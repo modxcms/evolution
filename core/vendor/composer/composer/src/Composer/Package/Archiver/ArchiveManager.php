@@ -72,6 +72,39 @@ class ArchiveManager
     }
 
     /**
+     * Generate a distinct filename for a particular version of a package.
+     *
+     * @param CompletePackageInterface $package The package to get a name for
+     *
+     * @return string A filename without an extension
+     */
+    public function getPackageFilename(CompletePackageInterface $package)
+    {
+        if ($package->getArchiveName()) {
+            $baseName = $package->getArchiveName();
+        } else {
+            $baseName = preg_replace('#[^a-z0-9-_]#i', '-', $package->getName());
+        }
+        $nameParts = array($baseName);
+
+        if (preg_match('{^[a-f0-9]{40}$}', $package->getDistReference())) {
+            array_push($nameParts, $package->getDistReference(), $package->getDistType());
+        } else {
+            array_push($nameParts, $package->getPrettyVersion(), $package->getDistReference());
+        }
+
+        if ($package->getSourceReference()) {
+            $nameParts[] = substr(sha1($package->getSourceReference()), 0, 6);
+        }
+
+        $name = implode('-', array_filter($nameParts, function ($p) {
+            return !empty($p);
+        }));
+
+        return str_replace('/', '-', $name);
+    }
+
+    /**
      * Create an archive of the specified package.
      *
      * @param  CompletePackageInterface  $package       The package to archive
@@ -165,38 +198,5 @@ class ArchiveManager
         $filesystem->remove($tempTarget);
 
         return $target;
-    }
-
-    /**
-     * Generate a distinct filename for a particular version of a package.
-     *
-     * @param CompletePackageInterface $package The package to get a name for
-     *
-     * @return string A filename without an extension
-     */
-    public function getPackageFilename(CompletePackageInterface $package)
-    {
-        if ($package->getArchiveName()) {
-            $baseName = $package->getArchiveName();
-        } else {
-            $baseName = preg_replace('#[^a-z0-9-_]#i', '-', $package->getName());
-        }
-        $nameParts = array($baseName);
-
-        if (preg_match('{^[a-f0-9]{40}$}', $package->getDistReference())) {
-            array_push($nameParts, $package->getDistReference(), $package->getDistType());
-        } else {
-            array_push($nameParts, $package->getPrettyVersion(), $package->getDistReference());
-        }
-
-        if ($package->getSourceReference()) {
-            $nameParts[] = substr(sha1($package->getSourceReference()), 0, 6);
-        }
-
-        $name = implode('-', array_filter($nameParts, function ($p) {
-            return !empty($p);
-        }));
-
-        return str_replace('/', '-', $name);
     }
 }

@@ -29,6 +29,27 @@ use React\Promise\Promise;
  */
 class CurlDownloader
 {
+    private $multiHandle;
+    private $shareHandle;
+    private $jobs = array();
+    /** @var IOInterface */
+    private $io;
+    /** @var Config */
+    private $config;
+    /** @var AuthHelper */
+    private $authHelper;
+    private $selectTimeout = 5.0;
+    private $maxRedirects = 20;
+    /** @var ProxyManager */
+    private $proxyManager;
+    private $supportsSecureProxy;
+    protected $multiErrors = array(
+        CURLM_BAD_HANDLE => array('CURLM_BAD_HANDLE', 'The passed-in handle is not a valid CURLM handle.'),
+        CURLM_BAD_EASY_HANDLE => array('CURLM_BAD_EASY_HANDLE', "An easy handle was not good/valid. It could mean that it isn't an easy handle at all, or possibly that the handle already is in used by this or another multi handle."),
+        CURLM_OUT_OF_MEMORY => array('CURLM_OUT_OF_MEMORY', 'You are doomed.'),
+        CURLM_INTERNAL_ERROR => array('CURLM_INTERNAL_ERROR', 'This can only be returned if libcurl bugs. Please report it to us!'),
+    );
+
     private static $options = array(
         'http' => array(
             'method' => CURLOPT_CUSTOMREQUEST,
@@ -46,6 +67,7 @@ class CurlDownloader
             'passphrase' => CURLOPT_SSLKEYPASSWD,
         ),
     );
+
     private static $timeInfo = array(
         'total_time' => true,
         'namelookup_time' => true,
@@ -54,26 +76,6 @@ class CurlDownloader
         'starttransfer_time' => true,
         'redirect_time' => true,
     );
-    protected $multiErrors = array(
-        CURLM_BAD_HANDLE => array('CURLM_BAD_HANDLE', 'The passed-in handle is not a valid CURLM handle.'),
-        CURLM_BAD_EASY_HANDLE => array('CURLM_BAD_EASY_HANDLE', "An easy handle was not good/valid. It could mean that it isn't an easy handle at all, or possibly that the handle already is in used by this or another multi handle."),
-        CURLM_OUT_OF_MEMORY => array('CURLM_OUT_OF_MEMORY', 'You are doomed.'),
-        CURLM_INTERNAL_ERROR => array('CURLM_INTERNAL_ERROR', 'This can only be returned if libcurl bugs. Please report it to us!'),
-    );
-    private $multiHandle;
-    private $shareHandle;
-    private $jobs = array();
-    /** @var IOInterface */
-    private $io;
-    /** @var Config */
-    private $config;
-    /** @var AuthHelper */
-    private $authHelper;
-    private $selectTimeout = 5.0;
-    private $maxRedirects = 20;
-    /** @var ProxyManager */
-    private $proxyManager;
-    private $supportsSecureProxy;
 
     public function __construct(IOInterface $io, Config $config, array $options = array(), $disableTls = false)
     {
@@ -242,17 +244,6 @@ class CurlDownloader
         return (int) $curlHandle;
     }
 
-    private function checkCurlResult($code)
-    {
-        if ($code != CURLM_OK && $code != CURLM_CALL_MULTI_PERFORM) {
-            throw new \RuntimeException(
-                isset($this->multiErrors[$code])
-                ? "cURL error: {$code} ({$this->multiErrors[$code][0]}): cURL message: {$this->multiErrors[$code][1]}"
-                : 'Unexpected cURL error: ' . $code
-            );
-        }
-    }
-
     public function abortRequest($id)
     {
         if (isset($this->jobs[$id], $this->jobs[$id]['handle'])) {
@@ -417,6 +408,37 @@ class CurlDownloader
         }
     }
 
+    private function handleRedirect(array $job, Response $response)
+    {
+        if ($locationHeader = $response->getHeader('location')) {
+            if (parse_url($locationHeader, PHP_URL_SCHEME)) {
+                // Absolute URL; e.g. https://example.com/composer
+                $targetUrl = $locationHeader;
+            } elseif (parse_url($locationHeader, PHP_URL_HOST)) {
+                // Scheme relative; e.g. //example.com/foo
+                $targetUrl = parse_url($job['url'], PHP_URL_SCHEME).':'.$locationHeader;
+            } elseif ('/' === $locationHeader[0]) {
+                // Absolute path; e.g. /foo
+                $urlHost = parse_url($job['url'], PHP_URL_HOST);
+
+                // Replace path using hostname as an anchor.
+                $targetUrl = preg_replace('{^(.+(?://|@)'.preg_quote($urlHost).'(?::\d+)?)(?:[/\?].*)?$}', '\1'.$locationHeader, $job['url']);
+            } else {
+                // Relative path; e.g. foo
+                // This actually differs from PHP which seems to add duplicate slashes.
+                $targetUrl = preg_replace('{^(.+/)[^/?]*(?:\?.*)?$}', '\1'.$locationHeader, $job['url']);
+            }
+        }
+
+        if (!empty($targetUrl)) {
+            $this->io->writeError(sprintf('Following redirect (%u) %s', $job['attributes']['redirects'] + 1, Url::sanitize($targetUrl)), true, IOInterface::DEBUG);
+
+            return $targetUrl;
+        }
+
+        throw new TransportException('The "'.$job['url'].'" file could not be downloaded, got redirect without Location ('.$response->getStatusMessage().')');
+    }
+
     private function isAuthenticatedRetryNeeded(array $job, Response $response)
     {
         if (in_array($response->getStatusCode(), array(401, 403)) && $job['attributes']['retryAuthFailure']) {
@@ -464,6 +486,18 @@ class CurlDownloader
         return array('retry' => false, 'storeAuth' => false);
     }
 
+    private function restartJob(array $job, $url, array $attributes = array())
+    {
+        if ($job['filename']) {
+            @unlink($job['filename'].'~');
+        }
+
+        $attributes = array_merge($job['attributes'], $attributes);
+        $origin = Url::getOrigin($this->config, $url);
+
+        $this->initDownload($job['resolve'], $job['reject'], $origin, $url, $job['options'], $job['filename'], $attributes);
+    }
+
     private function failResponse(array $job, Response $response, $errorMessage)
     {
         if ($job['filename']) {
@@ -478,49 +512,6 @@ class CurlDownloader
         return new TransportException('The "'.$job['url'].'" file could not be downloaded ('.$errorMessage.')' . $details, $response->getStatusCode());
     }
 
-    private function restartJob(array $job, $url, array $attributes = array())
-    {
-        if ($job['filename']) {
-            @unlink($job['filename'].'~');
-        }
-
-        $attributes = array_merge($job['attributes'], $attributes);
-        $origin = Url::getOrigin($this->config, $url);
-
-        $this->initDownload($job['resolve'], $job['reject'], $origin, $url, $job['options'], $job['filename'], $attributes);
-    }
-
-    private function handleRedirect(array $job, Response $response)
-    {
-        if ($locationHeader = $response->getHeader('location')) {
-            if (parse_url($locationHeader, PHP_URL_SCHEME)) {
-                // Absolute URL; e.g. https://example.com/composer
-                $targetUrl = $locationHeader;
-            } elseif (parse_url($locationHeader, PHP_URL_HOST)) {
-                // Scheme relative; e.g. //example.com/foo
-                $targetUrl = parse_url($job['url'], PHP_URL_SCHEME).':'.$locationHeader;
-            } elseif ('/' === $locationHeader[0]) {
-                // Absolute path; e.g. /foo
-                $urlHost = parse_url($job['url'], PHP_URL_HOST);
-
-                // Replace path using hostname as an anchor.
-                $targetUrl = preg_replace('{^(.+(?://|@)'.preg_quote($urlHost).'(?::\d+)?)(?:[/\?].*)?$}', '\1'.$locationHeader, $job['url']);
-            } else {
-                // Relative path; e.g. foo
-                // This actually differs from PHP which seems to add duplicate slashes.
-                $targetUrl = preg_replace('{^(.+/)[^/?]*(?:\?.*)?$}', '\1'.$locationHeader, $job['url']);
-            }
-        }
-
-        if (!empty($targetUrl)) {
-            $this->io->writeError(sprintf('Following redirect (%u) %s', $job['attributes']['redirects'] + 1, Url::sanitize($targetUrl)), true, IOInterface::DEBUG);
-
-            return $targetUrl;
-        }
-
-        throw new TransportException('The "'.$job['url'].'" file could not be downloaded, got redirect without Location ('.$response->getStatusMessage().')');
-    }
-
     private function rejectJob(array $job, \Exception $e)
     {
         if (is_resource($job['headerHandle'])) {
@@ -533,5 +524,16 @@ class CurlDownloader
             @unlink($job['filename'].'~');
         }
         call_user_func($job['reject'], $e);
+    }
+
+    private function checkCurlResult($code)
+    {
+        if ($code != CURLM_OK && $code != CURLM_CALL_MULTI_PERFORM) {
+            throw new \RuntimeException(
+                isset($this->multiErrors[$code])
+                ? "cURL error: {$code} ({$this->multiErrors[$code][0]}): cURL message: {$this->multiErrors[$code][1]}"
+                : 'Unexpected cURL error: ' . $code
+            );
+        }
     }
 }

@@ -27,6 +27,11 @@ class Wpc extends AbstractConverter
     use CurlTrait;
     use EncodingAutoTrait;
 
+    protected function getUnsupportedDefaultOptions()
+    {
+        return [];
+    }
+
     public function getUniqueOptions($imageType)
     {
         return [
@@ -50,6 +55,67 @@ class Wpc extends AbstractConverter
         // for api >= 2.
         return ($this->options['api-version'] >= 2);
     }
+
+    private static function createRandomSaltForBlowfish()
+    {
+        $salt = '';
+        $validCharsForSalt = array_merge(
+            range('A', 'Z'),
+            range('a', 'z'),
+            range('0', '9'),
+            ['.', '/']
+        );
+
+        for ($i = 0; $i < 22; $i++) {
+            $salt .= $validCharsForSalt[array_rand($validCharsForSalt)];
+        }
+        return $salt;
+    }
+
+    /**
+     * Get api key from options or environment variable
+     *
+     * @return string  api key or empty string if none is set
+     */
+    private function getApiKey()
+    {
+        if ($this->options['api-version'] == 0) {
+            if (!empty($this->options['secret'])) {
+                return $this->options['secret'];
+            }
+        } elseif ($this->options['api-version'] >= 1) {
+            if (!empty($this->options['api-key'])) {
+                return $this->options['api-key'];
+            }
+        }
+        if (defined('WEBPCONVERT_WPC_API_KEY')) {
+            return constant('WEBPCONVERT_WPC_API_KEY');
+        }
+        if (!empty(getenv('WEBPCONVERT_WPC_API_KEY'))) {
+            return getenv('WEBPCONVERT_WPC_API_KEY');
+        }
+        return '';
+    }
+
+    /**
+     * Get url from options or environment variable
+     *
+     * @return string  URL to WPC or empty string if none is set
+     */
+    private function getApiUrl()
+    {
+        if (!empty($this->options['api-url'])) {
+            return $this->options['api-url'];
+        }
+        if (defined('WEBPCONVERT_WPC_API_URL')) {
+            return constant('WEBPCONVERT_WPC_API_URL');
+        }
+        if (!empty(getenv('WEBPCONVERT_WPC_API_URL'))) {
+            return getenv('WEBPCONVERT_WPC_API_URL');
+        }
+        return '';
+    }
+
 
     /**
      * Check operationality of Wpc converter.
@@ -115,53 +181,81 @@ class Wpc extends AbstractConverter
         $this->checkOperationalityForCurlTrait();
     }
 
-    /**
-     * Get url from options or environment variable
-     *
-     * @return string  URL to WPC or empty string if none is set
-     */
-    private function getApiUrl()
+    /*
+    public function checkConvertability()
     {
-        if (!empty($this->options['api-url'])) {
-            return $this->options['api-url'];
+        // check upload limits
+        $this->checkConvertabilityCloudConverterTrait();
+
+        // TODO: some from below can be moved up here
+    }
+    */
+
+    private function createOptionsToSend()
+    {
+        $optionsToSend = $this->options;
+
+        if ($this->isQualityDetectionRequiredButFailing()) {
+            // quality was set to "auto", but we could not meassure the quality of the jpeg locally
+            // Ask the cloud service to do it, rather than using what we came up with.
+            $optionsToSend['quality'] = 'auto';
+        } else {
+            $optionsToSend['quality'] = $this->getCalculatedQuality();
         }
-        if (defined('WEBPCONVERT_WPC_API_URL')) {
-            return constant('WEBPCONVERT_WPC_API_URL');
+
+        // The following are unset for security reasons.
+        unset($optionsToSend['converters']);
+        unset($optionsToSend['secret']);
+        unset($optionsToSend['api-key']);
+        unset($optionsToSend['api-url']);
+
+        $apiVersion = $optionsToSend['api-version'];
+
+        if ($apiVersion == 1) {
+            // Lossless can be "auto" in api 2, but in api 1 "auto" is not supported
+            //unset($optionsToSend['lossless']);
+        } elseif ($apiVersion == 2) {
+            //unset($optionsToSend['png']);
+            //unset($optionsToSend['jpeg']);
+
+            // The following are unset for security reasons.
+            unset($optionsToSend['cwebp-command-line-options']);
+            unset($optionsToSend['command-line-options']);
         }
-        if (!empty(getenv('WEBPCONVERT_WPC_API_URL'))) {
-            return getenv('WEBPCONVERT_WPC_API_URL');
-        }
-        return '';
+
+        return $optionsToSend;
     }
 
-    /**
-     * Get api key from options or environment variable
-     *
-     * @return string  api key or empty string if none is set
-     */
-    private function getApiKey()
+    private function createPostData()
     {
-        if ($this->options['api-version'] == 0) {
-            if (!empty($this->options['secret'])) {
-                return $this->options['secret'];
-            }
-        } elseif ($this->options['api-version'] >= 1) {
-            if (!empty($this->options['api-key'])) {
-                return $this->options['api-key'];
-            }
-        }
-        if (defined('WEBPCONVERT_WPC_API_KEY')) {
-            return constant('WEBPCONVERT_WPC_API_KEY');
-        }
-        if (!empty(getenv('WEBPCONVERT_WPC_API_KEY'))) {
-            return getenv('WEBPCONVERT_WPC_API_KEY');
-        }
-        return '';
-    }
+        $options = $this->options;
 
-    protected function getUnsupportedDefaultOptions()
-    {
-        return [];
+        $postData = [
+            'file' => curl_file_create($this->source),
+            'options' => json_encode($this->createOptionsToSend()),
+            'servername' => (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '')
+        ];
+
+        $apiVersion = $options['api-version'];
+
+        $apiKey = $this->getApiKey();
+
+        if ($apiVersion == 0) {
+            $postData['hash'] = md5(md5_file($this->source) . $apiKey);
+        } elseif ($apiVersion == 1) {
+            //$this->logLn('api key: ' . $apiKey);
+
+            if ($options['crypt-api-key-in-transfer']) {
+                $salt = self::createRandomSaltForBlowfish();
+                $postData['salt'] = $salt;
+
+                // Strip off the first 28 characters (the first 6 are always "$2y$10$". The next 22 is the salt)
+                $postData['api-key-crypted'] = substr(crypt($apiKey, '$2y$10$' . $salt . '$'), 28);
+            } else {
+                $postData['api-key'] = $apiKey;
+            }
+        }
+        return $postData;
     }
 
     protected function doActualConvert()
@@ -255,98 +349,5 @@ class Wpc extends AbstractConverter
         if (!$success) {
             throw new ConversionFailedException('Error saving file. Check file permissions');
         }
-    }
-
-    /*
-    public function checkConvertability()
-    {
-        // check upload limits
-        $this->checkConvertabilityCloudConverterTrait();
-
-        // TODO: some from below can be moved up here
-    }
-    */
-
-    private function createPostData()
-    {
-        $options = $this->options;
-
-        $postData = [
-            'file' => curl_file_create($this->source),
-            'options' => json_encode($this->createOptionsToSend()),
-            'servername' => (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '')
-        ];
-
-        $apiVersion = $options['api-version'];
-
-        $apiKey = $this->getApiKey();
-
-        if ($apiVersion == 0) {
-            $postData['hash'] = md5(md5_file($this->source) . $apiKey);
-        } elseif ($apiVersion == 1) {
-            //$this->logLn('api key: ' . $apiKey);
-
-            if ($options['crypt-api-key-in-transfer']) {
-                $salt = self::createRandomSaltForBlowfish();
-                $postData['salt'] = $salt;
-
-                // Strip off the first 28 characters (the first 6 are always "$2y$10$". The next 22 is the salt)
-                $postData['api-key-crypted'] = substr(crypt($apiKey, '$2y$10$' . $salt . '$'), 28);
-            } else {
-                $postData['api-key'] = $apiKey;
-            }
-        }
-        return $postData;
-    }
-
-    private function createOptionsToSend()
-    {
-        $optionsToSend = $this->options;
-
-        if ($this->isQualityDetectionRequiredButFailing()) {
-            // quality was set to "auto", but we could not meassure the quality of the jpeg locally
-            // Ask the cloud service to do it, rather than using what we came up with.
-            $optionsToSend['quality'] = 'auto';
-        } else {
-            $optionsToSend['quality'] = $this->getCalculatedQuality();
-        }
-
-        // The following are unset for security reasons.
-        unset($optionsToSend['converters']);
-        unset($optionsToSend['secret']);
-        unset($optionsToSend['api-key']);
-        unset($optionsToSend['api-url']);
-
-        $apiVersion = $optionsToSend['api-version'];
-
-        if ($apiVersion == 1) {
-            // Lossless can be "auto" in api 2, but in api 1 "auto" is not supported
-            //unset($optionsToSend['lossless']);
-        } elseif ($apiVersion == 2) {
-            //unset($optionsToSend['png']);
-            //unset($optionsToSend['jpeg']);
-
-            // The following are unset for security reasons.
-            unset($optionsToSend['cwebp-command-line-options']);
-            unset($optionsToSend['command-line-options']);
-        }
-
-        return $optionsToSend;
-    }
-
-    private static function createRandomSaltForBlowfish()
-    {
-        $salt = '';
-        $validCharsForSalt = array_merge(
-            range('A', 'Z'),
-            range('a', 'z'),
-            range('0', '9'),
-            ['.', '/']
-        );
-
-        for ($i = 0; $i < 22; $i++) {
-            $salt .= $validCharsForSalt[array_rand($validCharsForSalt)];
-        }
-        return $salt;
     }
 }

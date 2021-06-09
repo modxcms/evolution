@@ -5,13 +5,14 @@ namespace League\Flysystem;
 final class SafeStorage
 {
     /**
-     * @var array
-     */
-    protected static $safeStorage = [];
-    /**
      * @var string
      */
     private $hash;
+
+    /**
+     * @var array
+     */
+    protected static $safeStorage = [];
 
     public function __construct()
     {

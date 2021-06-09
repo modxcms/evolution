@@ -36,16 +36,6 @@ class Composer
     }
 
     /**
-     * Regenerate the optimized Composer autoloader files.
-     *
-     * @return int
-     */
-    public function dumpOptimized()
-    {
-        return $this->dumpAutoloads('--optimize');
-    }
-
-    /**
      * Regenerate the Composer autoloader files.
      *
      * @param  string|array  $extra
@@ -58,6 +48,16 @@ class Composer
         $command = array_merge($this->findComposer(), ['dump-autoload'], $extra);
 
         return $this->getProcess($command)->run();
+    }
+
+    /**
+     * Regenerate the optimized Composer autoloader files.
+     *
+     * @return int
+     */
+    public function dumpOptimized()
+    {
+        return $this->dumpAutoloads('--optimize');
     }
 
     /**

@@ -71,23 +71,6 @@ final class HttpClientKernel implements HttpKernelInterface
         return $response;
     }
 
-    private function getHeaders(Request $request): array
-    {
-        $headers = [];
-        foreach ($request->headers as $key => $value) {
-            $headers[$key] = $value;
-        }
-        $cookies = [];
-        foreach ($request->cookies->all() as $name => $value) {
-            $cookies[] = $name.'='.$value;
-        }
-        if ($cookies) {
-            $headers['cookie'] = implode('; ', $cookies);
-        }
-
-        return $headers;
-    }
-
     private function getBody(Request $request): ?AbstractPart
     {
         if (\in_array($request->getMethod(), ['GET', 'HEAD'])) {
@@ -108,5 +91,22 @@ final class HttpClientKernel implements HttpKernelInterface
         }
 
         return new FormDataPart($fields);
+    }
+
+    private function getHeaders(Request $request): array
+    {
+        $headers = [];
+        foreach ($request->headers as $key => $value) {
+            $headers[$key] = $value;
+        }
+        $cookies = [];
+        foreach ($request->cookies->all() as $name => $value) {
+            $cookies[] = $name.'='.$value;
+        }
+        if ($cookies) {
+            $headers['cookie'] = implode('; ', $cookies);
+        }
+
+        return $headers;
     }
 }

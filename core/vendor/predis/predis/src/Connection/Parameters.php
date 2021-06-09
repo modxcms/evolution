@@ -20,12 +20,13 @@ namespace Predis\Connection;
  */
 class Parameters implements ParametersInterface
 {
+    private $parameters;
+
     private static $defaults = array(
         'scheme' => 'tcp',
         'host' => '127.0.0.1',
         'port' => 6379,
     );
-    private $parameters;
 
     /**
      * @param array $parameters Named array of connection parameters.
@@ -33,18 +34,6 @@ class Parameters implements ParametersInterface
     public function __construct(array $parameters = array())
     {
         $this->parameters = $this->filter($parameters) + $this->getDefaults();
-    }
-
-    /**
-     * Validates and converts each value of the connection parameters array.
-     *
-     * @param array $parameters Connection parameters.
-     *
-     * @return array
-     */
-    protected function filter(array $parameters)
-    {
-        return $parameters ?: array();
     }
 
     /**
@@ -146,6 +135,18 @@ class Parameters implements ParametersInterface
         }
 
         return $parsed;
+    }
+
+    /**
+     * Validates and converts each value of the connection parameters array.
+     *
+     * @param array $parameters Connection parameters.
+     *
+     * @return array
+     */
+    protected function filter(array $parameters)
+    {
+        return $parameters ?: array();
     }
 
     /**

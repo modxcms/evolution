@@ -27,20 +27,6 @@ trait InteractsWithContentTypes
     }
 
     /**
-     * Determine if the current request accepts any content type.
-     *
-     * @return bool
-     */
-    public function acceptsAnyContentType()
-    {
-        $acceptable = $this->getAcceptableContentTypes();
-
-        return count($acceptable) === 0 || (
-            isset($acceptable[0]) && ($acceptable[0] === '*/*' || $acceptable[0] === '*')
-        );
-    }
-
-    /**
      * Determine if the current request is asking for JSON.
      *
      * @return bool
@@ -50,65 +36,6 @@ trait InteractsWithContentTypes
         $acceptable = $this->getAcceptableContentTypes();
 
         return isset($acceptable[0]) && Str::contains($acceptable[0], ['/json', '+json']);
-    }
-
-    /**
-     * Return the most suitable content type from the given array based on content negotiation.
-     *
-     * @param  string|array  $contentTypes
-     * @return string|null
-     */
-    public function prefers($contentTypes)
-    {
-        $accepts = $this->getAcceptableContentTypes();
-
-        $contentTypes = (array) $contentTypes;
-
-        foreach ($accepts as $accept) {
-            if (in_array($accept, ['*/*', '*'])) {
-                return $contentTypes[0];
-            }
-
-            foreach ($contentTypes as $contentType) {
-                $type = $contentType;
-
-                if (! is_null($mimeType = $this->getMimeType($contentType))) {
-                    $type = $mimeType;
-                }
-
-                if ($this->matchesType($type, $accept) || $accept === strtok($type, '/').'/*') {
-                    return $contentType;
-                }
-            }
-        }
-    }
-
-    /**
-     * Determine if the given content types match.
-     *
-     * @param  string  $actual
-     * @param  string  $type
-     * @return bool
-     */
-    public static function matchesType($actual, $type)
-    {
-        if ($actual === $type) {
-            return true;
-        }
-
-        $split = explode('/', $actual);
-
-        return isset($split[1]) && preg_match('#'.preg_quote($split[0], '#').'/.+\+'.preg_quote($split[1], '#').'#', $type);
-    }
-
-    /**
-     * Determines whether a request accepts JSON.
-     *
-     * @return bool
-     */
-    public function acceptsJson()
-    {
-        return $this->accepts('application/json');
     }
 
     /**
@@ -143,6 +70,61 @@ trait InteractsWithContentTypes
     }
 
     /**
+     * Return the most suitable content type from the given array based on content negotiation.
+     *
+     * @param  string|array  $contentTypes
+     * @return string|null
+     */
+    public function prefers($contentTypes)
+    {
+        $accepts = $this->getAcceptableContentTypes();
+
+        $contentTypes = (array) $contentTypes;
+
+        foreach ($accepts as $accept) {
+            if (in_array($accept, ['*/*', '*'])) {
+                return $contentTypes[0];
+            }
+
+            foreach ($contentTypes as $contentType) {
+                $type = $contentType;
+
+                if (! is_null($mimeType = $this->getMimeType($contentType))) {
+                    $type = $mimeType;
+                }
+
+                if ($this->matchesType($type, $accept) || $accept === strtok($type, '/').'/*') {
+                    return $contentType;
+                }
+            }
+        }
+    }
+
+    /**
+     * Determine if the current request accepts any content type.
+     *
+     * @return bool
+     */
+    public function acceptsAnyContentType()
+    {
+        $acceptable = $this->getAcceptableContentTypes();
+
+        return count($acceptable) === 0 || (
+            isset($acceptable[0]) && ($acceptable[0] === '*/*' || $acceptable[0] === '*')
+        );
+    }
+
+    /**
+     * Determines whether a request accepts JSON.
+     *
+     * @return bool
+     */
+    public function acceptsJson()
+    {
+        return $this->accepts('application/json');
+    }
+
+    /**
      * Determines whether a request accepts HTML.
      *
      * @return bool
@@ -150,6 +132,24 @@ trait InteractsWithContentTypes
     public function acceptsHtml()
     {
         return $this->accepts('text/html');
+    }
+
+    /**
+     * Determine if the given content types match.
+     *
+     * @param  string  $actual
+     * @param  string  $type
+     * @return bool
+     */
+    public static function matchesType($actual, $type)
+    {
+        if ($actual === $type) {
+            return true;
+        }
+
+        $split = explode('/', $actual);
+
+        return isset($split[1]) && preg_match('#'.preg_quote($split[0], '#').'/.+\+'.preg_quote($split[1], '#').'#', $type);
     }
 
     /**

@@ -79,6 +79,34 @@ class ArrayLoader implements LoaderInterface
 
     /**
      * @template PackageClass of CompletePackageInterface
+     * @param  array                                      $versions
+     * @param  string                                     $class    FQCN to be instantiated
+     * @return list<CompletePackage|CompleteAliasPackage>
+     * @phpstan-param class-string<PackageClass> $class
+     */
+    public function loadPackages(array $versions, $class = 'Composer\Package\CompletePackage')
+    {
+        if ($class !== 'Composer\Package\CompletePackage') {
+            trigger_error('The $class arg is deprecated, please reach out to Composer maintainers ASAP if you still need this.', E_USER_DEPRECATED);
+        }
+
+        $packages = array();
+        $linkCache = array();
+
+        foreach ($versions as $version) {
+            $package = $this->createObject($version, $class);
+
+            $this->configureCachedLinks($linkCache, $package, $version);
+            $package = $this->configureObject($package, $version);
+
+            $packages[] = $package;
+        }
+
+        return $packages;
+    }
+
+    /**
+     * @template PackageClass of CompletePackageInterface
      * @param  array                       $config package data
      * @param  string                      $class  FQCN to be instantiated
      * @return CompletePackage|RootPackage
@@ -106,45 +134,6 @@ class ArrayLoader implements LoaderInterface
         }
 
         return new $class($config['name'], $version, $config['version']);
-    }
-
-    /**
-     * @param  string       $source        source package name
-     * @param  string       $sourceVersion source package version (pretty version ideally)
-     * @param  Link::TYPE_* $description   link description (e.g. requires, replaces, ..)
-     * @param  array        $links         array of package name => constraint mappings
-     * @return Link[]
-     */
-    public function parseLinks($source, $sourceVersion, $description, $links)
-    {
-        $res = array();
-        foreach ($links as $target => $constraint) {
-            $res[strtolower($target)] = $this->createLink($source, $sourceVersion, $description, $target, $constraint);
-        }
-
-        return $res;
-    }
-
-    /**
-     * @param  string       $source           source package name
-     * @param  string       $sourceVersion    source package version (pretty version ideally)
-     * @param  Link::TYPE_* $description      link description (e.g. requires, replaces, ..)
-     * @param  string       $target           target package name
-     * @param  string       $prettyConstraint constraint string
-     * @return Link
-     */
-    private function createLink($source, $sourceVersion, $description, $target, $prettyConstraint)
-    {
-        if (!\is_string($prettyConstraint)) {
-            throw new \UnexpectedValueException('Link constraint in '.$source.' '.$description.' > '.$target.' should be a string, got '.\gettype($prettyConstraint) . ' (' . var_export($prettyConstraint, true) . ')');
-        }
-        if ('self.version' === $prettyConstraint) {
-            $parsedConstraint = $this->versionParser->parseConstraints($sourceVersion);
-        } else {
-            $parsedConstraint = $this->versionParser->parseConstraints($prettyConstraint);
-        }
-
-        return new Link($source, $target, $parsedConstraint, $description, $prettyConstraint);
     }
 
     /**
@@ -328,6 +317,80 @@ class ArrayLoader implements LoaderInterface
     }
 
     /**
+     * @param  array            $linkCache
+     * @param  PackageInterface $package
+     * @param  array            $config
+     * @return void
+     */
+    private function configureCachedLinks(&$linkCache, $package, array $config)
+    {
+        $name = $package->getName();
+        $prettyVersion = $package->getPrettyVersion();
+
+        foreach (BasePackage::$supportedLinkTypes as $type => $opts) {
+            if (isset($config[$type])) {
+                $method = 'set'.ucfirst($opts['method']);
+
+                $links = array();
+                foreach ($config[$type] as $prettyTarget => $constraint) {
+                    $target = strtolower($prettyTarget);
+                    if ($constraint === 'self.version') {
+                        $links[$target] = $this->createLink($name, $prettyVersion, $opts['description'], $target, $constraint);
+                    } else {
+                        if (!isset($linkCache[$name][$type][$target][$constraint])) {
+                            $linkCache[$name][$type][$target][$constraint] = array($target, $this->createLink($name, $prettyVersion, $opts['description'], $target, $constraint));
+                        }
+
+                        list($target, $link) = $linkCache[$name][$type][$target][$constraint];
+                        $links[$target] = $link;
+                    }
+                }
+
+                $package->{$method}($links);
+            }
+        }
+    }
+
+    /**
+     * @param  string       $source        source package name
+     * @param  string       $sourceVersion source package version (pretty version ideally)
+     * @param  Link::TYPE_* $description   link description (e.g. requires, replaces, ..)
+     * @param  array        $links         array of package name => constraint mappings
+     * @return Link[]
+     */
+    public function parseLinks($source, $sourceVersion, $description, $links)
+    {
+        $res = array();
+        foreach ($links as $target => $constraint) {
+            $res[strtolower($target)] = $this->createLink($source, $sourceVersion, $description, $target, $constraint);
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param  string       $source           source package name
+     * @param  string       $sourceVersion    source package version (pretty version ideally)
+     * @param  Link::TYPE_* $description      link description (e.g. requires, replaces, ..)
+     * @param  string       $target           target package name
+     * @param  string       $prettyConstraint constraint string
+     * @return Link
+     */
+    private function createLink($source, $sourceVersion, $description, $target, $prettyConstraint)
+    {
+        if (!\is_string($prettyConstraint)) {
+            throw new \UnexpectedValueException('Link constraint in '.$source.' '.$description.' > '.$target.' should be a string, got '.\gettype($prettyConstraint) . ' (' . var_export($prettyConstraint, true) . ')');
+        }
+        if ('self.version' === $prettyConstraint) {
+            $parsedConstraint = $this->versionParser->parseConstraints($sourceVersion);
+        } else {
+            $parsedConstraint = $this->versionParser->parseConstraints($prettyConstraint);
+        }
+
+        return new Link($source, $target, $parsedConstraint, $description, $prettyConstraint);
+    }
+
+    /**
      * Retrieves a branch alias (dev-master => 1.0.x-dev for example) if it exists
      *
      * @param  array       $config the entire package config
@@ -382,68 +445,5 @@ class ArrayLoader implements LoaderInterface
         }
 
         return null;
-    }
-
-    /**
-     * @template PackageClass of CompletePackageInterface
-     * @param  array                                      $versions
-     * @param  string                                     $class    FQCN to be instantiated
-     * @return list<CompletePackage|CompleteAliasPackage>
-     * @phpstan-param class-string<PackageClass> $class
-     */
-    public function loadPackages(array $versions, $class = 'Composer\Package\CompletePackage')
-    {
-        if ($class !== 'Composer\Package\CompletePackage') {
-            trigger_error('The $class arg is deprecated, please reach out to Composer maintainers ASAP if you still need this.', E_USER_DEPRECATED);
-        }
-
-        $packages = array();
-        $linkCache = array();
-
-        foreach ($versions as $version) {
-            $package = $this->createObject($version, $class);
-
-            $this->configureCachedLinks($linkCache, $package, $version);
-            $package = $this->configureObject($package, $version);
-
-            $packages[] = $package;
-        }
-
-        return $packages;
-    }
-
-    /**
-     * @param  array            $linkCache
-     * @param  PackageInterface $package
-     * @param  array            $config
-     * @return void
-     */
-    private function configureCachedLinks(&$linkCache, $package, array $config)
-    {
-        $name = $package->getName();
-        $prettyVersion = $package->getPrettyVersion();
-
-        foreach (BasePackage::$supportedLinkTypes as $type => $opts) {
-            if (isset($config[$type])) {
-                $method = 'set'.ucfirst($opts['method']);
-
-                $links = array();
-                foreach ($config[$type] as $prettyTarget => $constraint) {
-                    $target = strtolower($prettyTarget);
-                    if ($constraint === 'self.version') {
-                        $links[$target] = $this->createLink($name, $prettyVersion, $opts['description'], $target, $constraint);
-                    } else {
-                        if (!isset($linkCache[$name][$type][$target][$constraint])) {
-                            $linkCache[$name][$type][$target][$constraint] = array($target, $this->createLink($name, $prettyVersion, $opts['description'], $target, $constraint));
-                        }
-
-                        list($target, $link) = $linkCache[$name][$type][$target][$constraint];
-                        $links[$target] = $link;
-                    }
-                }
-
-                $package->{$method}($links);
-            }
-        }
     }
 }

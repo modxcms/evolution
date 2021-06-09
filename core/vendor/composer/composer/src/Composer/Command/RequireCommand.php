@@ -306,33 +306,12 @@ EOT
         );
     }
 
-    private function updateFileCleanly($json, array $new, $requireKey, $removeKey, $sortPackages)
-    {
-        $contents = file_get_contents($json->getPath());
-
-        $manipulator = new JsonManipulator($contents);
-
-        foreach ($new as $package => $constraint) {
-            if (!$manipulator->addLink($requireKey, $package, $constraint, $sortPackages)) {
-                return false;
-            }
-            if (!$manipulator->removeSubNode($removeKey, $package)) {
-                return false;
-            }
-        }
-
-        $manipulator->removeMainKeyIfEmpty($removeKey);
-
-        file_put_contents($json->getPath(), $manipulator->getContents());
-
-        return true;
-    }
-
     private function doUpdate(InputInterface $input, OutputInterface $output, IOInterface $io, array $requirements, $requireKey, $removeKey)
     {
         // Update packages
         $this->resetComposer();
         $composer = $this->getComposer(true, $input->getOption('no-plugins'));
+        $composer->getEventDispatcher()->setRunScripts(!$input->getOption('no-scripts'));
 
         if ($input->getOption('dry-run')) {
             $rootPackage = $composer->getPackage();
@@ -384,7 +363,6 @@ EOT
             ->setPreferSource($preferSource)
             ->setPreferDist($preferDist)
             ->setDevMode($updateDevMode)
-            ->setRunScripts(!$input->getOption('no-scripts'))
             ->setOptimizeAutoloader($optimize)
             ->setClassMapAuthoritative($authoritative)
             ->setApcuAutoloader($apcu, $apcuPrefix)
@@ -408,6 +386,33 @@ EOT
         }
 
         return $status;
+    }
+
+    private function updateFileCleanly($json, array $new, $requireKey, $removeKey, $sortPackages)
+    {
+        $contents = file_get_contents($json->getPath());
+
+        $manipulator = new JsonManipulator($contents);
+
+        foreach ($new as $package => $constraint) {
+            if (!$manipulator->addLink($requireKey, $package, $constraint, $sortPackages)) {
+                return false;
+            }
+            if (!$manipulator->removeSubNode($removeKey, $package)) {
+                return false;
+            }
+        }
+
+        $manipulator->removeMainKeyIfEmpty($removeKey);
+
+        file_put_contents($json->getPath(), $manipulator->getContents());
+
+        return true;
+    }
+
+    protected function interact(InputInterface $input, OutputInterface $output)
+    {
+        return;
     }
 
     public function revertComposerFile($hardExit = true)
@@ -435,10 +440,5 @@ EOT
         if ($hardExit) {
             exit(1);
         }
-    }
-
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-        return;
     }
 }

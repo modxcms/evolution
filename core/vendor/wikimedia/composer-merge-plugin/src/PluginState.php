@@ -199,16 +199,6 @@ class PluginState
     }
 
     /**
-     * Is this the first time that the plugin has been installed?
-     *
-     * @return bool
-     */
-    public function isFirstInstall()
-    {
-        return $this->firstInstall;
-    }
-
-    /**
      * Set the first install flag
      *
      * @param bool $flag
@@ -219,13 +209,13 @@ class PluginState
     }
 
     /**
-     * Was a lockfile present when the plugin was installed?
+     * Is this the first time that the plugin has been installed?
      *
      * @return bool
      */
-    public function isLocked()
+    public function isFirstInstall()
     {
-        return $this->locked;
+        return $this->firstInstall;
     }
 
     /**
@@ -239,6 +229,16 @@ class PluginState
     }
 
     /**
+     * Was a lockfile present when the plugin was installed?
+     *
+     * @return bool
+     */
+    public function isLocked()
+    {
+        return $this->locked;
+    }
+
+    /**
      * Should an update be forced?
      *
      * @return true If packages are not locked
@@ -249,16 +249,6 @@ class PluginState
     }
 
     /**
-     * Should devMode settings be processed?
-     *
-     * @return bool
-     */
-    public function isDevMode()
-    {
-        return $this->shouldMergeDev() && $this->devMode;
-    }
-
-    /**
      * Set the devMode flag
      *
      * @param bool $flag
@@ -266,6 +256,16 @@ class PluginState
     public function setDevMode($flag)
     {
         $this->devMode = (bool)$flag;
+    }
+
+    /**
+     * Should devMode settings be processed?
+     *
+     * @return bool
+     */
+    public function isDevMode()
+    {
+        return $this->shouldMergeDev() && $this->devMode;
     }
 
     /**

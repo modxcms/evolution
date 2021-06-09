@@ -77,40 +77,6 @@ class ComponentTagCompiler
     }
 
     /**
-     * Compile the slot tags within the given string.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    public function compileSlots(string $value)
-    {
-        $value = preg_replace_callback('/<\s*x[\-\:]slot\s+(:?)name=(?<name>(\"[^\"]+\"|\\\'[^\\\']+\\\'|[^\s>]+))\s*>/', function ($matches) {
-            $name = $this->stripQuotes($matches['name']);
-
-            if ($matches[1] !== ':') {
-                $name = "'{$name}'";
-            }
-
-            return " @slot({$name}) ";
-        }, $value);
-
-        return preg_replace('/<\/\s*x[\-\:]slot[^>]*>/', ' @endslot', $value);
-    }
-
-    /**
-     * Strip any quotes from the given string.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    public function stripQuotes(string $value)
-    {
-        return Str::startsWith($value, ['"', '\''])
-                    ? substr($value, 1, -1)
-                    : $value;
-    }
-
-    /**
      * Compile the tags within the given string.
      *
      * @param  string  $value
@@ -125,6 +91,58 @@ class ComponentTagCompiler
         $value = $this->compileClosingTags($value);
 
         return $value;
+    }
+
+    /**
+     * Compile the opening tags within the given string.
+     *
+     * @param  string  $value
+     * @return string
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function compileOpeningTags(string $value)
+    {
+        $pattern = "/
+            <
+                \s*
+                x[-\:]([\w\-\:\.]*)
+                (?<attributes>
+                    (?:
+                        \s+
+                        (?:
+                            (?:
+                                \{\{\s*\\\$attributes(?:[^}]+?)?\s*\}\}
+                            )
+                            |
+                            (?:
+                                [\w\-:.@]+
+                                (
+                                    =
+                                    (?:
+                                        \\\"[^\\\"]*\\\"
+                                        |
+                                        \'[^\']*\'
+                                        |
+                                        [^\'\\\"=<>]+
+                                    )
+                                )?
+                            )
+                        )
+                    )*
+                    \s*
+                )
+                (?<![\/=\-])
+            >
+        /x";
+
+        return preg_replace_callback($pattern, function (array $matches) {
+            $this->boundAttributes = [];
+
+            $attributes = $this->getAttributesFromAttributeString($matches['attributes']);
+
+            return $this->componentString($matches[1], $attributes);
+        }, $value);
     }
 
     /**
@@ -177,6 +195,217 @@ class ComponentTagCompiler
 
             return $this->componentString($matches[1], $attributes)."\n@endComponentClass##END-COMPONENT-CLASS##";
         }, $value);
+    }
+
+    /**
+     * Compile the Blade component string for the given component and attributes.
+     *
+     * @param  string  $component
+     * @param  array  $attributes
+     * @return string
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function componentString(string $component, array $attributes)
+    {
+        $class = $this->componentClass($component);
+
+        [$data, $attributes] = $this->partitionDataAndAttributes($class, $attributes);
+
+        $data = $data->mapWithKeys(function ($value, $key) {
+            return [Str::camel($key) => $value];
+        });
+
+        // If the component doesn't exists as a class we'll assume it's a class-less
+        // component and pass the component as a view parameter to the data so it
+        // can be accessed within the component and we can render out the view.
+        if (! class_exists($class)) {
+            $parameters = [
+                'view' => "'$class'",
+                'data' => '['.$this->attributesToString($data->all(), $escapeBound = false).']',
+            ];
+
+            $class = AnonymousComponent::class;
+        } else {
+            $parameters = $data->all();
+        }
+
+        return "##BEGIN-COMPONENT-CLASS##@component('{$class}', '{$component}', [".$this->attributesToString($parameters, $escapeBound = false).'])
+<?php $component->withAttributes(['.$this->attributesToString($attributes->all(), $escapeAttributes = $class !== DynamicComponent::class).']); ?>';
+    }
+
+    /**
+     * Get the component class for a given component alias.
+     *
+     * @param  string  $component
+     * @return string
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function componentClass(string $component)
+    {
+        $viewFactory = Container::getInstance()->make(Factory::class);
+
+        if (isset($this->aliases[$component])) {
+            if (class_exists($alias = $this->aliases[$component])) {
+                return $alias;
+            }
+
+            if ($viewFactory->exists($alias)) {
+                return $alias;
+            }
+
+            throw new InvalidArgumentException(
+                "Unable to locate class or view [{$alias}] for component [{$component}]."
+            );
+        }
+
+        if ($class = $this->findClassByComponent($component)) {
+            return $class;
+        }
+
+        if (class_exists($class = $this->guessClassName($component))) {
+            return $class;
+        }
+
+        if ($viewFactory->exists($view = $this->guessViewName($component))) {
+            return $view;
+        }
+
+        throw new InvalidArgumentException(
+            "Unable to locate a class or view for component [{$component}]."
+        );
+    }
+
+    /**
+     * Find the class for the given component using the registered namespaces.
+     *
+     * @param  string  $component
+     * @return string|null
+     */
+    public function findClassByComponent(string $component)
+    {
+        $segments = explode('::', $component);
+
+        $prefix = $segments[0];
+
+        if (! isset($this->namespaces[$prefix]) || ! isset($segments[1])) {
+            return;
+        }
+
+        if (class_exists($class = $this->namespaces[$prefix].'\\'.$this->formatClassName($segments[1]))) {
+            return $class;
+        }
+    }
+
+    /**
+     * Guess the class name for the given component.
+     *
+     * @param  string  $component
+     * @return string
+     */
+    public function guessClassName(string $component)
+    {
+        $namespace = Container::getInstance()
+                    ->make(Application::class)
+                    ->getNamespace();
+
+        $class = $this->formatClassName($component);
+
+        return $namespace.'View\\Components\\'.$class;
+    }
+
+    /**
+     * Format the class name for the given component.
+     *
+     * @param  string  $component
+     * @return string
+     */
+    public function formatClassName(string $component)
+    {
+        $componentPieces = array_map(function ($componentPiece) {
+            return ucfirst(Str::camel($componentPiece));
+        }, explode('.', $component));
+
+        return implode('\\', $componentPieces);
+    }
+
+    /**
+     * Guess the view name for the given component.
+     *
+     * @param  string  $name
+     * @return string
+     */
+    public function guessViewName($name)
+    {
+        $prefix = 'components.';
+
+        $delimiter = ViewFinderInterface::HINT_PATH_DELIMITER;
+
+        if (Str::contains($name, $delimiter)) {
+            return Str::replaceFirst($delimiter, $delimiter.$prefix, $name);
+        }
+
+        return $prefix.$name;
+    }
+
+    /**
+     * Partition the data and extra attributes from the given array of attributes.
+     *
+     * @param  string  $class
+     * @param  array  $attributes
+     * @return array
+     */
+    public function partitionDataAndAttributes($class, array $attributes)
+    {
+        // If the class doesn't exists, we'll assume it's a class-less component and
+        // return all of the attributes as both data and attributes since we have
+        // now way to partition them. The user can exclude attributes manually.
+        if (! class_exists($class)) {
+            return [collect($attributes), collect($attributes)];
+        }
+
+        $constructor = (new ReflectionClass($class))->getConstructor();
+
+        $parameterNames = $constructor
+                    ? collect($constructor->getParameters())->map->getName()->all()
+                    : [];
+
+        return collect($attributes)->partition(function ($value, $key) use ($parameterNames) {
+            return in_array(Str::camel($key), $parameterNames);
+        })->all();
+    }
+
+    /**
+     * Compile the closing tags within the given string.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    protected function compileClosingTags(string $value)
+    {
+        return preg_replace("/<\/\s*x[-\:][\w\-\:\.]*\s*>/", ' @endComponentClass##END-COMPONENT-CLASS##', $value);
+    }
+
+    /**
+     * Compile the slot tags within the given string.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function compileSlots(string $value)
+    {
+        $value = preg_replace_callback('/<\s*x[\-\:]slot\s+(:?)name=(?<name>(\"[^\"]+\"|\\\'[^\\\']+\\\'|[^\s>]+))\s*>/', function ($matches) {
+            $name = $this->stripQuotes($matches['name']);
+
+            if ($matches[1] !== ':') {
+                $name = "'{$name}'";
+            }
+
+            return " @slot({$name}) ";
+        }, $value);
+
+        return preg_replace('/<\/\s*x[\-\:]slot[^>]*>/', ' @endslot', $value);
     }
 
     /**
@@ -313,185 +542,6 @@ class ComponentTagCompiler
     }
 
     /**
-     * Compile the Blade component string for the given component and attributes.
-     *
-     * @param  string  $component
-     * @param  array  $attributes
-     * @return string
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected function componentString(string $component, array $attributes)
-    {
-        $class = $this->componentClass($component);
-
-        [$data, $attributes] = $this->partitionDataAndAttributes($class, $attributes);
-
-        $data = $data->mapWithKeys(function ($value, $key) {
-            return [Str::camel($key) => $value];
-        });
-
-        // If the component doesn't exists as a class we'll assume it's a class-less
-        // component and pass the component as a view parameter to the data so it
-        // can be accessed within the component and we can render out the view.
-        if (! class_exists($class)) {
-            $parameters = [
-                'view' => "'$class'",
-                'data' => '['.$this->attributesToString($data->all(), $escapeBound = false).']',
-            ];
-
-            $class = AnonymousComponent::class;
-        } else {
-            $parameters = $data->all();
-        }
-
-        return "##BEGIN-COMPONENT-CLASS##@component('{$class}', '{$component}', [".$this->attributesToString($parameters, $escapeBound = false).'])
-<?php $component->withAttributes(['.$this->attributesToString($attributes->all(), $escapeAttributes = $class !== DynamicComponent::class).']); ?>';
-    }
-
-    /**
-     * Get the component class for a given component alias.
-     *
-     * @param  string  $component
-     * @return string
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function componentClass(string $component)
-    {
-        $viewFactory = Container::getInstance()->make(Factory::class);
-
-        if (isset($this->aliases[$component])) {
-            if (class_exists($alias = $this->aliases[$component])) {
-                return $alias;
-            }
-
-            if ($viewFactory->exists($alias)) {
-                return $alias;
-            }
-
-            throw new InvalidArgumentException(
-                "Unable to locate class or view [{$alias}] for component [{$component}]."
-            );
-        }
-
-        if ($class = $this->findClassByComponent($component)) {
-            return $class;
-        }
-
-        if (class_exists($class = $this->guessClassName($component))) {
-            return $class;
-        }
-
-        if ($viewFactory->exists($view = $this->guessViewName($component))) {
-            return $view;
-        }
-
-        throw new InvalidArgumentException(
-            "Unable to locate a class or view for component [{$component}]."
-        );
-    }
-
-    /**
-     * Find the class for the given component using the registered namespaces.
-     *
-     * @param  string  $component
-     * @return string|null
-     */
-    public function findClassByComponent(string $component)
-    {
-        $segments = explode('::', $component);
-
-        $prefix = $segments[0];
-
-        if (! isset($this->namespaces[$prefix]) || ! isset($segments[1])) {
-            return;
-        }
-
-        if (class_exists($class = $this->namespaces[$prefix].'\\'.$this->formatClassName($segments[1]))) {
-            return $class;
-        }
-    }
-
-    /**
-     * Format the class name for the given component.
-     *
-     * @param  string  $component
-     * @return string
-     */
-    public function formatClassName(string $component)
-    {
-        $componentPieces = array_map(function ($componentPiece) {
-            return ucfirst(Str::camel($componentPiece));
-        }, explode('.', $component));
-
-        return implode('\\', $componentPieces);
-    }
-
-    /**
-     * Guess the class name for the given component.
-     *
-     * @param  string  $component
-     * @return string
-     */
-    public function guessClassName(string $component)
-    {
-        $namespace = Container::getInstance()
-                    ->make(Application::class)
-                    ->getNamespace();
-
-        $class = $this->formatClassName($component);
-
-        return $namespace.'View\\Components\\'.$class;
-    }
-
-    /**
-     * Guess the view name for the given component.
-     *
-     * @param  string  $name
-     * @return string
-     */
-    public function guessViewName($name)
-    {
-        $prefix = 'components.';
-
-        $delimiter = ViewFinderInterface::HINT_PATH_DELIMITER;
-
-        if (Str::contains($name, $delimiter)) {
-            return Str::replaceFirst($delimiter, $delimiter.$prefix, $name);
-        }
-
-        return $prefix.$name;
-    }
-
-    /**
-     * Partition the data and extra attributes from the given array of attributes.
-     *
-     * @param  string  $class
-     * @param  array  $attributes
-     * @return array
-     */
-    public function partitionDataAndAttributes($class, array $attributes)
-    {
-        // If the class doesn't exists, we'll assume it's a class-less component and
-        // return all of the attributes as both data and attributes since we have
-        // now way to partition them. The user can exclude attributes manually.
-        if (! class_exists($class)) {
-            return [collect($attributes), collect($attributes)];
-        }
-
-        $constructor = (new ReflectionClass($class))->getConstructor();
-
-        $parameterNames = $constructor
-                    ? collect($constructor->getParameters())->map->getName()->all()
-                    : [];
-
-        return collect($attributes)->partition(function ($value, $key) use ($parameterNames) {
-            return in_array(Str::camel($key), $parameterNames);
-        })->all();
-    }
-
-    /**
      * Convert an array of attributes to a string.
      *
      * @param  array  $attributes
@@ -510,65 +560,15 @@ class ComponentTagCompiler
     }
 
     /**
-     * Compile the opening tags within the given string.
-     *
-     * @param  string  $value
-     * @return string
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected function compileOpeningTags(string $value)
-    {
-        $pattern = "/
-            <
-                \s*
-                x[-\:]([\w\-\:\.]*)
-                (?<attributes>
-                    (?:
-                        \s+
-                        (?:
-                            (?:
-                                \{\{\s*\\\$attributes(?:[^}]+?)?\s*\}\}
-                            )
-                            |
-                            (?:
-                                [\w\-:.@]+
-                                (
-                                    =
-                                    (?:
-                                        \\\"[^\\\"]*\\\"
-                                        |
-                                        \'[^\']*\'
-                                        |
-                                        [^\'\\\"=<>]+
-                                    )
-                                )?
-                            )
-                        )
-                    )*
-                    \s*
-                )
-                (?<![\/=\-])
-            >
-        /x";
-
-        return preg_replace_callback($pattern, function (array $matches) {
-            $this->boundAttributes = [];
-
-            $attributes = $this->getAttributesFromAttributeString($matches['attributes']);
-
-            return $this->componentString($matches[1], $attributes);
-        }, $value);
-    }
-
-    /**
-     * Compile the closing tags within the given string.
+     * Strip any quotes from the given string.
      *
      * @param  string  $value
      * @return string
      */
-    protected function compileClosingTags(string $value)
+    public function stripQuotes(string $value)
     {
-        return preg_replace("/<\/\s*x[-\:][\w\-\:\.]*\s*>/", ' @endComponentClass##END-COMPONENT-CLASS##', $value);
+        return Str::startsWith($value, ['"', '\''])
+                    ? substr($value, 1, -1)
+                    : $value;
     }
 }

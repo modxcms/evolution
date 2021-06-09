@@ -106,6 +106,24 @@ class RouteCollection extends AbstractRouteCollection
     }
 
     /**
+     * Refresh the name look-up table.
+     *
+     * This is done in case any names are fluently defined or if routes are overwritten.
+     *
+     * @return void
+     */
+    public function refreshNameLookups()
+    {
+        $this->nameList = [];
+
+        foreach ($this->allRoutes as $route) {
+            if ($route->getName()) {
+                $this->nameList[$route->getName()] = $route;
+            }
+        }
+    }
+
+    /**
      * Refresh the action look-up table.
      *
      * This is done in case any actions are overwritten with new controllers.
@@ -156,16 +174,6 @@ class RouteCollection extends AbstractRouteCollection
     }
 
     /**
-     * Get all of the routes in the collection.
-     *
-     * @return \Illuminate\Routing\Route[]
-     */
-    public function getRoutes()
-    {
-        return array_values($this->allRoutes);
-    }
-
-    /**
      * Determine if the route collection contains a given named route.
      *
      * @param  string  $name
@@ -196,6 +204,16 @@ class RouteCollection extends AbstractRouteCollection
     public function getByAction($action)
     {
         return $this->actionList[$action] ?? null;
+    }
+
+    /**
+     * Get all of the routes in the collection.
+     *
+     * @return \Illuminate\Routing\Route[]
+     */
+    public function getRoutes()
+    {
+        return array_values($this->allRoutes);
     }
 
     /**
@@ -230,24 +248,6 @@ class RouteCollection extends AbstractRouteCollection
         $this->refreshNameLookups();
 
         return $symfonyRoutes;
-    }
-
-    /**
-     * Refresh the name look-up table.
-     *
-     * This is done in case any names are fluently defined or if routes are overwritten.
-     *
-     * @return void
-     */
-    public function refreshNameLookups()
-    {
-        $this->nameList = [];
-
-        foreach ($this->allRoutes as $route) {
-            if ($route->getName()) {
-                $this->nameList[$route->getName()] = $route;
-            }
-        }
     }
 
     /**

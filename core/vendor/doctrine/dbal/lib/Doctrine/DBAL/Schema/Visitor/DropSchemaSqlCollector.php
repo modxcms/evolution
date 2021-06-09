@@ -35,13 +35,6 @@ class DropSchemaSqlCollector extends AbstractVisitor
         $this->initializeQueries();
     }
 
-    private function initializeQueries(): void
-    {
-        $this->constraints = new SplObjectStorage();
-        $this->sequences   = new SplObjectStorage();
-        $this->tables      = new SplObjectStorage();
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -102,5 +95,12 @@ class DropSchemaSqlCollector extends AbstractVisitor
         }
 
         return $sql;
+    }
+
+    private function initializeQueries(): void
+    {
+        $this->constraints = new SplObjectStorage();
+        $this->sequences   = new SplObjectStorage();
+        $this->tables      = new SplObjectStorage();
     }
 }

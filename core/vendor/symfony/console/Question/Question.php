@@ -149,32 +149,6 @@ class Question
     }
 
     /**
-     * Gets the callback function used for the autocompleter.
-     */
-    public function getAutocompleterCallback(): ?callable
-    {
-        return $this->autocompleterCallback;
-    }
-
-    /**
-     * Sets the callback function used for the autocompleter.
-     *
-     * The callback is passed the user input as argument and should return an iterable of corresponding suggestions.
-     *
-     * @return $this
-     */
-    public function setAutocompleterCallback(callable $callback = null): self
-    {
-        if ($this->hidden && null !== $callback) {
-            throw new LogicException('A hidden question cannot use the autocompleter.');
-        }
-
-        $this->autocompleterCallback = $callback;
-
-        return $this;
-    }
-
-    /**
      * Sets values for the autocompleter.
      *
      * @return $this
@@ -201,19 +175,30 @@ class Question
         return $this->setAutocompleterCallback($callback);
     }
 
-    protected function isAssoc(array $array)
+    /**
+     * Gets the callback function used for the autocompleter.
+     */
+    public function getAutocompleterCallback(): ?callable
     {
-        return (bool) \count(array_filter(array_keys($array), 'is_string'));
+        return $this->autocompleterCallback;
     }
 
     /**
-     * Gets the validator for the question.
+     * Sets the callback function used for the autocompleter.
      *
-     * @return callable|null
+     * The callback is passed the user input as argument and should return an iterable of corresponding suggestions.
+     *
+     * @return $this
      */
-    public function getValidator()
+    public function setAutocompleterCallback(callable $callback = null): self
     {
-        return $this->validator;
+        if ($this->hidden && null !== $callback) {
+            throw new LogicException('A hidden question cannot use the autocompleter.');
+        }
+
+        $this->autocompleterCallback = $callback;
+
+        return $this;
     }
 
     /**
@@ -226,6 +211,16 @@ class Question
         $this->validator = $validator;
 
         return $this;
+    }
+
+    /**
+     * Gets the validator for the question.
+     *
+     * @return callable|null
+     */
+    public function getValidator()
+    {
+        return $this->validator;
     }
 
     /**
@@ -264,18 +259,6 @@ class Question
     }
 
     /**
-     * Gets the normalizer for the response.
-     *
-     * The normalizer can ba a callable (a string), a closure or a class implementing __invoke.
-     *
-     * @return callable|null
-     */
-    public function getNormalizer()
-    {
-        return $this->normalizer;
-    }
-
-    /**
      * Sets a normalizer for the response.
      *
      * The normalizer can be a callable (a string), a closure or a class implementing __invoke.
@@ -287,6 +270,23 @@ class Question
         $this->normalizer = $normalizer;
 
         return $this;
+    }
+
+    /**
+     * Gets the normalizer for the response.
+     *
+     * The normalizer can ba a callable (a string), a closure or a class implementing __invoke.
+     *
+     * @return callable|null
+     */
+    public function getNormalizer()
+    {
+        return $this->normalizer;
+    }
+
+    protected function isAssoc(array $array)
+    {
+        return (bool) \count(array_filter(array_keys($array), 'is_string'));
     }
 
     public function isTrimmable(): bool

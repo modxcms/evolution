@@ -29,77 +29,57 @@ use Composer\Util\Http\Response;
  */
 class GitLabDriver extends VcsDriver
 {
-    const URL_REGEX = '#^(?:(?P<scheme>https?)://(?P<domain>.+?)(?::(?P<port>[0-9]+))?/|git@(?P<domain2>[^:]+):)(?P<parts>.+)/(?P<repo>[^/]+?)(?:\.git|/)?$#';
+    private $scheme;
+    private $namespace;
+    private $repository;
+
+    /**
+     * @var array Project data returned by GitLab API
+     */
+    private $project;
+
+    /**
+     * @var array Keeps commits returned by GitLab API
+     */
+    private $commits = array();
+
+    /**
+     * @var array List of tag => reference
+     */
+    private $tags;
+
+    /**
+     * @var array List of branch => reference
+     */
+    private $branches;
+
     /**
      * Git Driver
      *
      * @var ?GitDriver
      */
     protected $gitDriver = null;
+
     /**
      * Protocol to force use of for repository URLs.
      *
      * @var string One of ssh, http
      */
     protected $protocol;
-    private $scheme;
-    private $namespace;
-    private $repository;
-    /**
-     * @var array Project data returned by GitLab API
-     */
-    private $project;
-    /**
-     * @var array Keeps commits returned by GitLab API
-     */
-    private $commits = array();
-    /**
-     * @var array List of tag => reference
-     */
-    private $tags;
-    /**
-     * @var array List of branch => reference
-     */
-    private $branches;
+
     /**
      * Defaults to true unless we can make sure it is public
      *
      * @var bool defines whether the repo is private or not
      */
     private $isPrivate = true;
+
     /**
      * @var bool true if the origin has a port number or a path component in it
      */
     private $hasNonstandardOrigin = false;
 
-    /**
-     * Uses the config `gitlab-domains` to see if the driver supports the url for the
-     * repository given.
-     *
-     * {@inheritDoc}
-     */
-    public static function supports(IOInterface $io, Config $config, $url, $deep = false)
-    {
-        if (!preg_match(self::URL_REGEX, $url, $match)) {
-            return false;
-        }
-
-        $scheme = !empty($match['scheme']) ? $match['scheme'] : null;
-        $guessedDomain = !empty($match['domain']) ? $match['domain'] : $match['domain2'];
-        $urlParts = explode('/', $match['parts']);
-
-        if (false === self::determineOrigin((array) $config->get('gitlab-domains'), $guessedDomain, $urlParts, $match['port'])) {
-            return false;
-        }
-
-        if ('https' === $scheme && !extension_loaded('openssl')) {
-            $io->writeError('Skipping GitLab driver for '.$url.' because the OpenSSL PHP extension is missing.', true, IOInterface::VERBOSE);
-
-            return false;
-        }
-
-        return true;
-    }
+    const URL_REGEX = '#^(?:(?P<scheme>https?)://(?P<domain>.+?)(?::(?P<port>[0-9]+))?/|git@(?P<domain2>[^:]+):)(?P<parts>.+)/(?P<repo>[^/]+?)(?:\.git|/)?$#';
 
     /**
      * Extracts information from the repository url.
@@ -146,49 +126,188 @@ class GitLabDriver extends VcsDriver
     }
 
     /**
-     * @param  array       $configuredDomains
-     * @param  string      $guessedDomain
-     * @param  array       $urlParts
-     * @return bool|string
+     * Updates the HttpDownloader instance.
+     * Mainly useful for tests.
+     *
+     * @internal
      */
-    private static function determineOrigin(array $configuredDomains, $guessedDomain, array &$urlParts, $portNumber)
+    public function setHttpDownloader(HttpDownloader $httpDownloader)
     {
-        $guessedDomain = strtolower($guessedDomain);
-
-        if (in_array($guessedDomain, $configuredDomains) || ($portNumber && in_array($guessedDomain.':'.$portNumber, $configuredDomains))) {
-            if ($portNumber) {
-                return $guessedDomain.':'.$portNumber;
-            }
-
-            return $guessedDomain;
-        }
-
-        if ($portNumber) {
-            $guessedDomain .= ':'.$portNumber;
-        }
-
-        while (null !== ($part = array_shift($urlParts))) {
-            $guessedDomain .= '/' . $part;
-
-            if (in_array($guessedDomain, $configuredDomains) || ($portNumber && in_array(preg_replace('{:\d+}', '', $guessedDomain), $configuredDomains))) {
-                return $guessedDomain;
-            }
-        }
-
-        return false;
+        $this->httpDownloader = $httpDownloader;
     }
 
-    protected function fetchProject()
+    /**
+     * {@inheritDoc}
+     */
+    public function getComposerInformation($identifier)
     {
-        // we need to fetch the default branch from the api
-        $resource = $this->getApiUrl();
-        $this->project = $this->getContents($resource, true)->decodeJson();
-        if (isset($this->project['visibility'])) {
-            $this->isPrivate = $this->project['visibility'] !== 'public';
-        } else {
-            // client is not authenticated, therefore repository has to be public
-            $this->isPrivate = false;
+        if ($this->gitDriver) {
+            return $this->gitDriver->getComposerInformation($identifier);
         }
+
+        if (!isset($this->infoCache[$identifier])) {
+            if ($this->shouldCache($identifier) && $res = $this->cache->read($identifier)) {
+                $composer = JsonFile::parseJson($res);
+            } else {
+                $composer = $this->getBaseComposerInformation($identifier);
+
+                if ($this->shouldCache($identifier)) {
+                    $this->cache->write($identifier, json_encode($composer));
+                }
+            }
+
+            if ($composer) {
+                // specials for gitlab (this data is only available if authentication is provided)
+                if (!isset($composer['support']['issues']) && isset($this->project['_links']['issues'])) {
+                    $composer['support']['issues'] = $this->project['_links']['issues'];
+                }
+                if (!isset($composer['abandoned']) && !empty($this->project['archived'])) {
+                    $composer['abandoned'] = true;
+                }
+            }
+
+            $this->infoCache[$identifier] = $composer;
+        }
+
+        return $this->infoCache[$identifier];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFileContent($file, $identifier)
+    {
+        if ($this->gitDriver) {
+            return $this->gitDriver->getFileContent($file, $identifier);
+        }
+
+        // Convert the root identifier to a cacheable commit id
+        if (!preg_match('{[a-f0-9]{40}}i', $identifier)) {
+            $branches = $this->getBranches();
+            if (isset($branches[$identifier])) {
+                $identifier = $branches[$identifier];
+            }
+        }
+
+        $resource = $this->getApiUrl().'/repository/files/'.$this->urlEncodeAll($file).'/raw?ref='.$identifier;
+
+        try {
+            $content = $this->getContents($resource)->getBody();
+        } catch (TransportException $e) {
+            if ($e->getCode() !== 404) {
+                throw $e;
+            }
+
+            return null;
+        }
+
+        return $content;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChangeDate($identifier)
+    {
+        if ($this->gitDriver) {
+            return $this->gitDriver->getChangeDate($identifier);
+        }
+
+        if (isset($this->commits[$identifier])) {
+            return new \DateTime($this->commits[$identifier]['committed_date']);
+        }
+
+        return new \DateTime();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRepositoryUrl()
+    {
+        if ($this->protocol) {
+            return $this->project["{$this->protocol}_url_to_repo"];
+        }
+
+        return $this->isPrivate ? $this->project['ssh_url_to_repo'] : $this->project['http_url_to_repo'];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUrl()
+    {
+        if ($this->gitDriver) {
+            return $this->gitDriver->getUrl();
+        }
+
+        return $this->project['web_url'];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDist($identifier)
+    {
+        $url = $this->getApiUrl().'/repository/archive.zip?sha='.$identifier;
+
+        return array('type' => 'zip', 'url' => $url, 'reference' => $identifier, 'shasum' => '');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSource($identifier)
+    {
+        if ($this->gitDriver) {
+            return $this->gitDriver->getSource($identifier);
+        }
+
+        return array('type' => 'git', 'url' => $this->getRepositoryUrl(), 'reference' => $identifier);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRootIdentifier()
+    {
+        if ($this->gitDriver) {
+            return $this->gitDriver->getRootIdentifier();
+        }
+
+        return $this->project['default_branch'];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBranches()
+    {
+        if ($this->gitDriver) {
+            return $this->gitDriver->getBranches();
+        }
+
+        if (!$this->branches) {
+            $this->branches = $this->getReferences('branches');
+        }
+
+        return $this->branches;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTags()
+    {
+        if ($this->gitDriver) {
+            return $this->gitDriver->getTags();
+        }
+
+        if (!$this->tags) {
+            $this->tags = $this->getReferences('tags');
+        }
+
+        return $this->tags;
     }
 
     /**
@@ -217,6 +336,106 @@ class GitLabDriver extends VcsDriver
         }
 
         return $encoded;
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return string[] where keys are named references like tags or branches and the value a sha
+     */
+    protected function getReferences($type)
+    {
+        $perPage = 100;
+        $resource = $this->getApiUrl().'/repository/'.$type.'?per_page='.$perPage;
+
+        $references = array();
+        do {
+            $response = $this->getContents($resource);
+            $data = $response->decodeJson();
+
+            foreach ($data as $datum) {
+                $references[$datum['name']] = $datum['commit']['id'];
+
+                // Keep the last commit date of a reference to avoid
+                // unnecessary API call when retrieving the composer file.
+                $this->commits[$datum['commit']['id']] = $datum['commit'];
+            }
+
+            if (count($data) >= $perPage) {
+                $resource = $this->getNextPage($response);
+            } else {
+                $resource = false;
+            }
+        } while ($resource);
+
+        return $references;
+    }
+
+    protected function fetchProject()
+    {
+        // we need to fetch the default branch from the api
+        $resource = $this->getApiUrl();
+        $this->project = $this->getContents($resource, true)->decodeJson();
+        if (isset($this->project['visibility'])) {
+            $this->isPrivate = $this->project['visibility'] !== 'public';
+        } else {
+            // client is not authenticated, therefore repository has to be public
+            $this->isPrivate = false;
+        }
+    }
+
+    protected function attemptCloneFallback()
+    {
+        if ($this->isPrivate === false) {
+            $url = $this->generatePublicUrl();
+        } else {
+            $url = $this->generateSshUrl();
+        }
+
+        try {
+            // If this repository may be private and we
+            // cannot ask for authentication credentials (because we
+            // are not interactive) then we fallback to GitDriver.
+            $this->setupGitDriver($url);
+
+            return true;
+        } catch (\RuntimeException $e) {
+            $this->gitDriver = null;
+
+            $this->io->writeError('<error>Failed to clone the '.$url.' repository, try running in interactive mode so that you can enter your credentials</error>');
+            throw $e;
+        }
+    }
+
+    /**
+     * Generate an SSH URL
+     *
+     * @return string
+     */
+    protected function generateSshUrl()
+    {
+        if ($this->hasNonstandardOrigin) {
+            return 'ssh://git@'.$this->originUrl.'/'.$this->namespace.'/'.$this->repository.'.git';
+        }
+
+        return 'git@' . $this->originUrl . ':'.$this->namespace.'/'.$this->repository.'.git';
+    }
+
+    protected function generatePublicUrl()
+    {
+        return $this->scheme . '://' . $this->originUrl . '/'.$this->namespace.'/'.$this->repository.'.git';
+    }
+
+    protected function setupGitDriver($url)
+    {
+        $this->gitDriver = new GitDriver(
+            array('url' => $url),
+            $this->io,
+            $this->config,
+            $this->httpDownloader,
+            $this->process
+        );
+        $this->gitDriver->initialize();
     }
 
     /**
@@ -308,186 +527,33 @@ class GitLabDriver extends VcsDriver
         }
     }
 
-    protected function attemptCloneFallback()
-    {
-        if ($this->isPrivate === false) {
-            $url = $this->generatePublicUrl();
-        } else {
-            $url = $this->generateSshUrl();
-        }
-
-        try {
-            // If this repository may be private and we
-            // cannot ask for authentication credentials (because we
-            // are not interactive) then we fallback to GitDriver.
-            $this->setupGitDriver($url);
-
-            return true;
-        } catch (\RuntimeException $e) {
-            $this->gitDriver = null;
-
-            $this->io->writeError('<error>Failed to clone the '.$url.' repository, try running in interactive mode so that you can enter your credentials</error>');
-            throw $e;
-        }
-    }
-
-    protected function generatePublicUrl()
-    {
-        return $this->scheme . '://' . $this->originUrl . '/'.$this->namespace.'/'.$this->repository.'.git';
-    }
-
     /**
-     * Generate an SSH URL
+     * Uses the config `gitlab-domains` to see if the driver supports the url for the
+     * repository given.
      *
-     * @return string
-     */
-    protected function generateSshUrl()
-    {
-        if ($this->hasNonstandardOrigin) {
-            return 'ssh://git@'.$this->originUrl.'/'.$this->namespace.'/'.$this->repository.'.git';
-        }
-
-        return 'git@' . $this->originUrl . ':'.$this->namespace.'/'.$this->repository.'.git';
-    }
-
-    protected function setupGitDriver($url)
-    {
-        $this->gitDriver = new GitDriver(
-            array('url' => $url),
-            $this->io,
-            $this->config,
-            $this->httpDownloader,
-            $this->process
-        );
-        $this->gitDriver->initialize();
-    }
-
-    /**
-     * Updates the HttpDownloader instance.
-     * Mainly useful for tests.
-     *
-     * @internal
-     */
-    public function setHttpDownloader(HttpDownloader $httpDownloader)
-    {
-        $this->httpDownloader = $httpDownloader;
-    }
-
-    /**
      * {@inheritDoc}
      */
-    public function getComposerInformation($identifier)
+    public static function supports(IOInterface $io, Config $config, $url, $deep = false)
     {
-        if ($this->gitDriver) {
-            return $this->gitDriver->getComposerInformation($identifier);
+        if (!preg_match(self::URL_REGEX, $url, $match)) {
+            return false;
         }
 
-        if (!isset($this->infoCache[$identifier])) {
-            if ($this->shouldCache($identifier) && $res = $this->cache->read($identifier)) {
-                $composer = JsonFile::parseJson($res);
-            } else {
-                $composer = $this->getBaseComposerInformation($identifier);
+        $scheme = !empty($match['scheme']) ? $match['scheme'] : null;
+        $guessedDomain = !empty($match['domain']) ? $match['domain'] : $match['domain2'];
+        $urlParts = explode('/', $match['parts']);
 
-                if ($this->shouldCache($identifier)) {
-                    $this->cache->write($identifier, json_encode($composer));
-                }
-            }
-
-            if ($composer) {
-                // specials for gitlab (this data is only available if authentication is provided)
-                if (!isset($composer['support']['issues']) && isset($this->project['_links']['issues'])) {
-                    $composer['support']['issues'] = $this->project['_links']['issues'];
-                }
-                if (!isset($composer['abandoned']) && !empty($this->project['archived'])) {
-                    $composer['abandoned'] = true;
-                }
-            }
-
-            $this->infoCache[$identifier] = $composer;
+        if (false === self::determineOrigin((array) $config->get('gitlab-domains'), $guessedDomain, $urlParts, $match['port'])) {
+            return false;
         }
 
-        return $this->infoCache[$identifier];
-    }
+        if ('https' === $scheme && !extension_loaded('openssl')) {
+            $io->writeError('Skipping GitLab driver for '.$url.' because the OpenSSL PHP extension is missing.', true, IOInterface::VERBOSE);
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFileContent($file, $identifier)
-    {
-        if ($this->gitDriver) {
-            return $this->gitDriver->getFileContent($file, $identifier);
+            return false;
         }
 
-        // Convert the root identifier to a cacheable commit id
-        if (!preg_match('{[a-f0-9]{40}}i', $identifier)) {
-            $branches = $this->getBranches();
-            if (isset($branches[$identifier])) {
-                $identifier = $branches[$identifier];
-            }
-        }
-
-        $resource = $this->getApiUrl().'/repository/files/'.$this->urlEncodeAll($file).'/raw?ref='.$identifier;
-
-        try {
-            $content = $this->getContents($resource)->getBody();
-        } catch (TransportException $e) {
-            if ($e->getCode() !== 404) {
-                throw $e;
-            }
-
-            return null;
-        }
-
-        return $content;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getBranches()
-    {
-        if ($this->gitDriver) {
-            return $this->gitDriver->getBranches();
-        }
-
-        if (!$this->branches) {
-            $this->branches = $this->getReferences('branches');
-        }
-
-        return $this->branches;
-    }
-
-    /**
-     * @param string $type
-     *
-     * @return string[] where keys are named references like tags or branches and the value a sha
-     */
-    protected function getReferences($type)
-    {
-        $perPage = 100;
-        $resource = $this->getApiUrl().'/repository/'.$type.'?per_page='.$perPage;
-
-        $references = array();
-        do {
-            $response = $this->getContents($resource);
-            $data = $response->decodeJson();
-
-            foreach ($data as $datum) {
-                $references[$datum['name']] = $datum['commit']['id'];
-
-                // Keep the last commit date of a reference to avoid
-                // unnecessary API call when retrieving the composer file.
-                $this->commits[$datum['commit']['id']] = $datum['commit'];
-            }
-
-            if (count($data) >= $perPage) {
-                $resource = $this->getNextPage($response);
-            } else {
-                $resource = false;
-            }
-        } while ($resource);
-
-        return $references;
+        return true;
     }
 
     protected function getNextPage(Response $response)
@@ -503,92 +569,35 @@ class GitLabDriver extends VcsDriver
     }
 
     /**
-     * {@inheritdoc}
+     * @param  array       $configuredDomains
+     * @param  string      $guessedDomain
+     * @param  array       $urlParts
+     * @return bool|string
      */
-    public function getChangeDate($identifier)
+    private static function determineOrigin(array $configuredDomains, $guessedDomain, array &$urlParts, $portNumber)
     {
-        if ($this->gitDriver) {
-            return $this->gitDriver->getChangeDate($identifier);
+        $guessedDomain = strtolower($guessedDomain);
+
+        if (in_array($guessedDomain, $configuredDomains) || ($portNumber && in_array($guessedDomain.':'.$portNumber, $configuredDomains))) {
+            if ($portNumber) {
+                return $guessedDomain.':'.$portNumber;
+            }
+
+            return $guessedDomain;
         }
 
-        if (isset($this->commits[$identifier])) {
-            return new \DateTime($this->commits[$identifier]['committed_date']);
+        if ($portNumber) {
+            $guessedDomain .= ':'.$portNumber;
         }
 
-        return new \DateTime();
-    }
+        while (null !== ($part = array_shift($urlParts))) {
+            $guessedDomain .= '/' . $part;
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getUrl()
-    {
-        if ($this->gitDriver) {
-            return $this->gitDriver->getUrl();
+            if (in_array($guessedDomain, $configuredDomains) || ($portNumber && in_array(preg_replace('{:\d+}', '', $guessedDomain), $configuredDomains))) {
+                return $guessedDomain;
+            }
         }
 
-        return $this->project['web_url'];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getDist($identifier)
-    {
-        $url = $this->getApiUrl().'/repository/archive.zip?sha='.$identifier;
-
-        return array('type' => 'zip', 'url' => $url, 'reference' => $identifier, 'shasum' => '');
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getSource($identifier)
-    {
-        if ($this->gitDriver) {
-            return $this->gitDriver->getSource($identifier);
-        }
-
-        return array('type' => 'git', 'url' => $this->getRepositoryUrl(), 'reference' => $identifier);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getRepositoryUrl()
-    {
-        if ($this->protocol) {
-            return $this->project["{$this->protocol}_url_to_repo"];
-        }
-
-        return $this->isPrivate ? $this->project['ssh_url_to_repo'] : $this->project['http_url_to_repo'];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getRootIdentifier()
-    {
-        if ($this->gitDriver) {
-            return $this->gitDriver->getRootIdentifier();
-        }
-
-        return $this->project['default_branch'];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getTags()
-    {
-        if ($this->gitDriver) {
-            return $this->gitDriver->getTags();
-        }
-
-        if (!$this->tags) {
-            $this->tags = $this->getReferences('tags');
-        }
-
-        return $this->tags;
+        return false;
     }
 }

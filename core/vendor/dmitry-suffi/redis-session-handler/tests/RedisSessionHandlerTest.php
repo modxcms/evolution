@@ -5,6 +5,15 @@ use \suffi\RedisSessionHandler\RedisSessionHandler;
 class RedisSessionHandlerTest extends \PHPUnit\Framework\TestCase
 {
 
+    public function getRedis()
+    {
+        $savePath = ini_get('session.save_path');
+        $redis = new Redis();
+        $redis->pconnect($savePath);
+        $redis->select(963);
+        return $redis;
+    }
+
     public function testReadWrite()
     {
         $handler = new RedisSessionHandler($this->getRedis());
@@ -13,15 +22,6 @@ class RedisSessionHandlerTest extends \PHPUnit\Framework\TestCase
         $handler->write($sessionId, 'session data');
 
         $this->assertEquals($handler->read($sessionId), 'session data');
-    }
-
-    public function getRedis()
-    {
-        $savePath = ini_get('session.save_path');
-        $redis = new Redis();
-        $redis->pconnect($savePath);
-        $redis->select(963);
-        return $redis;
     }
 
     public function testLock()

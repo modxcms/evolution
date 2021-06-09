@@ -44,6 +44,22 @@ class Sequence extends AbstractAsset
     }
 
     /**
+     * @return int
+     */
+    public function getInitialValue()
+    {
+        return $this->initialValue;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getCache()
+    {
+        return $this->cache;
+    }
+
+    /**
      * @param int $allocationSize
      *
      * @return Sequence
@@ -56,14 +72,6 @@ class Sequence extends AbstractAsset
     }
 
     /**
-     * @return int
-     */
-    public function getInitialValue()
-    {
-        return $this->initialValue;
-    }
-
-    /**
      * @param int $initialValue
      *
      * @return Sequence
@@ -73,14 +81,6 @@ class Sequence extends AbstractAsset
         $this->initialValue = (int) $initialValue ?: 1;
 
         return $this;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getCache()
-    {
-        return $this->cache;
     }
 
     /**

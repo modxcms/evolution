@@ -15,13 +15,6 @@ class Deferred implements PromisorInterface
         $this->canceller = $canceller;
     }
 
-    public function resolve($value = null)
-    {
-        $this->promise();
-
-        \call_user_func($this->resolveCallback, $value);
-    }
-
     public function promise()
     {
         if (null === $this->promise) {
@@ -36,20 +29,18 @@ class Deferred implements PromisorInterface
         return $this->promise;
     }
 
+    public function resolve($value = null)
+    {
+        $this->promise();
+
+        \call_user_func($this->resolveCallback, $value);
+    }
+
     public function reject($reason = null)
     {
         $this->promise();
 
         \call_user_func($this->rejectCallback, $reason);
-    }
-
-    /**
-     * @deprecated 2.2.0
-     * @see Deferred::notify()
-     */
-    public function progress($update = null)
-    {
-        $this->notify($update);
     }
 
     /**
@@ -61,5 +52,14 @@ class Deferred implements PromisorInterface
         $this->promise();
 
         \call_user_func($this->notifyCallback, $update);
+    }
+
+    /**
+     * @deprecated 2.2.0
+     * @see Deferred::notify()
+     */
+    public function progress($update = null)
+    {
+        $this->notify($update);
     }
 }

@@ -101,11 +101,65 @@ class OraclePlatform extends AbstractPlatform
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function getDateArithmeticIntervalExpression($date, $operator, $interval, $unit)
+    {
+        switch ($unit) {
+            case DateIntervalUnit::MONTH:
+            case DateIntervalUnit::QUARTER:
+            case DateIntervalUnit::YEAR:
+                switch ($unit) {
+                    case DateIntervalUnit::QUARTER:
+                        $interval *= 3;
+                        break;
+
+                    case DateIntervalUnit::YEAR:
+                        $interval *= 12;
+                        break;
+                }
+
+                return 'ADD_MONTHS(' . $date . ', ' . $operator . $interval . ')';
+
+            default:
+                $calculationClause = '';
+
+                switch ($unit) {
+                    case DateIntervalUnit::SECOND:
+                        $calculationClause = '/24/60/60';
+                        break;
+
+                    case DateIntervalUnit::MINUTE:
+                        $calculationClause = '/24/60';
+                        break;
+
+                    case DateIntervalUnit::HOUR:
+                        $calculationClause = '/24';
+                        break;
+
+                    case DateIntervalUnit::WEEK:
+                        $calculationClause = '*7';
+                        break;
+                }
+
+                return '(' . $date . $operator . $interval . $calculationClause . ')';
+        }
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function getDateDiffExpression($date1, $date2)
     {
         return sprintf('TRUNC(%s) - TRUNC(%s)', $date1, $date2);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBitAndComparisonExpression($value1, $value2)
+    {
+        return 'BITAND(' . $value1 . ', ' . $value2 . ')';
     }
 
     /**
@@ -120,10 +174,18 @@ class OraclePlatform extends AbstractPlatform
 
     /**
      * {@inheritDoc}
+     *
+     * Need to specifiy minvalue, since start with is hidden in the system and MINVALUE <= START WITH.
+     * Therefore we can use MINVALUE to be able to get a hint what START WITH was for later introspection
+     * in {@see listSequences()}
      */
-    public function getBitAndComparisonExpression($value1, $value2)
+    public function getCreateSequenceSQL(Sequence $sequence)
     {
-        return 'BITAND(' . $value1 . ', ' . $value2 . ')';
+        return 'CREATE SEQUENCE ' . $sequence->getQuotedName($this) .
+               ' START WITH ' . $sequence->getInitialValue() .
+               ' MINVALUE ' . $sequence->getInitialValue() .
+               ' INCREMENT BY ' . $sequence->getAllocationSize() .
+               $this->getSequenceCacheSQL($sequence);
     }
 
     /**
@@ -262,6 +324,39 @@ class OraclePlatform extends AbstractPlatform
     /**
      * {@inheritDoc}
      */
+    protected function _getCommonIntegerTypeDeclarationSQL(array $column)
+    {
+        return '';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getVarcharTypeDeclarationSQLSnippet($length, $fixed)
+    {
+        return $fixed ? ($length ? 'CHAR(' . $length . ')' : 'CHAR(2000)')
+                : ($length ? 'VARCHAR2(' . $length . ')' : 'VARCHAR2(4000)');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBinaryTypeDeclarationSQLSnippet($length, $fixed)
+    {
+        return 'RAW(' . ($length ?: $this->getBinaryMaxLength()) . ')';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBinaryMaxLength()
+    {
+        return 2000;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getClobTypeDeclarationSQL(array $column)
     {
         return 'CLOB';
@@ -288,20 +383,36 @@ class OraclePlatform extends AbstractPlatform
     }
 
     /**
-     * Normalizes the given identifier.
-     *
-     * Uppercases the given identifier if it is not quoted by intention
-     * to reflect Oracle's internal auto uppercasing strategy of unquoted identifiers.
-     *
-     * @param string $name The identifier to normalize.
-     *
-     * @return Identifier The normalized identifier.
+     * {@inheritDoc}
      */
-    private function normalizeIdentifier($name)
+    protected function _getCreateTableSQL($name, array $columns, array $options = [])
     {
-        $identifier = new Identifier($name);
+        $indexes            = $options['indexes'] ?? [];
+        $options['indexes'] = [];
+        $sql                = parent::_getCreateTableSQL($name, $columns, $options);
 
-        return $identifier->isQuoted() ? $identifier : new Identifier(strtoupper($name));
+        foreach ($columns as $columnName => $column) {
+            if (isset($column['sequence'])) {
+                $sql[] = $this->getCreateSequenceSQL($column['sequence']);
+            }
+
+            if (
+                ! isset($column['autoincrement']) || ! $column['autoincrement'] &&
+                (! isset($column['autoinc']) || ! $column['autoinc'])
+            ) {
+                continue;
+            }
+
+            $sql = array_merge($sql, $this->getCreateAutoincrementSql($columnName, $name));
+        }
+
+        if (isset($indexes) && ! empty($indexes)) {
+            foreach ($indexes as $index) {
+                $sql[] = $this->getCreateIndexSQL($index, $name);
+            }
+        }
+
+        return $sql;
     }
 
     /**
@@ -376,6 +487,71 @@ class OraclePlatform extends AbstractPlatform
     }
 
     /**
+     * @param string $name
+     * @param string $table
+     * @param int    $start
+     *
+     * @return string[]
+     */
+    public function getCreateAutoincrementSql($name, $table, $start = 1)
+    {
+        $tableIdentifier   = $this->normalizeIdentifier($table);
+        $quotedTableName   = $tableIdentifier->getQuotedName($this);
+        $unquotedTableName = $tableIdentifier->getName();
+
+        $nameIdentifier = $this->normalizeIdentifier($name);
+        $quotedName     = $nameIdentifier->getQuotedName($this);
+        $unquotedName   = $nameIdentifier->getName();
+
+        $sql = [];
+
+        $autoincrementIdentifierName = $this->getAutoincrementIdentifierName($tableIdentifier);
+
+        $idx = new Index($autoincrementIdentifierName, [$quotedName], true, true);
+
+        $sql[] = "DECLARE
+  constraints_Count NUMBER;
+BEGIN
+  SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count FROM USER_CONSTRAINTS WHERE TABLE_NAME = '" . $unquotedTableName
+            . "' AND CONSTRAINT_TYPE = 'P';
+  IF constraints_Count = 0 OR constraints_Count = '' THEN
+    EXECUTE IMMEDIATE '" . $this->getCreateConstraintSQL($idx, $quotedTableName) . "';
+  END IF;
+END;";
+
+        $sequenceName = $this->getIdentitySequenceName(
+            $tableIdentifier->isQuoted() ? $quotedTableName : $unquotedTableName,
+            $nameIdentifier->isQuoted() ? $quotedName : $unquotedName
+        );
+        $sequence     = new Sequence($sequenceName, $start);
+        $sql[]        = $this->getCreateSequenceSQL($sequence);
+
+        $sql[] = 'CREATE TRIGGER ' . $autoincrementIdentifierName . '
+   BEFORE INSERT
+   ON ' . $quotedTableName . '
+   FOR EACH ROW
+DECLARE
+   last_Sequence NUMBER;
+   last_InsertID NUMBER;
+BEGIN
+   SELECT ' . $sequenceName . '.NEXTVAL INTO :NEW.' . $quotedName . ' FROM DUAL;
+   IF (:NEW.' . $quotedName . ' IS NULL OR :NEW.' . $quotedName . ' = 0) THEN
+      SELECT ' . $sequenceName . '.NEXTVAL INTO :NEW.' . $quotedName . ' FROM DUAL;
+   ELSE
+      SELECT NVL(Last_Number, 0) INTO last_Sequence
+        FROM User_Sequences
+       WHERE Sequence_Name = \'' . $sequence->getName() . '\';
+      SELECT :NEW.' . $quotedName . ' INTO last_InsertID FROM DUAL;
+      WHILE (last_InsertID > last_Sequence) LOOP
+         SELECT ' . $sequenceName . '.NEXTVAL INTO last_Sequence FROM DUAL;
+      END LOOP;
+   END IF;
+END;';
+
+        return $sql;
+    }
+
+    /**
      * Returns the SQL statements to drop the autoincrement for the given table name.
      *
      * @param string $table The table name to drop the autoincrement for.
@@ -399,15 +575,55 @@ class OraclePlatform extends AbstractPlatform
     }
 
     /**
-     * {@inheritDoc}
+     * Normalizes the given identifier.
+     *
+     * Uppercases the given identifier if it is not quoted by intention
+     * to reflect Oracle's internal auto uppercasing strategy of unquoted identifiers.
+     *
+     * @param string $name The identifier to normalize.
+     *
+     * @return Identifier The normalized identifier.
      */
-    public function getDropSequenceSQL($sequence)
+    private function normalizeIdentifier($name)
     {
-        if ($sequence instanceof Sequence) {
-            $sequence = $sequence->getQuotedName($this);
+        $identifier = new Identifier($name);
+
+        return $identifier->isQuoted() ? $identifier : new Identifier(strtoupper($name));
+    }
+
+    /**
+     * Adds suffix to identifier,
+     *
+     * if the new string exceeds max identifier length,
+     * keeps $suffix, cuts from $identifier as much as the part exceeding.
+     */
+    private function addSuffix(string $identifier, string $suffix): string
+    {
+        $maxPossibleLengthWithoutSuffix = $this->getMaxIdentifierLength() - strlen($suffix);
+        if (strlen($identifier) > $maxPossibleLengthWithoutSuffix) {
+            $identifier = substr($identifier, 0, $maxPossibleLengthWithoutSuffix);
         }
 
-        return 'DROP SEQUENCE ' . $sequence;
+        return $identifier . $suffix;
+    }
+
+    /**
+     * Returns the autoincrement primary key identifier name for the given table identifier.
+     *
+     * Quotes the autoincrement primary key identifier name
+     * if the given table name is quoted by intention.
+     *
+     * @param Identifier $table The table identifier to return the autoincrement primary key identifier name for.
+     *
+     * @return string
+     */
+    private function getAutoincrementIdentifierName(Identifier $table)
+    {
+        $identifierName = $this->addSuffix($table->getName(), '_AI_PK');
+
+        return $table->isQuoted()
+            ? $this->quoteSingleIdentifier($identifierName)
+            : $identifierName;
     }
 
     /**
@@ -495,6 +711,18 @@ SQL
             $table,
             $tabColumnsOwnerCondition
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDropSequenceSQL($sequence)
+    {
+        if ($sequence instanceof Sequence) {
+            $sequence = $sequence->getQuotedName($this);
+        }
+
+        return 'DROP SEQUENCE ' . $sequence;
     }
 
     /**
@@ -727,6 +955,19 @@ SQL
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function getRenameIndexSQL($oldIndexName, Index $index, $tableName)
+    {
+        if (strpos($tableName, '.') !== false) {
+            [$schema]     = explode('.', $tableName);
+            $oldIndexName = $schema . '.' . $oldIndexName;
+        }
+
+        return ['ALTER INDEX ' . $oldIndexName . ' RENAME TO ' . $index->getQuotedName($this)];
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @deprecated
@@ -751,6 +992,25 @@ SQL
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getIdentitySequenceName($tableName, $columnName)
+    {
+        $table = new Identifier($tableName);
+
+        // No usage of column name to preserve BC compatibility with <2.5
+        $identitySequenceName = $this->addSuffix($table->getName(), '_SEQ');
+
+        if ($table->isQuoted()) {
+            $identitySequenceName = '"' . $identitySequenceName . '"';
+        }
+
+        $identitySequenceIdentifier = $this->normalizeIdentifier($identitySequenceName);
+
+        return $identitySequenceIdentifier->getQuotedName($this);
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function supportsCommentOnStatement()
@@ -764,6 +1024,40 @@ SQL
     public function getName()
     {
         return 'oracle';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function doModifyLimitQuery($query, $limit, $offset = null)
+    {
+        if ($limit === null && $offset <= 0) {
+            return $query;
+        }
+
+        if (preg_match('/^\s*SELECT/i', $query)) {
+            if (! preg_match('/\sFROM\s/i', $query)) {
+                $query .= ' FROM dual';
+            }
+
+            $columns = ['a.*'];
+
+            if ($offset > 0) {
+                $columns[] = 'ROWNUM AS doctrine_rownum';
+            }
+
+            $query = sprintf('SELECT %s FROM (%s) a', implode(', ', $columns), $query);
+
+            if ($limit !== null) {
+                $query .= sprintf(' WHERE ROWNUM <= %d', $offset + $limit);
+            }
+
+            if ($offset > 0) {
+                $query = sprintf('SELECT * FROM (%s) WHERE doctrine_rownum >= %d', $query, $offset + 1);
+            }
+        }
+
+        return $query;
     }
 
     /**
@@ -834,6 +1128,14 @@ SQL
     /**
      * {@inheritDoc}
      */
+    public function getMaxIdentifierLength()
+    {
+        return 30;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function supportsSequences()
     {
         return true;
@@ -886,347 +1188,6 @@ SQL
     /**
      * {@inheritDoc}
      */
-    public function releaseSavePoint($savepoint)
-    {
-        return '';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getBlobTypeDeclarationSQL(array $column)
-    {
-        return 'BLOB';
-    }
-
-    public function getListTableCommentsSQL(string $table, ?string $database = null): string
-    {
-        $tableCommentsName = 'user_tab_comments';
-        $ownerCondition    = '';
-
-        if ($database !== null && $database !== '/') {
-            $tableCommentsName = 'all_tab_comments';
-            $ownerCondition    = ' AND owner = ' . $this->quoteStringLiteral(
-                $this->normalizeIdentifier($database)->getName()
-            );
-        }
-
-        return sprintf(
-            <<<'SQL'
-SELECT comments FROM %s WHERE table_name = %s%s
-SQL
-            ,
-            $tableCommentsName,
-            $this->quoteStringLiteral($this->normalizeIdentifier($table)->getName()),
-            $ownerCondition
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getDateArithmeticIntervalExpression($date, $operator, $interval, $unit)
-    {
-        switch ($unit) {
-            case DateIntervalUnit::MONTH:
-            case DateIntervalUnit::QUARTER:
-            case DateIntervalUnit::YEAR:
-                switch ($unit) {
-                    case DateIntervalUnit::QUARTER:
-                        $interval *= 3;
-                        break;
-
-                    case DateIntervalUnit::YEAR:
-                        $interval *= 12;
-                        break;
-                }
-
-                return 'ADD_MONTHS(' . $date . ', ' . $operator . $interval . ')';
-
-            default:
-                $calculationClause = '';
-
-                switch ($unit) {
-                    case DateIntervalUnit::SECOND:
-                        $calculationClause = '/24/60/60';
-                        break;
-
-                    case DateIntervalUnit::MINUTE:
-                        $calculationClause = '/24/60';
-                        break;
-
-                    case DateIntervalUnit::HOUR:
-                        $calculationClause = '/24';
-                        break;
-
-                    case DateIntervalUnit::WEEK:
-                        $calculationClause = '*7';
-                        break;
-                }
-
-                return '(' . $date . $operator . $interval . $calculationClause . ')';
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function _getCommonIntegerTypeDeclarationSQL(array $column)
-    {
-        return '';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function getVarcharTypeDeclarationSQLSnippet($length, $fixed)
-    {
-        return $fixed ? ($length ? 'CHAR(' . $length . ')' : 'CHAR(2000)')
-                : ($length ? 'VARCHAR2(' . $length . ')' : 'VARCHAR2(4000)');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getBinaryTypeDeclarationSQLSnippet($length, $fixed)
-    {
-        return 'RAW(' . ($length ?: $this->getBinaryMaxLength()) . ')';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBinaryMaxLength()
-    {
-        return 2000;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function _getCreateTableSQL($name, array $columns, array $options = [])
-    {
-        $indexes            = $options['indexes'] ?? [];
-        $options['indexes'] = [];
-        $sql                = parent::_getCreateTableSQL($name, $columns, $options);
-
-        foreach ($columns as $columnName => $column) {
-            if (isset($column['sequence'])) {
-                $sql[] = $this->getCreateSequenceSQL($column['sequence']);
-            }
-
-            if (
-                ! isset($column['autoincrement']) || ! $column['autoincrement'] &&
-                (! isset($column['autoinc']) || ! $column['autoinc'])
-            ) {
-                continue;
-            }
-
-            $sql = array_merge($sql, $this->getCreateAutoincrementSql($columnName, $name));
-        }
-
-        if (isset($indexes) && ! empty($indexes)) {
-            foreach ($indexes as $index) {
-                $sql[] = $this->getCreateIndexSQL($index, $name);
-            }
-        }
-
-        return $sql;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * Need to specifiy minvalue, since start with is hidden in the system and MINVALUE <= START WITH.
-     * Therefore we can use MINVALUE to be able to get a hint what START WITH was for later introspection
-     * in {@see listSequences()}
-     */
-    public function getCreateSequenceSQL(Sequence $sequence)
-    {
-        return 'CREATE SEQUENCE ' . $sequence->getQuotedName($this) .
-               ' START WITH ' . $sequence->getInitialValue() .
-               ' MINVALUE ' . $sequence->getInitialValue() .
-               ' INCREMENT BY ' . $sequence->getAllocationSize() .
-               $this->getSequenceCacheSQL($sequence);
-    }
-
-    /**
-     * @param string $name
-     * @param string $table
-     * @param int    $start
-     *
-     * @return string[]
-     */
-    public function getCreateAutoincrementSql($name, $table, $start = 1)
-    {
-        $tableIdentifier   = $this->normalizeIdentifier($table);
-        $quotedTableName   = $tableIdentifier->getQuotedName($this);
-        $unquotedTableName = $tableIdentifier->getName();
-
-        $nameIdentifier = $this->normalizeIdentifier($name);
-        $quotedName     = $nameIdentifier->getQuotedName($this);
-        $unquotedName   = $nameIdentifier->getName();
-
-        $sql = [];
-
-        $autoincrementIdentifierName = $this->getAutoincrementIdentifierName($tableIdentifier);
-
-        $idx = new Index($autoincrementIdentifierName, [$quotedName], true, true);
-
-        $sql[] = "DECLARE
-  constraints_Count NUMBER;
-BEGIN
-  SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count FROM USER_CONSTRAINTS WHERE TABLE_NAME = '" . $unquotedTableName
-            . "' AND CONSTRAINT_TYPE = 'P';
-  IF constraints_Count = 0 OR constraints_Count = '' THEN
-    EXECUTE IMMEDIATE '" . $this->getCreateConstraintSQL($idx, $quotedTableName) . "';
-  END IF;
-END;";
-
-        $sequenceName = $this->getIdentitySequenceName(
-            $tableIdentifier->isQuoted() ? $quotedTableName : $unquotedTableName,
-            $nameIdentifier->isQuoted() ? $quotedName : $unquotedName
-        );
-        $sequence     = new Sequence($sequenceName, $start);
-        $sql[]        = $this->getCreateSequenceSQL($sequence);
-
-        $sql[] = 'CREATE TRIGGER ' . $autoincrementIdentifierName . '
-   BEFORE INSERT
-   ON ' . $quotedTableName . '
-   FOR EACH ROW
-DECLARE
-   last_Sequence NUMBER;
-   last_InsertID NUMBER;
-BEGIN
-   SELECT ' . $sequenceName . '.NEXTVAL INTO :NEW.' . $quotedName . ' FROM DUAL;
-   IF (:NEW.' . $quotedName . ' IS NULL OR :NEW.' . $quotedName . ' = 0) THEN
-      SELECT ' . $sequenceName . '.NEXTVAL INTO :NEW.' . $quotedName . ' FROM DUAL;
-   ELSE
-      SELECT NVL(Last_Number, 0) INTO last_Sequence
-        FROM User_Sequences
-       WHERE Sequence_Name = \'' . $sequence->getName() . '\';
-      SELECT :NEW.' . $quotedName . ' INTO last_InsertID FROM DUAL;
-      WHILE (last_InsertID > last_Sequence) LOOP
-         SELECT ' . $sequenceName . '.NEXTVAL INTO last_Sequence FROM DUAL;
-      END LOOP;
-   END IF;
-END;';
-
-        return $sql;
-    }
-
-    /**
-     * Returns the autoincrement primary key identifier name for the given table identifier.
-     *
-     * Quotes the autoincrement primary key identifier name
-     * if the given table name is quoted by intention.
-     *
-     * @param Identifier $table The table identifier to return the autoincrement primary key identifier name for.
-     *
-     * @return string
-     */
-    private function getAutoincrementIdentifierName(Identifier $table)
-    {
-        $identifierName = $this->addSuffix($table->getName(), '_AI_PK');
-
-        return $table->isQuoted()
-            ? $this->quoteSingleIdentifier($identifierName)
-            : $identifierName;
-    }
-
-    /**
-     * Adds suffix to identifier,
-     *
-     * if the new string exceeds max identifier length,
-     * keeps $suffix, cuts from $identifier as much as the part exceeding.
-     */
-    private function addSuffix(string $identifier, string $suffix): string
-    {
-        $maxPossibleLengthWithoutSuffix = $this->getMaxIdentifierLength() - strlen($suffix);
-        if (strlen($identifier) > $maxPossibleLengthWithoutSuffix) {
-            $identifier = substr($identifier, 0, $maxPossibleLengthWithoutSuffix);
-        }
-
-        return $identifier . $suffix;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getMaxIdentifierLength()
-    {
-        return 30;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIdentitySequenceName($tableName, $columnName)
-    {
-        $table = new Identifier($tableName);
-
-        // No usage of column name to preserve BC compatibility with <2.5
-        $identitySequenceName = $this->addSuffix($table->getName(), '_SEQ');
-
-        if ($table->isQuoted()) {
-            $identitySequenceName = '"' . $identitySequenceName . '"';
-        }
-
-        $identitySequenceIdentifier = $this->normalizeIdentifier($identitySequenceName);
-
-        return $identitySequenceIdentifier->getQuotedName($this);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getRenameIndexSQL($oldIndexName, Index $index, $tableName)
-    {
-        if (strpos($tableName, '.') !== false) {
-            [$schema]     = explode('.', $tableName);
-            $oldIndexName = $schema . '.' . $oldIndexName;
-        }
-
-        return ['ALTER INDEX ' . $oldIndexName . ' RENAME TO ' . $index->getQuotedName($this)];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function doModifyLimitQuery($query, $limit, $offset = null)
-    {
-        if ($limit === null && $offset <= 0) {
-            return $query;
-        }
-
-        if (preg_match('/^\s*SELECT/i', $query)) {
-            if (! preg_match('/\sFROM\s/i', $query)) {
-                $query .= ' FROM dual';
-            }
-
-            $columns = ['a.*'];
-
-            if ($offset > 0) {
-                $columns[] = 'ROWNUM AS doctrine_rownum';
-            }
-
-            $query = sprintf('SELECT %s FROM (%s) a', implode(', ', $columns), $query);
-
-            if ($limit !== null) {
-                $query .= sprintf(' WHERE ROWNUM <= %d', $offset + $limit);
-            }
-
-            if ($offset > 0) {
-                $query = sprintf('SELECT * FROM (%s) WHERE doctrine_rownum >= %d', $query, $offset + 1);
-            }
-        }
-
-        return $query;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     protected function initializeDoctrineTypeMappings()
     {
         $this->doctrineTypeMapping = [
@@ -1259,8 +1220,47 @@ END;';
     /**
      * {@inheritDoc}
      */
+    public function releaseSavePoint($savepoint)
+    {
+        return '';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     protected function getReservedKeywordsClass()
     {
         return Keywords\OracleKeywords::class;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBlobTypeDeclarationSQL(array $column)
+    {
+        return 'BLOB';
+    }
+
+    public function getListTableCommentsSQL(string $table, ?string $database = null): string
+    {
+        $tableCommentsName = 'user_tab_comments';
+        $ownerCondition    = '';
+
+        if ($database !== null && $database !== '/') {
+            $tableCommentsName = 'all_tab_comments';
+            $ownerCondition    = ' AND owner = ' . $this->quoteStringLiteral(
+                $this->normalizeIdentifier($database)->getName()
+            );
+        }
+
+        return sprintf(
+            <<<'SQL'
+SELECT comments FROM %s WHERE table_name = %s%s
+SQL
+            ,
+            $tableCommentsName,
+            $this->quoteStringLiteral($this->normalizeIdentifier($table)->getName()),
+            $ownerCondition
+        );
     }
 }

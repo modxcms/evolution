@@ -40,17 +40,6 @@ final class ArgumentResolver implements ArgumentResolverInterface
         $this->argumentValueResolvers = $argumentValueResolvers ?: self::getDefaultArgumentValueResolvers();
     }
 
-    public static function getDefaultArgumentValueResolvers(): iterable
-    {
-        return [
-            new RequestAttributeValueResolver(),
-            new RequestValueResolver(),
-            new SessionValueResolver(),
-            new DefaultValueResolver(),
-            new VariadicValueResolver(),
-        ];
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -92,5 +81,16 @@ final class ArgumentResolver implements ArgumentResolverInterface
         }
 
         return $arguments;
+    }
+
+    public static function getDefaultArgumentValueResolvers(): iterable
+    {
+        return [
+            new RequestAttributeValueResolver(),
+            new RequestValueResolver(),
+            new SessionValueResolver(),
+            new DefaultValueResolver(),
+            new VariadicValueResolver(),
+        ];
     }
 }

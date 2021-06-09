@@ -21,6 +21,15 @@ class Imagick extends AbstractConverter
 {
     use EncodingAutoTrait;
 
+    protected function getUnsupportedDefaultOptions()
+    {
+        return [
+            'near-lossless',
+            'size-in-percentage',
+            'use-nice'
+        ];
+    }
+
     /**
      * Check operationality of Imagick converter.
      *
@@ -74,15 +83,6 @@ class Imagick extends AbstractConverter
                 }
                 break;
         }
-    }
-
-    protected function getUnsupportedDefaultOptions()
-    {
-        return [
-            'near-lossless',
-            'size-in-percentage',
-            'use-nice'
-        ];
     }
 
     /**

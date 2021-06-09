@@ -18,33 +18,6 @@ trait CurlTrait
 {
 
     /**
-     * Init curl.
-     *
-     * @throws  SystemRequirementsNotMetException  if curl could not be initialized
-     * @return  resource|\CurlHandle  curl handle (from PHP8: CurlHandle)
-     */
-    protected static function initCurl()
-    {
-        // Get curl handle
-        $ch = \curl_init();
-        if ($ch === false) {
-            throw new SystemRequirementsNotMetException('Could not initialise cURL.');
-        }
-        return $ch;
-    }
-
-    /**
-     * Check basis operationality for converters relying on curl
-     *
-     * @throws  SystemRequirementsNotMetException
-     * @return  void
-     */
-    public function checkOperationality()
-    {
-        $this->checkOperationalityForCurlTrait();
-    }
-
-    /**
      * Check basis operationality for converters relying on curl.
      *
      * Performs the same as ::checkOperationality(). It is here so converters that overrides the
@@ -68,5 +41,32 @@ trait CurlTrait
                 'Required curl_file_create() function is not available (requires PHP > 5.5).'
             );
         }
+    }
+
+    /**
+     * Check basis operationality for converters relying on curl
+     *
+     * @throws  SystemRequirementsNotMetException
+     * @return  void
+     */
+    public function checkOperationality()
+    {
+        $this->checkOperationalityForCurlTrait();
+    }
+
+    /**
+     * Init curl.
+     *
+     * @throws  SystemRequirementsNotMetException  if curl could not be initialized
+     * @return  resource|\CurlHandle  curl handle (from PHP8: CurlHandle)
+     */
+    protected static function initCurl()
+    {
+        // Get curl handle
+        $ch = \curl_init();
+        if ($ch === false) {
+            throw new SystemRequirementsNotMetException('Could not initialise cURL.');
+        }
+        return $ch;
     }
 }

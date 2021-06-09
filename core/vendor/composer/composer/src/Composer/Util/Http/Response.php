@@ -64,6 +64,21 @@ class Response
         return self::findHeaderValue($this->headers, $name);
     }
 
+    public function getBody()
+    {
+        return $this->body;
+    }
+
+    public function decodeJson()
+    {
+        return JsonFile::parseJson($this->body, $this->request['url']);
+    }
+
+    public function collect()
+    {
+        $this->request = $this->code = $this->headers = $this->body = null;
+    }
+
     /**
      * @param  array       $headers array of returned headers like from getLastHeaders()
      * @param  string      $name    header name (case insensitive)
@@ -79,20 +94,5 @@ class Response
         }
 
         return $value;
-    }
-
-    public function getBody()
-    {
-        return $this->body;
-    }
-
-    public function decodeJson()
-    {
-        return JsonFile::parseJson($this->body, $this->request['url']);
-    }
-
-    public function collect()
-    {
-        $this->request = $this->code = $this->headers = $this->body = null;
     }
 }

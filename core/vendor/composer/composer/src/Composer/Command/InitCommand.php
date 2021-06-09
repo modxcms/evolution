@@ -200,154 +200,6 @@ EOT
         return 0;
     }
 
-    protected function formatAuthors($author)
-    {
-        return array($this->parseAuthorString($author));
-    }
-
-    /**
-     * @private
-     * @param  string $author
-     * @return array
-     */
-    public function parseAuthorString($author)
-    {
-        if (preg_match('/^(?P<name>[- .,\p{L}\p{N}\p{Mn}\'’"()]+) <(?P<email>.+?)>$/u', $author, $match)) {
-            if ($this->isValidEmail($match['email'])) {
-                return array(
-                    'name' => trim($match['name']),
-                    'email' => $match['email'],
-                );
-            }
-        }
-
-        throw new \InvalidArgumentException(
-            'Invalid author string.  Must be in the format: '.
-            'John Smith <john@example.com>'
-        );
-    }
-
-    protected function isValidEmail($email)
-    {
-        // assume it's valid if we can't validate it
-        if (!function_exists('filter_var')) {
-            return true;
-        }
-
-        // php <5.3.3 has a very broken email validator, so bypass checks
-        if (PHP_VERSION_ID < 50303) {
-            return true;
-        }
-
-        return false !== filter_var($email, FILTER_VALIDATE_EMAIL);
-    }
-
-    /**
-     * Extract namespace from package's vendor name.
-     *
-     * new_projects.acme-extra/package-name becomes "NewProjectsAcmeExtra\PackageName"
-     *
-     * @param string $packageName
-     *
-     * @return string|null
-     */
-    public function namespaceFromPackageName($packageName)
-    {
-        if (!$packageName || strpos($packageName, '/') === false) {
-            return null;
-        }
-
-        $namespace = array_map(
-            function ($part) {
-                $part = preg_replace('/[^a-z0-9]/i', ' ', $part);
-                $part = ucwords($part);
-
-                return str_replace(' ', '', $part);
-            },
-            explode('/', $packageName)
-        );
-
-        return join('\\', $namespace);
-    }
-
-    private function hasDependencies($options)
-    {
-        $requires = (array) $options['require'];
-        $devRequires = isset($options['require-dev']) ? (array) $options['require-dev'] : array();
-
-        return !empty($requires) || !empty($devRequires);
-    }
-
-    private function runDumpAutoloadCommand($output)
-    {
-        try {
-            $command = $this->getApplication()->find('dump-autoload');
-            $this->getApplication()->resetComposer();
-            $command->run(new ArrayInput(array()), $output);
-        } catch (\Exception $e) {
-            $this->getIO()->writeError('Could not run dump-autoload.');
-        }
-    }
-
-    /**
-     * Checks the local .gitignore file for the Composer vendor directory.
-     *
-     * Tested patterns include:
-     *  "/$vendor"
-     *  "$vendor"
-     *  "$vendor/"
-     *  "/$vendor/"
-     *  "/$vendor/*"
-     *  "$vendor/*"
-     *
-     * @param string $ignoreFile
-     * @param string $vendor
-     *
-     * @return bool
-     */
-    protected function hasVendorIgnore($ignoreFile, $vendor = 'vendor')
-    {
-        if (!file_exists($ignoreFile)) {
-            return false;
-        }
-
-        $pattern = sprintf('{^/?%s(/\*?)?$}', preg_quote($vendor));
-
-        $lines = file($ignoreFile, FILE_IGNORE_NEW_LINES);
-        foreach ($lines as $line) {
-            if (preg_match($pattern, $line)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    protected function addVendorIgnore($ignoreFile, $vendor = '/vendor/')
-    {
-        $contents = "";
-        if (file_exists($ignoreFile)) {
-            $contents = file_get_contents($ignoreFile);
-
-            if (strpos($contents, "\n") !== 0) {
-                $contents .= "\n";
-            }
-        }
-
-        file_put_contents($ignoreFile, $contents . $vendor. "\n");
-    }
-
-    private function updateDependencies($output)
-    {
-        try {
-            $updateCommand = $this->getApplication()->find('update');
-            $this->getApplication()->resetComposer();
-            $updateCommand->run(new ArrayInput(array()), $output);
-        } catch (\Exception $e) {
-            $this->getIO()->writeError('Could not update dependencies. Run `composer update` to see more information.');
-        }
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -594,34 +446,31 @@ EOT
         $input->setOption('autoload', $autoload);
     }
 
-    protected function getGitConfig()
+    /**
+     * @private
+     * @param  string $author
+     * @return array
+     */
+    public function parseAuthorString($author)
     {
-        if (null !== $this->gitConfig) {
-            return $this->gitConfig;
-        }
-
-        $finder = new ExecutableFinder();
-        $gitBin = $finder->find('git');
-
-        // TODO in v3 always call with an array
-        if (method_exists('Symfony\Component\Process\Process', 'fromShellCommandline')) {
-            $cmd = new Process(array($gitBin, 'config', '-l'));
-        } else {
-            $cmd = new Process(sprintf('%s config -l', ProcessExecutor::escape($gitBin)));
-        }
-        $cmd->run();
-
-        if ($cmd->isSuccessful()) {
-            $this->gitConfig = array();
-            preg_match_all('{^([^=]+)=(.*)$}m', $cmd->getOutput(), $matches, PREG_SET_ORDER);
-            foreach ($matches as $match) {
-                $this->gitConfig[$match[1]] = $match[2];
+        if (preg_match('/^(?P<name>[- .,\p{L}\p{N}\p{Mn}\'’"()]+) <(?P<email>.+?)>$/u', $author, $match)) {
+            if ($this->isValidEmail($match['email'])) {
+                return array(
+                    'name' => trim($match['name']),
+                    'email' => $match['email'],
+                );
             }
-
-            return $this->gitConfig;
         }
 
-        return $this->gitConfig = array();
+        throw new \InvalidArgumentException(
+            'Invalid author string.  Must be in the format: '.
+            'John Smith <john@example.com>'
+        );
+    }
+
+    protected function findPackages($name)
+    {
+        return $this->getRepos()->search($name);
     }
 
     protected function getRepos()
@@ -802,6 +651,160 @@ EOT
         return $requires;
     }
 
+    protected function formatAuthors($author)
+    {
+        return array($this->parseAuthorString($author));
+    }
+
+    /**
+     * Extract namespace from package's vendor name.
+     *
+     * new_projects.acme-extra/package-name becomes "NewProjectsAcmeExtra\PackageName"
+     *
+     * @param string $packageName
+     *
+     * @return string|null
+     */
+    public function namespaceFromPackageName($packageName)
+    {
+        if (!$packageName || strpos($packageName, '/') === false) {
+            return null;
+        }
+
+        $namespace = array_map(
+            function ($part) {
+                $part = preg_replace('/[^a-z0-9]/i', ' ', $part);
+                $part = ucwords($part);
+
+                return str_replace(' ', '', $part);
+            },
+            explode('/', $packageName)
+        );
+
+        return join('\\', $namespace);
+    }
+
+    protected function getGitConfig()
+    {
+        if (null !== $this->gitConfig) {
+            return $this->gitConfig;
+        }
+
+        $finder = new ExecutableFinder();
+        $gitBin = $finder->find('git');
+
+        // TODO in v3 always call with an array
+        if (method_exists('Symfony\Component\Process\Process', 'fromShellCommandline')) {
+            $cmd = new Process(array($gitBin, 'config', '-l'));
+        } else {
+            $cmd = new Process(sprintf('%s config -l', ProcessExecutor::escape($gitBin)));
+        }
+        $cmd->run();
+
+        if ($cmd->isSuccessful()) {
+            $this->gitConfig = array();
+            preg_match_all('{^([^=]+)=(.*)$}m', $cmd->getOutput(), $matches, PREG_SET_ORDER);
+            foreach ($matches as $match) {
+                $this->gitConfig[$match[1]] = $match[2];
+            }
+
+            return $this->gitConfig;
+        }
+
+        return $this->gitConfig = array();
+    }
+
+    /**
+     * Checks the local .gitignore file for the Composer vendor directory.
+     *
+     * Tested patterns include:
+     *  "/$vendor"
+     *  "$vendor"
+     *  "$vendor/"
+     *  "/$vendor/"
+     *  "/$vendor/*"
+     *  "$vendor/*"
+     *
+     * @param string $ignoreFile
+     * @param string $vendor
+     *
+     * @return bool
+     */
+    protected function hasVendorIgnore($ignoreFile, $vendor = 'vendor')
+    {
+        if (!file_exists($ignoreFile)) {
+            return false;
+        }
+
+        $pattern = sprintf('{^/?%s(/\*?)?$}', preg_quote($vendor));
+
+        $lines = file($ignoreFile, FILE_IGNORE_NEW_LINES);
+        foreach ($lines as $line) {
+            if (preg_match($pattern, $line)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected function addVendorIgnore($ignoreFile, $vendor = '/vendor/')
+    {
+        $contents = "";
+        if (file_exists($ignoreFile)) {
+            $contents = file_get_contents($ignoreFile);
+
+            if (strpos($contents, "\n") !== 0) {
+                $contents .= "\n";
+            }
+        }
+
+        file_put_contents($ignoreFile, $contents . $vendor. "\n");
+    }
+
+    protected function isValidEmail($email)
+    {
+        // assume it's valid if we can't validate it
+        if (!function_exists('filter_var')) {
+            return true;
+        }
+
+        // php <5.3.3 has a very broken email validator, so bypass checks
+        if (PHP_VERSION_ID < 50303) {
+            return true;
+        }
+
+        return false !== filter_var($email, FILTER_VALIDATE_EMAIL);
+    }
+
+    private function getRepositorySet(InputInterface $input, $minimumStability = null)
+    {
+        $key = $minimumStability ?: 'default';
+
+        if (!isset($this->repositorySets[$key])) {
+            $this->repositorySets[$key] = $repositorySet = new RepositorySet($minimumStability ?: $this->getMinimumStability($input));
+            $repositorySet->addRepository($this->getRepos());
+        }
+
+        return $this->repositorySets[$key];
+    }
+
+    private function getMinimumStability(InputInterface $input)
+    {
+        if ($input->hasOption('stability')) {
+            return VersionParser::normalizeStability($input->getOption('stability') ?: 'stable');
+        }
+
+        $file = Factory::getComposerFile();
+        if (is_file($file) && Filesystem::isReadable($file) && is_array($composer = json_decode(file_get_contents($file), true))) {
+            if (!empty($composer['minimum-stability'])) {
+                return VersionParser::normalizeStability($composer['minimum-stability']);
+            }
+        }
+
+        return 'stable';
+    }
+
     /**
      * Given a package name, this determines the best version to use in the require key.
      *
@@ -913,34 +916,6 @@ EOT
         );
     }
 
-    private function getRepositorySet(InputInterface $input, $minimumStability = null)
-    {
-        $key = $minimumStability ?: 'default';
-
-        if (!isset($this->repositorySets[$key])) {
-            $this->repositorySets[$key] = $repositorySet = new RepositorySet($minimumStability ?: $this->getMinimumStability($input));
-            $repositorySet->addRepository($this->getRepos());
-        }
-
-        return $this->repositorySets[$key];
-    }
-
-    private function getMinimumStability(InputInterface $input)
-    {
-        if ($input->hasOption('stability')) {
-            return VersionParser::normalizeStability($input->getOption('stability') ?: 'stable');
-        }
-
-        $file = Factory::getComposerFile();
-        if (is_file($file) && Filesystem::isReadable($file) && is_array($composer = json_decode(file_get_contents($file), true))) {
-            if (!empty($composer['minimum-stability'])) {
-                return VersionParser::normalizeStability($composer['minimum-stability']);
-            }
-        }
-
-        return 'stable';
-    }
-
     private function getPlatformExceptionDetails(PackageInterface $candidate, PlatformRepository $platformRepo = null)
     {
         $details = array();
@@ -995,8 +970,33 @@ EOT
         return array_keys(array_slice($similarPackages, 0, 5));
     }
 
-    protected function findPackages($name)
+    private function updateDependencies($output)
     {
-        return $this->getRepos()->search($name);
+        try {
+            $updateCommand = $this->getApplication()->find('update');
+            $this->getApplication()->resetComposer();
+            $updateCommand->run(new ArrayInput(array()), $output);
+        } catch (\Exception $e) {
+            $this->getIO()->writeError('Could not update dependencies. Run `composer update` to see more information.');
+        }
+    }
+
+    private function runDumpAutoloadCommand($output)
+    {
+        try {
+            $command = $this->getApplication()->find('dump-autoload');
+            $this->getApplication()->resetComposer();
+            $command->run(new ArrayInput(array()), $output);
+        } catch (\Exception $e) {
+            $this->getIO()->writeError('Could not run dump-autoload.');
+        }
+    }
+
+    private function hasDependencies($options)
+    {
+        $requires = (array) $options['require'];
+        $devRequires = isset($options['require-dev']) ? (array) $options['require-dev'] : array();
+
+        return !empty($requires) || !empty($devRequires);
     }
 }

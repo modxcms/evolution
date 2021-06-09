@@ -22,6 +22,50 @@ class FFMpeg extends AbstractConverter
     use ExecTrait;
     use EncodingAutoTrait;
 
+    protected function getUnsupportedDefaultOptions()
+    {
+        return [
+            'alpha-quality',
+            'auto-filter',
+            'encoding',
+            'low-memory',
+            'near-lossless',
+            'preset',
+            'sharp-yuv',
+            'size-in-percentage',
+            'use-nice'
+        ];
+    }
+
+    private function getPath()
+    {
+        if (defined('WEBPCONVERT_FFMPEG_PATH')) {
+            return constant('WEBPCONVERT_FFMPEG_PATH');
+        }
+        if (!empty(getenv('WEBPCONVERT_FFMPEG_PATH'))) {
+            return getenv('WEBPCONVERT_FFMPEG_PATH');
+        }
+        return 'ffmpeg';
+    }
+
+    public function isInstalled()
+    {
+        exec($this->getPath() . ' -version 2>&1', $output, $returnCode);
+        return ($returnCode == 0);
+    }
+
+    // Check if webp delegate is installed
+    public function isWebPDelegateInstalled()
+    {
+        exec($this->getPath() . ' -version 2>&1', $output, $returnCode);
+        foreach ($output as $line) {
+            if (preg_match('# --enable-libwebp#i', $line)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Check (general) operationality of imagack converter executable
      *
@@ -38,80 +82,6 @@ class FFMpeg extends AbstractConverter
         }
         if (!$this->isWebPDelegateInstalled()) {
             throw new SystemRequirementsNotMetException('ffmpeg was compiled without libwebp');
-        }
-    }
-
-    public function isInstalled()
-    {
-        exec($this->getPath() . ' -version 2>&1', $output, $returnCode);
-        return ($returnCode == 0);
-    }
-
-    private function getPath()
-    {
-        if (defined('WEBPCONVERT_FFMPEG_PATH')) {
-            return constant('WEBPCONVERT_FFMPEG_PATH');
-        }
-        if (!empty(getenv('WEBPCONVERT_FFMPEG_PATH'))) {
-            return getenv('WEBPCONVERT_FFMPEG_PATH');
-        }
-        return 'ffmpeg';
-    }
-
-    // Check if webp delegate is installed
-
-    public function isWebPDelegateInstalled()
-    {
-        exec($this->getPath() . ' -version 2>&1', $output, $returnCode);
-        foreach ($output as $line) {
-            if (preg_match('# --enable-libwebp#i', $line)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    protected function getUnsupportedDefaultOptions()
-    {
-        return [
-            'alpha-quality',
-            'auto-filter',
-            'encoding',
-            'low-memory',
-            'near-lossless',
-            'preset',
-            'sharp-yuv',
-            'size-in-percentage',
-            'use-nice'
-        ];
-    }
-
-    protected function doActualConvert()
-    {
-        //$this->logLn($this->getVersion());
-
-        $command = $this->getPath() . ' ' . $this->createCommandLineOptions() . ' 2>&1';
-
-        $useNice = (($this->options['use-nice']) && self::hasNiceSupport()) ? true : false;
-        if ($useNice) {
-            $this->logLn('using nice');
-            $command = 'nice ' . $command;
-        }
-        $this->logLn('Executing command: ' . $command);
-        exec($command, $output, $returnCode);
-
-        $this->logExecOutput($output);
-        if ($returnCode == 0) {
-            $this->logLn('success');
-        } else {
-            $this->logLn('return code: ' . $returnCode);
-        }
-
-        if ($returnCode == 127) {
-            throw new SystemRequirementsNotMetException('ffmpeg is not installed');
-        }
-        if ($returnCode != 0) {
-            throw new SystemRequirementsNotMetException('The exec call failed');
         }
     }
 
@@ -164,5 +134,34 @@ class FFMpeg extends AbstractConverter
 
 
         return implode(' ', $commandArguments);
+    }
+
+    protected function doActualConvert()
+    {
+        //$this->logLn($this->getVersion());
+
+        $command = $this->getPath() . ' ' . $this->createCommandLineOptions() . ' 2>&1';
+
+        $useNice = (($this->options['use-nice']) && self::hasNiceSupport()) ? true : false;
+        if ($useNice) {
+            $this->logLn('using nice');
+            $command = 'nice ' . $command;
+        }
+        $this->logLn('Executing command: ' . $command);
+        exec($command, $output, $returnCode);
+
+        $this->logExecOutput($output);
+        if ($returnCode == 0) {
+            $this->logLn('success');
+        } else {
+            $this->logLn('return code: ' . $returnCode);
+        }
+
+        if ($returnCode == 127) {
+            throw new SystemRequirementsNotMetException('ffmpeg is not installed');
+        }
+        if ($returnCode != 0) {
+            throw new SystemRequirementsNotMetException('The exec call failed');
+        }
     }
 }

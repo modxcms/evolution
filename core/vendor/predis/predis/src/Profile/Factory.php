@@ -51,26 +51,6 @@ final class Factory
     }
 
     /**
-     * Returns the specified server profile.
-     *
-     * @param string $version Profile version or alias.
-     *
-     * @throws ClientException
-     *
-     * @return ProfileInterface
-     */
-    public static function get($version)
-    {
-        if (!isset(self::$profiles[$version])) {
-            throw new ClientException("Unknown server profile: '$version'.");
-        }
-
-        $profile = self::$profiles[$version];
-
-        return new $profile();
-    }
-
-    /**
      * Returns the development server profile.
      *
      * @return ProfileInterface
@@ -97,5 +77,25 @@ final class Factory
         }
 
         self::$profiles[$alias] = $class;
+    }
+
+    /**
+     * Returns the specified server profile.
+     *
+     * @param string $version Profile version or alias.
+     *
+     * @throws ClientException
+     *
+     * @return ProfileInterface
+     */
+    public static function get($version)
+    {
+        if (!isset(self::$profiles[$version])) {
+            throw new ClientException("Unknown server profile: '$version'.");
+        }
+
+        $profile = self::$profiles[$version];
+
+        return new $profile();
     }
 }

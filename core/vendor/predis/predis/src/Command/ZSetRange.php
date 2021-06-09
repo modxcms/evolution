@@ -29,40 +29,6 @@ class ZSetRange extends Command
     /**
      * {@inheritdoc}
      */
-    public function parseResponse($data)
-    {
-        if ($this->withScores()) {
-            $result = array();
-
-            for ($i = 0; $i < count($data); ++$i) {
-                $result[$data[$i]] = $data[++$i];
-            }
-
-            return $result;
-        }
-
-        return $data;
-    }
-
-    /**
-     * Checks for the presence of the WITHSCORES modifier.
-     *
-     * @return bool
-     */
-    protected function withScores()
-    {
-        $arguments = $this->getArguments();
-
-        if (count($arguments) < 4) {
-            return false;
-        }
-
-        return strtoupper($arguments[3]) === 'WITHSCORES';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function filterArguments(array $arguments)
     {
         if (count($arguments) === 4) {
@@ -101,5 +67,39 @@ class ZSetRange extends Command
         }
 
         return $finalizedOpts;
+    }
+
+    /**
+     * Checks for the presence of the WITHSCORES modifier.
+     *
+     * @return bool
+     */
+    protected function withScores()
+    {
+        $arguments = $this->getArguments();
+
+        if (count($arguments) < 4) {
+            return false;
+        }
+
+        return strtoupper($arguments[3]) === 'WITHSCORES';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function parseResponse($data)
+    {
+        if ($this->withScores()) {
+            $result = array();
+
+            for ($i = 0; $i < count($data); ++$i) {
+                $result[$data[$i]] = $data[++$i];
+            }
+
+            return $result;
+        }
+
+        return $data;
     }
 }

@@ -61,6 +61,17 @@ class PhpiredisSocketConnection extends AbstractConnection
     }
 
     /**
+     * Disconnects from the server and destroys the underlying resource and the
+     * protocol reader resource when PHP's garbage collector kicks in.
+     */
+    public function __destruct()
+    {
+        parent::__destruct();
+
+        phpiredis_reader_destroy($this->reader);
+    }
+
+    /**
      * Checks if the socket and phpiredis extensions are loaded in PHP.
      */
     protected function assertExtensions()
@@ -79,6 +90,30 @@ class PhpiredisSocketConnection extends AbstractConnection
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function assertParameters(ParametersInterface $parameters)
+    {
+        switch ($parameters->scheme) {
+            case 'tcp':
+            case 'redis':
+            case 'unix':
+                break;
+
+            default:
+                throw new \InvalidArgumentException("Invalid scheme: '$parameters->scheme'.");
+        }
+
+        if (isset($parameters->persistent)) {
+            throw new NotSupportedException(
+                'Persistent connections are not supported by this connection backend.'
+            );
+        }
+
+        return $parameters;
+    }
+
+    /**
      * Creates a new instance of the protocol reader resource.
      *
      * @return resource
@@ -91,6 +126,16 @@ class PhpiredisSocketConnection extends AbstractConnection
         phpiredis_reader_set_error_handler($reader, $this->getErrorHandler());
 
         return $reader;
+    }
+
+    /**
+     * Returns the underlying protocol reader resource.
+     *
+     * @return resource
+     */
+    protected function getReader()
+    {
+        return $this->reader;
     }
 
     /**
@@ -130,131 +175,36 @@ class PhpiredisSocketConnection extends AbstractConnection
     }
 
     /**
-     * Disconnects from the server and destroys the underlying resource and the
-     * protocol reader resource when PHP's garbage collector kicks in.
+     * Helper method used to throw exceptions on socket errors.
      */
-    public function __destruct()
+    private function emitSocketError()
     {
-        parent::__destruct();
+        $errno = socket_last_error();
+        $errstr = socket_strerror($errno);
 
-        phpiredis_reader_destroy($this->reader);
+        $this->disconnect();
+
+        $this->onConnectionError(trim($errstr), $errno);
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function connect()
-    {
-        if (parent::connect() && $this->initCommands) {
-            foreach ($this->initCommands as $command) {
-                $response = $this->executeCommand($command);
-
-                if ($response instanceof ErrorResponseInterface) {
-                    $this->onConnectionError("`{$command->getId()}` failed: $response", 0);
-                }
-            }
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function read()
-    {
-        $socket = $this->getResource();
-        $reader = $this->reader;
-
-        while (PHPIREDIS_READER_STATE_INCOMPLETE === $state = phpiredis_reader_get_state($reader)) {
-            if (@socket_recv($socket, $buffer, 4096, 0) === false || $buffer === '' || $buffer === null) {
-                $this->emitSocketError();
-            }
-
-            phpiredis_reader_feed($reader, $buffer);
-        }
-
-        if ($state === PHPIREDIS_READER_STATE_COMPLETE) {
-            return phpiredis_reader_get_reply($reader);
-        } else {
-            $this->onProtocolError(phpiredis_reader_get_error($reader));
-
-            return;
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function writeRequest(CommandInterface $command)
-    {
-        $arguments = $command->getArguments();
-        array_unshift($arguments, $command->getId());
-
-        $this->write(phpiredis_format_command($arguments));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function write($buffer)
-    {
-        $socket = $this->getResource();
-
-        while (($length = strlen($buffer)) > 0) {
-            $written = socket_write($socket, $buffer, $length);
-
-            if ($length === $written) {
-                return;
-            }
-
-            if ($written === false) {
-                $this->onConnectionError('Error while writing bytes to the server.');
-            }
-
-            $buffer = substr($buffer, $written);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __wakeup()
-    {
-        $this->assertExtensions();
-        $this->reader = $this->createReader();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function assertParameters(ParametersInterface $parameters)
-    {
-        switch ($parameters->scheme) {
-            case 'tcp':
-            case 'redis':
-            case 'unix':
-                break;
-
-            default:
-                throw new \InvalidArgumentException("Invalid scheme: '$parameters->scheme'.");
-        }
-
-        if (isset($parameters->persistent)) {
-            throw new NotSupportedException(
-                'Persistent connections are not supported by this connection backend.'
-            );
-        }
-
-        return $parameters;
-    }
-
-    /**
-     * Returns the underlying protocol reader resource.
+     * Gets the address of an host from connection parameters.
      *
-     * @return resource
+     * @param ParametersInterface $parameters Parameters used to initialize the connection.
+     *
+     * @return string
      */
-    protected function getReader()
+    protected static function getAddress(ParametersInterface $parameters)
     {
-        return $this->reader;
+        if (filter_var($host = $parameters->host, FILTER_VALIDATE_IP)) {
+            return $host;
+        }
+
+        if ($host === $address = gethostbyname($host)) {
+            return false;
+        }
+
+        return $address;
     }
 
     /**
@@ -285,52 +235,6 @@ class PhpiredisSocketConnection extends AbstractConnection
         $this->connectWithTimeout($socket, $address, $parameters);
 
         return $socket;
-    }
-
-    /**
-     * Gets the address of an host from connection parameters.
-     *
-     * @param ParametersInterface $parameters Parameters used to initialize the connection.
-     *
-     * @return string
-     */
-    protected static function getAddress(ParametersInterface $parameters)
-    {
-        if (filter_var($host = $parameters->host, FILTER_VALIDATE_IP)) {
-            return $host;
-        }
-
-        if ($host === $address = gethostbyname($host)) {
-            return false;
-        }
-
-        return $address;
-    }
-
-    /**
-     * Helper method used to throw exceptions on socket errors.
-     */
-    private function emitSocketError()
-    {
-        $errno = socket_last_error();
-        $errstr = socket_strerror($errno);
-
-        $this->disconnect();
-
-        $this->onConnectionError(trim($errstr), $errno);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function disconnect()
-    {
-        if ($this->isConnected()) {
-            phpiredis_reader_reset($this->reader);
-            socket_close($this->getResource());
-
-            parent::disconnect();
-        }
     }
 
     /**
@@ -414,5 +318,101 @@ class PhpiredisSocketConnection extends AbstractConnection
         if ($selected === false) {
             $this->emitSocketError();
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function connect()
+    {
+        if (parent::connect() && $this->initCommands) {
+            foreach ($this->initCommands as $command) {
+                $response = $this->executeCommand($command);
+
+                if ($response instanceof ErrorResponseInterface) {
+                    $this->onConnectionError("`{$command->getId()}` failed: $response", 0);
+                }
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function disconnect()
+    {
+        if ($this->isConnected()) {
+            phpiredis_reader_reset($this->reader);
+            socket_close($this->getResource());
+
+            parent::disconnect();
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function write($buffer)
+    {
+        $socket = $this->getResource();
+
+        while (($length = strlen($buffer)) > 0) {
+            $written = socket_write($socket, $buffer, $length);
+
+            if ($length === $written) {
+                return;
+            }
+
+            if ($written === false) {
+                $this->onConnectionError('Error while writing bytes to the server.');
+            }
+
+            $buffer = substr($buffer, $written);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function read()
+    {
+        $socket = $this->getResource();
+        $reader = $this->reader;
+
+        while (PHPIREDIS_READER_STATE_INCOMPLETE === $state = phpiredis_reader_get_state($reader)) {
+            if (@socket_recv($socket, $buffer, 4096, 0) === false || $buffer === '' || $buffer === null) {
+                $this->emitSocketError();
+            }
+
+            phpiredis_reader_feed($reader, $buffer);
+        }
+
+        if ($state === PHPIREDIS_READER_STATE_COMPLETE) {
+            return phpiredis_reader_get_reply($reader);
+        } else {
+            $this->onProtocolError(phpiredis_reader_get_error($reader));
+
+            return;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function writeRequest(CommandInterface $command)
+    {
+        $arguments = $command->getArguments();
+        array_unshift($arguments, $command->getId());
+
+        $this->write(phpiredis_format_command($arguments));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __wakeup()
+    {
+        $this->assertExtensions();
+        $this->reader = $this->createReader();
     }
 }

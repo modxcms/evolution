@@ -43,6 +43,14 @@ abstract class RedisProfile implements ProfileInterface
     /**
      * {@inheritdoc}
      */
+    public function supportsCommand($commandID)
+    {
+        return isset($this->commands[strtoupper($commandID)]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function supportsCommands(array $commandIDs)
     {
         foreach ($commandIDs as $commandID) {
@@ -52,14 +60,6 @@ abstract class RedisProfile implements ProfileInterface
         }
 
         return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsCommand($commandID)
-    {
-        return isset($this->commands[strtoupper($commandID)]);
     }
 
     /**
@@ -121,17 +121,17 @@ abstract class RedisProfile implements ProfileInterface
     /**
      * {@inheritdoc}
      */
-    public function getProcessor()
+    public function setProcessor(ProcessorInterface $processor = null)
     {
-        return $this->processor;
+        $this->processor = $processor;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setProcessor(ProcessorInterface $processor = null)
+    public function getProcessor()
     {
-        $this->processor = $processor;
+        return $this->processor;
     }
 
     /**

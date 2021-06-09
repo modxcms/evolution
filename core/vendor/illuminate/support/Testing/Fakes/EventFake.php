@@ -121,39 +121,6 @@ class EventFake implements Dispatcher
     }
 
     /**
-     * Get all of the events matching a truth-test callback.
-     *
-     * @param  string  $event
-     * @param  callable|null  $callback
-     * @return \Illuminate\Support\Collection
-     */
-    public function dispatched($event, $callback = null)
-    {
-        if (! $this->hasDispatched($event)) {
-            return collect();
-        }
-
-        $callback = $callback ?: function () {
-            return true;
-        };
-
-        return collect($this->events[$event])->filter(function ($arguments) use ($callback) {
-            return $callback(...$arguments);
-        });
-    }
-
-    /**
-     * Determine if the given event has been dispatched.
-     *
-     * @param  string  $event
-     * @return bool
-     */
-    public function hasDispatched($event)
-    {
-        return isset($this->events[$event]) && ! empty($this->events[$event]);
-    }
-
-    /**
      * Determine if an event was dispatched based on a truth-test callback.
      *
      * @param  string|\Closure  $event
@@ -185,6 +152,39 @@ class EventFake implements Dispatcher
             0, $count,
             "{$count} unexpected events were dispatched."
         );
+    }
+
+    /**
+     * Get all of the events matching a truth-test callback.
+     *
+     * @param  string  $event
+     * @param  callable|null  $callback
+     * @return \Illuminate\Support\Collection
+     */
+    public function dispatched($event, $callback = null)
+    {
+        if (! $this->hasDispatched($event)) {
+            return collect();
+        }
+
+        $callback = $callback ?: function () {
+            return true;
+        };
+
+        return collect($this->events[$event])->filter(function ($arguments) use ($callback) {
+            return $callback(...$arguments);
+        });
+    }
+
+    /**
+     * Determine if the given event has been dispatched.
+     *
+     * @param  string  $event
+     * @return bool
+     */
+    public function hasDispatched($event)
+    {
+        return isset($this->events[$event]) && ! empty($this->events[$event]);
     }
 
     /**
@@ -245,39 +245,6 @@ class EventFake implements Dispatcher
     }
 
     /**
-     * Remove a set of listeners from the dispatcher.
-     *
-     * @param  string  $event
-     * @return void
-     */
-    public function forget($event)
-    {
-        //
-    }
-
-    /**
-     * Forget all of the queued listeners.
-     *
-     * @return void
-     */
-    public function forgetPushed()
-    {
-        //
-    }
-
-    /**
-     * Dispatch an event and call the listeners.
-     *
-     * @param  string|object  $event
-     * @param  mixed  $payload
-     * @return array|null
-     */
-    public function until($event, $payload = [])
-    {
-        return $this->dispatch($event, $payload, true);
-    }
-
-    /**
      * Fire an event and call the listeners.
      *
      * @param  string|object  $event
@@ -316,5 +283,38 @@ class EventFake implements Dispatcher
                             : $event === $eventName;
             })
             ->isNotEmpty();
+    }
+
+    /**
+     * Remove a set of listeners from the dispatcher.
+     *
+     * @param  string  $event
+     * @return void
+     */
+    public function forget($event)
+    {
+        //
+    }
+
+    /**
+     * Forget all of the queued listeners.
+     *
+     * @return void
+     */
+    public function forgetPushed()
+    {
+        //
+    }
+
+    /**
+     * Dispatch an event and call the listeners.
+     *
+     * @param  string|object  $event
+     * @param  mixed  $payload
+     * @return array|null
+     */
+    public function until($event, $payload = [])
+    {
+        return $this->dispatch($event, $payload, true);
     }
 }

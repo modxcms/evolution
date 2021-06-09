@@ -22,11 +22,6 @@ use Composer\Repository\PlatformRepository;
  */
 abstract class BasePackage implements PackageInterface
 {
-    const STABILITY_STABLE = 0;
-    const STABILITY_RC = 5;
-    const STABILITY_BETA = 10;
-    const STABILITY_ALPHA = 15;
-    const STABILITY_DEV = 20;
     /**
      * @phpstan-var array<string, array{description: string, method: Link::TYPE_*}>
      */
@@ -37,6 +32,13 @@ abstract class BasePackage implements PackageInterface
         'replace' => array('description' => 'replaces', 'method' => Link::TYPE_REPLACE),
         'require-dev' => array('description' => 'requires (for development)', 'method' => Link::TYPE_DEV_REQUIRE),
     );
+
+    const STABILITY_STABLE = 0;
+    const STABILITY_RC = 5;
+    const STABILITY_BETA = 10;
+    const STABILITY_ALPHA = 15;
+    const STABILITY_DEV = 20;
+
     public static $stabilities = array(
         'stable' => self::STABILITY_STABLE,
         'RC' => self::STABILITY_RC,
@@ -72,17 +74,19 @@ abstract class BasePackage implements PackageInterface
     }
 
     /**
-     * Build a regexp from a package name, expanding * globs as required
-     *
-     * @param  string $allowPattern
-     * @param  string $wrap         Wrap the cleaned string by the given string
-     * @return string
+     * {@inheritDoc}
      */
-    public static function packageNameToRegexp($allowPattern, $wrap = '{^%s$}i')
+    public function getName()
     {
-        $cleanedAllowPattern = str_replace('\\*', '.*', preg_quote($allowPattern));
+        return $this->name;
+    }
 
-        return sprintf($wrap, $cleanedAllowPattern);
+    /**
+     * {@inheritDoc}
+     */
+    public function getPrettyName()
+    {
+        return $this->prettyName;
     }
 
     /**
@@ -110,9 +114,9 @@ abstract class BasePackage implements PackageInterface
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function setId($id)
     {
-        return $this->name;
+        $this->id = $id;
     }
 
     /**
@@ -126,9 +130,20 @@ abstract class BasePackage implements PackageInterface
     /**
      * {@inheritDoc}
      */
-    public function setId($id)
+    public function setRepository(RepositoryInterface $repository)
     {
-        $this->id = $id;
+        if ($this->repository && $repository !== $this->repository) {
+            throw new \LogicException('A package can only be added to one repository');
+        }
+        $this->repository = $repository;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRepository()
+    {
+        return $this->repository;
     }
 
     /**
@@ -142,22 +157,13 @@ abstract class BasePackage implements PackageInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Returns package unique name, constructed from name, version and release type.
+     *
+     * @return string
      */
-    public function getRepository()
+    public function getUniqueName()
     {
-        return $this->repository;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setRepository(RepositoryInterface $repository)
-    {
-        if ($this->repository && $repository !== $this->repository) {
-            throw new \LogicException('A package can only be added to one repository');
-        }
-        $this->repository = $repository;
+        return $this->getName().'-'.$this->getVersion();
     }
 
     public function equals(PackageInterface $package)
@@ -183,27 +189,9 @@ abstract class BasePackage implements PackageInterface
         return $this->getUniqueName();
     }
 
-    /**
-     * Returns package unique name, constructed from name, version and release type.
-     *
-     * @return string
-     */
-    public function getUniqueName()
-    {
-        return $this->getName().'-'.$this->getVersion();
-    }
-
     public function getPrettyString()
     {
         return $this->getPrettyName().' '.$this->getPrettyVersion();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getPrettyName()
-    {
-        return $this->prettyName;
     }
 
     /**
@@ -246,5 +234,19 @@ abstract class BasePackage implements PackageInterface
     {
         $this->repository = null;
         $this->id = -1;
+    }
+
+    /**
+     * Build a regexp from a package name, expanding * globs as required
+     *
+     * @param  string $allowPattern
+     * @param  string $wrap         Wrap the cleaned string by the given string
+     * @return string
+     */
+    public static function packageNameToRegexp($allowPattern, $wrap = '{^%s$}i')
+    {
+        $cleanedAllowPattern = str_replace('\\*', '.*', preg_quote($allowPattern));
+
+        return sprintf($wrap, $cleanedAllowPattern);
     }
 }

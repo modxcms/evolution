@@ -65,20 +65,6 @@ class RequestStack
     }
 
     /**
-     * Gets the master request.
-     *
-     * @return Request|null
-     *
-     * @deprecated since symfony/http-foundation 5.3, use getMainRequest() instead
-     */
-    public function getMasterRequest()
-    {
-        trigger_deprecation('symfony/http-foundation', '5.3', '"%s()" is deprecated, use "getMainRequest()" instead.', __METHOD__);
-
-        return $this->getMainRequest();
-    }
-
-    /**
      * Gets the main request.
      *
      * Be warned that making your code aware of the main request
@@ -92,6 +78,20 @@ class RequestStack
         }
 
         return $this->requests[0];
+    }
+
+    /**
+     * Gets the master request.
+     *
+     * @return Request|null
+     *
+     * @deprecated since symfony/http-foundation 5.3, use getMainRequest() instead
+     */
+    public function getMasterRequest()
+    {
+        trigger_deprecation('symfony/http-foundation', '5.3', '"%s()" is deprecated, use "getMainRequest()" instead.', __METHOD__);
+
+        return $this->getMainRequest();
     }
 
     /**

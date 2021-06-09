@@ -48,27 +48,6 @@ class PostgresBuilder extends Builder
     }
 
     /**
-     * Parse the table name and extract the schema and table.
-     *
-     * @param  string  $table
-     * @return array
-     */
-    protected function parseSchemaAndTable($table)
-    {
-        $table = explode('.', $table);
-
-        if (is_array($schema = $this->connection->getConfig('schema'))) {
-            if (in_array($table[0], $schema)) {
-                return [array_shift($table), implode('.', $table)];
-            }
-
-            $schema = head($schema);
-        }
-
-        return [$schema ?: 'public', implode('.', $table)];
-    }
-
-    /**
      * Drop all tables from the database.
      *
      * @return void
@@ -99,18 +78,6 @@ class PostgresBuilder extends Builder
     }
 
     /**
-     * Get all of the table names for the database.
-     *
-     * @return array
-     */
-    public function getAllTables()
-    {
-        return $this->connection->select(
-            $this->grammar->compileGetAllTables((array) $this->connection->getConfig('schema'))
-        );
-    }
-
-    /**
      * Drop all views from the database.
      *
      * @return void
@@ -135,18 +102,6 @@ class PostgresBuilder extends Builder
     }
 
     /**
-     * Get all of the view names for the database.
-     *
-     * @return array
-     */
-    public function getAllViews()
-    {
-        return $this->connection->select(
-            $this->grammar->compileGetAllViews((array) $this->connection->getConfig('schema'))
-        );
-    }
-
-    /**
      * Drop all types from the database.
      *
      * @return void
@@ -167,6 +122,30 @@ class PostgresBuilder extends Builder
 
         $this->connection->statement(
             $this->grammar->compileDropAllTypes($types)
+        );
+    }
+
+    /**
+     * Get all of the table names for the database.
+     *
+     * @return array
+     */
+    public function getAllTables()
+    {
+        return $this->connection->select(
+            $this->grammar->compileGetAllTables((array) $this->connection->getConfig('schema'))
+        );
+    }
+
+    /**
+     * Get all of the view names for the database.
+     *
+     * @return array
+     */
+    public function getAllViews()
+    {
+        return $this->connection->select(
+            $this->grammar->compileGetAllViews((array) $this->connection->getConfig('schema'))
         );
     }
 
@@ -199,5 +178,26 @@ class PostgresBuilder extends Builder
         );
 
         return $this->connection->getPostProcessor()->processColumnListing($results);
+    }
+
+    /**
+     * Parse the table name and extract the schema and table.
+     *
+     * @param  string  $table
+     * @return array
+     */
+    protected function parseSchemaAndTable($table)
+    {
+        $table = explode('.', $table);
+
+        if (is_array($schema = $this->connection->getConfig('schema'))) {
+            if (in_array($table[0], $schema)) {
+                return [array_shift($table), implode('.', $table)];
+            }
+
+            $schema = head($schema);
+        }
+
+        return [$schema ?: 'public', implode('.', $table)];
     }
 }

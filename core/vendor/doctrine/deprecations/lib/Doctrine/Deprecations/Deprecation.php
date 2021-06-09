@@ -98,53 +98,6 @@ class Deprecation
     }
 
     /**
-     * @param array<mixed> $backtrace
-     */
-    private static function delegateTriggerToBackend(string $message, array $backtrace, string $link, string $package): void
-    {
-        if ((self::$type & self::TYPE_PSR_LOGGER) > 0) {
-            $context = [
-                'file' => $backtrace[0]['file'],
-                'line' => $backtrace[0]['line'],
-                'package' => $package,
-                'link' => $link,
-            ];
-
-            self::$logger->notice($message, $context);
-        }
-
-        if (! ((self::$type & self::TYPE_TRIGGER_ERROR) > 0)) {
-            return;
-        }
-
-        $message .= sprintf(
-            ' (%s:%d called by %s:%d, %s, package %s)',
-            self::basename($backtrace[0]['file']),
-            $backtrace[0]['line'],
-            self::basename($backtrace[1]['file']),
-            $backtrace[1]['line'],
-            $link,
-            $package
-        );
-
-        @trigger_error($message, E_USER_DEPRECATED);
-    }
-
-    /**
-     * A non-local-aware version of PHPs basename function.
-     */
-    private static function basename(string $filename): string
-    {
-        $pos = strrpos($filename, DIRECTORY_SEPARATOR);
-
-        if ($pos === false) {
-            return $filename;
-        }
-
-        return substr($filename, $pos + 1);
-    }
-
-    /**
      * Trigger a deprecation for the given package and identifier when called from outside.
      *
      * "Outside" means we assume that $package is currently installed as a
@@ -201,6 +154,53 @@ class Deprecation
         $message = sprintf($message, ...$args);
 
         self::delegateTriggerToBackend($message, $backtrace, $link, $package);
+    }
+
+    /**
+     * @param array<mixed> $backtrace
+     */
+    private static function delegateTriggerToBackend(string $message, array $backtrace, string $link, string $package): void
+    {
+        if ((self::$type & self::TYPE_PSR_LOGGER) > 0) {
+            $context = [
+                'file' => $backtrace[0]['file'],
+                'line' => $backtrace[0]['line'],
+                'package' => $package,
+                'link' => $link,
+            ];
+
+            self::$logger->notice($message, $context);
+        }
+
+        if (! ((self::$type & self::TYPE_TRIGGER_ERROR) > 0)) {
+            return;
+        }
+
+        $message .= sprintf(
+            ' (%s:%d called by %s:%d, %s, package %s)',
+            self::basename($backtrace[0]['file']),
+            $backtrace[0]['line'],
+            self::basename($backtrace[1]['file']),
+            $backtrace[1]['line'],
+            $link,
+            $package
+        );
+
+        @trigger_error($message, E_USER_DEPRECATED);
+    }
+
+    /**
+     * A non-local-aware version of PHPs basename function.
+     */
+    private static function basename(string $filename): string
+    {
+        $pos = strrpos($filename, DIRECTORY_SEPARATOR);
+
+        if ($pos === false) {
+            return $filename;
+        }
+
+        return substr($filename, $pos + 1);
     }
 
     public static function enableTrackingDeprecations(): void

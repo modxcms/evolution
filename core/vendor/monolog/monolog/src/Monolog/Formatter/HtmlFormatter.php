@@ -46,19 +46,34 @@ class HtmlFormatter extends NormalizerFormatter
     }
 
     /**
-     * Formats a set of log records.
+     * Creates an HTML table row
      *
-     * @param  array  $records A set of records to format
-     * @return string The formatted set of records
+     * @param string $th       Row header content
+     * @param string $td       Row standard cell content
+     * @param bool   $escapeTd false if td content must not be html escaped
      */
-    public function formatBatch(array $records): string
+    protected function addRow(string $th, string $td = ' ', bool $escapeTd = true): string
     {
-        $message = '';
-        foreach ($records as $record) {
-            $message .= $this->format($record);
+        $th = htmlspecialchars($th, ENT_NOQUOTES, 'UTF-8');
+        if ($escapeTd) {
+            $td = '<pre>'.htmlspecialchars($td, ENT_NOQUOTES, 'UTF-8').'</pre>';
         }
 
-        return $message;
+        return "<tr style=\"padding: 4px;text-align: left;\">\n<th style=\"vertical-align: top;background: #ccc;color: #000\" width=\"100\">$th:</th>\n<td style=\"padding: 4px;text-align: left;vertical-align: top;background: #eee;color: #000\">".$td."</td>\n</tr>";
+    }
+
+    /**
+     * Create a HTML h1 tag
+     *
+     * @param  string $title Text to be in the h1
+     * @param  int    $level Error level
+     * @return string
+     */
+    protected function addTitle(string $title, int $level): string
+    {
+        $title = htmlspecialchars($title, ENT_NOQUOTES, 'UTF-8');
+
+        return '<h1 style="background: '.$this->logLevels[$level].';color: #ffffff;padding: 5px;" class="monolog-output">'.$title.'</h1>';
     }
 
     /**
@@ -96,34 +111,19 @@ class HtmlFormatter extends NormalizerFormatter
     }
 
     /**
-     * Create a HTML h1 tag
+     * Formats a set of log records.
      *
-     * @param  string $title Text to be in the h1
-     * @param  int    $level Error level
-     * @return string
+     * @param  array  $records A set of records to format
+     * @return string The formatted set of records
      */
-    protected function addTitle(string $title, int $level): string
+    public function formatBatch(array $records): string
     {
-        $title = htmlspecialchars($title, ENT_NOQUOTES, 'UTF-8');
-
-        return '<h1 style="background: '.$this->logLevels[$level].';color: #ffffff;padding: 5px;" class="monolog-output">'.$title.'</h1>';
-    }
-
-    /**
-     * Creates an HTML table row
-     *
-     * @param string $th       Row header content
-     * @param string $td       Row standard cell content
-     * @param bool   $escapeTd false if td content must not be html escaped
-     */
-    protected function addRow(string $th, string $td = ' ', bool $escapeTd = true): string
-    {
-        $th = htmlspecialchars($th, ENT_NOQUOTES, 'UTF-8');
-        if ($escapeTd) {
-            $td = '<pre>'.htmlspecialchars($td, ENT_NOQUOTES, 'UTF-8').'</pre>';
+        $message = '';
+        foreach ($records as $record) {
+            $message .= $this->format($record);
         }
 
-        return "<tr style=\"padding: 4px;text-align: left;\">\n<th style=\"vertical-align: top;background: #ccc;color: #000\" width=\"100\">$th:</th>\n<td style=\"padding: 4px;text-align: left;vertical-align: top;background: #eee;color: #000\">".$td."</td>\n</tr>";
+        return $message;
     }
 
     protected function convertToString($data): string

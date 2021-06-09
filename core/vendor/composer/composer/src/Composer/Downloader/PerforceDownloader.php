@@ -27,32 +27,9 @@ class PerforceDownloader extends VcsDownloader
     /**
      * {@inheritDoc}
      */
-    public function getLocalChanges(PackageInterface $package, $path)
-    {
-        $this->io->writeError('Perforce driver does not check for local changes before overriding');
-
-        return null;
-    }
-
-    public function setPerforce($perforce)
-    {
-        $this->perforce = $perforce;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     protected function doDownload(PackageInterface $package, $path, $url, PackageInterface $prevPackage = null)
     {
         return \React\Promise\resolve();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function doUpdate(PackageInterface $initial, PackageInterface $target, $path, $url)
-    {
-        return $this->doInstall($target, $path, $url);
     }
 
     /**
@@ -109,9 +86,32 @@ class PerforceDownloader extends VcsDownloader
     /**
      * {@inheritDoc}
      */
+    protected function doUpdate(PackageInterface $initial, PackageInterface $target, $path, $url)
+    {
+        return $this->doInstall($target, $path, $url);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getLocalChanges(PackageInterface $package, $path)
+    {
+        $this->io->writeError('Perforce driver does not check for local changes before overriding');
+
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     protected function getCommitLogs($fromReference, $toReference, $path)
     {
         return $this->perforce->getCommitLogs($fromReference, $toReference);
+    }
+
+    public function setPerforce($perforce)
+    {
+        $this->perforce = $perforce;
     }
 
     /**

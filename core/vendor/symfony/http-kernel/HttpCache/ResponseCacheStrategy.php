@@ -56,6 +56,42 @@ class ResponseCacheStrategy implements ResponseCacheStrategyInterface
     /**
      * {@inheritdoc}
      */
+    public function add(Response $response)
+    {
+        ++$this->embeddedResponses;
+
+        foreach (self::OVERRIDE_DIRECTIVES as $directive) {
+            if ($response->headers->hasCacheControlDirective($directive)) {
+                $this->flagDirectives[$directive] = true;
+            }
+        }
+
+        foreach (self::INHERIT_DIRECTIVES as $directive) {
+            if (false !== $this->flagDirectives[$directive]) {
+                $this->flagDirectives[$directive] = $response->headers->hasCacheControlDirective($directive);
+            }
+        }
+
+        $age = $response->getAge();
+        $this->age = max($this->age, $age);
+
+        if ($this->willMakeFinalResponseUncacheable($response)) {
+            $this->isNotCacheableResponseEmbedded = true;
+
+            return;
+        }
+
+        $this->storeRelativeAgeDirective('max-age', $response->headers->getCacheControlDirective('max-age'), $age);
+        $this->storeRelativeAgeDirective('s-maxage', $response->headers->getCacheControlDirective('s-maxage') ?: $response->headers->getCacheControlDirective('max-age'), $age);
+
+        $expires = $response->getExpires();
+        $expires = null !== $expires ? (int) $expires->format('U') - (int) $response->getDate()->format('U') : null;
+        $this->storeRelativeAgeDirective('expires', $expires >= 0 ? $expires : null, 0);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function update(Response $response)
     {
         // if we have no embedded Response, do nothing
@@ -111,42 +147,6 @@ class ResponseCacheStrategy implements ResponseCacheStrategyInterface
             $date->modify('+'.($this->ageDirectives['expires'] + $this->age).' seconds');
             $response->setExpires($date);
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function add(Response $response)
-    {
-        ++$this->embeddedResponses;
-
-        foreach (self::OVERRIDE_DIRECTIVES as $directive) {
-            if ($response->headers->hasCacheControlDirective($directive)) {
-                $this->flagDirectives[$directive] = true;
-            }
-        }
-
-        foreach (self::INHERIT_DIRECTIVES as $directive) {
-            if (false !== $this->flagDirectives[$directive]) {
-                $this->flagDirectives[$directive] = $response->headers->hasCacheControlDirective($directive);
-            }
-        }
-
-        $age = $response->getAge();
-        $this->age = max($this->age, $age);
-
-        if ($this->willMakeFinalResponseUncacheable($response)) {
-            $this->isNotCacheableResponseEmbedded = true;
-
-            return;
-        }
-
-        $this->storeRelativeAgeDirective('max-age', $response->headers->getCacheControlDirective('max-age'), $age);
-        $this->storeRelativeAgeDirective('s-maxage', $response->headers->getCacheControlDirective('s-maxage') ?: $response->headers->getCacheControlDirective('max-age'), $age);
-
-        $expires = $response->getExpires();
-        $expires = null !== $expires ? (int) $expires->format('U') - (int) $response->getDate()->format('U') : null;
-        $this->storeRelativeAgeDirective('expires', $expires >= 0 ? $expires : null, 0);
     }
 
     /**

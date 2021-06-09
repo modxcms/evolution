@@ -28,6 +28,13 @@ abstract class Handler implements HandlerInterface
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function close(): void
+    {
+    }
+
     public function __destruct()
     {
         try {
@@ -35,13 +42,6 @@ abstract class Handler implements HandlerInterface
         } catch (\Throwable $e) {
             // do nothing
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function close(): void
-    {
     }
 
     public function __sleep()

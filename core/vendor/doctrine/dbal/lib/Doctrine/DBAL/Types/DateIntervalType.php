@@ -18,6 +18,14 @@ class DateIntervalType extends Type
     /**
      * {@inheritdoc}
      */
+    public function getName()
+    {
+        return Types::DATEINTERVAL;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getSQLDeclaration(array $column, AbstractPlatform $platform)
     {
         $column['length'] = 255;
@@ -39,14 +47,6 @@ class DateIntervalType extends Type
         }
 
         throw ConversionException::conversionFailedInvalidType($value, $this->getName(), ['null', 'DateInterval']);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return Types::DATEINTERVAL;
     }
 
     /**

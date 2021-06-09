@@ -59,36 +59,6 @@ class Validator
     }
 
     /**
-     * Assert that the callback returns true for each variable.
-     *
-     * @param callable(?string):bool $callback
-     * @param string                 $message
-     *
-     * @throws \Dotenv\Exception\ValidationException
-     *
-     * @return \Dotenv\Validator
-     */
-    public function assert(callable $callback, string $message)
-    {
-        $failing = [];
-
-        foreach ($this->variables as $variable) {
-            if ($callback($this->repository->get($variable)) === false) {
-                $failing[] = \sprintf('%s %s', $variable, $message);
-            }
-        }
-
-        if (\count($failing) > 0) {
-            throw new ValidationException(\sprintf(
-                'One or more environment variables failed assertions: %s.',
-                \implode(', ', $failing)
-            ));
-        }
-
-        return $this;
-    }
-
-    /**
      * Assert that each variable is not empty.
      *
      * @throws \Dotenv\Exception\ValidationException
@@ -102,32 +72,6 @@ class Validator
                 return Str::len(\trim($value)) > 0;
             },
             'is empty'
-        );
-    }
-
-    /**
-     * Assert that the callback returns true for each variable.
-     *
-     * Skip checking null variable values.
-     *
-     * @param callable(string):bool $callback
-     * @param string                $message
-     *
-     * @throws \Dotenv\Exception\ValidationException
-     *
-     * @return \Dotenv\Validator
-     */
-    public function assertNullable(callable $callback, string $message)
-    {
-        return $this->assert(
-            static function (?string $value) use ($callback) {
-                if ($value === null) {
-                    return true;
-                }
-
-                return $callback($value);
-            },
-            $message
         );
     }
 
@@ -204,6 +148,62 @@ class Validator
                 return Regex::matches($regex, $value)->success()->getOrElse(false);
             },
             \sprintf('does not match "%s"', $regex)
+        );
+    }
+
+    /**
+     * Assert that the callback returns true for each variable.
+     *
+     * @param callable(?string):bool $callback
+     * @param string                 $message
+     *
+     * @throws \Dotenv\Exception\ValidationException
+     *
+     * @return \Dotenv\Validator
+     */
+    public function assert(callable $callback, string $message)
+    {
+        $failing = [];
+
+        foreach ($this->variables as $variable) {
+            if ($callback($this->repository->get($variable)) === false) {
+                $failing[] = \sprintf('%s %s', $variable, $message);
+            }
+        }
+
+        if (\count($failing) > 0) {
+            throw new ValidationException(\sprintf(
+                'One or more environment variables failed assertions: %s.',
+                \implode(', ', $failing)
+            ));
+        }
+
+        return $this;
+    }
+
+    /**
+     * Assert that the callback returns true for each variable.
+     *
+     * Skip checking null variable values.
+     *
+     * @param callable(string):bool $callback
+     * @param string                $message
+     *
+     * @throws \Dotenv\Exception\ValidationException
+     *
+     * @return \Dotenv\Validator
+     */
+    public function assertNullable(callable $callback, string $message)
+    {
+        return $this->assert(
+            static function (?string $value) use ($callback) {
+                if ($value === null) {
+                    return true;
+                }
+
+                return $callback($value);
+            },
+            $message
         );
     }
 }

@@ -43,6 +43,20 @@ class VarDumper
         return (self::$handler)($var);
     }
 
+    public static function setHandler(callable $callable = null)
+    {
+        $prevHandler = self::$handler;
+
+        // Prevent replacing the handler with expected format as soon as the env var was set:
+        if (isset($_SERVER['VAR_DUMPER_FORMAT'])) {
+            return $prevHandler;
+        }
+
+        self::$handler = $callable;
+
+        return $prevHandler;
+    }
+
     private static function register(): void
     {
         $cloner = new VarCloner();
@@ -91,19 +105,5 @@ class VarDumper
             'cli' => new CliContextProvider(),
             'source' => new SourceContextProvider(null, null, $fileLinkFormatter),
         ];
-    }
-
-    public static function setHandler(callable $callable = null)
-    {
-        $prevHandler = self::$handler;
-
-        // Prevent replacing the handler with expected format as soon as the env var was set:
-        if (isset($_SERVER['VAR_DUMPER_FORMAT'])) {
-            return $prevHandler;
-        }
-
-        self::$handler = $callable;
-
-        return $prevHandler;
     }
 }

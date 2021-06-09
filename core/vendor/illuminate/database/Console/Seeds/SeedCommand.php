@@ -76,18 +76,6 @@ class SeedCommand extends Command
     }
 
     /**
-     * Get the name of the database connection to use.
-     *
-     * @return string
-     */
-    protected function getDatabase()
-    {
-        $database = $this->input->getOption('database');
-
-        return $database ?: $this->laravel['config']['database.default'];
-    }
-
-    /**
      * Get a seeder instance from the container.
      *
      * @return \Illuminate\Database\Seeder
@@ -108,6 +96,18 @@ class SeedCommand extends Command
         return $this->laravel->make($class)
                         ->setContainer($this->laravel)
                         ->setCommand($this);
+    }
+
+    /**
+     * Get the name of the database connection to use.
+     *
+     * @return string
+     */
+    protected function getDatabase()
+    {
+        $database = $this->input->getOption('database');
+
+        return $database ?: $this->laravel['config']['database.default'];
     }
 
     /**

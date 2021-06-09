@@ -51,9 +51,9 @@ class Composer
      * const RELEASE_DATE = '@release_date@';
      * const SOURCE_VERSION = '1.8-dev+source';
      */
-    const VERSION = '2.1.0';
+    const VERSION = '2.1.3';
     const BRANCH_ALIAS_VERSION = '';
-    const RELEASE_DATE = '2021-06-03 11:30:09';
+    const RELEASE_DATE = '2021-06-09 16:31:20';
     const SOURCE_VERSION = '';
 
     /**
@@ -66,50 +66,6 @@ class Composer
      * @var string
      */
     const RUNTIME_API_VERSION = '2.1.0';
-    /**
-     * @var RootPackageInterface
-     */
-    private $package;
-    /**
-     * @var Locker
-     */
-    private $locker;
-    /**
-     * @var Loop
-     */
-    private $loop;
-    /**
-     * @var Repository\RepositoryManager
-     */
-    private $repositoryManager;
-    /**
-     * @var Downloader\DownloadManager
-     */
-    private $downloadManager;
-    /**
-     * @var Installer\InstallationManager
-     */
-    private $installationManager;
-    /**
-     * @var Plugin\PluginManager
-     */
-    private $pluginManager;
-    /**
-     * @var Config
-     */
-    private $config;
-    /**
-     * @var EventDispatcher
-     */
-    private $eventDispatcher;
-    /**
-     * @var Autoload\AutoloadGenerator
-     */
-    private $autoloadGenerator;
-    /**
-     * @var ArchiveManager
-     */
-    private $archiveManager;
 
     public static function getVersion()
     {
@@ -127,12 +83,59 @@ class Composer
     }
 
     /**
-     * @return RootPackageInterface
+     * @var RootPackageInterface
      */
-    public function getPackage()
-    {
-        return $this->package;
-    }
+    private $package;
+
+    /**
+     * @var Locker
+     */
+    private $locker;
+
+    /**
+     * @var Loop
+     */
+    private $loop;
+
+    /**
+     * @var Repository\RepositoryManager
+     */
+    private $repositoryManager;
+
+    /**
+     * @var Downloader\DownloadManager
+     */
+    private $downloadManager;
+
+    /**
+     * @var Installer\InstallationManager
+     */
+    private $installationManager;
+
+    /**
+     * @var Plugin\PluginManager
+     */
+    private $pluginManager;
+
+    /**
+     * @var Config
+     */
+    private $config;
+
+    /**
+     * @var EventDispatcher
+     */
+    private $eventDispatcher;
+
+    /**
+     * @var Autoload\AutoloadGenerator
+     */
+    private $autoloadGenerator;
+
+    /**
+     * @var ArchiveManager
+     */
+    private $archiveManager;
 
     /**
      * @param  RootPackageInterface $package
@@ -144,11 +147,11 @@ class Composer
     }
 
     /**
-     * @return Config
+     * @return RootPackageInterface
      */
-    public function getConfig()
+    public function getPackage()
     {
-        return $this->config;
+        return $this->package;
     }
 
     /**
@@ -160,11 +163,11 @@ class Composer
     }
 
     /**
-     * @return Locker
+     * @return Config
      */
-    public function getLocker()
+    public function getConfig()
     {
-        return $this->locker;
+        return $this->config;
     }
 
     /**
@@ -176,11 +179,11 @@ class Composer
     }
 
     /**
-     * @return Loop
+     * @return Locker
      */
-    public function getLoop()
+    public function getLocker()
     {
-        return $this->loop;
+        return $this->locker;
     }
 
     /**
@@ -192,11 +195,11 @@ class Composer
     }
 
     /**
-     * @return RepositoryManager
+     * @return Loop
      */
-    public function getRepositoryManager()
+    public function getLoop()
     {
-        return $this->repositoryManager;
+        return $this->loop;
     }
 
     /**
@@ -208,11 +211,11 @@ class Composer
     }
 
     /**
-     * @return DownloadManager
+     * @return RepositoryManager
      */
-    public function getDownloadManager()
+    public function getRepositoryManager()
     {
-        return $this->downloadManager;
+        return $this->repositoryManager;
     }
 
     /**
@@ -224,11 +227,11 @@ class Composer
     }
 
     /**
-     * @return ArchiveManager
+     * @return DownloadManager
      */
-    public function getArchiveManager()
+    public function getDownloadManager()
     {
-        return $this->archiveManager;
+        return $this->downloadManager;
     }
 
     /**
@@ -240,11 +243,11 @@ class Composer
     }
 
     /**
-     * @return InstallationManager
+     * @return ArchiveManager
      */
-    public function getInstallationManager()
+    public function getArchiveManager()
     {
-        return $this->installationManager;
+        return $this->archiveManager;
     }
 
     /**
@@ -256,11 +259,11 @@ class Composer
     }
 
     /**
-     * @return PluginManager
+     * @return InstallationManager
      */
-    public function getPluginManager()
+    public function getInstallationManager()
     {
-        return $this->pluginManager;
+        return $this->installationManager;
     }
 
     /**
@@ -272,11 +275,11 @@ class Composer
     }
 
     /**
-     * @return EventDispatcher
+     * @return PluginManager
      */
-    public function getEventDispatcher()
+    public function getPluginManager()
     {
-        return $this->eventDispatcher;
+        return $this->pluginManager;
     }
 
     /**
@@ -288,11 +291,11 @@ class Composer
     }
 
     /**
-     * @return AutoloadGenerator
+     * @return EventDispatcher
      */
-    public function getAutoloadGenerator()
+    public function getEventDispatcher()
     {
-        return $this->autoloadGenerator;
+        return $this->eventDispatcher;
     }
 
     /**
@@ -301,5 +304,13 @@ class Composer
     public function setAutoloadGenerator(AutoloadGenerator $autoloadGenerator)
     {
         $this->autoloadGenerator = $autoloadGenerator;
+    }
+
+    /**
+     * @return AutoloadGenerator
+     */
+    public function getAutoloadGenerator()
+    {
+        return $this->autoloadGenerator;
     }
 }

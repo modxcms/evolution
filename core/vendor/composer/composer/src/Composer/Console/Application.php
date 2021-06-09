@@ -46,6 +46,16 @@ use Symfony\Component\Process\Exception\ProcessTimedOutException;
  */
 class Application extends BaseApplication
 {
+    /**
+     * @var ?Composer
+     */
+    protected $composer;
+
+    /**
+     * @var IOInterface
+     */
+    protected $io;
+
     private static $logo = '   ______
   / ____/___  ____ ___  ____  ____  ________  _____
  / /   / __ \/ __ `__ \/ __ \/ __ \/ ___/ _ \/ ___/
@@ -53,14 +63,7 @@ class Application extends BaseApplication
 \____/\____/_/ /_/ /_/ .___/\____/____/\___/_/
                     /_/
 ';
-    /**
-     * @var ?Composer
-     */
-    protected $composer;
-    /**
-     * @var IOInterface
-     */
-    protected $io;
+
     private $hasPluginCommands = false;
     private $disablePluginsByDefault = false;
 
@@ -349,64 +352,6 @@ class Application extends BaseApplication
         return $workingDir;
     }
 
-    private function getPluginCommands()
-    {
-        $commands = array();
-
-        $composer = $this->getComposer(false, false);
-        if (null === $composer) {
-            $composer = Factory::createGlobal($this->io);
-        }
-
-        if (null !== $composer) {
-            $pm = $composer->getPluginManager();
-            foreach ($pm->getPluginCapabilities('Composer\Plugin\Capability\CommandProvider', array('composer' => $composer, 'io' => $this->io)) as $capability) {
-                $newCommands = $capability->getCommands();
-                if (!is_array($newCommands)) {
-                    throw new \UnexpectedValueException('Plugin capability '.get_class($capability).' failed to return an array from getCommands');
-                }
-                foreach ($newCommands as $command) {
-                    if (!$command instanceof Command\BaseCommand) {
-                        throw new \UnexpectedValueException('Plugin capability '.get_class($capability).' returned an invalid value, we expected an array of Composer\Command\BaseCommand objects');
-                    }
-                }
-                $commands = array_merge($commands, $newCommands);
-            }
-        }
-
-        return $commands;
-    }
-
-    /**
-     * @param  bool                    $required
-     * @param  bool|null               $disablePlugins
-     * @throws JsonValidationException
-     * @return \Composer\Composer
-     */
-    public function getComposer($required = true, $disablePlugins = null)
-    {
-        if (null === $disablePlugins) {
-            $disablePlugins = $this->disablePluginsByDefault;
-        }
-
-        if (null === $this->composer) {
-            try {
-                $this->composer = Factory::create($this->io, null, $disablePlugins);
-            } catch (\InvalidArgumentException $e) {
-                if ($required) {
-                    $this->io->writeError($e->getMessage());
-                    exit(1);
-                }
-            } catch (JsonValidationException $e) {
-                $errors = ' - ' . implode(PHP_EOL . ' - ', $e->getErrors());
-                $message = $e->getMessage() . ':' . PHP_EOL . $errors;
-                throw new JsonValidationException($message);
-            }
-        }
-
-        return $this->composer;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -455,11 +400,33 @@ class Application extends BaseApplication
     }
 
     /**
-     * @return IOInterface
+     * @param  bool                    $required
+     * @param  bool|null               $disablePlugins
+     * @throws JsonValidationException
+     * @return \Composer\Composer
      */
-    public function getIO()
+    public function getComposer($required = true, $disablePlugins = null)
     {
-        return $this->io;
+        if (null === $disablePlugins) {
+            $disablePlugins = $this->disablePluginsByDefault;
+        }
+
+        if (null === $this->composer) {
+            try {
+                $this->composer = Factory::create($this->io, null, $disablePlugins);
+            } catch (\InvalidArgumentException $e) {
+                if ($required) {
+                    $this->io->writeError($e->getMessage());
+                    exit(1);
+                }
+            } catch (JsonValidationException $e) {
+                $errors = ' - ' . implode(PHP_EOL . ' - ', $e->getErrors());
+                $message = $e->getMessage() . ':' . PHP_EOL . $errors;
+                throw new JsonValidationException($message);
+            }
+        }
+
+        return $this->composer;
     }
 
     /**
@@ -473,37 +440,17 @@ class Application extends BaseApplication
         }
     }
 
+    /**
+     * @return IOInterface
+     */
+    public function getIO()
+    {
+        return $this->io;
+    }
+
     public function getHelp()
     {
         return self::$logo . parent::getHelp();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getLongVersion()
-    {
-        if (Composer::BRANCH_ALIAS_VERSION && Composer::BRANCH_ALIAS_VERSION !== '@package_branch_alias_version'.'@') {
-            return sprintf(
-                '<info>%s</info> version <comment>%s (%s)</comment> %s',
-                $this->getName(),
-                Composer::BRANCH_ALIAS_VERSION,
-                $this->getVersion(),
-                Composer::RELEASE_DATE
-            );
-        }
-
-        return parent::getLongVersion() . ' ' . Composer::RELEASE_DATE;
-    }
-
-    /**
-     * Get the working directory at startup time
-     *
-     * @return string
-     */
-    public function getInitialWorkingDirectory()
-    {
-        return $this->initialWorkingDirectory;
     }
 
     /**
@@ -552,6 +499,24 @@ class Application extends BaseApplication
     /**
      * {@inheritDoc}
      */
+    public function getLongVersion()
+    {
+        if (Composer::BRANCH_ALIAS_VERSION && Composer::BRANCH_ALIAS_VERSION !== '@package_branch_alias_version'.'@') {
+            return sprintf(
+                '<info>%s</info> version <comment>%s (%s)</comment> %s',
+                $this->getName(),
+                Composer::BRANCH_ALIAS_VERSION,
+                $this->getVersion(),
+                Composer::RELEASE_DATE
+            );
+        }
+
+        return parent::getLongVersion() . ' ' . Composer::RELEASE_DATE;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     protected function getDefaultInputDefinition()
     {
         $definition = parent::getDefaultInputDefinition();
@@ -561,5 +526,43 @@ class Application extends BaseApplication
         $definition->addOption(new InputOption('--no-cache', null, InputOption::VALUE_NONE, 'Prevent use of the cache'));
 
         return $definition;
+    }
+
+    private function getPluginCommands()
+    {
+        $commands = array();
+
+        $composer = $this->getComposer(false, false);
+        if (null === $composer) {
+            $composer = Factory::createGlobal($this->io);
+        }
+
+        if (null !== $composer) {
+            $pm = $composer->getPluginManager();
+            foreach ($pm->getPluginCapabilities('Composer\Plugin\Capability\CommandProvider', array('composer' => $composer, 'io' => $this->io)) as $capability) {
+                $newCommands = $capability->getCommands();
+                if (!is_array($newCommands)) {
+                    throw new \UnexpectedValueException('Plugin capability '.get_class($capability).' failed to return an array from getCommands');
+                }
+                foreach ($newCommands as $command) {
+                    if (!$command instanceof Command\BaseCommand) {
+                        throw new \UnexpectedValueException('Plugin capability '.get_class($capability).' returned an invalid value, we expected an array of Composer\Command\BaseCommand objects');
+                    }
+                }
+                $commands = array_merge($commands, $newCommands);
+            }
+        }
+
+        return $commands;
+    }
+
+    /**
+     * Get the working directory at startup time
+     *
+     * @return string
+     */
+    public function getInitialWorkingDirectory()
+    {
+        return $this->initialWorkingDirectory;
     }
 }

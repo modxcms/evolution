@@ -220,25 +220,6 @@ abstract class ClusterStrategy implements StrategyInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getSlot(CommandInterface $command)
-    {
-        $slot = $command->getSlot();
-
-        if (!isset($slot) && isset($this->commands[$cmdID = $command->getId()])) {
-            $key = call_user_func($this->commands[$cmdID], $command);
-
-            if (isset($key)) {
-                $slot = $this->getSlotByKey($key);
-                $command->setSlot($slot);
-            }
-        }
-
-        return $slot;
-    }
-
-    /**
      * Extracts the key from the first argument of a command instance.
      *
      * @param CommandInterface $command Command instance.
@@ -265,34 +246,6 @@ abstract class ClusterStrategy implements StrategyInterface
         if ($this->checkSameSlotForKeys($arguments)) {
             return $arguments[0];
         }
-    }
-
-    /**
-     * Checks if the specified array of keys will generate the same hash.
-     *
-     * @param array $keys Array of keys.
-     *
-     * @return bool
-     */
-    protected function checkSameSlotForKeys(array $keys)
-    {
-        if (!$count = count($keys)) {
-            return false;
-        }
-
-        $currentSlot = $this->getSlotByKey($keys[0]);
-
-        for ($i = 1; $i < $count; ++$i) {
-            $nextSlot = $this->getSlotByKey($keys[$i]);
-
-            if ($currentSlot !== $nextSlot) {
-                return false;
-            }
-
-            $currentSlot = $nextSlot;
-        }
-
-        return true;
     }
 
     /**
@@ -446,6 +399,53 @@ abstract class ClusterStrategy implements StrategyInterface
         if ($keys && $this->checkSameSlotForKeys($keys)) {
             return $keys[0];
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSlot(CommandInterface $command)
+    {
+        $slot = $command->getSlot();
+
+        if (!isset($slot) && isset($this->commands[$cmdID = $command->getId()])) {
+            $key = call_user_func($this->commands[$cmdID], $command);
+
+            if (isset($key)) {
+                $slot = $this->getSlotByKey($key);
+                $command->setSlot($slot);
+            }
+        }
+
+        return $slot;
+    }
+
+    /**
+     * Checks if the specified array of keys will generate the same hash.
+     *
+     * @param array $keys Array of keys.
+     *
+     * @return bool
+     */
+    protected function checkSameSlotForKeys(array $keys)
+    {
+        if (!$count = count($keys)) {
+            return false;
+        }
+
+        $currentSlot = $this->getSlotByKey($keys[0]);
+
+        for ($i = 1; $i < $count; ++$i) {
+            $nextSlot = $this->getSlotByKey($keys[$i]);
+
+            if ($currentSlot !== $nextSlot) {
+                return false;
+            }
+
+            $currentSlot = $nextSlot;
+        }
+
+        return true;
     }
 
     /**

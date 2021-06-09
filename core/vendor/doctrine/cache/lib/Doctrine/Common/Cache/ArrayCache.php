@@ -72,9 +72,9 @@ class ArrayCache extends CacheProvider
     /**
      * {@inheritdoc}
      */
-    protected function doDelete($id)
+    protected function doSave($id, $data, $lifeTime = 0)
     {
-        unset($this->data[$id]);
+        $this->data[$id] = [$data, $lifeTime ? time() + $lifeTime : false];
 
         return true;
     }
@@ -82,9 +82,9 @@ class ArrayCache extends CacheProvider
     /**
      * {@inheritdoc}
      */
-    protected function doSave($id, $data, $lifeTime = 0)
+    protected function doDelete($id)
     {
-        $this->data[$id] = [$data, $lifeTime ? time() + $lifeTime : false];
+        unset($this->data[$id]);
 
         return true;
     }

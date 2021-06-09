@@ -115,41 +115,26 @@ class DatabaseStore implements LockProvider, Store
     }
 
     /**
-     * Get a query builder for the cache table.
-     *
-     * @return \Illuminate\Database\Query\Builder
-     */
-    protected function table()
-    {
-        return $this->connection->table($this->table);
-    }
-
-    /**
-     * Remove an item from the cache.
+     * Store an item in the cache for a given number of seconds.
      *
      * @param  string  $key
+     * @param  mixed  $value
+     * @param  int  $seconds
      * @return bool
      */
-    public function forget($key)
+    public function put($key, $value, $seconds)
     {
-        $this->table()->where('key', '=', $this->prefix.$key)->delete();
+        $key = $this->prefix.$key;
+        $value = $this->serialize($value);
+        $expiration = $this->getTime() + $seconds;
 
-        return true;
-    }
+        try {
+            return $this->table()->insert(compact('key', 'value', 'expiration'));
+        } catch (Exception $e) {
+            $result = $this->table()->where('key', $key)->update(compact('value', 'expiration'));
 
-    /**
-     * Unserialize the given value.
-     *
-     * @param  string  $value
-     * @return mixed
-     */
-    protected function unserialize($value)
-    {
-        if ($this->connection instanceof PostgresConnection && ! Str::contains($value, [':', ';'])) {
-            $value = base64_decode($value);
+            return $result > 0;
         }
-
-        return unserialize($value);
     }
 
     /**
@@ -180,33 +165,6 @@ class DatabaseStore implements LockProvider, Store
     }
 
     /**
-     * Serialize the given value.
-     *
-     * @param  mixed  $value
-     * @return string
-     */
-    protected function serialize($value)
-    {
-        $result = serialize($value);
-
-        if ($this->connection instanceof PostgresConnection && Str::contains($result, "\0")) {
-            $result = base64_encode($result);
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get the current system time.
-     *
-     * @return int
-     */
-    protected function getTime()
-    {
-        return $this->currentTime();
-    }
-
-    /**
      * Increment the value of an item in the cache.
      *
      * @param  string  $key
@@ -217,6 +175,20 @@ class DatabaseStore implements LockProvider, Store
     {
         return $this->incrementOrDecrement($key, $value, function ($current, $value) {
             return $current + $value;
+        });
+    }
+
+    /**
+     * Decrement the value of an item in the cache.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return int|bool
+     */
+    public function decrement($key, $value = 1)
+    {
+        return $this->incrementOrDecrement($key, $value, function ($current, $value) {
+            return $current - $value;
         });
     }
 
@@ -268,17 +240,13 @@ class DatabaseStore implements LockProvider, Store
     }
 
     /**
-     * Decrement the value of an item in the cache.
+     * Get the current system time.
      *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return int|bool
+     * @return int
      */
-    public function decrement($key, $value = 1)
+    protected function getTime()
     {
-        return $this->incrementOrDecrement($key, $value, function ($current, $value) {
-            return $current - $value;
-        });
+        return $this->currentTime();
     }
 
     /**
@@ -291,41 +259,6 @@ class DatabaseStore implements LockProvider, Store
     public function forever($key, $value)
     {
         return $this->put($key, $value, 315360000);
-    }
-
-    /**
-     * Store an item in the cache for a given number of seconds.
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @param  int  $seconds
-     * @return bool
-     */
-    public function put($key, $value, $seconds)
-    {
-        $key = $this->prefix.$key;
-        $value = $this->serialize($value);
-        $expiration = $this->getTime() + $seconds;
-
-        try {
-            return $this->table()->insert(compact('key', 'value', 'expiration'));
-        } catch (Exception $e) {
-            $result = $this->table()->where('key', $key)->update(compact('value', 'expiration'));
-
-            return $result > 0;
-        }
-    }
-
-    /**
-     * Restore a lock instance using the owner identifier.
-     *
-     * @param  string  $name
-     * @param  string  $owner
-     * @return \Illuminate\Contracts\Cache\Lock
-     */
-    public function restoreLock($name, $owner)
-    {
-        return $this->lock($name, 0, $owner);
     }
 
     /**
@@ -349,6 +282,31 @@ class DatabaseStore implements LockProvider, Store
     }
 
     /**
+     * Restore a lock instance using the owner identifier.
+     *
+     * @param  string  $name
+     * @param  string  $owner
+     * @return \Illuminate\Contracts\Cache\Lock
+     */
+    public function restoreLock($name, $owner)
+    {
+        return $this->lock($name, 0, $owner);
+    }
+
+    /**
+     * Remove an item from the cache.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    public function forget($key)
+    {
+        $this->table()->where('key', '=', $this->prefix.$key)->delete();
+
+        return true;
+    }
+
+    /**
      * Remove all items from the cache.
      *
      * @return bool
@@ -358,6 +316,16 @@ class DatabaseStore implements LockProvider, Store
         $this->table()->delete();
 
         return true;
+    }
+
+    /**
+     * Get a query builder for the cache table.
+     *
+     * @return \Illuminate\Database\Query\Builder
+     */
+    protected function table()
+    {
+        return $this->connection->table($this->table);
     }
 
     /**
@@ -391,5 +359,37 @@ class DatabaseStore implements LockProvider, Store
     public function getPrefix()
     {
         return $this->prefix;
+    }
+
+    /**
+     * Serialize the given value.
+     *
+     * @param  mixed  $value
+     * @return string
+     */
+    protected function serialize($value)
+    {
+        $result = serialize($value);
+
+        if ($this->connection instanceof PostgresConnection && Str::contains($result, "\0")) {
+            $result = base64_encode($result);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Unserialize the given value.
+     *
+     * @param  string  $value
+     * @return mixed
+     */
+    protected function unserialize($value)
+    {
+        if ($this->connection instanceof PostgresConnection && ! Str::contains($value, [':', ';'])) {
+            $value = base64_decode($value);
+        }
+
+        return unserialize($value);
     }
 }

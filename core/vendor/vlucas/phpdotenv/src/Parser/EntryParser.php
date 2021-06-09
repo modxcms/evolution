@@ -82,23 +82,6 @@ final class EntryParser
     }
 
     /**
-     * Generate a friendly error message.
-     *
-     * @param string $cause
-     * @param string $subject
-     *
-     * @return string
-     */
-    private static function getErrorMessage(string $cause, string $subject)
-    {
-        return \sprintf(
-            'Encountered %s at [%s].',
-            $cause,
-            \strtok($subject, "\n")
-        );
-    }
-
-    /**
      * Parse the given variable name.
      *
      * That is, strip the optional quotes and leading "export" from the
@@ -289,5 +272,22 @@ final class EntryParser
             default:
                 throw new \Error('Parser entered invalid state.');
         }
+    }
+
+    /**
+     * Generate a friendly error message.
+     *
+     * @param string $cause
+     * @param string $subject
+     *
+     * @return string
+     */
+    private static function getErrorMessage(string $cause, string $subject)
+    {
+        return \sprintf(
+            'Encountered %s at [%s].',
+            $cause,
+            \strtok($subject, "\n")
+        );
     }
 }

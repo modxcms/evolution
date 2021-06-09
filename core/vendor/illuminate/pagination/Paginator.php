@@ -73,6 +73,18 @@ class Paginator extends AbstractPaginator implements Arrayable, ArrayAccess, Cou
     }
 
     /**
+     * Get the URL for the next page.
+     *
+     * @return string|null
+     */
+    public function nextPageUrl()
+    {
+        if ($this->hasMorePages()) {
+            return $this->url($this->currentPage() + 1);
+        }
+    }
+
+    /**
      * Render the paginator using the given view.
      *
      * @param  string|null  $view
@@ -112,24 +124,13 @@ class Paginator extends AbstractPaginator implements Arrayable, ArrayAccess, Cou
     }
 
     /**
-     * Convert the object to its JSON representation.
+     * Determine if there are more items in the data source.
      *
-     * @param  int  $options
-     * @return string
+     * @return bool
      */
-    public function toJson($options = 0)
+    public function hasMorePages()
     {
-        return json_encode($this->jsonSerialize(), $options);
-    }
-
-    /**
-     * Convert the object into something JSON serializable.
-     *
-     * @return array
-     */
-    public function jsonSerialize()
-    {
-        return $this->toArray();
+        return $this->hasMore;
     }
 
     /**
@@ -153,24 +154,23 @@ class Paginator extends AbstractPaginator implements Arrayable, ArrayAccess, Cou
     }
 
     /**
-     * Get the URL for the next page.
+     * Convert the object into something JSON serializable.
      *
-     * @return string|null
+     * @return array
      */
-    public function nextPageUrl()
+    public function jsonSerialize()
     {
-        if ($this->hasMorePages()) {
-            return $this->url($this->currentPage() + 1);
-        }
+        return $this->toArray();
     }
 
     /**
-     * Determine if there are more items in the data source.
+     * Convert the object to its JSON representation.
      *
-     * @return bool
+     * @param  int  $options
+     * @return string
      */
-    public function hasMorePages()
+    public function toJson($options = 0)
     {
-        return $this->hasMore;
+        return json_encode($this->jsonSerialize(), $options);
     }
 }

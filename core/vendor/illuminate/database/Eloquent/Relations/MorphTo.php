@@ -125,26 +125,6 @@ class MorphTo extends BelongsTo
     }
 
     /**
-     * Match the results for a given type to their parents.
-     *
-     * @param  string  $type
-     * @param  \Illuminate\Database\Eloquent\Collection  $results
-     * @return void
-     */
-    protected function matchToMorphParents($type, Collection $results)
-    {
-        foreach ($results as $result) {
-            $ownerKey = ! is_null($this->ownerKey) ? $this->getDictionaryKey($result->{$this->ownerKey}) : $result->getKey();
-
-            if (isset($this->dictionary[$type][$ownerKey])) {
-                foreach ($this->dictionary[$type][$ownerKey] as $model) {
-                    $model->setRelation($this->relationName, $result);
-                }
-            }
-        }
-    }
-
-    /**
      * Get all of the relation results for a type.
      *
      * @param  string  $type
@@ -178,6 +158,22 @@ class MorphTo extends BelongsTo
     }
 
     /**
+     * Gather all of the foreign keys for a given type.
+     *
+     * @param  string  $type
+     * @param  string  $keyType
+     * @return array
+     */
+    protected function gatherKeysByType($type, $keyType)
+    {
+        return $keyType !== 'string'
+                    ? array_keys($this->dictionary[$type])
+                    : array_map(function ($modelId) {
+                        return (string) $modelId;
+                    }, array_filter(array_keys($this->dictionary[$type])));
+    }
+
+    /**
      * Create a new model instance by type.
      *
      * @param  string  $type
@@ -195,37 +191,6 @@ class MorphTo extends BelongsTo
     }
 
     /**
-     * Replay stored macro calls on the actual related instance.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    protected function replayMacros(Builder $query)
-    {
-        foreach ($this->macroBuffer as $macro) {
-            $query->{$macro['method']}(...$macro['parameters']);
-        }
-
-        return $query;
-    }
-
-    /**
-     * Gather all of the foreign keys for a given type.
-     *
-     * @param  string  $type
-     * @param  string  $keyType
-     * @return array
-     */
-    protected function gatherKeysByType($type, $keyType)
-    {
-        return $keyType !== 'string'
-                    ? array_keys($this->dictionary[$type])
-                    : array_map(function ($modelId) {
-                        return (string) $modelId;
-                    }, array_filter(array_keys($this->dictionary[$type])));
-    }
-
-    /**
      * Match the eagerly loaded results to their parents.
      *
      * @param  array  $models
@@ -236,6 +201,26 @@ class MorphTo extends BelongsTo
     public function match(array $models, Collection $results, $relation)
     {
         return $models;
+    }
+
+    /**
+     * Match the results for a given type to their parents.
+     *
+     * @param  string  $type
+     * @param  \Illuminate\Database\Eloquent\Collection  $results
+     * @return void
+     */
+    protected function matchToMorphParents($type, Collection $results)
+    {
+        foreach ($results as $result) {
+            $ownerKey = ! is_null($this->ownerKey) ? $this->getDictionaryKey($result->{$this->ownerKey}) : $result->getKey();
+
+            if (isset($this->dictionary[$type][$ownerKey])) {
+                foreach ($this->dictionary[$type][$ownerKey] as $model) {
+                    $model->setRelation($this->relationName, $result);
+                }
+            }
+        }
     }
 
     /**
@@ -287,6 +272,17 @@ class MorphTo extends BelongsTo
         if (! is_null($this->child->{$this->foreignKey})) {
             parent::touch();
         }
+    }
+
+    /**
+     * Make a new related instance for the given model.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $parent
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    protected function newRelatedInstanceFor(Model $parent)
+    {
+        return $parent->{$this->getRelationName()}()->getRelated()->newInstance();
     }
 
     /**
@@ -355,6 +351,21 @@ class MorphTo extends BelongsTo
     }
 
     /**
+     * Replay stored macro calls on the actual related instance.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function replayMacros(Builder $query)
+    {
+        foreach ($this->macroBuffer as $macro) {
+            $query->{$macro['method']}(...$macro['parameters']);
+        }
+
+        return $query;
+    }
+
+    /**
      * Handle dynamic method calls to the relationship.
      *
      * @param  string  $method
@@ -381,16 +392,5 @@ class MorphTo extends BelongsTo
 
             return $this;
         }
-    }
-
-    /**
-     * Make a new related instance for the given model.
-     *
-     * @param  \Illuminate\Database\Eloquent\Model  $parent
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    protected function newRelatedInstanceFor(Model $parent)
-    {
-        return $parent->{$this->getRelationName()}()->getRelated()->newInstance();
     }
 }

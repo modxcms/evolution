@@ -13,6 +13,14 @@ class DateTimeTzImmutableType extends DateTimeTzType
     /**
      * {@inheritdoc}
      */
+    public function getName()
+    {
+        return Types::DATETIMETZ_IMMUTABLE;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
         if ($value === null) {
@@ -28,14 +36,6 @@ class DateTimeTzImmutableType extends DateTimeTzType
             $this->getName(),
             ['null', DateTimeImmutable::class]
         );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return Types::DATETIMETZ_IMMUTABLE;
     }
 
     /**

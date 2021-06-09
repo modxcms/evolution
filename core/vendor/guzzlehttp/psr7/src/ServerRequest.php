@@ -76,107 +76,6 @@ class ServerRequest extends Request implements ServerRequestInterface
     }
 
     /**
-     * Return a ServerRequest populated with superglobals:
-     * $_GET
-     * $_POST
-     * $_COOKIE
-     * $_FILES
-     * $_SERVER
-     *
-     * @return ServerRequestInterface
-     */
-    public static function fromGlobals()
-    {
-        $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
-        $headers = getallheaders();
-        $uri = self::getUriFromGlobals();
-        $body = new CachingStream(new LazyOpenStream('php://input', 'r+'));
-        $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? str_replace('HTTP/', '', $_SERVER['SERVER_PROTOCOL']) : '1.1';
-
-        $serverRequest = new ServerRequest($method, $uri, $headers, $body, $protocol, $_SERVER);
-
-        return $serverRequest
-            ->withCookieParams($_COOKIE)
-            ->withQueryParams($_GET)
-            ->withParsedBody($_POST)
-            ->withUploadedFiles(self::normalizeFiles($_FILES));
-    }
-
-    /**
-     * Get a Uri populated with values from $_SERVER.
-     *
-     * @return UriInterface
-     */
-    public static function getUriFromGlobals()
-    {
-        $uri = new Uri('');
-
-        $uri = $uri->withScheme(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http');
-
-        $hasPort = false;
-        if (isset($_SERVER['HTTP_HOST'])) {
-            list($host, $port) = self::extractHostAndPortFromAuthority($_SERVER['HTTP_HOST']);
-            if ($host !== null) {
-                $uri = $uri->withHost($host);
-            }
-
-            if ($port !== null) {
-                $hasPort = true;
-                $uri = $uri->withPort($port);
-            }
-        } elseif (isset($_SERVER['SERVER_NAME'])) {
-            $uri = $uri->withHost($_SERVER['SERVER_NAME']);
-        } elseif (isset($_SERVER['SERVER_ADDR'])) {
-            $uri = $uri->withHost($_SERVER['SERVER_ADDR']);
-        }
-
-        if (!$hasPort && isset($_SERVER['SERVER_PORT'])) {
-            $uri = $uri->withPort($_SERVER['SERVER_PORT']);
-        }
-
-        $hasQuery = false;
-        if (isset($_SERVER['REQUEST_URI'])) {
-            $requestUriParts = explode('?', $_SERVER['REQUEST_URI'], 2);
-            $uri = $uri->withPath($requestUriParts[0]);
-            if (isset($requestUriParts[1])) {
-                $hasQuery = true;
-                $uri = $uri->withQuery($requestUriParts[1]);
-            }
-        }
-
-        if (!$hasQuery && isset($_SERVER['QUERY_STRING'])) {
-            $uri = $uri->withQuery($_SERVER['QUERY_STRING']);
-        }
-
-        return $uri;
-    }
-
-    private static function extractHostAndPortFromAuthority($authority)
-    {
-        $uri = 'http://' . $authority;
-        $parts = parse_url($uri);
-        if (false === $parts) {
-            return [null, null];
-        }
-
-        $host = isset($parts['host']) ? $parts['host'] : null;
-        $port = isset($parts['port']) ? $parts['port'] : null;
-
-        return [$host, $port];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function withCookieParams(array $cookies)
-    {
-        $new = clone $this;
-        $new->cookieParams = $cookies;
-
-        return $new;
-    }
-
-    /**
      * Return an UploadedFile instance array.
      *
      * @param array $files A array which respect $_FILES structure
@@ -259,6 +158,96 @@ class ServerRequest extends Request implements ServerRequestInterface
     }
 
     /**
+     * Return a ServerRequest populated with superglobals:
+     * $_GET
+     * $_POST
+     * $_COOKIE
+     * $_FILES
+     * $_SERVER
+     *
+     * @return ServerRequestInterface
+     */
+    public static function fromGlobals()
+    {
+        $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
+        $headers = getallheaders();
+        $uri = self::getUriFromGlobals();
+        $body = new CachingStream(new LazyOpenStream('php://input', 'r+'));
+        $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? str_replace('HTTP/', '', $_SERVER['SERVER_PROTOCOL']) : '1.1';
+
+        $serverRequest = new ServerRequest($method, $uri, $headers, $body, $protocol, $_SERVER);
+
+        return $serverRequest
+            ->withCookieParams($_COOKIE)
+            ->withQueryParams($_GET)
+            ->withParsedBody($_POST)
+            ->withUploadedFiles(self::normalizeFiles($_FILES));
+    }
+
+    private static function extractHostAndPortFromAuthority($authority)
+    {
+        $uri = 'http://' . $authority;
+        $parts = parse_url($uri);
+        if (false === $parts) {
+            return [null, null];
+        }
+
+        $host = isset($parts['host']) ? $parts['host'] : null;
+        $port = isset($parts['port']) ? $parts['port'] : null;
+
+        return [$host, $port];
+    }
+
+    /**
+     * Get a Uri populated with values from $_SERVER.
+     *
+     * @return UriInterface
+     */
+    public static function getUriFromGlobals()
+    {
+        $uri = new Uri('');
+
+        $uri = $uri->withScheme(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http');
+
+        $hasPort = false;
+        if (isset($_SERVER['HTTP_HOST'])) {
+            list($host, $port) = self::extractHostAndPortFromAuthority($_SERVER['HTTP_HOST']);
+            if ($host !== null) {
+                $uri = $uri->withHost($host);
+            }
+
+            if ($port !== null) {
+                $hasPort = true;
+                $uri = $uri->withPort($port);
+            }
+        } elseif (isset($_SERVER['SERVER_NAME'])) {
+            $uri = $uri->withHost($_SERVER['SERVER_NAME']);
+        } elseif (isset($_SERVER['SERVER_ADDR'])) {
+            $uri = $uri->withHost($_SERVER['SERVER_ADDR']);
+        }
+
+        if (!$hasPort && isset($_SERVER['SERVER_PORT'])) {
+            $uri = $uri->withPort($_SERVER['SERVER_PORT']);
+        }
+
+        $hasQuery = false;
+        if (isset($_SERVER['REQUEST_URI'])) {
+            $requestUriParts = explode('?', $_SERVER['REQUEST_URI'], 2);
+            $uri = $uri->withPath($requestUriParts[0]);
+            if (isset($requestUriParts[1])) {
+                $hasQuery = true;
+                $uri = $uri->withQuery($requestUriParts[1]);
+            }
+        }
+
+        if (!$hasQuery && isset($_SERVER['QUERY_STRING'])) {
+            $uri = $uri->withQuery($_SERVER['QUERY_STRING']);
+        }
+
+        return $uri;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getServerParams()
@@ -291,6 +280,17 @@ class ServerRequest extends Request implements ServerRequestInterface
     public function getCookieParams()
     {
         return $this->cookieParams;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function withCookieParams(array $cookies)
+    {
+        $new = clone $this;
+        $new->cookieParams = $cookies;
+
+        return $new;
     }
 
     /**

@@ -44,23 +44,11 @@ class SuggestedPackagesReporter
     }
 
     /**
-     * Add all suggestions from a package.
-     *
-     * @param  PackageInterface          $package
-     * @return SuggestedPackagesReporter
+     * @return array Suggested packages with source, target and reason keys.
      */
-    public function addSuggestionsFromPackage(PackageInterface $package)
+    public function getPackages()
     {
-        $source = $package->getPrettyName();
-        foreach ($package->getSuggests() as $target => $reason) {
-            $this->addPackage(
-                $source,
-                $target,
-                $reason
-            );
-        }
-
-        return $this;
+        return $this->suggestedPackages;
     }
 
     /**
@@ -81,6 +69,26 @@ class SuggestedPackagesReporter
             'target' => $target,
             'reason' => $reason,
         );
+
+        return $this;
+    }
+
+    /**
+     * Add all suggestions from a package.
+     *
+     * @param  PackageInterface          $package
+     * @return SuggestedPackagesReporter
+     */
+    public function addSuggestionsFromPackage(PackageInterface $package)
+    {
+        $source = $package->getPrettyName();
+        foreach ($package->getSuggests() as $target => $reason) {
+            $this->addPackage(
+                $source,
+                $target,
+                $reason
+            );
+        }
 
         return $this;
     }
@@ -155,6 +163,21 @@ class SuggestedPackagesReporter
     }
 
     /**
+     * Output number of new suggested packages and a hint to use suggest command.
+     *
+     * @param  InstalledRepository|null $installedRepo    If passed in, suggested packages which are installed already will be skipped
+     * @param  PackageInterface|null    $onlyDependentsOf If passed in, only the suggestions from direct dependents of that package, or from the package itself, will be shown
+     * @return void
+     */
+    public function outputMinimalistic(InstalledRepository $installedRepo = null, PackageInterface $onlyDependentsOf = null)
+    {
+        $suggestedPackages = $this->getFilteredSuggestions($installedRepo, $onlyDependentsOf);
+        if ($suggestedPackages) {
+            $this->io->writeError('<info>'.count($suggestedPackages).' package suggestions were added by new dependencies, use `composer suggest` to see details.</info>');
+        }
+    }
+
+    /**
      * @param  InstalledRepository|null $installedRepo    If passed in, suggested packages which are installed already will be skipped
      * @param  PackageInterface|null    $onlyDependentsOf If passed in, only the suggestions from direct dependents of that package, or from the package itself, will be shown
      * @return array[]
@@ -193,14 +216,6 @@ class SuggestedPackagesReporter
     }
 
     /**
-     * @return array Suggested packages with source, target and reason keys.
-     */
-    public function getPackages()
-    {
-        return $this->suggestedPackages;
-    }
-
-    /**
      * @param  string $string
      * @return string
      */
@@ -222,20 +237,5 @@ class SuggestedPackagesReporter
             '',
             str_replace("\n", ' ', $string)
         );
-    }
-
-    /**
-     * Output number of new suggested packages and a hint to use suggest command.
-     *
-     * @param  InstalledRepository|null $installedRepo    If passed in, suggested packages which are installed already will be skipped
-     * @param  PackageInterface|null    $onlyDependentsOf If passed in, only the suggestions from direct dependents of that package, or from the package itself, will be shown
-     * @return void
-     */
-    public function outputMinimalistic(InstalledRepository $installedRepo = null, PackageInterface $onlyDependentsOf = null)
-    {
-        $suggestedPackages = $this->getFilteredSuggestions($installedRepo, $onlyDependentsOf);
-        if ($suggestedPackages) {
-            $this->io->writeError('<info>'.count($suggestedPackages).' package suggestions were added by new dependencies, use `composer suggest` to see details.</info>');
-        }
     }
 }

@@ -14,18 +14,6 @@ trait Batchable
     public $batchId;
 
     /**
-     * Determine if the batch is still active and processing.
-     *
-     * @return bool
-     */
-    public function batching()
-    {
-        $batch = $this->batch();
-
-        return $batch && ! $batch->cancelled();
-    }
-
-    /**
      * Get the batch instance for the job, if applicable.
      *
      * @return \Illuminate\Bus\Batch|null
@@ -35,6 +23,18 @@ trait Batchable
         if ($this->batchId) {
             return Container::getInstance()->make(BatchRepository::class)->find($this->batchId);
         }
+    }
+
+    /**
+     * Determine if the batch is still active and processing.
+     *
+     * @return bool
+     */
+    public function batching()
+    {
+        $batch = $this->batch();
+
+        return $batch && ! $batch->cancelled();
     }
 
     /**

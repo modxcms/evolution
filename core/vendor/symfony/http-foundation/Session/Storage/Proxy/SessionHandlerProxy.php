@@ -66,6 +66,15 @@ class SessionHandlerProxy extends AbstractProxy implements \SessionHandlerInterf
      * @return bool
      */
     #[\ReturnTypeWillChange]
+    public function write($sessionId, $data)
+    {
+        return (bool) $this->handler->write($sessionId, $data);
+    }
+
+    /**
+     * @return bool
+     */
+    #[\ReturnTypeWillChange]
     public function destroy($sessionId)
     {
         return (bool) $this->handler->destroy($sessionId);
@@ -96,14 +105,5 @@ class SessionHandlerProxy extends AbstractProxy implements \SessionHandlerInterf
     public function updateTimestamp($sessionId, $data)
     {
         return $this->handler instanceof \SessionUpdateTimestampHandlerInterface ? $this->handler->updateTimestamp($sessionId, $data) : $this->write($sessionId, $data);
-    }
-
-    /**
-     * @return bool
-     */
-    #[\ReturnTypeWillChange]
-    public function write($sessionId, $data)
-    {
-        return (bool) $this->handler->write($sessionId, $data);
     }
 }

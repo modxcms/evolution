@@ -23,18 +23,21 @@ class RuleSet implements \IteratorAggregate, \Countable
     const TYPE_PACKAGE = 0;
     const TYPE_REQUEST = 1;
     const TYPE_LEARNED = 4;
-    protected static $types = array(
-        255 => 'UNKNOWN',
-        self::TYPE_PACKAGE => 'PACKAGE',
-        self::TYPE_REQUEST => 'REQUEST',
-        self::TYPE_LEARNED => 'LEARNED',
-    );
+
     /**
      * READ-ONLY: Lookup table for rule id to rule object
      *
      * @var Rule[]
      */
     public $ruleById;
+
+    protected static $types = array(
+        255 => 'UNKNOWN',
+        self::TYPE_PACKAGE => 'PACKAGE',
+        self::TYPE_REQUEST => 'REQUEST',
+        self::TYPE_LEARNED => 'LEARNED',
+    );
+
     protected $rules;
     protected $nextRuleId;
 
@@ -49,14 +52,6 @@ class RuleSet implements \IteratorAggregate, \Countable
         }
 
         $this->rulesByHash = array();
-    }
-
-    public function getTypes()
-    {
-        $types = self::$types;
-        unset($types[255]);
-
-        return array_keys($types);
     }
 
     public function add(Rule $rule, $type)
@@ -113,17 +108,17 @@ class RuleSet implements \IteratorAggregate, \Countable
         return $this->ruleById[$id];
     }
 
+    public function getRules()
+    {
+        return $this->rules;
+    }
+
     /**
      * @return RuleSetIterator
      */
     public function getIterator()
     {
         return new RuleSetIterator($this->getRules());
-    }
-
-    public function getRules()
-    {
-        return $this->rules;
     }
 
     public function getIteratorFor($types)
@@ -157,9 +152,12 @@ class RuleSet implements \IteratorAggregate, \Countable
         return new RuleSetIterator($rules);
     }
 
-    public function __toString()
+    public function getTypes()
     {
-        return $this->getPrettyString();
+        $types = self::$types;
+        unset($types[255]);
+
+        return array_keys($types);
     }
 
     public function getPrettyString(RepositorySet $repositorySet = null, Request $request = null, Pool $pool = null, $isVerbose = false)
@@ -174,5 +172,10 @@ class RuleSet implements \IteratorAggregate, \Countable
         }
 
         return $string;
+    }
+
+    public function __toString()
+    {
+        return $this->getPrettyString();
     }
 }

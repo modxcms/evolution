@@ -88,36 +88,6 @@ class MongoDbSessionHandler extends AbstractSessionHandler
     }
 
     /**
-     * @return bool
-     */
-    public function gc($maxlifetime)
-    {
-        $this->getCollection()->deleteMany([
-            $this->options['expiry_field'] => ['$lt' => new \MongoDB\BSON\UTCDateTime()],
-        ]);
-
-        return true;
-    }
-
-    /**
-     * @return bool
-     */
-    public function updateTimestamp($sessionId, $data)
-    {
-        $expiry = new \MongoDB\BSON\UTCDateTime((time() + (int) ini_get('session.gc_maxlifetime')) * 1000);
-
-        $this->getCollection()->updateOne(
-            [$this->options['id_field'] => $sessionId],
-            ['$set' => [
-                $this->options['time_field'] => new \MongoDB\BSON\UTCDateTime(),
-                $this->options['expiry_field'] => $expiry,
-            ]]
-        );
-
-        return true;
-    }
-
-    /**
      * {@inheritdoc}
      */
     protected function doDestroy(string $sessionId)
@@ -129,13 +99,16 @@ class MongoDbSessionHandler extends AbstractSessionHandler
         return true;
     }
 
-    private function getCollection(): \MongoDB\Collection
+    /**
+     * @return bool
+     */
+    public function gc($maxlifetime)
     {
-        if (null === $this->collection) {
-            $this->collection = $this->mongo->selectCollection($this->options['database'], $this->options['collection']);
-        }
+        $this->getCollection()->deleteMany([
+            $this->options['expiry_field'] => ['$lt' => new \MongoDB\BSON\UTCDateTime()],
+        ]);
 
-        return $this->collection;
+        return true;
     }
 
     /**
@@ -161,6 +134,24 @@ class MongoDbSessionHandler extends AbstractSessionHandler
     }
 
     /**
+     * @return bool
+     */
+    public function updateTimestamp($sessionId, $data)
+    {
+        $expiry = new \MongoDB\BSON\UTCDateTime((time() + (int) ini_get('session.gc_maxlifetime')) * 1000);
+
+        $this->getCollection()->updateOne(
+            [$this->options['id_field'] => $sessionId],
+            ['$set' => [
+                $this->options['time_field'] => new \MongoDB\BSON\UTCDateTime(),
+                $this->options['expiry_field'] => $expiry,
+            ]]
+        );
+
+        return true;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function doRead(string $sessionId)
@@ -175,6 +166,15 @@ class MongoDbSessionHandler extends AbstractSessionHandler
         }
 
         return $dbData[$this->options['data_field']]->getData();
+    }
+
+    private function getCollection(): \MongoDB\Collection
+    {
+        if (null === $this->collection) {
+            $this->collection = $this->mongo->selectCollection($this->options['database'], $this->options['collection']);
+        }
+
+        return $this->collection;
     }
 
     /**

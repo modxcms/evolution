@@ -101,6 +101,20 @@ class ExpressionBuilder
     }
 
     /**
+     * Creates a comparison expression.
+     *
+     * @param mixed  $x        The left expression.
+     * @param string $operator One of the ExpressionBuilder::* constants.
+     * @param mixed  $y        The right expression.
+     *
+     * @return string
+     */
+    public function comparison($x, $operator, $y)
+    {
+        return $x . ' ' . $operator . ' ' . $y;
+    }
+
+    /**
      * Creates an equality comparison expression with the given arguments.
      *
      * First argument is considered the left expression and the second is the right expression.
@@ -118,20 +132,6 @@ class ExpressionBuilder
     public function eq($x, $y)
     {
         return $this->comparison($x, self::EQ, $y);
-    }
-
-    /**
-     * Creates a comparison expression.
-     *
-     * @param mixed  $x        The left expression.
-     * @param string $operator One of the ExpressionBuilder::* constants.
-     * @param mixed  $y        The right expression.
-     *
-     * @return string
-     */
-    public function comparison($x, $operator, $y)
-    {
-        return $x . ' ' . $operator . ' ' . $y;
     }
 
     /**

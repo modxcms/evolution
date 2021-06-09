@@ -75,6 +75,18 @@ class MultiExecState
     }
 
     /**
+     * Returns if the specified flag or set of flags is set.
+     *
+     * @param int $flags Flag
+     *
+     * @return bool
+     */
+    public function check($flags)
+    {
+        return ($this->flags & $flags) === $flags;
+    }
+
+    /**
      * Resets the state of a transaction.
      */
     public function reset()
@@ -100,18 +112,6 @@ class MultiExecState
     public function isInitialized()
     {
         return $this->check(self::INITIALIZED);
-    }
-
-    /**
-     * Returns if the specified flag or set of flags is set.
-     *
-     * @param int $flags Flag
-     *
-     * @return bool
-     */
-    public function check($flags)
-    {
-        return ($this->flags & $flags) === $flags;
     }
 
     /**

@@ -58,6 +58,24 @@ class CompositeExpression implements Countable
     }
 
     /**
+     * @param self|string $part
+     * @param self|string ...$parts
+     */
+    public static function and($part, ...$parts): self
+    {
+        return new self(self::TYPE_AND, array_merge([$part], $parts));
+    }
+
+    /**
+     * @param self|string $part
+     * @param self|string ...$parts
+     */
+    public static function or($part, ...$parts): self
+    {
+        return new self(self::TYPE_OR, array_merge([$part], $parts));
+    }
+
+    /**
      * Adds multiple parts to composite expression.
      *
      * @deprecated This class will be made immutable. Use with() instead.
@@ -112,24 +130,6 @@ class CompositeExpression implements Countable
     }
 
     /**
-     * @param self|string $part
-     * @param self|string ...$parts
-     */
-    public static function and($part, ...$parts): self
-    {
-        return new self(self::TYPE_AND, array_merge([$part], $parts));
-    }
-
-    /**
-     * @param self|string $part
-     * @param self|string ...$parts
-     */
-    public static function or($part, ...$parts): self
-    {
-        return new self(self::TYPE_OR, array_merge([$part], $parts));
-    }
-
-    /**
      * Returns a new CompositeExpression with the given parts added.
      *
      * @param self|string $part
@@ -149,6 +149,16 @@ class CompositeExpression implements Countable
     }
 
     /**
+     * Retrieves the amount of expressions on composite expression.
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->parts);
+    }
+
+    /**
      * Retrieves the string representation of this composite expression.
      *
      * @return string
@@ -160,16 +170,6 @@ class CompositeExpression implements Countable
         }
 
         return '(' . implode(') ' . $this->type . ' (', $this->parts) . ')';
-    }
-
-    /**
-     * Retrieves the amount of expressions on composite expression.
-     *
-     * @return int
-     */
-    public function count()
-    {
-        return count($this->parts);
     }
 
     /**

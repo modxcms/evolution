@@ -41,6 +41,20 @@ final class Success extends Result
     }
 
     /**
+     * Create a new error value.
+     *
+     * @template S
+     *
+     * @param S $value
+     *
+     * @return \GrahamCampbell\ResultType\Result<S,E>
+     */
+    public static function create($value)
+    {
+        return new self($value);
+    }
+
+    /**
      * Get the success option value.
      *
      * @return \PhpOption\Option<T>
@@ -62,20 +76,6 @@ final class Success extends Result
     public function map(callable $f)
     {
         return self::create($f($this->value));
-    }
-
-    /**
-     * Create a new error value.
-     *
-     * @template S
-     *
-     * @param S $value
-     *
-     * @return \GrahamCampbell\ResultType\Result<S,E>
-     */
-    public static function create($value)
-    {
-        return new self($value);
     }
 
     /**

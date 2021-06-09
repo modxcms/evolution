@@ -34,14 +34,14 @@ abstract class AbstractHeader implements HeaderInterface
         $this->name = $name;
     }
 
-    public function getCharset(): ?string
-    {
-        return $this->charset;
-    }
-
     public function setCharset(string $charset)
     {
         $this->charset = $charset;
+    }
+
+    public function getCharset(): ?string
+    {
+        return $this->charset;
     }
 
     /**
@@ -77,70 +77,6 @@ abstract class AbstractHeader implements HeaderInterface
     public function toString(): string
     {
         return $this->tokensToString($this->toTokens());
-    }
-
-    /**
-     * Takes an array of tokens which appear in the header and turns them into
-     * an RFC 2822 compliant string, adding FWSP where needed.
-     *
-     * @param string[] $tokens
-     */
-    private function tokensToString(array $tokens): string
-    {
-        $lineCount = 0;
-        $headerLines = [];
-        $headerLines[] = $this->name.': ';
-        $currentLine = &$headerLines[$lineCount++];
-
-        // Build all tokens back into compliant header
-        foreach ($tokens as $i => $token) {
-            // Line longer than specified maximum or token was just a new line
-            if (("\r\n" === $token) ||
-                ($i > 0 && \strlen($currentLine.$token) > $this->lineLength)
-                && 0 < \strlen($currentLine)) {
-                $headerLines[] = '';
-                $currentLine = &$headerLines[$lineCount++];
-            }
-
-            // Append token to the line
-            if ("\r\n" !== $token) {
-                $currentLine .= $token;
-            }
-        }
-
-        // Implode with FWS (RFC 2822, 2.2.3)
-        return implode("\r\n", $headerLines);
-    }
-
-    /**
-     * Generate a list of all tokens in the final header.
-     */
-    protected function toTokens(string $string = null): array
-    {
-        if (null === $string) {
-            $string = $this->getBodyAsString();
-        }
-
-        $tokens = [];
-        // Generate atoms; split at all invisible boundaries followed by WSP
-        foreach (preg_split('~(?=[ \t])~', $string) as $token) {
-            $newTokens = $this->generateTokenLines($token);
-            foreach ($newTokens as $newToken) {
-                $tokens[] = $newToken;
-            }
-        }
-
-        return $tokens;
-    }
-
-    /**
-     * Generates tokens from the given string which include CRLF as individual tokens.
-     *
-     * @return string[]
-     */
-    protected function generateTokenLines(string $token): array
-    {
-        return preg_split('~(\r\n)~', $token, -1, \PREG_SPLIT_DELIM_CAPTURE);
     }
 
     /**
@@ -209,6 +145,11 @@ abstract class AbstractHeader implements HeaderInterface
         return $value;
     }
 
+    protected function tokenNeedsEncoding(string $token): bool
+    {
+        return (bool) preg_match('~[\x00-\x08\x10-\x19\x7F-\xFF\r\n]~', $token);
+    }
+
     /**
      * Splits a string into tokens in blocks of words which can be encoded quickly.
      *
@@ -235,11 +176,6 @@ abstract class AbstractHeader implements HeaderInterface
         }
 
         return $tokens;
-    }
-
-    protected function tokenNeedsEncoding(string $token): bool
-    {
-        return (bool) preg_match('~[\x00-\x08\x10-\x19\x7F-\xFF\r\n]~', $token);
     }
 
     /**
@@ -275,5 +211,69 @@ abstract class AbstractHeader implements HeaderInterface
         }
 
         return implode("\r\n ", $encodedTextLines);
+    }
+
+    /**
+     * Generates tokens from the given string which include CRLF as individual tokens.
+     *
+     * @return string[]
+     */
+    protected function generateTokenLines(string $token): array
+    {
+        return preg_split('~(\r\n)~', $token, -1, \PREG_SPLIT_DELIM_CAPTURE);
+    }
+
+    /**
+     * Generate a list of all tokens in the final header.
+     */
+    protected function toTokens(string $string = null): array
+    {
+        if (null === $string) {
+            $string = $this->getBodyAsString();
+        }
+
+        $tokens = [];
+        // Generate atoms; split at all invisible boundaries followed by WSP
+        foreach (preg_split('~(?=[ \t])~', $string) as $token) {
+            $newTokens = $this->generateTokenLines($token);
+            foreach ($newTokens as $newToken) {
+                $tokens[] = $newToken;
+            }
+        }
+
+        return $tokens;
+    }
+
+    /**
+     * Takes an array of tokens which appear in the header and turns them into
+     * an RFC 2822 compliant string, adding FWSP where needed.
+     *
+     * @param string[] $tokens
+     */
+    private function tokensToString(array $tokens): string
+    {
+        $lineCount = 0;
+        $headerLines = [];
+        $headerLines[] = $this->name.': ';
+        $currentLine = &$headerLines[$lineCount++];
+
+        // Build all tokens back into compliant header
+        foreach ($tokens as $i => $token) {
+            // Line longer than specified maximum or token was just a new line
+            if (("\r\n" === $token) ||
+                ($i > 0 && \strlen($currentLine.$token) > $this->lineLength)
+                && 0 < \strlen($currentLine)) {
+                $headerLines[] = '';
+                $currentLine = &$headerLines[$lineCount++];
+            }
+
+            // Append token to the line
+            if ("\r\n" !== $token) {
+                $currentLine .= $token;
+            }
+        }
+
+        // Implode with FWS (RFC 2822, 2.2.3)
+        return implode("\r\n", $headerLines);
     }
 }

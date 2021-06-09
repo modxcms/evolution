@@ -16,6 +16,7 @@ use Carbon\CarbonInterval;
 use Carbon\Exceptions\UnitException;
 use Closure;
 use DateInterval;
+use ReturnTypeWillChange;
 
 /**
  * Trait Units.
@@ -24,38 +25,6 @@ use DateInterval;
  */
 trait Units
 {
-    /**
-     * Returns true if a property can be changed via setter.
-     *
-     * @param string $unit
-     *
-     * @return bool
-     */
-    public static function isModifiableUnit($unit)
-    {
-        static $modifiableUnits = [
-            // @call addUnit
-            'millennium',
-            // @call addUnit
-            'century',
-            // @call addUnit
-            'decade',
-            // @call addUnit
-            'quarter',
-            // @call addUnit
-            'week',
-            // @call addUnit
-            'weekday',
-        ];
-
-        return \in_array($unit, $modifiableUnits) || \in_array($unit, static::$units);
-    }
-
-    public function subRealUnit($unit, $value = 1)
-    {
-        return $this->addRealUnit($unit, -$value);
-    }
-
     /**
      * Add seconds to the instance using timestamp. Positive $value travels
      * forward while negative $value travels into the past.
@@ -168,6 +137,38 @@ trait Units
         return $this->setTimestamp((int) ($this->getTimestamp() + $value));
     }
 
+    public function subRealUnit($unit, $value = 1)
+    {
+        return $this->addRealUnit($unit, -$value);
+    }
+
+    /**
+     * Returns true if a property can be changed via setter.
+     *
+     * @param string $unit
+     *
+     * @return bool
+     */
+    public static function isModifiableUnit($unit)
+    {
+        static $modifiableUnits = [
+            // @call addUnit
+            'millennium',
+            // @call addUnit
+            'century',
+            // @call addUnit
+            'decade',
+            // @call addUnit
+            'quarter',
+            // @call addUnit
+            'week',
+            // @call addUnit
+            'weekday',
+        ];
+
+        return \in_array($unit, $modifiableUnits) || \in_array($unit, static::$units);
+    }
+
     /**
      * Call native PHP DateTime/DateTimeImmutable add() method.
      *
@@ -193,6 +194,7 @@ trait Units
      *
      * @return static
      */
+    #[ReturnTypeWillChange]
     public function add($unit, $value = 1, $overflow = null)
     {
         if (\is_string($unit) && \func_num_args() === 1) {
@@ -342,26 +344,6 @@ trait Units
     /**
      * Subtract given units or interval to the current instance.
      *
-     * @see sub()
-     *
-     * @param string|DateInterval $unit
-     * @param int                 $value
-     * @param bool|null           $overflow
-     *
-     * @return static
-     */
-    public function subtract($unit, $value = 1, $overflow = null)
-    {
-        if (\is_string($unit) && \func_num_args() === 1) {
-            $unit = CarbonInterval::make($unit);
-        }
-
-        return $this->sub($unit, $value, $overflow);
-    }
-
-    /**
-     * Subtract given units or interval to the current instance.
-     *
      * @example $date->sub('hour', 3)
      * @example $date->sub(15, 'days')
      * @example $date->sub(CarbonInterval::days(4))
@@ -372,6 +354,7 @@ trait Units
      *
      * @return static
      */
+    #[ReturnTypeWillChange]
     public function sub($unit, $value = 1, $overflow = null)
     {
         if (\is_string($unit) && \func_num_args() === 1) {
@@ -395,5 +378,25 @@ trait Units
         }
 
         return $this->addUnit($unit, -\floatval($value), $overflow);
+    }
+
+    /**
+     * Subtract given units or interval to the current instance.
+     *
+     * @see sub()
+     *
+     * @param string|DateInterval $unit
+     * @param int                 $value
+     * @param bool|null           $overflow
+     *
+     * @return static
+     */
+    public function subtract($unit, $value = 1, $overflow = null)
+    {
+        if (\is_string($unit) && \func_num_args() === 1) {
+            $unit = CarbonInterval::make($unit);
+        }
+
+        return $this->sub($unit, $value, $overflow);
     }
 }

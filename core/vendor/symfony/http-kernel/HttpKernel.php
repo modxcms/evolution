@@ -92,6 +92,31 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function terminate(Request $request, Response $response)
+    {
+        $this->dispatcher->dispatch(new TerminateEvent($this, $request, $response), KernelEvents::TERMINATE);
+    }
+
+    /**
+     * @internal
+     */
+    public function terminateWithException(\Throwable $exception, Request $request = null)
+    {
+        if (!$request = $request ?: $this->requestStack->getMainRequest()) {
+            throw $exception;
+        }
+
+        $response = $this->handleThrowable($exception, $request, self::MAIN_REQUEST);
+
+        $response->sendHeaders();
+        $response->sendContent();
+
+        $this->terminate($request, $response);
+    }
+
+    /**
      * Handles a request to convert it to a response.
      *
      * Exceptions are not caught.
@@ -183,6 +208,46 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
     }
 
     /**
+     * Handles a throwable by trying to convert it to a Response.
+     *
+     * @throws \Exception
+     */
+    private function handleThrowable(\Throwable $e, Request $request, int $type): Response
+    {
+        $event = new ExceptionEvent($this, $request, $type, $e);
+        $this->dispatcher->dispatch($event, KernelEvents::EXCEPTION);
+
+        // a listener might have replaced the exception
+        $e = $event->getThrowable();
+
+        if (!$event->hasResponse()) {
+            $this->finishRequest($request, $type);
+
+            throw $e;
+        }
+
+        $response = $event->getResponse();
+
+        // the developer asked for a specific status code
+        if (!$event->isAllowingCustomResponseCode() && !$response->isClientError() && !$response->isServerError() && !$response->isRedirect()) {
+            // ensure that we actually have an error response
+            if ($e instanceof HttpExceptionInterface) {
+                // keep the HTTP status code and headers
+                $response->setStatusCode($e->getStatusCode());
+                $response->headers->add($e->getHeaders());
+            } else {
+                $response->setStatusCode(500);
+            }
+        }
+
+        try {
+            return $this->filterResponse($response, $request, $type);
+        } catch (\Exception $e) {
+            return $response;
+        }
+    }
+
+    /**
      * Returns a human-readable string for the specified variable.
      */
     private function varToString($var): string
@@ -225,70 +290,5 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
         }
 
         return (string) $var;
-    }
-
-    /**
-     * Handles a throwable by trying to convert it to a Response.
-     *
-     * @throws \Exception
-     */
-    private function handleThrowable(\Throwable $e, Request $request, int $type): Response
-    {
-        $event = new ExceptionEvent($this, $request, $type, $e);
-        $this->dispatcher->dispatch($event, KernelEvents::EXCEPTION);
-
-        // a listener might have replaced the exception
-        $e = $event->getThrowable();
-
-        if (!$event->hasResponse()) {
-            $this->finishRequest($request, $type);
-
-            throw $e;
-        }
-
-        $response = $event->getResponse();
-
-        // the developer asked for a specific status code
-        if (!$event->isAllowingCustomResponseCode() && !$response->isClientError() && !$response->isServerError() && !$response->isRedirect()) {
-            // ensure that we actually have an error response
-            if ($e instanceof HttpExceptionInterface) {
-                // keep the HTTP status code and headers
-                $response->setStatusCode($e->getStatusCode());
-                $response->headers->add($e->getHeaders());
-            } else {
-                $response->setStatusCode(500);
-            }
-        }
-
-        try {
-            return $this->filterResponse($response, $request, $type);
-        } catch (\Exception $e) {
-            return $response;
-        }
-    }
-
-    /**
-     * @internal
-     */
-    public function terminateWithException(\Throwable $exception, Request $request = null)
-    {
-        if (!$request = $request ?: $this->requestStack->getMainRequest()) {
-            throw $exception;
-        }
-
-        $response = $this->handleThrowable($exception, $request, self::MAIN_REQUEST);
-
-        $response->sendHeaders();
-        $response->sendContent();
-
-        $this->terminate($request, $response);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function terminate(Request $request, Response $response)
-    {
-        $this->dispatcher->dispatch(new TerminateEvent($this, $request, $response), KernelEvents::TERMINATE);
     }
 }

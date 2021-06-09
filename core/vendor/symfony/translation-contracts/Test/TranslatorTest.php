@@ -30,6 +30,13 @@ use Symfony\Contracts\Translation\TranslatorTrait;
  */
 class TranslatorTest extends TestCase
 {
+    public function getTranslator()
+    {
+        return new class() implements TranslatorInterface {
+            use TranslatorTrait;
+        };
+    }
+
     /**
      * @dataProvider getTransTests
      */
@@ -38,13 +45,6 @@ class TranslatorTest extends TestCase
         $translator = $this->getTranslator();
 
         $this->assertEquals($expected, $translator->trans($id, $parameters));
-    }
-
-    public function getTranslator()
-    {
-        return new class() implements TranslatorInterface {
-            use TranslatorTrait;
-        };
     }
 
     /**
@@ -281,44 +281,6 @@ class TranslatorTest extends TestCase
         $this->validateMatrix($nplural, $matrix, false);
     }
 
-    protected function generateTestData($langCodes)
-    {
-        $translator = new class() {
-            use TranslatorTrait {
-                getPluralizationRule as public;
-            }
-        };
-
-        $matrix = [];
-        foreach ($langCodes as $langCode) {
-            for ($count = 0; $count < 200; ++$count) {
-                $plural = $translator->getPluralizationRule($count, $langCode);
-                $matrix[$langCode][$count] = $plural;
-            }
-        }
-
-        return $matrix;
-    }
-
-    /**
-     * We validate only on the plural coverage. Thus the real rules is not tested.
-     *
-     * @param string $nplural       Plural expected
-     * @param array  $matrix        Containing langcodes and their plural index values
-     * @param bool   $expectSuccess
-     */
-    protected function validateMatrix($nplural, $matrix, $expectSuccess = true)
-    {
-        foreach ($matrix as $langCode => $data) {
-            $indexes = array_flip($data);
-            if ($expectSuccess) {
-                $this->assertEquals($nplural, \count($indexes), "Langcode '$langCode' has '$nplural' plural forms.");
-            } else {
-                $this->assertNotEquals((int) $nplural, \count($indexes), "Langcode '$langCode' has '$nplural' plural forms.");
-            }
-        }
-    }
-
     /**
      * @dataProvider successLangcodes
      */
@@ -363,5 +325,43 @@ class TranslatorTest extends TestCase
             ['4', ['gd', 'kw']],
             ['5', ['ga']],
         ];
+    }
+
+    /**
+     * We validate only on the plural coverage. Thus the real rules is not tested.
+     *
+     * @param string $nplural       Plural expected
+     * @param array  $matrix        Containing langcodes and their plural index values
+     * @param bool   $expectSuccess
+     */
+    protected function validateMatrix($nplural, $matrix, $expectSuccess = true)
+    {
+        foreach ($matrix as $langCode => $data) {
+            $indexes = array_flip($data);
+            if ($expectSuccess) {
+                $this->assertEquals($nplural, \count($indexes), "Langcode '$langCode' has '$nplural' plural forms.");
+            } else {
+                $this->assertNotEquals((int) $nplural, \count($indexes), "Langcode '$langCode' has '$nplural' plural forms.");
+            }
+        }
+    }
+
+    protected function generateTestData($langCodes)
+    {
+        $translator = new class() {
+            use TranslatorTrait {
+                getPluralizationRule as public;
+            }
+        };
+
+        $matrix = [];
+        foreach ($langCodes as $langCode) {
+            for ($count = 0; $count < 200; ++$count) {
+                $plural = $translator->getPluralizationRule($count, $langCode);
+                $matrix[$langCode][$count] = $plural;
+            }
+        }
+
+        return $matrix;
     }
 }

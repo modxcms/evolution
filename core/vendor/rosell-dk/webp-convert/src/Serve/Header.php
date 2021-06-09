@@ -13,6 +13,17 @@ namespace WebPConvert\Serve;
 class Header
 {
     /**
+     * Convenience function for adding header (append).
+     *
+     * @param  string  $header  The header to add.
+     * @return void
+     */
+    public static function addHeader($header)
+    {
+        header($header, false);
+    }
+
+    /**
      * Convenience function for replacing header.
      *
      * @param  string  $header  The header to set.
@@ -36,16 +47,5 @@ class Header
         if (!is_null($logger)) {
             $logger->logLn($msg);
         }
-    }
-
-    /**
-     * Convenience function for adding header (append).
-     *
-     * @param  string  $header  The header to add.
-     * @return void
-     */
-    public static function addHeader($header)
-    {
-        header($header, false);
     }
 }

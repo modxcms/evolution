@@ -25,6 +25,32 @@ class MorphPivot extends Pivot
     protected $morphClass;
 
     /**
+     * Set the keys for a save update query.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function setKeysForSaveQuery($query)
+    {
+        $query->where($this->morphType, $this->morphClass);
+
+        return parent::setKeysForSaveQuery($query);
+    }
+
+    /**
+     * Set the keys for a select query.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function setKeysForSelectQuery($query)
+    {
+        $query->where($this->morphType, $this->morphClass);
+
+        return parent::setKeysForSelectQuery($query);
+    }
+
+    /**
      * Delete the pivot model record from the database.
      *
      * @return int
@@ -154,31 +180,5 @@ class MorphPivot extends Pivot
         }
 
         return $query;
-    }
-
-    /**
-     * Set the keys for a save update query.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    protected function setKeysForSaveQuery($query)
-    {
-        $query->where($this->morphType, $this->morphClass);
-
-        return parent::setKeysForSaveQuery($query);
-    }
-
-    /**
-     * Set the keys for a select query.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    protected function setKeysForSelectQuery($query)
-    {
-        $query->where($this->morphType, $this->morphClass);
-
-        return parent::setKeysForSelectQuery($query);
     }
 }

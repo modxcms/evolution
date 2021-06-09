@@ -23,6 +23,21 @@ trait InteractsWithTime
     }
 
     /**
+     * Get the "available at" UNIX timestamp.
+     *
+     * @param  \DateTimeInterface|\DateInterval|int  $delay
+     * @return int
+     */
+    protected function availableAt($delay = 0)
+    {
+        $delay = $this->parseDateInterval($delay);
+
+        return $delay instanceof DateTimeInterface
+                            ? $delay->getTimestamp()
+                            : Carbon::now()->addRealSeconds($delay)->getTimestamp();
+    }
+
+    /**
      * If the given value is an interval, convert it to a DateTime instance.
      *
      * @param  \DateTimeInterface|\DateInterval|int  $delay
@@ -45,20 +60,5 @@ trait InteractsWithTime
     protected function currentTime()
     {
         return Carbon::now()->getTimestamp();
-    }
-
-    /**
-     * Get the "available at" UNIX timestamp.
-     *
-     * @param  \DateTimeInterface|\DateInterval|int  $delay
-     * @return int
-     */
-    protected function availableAt($delay = 0)
-    {
-        $delay = $this->parseDateInterval($delay);
-
-        return $delay instanceof DateTimeInterface
-                            ? $delay->getTimestamp()
-                            : Carbon::now()->addRealSeconds($delay)->getTimestamp();
     }
 }

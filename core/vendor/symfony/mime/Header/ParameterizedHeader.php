@@ -46,12 +46,9 @@ final class ParameterizedHeader extends UnstructuredHeader
         $this->setParameters(array_merge($this->getParameters(), [$parameter => $value]));
     }
 
-    /**
-     * @return string[]
-     */
-    public function getParameters(): array
+    public function getParameter(string $parameter): string
     {
-        return $this->parameters;
+        return $this->getParameters()[$parameter] ?? '';
     }
 
     /**
@@ -62,9 +59,12 @@ final class ParameterizedHeader extends UnstructuredHeader
         $this->parameters = $parameters;
     }
 
-    public function getParameter(string $parameter): string
+    /**
+     * @return string[]
+     */
+    public function getParameters(): array
     {
-        return $this->getParameters()[$parameter] ?? '';
+        return $this->parameters;
     }
 
     public function getBodyAsString(): string
@@ -77,6 +77,28 @@ final class ParameterizedHeader extends UnstructuredHeader
         }
 
         return $body;
+    }
+
+    /**
+     * Generate a list of all tokens in the final header.
+     *
+     * This doesn't need to be overridden in theory, but it is for implementation
+     * reasons to prevent potential breakage of attributes.
+     */
+    protected function toTokens(string $string = null): array
+    {
+        $tokens = parent::toTokens(parent::getBodyAsString());
+
+        // Try creating any parameters
+        foreach ($this->parameters as $name => $value) {
+            if (null !== $value) {
+                // Add the semi-colon separator
+                $tokens[\count($tokens) - 1] .= ';';
+                $tokens = array_merge($tokens, $this->generateTokenLines(' '.$this->createParameter($name, $value)));
+            }
+        }
+
+        return $tokens;
     }
 
     /**
@@ -149,27 +171,5 @@ final class ParameterizedHeader extends UnstructuredHeader
         }
 
         return $prepend.$value;
-    }
-
-    /**
-     * Generate a list of all tokens in the final header.
-     *
-     * This doesn't need to be overridden in theory, but it is for implementation
-     * reasons to prevent potential breakage of attributes.
-     */
-    protected function toTokens(string $string = null): array
-    {
-        $tokens = parent::toTokens(parent::getBodyAsString());
-
-        // Try creating any parameters
-        foreach ($this->parameters as $name => $value) {
-            if (null !== $value) {
-                // Add the semi-colon separator
-                $tokens[\count($tokens) - 1] .= ';';
-                $tokens = array_merge($tokens, $this->generateTokenLines(' '.$this->createParameter($name, $value)));
-            }
-        }
-
-        return $tokens;
     }
 }

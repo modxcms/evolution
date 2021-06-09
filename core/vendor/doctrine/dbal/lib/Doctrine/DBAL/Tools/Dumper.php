@@ -136,26 +136,6 @@ final class Dumper
     }
 
     /**
-     * @param object $object
-     */
-    private static function getClass($object): string
-    {
-        $class = get_class($object);
-
-        if (! class_exists(Proxy::class)) {
-            return $class;
-        }
-
-        $pos = strrpos($class, '\\' . Proxy::MARKER . '\\');
-
-        if ($pos === false) {
-            return $class;
-        }
-
-        return substr($class, $pos + strlen(Proxy::MARKER) + 2);
-    }
-
-    /**
      * Fill the $return variable with class attributes
      * Based on obj2array function from {@see https://secure.php.net/manual/en/function.get-object-vars.php#47075}
      *
@@ -178,5 +158,25 @@ final class Dumper
         }
 
         return $return;
+    }
+
+    /**
+     * @param object $object
+     */
+    private static function getClass($object): string
+    {
+        $class = get_class($object);
+
+        if (! class_exists(Proxy::class)) {
+            return $class;
+        }
+
+        $pos = strrpos($class, '\\' . Proxy::MARKER . '\\');
+
+        if ($pos === false) {
+            return $class;
+        }
+
+        return substr($class, $pos + strlen(Proxy::MARKER) + 2);
     }
 }

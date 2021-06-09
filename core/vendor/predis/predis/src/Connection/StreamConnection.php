@@ -52,12 +52,202 @@ class StreamConnection extends AbstractConnection
     /**
      * {@inheritdoc}
      */
-    public function disconnect()
+    protected function assertParameters(ParametersInterface $parameters)
     {
-        if ($this->isConnected()) {
-            fclose($this->getResource());
-            parent::disconnect();
+        switch ($parameters->scheme) {
+            case 'tcp':
+            case 'redis':
+            case 'unix':
+                break;
+
+            case 'tls':
+            case 'rediss':
+                $this->assertSslSupport($parameters);
+                break;
+
+            default:
+                throw new \InvalidArgumentException("Invalid scheme: '$parameters->scheme'.");
         }
+
+        return $parameters;
+    }
+
+    /**
+     * Checks needed conditions for SSL-encrypted connections.
+     *
+     * @param ParametersInterface $parameters Initialization parameters for the connection.
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function assertSslSupport(ParametersInterface $parameters)
+    {
+        if (
+            filter_var($parameters->persistent, FILTER_VALIDATE_BOOLEAN) &&
+            version_compare(PHP_VERSION, '7.0.0beta') < 0
+        ) {
+            throw new \InvalidArgumentException('Persistent SSL connections require PHP >= 7.0.0.');
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function createResource()
+    {
+        switch ($this->parameters->scheme) {
+            case 'tcp':
+            case 'redis':
+                return $this->tcpStreamInitializer($this->parameters);
+
+            case 'unix':
+                return $this->unixStreamInitializer($this->parameters);
+
+            case 'tls':
+            case 'rediss':
+                return $this->tlsStreamInitializer($this->parameters);
+
+            default:
+                throw new \InvalidArgumentException("Invalid scheme: '{$this->parameters->scheme}'.");
+        }
+    }
+
+    /**
+     * Creates a connected stream socket resource.
+     *
+     * @param ParametersInterface $parameters Connection parameters.
+     * @param string              $address    Address for stream_socket_client().
+     * @param int                 $flags      Flags for stream_socket_client().
+     *
+     * @return resource
+     */
+    protected function createStreamSocket(ParametersInterface $parameters, $address, $flags)
+    {
+        $timeout = (isset($parameters->timeout) ? (float) $parameters->timeout : 5.0);
+
+        if (!$resource = @stream_socket_client($address, $errno, $errstr, $timeout, $flags)) {
+            $this->onConnectionError(trim($errstr), $errno);
+        }
+
+        if (isset($parameters->read_write_timeout)) {
+            $rwtimeout = (float) $parameters->read_write_timeout;
+            $rwtimeout = $rwtimeout > 0 ? $rwtimeout : -1;
+            $timeoutSeconds = floor($rwtimeout);
+            $timeoutUSeconds = ($rwtimeout - $timeoutSeconds) * 1000000;
+            stream_set_timeout($resource, $timeoutSeconds, $timeoutUSeconds);
+        }
+
+        if (isset($parameters->tcp_nodelay) && function_exists('socket_import_stream')) {
+            $socket = socket_import_stream($resource);
+            socket_set_option($socket, SOL_TCP, TCP_NODELAY, (int) $parameters->tcp_nodelay);
+        }
+
+        return $resource;
+    }
+
+    /**
+     * Initializes a TCP stream resource.
+     *
+     * @param ParametersInterface $parameters Initialization parameters for the connection.
+     *
+     * @return resource
+     */
+    protected function tcpStreamInitializer(ParametersInterface $parameters)
+    {
+        if (!filter_var($parameters->host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+            $address = "tcp://$parameters->host:$parameters->port";
+        } else {
+            $address = "tcp://[$parameters->host]:$parameters->port";
+        }
+
+        $flags = STREAM_CLIENT_CONNECT;
+
+        if (isset($parameters->async_connect) && $parameters->async_connect) {
+            $flags |= STREAM_CLIENT_ASYNC_CONNECT;
+        }
+
+        if (isset($parameters->persistent)) {
+            if (false !== $persistent = filter_var($parameters->persistent, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
+                $flags |= STREAM_CLIENT_PERSISTENT;
+
+                if ($persistent === null) {
+                    $address = "{$address}/{$parameters->persistent}";
+                }
+            }
+        }
+
+        $resource = $this->createStreamSocket($parameters, $address, $flags);
+
+        return $resource;
+    }
+
+    /**
+     * Initializes a UNIX stream resource.
+     *
+     * @param ParametersInterface $parameters Initialization parameters for the connection.
+     *
+     * @return resource
+     */
+    protected function unixStreamInitializer(ParametersInterface $parameters)
+    {
+        if (!isset($parameters->path)) {
+            throw new \InvalidArgumentException('Missing UNIX domain socket path.');
+        }
+
+        $flags = STREAM_CLIENT_CONNECT;
+
+        if (isset($parameters->persistent)) {
+            if (false !== $persistent = filter_var($parameters->persistent, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
+                $flags |= STREAM_CLIENT_PERSISTENT;
+
+                if ($persistent === null) {
+                    throw new \InvalidArgumentException(
+                        'Persistent connection IDs are not supported when using UNIX domain sockets.'
+                    );
+                }
+            }
+        }
+
+        $resource = $this->createStreamSocket($parameters, "unix://{$parameters->path}", $flags);
+
+        return $resource;
+    }
+
+    /**
+     * Initializes a SSL-encrypted TCP stream resource.
+     *
+     * @param ParametersInterface $parameters Initialization parameters for the connection.
+     *
+     * @return resource
+     */
+    protected function tlsStreamInitializer(ParametersInterface $parameters)
+    {
+        $resource = $this->tcpStreamInitializer($parameters);
+        $metadata = stream_get_meta_data($resource);
+
+        // Detect if crypto mode is already enabled for this stream (PHP >= 7.0.0).
+        if (isset($metadata['crypto'])) {
+            return $resource;
+        }
+
+        if (is_array($parameters->ssl)) {
+            $options = $parameters->ssl;
+        } else {
+            $options = array();
+        }
+
+        if (!isset($options['crypto_type'])) {
+            $options['crypto_type'] = STREAM_CRYPTO_METHOD_TLS_CLIENT;
+        }
+
+        if (!stream_context_set_option($resource, array('ssl' => $options))) {
+            $this->onConnectionError('Error while setting SSL context options');
+        }
+
+        if (!stream_socket_enable_crypto($resource, true, $options['crypto_type'])) {
+            $this->onConnectionError('Error while switching to encrypted communication');
+        }
+
+        return $resource;
     }
 
     /**
@@ -73,6 +263,42 @@ class StreamConnection extends AbstractConnection
                     $this->onConnectionError("`{$command->getId()}` failed: $response", 0);
                 }
             }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function disconnect()
+    {
+        if ($this->isConnected()) {
+            fclose($this->getResource());
+            parent::disconnect();
+        }
+    }
+
+    /**
+     * Performs a write operation over the stream of the buffer containing a
+     * command serialized with the Redis wire protocol.
+     *
+     * @param string $buffer Representation of a command in the Redis wire protocol.
+     */
+    protected function write($buffer)
+    {
+        $socket = $this->getResource();
+
+        while (($length = strlen($buffer)) > 0) {
+            $written = @fwrite($socket, $buffer);
+
+            if ($length === $written) {
+                return;
+            }
+
+            if ($written === false || $written === 0) {
+                $this->onConnectionError('Error while writing bytes to the server.');
+            }
+
+            $buffer = substr($buffer, $written);
         }
     }
 
@@ -166,231 +392,5 @@ class StreamConnection extends AbstractConnection
         }
 
         $this->write($buffer);
-    }
-
-    /**
-     * Performs a write operation over the stream of the buffer containing a
-     * command serialized with the Redis wire protocol.
-     *
-     * @param string $buffer Representation of a command in the Redis wire protocol.
-     */
-    protected function write($buffer)
-    {
-        $socket = $this->getResource();
-
-        while (($length = strlen($buffer)) > 0) {
-            $written = @fwrite($socket, $buffer);
-
-            if ($length === $written) {
-                return;
-            }
-
-            if ($written === false || $written === 0) {
-                $this->onConnectionError('Error while writing bytes to the server.');
-            }
-
-            $buffer = substr($buffer, $written);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function assertParameters(ParametersInterface $parameters)
-    {
-        switch ($parameters->scheme) {
-            case 'tcp':
-            case 'redis':
-            case 'unix':
-                break;
-
-            case 'tls':
-            case 'rediss':
-                $this->assertSslSupport($parameters);
-                break;
-
-            default:
-                throw new \InvalidArgumentException("Invalid scheme: '$parameters->scheme'.");
-        }
-
-        return $parameters;
-    }
-
-    /**
-     * Checks needed conditions for SSL-encrypted connections.
-     *
-     * @param ParametersInterface $parameters Initialization parameters for the connection.
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected function assertSslSupport(ParametersInterface $parameters)
-    {
-        if (
-            filter_var($parameters->persistent, FILTER_VALIDATE_BOOLEAN) &&
-            version_compare(PHP_VERSION, '7.0.0beta') < 0
-        ) {
-            throw new \InvalidArgumentException('Persistent SSL connections require PHP >= 7.0.0.');
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function createResource()
-    {
-        switch ($this->parameters->scheme) {
-            case 'tcp':
-            case 'redis':
-                return $this->tcpStreamInitializer($this->parameters);
-
-            case 'unix':
-                return $this->unixStreamInitializer($this->parameters);
-
-            case 'tls':
-            case 'rediss':
-                return $this->tlsStreamInitializer($this->parameters);
-
-            default:
-                throw new \InvalidArgumentException("Invalid scheme: '{$this->parameters->scheme}'.");
-        }
-    }
-
-    /**
-     * Initializes a TCP stream resource.
-     *
-     * @param ParametersInterface $parameters Initialization parameters for the connection.
-     *
-     * @return resource
-     */
-    protected function tcpStreamInitializer(ParametersInterface $parameters)
-    {
-        if (!filter_var($parameters->host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-            $address = "tcp://$parameters->host:$parameters->port";
-        } else {
-            $address = "tcp://[$parameters->host]:$parameters->port";
-        }
-
-        $flags = STREAM_CLIENT_CONNECT;
-
-        if (isset($parameters->async_connect) && $parameters->async_connect) {
-            $flags |= STREAM_CLIENT_ASYNC_CONNECT;
-        }
-
-        if (isset($parameters->persistent)) {
-            if (false !== $persistent = filter_var($parameters->persistent, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
-                $flags |= STREAM_CLIENT_PERSISTENT;
-
-                if ($persistent === null) {
-                    $address = "{$address}/{$parameters->persistent}";
-                }
-            }
-        }
-
-        $resource = $this->createStreamSocket($parameters, $address, $flags);
-
-        return $resource;
-    }
-
-    /**
-     * Creates a connected stream socket resource.
-     *
-     * @param ParametersInterface $parameters Connection parameters.
-     * @param string              $address    Address for stream_socket_client().
-     * @param int                 $flags      Flags for stream_socket_client().
-     *
-     * @return resource
-     */
-    protected function createStreamSocket(ParametersInterface $parameters, $address, $flags)
-    {
-        $timeout = (isset($parameters->timeout) ? (float) $parameters->timeout : 5.0);
-
-        if (!$resource = @stream_socket_client($address, $errno, $errstr, $timeout, $flags)) {
-            $this->onConnectionError(trim($errstr), $errno);
-        }
-
-        if (isset($parameters->read_write_timeout)) {
-            $rwtimeout = (float) $parameters->read_write_timeout;
-            $rwtimeout = $rwtimeout > 0 ? $rwtimeout : -1;
-            $timeoutSeconds = floor($rwtimeout);
-            $timeoutUSeconds = ($rwtimeout - $timeoutSeconds) * 1000000;
-            stream_set_timeout($resource, $timeoutSeconds, $timeoutUSeconds);
-        }
-
-        if (isset($parameters->tcp_nodelay) && function_exists('socket_import_stream')) {
-            $socket = socket_import_stream($resource);
-            socket_set_option($socket, SOL_TCP, TCP_NODELAY, (int) $parameters->tcp_nodelay);
-        }
-
-        return $resource;
-    }
-
-    /**
-     * Initializes a UNIX stream resource.
-     *
-     * @param ParametersInterface $parameters Initialization parameters for the connection.
-     *
-     * @return resource
-     */
-    protected function unixStreamInitializer(ParametersInterface $parameters)
-    {
-        if (!isset($parameters->path)) {
-            throw new \InvalidArgumentException('Missing UNIX domain socket path.');
-        }
-
-        $flags = STREAM_CLIENT_CONNECT;
-
-        if (isset($parameters->persistent)) {
-            if (false !== $persistent = filter_var($parameters->persistent, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
-                $flags |= STREAM_CLIENT_PERSISTENT;
-
-                if ($persistent === null) {
-                    throw new \InvalidArgumentException(
-                        'Persistent connection IDs are not supported when using UNIX domain sockets.'
-                    );
-                }
-            }
-        }
-
-        $resource = $this->createStreamSocket($parameters, "unix://{$parameters->path}", $flags);
-
-        return $resource;
-    }
-
-    /**
-     * Initializes a SSL-encrypted TCP stream resource.
-     *
-     * @param ParametersInterface $parameters Initialization parameters for the connection.
-     *
-     * @return resource
-     */
-    protected function tlsStreamInitializer(ParametersInterface $parameters)
-    {
-        $resource = $this->tcpStreamInitializer($parameters);
-        $metadata = stream_get_meta_data($resource);
-
-        // Detect if crypto mode is already enabled for this stream (PHP >= 7.0.0).
-        if (isset($metadata['crypto'])) {
-            return $resource;
-        }
-
-        if (is_array($parameters->ssl)) {
-            $options = $parameters->ssl;
-        } else {
-            $options = array();
-        }
-
-        if (!isset($options['crypto_type'])) {
-            $options['crypto_type'] = STREAM_CRYPTO_METHOD_TLS_CLIENT;
-        }
-
-        if (!stream_context_set_option($resource, array('ssl' => $options))) {
-            $this->onConnectionError('Error while setting SSL context options');
-        }
-
-        if (!stream_socket_enable_crypto($resource, true, $options['crypto_type'])) {
-            $this->onConnectionError('Error while switching to encrypted communication');
-        }
-
-        return $resource;
     }
 }

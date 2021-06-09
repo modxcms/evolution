@@ -35,8 +35,6 @@ use Composer\Util\PackageSorter;
  */
 class PluginManager
 {
-    /** @var int */
-    private static $classCounter = 0;
     /** @var Composer */
     protected $composer;
     /** @var IOInterface */
@@ -47,10 +45,14 @@ class PluginManager
     protected $versionParser;
     /** @var bool */
     protected $disablePlugins = false;
+
     /** @var array<PluginInterface> */
     protected $plugins = array();
     /** @var array<string, PluginInterface> */
     protected $registeredPlugins = array();
+
+    /** @var int */
+    private static $classCounter = 0;
 
     /**
      * Initializes plugin manager
@@ -89,33 +91,23 @@ class PluginManager
     }
 
     /**
-     * Load all plugins and installers from a repository
+     * Gets all currently active plugin instances
      *
-     * If a plugin requires another plugin, the required one will be loaded first
-     *
-     * Note that plugins in the specified repository that rely on events that
-     * have fired prior to loading will be missed. This means you likely want to
-     * call this method as early as possible.
-     *
-     * @param RepositoryInterface $repo Repository to scan for plugins to install
-     *
-     * @throws \RuntimeException
+     * @return array plugins
      */
-    private function loadRepository(RepositoryInterface $repo, $isGlobalRepo)
+    public function getPlugins()
     {
-        $packages = $repo->getPackages();
-        $sortedPackages = PackageSorter::sortPackages($packages);
-        foreach ($sortedPackages as $package) {
-            if (!($package instanceof CompletePackage)) {
-                continue;
-            }
-            if ('composer-plugin' === $package->getType()) {
-                $this->registerPackage($package, false, $isGlobalRepo);
-            // Backward compatibility
-            } elseif ('composer-installer' === $package->getType()) {
-                $this->registerPackage($package, false, $isGlobalRepo);
-            }
-        }
+        return $this->plugins;
+    }
+
+    /**
+     * Gets global composer or null when main composer is not fully loaded
+     *
+     * @return Composer|null
+     */
+    public function getGlobalComposer()
+    {
+        return $this->globalComposer;
     }
 
     /**
@@ -245,6 +237,71 @@ class PluginManager
     }
 
     /**
+     * Deactivates a plugin package
+     *
+     * If it's of type composer-installer it is unregistered from the installers
+     * instead for BC
+     *
+     * @param PackageInterface $package
+     *
+     * @throws \UnexpectedValueException
+     */
+    public function deactivatePackage(PackageInterface $package)
+    {
+        if ($this->disablePlugins) {
+            return;
+        }
+
+        $oldInstallerPlugin = ($package->getType() === 'composer-installer');
+
+        if (!isset($this->registeredPlugins[$package->getName()])) {
+            return;
+        }
+
+        if ($oldInstallerPlugin) {
+            $installer = $this->registeredPlugins[$package->getName()];
+            unset($this->registeredPlugins[$package->getName()]);
+            $this->composer->getInstallationManager()->removeInstaller($installer);
+        } else {
+            $plugin = $this->registeredPlugins[$package->getName()];
+            unset($this->registeredPlugins[$package->getName()]);
+            $this->removePlugin($plugin);
+        }
+    }
+
+    /**
+     * Uninstall a plugin package
+     *
+     * If it's of type composer-installer it is unregistered from the installers
+     * instead for BC
+     *
+     * @param PackageInterface $package
+     *
+     * @throws \UnexpectedValueException
+     */
+    public function uninstallPackage(PackageInterface $package)
+    {
+        if ($this->disablePlugins) {
+            return;
+        }
+
+        $oldInstallerPlugin = ($package->getType() === 'composer-installer');
+
+        if (!isset($this->registeredPlugins[$package->getName()])) {
+            return;
+        }
+
+        if ($oldInstallerPlugin) {
+            $this->deactivatePackage($package);
+        } else {
+            $plugin = $this->registeredPlugins[$package->getName()];
+            unset($this->registeredPlugins[$package->getName()]);
+            $this->removePlugin($plugin);
+            $this->uninstallPlugin($plugin);
+        }
+    }
+
+    /**
      * Returns the version of the internal composer-plugin-api package.
      *
      * @return string
@@ -252,6 +309,102 @@ class PluginManager
     protected function getPluginApiVersion()
     {
         return PluginInterface::PLUGIN_API_VERSION;
+    }
+
+    /**
+     * Adds a plugin, activates it and registers it with the event dispatcher
+     *
+     * Ideally plugin packages should be registered via registerPackage, but if you use Composer
+     * programmatically and want to register a plugin class directly this is a valid way
+     * to do it.
+     *
+     * @param PluginInterface   $plugin        plugin instance
+     * @param ?PackageInterface $sourcePackage Package from which the plugin comes from
+     */
+    public function addPlugin(PluginInterface $plugin, $isGlobalPlugin = false, PackageInterface $sourcePackage = null)
+    {
+        $details = array();
+        if ($sourcePackage) {
+            $details[] = 'from '.$sourcePackage->getName();
+        }
+        if ($isGlobalPlugin) {
+            $details[] = 'installed globally';
+        }
+        $this->io->writeError('Loading plugin '.get_class($plugin).($details ? ' ('.implode(', ', $details).')' : ''), true, IOInterface::DEBUG);
+        $this->plugins[] = $plugin;
+        $plugin->activate($this->composer, $this->io);
+
+        if ($plugin instanceof EventSubscriberInterface) {
+            $this->composer->getEventDispatcher()->addSubscriber($plugin);
+        }
+    }
+
+    /**
+     * Removes a plugin, deactivates it and removes any listener the plugin has set on the plugin instance
+     *
+     * Ideally plugin packages should be deactivated via deactivatePackage, but if you use Composer
+     * programmatically and want to deregister a plugin class directly this is a valid way
+     * to do it.
+     *
+     * @param PluginInterface $plugin plugin instance
+     */
+    public function removePlugin(PluginInterface $plugin)
+    {
+        $index = array_search($plugin, $this->plugins, true);
+        if ($index === false) {
+            return;
+        }
+
+        $this->io->writeError('Unloading plugin '.get_class($plugin), true, IOInterface::DEBUG);
+        unset($this->plugins[$index]);
+        $plugin->deactivate($this->composer, $this->io);
+
+        $this->composer->getEventDispatcher()->removeListener($plugin);
+    }
+
+    /**
+     * Notifies a plugin it is being uninstalled and should clean up
+     *
+     * Ideally plugin packages should be uninstalled via uninstallPackage, but if you use Composer
+     * programmatically and want to deregister a plugin class directly this is a valid way
+     * to do it.
+     *
+     * @param PluginInterface $plugin plugin instance
+     */
+    public function uninstallPlugin(PluginInterface $plugin)
+    {
+        $this->io->writeError('Uninstalling plugin '.get_class($plugin), true, IOInterface::DEBUG);
+        $plugin->uninstall($this->composer, $this->io);
+    }
+
+    /**
+     * Load all plugins and installers from a repository
+     *
+     * If a plugin requires another plugin, the required one will be loaded first
+     *
+     * Note that plugins in the specified repository that rely on events that
+     * have fired prior to loading will be missed. This means you likely want to
+     * call this method as early as possible.
+     *
+     * @param RepositoryInterface $repo Repository to scan for plugins to install
+     *
+     * @throws \RuntimeException
+     */
+    private function loadRepository(RepositoryInterface $repo, $isGlobalRepo)
+    {
+        $packages = $repo->getPackages();
+        $sortedPackages = PackageSorter::sortPackages($packages);
+        foreach ($sortedPackages as $package) {
+            if (!($package instanceof CompletePackage)) {
+                continue;
+            }
+            if ('composer-plugin' === $package->getType()) {
+                $this->registerPackage($package, false, $isGlobalRepo);
+            // Backward compatibility
+            } elseif ('composer-installer' === $package->getType()) {
+                $this->registerPackage($package, false, $isGlobalRepo);
+            }
+        }
     }
 
     /**
@@ -295,174 +448,31 @@ class PluginManager
     }
 
     /**
-     * Adds a plugin, activates it and registers it with the event dispatcher
-     *
-     * Ideally plugin packages should be registered via registerPackage, but if you use Composer
-     * programmatically and want to register a plugin class directly this is a valid way
-     * to do it.
-     *
-     * @param PluginInterface   $plugin        plugin instance
-     * @param ?PackageInterface $sourcePackage Package from which the plugin comes from
+     * @param  PluginInterface   $plugin
+     * @param  string            $capability
+     * @throws \RuntimeException On empty or non-string implementation class name value
+     * @return null|string       The fully qualified class of the implementation or null if Plugin is not of Capable type or does not provide it
      */
-    public function addPlugin(PluginInterface $plugin, $isGlobalPlugin = false, PackageInterface $sourcePackage = null)
+    protected function getCapabilityImplementationClassName(PluginInterface $plugin, $capability)
     {
-        $details = array();
-        if ($sourcePackage) {
-            $details[] = 'from '.$sourcePackage->getName();
-        }
-        if ($isGlobalPlugin) {
-            $details[] = 'installed globally';
-        }
-        $this->io->writeError('Loading plugin '.get_class($plugin).($details ? ' ('.implode(', ', $details).')' : ''), true, IOInterface::DEBUG);
-        $this->plugins[] = $plugin;
-        $plugin->activate($this->composer, $this->io);
-
-        if ($plugin instanceof EventSubscriberInterface) {
-            $this->composer->getEventDispatcher()->addSubscriber($plugin);
-        }
-    }
-
-    /**
-     * Gets global composer or null when main composer is not fully loaded
-     *
-     * @return Composer|null
-     */
-    public function getGlobalComposer()
-    {
-        return $this->globalComposer;
-    }
-
-    /**
-     * Uninstall a plugin package
-     *
-     * If it's of type composer-installer it is unregistered from the installers
-     * instead for BC
-     *
-     * @param PackageInterface $package
-     *
-     * @throws \UnexpectedValueException
-     */
-    public function uninstallPackage(PackageInterface $package)
-    {
-        if ($this->disablePlugins) {
-            return;
+        if (!($plugin instanceof Capable)) {
+            return null;
         }
 
-        $oldInstallerPlugin = ($package->getType() === 'composer-installer');
+        $capabilities = (array) $plugin->getCapabilities();
 
-        if (!isset($this->registeredPlugins[$package->getName()])) {
-            return;
+        if (!empty($capabilities[$capability]) && is_string($capabilities[$capability]) && trim($capabilities[$capability])) {
+            return trim($capabilities[$capability]);
         }
 
-        if ($oldInstallerPlugin) {
-            $this->deactivatePackage($package);
-        } else {
-            $plugin = $this->registeredPlugins[$package->getName()];
-            unset($this->registeredPlugins[$package->getName()]);
-            $this->removePlugin($plugin);
-            $this->uninstallPlugin($plugin);
-        }
-    }
-
-    /**
-     * Deactivates a plugin package
-     *
-     * If it's of type composer-installer it is unregistered from the installers
-     * instead for BC
-     *
-     * @param PackageInterface $package
-     *
-     * @throws \UnexpectedValueException
-     */
-    public function deactivatePackage(PackageInterface $package)
-    {
-        if ($this->disablePlugins) {
-            return;
+        if (
+            array_key_exists($capability, $capabilities)
+            && (empty($capabilities[$capability]) || !is_string($capabilities[$capability]) || !trim($capabilities[$capability]))
+        ) {
+            throw new \UnexpectedValueException('Plugin '.get_class($plugin).' provided invalid capability class name(s), got '.var_export($capabilities[$capability], 1));
         }
 
-        $oldInstallerPlugin = ($package->getType() === 'composer-installer');
-
-        if (!isset($this->registeredPlugins[$package->getName()])) {
-            return;
-        }
-
-        if ($oldInstallerPlugin) {
-            $installer = $this->registeredPlugins[$package->getName()];
-            unset($this->registeredPlugins[$package->getName()]);
-            $this->composer->getInstallationManager()->removeInstaller($installer);
-        } else {
-            $plugin = $this->registeredPlugins[$package->getName()];
-            unset($this->registeredPlugins[$package->getName()]);
-            $this->removePlugin($plugin);
-        }
-    }
-
-    /**
-     * Removes a plugin, deactivates it and removes any listener the plugin has set on the plugin instance
-     *
-     * Ideally plugin packages should be deactivated via deactivatePackage, but if you use Composer
-     * programmatically and want to deregister a plugin class directly this is a valid way
-     * to do it.
-     *
-     * @param PluginInterface $plugin plugin instance
-     */
-    public function removePlugin(PluginInterface $plugin)
-    {
-        $index = array_search($plugin, $this->plugins, true);
-        if ($index === false) {
-            return;
-        }
-
-        $this->io->writeError('Unloading plugin '.get_class($plugin), true, IOInterface::DEBUG);
-        unset($this->plugins[$index]);
-        $plugin->deactivate($this->composer, $this->io);
-
-        $this->composer->getEventDispatcher()->removeListener($plugin);
-    }
-
-    /**
-     * Notifies a plugin it is being uninstalled and should clean up
-     *
-     * Ideally plugin packages should be uninstalled via uninstallPackage, but if you use Composer
-     * programmatically and want to deregister a plugin class directly this is a valid way
-     * to do it.
-     *
-     * @param PluginInterface $plugin plugin instance
-     */
-    public function uninstallPlugin(PluginInterface $plugin)
-    {
-        $this->io->writeError('Uninstalling plugin '.get_class($plugin), true, IOInterface::DEBUG);
-        $plugin->uninstall($this->composer, $this->io);
-    }
-
-    /**
-     * @template CapabilityClass of Capability
-     * @param  class-string<CapabilityClass> $capabilityClassName The fully qualified name of the API interface which the plugin may provide
-     *                                                            an implementation of.
-     * @param  array                         $ctorArgs            Arguments passed to Capability's constructor.
-     *                                                            Keeping it an array will allow future values to be passed w\o changing the signature.
-     * @return CapabilityClass[]
-     */
-    public function getPluginCapabilities($capabilityClassName, array $ctorArgs = array())
-    {
-        $capabilities = array();
-        foreach ($this->getPlugins() as $plugin) {
-            if ($capability = $this->getPluginCapability($plugin, $capabilityClassName, $ctorArgs)) {
-                $capabilities[] = $capability;
-            }
-        }
-
-        return $capabilities;
-    }
-
-    /**
-     * Gets all currently active plugin instances
-     *
-     * @return array plugins
-     */
-    public function getPlugins()
-    {
-        return $this->plugins;
+        return null;
     }
 
     /**
@@ -500,30 +510,22 @@ class PluginManager
     }
 
     /**
-     * @param  PluginInterface   $plugin
-     * @param  string            $capability
-     * @throws \RuntimeException On empty or non-string implementation class name value
-     * @return null|string       The fully qualified class of the implementation or null if Plugin is not of Capable type or does not provide it
+     * @template CapabilityClass of Capability
+     * @param  class-string<CapabilityClass> $capabilityClassName The fully qualified name of the API interface which the plugin may provide
+     *                                                            an implementation of.
+     * @param  array                         $ctorArgs            Arguments passed to Capability's constructor.
+     *                                                            Keeping it an array will allow future values to be passed w\o changing the signature.
+     * @return CapabilityClass[]
      */
-    protected function getCapabilityImplementationClassName(PluginInterface $plugin, $capability)
+    public function getPluginCapabilities($capabilityClassName, array $ctorArgs = array())
     {
-        if (!($plugin instanceof Capable)) {
-            return null;
+        $capabilities = array();
+        foreach ($this->getPlugins() as $plugin) {
+            if ($capability = $this->getPluginCapability($plugin, $capabilityClassName, $ctorArgs)) {
+                $capabilities[] = $capability;
+            }
         }
 
-        $capabilities = (array) $plugin->getCapabilities();
-
-        if (!empty($capabilities[$capability]) && is_string($capabilities[$capability]) && trim($capabilities[$capability])) {
-            return trim($capabilities[$capability]);
-        }
-
-        if (
-            array_key_exists($capability, $capabilities)
-            && (empty($capabilities[$capability]) || !is_string($capabilities[$capability]) || !trim($capabilities[$capability]))
-        ) {
-            throw new \UnexpectedValueException('Plugin '.get_class($plugin).' provided invalid capability class name(s), got '.var_export($capabilities[$capability], 1));
-        }
-
-        return null;
+        return $capabilities;
     }
 }

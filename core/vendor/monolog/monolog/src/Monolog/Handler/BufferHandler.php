@@ -94,15 +94,6 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
         $this->clear();
     }
 
-    /**
-     * Clears the buffer without flushing any messages down to the wrapped handler.
-     */
-    public function clear(): void
-    {
-        $this->bufferSize = 0;
-        $this->buffer = [];
-    }
-
     public function __destruct()
     {
         // suppress the parent behavior since we already have register_shutdown_function()
@@ -118,6 +109,15 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
         $this->flush();
 
         $this->handler->close();
+    }
+
+    /**
+     * Clears the buffer without flushing any messages down to the wrapped handler.
+     */
+    public function clear(): void
+    {
+        $this->bufferSize = 0;
+        $this->buffer = [];
     }
 
     public function reset()

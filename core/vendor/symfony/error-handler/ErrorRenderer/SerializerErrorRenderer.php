@@ -50,17 +50,6 @@ class SerializerErrorRenderer implements ErrorRendererInterface
         $this->debug = $debug;
     }
 
-    public static function getPreferredFormat(RequestStack $requestStack): \Closure
-    {
-        return static function () use ($requestStack) {
-            if (!$request = $requestStack->getCurrentRequest()) {
-                throw new NotEncodableValueException();
-            }
-
-            return $request->getPreferredFormat();
-        };
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -90,5 +79,16 @@ class SerializerErrorRenderer implements ErrorRendererInterface
         } catch (NotEncodableValueException $e) {
             return $this->fallbackErrorRenderer->render($exception);
         }
+    }
+
+    public static function getPreferredFormat(RequestStack $requestStack): \Closure
+    {
+        return static function () use ($requestStack) {
+            if (!$request = $requestStack->getCurrentRequest()) {
+                throw new NotEncodableValueException();
+            }
+
+            return $request->getPreferredFormat();
+        };
     }
 }

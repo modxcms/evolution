@@ -67,6 +67,49 @@ final class Color
         }
     }
 
+    public function apply(string $text): string
+    {
+        return $this->set().$text.$this->unset();
+    }
+
+    public function set(): string
+    {
+        $setCodes = [];
+        if ('' !== $this->foreground) {
+            $setCodes[] = $this->foreground;
+        }
+        if ('' !== $this->background) {
+            $setCodes[] = $this->background;
+        }
+        foreach ($this->options as $option) {
+            $setCodes[] = $option['set'];
+        }
+        if (0 === \count($setCodes)) {
+            return '';
+        }
+
+        return sprintf("\033[%sm", implode(';', $setCodes));
+    }
+
+    public function unset(): string
+    {
+        $unsetCodes = [];
+        if ('' !== $this->foreground) {
+            $unsetCodes[] = 39;
+        }
+        if ('' !== $this->background) {
+            $unsetCodes[] = 49;
+        }
+        foreach ($this->options as $option) {
+            $unsetCodes[] = $option['unset'];
+        }
+        if (0 === \count($unsetCodes)) {
+            return '';
+        }
+
+        return sprintf("\033[%sm", implode(';', $unsetCodes));
+    }
+
     private function parseColor(string $color, bool $background = false): string
     {
         if ('' === $color) {
@@ -133,48 +176,5 @@ final class Color
         }
 
         return (int) $diff * 100 / $v;
-    }
-
-    public function apply(string $text): string
-    {
-        return $this->set().$text.$this->unset();
-    }
-
-    public function set(): string
-    {
-        $setCodes = [];
-        if ('' !== $this->foreground) {
-            $setCodes[] = $this->foreground;
-        }
-        if ('' !== $this->background) {
-            $setCodes[] = $this->background;
-        }
-        foreach ($this->options as $option) {
-            $setCodes[] = $option['set'];
-        }
-        if (0 === \count($setCodes)) {
-            return '';
-        }
-
-        return sprintf("\033[%sm", implode(';', $setCodes));
-    }
-
-    public function unset(): string
-    {
-        $unsetCodes = [];
-        if ('' !== $this->foreground) {
-            $unsetCodes[] = 39;
-        }
-        if ('' !== $this->background) {
-            $unsetCodes[] = 49;
-        }
-        foreach ($this->options as $option) {
-            $unsetCodes[] = $option['unset'];
-        }
-        if (0 === \count($unsetCodes)) {
-            return '';
-        }
-
-        return sprintf("\033[%sm", implode(';', $unsetCodes));
     }
 }

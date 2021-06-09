@@ -75,14 +75,6 @@ class CachingStream implements StreamInterface
         }
     }
 
-    private function cacheEntireStream()
-    {
-        $target = new FnStream(['write' => 'strlen']);
-        Utils::copyToStream($this, $target);
-
-        return $this->tell();
-    }
-
     public function read($length)
     {
         // Perform a regular read on any previously read data from the buffer
@@ -137,5 +129,13 @@ class CachingStream implements StreamInterface
     public function close()
     {
         $this->remoteStream->close() && $this->stream->close();
+    }
+
+    private function cacheEntireStream()
+    {
+        $target = new FnStream(['write' => 'strlen']);
+        Utils::copyToStream($this, $target);
+
+        return $this->tell();
     }
 }

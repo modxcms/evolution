@@ -136,15 +136,6 @@ class VersionSelector
         return $package;
     }
 
-    private function getParser()
-    {
-        if ($this->parser === null) {
-            $this->parser = new VersionParser();
-        }
-
-        return $this->parser;
-    }
-
     /**
      * Given a concrete version, this returns a ^ constraint (when possible)
      * that should be used, for example, in composer.json.
@@ -218,5 +209,14 @@ class VersionSelector
 
         // 2.1 -> ^2.1
         return '^' . $version;
+    }
+
+    private function getParser()
+    {
+        if ($this->parser === null) {
+            $this->parser = new VersionParser();
+        }
+
+        return $this->parser;
     }
 }

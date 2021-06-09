@@ -19,13 +19,6 @@ final class TranslatorBag implements TranslatorBagInterface
     /** @var MessageCatalogue[] */
     private $catalogues = [];
 
-    public function addBag(TranslatorBagInterface $bag): void
-    {
-        foreach ($bag->getCatalogues() as $catalogue) {
-            $this->addCatalogue($catalogue);
-        }
-    }
-
     public function addCatalogue(MessageCatalogue $catalogue): void
     {
         if (null !== $existingCatalogue = $this->getCatalogue($catalogue->getLocale())) {
@@ -33,6 +26,13 @@ final class TranslatorBag implements TranslatorBagInterface
         }
 
         $this->catalogues[$catalogue->getLocale()] = $catalogue;
+    }
+
+    public function addBag(TranslatorBagInterface $bag): void
+    {
+        foreach ($bag->getCatalogues() as $catalogue) {
+            $this->addCatalogue($catalogue);
+        }
     }
 
     /**

@@ -55,6 +55,30 @@ class StreamOutput extends Output
     }
 
     /**
+     * Gets the stream attached to this StreamOutput instance.
+     *
+     * @return resource A stream resource
+     */
+    public function getStream()
+    {
+        return $this->stream;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function doWrite(string $message, bool $newline)
+    {
+        if ($newline) {
+            $message .= \PHP_EOL;
+        }
+
+        @fwrite($this->stream, $message);
+
+        fflush($this->stream);
+    }
+
+    /**
      * Returns true if the stream supports colorization.
      *
      * Colorization is disabled if not supported by the stream:
@@ -87,29 +111,5 @@ class StreamOutput extends Output
         }
 
         return stream_isatty($this->stream);
-    }
-
-    /**
-     * Gets the stream attached to this StreamOutput instance.
-     *
-     * @return resource A stream resource
-     */
-    public function getStream()
-    {
-        return $this->stream;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function doWrite(string $message, bool $newline)
-    {
-        if ($newline) {
-            $message .= \PHP_EOL;
-        }
-
-        @fwrite($this->stream, $message);
-
-        fflush($this->stream);
     }
 }

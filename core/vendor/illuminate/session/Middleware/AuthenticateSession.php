@@ -63,13 +63,20 @@ class AuthenticateSession
     }
 
     /**
-     * Get the guard instance that should be used by the middleware.
+     * Store the user's current password hash in the session.
      *
-     * @return \Illuminate\Contracts\Auth\Factory|\Illuminate\Contracts\Auth\Guard
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
      */
-    protected function guard()
+    protected function storePasswordHashInSession($request)
     {
-        return $this->auth;
+        if (! $request->user()) {
+            return;
+        }
+
+        $request->session()->put([
+            'password_hash_'.$this->auth->getDefaultDriver() => $request->user()->getAuthPassword(),
+        ]);
     }
 
     /**
@@ -90,19 +97,12 @@ class AuthenticateSession
     }
 
     /**
-     * Store the user's current password hash in the session.
+     * Get the guard instance that should be used by the middleware.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return void
+     * @return \Illuminate\Contracts\Auth\Factory|\Illuminate\Contracts\Auth\Guard
      */
-    protected function storePasswordHashInSession($request)
+    protected function guard()
     {
-        if (! $request->user()) {
-            return;
-        }
-
-        $request->session()->put([
-            'password_hash_'.$this->auth->getDefaultDriver() => $request->user()->getAuthPassword(),
-        ]);
+        return $this->auth;
     }
 }

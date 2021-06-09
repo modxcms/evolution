@@ -67,19 +67,6 @@ abstract class SchemaState
     }
 
     /**
-     * Specify the callback that should be used to handle process output.
-     *
-     * @param  callable  $output
-     * @return $this
-     */
-    public function handleOutputUsing(callable $output)
-    {
-        $this->output = $output;
-
-        return $this;
-    }
-
-    /**
      * Dump the database's schema into a file.
      *
      * @param  \Illuminate\Database\Connection  $connection
@@ -116,6 +103,19 @@ abstract class SchemaState
     public function withMigrationTable(string $table)
     {
         $this->migrationTable = $table;
+
+        return $this;
+    }
+
+    /**
+     * Specify the callback that should be used to handle process output.
+     *
+     * @param  callable  $output
+     * @return $this
+     */
+    public function handleOutputUsing(callable $output)
+    {
+        $this->output = $output;
 
         return $this;
     }

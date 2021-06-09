@@ -30,34 +30,52 @@ class MySqlSchemaState extends SchemaState
     }
 
     /**
-     * Execute the given dump process.
+     * Remove the auto-incrementing state from the given schema dump.
      *
-     * @param  \Symfony\Component\Process\Process  $process
-     * @param  callable  $output
-     * @param  array  $variables
-     * @return \Symfony\Component\Process\Process
+     * @param  string  $path
+     * @return void
      */
-    protected function executeDumpProcess(Process $process, $output, array $variables)
+    protected function removeAutoIncrementingState(string $path)
     {
-        try {
-            $process->setTimeout(null)->mustRun($output, $variables);
-        } catch (Exception $e) {
-            if (Str::contains($e->getMessage(), ['column-statistics', 'column_statistics'])) {
-                return $this->executeDumpProcess(Process::fromShellCommandLine(
-                    str_replace(' --column-statistics=0', '', $process->getCommandLine())
-                ), $output, $variables);
-            }
+        $this->files->put($path, preg_replace(
+            '/\s+AUTO_INCREMENT=[0-9]+/iu',
+            '',
+            $this->files->get($path)
+        ));
+    }
 
-            if (Str::contains($e->getMessage(), ['set-gtid-purged'])) {
-                return $this->executeDumpProcess(Process::fromShellCommandLine(
-                    str_replace(' --set-gtid-purged=OFF', '', $process->getCommandLine())
-                ), $output, $variables);
-            }
+    /**
+     * Append the migration data to the schema dump.
+     *
+     * @param  string  $path
+     * @return void
+     */
+    protected function appendMigrationData(string $path)
+    {
+        $process = $this->executeDumpProcess($this->makeProcess(
+            $this->baseDumpCommand().' '.$this->migrationTable.' --no-create-info --skip-extended-insert --skip-routines --compact'
+        ), null, array_merge($this->baseVariables($this->connection->getConfig()), [
+            //
+        ]));
 
-            throw $e;
-        }
+        $this->files->append($path, $process->getOutput());
+    }
 
-        return $process;
+    /**
+     * Load the given schema file into the database.
+     *
+     * @param  string  $path
+     * @return void
+     */
+    public function load($path)
+    {
+        $command = 'mysql '.$this->connectionString().' --database="${:LARAVEL_LOAD_DATABASE}" < "${:LARAVEL_LOAD_PATH}"';
+
+        $process = $this->makeProcess($command)->setTimeout(null);
+
+        $process->mustRun(null, array_merge($this->baseVariables($this->connection->getConfig()), [
+            'LARAVEL_LOAD_PATH' => $path,
+        ]));
     }
 
     /**
@@ -113,51 +131,33 @@ class MySqlSchemaState extends SchemaState
     }
 
     /**
-     * Remove the auto-incrementing state from the given schema dump.
+     * Execute the given dump process.
      *
-     * @param  string  $path
-     * @return void
+     * @param  \Symfony\Component\Process\Process  $process
+     * @param  callable  $output
+     * @param  array  $variables
+     * @return \Symfony\Component\Process\Process
      */
-    protected function removeAutoIncrementingState(string $path)
+    protected function executeDumpProcess(Process $process, $output, array $variables)
     {
-        $this->files->put($path, preg_replace(
-            '/\s+AUTO_INCREMENT=[0-9]+/iu',
-            '',
-            $this->files->get($path)
-        ));
-    }
+        try {
+            $process->setTimeout(null)->mustRun($output, $variables);
+        } catch (Exception $e) {
+            if (Str::contains($e->getMessage(), ['column-statistics', 'column_statistics'])) {
+                return $this->executeDumpProcess(Process::fromShellCommandLine(
+                    str_replace(' --column-statistics=0', '', $process->getCommandLine())
+                ), $output, $variables);
+            }
 
-    /**
-     * Append the migration data to the schema dump.
-     *
-     * @param  string  $path
-     * @return void
-     */
-    protected function appendMigrationData(string $path)
-    {
-        $process = $this->executeDumpProcess($this->makeProcess(
-            $this->baseDumpCommand().' '.$this->migrationTable.' --no-create-info --skip-extended-insert --skip-routines --compact'
-        ), null, array_merge($this->baseVariables($this->connection->getConfig()), [
-            //
-        ]));
+            if (Str::contains($e->getMessage(), ['set-gtid-purged'])) {
+                return $this->executeDumpProcess(Process::fromShellCommandLine(
+                    str_replace(' --set-gtid-purged=OFF', '', $process->getCommandLine())
+                ), $output, $variables);
+            }
 
-        $this->files->append($path, $process->getOutput());
-    }
+            throw $e;
+        }
 
-    /**
-     * Load the given schema file into the database.
-     *
-     * @param  string  $path
-     * @return void
-     */
-    public function load($path)
-    {
-        $command = 'mysql '.$this->connectionString().' --database="${:LARAVEL_LOAD_DATABASE}" < "${:LARAVEL_LOAD_PATH}"';
-
-        $process = $this->makeProcess($command)->setTimeout(null);
-
-        $process->mustRun(null, array_merge($this->baseVariables($this->connection->getConfig()), [
-            'LARAVEL_LOAD_PATH' => $path,
-        ]));
+        return $process;
     }
 }

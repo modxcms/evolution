@@ -22,42 +22,51 @@ use Composer\IO\IOInterface;
 class Svn
 {
     const MAX_QTY_AUTH_TRIES = 5;
-    /**
-     * @var string|null
-     */
-    private static $version;
+
     /**
      * @var array
      */
     protected $credentials;
+
     /**
      * @var bool
      */
     protected $hasAuth;
+
     /**
      * @var \Composer\IO\IOInterface
      */
     protected $io;
+
     /**
      * @var string
      */
     protected $url;
+
     /**
      * @var bool
      */
     protected $cacheCredentials = true;
+
     /**
      * @var ProcessExecutor
      */
     protected $process;
+
     /**
      * @var int
      */
     protected $qtyAuthTries = 0;
+
     /**
      * @var \Composer\Config
      */
     protected $config;
+
+    /**
+     * @var string|null
+     */
+    private static $version;
 
     /**
      * @param string                   $url
@@ -98,6 +107,24 @@ class Svn
         $this->config->prohibitUrlByConfig($url, $this->io);
 
         return $this->executeWithAuthRetry($command, $cwd, $url, $path, $verbose);
+    }
+
+    /**
+     * Execute an SVN local command and try to fix up the process with credentials
+     * if necessary.
+     *
+     * @param string $command SVN command to run
+     * @param string $path    Path argument passed thru to the command
+     * @param string $cwd     Working directory
+     * @param bool   $verbose Output all output to the user
+     *
+     * @throws \RuntimeException
+     * @return string
+     */
+    public function executeLocal($command, $path, $cwd = null, $verbose = false)
+    {
+        // A local command has no remote url
+        return $this->executeWithAuthRetry($command, $cwd, '', $path, $verbose);
     }
 
     private function executeWithAuthRetry($svnCommand, $cwd, $url, $path, $verbose)
@@ -151,6 +178,40 @@ class Svn
     }
 
     /**
+     * @param bool $cacheCredentials
+     */
+    public function setCacheCredentials($cacheCredentials)
+    {
+        $this->cacheCredentials = $cacheCredentials;
+    }
+
+    /**
+     * Repositories requests credentials, let's put them in.
+     *
+     * @throws \RuntimeException
+     * @return \Composer\Util\Svn
+     */
+    protected function doAuthDance()
+    {
+        // cannot ask for credentials in non interactive mode
+        if (!$this->io->isInteractive()) {
+            throw new \RuntimeException(
+                'can not ask for authentication in non interactive mode'
+            );
+        }
+
+        $this->io->writeError("The Subversion server ({$this->url}) requested credentials:");
+
+        $this->hasAuth = true;
+        $this->credentials['username'] = $this->io->ask("Username: ");
+        $this->credentials['password'] = $this->io->askAndHideAnswer("Password: ");
+
+        $this->cacheCredentials = $this->io->askConfirmation("Should Subversion cache these credentials? (yes/no) ");
+
+        return $this;
+    }
+
+    /**
      * A method to create the svn commands run.
      *
      * @param string $cmd  Usually 'svn ls' or something like that.
@@ -198,6 +259,36 @@ class Svn
     }
 
     /**
+     * Get the password for the svn command. Can be empty.
+     *
+     * @throws \LogicException
+     * @return string
+     */
+    protected function getPassword()
+    {
+        if ($this->credentials === null) {
+            throw new \LogicException("No svn auth detected.");
+        }
+
+        return isset($this->credentials['password']) ? $this->credentials['password'] : '';
+    }
+
+    /**
+     * Get the username for the svn command.
+     *
+     * @throws \LogicException
+     * @return string
+     */
+    protected function getUsername()
+    {
+        if ($this->credentials === null) {
+            throw new \LogicException("No svn auth detected.");
+        }
+
+        return $this->credentials['username'];
+    }
+
+    /**
      * Detect Svn Auth.
      *
      * @return bool
@@ -213,6 +304,16 @@ class Svn
         }
 
         return (bool) $this->hasAuth;
+    }
+
+    /**
+     * Return the no-auth-cache switch.
+     *
+     * @return string
+     */
+    protected function getAuthCache()
+    {
+        return $this->cacheCredentials ? '' : '--no-auth-cache ';
     }
 
     /**
@@ -257,98 +358,6 @@ class Svn
         }
 
         return $this->hasAuth = true;
-    }
-
-    /**
-     * Return the no-auth-cache switch.
-     *
-     * @return string
-     */
-    protected function getAuthCache()
-    {
-        return $this->cacheCredentials ? '' : '--no-auth-cache ';
-    }
-
-    /**
-     * Get the username for the svn command.
-     *
-     * @throws \LogicException
-     * @return string
-     */
-    protected function getUsername()
-    {
-        if ($this->credentials === null) {
-            throw new \LogicException("No svn auth detected.");
-        }
-
-        return $this->credentials['username'];
-    }
-
-    /**
-     * Get the password for the svn command. Can be empty.
-     *
-     * @throws \LogicException
-     * @return string
-     */
-    protected function getPassword()
-    {
-        if ($this->credentials === null) {
-            throw new \LogicException("No svn auth detected.");
-        }
-
-        return isset($this->credentials['password']) ? $this->credentials['password'] : '';
-    }
-
-    /**
-     * Repositories requests credentials, let's put them in.
-     *
-     * @throws \RuntimeException
-     * @return \Composer\Util\Svn
-     */
-    protected function doAuthDance()
-    {
-        // cannot ask for credentials in non interactive mode
-        if (!$this->io->isInteractive()) {
-            throw new \RuntimeException(
-                'can not ask for authentication in non interactive mode'
-            );
-        }
-
-        $this->io->writeError("The Subversion server ({$this->url}) requested credentials:");
-
-        $this->hasAuth = true;
-        $this->credentials['username'] = $this->io->ask("Username: ");
-        $this->credentials['password'] = $this->io->askAndHideAnswer("Password: ");
-
-        $this->cacheCredentials = $this->io->askConfirmation("Should Subversion cache these credentials? (yes/no) ");
-
-        return $this;
-    }
-
-    /**
-     * Execute an SVN local command and try to fix up the process with credentials
-     * if necessary.
-     *
-     * @param string $command SVN command to run
-     * @param string $path    Path argument passed thru to the command
-     * @param string $cwd     Working directory
-     * @param bool   $verbose Output all output to the user
-     *
-     * @throws \RuntimeException
-     * @return string
-     */
-    public function executeLocal($command, $path, $cwd = null, $verbose = false)
-    {
-        // A local command has no remote url
-        return $this->executeWithAuthRetry($command, $cwd, '', $path, $verbose);
-    }
-
-    /**
-     * @param bool $cacheCredentials
-     */
-    public function setCacheCredentials($cacheCredentials)
-    {
-        $this->cacheCredentials = $cacheCredentials;
     }
 
     /**

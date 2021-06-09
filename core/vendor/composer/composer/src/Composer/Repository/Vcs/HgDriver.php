@@ -32,39 +32,6 @@ class HgDriver extends VcsDriver
     /**
      * {@inheritDoc}
      */
-    public static function supports(IOInterface $io, Config $config, $url, $deep = false)
-    {
-        if (preg_match('#(^(?:https?|ssh)://(?:[^@]+@)?bitbucket.org|https://(?:.*?)\.kilnhg.com)#i', $url)) {
-            return true;
-        }
-
-        // local filesystem
-        if (Filesystem::isLocalPath($url)) {
-            $url = Filesystem::getPlatformPath($url);
-            if (!is_dir($url)) {
-                return false;
-            }
-
-            $process = new ProcessExecutor($io);
-            // check whether there is a hg repo in that path
-            if ($process->execute('hg summary', $output, $url) === 0) {
-                return true;
-            }
-        }
-
-        if (!$deep) {
-            return false;
-        }
-
-        $process = new ProcessExecutor($io);
-        $exit = $process->execute(sprintf('hg identify -- %s', ProcessExecutor::escape($url)), $ignored);
-
-        return $exit === 0;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function initialize()
     {
         if (Filesystem::isLocalPath($this->url)) {
@@ -109,6 +76,76 @@ class HgDriver extends VcsDriver
 
         $this->getTags();
         $this->getBranches();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRootIdentifier()
+    {
+        if (null === $this->rootIdentifier) {
+            $this->process->execute(sprintf('hg tip --template "{node}"'), $output, $this->repoDir);
+            $output = $this->process->splitLines($output);
+            $this->rootIdentifier = $output[0];
+        }
+
+        return $this->rootIdentifier;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSource($identifier)
+    {
+        return array('type' => 'hg', 'url' => $this->getUrl(), 'reference' => $identifier);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDist($identifier)
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFileContent($file, $identifier)
+    {
+        $resource = sprintf('hg cat -r %s %s', ProcessExecutor::escape($identifier), ProcessExecutor::escape($file));
+        $this->process->execute($resource, $content, $this->repoDir);
+
+        if (!trim($content)) {
+            return null;
+        }
+
+        return $content;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChangeDate($identifier)
+    {
+        $this->process->execute(
+            sprintf(
+                'hg log --template "{date|rfc3339date}" -r %s',
+                ProcessExecutor::escape($identifier)
+            ),
+            $output,
+            $this->repoDir
+        );
+
+        return new \DateTime(trim($output), new \DateTimeZone('UTC'));
     }
 
     /**
@@ -166,70 +203,33 @@ class HgDriver extends VcsDriver
     /**
      * {@inheritDoc}
      */
-    public function getRootIdentifier()
+    public static function supports(IOInterface $io, Config $config, $url, $deep = false)
     {
-        if (null === $this->rootIdentifier) {
-            $this->process->execute(sprintf('hg tip --template "{node}"'), $output, $this->repoDir);
-            $output = $this->process->splitLines($output);
-            $this->rootIdentifier = $output[0];
+        if (preg_match('#(^(?:https?|ssh)://(?:[^@]+@)?bitbucket.org|https://(?:.*?)\.kilnhg.com)#i', $url)) {
+            return true;
         }
 
-        return $this->rootIdentifier;
-    }
+        // local filesystem
+        if (Filesystem::isLocalPath($url)) {
+            $url = Filesystem::getPlatformPath($url);
+            if (!is_dir($url)) {
+                return false;
+            }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getSource($identifier)
-    {
-        return array('type' => 'hg', 'url' => $this->getUrl(), 'reference' => $identifier);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getDist($identifier)
-    {
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFileContent($file, $identifier)
-    {
-        $resource = sprintf('hg cat -r %s %s', ProcessExecutor::escape($identifier), ProcessExecutor::escape($file));
-        $this->process->execute($resource, $content, $this->repoDir);
-
-        if (!trim($content)) {
-            return null;
+            $process = new ProcessExecutor($io);
+            // check whether there is a hg repo in that path
+            if ($process->execute('hg summary', $output, $url) === 0) {
+                return true;
+            }
         }
 
-        return $content;
-    }
+        if (!$deep) {
+            return false;
+        }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getChangeDate($identifier)
-    {
-        $this->process->execute(
-            sprintf(
-                'hg log --template "{date|rfc3339date}" -r %s',
-                ProcessExecutor::escape($identifier)
-            ),
-            $output,
-            $this->repoDir
-        );
+        $process = new ProcessExecutor($io);
+        $exit = $process->execute(sprintf('hg identify -- %s', ProcessExecutor::escape($url)), $ignored);
 
-        return new \DateTime(trim($output), new \DateTimeZone('UTC'));
+        return $exit === 0;
     }
 }

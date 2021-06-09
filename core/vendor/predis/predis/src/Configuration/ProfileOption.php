@@ -24,21 +24,6 @@ use Predis\Profile\RedisProfile;
 class ProfileOption implements OptionInterface
 {
     /**
-     * {@inheritdoc}
-     */
-    public function filter(OptionsInterface $options, $value)
-    {
-        if (is_string($value)) {
-            $value = Factory::get($value);
-            $this->setProcessors($options, $value);
-        } elseif (!$value instanceof ProfileInterface) {
-            throw new \InvalidArgumentException('Invalid value for the profile option.');
-        }
-
-        return $value;
-    }
-
-    /**
      * Sets the commands processors that need to be applied to the profile.
      *
      * @param OptionsInterface $options Client options.
@@ -54,6 +39,21 @@ class ProfileOption implements OptionInterface
 
             $profile->setProcessor($options->__get('prefix'));
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function filter(OptionsInterface $options, $value)
+    {
+        if (is_string($value)) {
+            $value = Factory::get($value);
+            $this->setProcessors($options, $value);
+        } elseif (!$value instanceof ProfileInterface) {
+            throw new \InvalidArgumentException('Invalid value for the profile option.');
+        }
+
+        return $value;
     }
 
     /**

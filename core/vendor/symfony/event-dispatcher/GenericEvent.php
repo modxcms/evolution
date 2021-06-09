@@ -48,6 +48,36 @@ class GenericEvent extends Event implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
+     * Get argument by key.
+     *
+     * @return mixed Contents of array key
+     *
+     * @throws \InvalidArgumentException if key is not found
+     */
+    public function getArgument(string $key)
+    {
+        if ($this->hasArgument($key)) {
+            return $this->arguments[$key];
+        }
+
+        throw new \InvalidArgumentException(sprintf('Argument "%s" not found.', $key));
+    }
+
+    /**
+     * Add argument to event.
+     *
+     * @param mixed $value Value
+     *
+     * @return $this
+     */
+    public function setArgument(string $key, $value)
+    {
+        $this->arguments[$key] = $value;
+
+        return $this;
+    }
+
+    /**
      * Getter for all arguments.
      *
      * @return array
@@ -70,6 +100,16 @@ class GenericEvent extends Event implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
+     * Has argument.
+     *
+     * @return bool
+     */
+    public function hasArgument(string $key)
+    {
+        return \array_key_exists($key, $this->arguments);
+    }
+
+    /**
      * ArrayAccess for argument getter.
      *
      * @param string $key Array key
@@ -84,32 +124,6 @@ class GenericEvent extends Event implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Get argument by key.
-     *
-     * @return mixed Contents of array key
-     *
-     * @throws \InvalidArgumentException if key is not found
-     */
-    public function getArgument(string $key)
-    {
-        if ($this->hasArgument($key)) {
-            return $this->arguments[$key];
-        }
-
-        throw new \InvalidArgumentException(sprintf('Argument "%s" not found.', $key));
-    }
-
-    /**
-     * Has argument.
-     *
-     * @return bool
-     */
-    public function hasArgument(string $key)
-    {
-        return \array_key_exists($key, $this->arguments);
-    }
-
-    /**
      * ArrayAccess for argument setter.
      *
      * @param string $key   Array key to set
@@ -118,20 +132,6 @@ class GenericEvent extends Event implements \ArrayAccess, \IteratorAggregate
     public function offsetSet($key, $value)
     {
         $this->setArgument($key, $value);
-    }
-
-    /**
-     * Add argument to event.
-     *
-     * @param mixed $value Value
-     *
-     * @return $this
-     */
-    public function setArgument(string $key, $value)
-    {
-        $this->arguments[$key] = $value;
-
-        return $this;
     }
 
     /**

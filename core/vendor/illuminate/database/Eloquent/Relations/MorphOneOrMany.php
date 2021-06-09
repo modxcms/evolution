@@ -68,6 +68,19 @@ abstract class MorphOneOrMany extends HasOneOrMany
     }
 
     /**
+     * Set the foreign ID and type for creating a related model.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @return void
+     */
+    protected function setForeignAttributesForCreate(Model $model)
+    {
+        $model->{$this->getForeignKeyName()} = $this->getParentKey();
+
+        $model->{$this->getMorphType()} = $this->morphClass;
+    }
+
+    /**
      * Get the relationship query.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
@@ -93,29 +106,6 @@ abstract class MorphOneOrMany extends HasOneOrMany
     }
 
     /**
-     * Get the class name of the parent model.
-     *
-     * @return string
-     */
-    public function getMorphClass()
-    {
-        return $this->morphClass;
-    }
-
-    /**
-     * Set the foreign ID and type for creating a related model.
-     *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @return void
-     */
-    protected function setForeignAttributesForCreate(Model $model)
-    {
-        $model->{$this->getForeignKeyName()} = $this->getParentKey();
-
-        $model->{$this->getMorphType()} = $this->morphClass;
-    }
-
-    /**
      * Get the plain morph type name without the table.
      *
      * @return string
@@ -123,5 +113,15 @@ abstract class MorphOneOrMany extends HasOneOrMany
     public function getMorphType()
     {
         return last(explode('.', $this->morphType));
+    }
+
+    /**
+     * Get the class name of the parent model.
+     *
+     * @return string
+     */
+    public function getMorphClass()
+    {
+        return $this->morphClass;
     }
 }

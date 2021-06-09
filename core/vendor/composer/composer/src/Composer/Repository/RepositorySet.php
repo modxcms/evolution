@@ -106,20 +106,6 @@ class RepositorySet
         }
     }
 
-    private static function getRootAliasesPerPackage(array $aliases)
-    {
-        $normalizedAliases = array();
-
-        foreach ($aliases as $alias) {
-            $normalizedAliases[$alias['package']][$alias['version']] = array(
-                'alias' => $alias['alias'],
-                'alias_normalized' => $alias['alias_normalized'],
-            );
-        }
-
-        return $normalizedAliases;
-    }
-
     public function allowInstalledRepositories($allow = true)
     {
         $this->allowInstalledRepositories = $allow;
@@ -206,11 +192,6 @@ class RepositorySet
         return $result;
     }
 
-    public function isPackageAcceptable($names, $stability)
-    {
-        return StabilityFilter::isPackageAcceptable($this->acceptableStabilities, $this->stabilityFlags, $names, $stability);
-    }
-
     public function getProviders($packageName)
     {
         $providers = array();
@@ -221,6 +202,31 @@ class RepositorySet
         }
 
         return $providers;
+    }
+
+    public function isPackageAcceptable($names, $stability)
+    {
+        return StabilityFilter::isPackageAcceptable($this->acceptableStabilities, $this->stabilityFlags, $names, $stability);
+    }
+
+    /**
+     * Create a pool for dependency resolution from the packages in this repository set.
+     *
+     * @return Pool
+     */
+    public function createPool(Request $request, IOInterface $io, EventDispatcher $eventDispatcher = null)
+    {
+        $poolBuilder = new PoolBuilder($this->acceptableStabilities, $this->stabilityFlags, $this->rootAliases, $this->rootReferences, $io, $eventDispatcher);
+
+        foreach ($this->repositories as $repo) {
+            if (($repo instanceof InstalledRepositoryInterface || $repo instanceof InstalledRepository) && !$this->allowInstalledRepositories) {
+                throw new \LogicException('The pool can not accept packages from an installed repository');
+            }
+        }
+
+        $this->locked = true;
+
+        return $poolBuilder->buildPool($this->repositories, $request);
     }
 
     /**
@@ -283,23 +289,17 @@ class RepositorySet
         return $this->createPool($request, new NullIO());
     }
 
-    /**
-     * Create a pool for dependency resolution from the packages in this repository set.
-     *
-     * @return Pool
-     */
-    public function createPool(Request $request, IOInterface $io, EventDispatcher $eventDispatcher = null)
+    private static function getRootAliasesPerPackage(array $aliases)
     {
-        $poolBuilder = new PoolBuilder($this->acceptableStabilities, $this->stabilityFlags, $this->rootAliases, $this->rootReferences, $io, $eventDispatcher);
+        $normalizedAliases = array();
 
-        foreach ($this->repositories as $repo) {
-            if (($repo instanceof InstalledRepositoryInterface || $repo instanceof InstalledRepository) && !$this->allowInstalledRepositories) {
-                throw new \LogicException('The pool can not accept packages from an installed repository');
-            }
+        foreach ($aliases as $alias) {
+            $normalizedAliases[$alias['package']][$alias['version']] = array(
+                'alias' => $alias['alias'],
+                'alias_normalized' => $alias['alias_normalized'],
+            );
         }
 
-        $this->locked = true;
-
-        return $poolBuilder->buildPool($this->repositories, $request);
+        return $normalizedAliases;
     }
 }

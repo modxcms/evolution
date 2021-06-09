@@ -28,19 +28,6 @@ trait Rounding
     use IntervalRounding;
 
     /**
-     * Truncate the current instance at the given unit with given precision if specified.
-     *
-     * @param string    $unit
-     * @param float|int $precision
-     *
-     * @return CarbonInterface
-     */
-    public function floorUnit($unit, $precision = 1)
-    {
-        return $this->roundUnit($unit, $precision, 'floor');
-    }
-
-    /**
      * Round the current instance at the given unit with given precision if specified and the given function.
      *
      * @param string    $unit
@@ -136,6 +123,19 @@ trait Rounding
     }
 
     /**
+     * Truncate the current instance at the given unit with given precision if specified.
+     *
+     * @param string    $unit
+     * @param float|int $precision
+     *
+     * @return CarbonInterface
+     */
+    public function floorUnit($unit, $precision = 1)
+    {
+        return $this->roundUnit($unit, $precision, 'floor');
+    }
+
+    /**
      * Ceil the current instance at the given unit with given precision if specified.
      *
      * @param string    $unit
@@ -152,18 +152,6 @@ trait Rounding
      * Round the current instance second with given precision if specified.
      *
      * @param float|int|string|\DateInterval|null $precision
-     *
-     * @return CarbonInterface
-     */
-    public function floor($precision = 1)
-    {
-        return $this->round($precision, 'floor');
-    }
-
-    /**
-     * Round the current instance second with given precision if specified.
-     *
-     * @param float|int|string|\DateInterval|null $precision
      * @param string                              $function
      *
      * @return CarbonInterface
@@ -171,6 +159,18 @@ trait Rounding
     public function round($precision = 1, $function = 'round')
     {
         return $this->roundWith($precision, $function);
+    }
+
+    /**
+     * Round the current instance second with given precision if specified.
+     *
+     * @param float|int|string|\DateInterval|null $precision
+     *
+     * @return CarbonInterface
+     */
+    public function floor($precision = 1)
+    {
+        return $this->round($precision, 'floor');
     }
 
     /**

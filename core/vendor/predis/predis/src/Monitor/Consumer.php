@@ -39,6 +39,14 @@ class Consumer implements \Iterator
     }
 
     /**
+     * Automatically stops the consumer when the garbage collector kicks in.
+     */
+    public function __destruct()
+    {
+        $this->stop();
+    }
+
+    /**
      * Checks if the passed client instance satisfies the required conditions
      * needed to initialize a monitor consumer.
      *
@@ -71,14 +79,6 @@ class Consumer implements \Iterator
     }
 
     /**
-     * Automatically stops the consumer when the garbage collector kicks in.
-     */
-    public function __destruct()
-    {
-        $this->stop();
-    }
-
-    /**
      * Stops the consumer. Internally this is done by disconnecting from server
      * since there is no way to terminate the stream initialized by MONITOR.
      */
@@ -104,6 +104,32 @@ class Consumer implements \Iterator
     public function current()
     {
         return $this->getValue();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function key()
+    {
+        return $this->position;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function next()
+    {
+        ++$this->position;
+    }
+
+    /**
+     * Checks if the the consumer is still in a valid state to continue.
+     *
+     * @return bool
+     */
+    public function valid()
+    {
+        return $this->valid;
     }
 
     /**
@@ -143,31 +169,5 @@ class Consumer implements \Iterator
             'command' => substr($command, 1, -1),
             'arguments' => $arguments,
         );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function key()
-    {
-        return $this->position;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function next()
-    {
-        ++$this->position;
-    }
-
-    /**
-     * Checks if the the consumer is still in a valid state to continue.
-     *
-     * @return bool
-     */
-    public function valid()
-    {
-        return $this->valid;
     }
 }

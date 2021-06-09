@@ -55,15 +55,6 @@ class Translator extends Translation\Translator
         'scr' => 'sh',
     ];
 
-    public function __construct($locale, Translation\Formatter\MessageFormatterInterface $formatter = null, $cacheDir = null, $debug = false)
-    {
-        $this->initializing = true;
-        $this->directories = [__DIR__.'/Lang'];
-        $this->addLoader('array', new Translation\Loader\ArrayLoader());
-        parent::__construct($locale, $formatter, $cacheDir, $debug);
-        $this->initializing = false;
-    }
-
     /**
      * Return a singleton instance of Translator.
      *
@@ -80,6 +71,39 @@ class Translator extends Translation\Translator
         }
 
         return static::$singletons[$locale];
+    }
+
+    public function __construct($locale, Translation\Formatter\MessageFormatterInterface $formatter = null, $cacheDir = null, $debug = false)
+    {
+        $this->initializing = true;
+        $this->directories = [__DIR__.'/Lang'];
+        $this->addLoader('array', new Translation\Loader\ArrayLoader());
+        parent::__construct($locale, $formatter, $cacheDir, $debug);
+        $this->initializing = false;
+    }
+
+    /**
+     * Returns the list of directories translation files are searched in.
+     *
+     * @return array
+     */
+    public function getDirectories(): array
+    {
+        return $this->directories;
+    }
+
+    /**
+     * Set list of directories translation files are searched in.
+     *
+     * @param array $directories new directories list
+     *
+     * @return $this
+     */
+    public function setDirectories(array $directories)
+    {
+        $this->directories = $directories;
+
+        return $this;
     }
 
     /**
@@ -110,30 +134,6 @@ class Translator extends Translation\Translator
         return $this->setDirectories(array_filter($this->getDirectories(), function ($item) use ($search) {
             return rtrim(strtr($item, '\\', '/'), '/') !== $search;
         }));
-    }
-
-    /**
-     * Returns the list of directories translation files are searched in.
-     *
-     * @return array
-     */
-    public function getDirectories(): array
-    {
-        return $this->directories;
-    }
-
-    /**
-     * Set list of directories translation files are searched in.
-     *
-     * @param array $directories new directories list
-     *
-     * @return $this
-     */
-    public function setDirectories(array $directories)
-    {
-        $this->directories = $directories;
-
-        return $this;
     }
 
     /**
@@ -173,6 +173,113 @@ class Translator extends Translation\Translator
     }
 
     /**
+     * Reset messages of a locale (all locale if no locale passed).
+     * Remove custom messages and reload initial messages from matching
+     * file in Lang directory.
+     *
+     * @param string|null $locale
+     *
+     * @return bool
+     */
+    public function resetMessages($locale = null)
+    {
+        if ($locale === null) {
+            $this->messages = [];
+
+            return true;
+        }
+
+        foreach ($this->getDirectories() as $directory) {
+            $data = @include sprintf('%s/%s.php', rtrim($directory, '\\/'), $locale);
+
+            if ($data !== false) {
+                $this->messages[$locale] = $data;
+                $this->addResource('array', $this->messages[$locale], $locale);
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns the list of files matching a given locale prefix (or all if empty).
+     *
+     * @param string $prefix prefix required to filter result
+     *
+     * @return array
+     */
+    public function getLocalesFiles($prefix = '')
+    {
+        $files = [];
+
+        foreach ($this->getDirectories() as $directory) {
+            $directory = rtrim($directory, '\\/');
+
+            foreach (glob("$directory/$prefix*.php") as $file) {
+                $files[] = $file;
+            }
+        }
+
+        return array_unique($files);
+    }
+
+    /**
+     * Returns the list of internally available locales and already loaded custom locales.
+     * (It will ignore custom translator dynamic loading.)
+     *
+     * @param string $prefix prefix required to filter result
+     *
+     * @return array
+     */
+    public function getAvailableLocales($prefix = '')
+    {
+        $locales = [];
+        foreach ($this->getLocalesFiles($prefix) as $file) {
+            $locales[] = substr($file, strrpos($file, '/') + 1, -4);
+        }
+
+        return array_unique(array_merge($locales, array_keys($this->messages)));
+    }
+
+    /**
+     * Init messages language from matching file in Lang directory.
+     *
+     * @param string $locale
+     *
+     * @return bool
+     */
+    protected function loadMessagesFromFile($locale)
+    {
+        if (isset($this->messages[$locale])) {
+            return true;
+        }
+
+        return $this->resetMessages($locale);
+    }
+
+    /**
+     * Set messages of a locale and take file first if present.
+     *
+     * @param string $locale
+     * @param array  $messages
+     *
+     * @return $this
+     */
+    public function setMessages($locale, $messages)
+    {
+        $this->loadMessagesFromFile($locale);
+        $this->addResource('array', $messages, $locale);
+        $this->messages[$locale] = array_merge(
+            isset($this->messages[$locale]) ? $this->messages[$locale] : [],
+            $messages
+        );
+
+        return $this;
+    }
+
+    /**
      * Set messages of the current locale and take file first if present.
      *
      * @param array $messages
@@ -195,26 +302,6 @@ class Translator extends Translation\Translator
     public function getMessages($locale = null)
     {
         return $locale === null ? $this->messages : $this->messages[$locale];
-    }
-
-    /**
-     * Set messages of a locale and take file first if present.
-     *
-     * @param string $locale
-     * @param array  $messages
-     *
-     * @return $this
-     */
-    public function setMessages($locale, $messages)
-    {
-        $this->loadMessagesFromFile($locale);
-        $this->addResource('array', $messages, $locale);
-        $this->messages[$locale] = array_merge(
-            isset($this->messages[$locale]) ? $this->messages[$locale] : [],
-            $messages
-        );
-
-        return $this;
     }
 
     /**
@@ -284,43 +371,15 @@ class Translator extends Translation\Translator
     }
 
     /**
-     * Returns the list of internally available locales and already loaded custom locales.
-     * (It will ignore custom translator dynamic loading.)
-     *
-     * @param string $prefix prefix required to filter result
+     * Show locale on var_dump().
      *
      * @return array
      */
-    public function getAvailableLocales($prefix = '')
+    public function __debugInfo()
     {
-        $locales = [];
-        foreach ($this->getLocalesFiles($prefix) as $file) {
-            $locales[] = substr($file, strrpos($file, '/') + 1, -4);
-        }
-
-        return array_unique(array_merge($locales, array_keys($this->messages)));
-    }
-
-    /**
-     * Returns the list of files matching a given locale prefix (or all if empty).
-     *
-     * @param string $prefix prefix required to filter result
-     *
-     * @return array
-     */
-    public function getLocalesFiles($prefix = '')
-    {
-        $files = [];
-
-        foreach ($this->getDirectories() as $directory) {
-            $directory = rtrim($directory, '\\/');
-
-            foreach (glob("$directory/$prefix*.php") as $file) {
-                $files[] = $file;
-            }
-        }
-
-        return array_unique($files);
+        return [
+            'locale' => $this->getLocale(),
+        ];
     }
 
     private static function compareChunkLists($referenceChunks, $chunks)
@@ -340,64 +399,5 @@ class Translator extends Translation\Translator
         }
 
         return $score;
-    }
-
-    /**
-     * Init messages language from matching file in Lang directory.
-     *
-     * @param string $locale
-     *
-     * @return bool
-     */
-    protected function loadMessagesFromFile($locale)
-    {
-        if (isset($this->messages[$locale])) {
-            return true;
-        }
-
-        return $this->resetMessages($locale);
-    }
-
-    /**
-     * Reset messages of a locale (all locale if no locale passed).
-     * Remove custom messages and reload initial messages from matching
-     * file in Lang directory.
-     *
-     * @param string|null $locale
-     *
-     * @return bool
-     */
-    public function resetMessages($locale = null)
-    {
-        if ($locale === null) {
-            $this->messages = [];
-
-            return true;
-        }
-
-        foreach ($this->getDirectories() as $directory) {
-            $data = @include sprintf('%s/%s.php', rtrim($directory, '\\/'), $locale);
-
-            if ($data !== false) {
-                $this->messages[$locale] = $data;
-                $this->addResource('array', $this->messages[$locale], $locale);
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Show locale on var_dump().
-     *
-     * @return array
-     */
-    public function __debugInfo()
-    {
-        return [
-            'locale' => $this->getLocale(),
-        ];
     }
 }

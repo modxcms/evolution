@@ -56,17 +56,6 @@ final class TypeRegistry
         return $name;
     }
 
-    private function findTypeName(Type $type): ?string
-    {
-        $name = array_search($type, $this->instances, true);
-
-        if ($name === false) {
-            return null;
-        }
-
-        return $name;
-    }
-
     /**
      * Checks if there is a type of the given name.
      */
@@ -121,5 +110,16 @@ final class TypeRegistry
     public function getMap(): array
     {
         return $this->instances;
+    }
+
+    private function findTypeName(Type $type): ?string
+    {
+        $name = array_search($type, $this->instances, true);
+
+        if ($name === false) {
+            return null;
+        }
+
+        return $name;
     }
 }

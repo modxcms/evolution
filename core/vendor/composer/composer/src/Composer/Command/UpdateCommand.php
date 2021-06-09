@@ -116,6 +116,7 @@ EOT
         }
 
         $composer = $this->getComposer(true, $input->getOption('no-plugins'));
+        $composer->getEventDispatcher()->setRunScripts(!$input->getOption('no-scripts'));
 
         if (!HttpDownloader::isCurlEnabled()) {
             $io->writeError('<warning>Composer is operating significantly slower than normal because you do not have the PHP curl extension enabled.</warning>');
@@ -220,7 +221,6 @@ EOT
             ->setPreferDist($preferDist)
             ->setDevMode(!$input->getOption('no-dev'))
             ->setDumpAutoloader(!$input->getOption('no-autoloader'))
-            ->setRunScripts(!$input->getOption('no-scripts'))
             ->setOptimizeAutoloader($optimize)
             ->setClassMapAuthoritative($authoritative)
             ->setApcuAutoloader($apcu, $apcuPrefix)
@@ -239,22 +239,6 @@ EOT
         }
 
         return $install->run();
-    }
-
-    private function appendConstraintToLink(Link $link, $constraint)
-    {
-        $parser = new VersionParser;
-        $oldPrettyString = $link->getConstraint()->getPrettyString();
-        $newConstraint = MultiConstraint::create(array($link->getConstraint(), $parser->parseConstraints($constraint)));
-        $newConstraint->setPrettyString($oldPrettyString.', '.$constraint);
-
-        return new Link(
-            $link->getSource(),
-            $link->getTarget(),
-            $newConstraint,
-            $link->getDescription(),
-            $link->getPrettyConstraint() . ', ' . $constraint
-        );
     }
 
     private function getPackagesInteractively(IOInterface $io, InputInterface $input, OutputInterface $output, Composer $composer, array $packages)
@@ -318,5 +302,21 @@ EOT
         }
 
         throw new \RuntimeException('Installation aborted.');
+    }
+
+    private function appendConstraintToLink(Link $link, $constraint)
+    {
+        $parser = new VersionParser;
+        $oldPrettyString = $link->getConstraint()->getPrettyString();
+        $newConstraint = MultiConstraint::create(array($link->getConstraint(), $parser->parseConstraints($constraint)));
+        $newConstraint->setPrettyString($oldPrettyString.', '.$constraint);
+
+        return new Link(
+            $link->getSource(),
+            $link->getTarget(),
+            $newConstraint,
+            $link->getDescription(),
+            $link->getPrettyConstraint() . ', ' . $constraint
+        );
     }
 }

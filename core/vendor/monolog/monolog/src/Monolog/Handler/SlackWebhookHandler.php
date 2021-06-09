@@ -85,22 +85,6 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         return $this->webhookUrl;
     }
 
-    public function setFormatter(FormatterInterface $formatter): HandlerInterface
-    {
-        parent::setFormatter($formatter);
-        $this->slackRecord->setFormatter($formatter);
-
-        return $this;
-    }
-
-    public function getFormatter(): FormatterInterface
-    {
-        $formatter = parent::getFormatter();
-        $this->slackRecord->setFormatter($formatter);
-
-        return $formatter;
-    }
-
     /**
      * {@inheritdoc}
      *
@@ -126,5 +110,21 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         curl_setopt_array($ch, $options);
 
         Curl\Util::execute($ch);
+    }
+
+    public function setFormatter(FormatterInterface $formatter): HandlerInterface
+    {
+        parent::setFormatter($formatter);
+        $this->slackRecord->setFormatter($formatter);
+
+        return $this;
+    }
+
+    public function getFormatter(): FormatterInterface
+    {
+        $formatter = parent::getFormatter();
+        $this->slackRecord->setFormatter($formatter);
+
+        return $formatter;
     }
 }

@@ -66,6 +66,17 @@ class Pool implements \Countable
     }
 
     /**
+     * Retrieves the package object for a given package id.
+     *
+     * @param  int         $id
+     * @return BasePackage
+     */
+    public function packageById($id)
+    {
+        return $this->packages[$id - 1];
+    }
+
+    /**
      * Returns how many packages have been loaded into the pool
      */
     public function count()
@@ -109,6 +120,26 @@ class Pool implements \Countable
         }
 
         return $matches;
+    }
+
+    public function literalToPackage($literal)
+    {
+        $packageId = abs($literal);
+
+        return $this->packageById($packageId);
+    }
+
+    public function literalToPrettyString($literal, $installedMap)
+    {
+        $package = $this->literalToPackage($literal);
+
+        if (isset($installedMap[$package->id])) {
+            $prefix = ($literal > 0 ? 'keep' : 'remove');
+        } else {
+            $prefix = ($literal > 0 ? 'install' : 'don\'t install');
+        }
+
+        return $prefix.' '.$package->getPrettyString();
     }
 
     /**
@@ -158,37 +189,6 @@ class Pool implements \Countable
         }
 
         return false;
-    }
-
-    public function literalToPrettyString($literal, $installedMap)
-    {
-        $package = $this->literalToPackage($literal);
-
-        if (isset($installedMap[$package->id])) {
-            $prefix = ($literal > 0 ? 'keep' : 'remove');
-        } else {
-            $prefix = ($literal > 0 ? 'install' : 'don\'t install');
-        }
-
-        return $prefix.' '.$package->getPrettyString();
-    }
-
-    public function literalToPackage($literal)
-    {
-        $packageId = abs($literal);
-
-        return $this->packageById($packageId);
-    }
-
-    /**
-     * Retrieves the package object for a given package id.
-     *
-     * @param  int         $id
-     * @return BasePackage
-     */
-    public function packageById($id)
-    {
-        return $this->packages[$id - 1];
     }
 
     public function isUnacceptableFixedOrLockedPackage(BasePackage $package)

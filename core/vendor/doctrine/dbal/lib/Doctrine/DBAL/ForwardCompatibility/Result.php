@@ -23,11 +23,6 @@ class Result implements IteratorAggregate, DriverStatement, DriverResultStatemen
     /** @var Driver\ResultStatement */
     private $stmt;
 
-    public function __construct(Driver\ResultStatement $stmt)
-    {
-        $this->stmt = $stmt;
-    }
-
     public static function ensure(Driver\ResultStatement $stmt): Result
     {
         if ($stmt instanceof Result) {
@@ -37,12 +32,35 @@ class Result implements IteratorAggregate, DriverStatement, DriverResultStatemen
         return new Result($stmt);
     }
 
+    public function __construct(Driver\ResultStatement $stmt)
+    {
+        $this->stmt = $stmt;
+    }
+
     /**
      * @return Driver\ResultStatement
      */
     public function getIterator()
     {
         return $this->stmt;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Use Result::free() instead.
+     */
+    public function closeCursor()
+    {
+        return $this->stmt->closeCursor();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function columnCount()
+    {
+        return $this->stmt->columnCount();
     }
 
     /**
@@ -107,33 +125,31 @@ class Result implements IteratorAggregate, DriverStatement, DriverResultStatemen
     /**
      * {@inheritDoc}
      */
-    public function fetchAllKeyValue(): array
+    public function fetchNumeric()
     {
-        $this->ensureHasKeyValue();
-        $data = [];
-
-        foreach ($this->fetchAllNumeric() as [$key, $value]) {
-            $data[$key] = $value;
-        }
-
-        return $data;
-    }
-
-    private function ensureHasKeyValue(): void
-    {
-        $columnCount = $this->columnCount();
-
-        if ($columnCount < 2) {
-            throw NoKeyValue::fromColumnCount($columnCount);
-        }
+        return $this->stmt->fetch(PDO::FETCH_NUM);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function columnCount()
+    public function fetchAssociative()
     {
-        return $this->stmt->columnCount();
+        return $this->stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fetchOne()
+    {
+        $row = $this->fetchNumeric();
+
+        if ($row === false) {
+            return false;
+        }
+
+        return $row[0];
     }
 
     /**
@@ -153,9 +169,30 @@ class Result implements IteratorAggregate, DriverStatement, DriverResultStatemen
     /**
      * {@inheritDoc}
      */
-    public function fetchNumeric()
+    public function fetchAllAssociative(): array
     {
-        return $this->stmt->fetch(PDO::FETCH_NUM);
+        $rows = [];
+
+        while (($row = $this->fetchAssociative()) !== false) {
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fetchAllKeyValue(): array
+    {
+        $this->ensureHasKeyValue();
+        $data = [];
+
+        foreach ($this->fetchAllNumeric() as [$key, $value]) {
+            $data[$key] = $value;
+        }
+
+        return $data;
     }
 
     /**
@@ -175,28 +212,6 @@ class Result implements IteratorAggregate, DriverStatement, DriverResultStatemen
     /**
      * {@inheritDoc}
      */
-    public function fetchAllAssociative(): array
-    {
-        $rows = [];
-
-        while (($row = $this->fetchAssociative()) !== false) {
-            $rows[] = $row;
-        }
-
-        return $rows;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function fetchAssociative()
-    {
-        return $this->stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function fetchFirstColumn(): array
     {
         $rows = [];
@@ -206,34 +221,6 @@ class Result implements IteratorAggregate, DriverStatement, DriverResultStatemen
         }
 
         return $rows;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function fetchOne()
-    {
-        $row = $this->fetchNumeric();
-
-        if ($row === false) {
-            return false;
-        }
-
-        return $row[0];
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @return Traversable<mixed,mixed>
-     */
-    public function iterateKeyValue(): Traversable
-    {
-        $this->ensureHasKeyValue();
-
-        foreach ($this->iterateNumeric() as [$key, $value]) {
-            yield $key => $value;
-        }
     }
 
     /**
@@ -251,24 +238,38 @@ class Result implements IteratorAggregate, DriverStatement, DriverResultStatemen
     /**
      * {@inheritDoc}
      *
-     * @return Traversable<mixed,array<string,mixed>>
-     */
-    public function iterateAssociativeIndexed(): Traversable
-    {
-        foreach ($this->iterateAssociative() as $row) {
-            yield array_shift($row) => $row;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     *
      * @return Traversable<int,array<string,mixed>>
      */
     public function iterateAssociative(): Traversable
     {
         while (($row = $this->fetchAssociative()) !== false) {
             yield $row;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return Traversable<mixed,mixed>
+     */
+    public function iterateKeyValue(): Traversable
+    {
+        $this->ensureHasKeyValue();
+
+        foreach ($this->iterateNumeric() as [$key, $value]) {
+            yield $key => $value;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return Traversable<mixed,array<string,mixed>>
+     */
+    public function iterateAssociativeIndexed(): Traversable
+    {
+        foreach ($this->iterateAssociative() as $row) {
+            yield array_shift($row) => $row;
         }
     }
 
@@ -301,14 +302,13 @@ class Result implements IteratorAggregate, DriverStatement, DriverResultStatemen
         $this->closeCursor();
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated Use Result::free() instead.
-     */
-    public function closeCursor()
+    private function ensureHasKeyValue(): void
     {
-        return $this->stmt->closeCursor();
+        $columnCount = $this->columnCount();
+
+        if ($columnCount < 2) {
+            throw NoKeyValue::fromColumnCount($columnCount);
+        }
     }
 
     /**

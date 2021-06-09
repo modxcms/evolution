@@ -44,17 +44,6 @@ class PostgreSQL92Platform extends PostgreSQL91Platform
     /**
      * {@inheritdoc}
      */
-    public function getCloseActiveDatabaseConnectionsSQL($database)
-    {
-        return sprintf(
-            'SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = %s',
-            $this->quoteStringLiteral($database)
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function getReservedKeywordsClass()
     {
         return Keywords\PostgreSQL92Keywords::class;
@@ -68,5 +57,16 @@ class PostgreSQL92Platform extends PostgreSQL91Platform
         parent::initializeDoctrineTypeMappings();
 
         $this->doctrineTypeMapping['json'] = Types::JSON;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCloseActiveDatabaseConnectionsSQL($database)
+    {
+        return sprintf(
+            'SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = %s',
+            $this->quoteStringLiteral($database)
+        );
     }
 }

@@ -67,19 +67,6 @@ class EventManager
     }
 
     /**
-     * Adds an EventSubscriber. The subscriber is asked for all the events it is
-     * interested in and added as a listener for these events.
-     *
-     * @param EventSubscriber $subscriber The subscriber.
-     *
-     * @return void
-     */
-    public function addEventSubscriber(EventSubscriber $subscriber)
-    {
-        $this->addEventListener($subscriber->getSubscribedEvents(), $subscriber);
-    }
-
-    /**
      * Adds an event listener that listens on the specified events.
      *
      * @param string|string[] $events   The event(s) to listen on.
@@ -100,19 +87,6 @@ class EventManager
     }
 
     /**
-     * Removes an EventSubscriber. The subscriber is asked for all the events it is
-     * interested in and removed as a listener for these events.
-     *
-     * @param EventSubscriber $subscriber The subscriber.
-     *
-     * @return void
-     */
-    public function removeEventSubscriber(EventSubscriber $subscriber)
-    {
-        $this->removeEventListener($subscriber->getSubscribedEvents(), $subscriber);
-    }
-
-    /**
      * Removes an event listener from the specified events.
      *
      * @param string|string[] $events
@@ -128,5 +102,31 @@ class EventManager
         foreach ((array) $events as $event) {
             unset($this->_listeners[$event][$hash]);
         }
+    }
+
+    /**
+     * Adds an EventSubscriber. The subscriber is asked for all the events it is
+     * interested in and added as a listener for these events.
+     *
+     * @param EventSubscriber $subscriber The subscriber.
+     *
+     * @return void
+     */
+    public function addEventSubscriber(EventSubscriber $subscriber)
+    {
+        $this->addEventListener($subscriber->getSubscribedEvents(), $subscriber);
+    }
+
+    /**
+     * Removes an EventSubscriber. The subscriber is asked for all the events it is
+     * interested in and removed as a listener for these events.
+     *
+     * @param EventSubscriber $subscriber The subscriber.
+     *
+     * @return void
+     */
+    public function removeEventSubscriber(EventSubscriber $subscriber)
+    {
+        $this->removeEventListener($subscriber->getSubscribedEvents(), $subscriber);
     }
 }

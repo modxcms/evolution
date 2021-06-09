@@ -96,6 +96,48 @@ class ControllerResolver implements ControllerResolverInterface
     }
 
     /**
+     * Returns a callable for the given controller.
+     *
+     * @return callable A PHP callable
+     *
+     * @throws \InvalidArgumentException When the controller cannot be created
+     */
+    protected function createController(string $controller)
+    {
+        if (false === strpos($controller, '::')) {
+            $controller = $this->instantiateController($controller);
+
+            if (!\is_callable($controller)) {
+                throw new \InvalidArgumentException($this->getControllerError($controller));
+            }
+
+            return $controller;
+        }
+
+        [$class, $method] = explode('::', $controller, 2);
+
+        try {
+            $controller = [$this->instantiateController($class), $method];
+        } catch (\Error | \LogicException $e) {
+            try {
+                if ((new \ReflectionMethod($class, $method))->isStatic()) {
+                    return $class.'::'.$method;
+                }
+            } catch (\ReflectionException $reflectionException) {
+                throw $e;
+            }
+
+            throw $e;
+        }
+
+        if (!\is_callable($controller)) {
+            throw new \InvalidArgumentException($this->getControllerError($controller));
+        }
+
+        return $controller;
+    }
+
+    /**
      * Returns an instantiated controller.
      *
      * @return object
@@ -174,47 +216,5 @@ class ControllerResolver implements ControllerResolverInterface
         return array_filter($methods, function (string $method) {
             return 0 !== strncmp($method, '__', 2);
         });
-    }
-
-    /**
-     * Returns a callable for the given controller.
-     *
-     * @return callable A PHP callable
-     *
-     * @throws \InvalidArgumentException When the controller cannot be created
-     */
-    protected function createController(string $controller)
-    {
-        if (false === strpos($controller, '::')) {
-            $controller = $this->instantiateController($controller);
-
-            if (!\is_callable($controller)) {
-                throw new \InvalidArgumentException($this->getControllerError($controller));
-            }
-
-            return $controller;
-        }
-
-        [$class, $method] = explode('::', $controller, 2);
-
-        try {
-            $controller = [$this->instantiateController($class), $method];
-        } catch (\Error | \LogicException $e) {
-            try {
-                if ((new \ReflectionMethod($class, $method))->isStatic()) {
-                    return $class.'::'.$method;
-                }
-            } catch (\ReflectionException $reflectionException) {
-                throw $e;
-            }
-
-            throw $e;
-        }
-
-        if (!\is_callable($controller)) {
-            throw new \InvalidArgumentException($this->getControllerError($controller));
-        }
-
-        return $controller;
     }
 }

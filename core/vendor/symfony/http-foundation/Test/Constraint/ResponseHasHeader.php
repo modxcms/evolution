@@ -24,6 +24,14 @@ final class ResponseHasHeader extends Constraint
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function toString(): string
+    {
+        return sprintf('has header "%s"', $this->headerName);
+    }
+
+    /**
      * @param Response $response
      *
      * {@inheritdoc}
@@ -41,13 +49,5 @@ final class ResponseHasHeader extends Constraint
     protected function failureDescription($response): string
     {
         return 'the Response '.$this->toString();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function toString(): string
-    {
-        return sprintf('has header "%s"', $this->headerName);
     }
 }

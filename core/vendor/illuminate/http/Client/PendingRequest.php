@@ -8,6 +8,8 @@ use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\HandlerStack;
+use Illuminate\Http\Client\Events\RequestSending;
+use Illuminate\Http\Client\Events\ResponseReceived;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
@@ -131,6 +133,13 @@ class PendingRequest
     protected $promise;
 
     /**
+     * The sent request object, if a request has been made.
+     *
+     * @var \Illuminate\Http\Client\Request|null
+     */
+    protected $request;
+
+    /**
      * Create a new HTTP Client instance.
      *
      * @param  \Illuminate\Http\Client\Factory|null  $factory
@@ -147,58 +156,12 @@ class PendingRequest
             'http_errors' => false,
         ];
 
-        $this->beforeSendingCallbacks = collect([function (Request $request, array $options) {
-            $this->cookies = $options['cookies'];
+        $this->beforeSendingCallbacks = collect([function (Request $request, array $options, PendingRequest $pendingRequest) {
+            $pendingRequest->request = $request;
+            $pendingRequest->cookies = $options['cookies'];
+
+            $pendingRequest->dispatchRequestSendingEvent();
         }]);
-    }
-
-    /**
-     * Indicate the request contains JSON.
-     *
-     * @return $this
-     */
-    public function asJson()
-    {
-        return $this->bodyFormat('json')->contentType('application/json');
-    }
-
-    /**
-     * Specify the request's content type.
-     *
-     * @param  string  $contentType
-     * @return $this
-     */
-    public function contentType(string $contentType)
-    {
-        return $this->withHeaders(['Content-Type' => $contentType]);
-    }
-
-    /**
-     * Add the given headers to the request.
-     *
-     * @param  array  $headers
-     * @return $this
-     */
-    public function withHeaders(array $headers)
-    {
-        return tap($this, function ($request) use ($headers) {
-            return $this->options = array_merge_recursive($this->options, [
-                'headers' => $headers,
-            ]);
-        });
-    }
-
-    /**
-     * Specify the body format of the request.
-     *
-     * @param  string  $format
-     * @return $this
-     */
-    public function bodyFormat(string $format)
-    {
-        return tap($this, function ($request) use ($format) {
-            $this->bodyFormat = $format;
-        });
     }
 
     /**
@@ -230,6 +193,16 @@ class PendingRequest
         $this->contentType($contentType);
 
         return $this;
+    }
+
+    /**
+     * Indicate the request contains JSON.
+     *
+     * @return $this
+     */
+    public function asJson()
+    {
+        return $this->bodyFormat('json')->contentType('application/json');
     }
 
     /**
@@ -284,6 +257,30 @@ class PendingRequest
     }
 
     /**
+     * Specify the body format of the request.
+     *
+     * @param  string  $format
+     * @return $this
+     */
+    public function bodyFormat(string $format)
+    {
+        return tap($this, function ($request) use ($format) {
+            $this->bodyFormat = $format;
+        });
+    }
+
+    /**
+     * Specify the request's content type.
+     *
+     * @param  string  $contentType
+     * @return $this
+     */
+    public function contentType(string $contentType)
+    {
+        return $this->withHeaders(['Content-Type' => $contentType]);
+    }
+
+    /**
      * Indicate that JSON should be returned by the server.
      *
      * @return $this
@@ -302,6 +299,21 @@ class PendingRequest
     public function accept($contentType)
     {
         return $this->withHeaders(['Accept' => $contentType]);
+    }
+
+    /**
+     * Add the given headers to the request.
+     *
+     * @param  array  $headers
+     * @return $this
+     */
+    public function withHeaders(array $headers)
+    {
+        return tap($this, function ($request) use ($headers) {
+            return $this->options = array_merge_recursive($this->options, [
+                'headers' => $headers,
+            ]);
+        });
     }
 
     /**
@@ -465,6 +477,19 @@ class PendingRequest
     }
 
     /**
+     * Add a new "before sending" callback to the request.
+     *
+     * @param  callable  $callback
+     * @return $this
+     */
+    public function beforeSending($callback)
+    {
+        return tap($this, function () use ($callback) {
+            $this->beforeSendingCallbacks[] = $callback;
+        });
+    }
+
+    /**
      * Dump the request before sending.
      *
      * @return $this
@@ -477,19 +502,6 @@ class PendingRequest
             foreach (array_merge($values, [$request, $options]) as $value) {
                 VarDumper::dump($value);
             }
-        });
-    }
-
-    /**
-     * Add a new "before sending" callback to the request.
-     *
-     * @param  callable  $callback
-     * @return $this
-     */
-    public function beforeSending($callback)
-    {
-        return tap($this, function () use ($callback) {
-            $this->beforeSendingCallbacks[] = $callback;
         });
     }
 
@@ -523,305 +535,6 @@ class PendingRequest
         return $this->send('GET', $url, [
             'query' => $query,
         ]);
-    }
-
-    /**
-     * Send the request to the given URL.
-     *
-     * @param  string  $method
-     * @param  string  $url
-     * @param  array  $options
-     * @return \Illuminate\Http\Client\Response
-     *
-     * @throws \Exception
-     */
-    public function send(string $method, string $url, array $options = [])
-    {
-        $url = ltrim(rtrim($this->baseUrl, '/').'/'.ltrim($url, '/'), '/');
-
-        if (isset($options[$this->bodyFormat])) {
-            if ($this->bodyFormat === 'multipart') {
-                $options[$this->bodyFormat] = $this->parseMultipartBodyFormat($options[$this->bodyFormat]);
-            } elseif ($this->bodyFormat === 'body') {
-                $options[$this->bodyFormat] = $this->pendingBody;
-            }
-
-            if (is_array($options[$this->bodyFormat])) {
-                $options[$this->bodyFormat] = array_merge(
-                    $options[$this->bodyFormat], $this->pendingFiles
-                );
-            }
-        } else {
-            $options[$this->bodyFormat] = $this->pendingBody;
-        }
-
-        [$this->pendingBody, $this->pendingFiles] = [null, []];
-
-        if ($this->async) {
-            return $this->makePromise($method, $url, $options);
-        }
-
-        return retry($this->tries ?? 1, function () use ($method, $url, $options) {
-            try {
-                return tap(new Response($this->sendRequest($method, $url, $options)), function ($response) {
-                    $this->populateResponse($response);
-
-                    if ($this->tries > 1 && ! $response->successful()) {
-                        $response->throw();
-                    }
-                });
-            } catch (ConnectException $e) {
-                throw new ConnectionException($e->getMessage(), 0, $e);
-            }
-        }, $this->retryDelay ?? 100);
-    }
-
-    /**
-     * Parse multi-part form data.
-     *
-     * @param  array  $data
-     * @return array|array[]
-     */
-    protected function parseMultipartBodyFormat(array $data)
-    {
-        return collect($data)->map(function ($value, $key) {
-            return is_array($value) ? $value : ['name' => $key, 'contents' => $value];
-        })->values()->all();
-    }
-
-    /**
-     * Send an asynchronous request to the given URL.
-     *
-     * @param  string  $method
-     * @param  string  $url
-     * @param  array  $options
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    protected function makePromise(string $method, string $url, array $options = [])
-    {
-        return $this->promise = $this->sendRequest($method, $url, $options)
-            ->then(function (MessageInterface $message) {
-                return $this->populateResponse(new Response($message));
-            })
-            ->otherwise(function (TransferException $e) {
-                return $e instanceof RequestException ? $this->populateResponse(new Response($e->getResponse())) : $e;
-            });
-    }
-
-    /**
-     * Send a request either synchronously or asynchronously.
-     *
-     * @param  string  $method
-     * @param  string  $url
-     * @param  array  $options
-     * @return \Psr\Http\Message\MessageInterface|\GuzzleHttp\Promise\PromiseInterface
-     *
-     * @throws \Exception
-     */
-    protected function sendRequest(string $method, string $url, array $options = [])
-    {
-        $clientMethod = $this->async ? 'requestAsync' : 'request';
-
-        $laravelData = $this->parseRequestData($method, $url, $options);
-
-        return $this->buildClient()->$clientMethod($method, $url, $this->mergeOptions([
-            'laravel_data' => $laravelData,
-            'on_stats' => function ($transferStats) {
-                $this->transferStats = $transferStats;
-            },
-        ], $options));
-    }
-
-    /**
-     * Get the request data as an array so that we can attach it to the request for convenient assertions.
-     *
-     * @param  string  $method
-     * @param  string  $url
-     * @param  array  $options
-     * @return array
-     */
-    protected function parseRequestData($method, $url, array $options)
-    {
-        $laravelData = $options[$this->bodyFormat] ?? $options['query'] ?? [];
-
-        $urlString = Str::of($url);
-
-        if (empty($laravelData) && $method === 'GET' && $urlString->contains('?')) {
-            $laravelData = (string) $urlString->after('?');
-        }
-
-        if (is_string($laravelData)) {
-            parse_str($laravelData, $parsedData);
-
-            $laravelData = is_array($parsedData) ? $parsedData : [];
-        }
-
-        return $laravelData;
-    }
-
-    /**
-     * Build the Guzzle client.
-     *
-     * @return \GuzzleHttp\Client
-     */
-    public function buildClient()
-    {
-        return $this->client = $this->client ?: new Client([
-            'handler' => $this->buildHandlerStack(),
-            'cookies' => true,
-        ]);
-    }
-
-    /**
-     * Build the before sending handler stack.
-     *
-     * @return \GuzzleHttp\HandlerStack
-     */
-    public function buildHandlerStack()
-    {
-        return tap(HandlerStack::create(), function ($stack) {
-            $stack->push($this->buildBeforeSendingHandler());
-            $stack->push($this->buildRecorderHandler());
-            $stack->push($this->buildStubHandler());
-
-            $this->middleware->each(function ($middleware) use ($stack) {
-                $stack->push($middleware);
-            });
-        });
-    }
-
-    /**
-     * Build the before sending handler.
-     *
-     * @return \Closure
-     */
-    public function buildBeforeSendingHandler()
-    {
-        return function ($handler) {
-            return function ($request, $options) use ($handler) {
-                return $handler($this->runBeforeSendingCallbacks($request, $options), $options);
-            };
-        };
-    }
-
-    /**
-     * Execute the "before sending" callbacks.
-     *
-     * @param  \GuzzleHttp\Psr7\RequestInterface  $request
-     * @param  array  $options
-     * @return \Closure
-     */
-    public function runBeforeSendingCallbacks($request, array $options)
-    {
-        return tap($request, function ($request) use ($options) {
-            $this->beforeSendingCallbacks->each->__invoke(
-                (new Request($request))->withData($options['laravel_data']),
-                $options
-            );
-        });
-    }
-
-    /**
-     * Build the recorder handler.
-     *
-     * @return \Closure
-     */
-    public function buildRecorderHandler()
-    {
-        return function ($handler) {
-            return function ($request, $options) use ($handler) {
-                $promise = $handler($request, $options);
-
-                return $promise->then(function ($response) use ($request, $options) {
-                    optional($this->factory)->recordRequestResponsePair(
-                        (new Request($request))->withData($options['laravel_data']),
-                        new Response($response)
-                    );
-
-                    return $response;
-                });
-            };
-        };
-    }
-
-    /**
-     * Build the stub handler.
-     *
-     * @return \Closure
-     */
-    public function buildStubHandler()
-    {
-        return function ($handler) {
-            return function ($request, $options) use ($handler) {
-                $response = ($this->stubCallbacks ?? collect())
-                     ->map
-                     ->__invoke((new Request($request))->withData($options['laravel_data']), $options)
-                     ->filter()
-                     ->first();
-
-                if (is_null($response)) {
-                    return $handler($request, $options);
-                }
-
-                $response = is_array($response) ? Factory::response($response) : $response;
-
-                $sink = $options['sink'] ?? null;
-
-                if ($sink) {
-                    $response->then($this->sinkStubHandler($sink));
-                }
-
-                return $response;
-            };
-        };
-    }
-
-    /**
-     * Get the sink stub handler callback.
-     *
-     * @param  string  $sink
-     * @return \Closure
-     */
-    protected function sinkStubHandler($sink)
-    {
-        return function ($response) use ($sink) {
-            $body = $response->getBody()->getContents();
-
-            if (is_string($sink)) {
-                file_put_contents($sink, $body);
-
-                return;
-            }
-
-            fwrite($sink, $body);
-            rewind($sink);
-        };
-    }
-
-    /**
-     * Merge the given options with the current request options.
-     *
-     * @param  array  $options
-     * @return array
-     */
-    public function mergeOptions(...$options)
-    {
-        return array_merge_recursive($this->options, ...$options);
-    }
-
-    /**
-     * Populate the given response with additional data.
-     *
-     * @param  \Illuminate\Http\Client\Response  $response
-     * @return \Illuminate\Http\Client\Response
-     */
-    protected function populateResponse(Response $response)
-    {
-        $response->cookies = $this->cookies;
-
-        $response->transferStats = $this->transferStats;
-
-        return $response;
     }
 
     /**
@@ -916,13 +629,305 @@ class PendingRequest
     }
 
     /**
-     * Retrieve the pending request promise.
+     * Send the request to the given URL.
      *
-     * @return \GuzzleHttp\Promise\PromiseInterface|null
+     * @param  string  $method
+     * @param  string  $url
+     * @param  array  $options
+     * @return \Illuminate\Http\Client\Response
+     *
+     * @throws \Exception
      */
-    public function getPromise()
+    public function send(string $method, string $url, array $options = [])
     {
-        return $this->promise;
+        $url = ltrim(rtrim($this->baseUrl, '/').'/'.ltrim($url, '/'), '/');
+
+        if (isset($options[$this->bodyFormat])) {
+            if ($this->bodyFormat === 'multipart') {
+                $options[$this->bodyFormat] = $this->parseMultipartBodyFormat($options[$this->bodyFormat]);
+            } elseif ($this->bodyFormat === 'body') {
+                $options[$this->bodyFormat] = $this->pendingBody;
+            }
+
+            if (is_array($options[$this->bodyFormat])) {
+                $options[$this->bodyFormat] = array_merge(
+                    $options[$this->bodyFormat], $this->pendingFiles
+                );
+            }
+        } else {
+            $options[$this->bodyFormat] = $this->pendingBody;
+        }
+
+        [$this->pendingBody, $this->pendingFiles] = [null, []];
+
+        if ($this->async) {
+            return $this->makePromise($method, $url, $options);
+        }
+
+        return retry($this->tries ?? 1, function () use ($method, $url, $options) {
+            try {
+                return tap(new Response($this->sendRequest($method, $url, $options)), function ($response) {
+                    $this->populateResponse($response);
+
+                    if ($this->tries > 1 && ! $response->successful()) {
+                        $response->throw();
+                    }
+
+                    $this->dispatchResponseReceivedEvent($response);
+                });
+            } catch (ConnectException $e) {
+                throw new ConnectionException($e->getMessage(), 0, $e);
+            }
+        }, $this->retryDelay ?? 100);
+    }
+
+    /**
+     * Parse multi-part form data.
+     *
+     * @param  array  $data
+     * @return array|array[]
+     */
+    protected function parseMultipartBodyFormat(array $data)
+    {
+        return collect($data)->map(function ($value, $key) {
+            return is_array($value) ? $value : ['name' => $key, 'contents' => $value];
+        })->values()->all();
+    }
+
+    /**
+     * Send an asynchronous request to the given URL.
+     *
+     * @param  string  $method
+     * @param  string  $url
+     * @param  array  $options
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    protected function makePromise(string $method, string $url, array $options = [])
+    {
+        return $this->promise = $this->sendRequest($method, $url, $options)
+            ->then(function (MessageInterface $message) {
+                return $this->populateResponse(new Response($message));
+            })
+            ->otherwise(function (TransferException $e) {
+                return $e instanceof RequestException ? $this->populateResponse(new Response($e->getResponse())) : $e;
+            });
+    }
+
+    /**
+     * Send a request either synchronously or asynchronously.
+     *
+     * @param  string  $method
+     * @param  string  $url
+     * @param  array  $options
+     * @return \Psr\Http\Message\MessageInterface|\GuzzleHttp\Promise\PromiseInterface
+     *
+     * @throws \Exception
+     */
+    protected function sendRequest(string $method, string $url, array $options = [])
+    {
+        $clientMethod = $this->async ? 'requestAsync' : 'request';
+
+        $laravelData = $this->parseRequestData($method, $url, $options);
+
+        return $this->buildClient()->$clientMethod($method, $url, $this->mergeOptions([
+            'laravel_data' => $laravelData,
+            'on_stats' => function ($transferStats) {
+                $this->transferStats = $transferStats;
+            },
+        ], $options));
+    }
+
+    /**
+     * Get the request data as an array so that we can attach it to the request for convenient assertions.
+     *
+     * @param  string  $method
+     * @param  string  $url
+     * @param  array  $options
+     * @return array
+     */
+    protected function parseRequestData($method, $url, array $options)
+    {
+        $laravelData = $options[$this->bodyFormat] ?? $options['query'] ?? [];
+
+        $urlString = Str::of($url);
+
+        if (empty($laravelData) && $method === 'GET' && $urlString->contains('?')) {
+            $laravelData = (string) $urlString->after('?');
+        }
+
+        if (is_string($laravelData)) {
+            parse_str($laravelData, $parsedData);
+
+            $laravelData = is_array($parsedData) ? $parsedData : [];
+        }
+
+        return $laravelData;
+    }
+
+    /**
+     * Populate the given response with additional data.
+     *
+     * @param  \Illuminate\Http\Client\Response  $response
+     * @return \Illuminate\Http\Client\Response
+     */
+    protected function populateResponse(Response $response)
+    {
+        $response->cookies = $this->cookies;
+
+        $response->transferStats = $this->transferStats;
+
+        return $response;
+    }
+
+    /**
+     * Build the Guzzle client.
+     *
+     * @return \GuzzleHttp\Client
+     */
+    public function buildClient()
+    {
+        return $this->client = $this->client ?: new Client([
+            'handler' => $this->buildHandlerStack(),
+            'cookies' => true,
+        ]);
+    }
+
+    /**
+     * Build the before sending handler stack.
+     *
+     * @return \GuzzleHttp\HandlerStack
+     */
+    public function buildHandlerStack()
+    {
+        return tap(HandlerStack::create(), function ($stack) {
+            $stack->push($this->buildBeforeSendingHandler());
+            $stack->push($this->buildRecorderHandler());
+            $stack->push($this->buildStubHandler());
+
+            $this->middleware->each(function ($middleware) use ($stack) {
+                $stack->push($middleware);
+            });
+        });
+    }
+
+    /**
+     * Build the before sending handler.
+     *
+     * @return \Closure
+     */
+    public function buildBeforeSendingHandler()
+    {
+        return function ($handler) {
+            return function ($request, $options) use ($handler) {
+                return $handler($this->runBeforeSendingCallbacks($request, $options), $options);
+            };
+        };
+    }
+
+    /**
+     * Build the recorder handler.
+     *
+     * @return \Closure
+     */
+    public function buildRecorderHandler()
+    {
+        return function ($handler) {
+            return function ($request, $options) use ($handler) {
+                $promise = $handler($request, $options);
+
+                return $promise->then(function ($response) use ($request, $options) {
+                    optional($this->factory)->recordRequestResponsePair(
+                        (new Request($request))->withData($options['laravel_data']),
+                        new Response($response)
+                    );
+
+                    return $response;
+                });
+            };
+        };
+    }
+
+    /**
+     * Build the stub handler.
+     *
+     * @return \Closure
+     */
+    public function buildStubHandler()
+    {
+        return function ($handler) {
+            return function ($request, $options) use ($handler) {
+                $response = ($this->stubCallbacks ?? collect())
+                     ->map
+                     ->__invoke((new Request($request))->withData($options['laravel_data']), $options)
+                     ->filter()
+                     ->first();
+
+                if (is_null($response)) {
+                    return $handler($request, $options);
+                }
+
+                $response = is_array($response) ? Factory::response($response) : $response;
+
+                $sink = $options['sink'] ?? null;
+
+                if ($sink) {
+                    $response->then($this->sinkStubHandler($sink));
+                }
+
+                return $response;
+            };
+        };
+    }
+
+    /**
+     * Get the sink stub handler callback.
+     *
+     * @param  string  $sink
+     * @return \Closure
+     */
+    protected function sinkStubHandler($sink)
+    {
+        return function ($response) use ($sink) {
+            $body = $response->getBody()->getContents();
+
+            if (is_string($sink)) {
+                file_put_contents($sink, $body);
+
+                return;
+            }
+
+            fwrite($sink, $body);
+            rewind($sink);
+        };
+    }
+
+    /**
+     * Execute the "before sending" callbacks.
+     *
+     * @param  \GuzzleHttp\Psr7\RequestInterface  $request
+     * @param  array  $options
+     * @return \Closure
+     */
+    public function runBeforeSendingCallbacks($request, array $options)
+    {
+        return tap($request, function ($request) use ($options) {
+            $this->beforeSendingCallbacks->each->__invoke(
+                (new Request($request))->withData($options['laravel_data']),
+                $options,
+                $this
+            );
+        });
+    }
+
+    /**
+     * Merge the given options with the current request options.
+     *
+     * @param  array  $options
+     * @return array
+     */
+    public function mergeOptions(...$options)
+    {
+        return array_merge_recursive($this->options, ...$options);
     }
 
     /**
@@ -949,6 +954,44 @@ class PendingRequest
         $this->async = $async;
 
         return $this;
+    }
+
+    /**
+     * Retrieve the pending request promise.
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface|null
+     */
+    public function getPromise()
+    {
+        return $this->promise;
+    }
+
+    /**
+     * Dispatch the RequestSending event if a dispatcher is available.
+     *
+     * @return void
+     */
+    protected function dispatchRequestSendingEvent()
+    {
+        if ($dispatcher = optional($this->factory)->getDispatcher()) {
+            $dispatcher->dispatch(new RequestSending($this->request));
+        }
+    }
+
+    /**
+     * Dispatch the ResponseReceived event if a dispatcher is available.
+     *
+     * @param  \Illuminate\Http\Client\Response  $response
+     * @return void
+     */
+    protected function dispatchResponseReceivedEvent(Response $response)
+    {
+        if (! ($dispatcher = optional($this->factory)->getDispatcher()) ||
+            ! $this->request) {
+            return;
+        }
+
+        $dispatcher->dispatch(new ResponseReceived($this->request, $response));
     }
 
     /**

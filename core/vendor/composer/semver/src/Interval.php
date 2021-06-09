@@ -27,11 +27,19 @@ class Interval
     }
 
     /**
-     * @return self
+     * @return Constraint
      */
-    public static function any()
+    public function getStart()
     {
-        return new self(self::fromZero(), self::untilPositiveInfinity());
+        return $this->start;
+    }
+
+    /**
+     * @return Constraint
+     */
+    public function getEnd()
+    {
+        return $this->end;
     }
 
     /**
@@ -63,6 +71,14 @@ class Interval
     }
 
     /**
+     * @return self
+     */
+    public static function any()
+    {
+        return new self(self::fromZero(), self::untilPositiveInfinity());
+    }
+
+    /**
      * @return array{'names': string[], 'exclude': bool}
      */
     public static function anyDev()
@@ -78,21 +94,5 @@ class Interval
     {
         // nothing == no names included
         return array('names' => array(), 'exclude' => false);
-    }
-
-    /**
-     * @return Constraint
-     */
-    public function getStart()
-    {
-        return $this->start;
-    }
-
-    /**
-     * @return Constraint
-     */
-    public function getEnd()
-    {
-        return $this->end;
     }
 }

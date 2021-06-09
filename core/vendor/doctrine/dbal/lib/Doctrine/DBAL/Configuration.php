@@ -96,22 +96,6 @@ class Configuration
     }
 
     /**
-     * @param string $filterExpression
-     *
-     * @return callable(string|AbstractAsset)
-     */
-    private function buildSchemaAssetsFilterFromExpression($filterExpression): callable
-    {
-        return static function ($assetName) use ($filterExpression) {
-            if ($assetName instanceof AbstractAsset) {
-                $assetName = $assetName->getName();
-            }
-
-            return preg_match($filterExpression, $assetName);
-        };
-    }
-
-    /**
      * Returns filter schema assets expression.
      *
      * @deprecated Use Configuration::getSchemaAssetsFilter() instead
@@ -127,6 +111,22 @@ class Configuration
         );
 
         return $this->_attributes['filterSchemaAssetsExpression'] ?? null;
+    }
+
+    /**
+     * @param string $filterExpression
+     *
+     * @return callable(string|AbstractAsset)
+     */
+    private function buildSchemaAssetsFilterFromExpression($filterExpression): callable
+    {
+        return static function ($assetName) use ($filterExpression) {
+            if ($assetName instanceof AbstractAsset) {
+                $assetName = $assetName->getName();
+            }
+
+            return preg_match($filterExpression, $assetName);
+        };
     }
 
     /**

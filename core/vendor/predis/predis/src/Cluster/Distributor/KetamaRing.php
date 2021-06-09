@@ -34,16 +34,6 @@ class KetamaRing extends HashRing
     /**
      * {@inheritdoc}
      */
-    public function hash($value)
-    {
-        $hash = unpack('V', md5($value, true));
-
-        return $hash[1];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function addNodeToRing(&$ring, $node, $totalNodes, $replicas, $weightRatio)
     {
         $nodeObject = $node['object'];
@@ -57,6 +47,16 @@ class KetamaRing extends HashRing
                 $ring[$key] = $nodeObject;
             }
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hash($value)
+    {
+        $hash = unpack('V', md5($value, true));
+
+        return $hash[1];
     }
 
     /**

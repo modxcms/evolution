@@ -39,11 +39,6 @@ class Connection
         $this->contextProviders = $contextProviders;
     }
 
-    private static function nullErrorHandler($t, $m)
-    {
-        // no-op
-    }
-
     public function getContextProviders(): array
     {
         return $this->contextProviders;
@@ -81,6 +76,11 @@ class Connection
         }
 
         return false;
+    }
+
+    private static function nullErrorHandler($t, $m)
+    {
+        // no-op
     }
 
     private function createSocket()

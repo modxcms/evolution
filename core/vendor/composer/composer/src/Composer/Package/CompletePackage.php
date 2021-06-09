@@ -35,14 +35,6 @@ class CompletePackage extends Package implements CompletePackageInterface
     /**
      * {@inheritDoc}
      */
-    public function getScripts()
-    {
-        return $this->scripts;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function setScripts(array $scripts)
     {
         $this->scripts = $scripts;
@@ -51,9 +43,9 @@ class CompletePackage extends Package implements CompletePackageInterface
     /**
      * {@inheritDoc}
      */
-    public function getRepositories()
+    public function getScripts()
     {
-        return $this->repositories;
+        return $this->scripts;
     }
 
     /**
@@ -67,9 +59,9 @@ class CompletePackage extends Package implements CompletePackageInterface
     /**
      * {@inheritDoc}
      */
-    public function getLicense()
+    public function getRepositories()
     {
-        return $this->license;
+        return $this->repositories;
     }
 
     /**
@@ -83,9 +75,9 @@ class CompletePackage extends Package implements CompletePackageInterface
     /**
      * {@inheritDoc}
      */
-    public function getKeywords()
+    public function getLicense()
     {
-        return $this->keywords;
+        return $this->license;
     }
 
     /**
@@ -99,9 +91,9 @@ class CompletePackage extends Package implements CompletePackageInterface
     /**
      * {@inheritDoc}
      */
-    public function getAuthors()
+    public function getKeywords()
     {
-        return $this->authors;
+        return $this->keywords;
     }
 
     /**
@@ -115,9 +107,9 @@ class CompletePackage extends Package implements CompletePackageInterface
     /**
      * {@inheritDoc}
      */
-    public function getDescription()
+    public function getAuthors()
     {
-        return $this->description;
+        return $this->authors;
     }
 
     /**
@@ -131,9 +123,9 @@ class CompletePackage extends Package implements CompletePackageInterface
     /**
      * {@inheritDoc}
      */
-    public function getHomepage()
+    public function getDescription()
     {
-        return $this->homepage;
+        return $this->description;
     }
 
     /**
@@ -147,9 +139,9 @@ class CompletePackage extends Package implements CompletePackageInterface
     /**
      * {@inheritDoc}
      */
-    public function getSupport()
+    public function getHomepage()
     {
-        return $this->support;
+        return $this->homepage;
     }
 
     /**
@@ -163,9 +155,9 @@ class CompletePackage extends Package implements CompletePackageInterface
     /**
      * {@inheritDoc}
      */
-    public function getFunding()
+    public function getSupport()
     {
-        return $this->funding;
+        return $this->support;
     }
 
     /**
@@ -174,6 +166,14 @@ class CompletePackage extends Package implements CompletePackageInterface
     public function setFunding(array $funding)
     {
         $this->funding = $funding;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFunding()
+    {
+        return $this->funding;
     }
 
     /**
@@ -203,14 +203,6 @@ class CompletePackage extends Package implements CompletePackageInterface
     /**
      * {@inheritDoc}
      */
-    public function getArchiveName()
-    {
-        return $this->archiveName;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function setArchiveName($name)
     {
         $this->archiveName = $name;
@@ -219,9 +211,9 @@ class CompletePackage extends Package implements CompletePackageInterface
     /**
      * {@inheritDoc}
      */
-    public function getArchiveExcludes()
+    public function getArchiveName()
     {
-        return $this->archiveExcludes;
+        return $this->archiveName;
     }
 
     /**
@@ -230,5 +222,13 @@ class CompletePackage extends Package implements CompletePackageInterface
     public function setArchiveExcludes(array $excludes)
     {
         $this->archiveExcludes = $excludes;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getArchiveExcludes()
+    {
+        return $this->archiveExcludes;
     }
 }

@@ -110,13 +110,23 @@ class InputOption
     }
 
     /**
-     * Returns true if the option can take multiple values.
+     * Returns the option shortcut.
      *
-     * @return bool true if mode is self::VALUE_IS_ARRAY, false otherwise
+     * @return string|null The shortcut
      */
-    public function isArray()
+    public function getShortcut()
     {
-        return self::VALUE_IS_ARRAY === (self::VALUE_IS_ARRAY & $this->mode);
+        return $this->shortcut;
+    }
+
+    /**
+     * Returns the option name.
+     *
+     * @return string The name
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -149,9 +159,53 @@ class InputOption
         return self::VALUE_OPTIONAL === (self::VALUE_OPTIONAL & $this->mode);
     }
 
+    /**
+     * Returns true if the option can take multiple values.
+     *
+     * @return bool true if mode is self::VALUE_IS_ARRAY, false otherwise
+     */
+    public function isArray()
+    {
+        return self::VALUE_IS_ARRAY === (self::VALUE_IS_ARRAY & $this->mode);
+    }
+
     public function isNegatable(): bool
     {
         return self::VALUE_NEGATABLE === (self::VALUE_NEGATABLE & $this->mode);
+    }
+
+    /**
+     * Sets the default value.
+     *
+     * @param string|string[]|bool|null $default The default value
+     *
+     * @throws LogicException When incorrect default value is given
+     */
+    public function setDefault($default = null)
+    {
+        if (self::VALUE_NONE === (self::VALUE_NONE & $this->mode) && null !== $default) {
+            throw new LogicException('Cannot set a default value when using InputOption::VALUE_NONE mode.');
+        }
+
+        if ($this->isArray()) {
+            if (null === $default) {
+                $default = [];
+            } elseif (!\is_array($default)) {
+                throw new LogicException('A default value for an array option must be an array.');
+            }
+        }
+
+        $this->default = $this->acceptValue() || $this->isNegatable() ? $default : false;
+    }
+
+    /**
+     * Returns the default value.
+     *
+     * @return string|string[]|bool|null The default value
+     */
+    public function getDefault()
+    {
+        return $this->default;
     }
 
     /**
@@ -179,59 +233,5 @@ class InputOption
             && $option->isValueRequired() === $this->isValueRequired()
             && $option->isValueOptional() === $this->isValueOptional()
         ;
-    }
-
-    /**
-     * Returns the option name.
-     *
-     * @return string The name
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Returns the option shortcut.
-     *
-     * @return string|null The shortcut
-     */
-    public function getShortcut()
-    {
-        return $this->shortcut;
-    }
-
-    /**
-     * Returns the default value.
-     *
-     * @return string|string[]|bool|null The default value
-     */
-    public function getDefault()
-    {
-        return $this->default;
-    }
-
-    /**
-     * Sets the default value.
-     *
-     * @param string|string[]|bool|null $default The default value
-     *
-     * @throws LogicException When incorrect default value is given
-     */
-    public function setDefault($default = null)
-    {
-        if (self::VALUE_NONE === (self::VALUE_NONE & $this->mode) && null !== $default) {
-            throw new LogicException('Cannot set a default value when using InputOption::VALUE_NONE mode.');
-        }
-
-        if ($this->isArray()) {
-            if (null === $default) {
-                $default = [];
-            } elseif (!\is_array($default)) {
-                throw new LogicException('A default value for an array option must be an array.');
-            }
-        }
-
-        $this->default = $this->acceptValue() || $this->isNegatable() ? $default : false;
     }
 }

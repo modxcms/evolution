@@ -168,65 +168,6 @@ class UserLogin implements UserServiceInterface
         return !$validator->fails();
     }
 
-    public function checkPassword()
-    {
-        if ($this->events) {
-            // invoke OnManagerAuthentication event
-            $rt = EvolutionCMS()->invokeEvent('OnManagerAuthentication', array(
-                'userid' => $this->user->getKey(),
-                'username' => $this->user->username,
-                'userpassword' => $this->userData['password'],
-                'savedpassword' => $this->user->password,
-                'rememberme' => $this->userData['rememberme']
-            ));
-        }
-
-        // check if plugin authenticated the user
-        $matchPassword = false;
-        if (!isset($rt) || !$rt || (is_array($rt) && !in_array(true, $rt))) {
-            // check user password - local authentication
-            $hashType = EvolutionCMS()->getManagerApi()->getHashType($this->user->password);
-
-            if ($hashType == 'phpass') {
-                $matchPassword = login($this->user->username, $this->userData['password'], $this->user->password);
-            } elseif ($hashType == 'md5') {
-                $matchPassword = loginMD5($this->user->getKey(), $this->userData['password'], $this->user->password, $this->user->username);
-            } elseif ($hashType == 'v1') {
-                $matchPassword = loginV1($this->user->getKey(), $this->userData['password'], $this->user->password, $this->user->username);
-            } else {
-                $matchPassword = false;
-            }
-
-        } else if ($rt === true || (is_array($rt) && in_array(true, $rt))) {
-            $matchPassword = true;
-        }
-
-        if (!$matchPassword) {
-            $this->incrementFailedLoginCount();
-            throw new ServiceActionException(\Lang::get('global.login_processor_wrong_password'));
-        }
-    }
-
-    public function incrementFailedLoginCount(): void
-    {
-        $this->user->attributes->failedlogincount += 1;
-
-        if ($this->user->attributes->failedlogincount >= $this->failedLoginAttempts) //block user for too many fail attempts
-        {
-            $this->user->attributes->blockeduntil = time() + ($this->blockedMinutes * 60);
-        }
-        $this->user->attributes->save();
-
-        if ($this->user->attributes->failedlogincount < $this->failedLoginAttempts) {
-            //sleep to help prevent brute force attacks
-            $sleep = (int)$this->user->attributes->failedlogincount / 2;
-            if ($sleep > 5) {
-                $sleep = 5;
-            }
-            sleep($sleep);
-        }
-    }
-
     /**
      * @return bool
      */
@@ -297,6 +238,7 @@ class UserLogin implements UserServiceInterface
         }
         return true;
     }
+
 
     public function authProcess()
     {
@@ -396,6 +338,66 @@ class UserLogin implements UserServiceInterface
                     'lastHit' => $lastHit->lasthit
                 );
             }
+        }
+    }
+
+
+    public function incrementFailedLoginCount(): void
+    {
+        $this->user->attributes->failedlogincount += 1;
+
+        if ($this->user->attributes->failedlogincount >= $this->failedLoginAttempts) //block user for too many fail attempts
+        {
+            $this->user->attributes->blockeduntil = time() + ($this->blockedMinutes * 60);
+        }
+        $this->user->attributes->save();
+
+        if ($this->user->attributes->failedlogincount < $this->failedLoginAttempts) {
+            //sleep to help prevent brute force attacks
+            $sleep = (int)$this->user->attributes->failedlogincount / 2;
+            if ($sleep > 5) {
+                $sleep = 5;
+            }
+            sleep($sleep);
+        }
+    }
+
+    public function checkPassword()
+    {
+        if ($this->events) {
+            // invoke OnManagerAuthentication event
+            $rt = EvolutionCMS()->invokeEvent('OnManagerAuthentication', array(
+                'userid' => $this->user->getKey(),
+                'username' => $this->user->username,
+                'userpassword' => $this->userData['password'],
+                'savedpassword' => $this->user->password,
+                'rememberme' => $this->userData['rememberme']
+            ));
+        }
+
+        // check if plugin authenticated the user
+        $matchPassword = false;
+        if (!isset($rt) || !$rt || (is_array($rt) && !in_array(true, $rt))) {
+            // check user password - local authentication
+            $hashType = EvolutionCMS()->getManagerApi()->getHashType($this->user->password);
+
+            if ($hashType == 'phpass') {
+                $matchPassword = login($this->user->username, $this->userData['password'], $this->user->password);
+            } elseif ($hashType == 'md5') {
+                $matchPassword = loginMD5($this->user->getKey(), $this->userData['password'], $this->user->password, $this->user->username);
+            } elseif ($hashType == 'v1') {
+                $matchPassword = loginV1($this->user->getKey(), $this->userData['password'], $this->user->password, $this->user->username);
+            } else {
+                $matchPassword = false;
+            }
+
+        } else if ($rt === true || (is_array($rt) && in_array(true, $rt))) {
+            $matchPassword = true;
+        }
+
+        if (!$matchPassword) {
+            $this->incrementFailedLoginCount();
+            throw new ServiceActionException(\Lang::get('global.login_processor_wrong_password'));
         }
     }
 

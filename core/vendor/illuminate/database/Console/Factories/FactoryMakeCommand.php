@@ -92,6 +92,19 @@ class FactoryMakeCommand extends GeneratorCommand
     }
 
     /**
+     * Get the destination class path.
+     *
+     * @param  string  $name
+     * @return string
+     */
+    protected function getPath($name)
+    {
+        $name = (string) Str::of($name)->replaceFirst($this->rootNamespace(), '')->finish('Factory');
+
+        return $this->laravel->databasePath().'/factories/'.str_replace('\\', '/', $name).'.php';
+    }
+
+    /**
      * Guess the model name from the Factory name or return a default model name.
      *
      * @param  string  $name
@@ -114,19 +127,6 @@ class FactoryMakeCommand extends GeneratorCommand
         }
 
         return $this->rootNamespace().'Model';
-    }
-
-    /**
-     * Get the destination class path.
-     *
-     * @param  string  $name
-     * @return string
-     */
-    protected function getPath($name)
-    {
-        $name = (string) Str::of($name)->replaceFirst($this->rootNamespace(), '')->finish('Factory');
-
-        return $this->laravel->databasePath().'/factories/'.str_replace('\\', '/', $name).'.php';
     }
 
     /**

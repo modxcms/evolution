@@ -25,6 +25,27 @@ use WebPConvert\Options\SensitiveArrayOption;
 class Stack extends AbstractConverter
 {
 
+    protected function getUnsupportedDefaultOptions()
+    {
+        return [
+            'alpha-quality',
+            'auto-filter',
+            'encoding',
+            'low-memory',
+            'metadata',
+            'method',
+            'near-lossless',
+            'preset',
+            'sharp-yuv',
+            'size-in-percentage',
+            'use-nice',
+            'skip',
+            'default-quality',
+            'quality',
+            'max-quality',
+        ];
+    }
+
     public function getUniqueOptions($imageType)
     {
         return [
@@ -64,27 +85,6 @@ class Stack extends AbstractConverter
         // TODO: We should test if all converters are found in order to detect problems early
 
         //$this->logLn('Stack converter ignited');
-    }
-
-    protected function getUnsupportedDefaultOptions()
-    {
-        return [
-            'alpha-quality',
-            'auto-filter',
-            'encoding',
-            'low-memory',
-            'metadata',
-            'method',
-            'near-lossless',
-            'preset',
-            'sharp-yuv',
-            'size-in-percentage',
-            'use-nice',
-            'skip',
-            'default-quality',
-            'quality',
-            'max-quality',
-        ];
     }
 
     protected function doActualConvert()

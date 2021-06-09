@@ -40,6 +40,14 @@ class MongoDBFormatter implements FormatterInterface
     /**
      * {@inheritDoc}
      */
+    public function format(array $record): array
+    {
+        return $this->formatArray($record);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function formatBatch(array $records): array
     {
         foreach ($records as $key => $record) {
@@ -47,14 +55,6 @@ class MongoDBFormatter implements FormatterInterface
         }
 
         return $records;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function format(array $record): array
-    {
-        return $this->formatArray($record);
     }
 
     /**
@@ -81,36 +81,12 @@ class MongoDBFormatter implements FormatterInterface
         return $record;
     }
 
-    protected function formatDate(\DateTimeInterface $value, int $nestingLevel): UTCDateTime
+    protected function formatObject($value, int $nestingLevel)
     {
-        if ($this->isLegacyMongoExt) {
-            return $this->legacyGetMongoDbDateTime($value);
-        }
+        $objectVars = get_object_vars($value);
+        $objectVars['class'] = Utils::getClass($value);
 
-        return $this->getMongoDbDateTime($value);
-    }
-
-    /**
-     * This is needed to support MongoDB Driver v1.19 and below
-     *
-     * See https://github.com/mongodb/mongo-php-driver/issues/426
-     *
-     * It can probably be removed in 2.1 or later once MongoDB's 1.2 is released and widely adopted
-     */
-    private function legacyGetMongoDbDateTime(\DateTimeInterface $value): UTCDateTime
-    {
-        $milliseconds = floor(((float) $value->format('U.u')) * 1000);
-
-        $milliseconds = (PHP_INT_SIZE == 8) //64-bit OS?
-            ? (int) $milliseconds
-            : (string) $milliseconds;
-
-        return new UTCDateTime($milliseconds);
-    }
-
-    private function getMongoDbDateTime(\DateTimeInterface $value): UTCDateTime
-    {
-        return new UTCDateTime((int) floor(((float) $value->format('U.u')) * 1000));
+        return $this->formatArray($objectVars, $nestingLevel);
     }
 
     protected function formatException(\Throwable $exception, int $nestingLevel)
@@ -131,11 +107,35 @@ class MongoDBFormatter implements FormatterInterface
         return $this->formatArray($formattedException, $nestingLevel);
     }
 
-    protected function formatObject($value, int $nestingLevel)
+    protected function formatDate(\DateTimeInterface $value, int $nestingLevel): UTCDateTime
     {
-        $objectVars = get_object_vars($value);
-        $objectVars['class'] = Utils::getClass($value);
+        if ($this->isLegacyMongoExt) {
+            return $this->legacyGetMongoDbDateTime($value);
+        }
 
-        return $this->formatArray($objectVars, $nestingLevel);
+        return $this->getMongoDbDateTime($value);
+    }
+
+    private function getMongoDbDateTime(\DateTimeInterface $value): UTCDateTime
+    {
+        return new UTCDateTime((int) floor(((float) $value->format('U.u')) * 1000));
+    }
+
+    /**
+     * This is needed to support MongoDB Driver v1.19 and below
+     *
+     * See https://github.com/mongodb/mongo-php-driver/issues/426
+     *
+     * It can probably be removed in 2.1 or later once MongoDB's 1.2 is released and widely adopted
+     */
+    private function legacyGetMongoDbDateTime(\DateTimeInterface $value): UTCDateTime
+    {
+        $milliseconds = floor(((float) $value->format('U.u')) * 1000);
+
+        $milliseconds = (PHP_INT_SIZE == 8) //64-bit OS?
+            ? (int) $milliseconds
+            : (string) $milliseconds;
+
+        return new UTCDateTime($milliseconds);
     }
 }

@@ -23,31 +23,6 @@ class VersionParser extends SemverVersionParser
     private static $constraints = array();
 
     /**
-     * @return bool
-     */
-    public static function isUpgrade($normalizedFrom, $normalizedTo)
-    {
-        if ($normalizedFrom === $normalizedTo) {
-            return true;
-        }
-
-        if (in_array($normalizedFrom, array('dev-master', 'dev-trunk', 'dev-default'), true)) {
-            $normalizedFrom = VersionParser::DEFAULT_BRANCH_ALIAS;
-        }
-        if (in_array($normalizedTo, array('dev-master', 'dev-trunk', 'dev-default'), true)) {
-            $normalizedTo = VersionParser::DEFAULT_BRANCH_ALIAS;
-        }
-
-        if (strpos($normalizedFrom, 'dev-') === 0 || strpos($normalizedTo, 'dev-') === 0) {
-            return true;
-        }
-
-        $sorted = Semver::sort(array($normalizedTo, $normalizedFrom));
-
-        return $sorted[0] === $normalizedFrom;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function parseConstraints($constraints)
@@ -90,5 +65,30 @@ class VersionParser extends SemverVersionParser
         }
 
         return $result;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isUpgrade($normalizedFrom, $normalizedTo)
+    {
+        if ($normalizedFrom === $normalizedTo) {
+            return true;
+        }
+
+        if (in_array($normalizedFrom, array('dev-master', 'dev-trunk', 'dev-default'), true)) {
+            $normalizedFrom = VersionParser::DEFAULT_BRANCH_ALIAS;
+        }
+        if (in_array($normalizedTo, array('dev-master', 'dev-trunk', 'dev-default'), true)) {
+            $normalizedTo = VersionParser::DEFAULT_BRANCH_ALIAS;
+        }
+
+        if (strpos($normalizedFrom, 'dev-') === 0 || strpos($normalizedTo, 'dev-') === 0) {
+            return true;
+        }
+
+        $sorted = Semver::sort(array($normalizedTo, $normalizedFrom));
+
+        return $sorted[0] === $normalizedFrom;
     }
 }

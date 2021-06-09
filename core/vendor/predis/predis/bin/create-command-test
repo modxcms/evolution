@@ -107,13 +107,20 @@ class CommandTestCaseGenerator
         return new self($options);
     }
 
-    public function save()
+    protected function getTestRealm()
     {
-        $options = $this->options;
-        if (file_exists($options['output']) && !$options['overwrite']) {
-            throw new RuntimeException("File {$options['output']} already exist. Specify the --overwrite option to overwrite the existing file.");
+        if (isset($this->options['realm'])) {
+            if (!$this->options['realm']) {
+                throw new RuntimeException('Invalid value for realm has been sepcified (empty).');
+            }
+            return $this->options['realm'];
         }
-        file_put_contents($options['output'], $this->generate());
+
+        $fqnParts = explode('\\', $this->options['fqn']);
+        $class = array_pop($fqnParts);
+        list($realm,) = preg_split('/([[:upper:]][[:lower:]]+)/', $class, 2, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+
+        return strtolower($realm);
     }
 
     public function generate()
@@ -135,6 +142,15 @@ class CommandTestCaseGenerator
         $buffer = $this->getTestCaseBuffer($instance);
 
         return $buffer;
+    }
+
+    public function save()
+    {
+        $options = $this->options;
+        if (file_exists($options['output']) && !$options['overwrite']) {
+            throw new RuntimeException("File {$options['output']} already exist. Specify the --overwrite option to overwrite the existing file.");
+        }
+        file_put_contents($options['output'], $this->generate());
     }
 
     protected function getTestCaseBuffer(CommandInterface $instance)
@@ -248,22 +264,6 @@ PHP;
         }
 
         return "$buffer}\n";
-    }
-
-    protected function getTestRealm()
-    {
-        if (isset($this->options['realm'])) {
-            if (!$this->options['realm']) {
-                throw new RuntimeException('Invalid value for realm has been sepcified (empty).');
-            }
-            return $this->options['realm'];
-        }
-
-        $fqnParts = explode('\\', $this->options['fqn']);
-        $class = array_pop($fqnParts);
-        list($realm,) = preg_split('/([[:upper:]][[:lower:]]+)/', $class, 2, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-
-        return strtolower($realm);
     }
 }
 

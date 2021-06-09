@@ -19,6 +19,16 @@ class WebPConvertException extends \Exception
     protected $detailedMessage;
     protected $shortMessage;
 
+    public function getDetailedMessage()
+    {
+        return $this->detailedMessage;
+    }
+
+    public function getShortMessage()
+    {
+        return $this->shortMessage;
+    }
+
     public function __construct($shortMessage = "", $detailedMessage = "", $previous = null)
     {
         $detailedMessage = ($detailedMessage != '') ? $detailedMessage : $shortMessage;
@@ -30,15 +40,5 @@ class WebPConvertException extends \Exception
             0,
             $previous
         );
-    }
-
-    public function getDetailedMessage()
-    {
-        return $this->detailedMessage;
-    }
-
-    public function getShortMessage()
-    {
-        return $this->shortMessage;
     }
 }

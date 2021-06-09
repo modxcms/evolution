@@ -24,6 +24,19 @@ use Composer\XdebugHandler\XdebugHandler;
 class IniHelper
 {
     /**
+     * Returns an array of php.ini locations with at least one entry
+     *
+     * The equivalent of calling php_ini_loaded_file then php_ini_scanned_files.
+     * The loaded ini location is the first entry and may be empty.
+     *
+     * @return array
+     */
+    public static function getAll()
+    {
+        return XdebugHandler::getAllIniFiles();
+    }
+
+    /**
      * Describes the location of the loaded php.ini file(s)
      *
      * @return string
@@ -47,18 +60,5 @@ class IniHelper
         }
 
         return 'The php.ini used by your command-line PHP is: '.$ini;
-    }
-
-    /**
-     * Returns an array of php.ini locations with at least one entry
-     *
-     * The equivalent of calling php_ini_loaded_file then php_ini_scanned_files.
-     * The loaded ini location is the first entry and may be empty.
-     *
-     * @return array
-     */
-    public static function getAll()
-    {
-        return XdebugHandler::getAllIniFiles();
     }
 }

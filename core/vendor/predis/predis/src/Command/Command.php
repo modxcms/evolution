@@ -22,6 +22,80 @@ abstract class Command implements CommandInterface
     private $arguments = array();
 
     /**
+     * Returns a filtered array of the arguments.
+     *
+     * @param array $arguments List of arguments.
+     *
+     * @return array
+     */
+    protected function filterArguments(array $arguments)
+    {
+        return $arguments;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setArguments(array $arguments)
+    {
+        $this->arguments = $this->filterArguments($arguments);
+        unset($this->slot);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setRawArguments(array $arguments)
+    {
+        $this->arguments = $arguments;
+        unset($this->slot);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getArguments()
+    {
+        return $this->arguments;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getArgument($index)
+    {
+        if (isset($this->arguments[$index])) {
+            return $this->arguments[$index];
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setSlot($slot)
+    {
+        $this->slot = $slot;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSlot()
+    {
+        if (isset($this->slot)) {
+            return $this->slot;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function parseResponse($data)
+    {
+        return $data;
+    }
+
+    /**
      * Normalizes the arguments array passed to a Redis command.
      *
      * @param array $arguments Arguments for a command.
@@ -51,79 +125,5 @@ abstract class Command implements CommandInterface
         }
 
         return $arguments;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setRawArguments(array $arguments)
-    {
-        $this->arguments = $arguments;
-        unset($this->slot);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getArguments()
-    {
-        return $this->arguments;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setArguments(array $arguments)
-    {
-        $this->arguments = $this->filterArguments($arguments);
-        unset($this->slot);
-    }
-
-    /**
-     * Returns a filtered array of the arguments.
-     *
-     * @param array $arguments List of arguments.
-     *
-     * @return array
-     */
-    protected function filterArguments(array $arguments)
-    {
-        return $arguments;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getArgument($index)
-    {
-        if (isset($this->arguments[$index])) {
-            return $this->arguments[$index];
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSlot()
-    {
-        if (isset($this->slot)) {
-            return $this->slot;
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setSlot($slot)
-    {
-        $this->slot = $slot;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function parseResponse($data)
-    {
-        return $data;
     }
 }

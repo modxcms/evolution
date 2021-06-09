@@ -47,6 +47,17 @@ class DateCaster
         return $a;
     }
 
+    public static function castInterval(\DateInterval $interval, array $a, Stub $stub, bool $isNested, int $filter)
+    {
+        $now = new \DateTimeImmutable();
+        $numberOfSeconds = $now->add($interval)->getTimestamp() - $now->getTimestamp();
+        $title = number_format($numberOfSeconds, 0, '.', ' ').'s';
+
+        $i = [Caster::PREFIX_VIRTUAL.'interval' => new ConstStub(self::formatInterval($interval), $title)];
+
+        return $filter & Caster::EXCLUDE_VERBOSE ? $i : $i + $a;
+    }
+
     private static function formatInterval(\DateInterval $i): string
     {
         $format = '%R ';
@@ -62,27 +73,6 @@ class DateCaster
         $format = '%R ' === $format ? '0s' : $format;
 
         return $i->format(rtrim($format));
-    }
-
-    private static function formatSeconds(string $s, string $us): string
-    {
-        return sprintf('%02d.%s', $s, 0 === ($len = \strlen($t = rtrim($us, '0'))) ? '0' : ($len <= 3 ? str_pad($t, 3, '0') : $us));
-    }
-
-    private static function formatDateTime(\DateTimeInterface $d, string $extra = ''): string
-    {
-        return $d->format('Y-m-d H:i:'.self::formatSeconds($d->format('s'), $d->format('u')).$extra);
-    }
-
-    public static function castInterval(\DateInterval $interval, array $a, Stub $stub, bool $isNested, int $filter)
-    {
-        $now = new \DateTimeImmutable();
-        $numberOfSeconds = $now->add($interval)->getTimestamp() - $now->getTimestamp();
-        $title = number_format($numberOfSeconds, 0, '.', ' ').'s';
-
-        $i = [Caster::PREFIX_VIRTUAL.'interval' => new ConstStub(self::formatInterval($interval), $title)];
-
-        return $filter & Caster::EXCLUDE_VERBOSE ? $i : $i + $a;
     }
 
     public static function castTimeZone(\DateTimeZone $timeZone, array $a, Stub $stub, bool $isNested, int $filter)
@@ -122,5 +112,15 @@ class DateCaster
         $p = [Caster::PREFIX_VIRTUAL.'period' => new ConstStub($period, implode("\n", $dates))];
 
         return $filter & Caster::EXCLUDE_VERBOSE ? $p : $p + $a;
+    }
+
+    private static function formatDateTime(\DateTimeInterface $d, string $extra = ''): string
+    {
+        return $d->format('Y-m-d H:i:'.self::formatSeconds($d->format('s'), $d->format('u')).$extra);
+    }
+
+    private static function formatSeconds(string $s, string $us): string
+    {
+        return sprintf('%02d.%s', $s, 0 === ($len = \strlen($t = rtrim($us, '0'))) ? '0' : ($len <= 3 ? str_pad($t, 3, '0') : $us));
     }
 }

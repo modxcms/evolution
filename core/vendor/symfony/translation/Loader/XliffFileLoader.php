@@ -75,11 +75,6 @@ class XliffFileLoader implements LoaderInterface
         return $catalogue;
     }
 
-    private function isXmlString(string $resource): bool
-    {
-        return 0 === strpos($resource, '<?xml');
-    }
-
     private function extract($dom, MessageCatalogue $catalogue, string $domain)
     {
         $xliffVersion = XliffUtils::getVersionNumber($dom);
@@ -149,44 +144,6 @@ class XliffFileLoader implements LoaderInterface
         }
     }
 
-    /**
-     * Convert a UTF8 string to the specified encoding.
-     */
-    private function utf8ToCharset(string $content, string $encoding = null): string
-    {
-        if ('UTF-8' !== $encoding && !empty($encoding)) {
-            return mb_convert_encoding($content, $encoding, 'UTF-8');
-        }
-
-        return $content;
-    }
-
-    private function parseNotesMetadata(\SimpleXMLElement $noteElement = null, string $encoding = null): array
-    {
-        $notes = [];
-
-        if (null === $noteElement) {
-            return $notes;
-        }
-
-        /** @var \SimpleXMLElement $xmlNote */
-        foreach ($noteElement as $xmlNote) {
-            $noteAttributes = $xmlNote->attributes();
-            $note = ['content' => $this->utf8ToCharset((string) $xmlNote, $encoding)];
-            if (isset($noteAttributes['priority'])) {
-                $note['priority'] = (int) $noteAttributes['priority'];
-            }
-
-            if (isset($noteAttributes['from'])) {
-                $note['from'] = (string) $noteAttributes['from'];
-            }
-
-            $notes[] = $note;
-        }
-
-        return $notes;
-    }
-
     private function extractXliff2(\DOMDocument $dom, MessageCatalogue $catalogue, string $domain)
     {
         $xml = simplexml_import_dom($dom);
@@ -228,5 +185,48 @@ class XliffFileLoader implements LoaderInterface
                 $catalogue->setMetadata((string) $source, $metadata, $domain);
             }
         }
+    }
+
+    /**
+     * Convert a UTF8 string to the specified encoding.
+     */
+    private function utf8ToCharset(string $content, string $encoding = null): string
+    {
+        if ('UTF-8' !== $encoding && !empty($encoding)) {
+            return mb_convert_encoding($content, $encoding, 'UTF-8');
+        }
+
+        return $content;
+    }
+
+    private function parseNotesMetadata(\SimpleXMLElement $noteElement = null, string $encoding = null): array
+    {
+        $notes = [];
+
+        if (null === $noteElement) {
+            return $notes;
+        }
+
+        /** @var \SimpleXMLElement $xmlNote */
+        foreach ($noteElement as $xmlNote) {
+            $noteAttributes = $xmlNote->attributes();
+            $note = ['content' => $this->utf8ToCharset((string) $xmlNote, $encoding)];
+            if (isset($noteAttributes['priority'])) {
+                $note['priority'] = (int) $noteAttributes['priority'];
+            }
+
+            if (isset($noteAttributes['from'])) {
+                $note['from'] = (string) $noteAttributes['from'];
+            }
+
+            $notes[] = $note;
+        }
+
+        return $notes;
+    }
+
+    private function isXmlString(string $resource): bool
+    {
+        return 0 === strpos($resource, '<?xml');
     }
 }

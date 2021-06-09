@@ -30,16 +30,6 @@ trait HasTimestamps
     }
 
     /**
-     * Determine if the model uses timestamps.
-     *
-     * @return bool
-     */
-    public function usesTimestamps()
-    {
-        return $this->timestamps;
-    }
-
-    /**
      * Update the creation and update timestamps.
      *
      * @return void
@@ -62,23 +52,16 @@ trait HasTimestamps
     }
 
     /**
-     * Get a fresh timestamp for the model.
+     * Set the value of the "created at" attribute.
      *
-     * @return \Illuminate\Support\Carbon
+     * @param  mixed  $value
+     * @return $this
      */
-    public function freshTimestamp()
+    public function setCreatedAt($value)
     {
-        return Date::now();
-    }
+        $this->{$this->getCreatedAtColumn()} = $value;
 
-    /**
-     * Get the name of the "updated at" column.
-     *
-     * @return string|null
-     */
-    public function getUpdatedAtColumn()
-    {
-        return static::UPDATED_AT;
+        return $this;
     }
 
     /**
@@ -95,26 +78,13 @@ trait HasTimestamps
     }
 
     /**
-     * Get the name of the "created at" column.
+     * Get a fresh timestamp for the model.
      *
-     * @return string|null
+     * @return \Illuminate\Support\Carbon
      */
-    public function getCreatedAtColumn()
+    public function freshTimestamp()
     {
-        return static::CREATED_AT;
-    }
-
-    /**
-     * Set the value of the "created at" attribute.
-     *
-     * @param  mixed  $value
-     * @return $this
-     */
-    public function setCreatedAt($value)
-    {
-        $this->{$this->getCreatedAtColumn()} = $value;
-
-        return $this;
+        return Date::now();
     }
 
     /**
@@ -125,6 +95,36 @@ trait HasTimestamps
     public function freshTimestampString()
     {
         return $this->fromDateTime($this->freshTimestamp());
+    }
+
+    /**
+     * Determine if the model uses timestamps.
+     *
+     * @return bool
+     */
+    public function usesTimestamps()
+    {
+        return $this->timestamps;
+    }
+
+    /**
+     * Get the name of the "created at" column.
+     *
+     * @return string|null
+     */
+    public function getCreatedAtColumn()
+    {
+        return static::CREATED_AT;
+    }
+
+    /**
+     * Get the name of the "updated at" column.
+     *
+     * @return string|null
+     */
+    public function getUpdatedAtColumn()
+    {
+        return static::UPDATED_AT;
     }
 
     /**

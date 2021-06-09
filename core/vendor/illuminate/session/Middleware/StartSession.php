@@ -65,29 +65,6 @@ class StartSession
     }
 
     /**
-     * Determine if a session driver has been configured.
-     *
-     * @return bool
-     */
-    protected function sessionConfigured()
-    {
-        return ! is_null($this->manager->getSessionConfig()['driver'] ?? null);
-    }
-
-    /**
-     * Get the session implementation from the manager.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Contracts\Session\Session
-     */
-    public function getSession(Request $request)
-    {
-        return tap($this->manager->driver(), function ($session) use ($request) {
-            $session->setId($request->cookies->get($session->getName()));
-        });
-    }
-
-    /**
      * Handle the given request within session state.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -120,17 +97,6 @@ class StartSession
         } finally {
             optional($lock)->release();
         }
-    }
-
-    /**
-     * Resolve the given cache driver.
-     *
-     * @param  string  $driver
-     * @return \Illuminate\Cache\Store
-     */
-    protected function cache($driver)
-    {
-        return call_user_func($this->cacheFactoryResolver)->driver($driver);
     }
 
     /**
@@ -183,6 +149,19 @@ class StartSession
     }
 
     /**
+     * Get the session implementation from the manager.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Session\Session
+     */
+    public function getSession(Request $request)
+    {
+        return tap($this->manager->driver(), function ($session) use ($request) {
+            $session->setId($request->cookies->get($session->getName()));
+        });
+    }
+
+    /**
      * Remove the garbage from the session if necessary.
      *
      * @param  \Illuminate\Contracts\Session\Session  $session
@@ -209,16 +188,6 @@ class StartSession
     protected function configHitsLottery(array $config)
     {
         return random_int(1, $config['lottery'][1]) <= $config['lottery'][0];
-    }
-
-    /**
-     * Get the session lifetime in seconds.
-     *
-     * @return int
-     */
-    protected function getSessionLifetimeInSeconds()
-    {
-        return ($this->manager->getSessionConfig()['lifetime'] ?? null) * 60;
     }
 
     /**
@@ -257,16 +226,24 @@ class StartSession
     }
 
     /**
-     * Determine if the configured session driver is persistent.
+     * Save the session data to storage.
      *
-     * @param  array|null  $config
-     * @return bool
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
      */
-    protected function sessionIsPersistent(array $config = null)
+    protected function saveSession($request)
     {
-        $config = $config ?: $this->manager->getSessionConfig();
+        $this->manager->driver()->save();
+    }
 
-        return ! is_null($config['driver'] ?? null);
+    /**
+     * Get the session lifetime in seconds.
+     *
+     * @return int
+     */
+    protected function getSessionLifetimeInSeconds()
+    {
+        return ($this->manager->getSessionConfig()['lifetime'] ?? null) * 60;
     }
 
     /**
@@ -284,13 +261,36 @@ class StartSession
     }
 
     /**
-     * Save the session data to storage.
+     * Determine if a session driver has been configured.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return void
+     * @return bool
      */
-    protected function saveSession($request)
+    protected function sessionConfigured()
     {
-        $this->manager->driver()->save();
+        return ! is_null($this->manager->getSessionConfig()['driver'] ?? null);
+    }
+
+    /**
+     * Determine if the configured session driver is persistent.
+     *
+     * @param  array|null  $config
+     * @return bool
+     */
+    protected function sessionIsPersistent(array $config = null)
+    {
+        $config = $config ?: $this->manager->getSessionConfig();
+
+        return ! is_null($config['driver'] ?? null);
+    }
+
+    /**
+     * Resolve the given cache driver.
+     *
+     * @param  string  $driver
+     * @return \Illuminate\Cache\Store
+     */
+    protected function cache($driver)
+    {
+        return call_user_func($this->cacheFactoryResolver)->driver($driver);
     }
 }

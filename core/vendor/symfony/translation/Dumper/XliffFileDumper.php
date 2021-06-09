@@ -47,6 +47,14 @@ class XliffFileDumper extends FileDumper
         throw new InvalidArgumentException(sprintf('No support implemented for dumping XLIFF version "%s".', $xliffVersion));
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    protected function getExtension()
+    {
+        return 'xlf';
+    }
+
     private function dumpXliff1(string $defaultLocale, MessageCatalogue $messages, ?string $domain, array $options = [])
     {
         $toolInfo = ['tool-id' => 'symfony', 'tool-name' => 'Symfony'];
@@ -121,11 +129,6 @@ class XliffFileDumper extends FileDumper
         return $dom->saveXML();
     }
 
-    private function hasMetadataArrayInfo(string $key, array $metadata = null): bool
-    {
-        return null !== $metadata && \array_key_exists($key, $metadata) && ($metadata[$key] instanceof \Traversable || \is_array($metadata[$key]));
-    }
-
     private function dumpXliff2(string $defaultLocale, MessageCatalogue $messages, ?string $domain)
     {
         $dom = new \DOMDocument('1.0', 'utf-8');
@@ -193,11 +196,8 @@ class XliffFileDumper extends FileDumper
         return $dom->saveXML();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function getExtension()
+    private function hasMetadataArrayInfo(string $key, array $metadata = null): bool
     {
-        return 'xlf';
+        return null !== $metadata && \array_key_exists($key, $metadata) && ($metadata[$key] instanceof \Traversable || \is_array($metadata[$key]));
     }
 }

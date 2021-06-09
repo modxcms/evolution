@@ -15,87 +15,6 @@ class MySqlGrammar extends Grammar
     protected $operators = ['sounds like'];
 
     /**
-     * Compile an insert ignore statement into SQL.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  array  $values
-     * @return string
-     */
-    public function compileInsertOrIgnore(Builder $query, array $values)
-    {
-        return Str::replaceFirst('insert', 'insert ignore', $this->compileInsert($query, $values));
-    }
-
-    /**
-     * Compile an insert statement into SQL.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  array  $values
-     * @return string
-     */
-    public function compileInsert(Builder $query, array $values)
-    {
-        if (empty($values)) {
-            $values = [[]];
-        }
-
-        return parent::compileInsert($query, $values);
-    }
-
-    /**
-     * Compile the random statement into SQL.
-     *
-     * @param  string  $seed
-     * @return string
-     */
-    public function compileRandom($seed)
-    {
-        return 'RAND('.$seed.')';
-    }
-
-    /**
-     * Compile an "upsert" statement into SQL.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  array  $values
-     * @param  array  $uniqueBy
-     * @param  array  $update
-     * @return string
-     */
-    public function compileUpsert(Builder $query, array $values, array $uniqueBy, array $update)
-    {
-        $sql = $this->compileInsert($query, $values).' on duplicate key update ';
-
-        $columns = collect($update)->map(function ($value, $key) {
-            return is_numeric($key)
-                ? $this->wrap($value).' = values('.$this->wrap($value).')'
-                : $this->wrap($key).' = '.$this->parameter($value);
-        })->implode(', ');
-
-        return $sql.$columns;
-    }
-
-    /**
-     * Prepare the bindings for an update statement.
-     *
-     * Booleans, integers, and doubles are inserted into JSON updates as raw values.
-     *
-     * @param  array  $bindings
-     * @param  array  $values
-     * @return array
-     */
-    public function prepareBindingsForUpdate(array $bindings, array $values)
-    {
-        $values = collect($values)->reject(function ($value, $column) {
-            return $this->isJsonSelector($column) && is_bool($value);
-        })->map(function ($value) {
-            return is_array($value) ? json_encode($value) : $value;
-        })->all();
-
-        return parent::prepareBindingsForUpdate($bindings, $values);
-    }
-
-    /**
      * Add a "where null" clause to the query.
      *
      * @param  \Illuminate\Database\Query\Builder  $query
@@ -132,6 +51,18 @@ class MySqlGrammar extends Grammar
     }
 
     /**
+     * Compile an insert ignore statement into SQL.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $values
+     * @return string
+     */
+    public function compileInsertOrIgnore(Builder $query, array $values)
+    {
+        return Str::replaceFirst('insert', 'insert ignore', $this->compileInsert($query, $values));
+    }
+
+    /**
      * Compile a "JSON contains" statement into SQL.
      *
      * @param  string  $column
@@ -161,6 +92,17 @@ class MySqlGrammar extends Grammar
     }
 
     /**
+     * Compile the random statement into SQL.
+     *
+     * @param  string  $seed
+     * @return string
+     */
+    public function compileRandom($seed)
+    {
+        return 'RAND('.$seed.')';
+    }
+
+    /**
      * Compile the lock into SQL.
      *
      * @param  \Illuminate\Database\Query\Builder  $query
@@ -174,6 +116,22 @@ class MySqlGrammar extends Grammar
         }
 
         return $value;
+    }
+
+    /**
+     * Compile an insert statement into SQL.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $values
+     * @return string
+     */
+    public function compileInsert(Builder $query, array $values)
+    {
+        if (empty($values)) {
+            $values = [[]];
+        }
+
+        return parent::compileInsert($query, $values);
     }
 
     /**
@@ -192,6 +150,28 @@ class MySqlGrammar extends Grammar
 
             return $this->wrap($key).' = '.$this->parameter($value);
         })->implode(', ');
+    }
+
+    /**
+     * Compile an "upsert" statement into SQL.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $values
+     * @param  array  $uniqueBy
+     * @param  array  $update
+     * @return string
+     */
+    public function compileUpsert(Builder $query, array $values, array $uniqueBy, array $update)
+    {
+        $sql = $this->compileInsert($query, $values).' on duplicate key update ';
+
+        $columns = collect($update)->map(function ($value, $key) {
+            return is_numeric($key)
+                ? $this->wrap($value).' = values('.$this->wrap($value).')'
+                : $this->wrap($key).' = '.$this->parameter($value);
+        })->implode(', ');
+
+        return $sql.$columns;
     }
 
     /**
@@ -238,6 +218,26 @@ class MySqlGrammar extends Grammar
         }
 
         return $sql;
+    }
+
+    /**
+     * Prepare the bindings for an update statement.
+     *
+     * Booleans, integers, and doubles are inserted into JSON updates as raw values.
+     *
+     * @param  array  $bindings
+     * @param  array  $values
+     * @return array
+     */
+    public function prepareBindingsForUpdate(array $bindings, array $values)
+    {
+        $values = collect($values)->reject(function ($value, $column) {
+            return $this->isJsonSelector($column) && is_bool($value);
+        })->map(function ($value) {
+            return is_array($value) ? json_encode($value) : $value;
+        })->all();
+
+        return parent::prepareBindingsForUpdate($bindings, $values);
     }
 
     /**

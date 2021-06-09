@@ -94,22 +94,6 @@ class SQLAnywhereConnection implements Connection, ServerInfoAwareConnection
     }
 
     /**
-     * Ends transactional mode and enables auto commit again.
-     *
-     * @return bool Whether or not ending transactional mode succeeded.
-     *
-     * @throws SQLAnywhereException
-     */
-    private function endTransaction()
-    {
-        if (! sasql_set_option($this->connection, 'auto_commit', 'on')) {
-            throw SQLAnywhereException::fromSQLAnywhereError($this->connection);
-        }
-
-        return true;
-    }
-
-    /**
      * {@inheritdoc}
      *
      * @deprecated The error information is available via exceptions.
@@ -162,27 +146,6 @@ class SQLAnywhereConnection implements Connection, ServerInfoAwareConnection
     /**
      * {@inheritdoc}
      */
-    public function query()
-    {
-        $args = func_get_args();
-        $stmt = $this->prepare($args[0]);
-
-        $stmt->execute();
-
-        return $stmt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function prepare($sql)
-    {
-        return new SQLAnywhereStatement($this->connection, $sql);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function lastInsertId($name = null)
     {
         if ($name === null) {
@@ -196,6 +159,27 @@ class SQLAnywhereConnection implements Connection, ServerInfoAwareConnection
         }
 
         return $stmt->fetchColumn();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function prepare($sql)
+    {
+        return new SQLAnywhereStatement($this->connection, $sql);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function query()
+    {
+        $args = func_get_args();
+        $stmt = $this->prepare($args[0]);
+
+        $stmt->execute();
+
+        return $stmt;
     }
 
     /**
@@ -236,6 +220,22 @@ class SQLAnywhereConnection implements Connection, ServerInfoAwareConnection
         }
 
         $this->endTransaction();
+
+        return true;
+    }
+
+    /**
+     * Ends transactional mode and enables auto commit again.
+     *
+     * @return bool Whether or not ending transactional mode succeeded.
+     *
+     * @throws SQLAnywhereException
+     */
+    private function endTransaction()
+    {
+        if (! sasql_set_option($this->connection, 'auto_commit', 'on')) {
+            throw SQLAnywhereException::fromSQLAnywhereError($this->connection);
+        }
 
         return true;
     }

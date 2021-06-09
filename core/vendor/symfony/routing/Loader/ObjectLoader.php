@@ -23,6 +23,16 @@ use Symfony\Component\Routing\RouteCollection;
 abstract class ObjectLoader extends Loader
 {
     /**
+     * Returns the object that the method will be called on to load routes.
+     *
+     * For example, if your application uses a service container,
+     * the $id may be a service id.
+     *
+     * @return object
+     */
+    abstract protected function getObject(string $id);
+
+    /**
      * Calls the object method that will load the routes.
      *
      * @param string      $resource object_id::method
@@ -62,16 +72,6 @@ abstract class ObjectLoader extends Loader
 
         return $routeCollection;
     }
-
-    /**
-     * Returns the object that the method will be called on to load routes.
-     *
-     * For example, if your application uses a service container,
-     * the $id may be a service id.
-     *
-     * @return object
-     */
-    abstract protected function getObject(string $id);
 
     private function addClassResource(\ReflectionClass $class, RouteCollection $collection)
     {

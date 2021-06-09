@@ -25,16 +25,6 @@ class MemcachedCache extends CacheProvider
     private $memcached;
 
     /**
-     * Gets the memcached instance used by the cache.
-     *
-     * @return Memcached|null
-     */
-    public function getMemcached()
-    {
-        return $this->memcached;
-    }
-
-    /**
      * Sets the memcache instance to use.
      *
      * @return void
@@ -42,6 +32,16 @@ class MemcachedCache extends CacheProvider
     public function setMemcached(Memcached $memcached)
     {
         $this->memcached = $memcached;
+    }
+
+    /**
+     * Gets the memcached instance used by the cache.
+     *
+     * @return Memcached|null
+     */
+    public function getMemcached()
+    {
+        return $this->memcached;
     }
 
     /**
@@ -74,32 +74,6 @@ class MemcachedCache extends CacheProvider
         }
 
         return $this->memcached->setMulti($keysAndValues, $lifetime);
-    }
-
-    /**
-     * Validate the cache id
-     *
-     * @see https://github.com/memcached/memcached/blob/1.5.12/doc/protocol.txt#L41-L49
-     *
-     * @param string $id
-     *
-     * @return void
-     *
-     * @throws InvalidCacheId
-     */
-    private function validateCacheId($id)
-    {
-        if (strlen($id) > self::CACHE_ID_MAX_LENGTH) {
-            throw InvalidCacheId::exceedsMaxLength($id, self::CACHE_ID_MAX_LENGTH);
-        }
-
-        if (strpos($id, ' ') !== false) {
-            throw InvalidCacheId::containsUnauthorizedCharacter($id, ' ');
-        }
-
-        if (preg_match('/[\t\r\n]/', $id) === 1) {
-            throw InvalidCacheId::containsControlCharacter($id);
-        }
     }
 
     /**
@@ -169,5 +143,31 @@ class MemcachedCache extends CacheProvider
             Cache::STATS_MEMORY_USAGE     => $stats['bytes'],
             Cache::STATS_MEMORY_AVAILABLE => $stats['limit_maxbytes'],
         ];
+    }
+
+    /**
+     * Validate the cache id
+     *
+     * @see https://github.com/memcached/memcached/blob/1.5.12/doc/protocol.txt#L41-L49
+     *
+     * @param string $id
+     *
+     * @return void
+     *
+     * @throws InvalidCacheId
+     */
+    private function validateCacheId($id)
+    {
+        if (strlen($id) > self::CACHE_ID_MAX_LENGTH) {
+            throw InvalidCacheId::exceedsMaxLength($id, self::CACHE_ID_MAX_LENGTH);
+        }
+
+        if (strpos($id, ' ') !== false) {
+            throw InvalidCacheId::containsUnauthorizedCharacter($id, ' ');
+        }
+
+        if (preg_match('/[\t\r\n]/', $id) === 1) {
+            throw InvalidCacheId::containsControlCharacter($id);
+        }
     }
 }

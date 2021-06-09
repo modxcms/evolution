@@ -70,6 +70,28 @@ trait Mixin
     }
 
     /**
+     * @param object|string $mixin
+     *
+     * @throws ReflectionException
+     */
+    private static function loadMixinClass($mixin)
+    {
+        $methods = (new ReflectionClass($mixin))->getMethods(
+            ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED
+        );
+
+        foreach ($methods as $method) {
+            if ($method->isConstructor() || $method->isDestructor()) {
+                continue;
+            }
+
+            $method->setAccessible(true);
+
+            static::macro($method->name, $method->invoke($mixin));
+        }
+    }
+
+    /**
      * @param string $trait
      */
     private static function loadMixinTrait($trait)
@@ -112,28 +134,6 @@ trait Mixin
             }
 
             yield $name;
-        }
-    }
-
-    /**
-     * @param object|string $mixin
-     *
-     * @throws ReflectionException
-     */
-    private static function loadMixinClass($mixin)
-    {
-        $methods = (new ReflectionClass($mixin))->getMethods(
-            ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED
-        );
-
-        foreach ($methods as $method) {
-            if ($method->isConstructor() || $method->isDestructor()) {
-                continue;
-            }
-
-            $method->setAccessible(true);
-
-            static::macro($method->name, $method->invoke($mixin));
         }
     }
 

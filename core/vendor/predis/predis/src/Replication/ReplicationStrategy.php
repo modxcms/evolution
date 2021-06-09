@@ -36,6 +36,153 @@ class ReplicationStrategy
     }
 
     /**
+     * Returns if the specified command will perform a read-only operation
+     * on Redis or not.
+     *
+     * @param CommandInterface $command Command instance.
+     *
+     * @throws NotSupportedException
+     *
+     * @return bool
+     */
+    public function isReadOperation(CommandInterface $command)
+    {
+        if (isset($this->disallowed[$id = $command->getId()])) {
+            throw new NotSupportedException(
+                "The command '$id' is not allowed in replication mode."
+            );
+        }
+
+        if (isset($this->readonly[$id])) {
+            if (true === $readonly = $this->readonly[$id]) {
+                return true;
+            }
+
+            return call_user_func($readonly, $command);
+        }
+
+        if (($eval = $id === 'EVAL') || $id === 'EVALSHA') {
+            $sha1 = $eval ? sha1($command->getArgument(0)) : $command->getArgument(0);
+
+            if (isset($this->readonlySHA1[$sha1])) {
+                if (true === $readonly = $this->readonlySHA1[$sha1]) {
+                    return true;
+                }
+
+                return call_user_func($readonly, $command);
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns if the specified command is not allowed for execution in a master
+     * / slave replication context.
+     *
+     * @param CommandInterface $command Command instance.
+     *
+     * @return bool
+     */
+    public function isDisallowedOperation(CommandInterface $command)
+    {
+        return isset($this->disallowed[$command->getId()]);
+    }
+
+    /**
+     * Checks if BITFIELD performs a read-only operation by looking for certain
+     * SET and INCRYBY modifiers in the arguments array of the command.
+     *
+     * @param CommandInterface $command Command instance.
+     *
+     * @return bool
+     */
+    protected function isBitfieldReadOnly(CommandInterface $command)
+    {
+        $arguments = $command->getArguments();
+        $argc = count($arguments);
+
+        if ($argc >= 2) {
+            for ($i = 1; $i < $argc; ++$i) {
+                $argument = strtoupper($arguments[$i]);
+                if ($argument === 'SET' || $argument === 'INCRBY') {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if a GEORADIUS command is a readable operation by parsing the
+     * arguments array of the specified commad instance.
+     *
+     * @param CommandInterface $command Command instance.
+     *
+     * @return bool
+     */
+    protected function isGeoradiusReadOnly(CommandInterface $command)
+    {
+        $arguments = $command->getArguments();
+        $argc = count($arguments);
+        $startIndex = $command->getId() === 'GEORADIUS' ? 5 : 4;
+
+        if ($argc > $startIndex) {
+            for ($i = $startIndex; $i < $argc; ++$i) {
+                $argument = strtoupper($arguments[$i]);
+                if ($argument === 'STORE' || $argument === 'STOREDIST') {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Marks a command as a read-only operation.
+     *
+     * When the behavior of a command can be decided only at runtime depending
+     * on its arguments, a callable object can be provided to dynamically check
+     * if the specified command performs a read or a write operation.
+     *
+     * @param string $commandID Command ID.
+     * @param mixed  $readonly  A boolean value or a callable object.
+     */
+    public function setCommandReadOnly($commandID, $readonly = true)
+    {
+        $commandID = strtoupper($commandID);
+
+        if ($readonly) {
+            $this->readonly[$commandID] = $readonly;
+        } else {
+            unset($this->readonly[$commandID]);
+        }
+    }
+
+    /**
+     * Marks a Lua script for EVAL and EVALSHA as a read-only operation. When
+     * the behaviour of a script can be decided only at runtime depending on
+     * its arguments, a callable object can be provided to dynamically check
+     * if the passed instance of EVAL or EVALSHA performs write operations or
+     * not.
+     *
+     * @param string $script   Body of the Lua script.
+     * @param mixed  $readonly A boolean value or a callable object.
+     */
+    public function setScriptReadOnly($script, $readonly = true)
+    {
+        $sha1 = sha1($script);
+
+        if ($readonly) {
+            $this->readonlySHA1[$sha1] = $readonly;
+        } else {
+            unset($this->readonlySHA1[$sha1]);
+        }
+    }
+
+    /**
      * Returns the default list of disallowed commands.
      *
      * @return array
@@ -127,152 +274,5 @@ class ReplicationStrategy
             'GEORADIUS' => array($this, 'isGeoradiusReadOnly'),
             'GEORADIUSBYMEMBER' => array($this, 'isGeoradiusReadOnly'),
         );
-    }
-
-    /**
-     * Returns if the specified command will perform a read-only operation
-     * on Redis or not.
-     *
-     * @param CommandInterface $command Command instance.
-     *
-     * @throws NotSupportedException
-     *
-     * @return bool
-     */
-    public function isReadOperation(CommandInterface $command)
-    {
-        if (isset($this->disallowed[$id = $command->getId()])) {
-            throw new NotSupportedException(
-                "The command '$id' is not allowed in replication mode."
-            );
-        }
-
-        if (isset($this->readonly[$id])) {
-            if (true === $readonly = $this->readonly[$id]) {
-                return true;
-            }
-
-            return call_user_func($readonly, $command);
-        }
-
-        if (($eval = $id === 'EVAL') || $id === 'EVALSHA') {
-            $sha1 = $eval ? sha1($command->getArgument(0)) : $command->getArgument(0);
-
-            if (isset($this->readonlySHA1[$sha1])) {
-                if (true === $readonly = $this->readonlySHA1[$sha1]) {
-                    return true;
-                }
-
-                return call_user_func($readonly, $command);
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Returns if the specified command is not allowed for execution in a master
-     * / slave replication context.
-     *
-     * @param CommandInterface $command Command instance.
-     *
-     * @return bool
-     */
-    public function isDisallowedOperation(CommandInterface $command)
-    {
-        return isset($this->disallowed[$command->getId()]);
-    }
-
-    /**
-     * Marks a command as a read-only operation.
-     *
-     * When the behavior of a command can be decided only at runtime depending
-     * on its arguments, a callable object can be provided to dynamically check
-     * if the specified command performs a read or a write operation.
-     *
-     * @param string $commandID Command ID.
-     * @param mixed  $readonly  A boolean value or a callable object.
-     */
-    public function setCommandReadOnly($commandID, $readonly = true)
-    {
-        $commandID = strtoupper($commandID);
-
-        if ($readonly) {
-            $this->readonly[$commandID] = $readonly;
-        } else {
-            unset($this->readonly[$commandID]);
-        }
-    }
-
-    /**
-     * Marks a Lua script for EVAL and EVALSHA as a read-only operation. When
-     * the behaviour of a script can be decided only at runtime depending on
-     * its arguments, a callable object can be provided to dynamically check
-     * if the passed instance of EVAL or EVALSHA performs write operations or
-     * not.
-     *
-     * @param string $script   Body of the Lua script.
-     * @param mixed  $readonly A boolean value or a callable object.
-     */
-    public function setScriptReadOnly($script, $readonly = true)
-    {
-        $sha1 = sha1($script);
-
-        if ($readonly) {
-            $this->readonlySHA1[$sha1] = $readonly;
-        } else {
-            unset($this->readonlySHA1[$sha1]);
-        }
-    }
-
-    /**
-     * Checks if BITFIELD performs a read-only operation by looking for certain
-     * SET and INCRYBY modifiers in the arguments array of the command.
-     *
-     * @param CommandInterface $command Command instance.
-     *
-     * @return bool
-     */
-    protected function isBitfieldReadOnly(CommandInterface $command)
-    {
-        $arguments = $command->getArguments();
-        $argc = count($arguments);
-
-        if ($argc >= 2) {
-            for ($i = 1; $i < $argc; ++$i) {
-                $argument = strtoupper($arguments[$i]);
-                if ($argument === 'SET' || $argument === 'INCRBY') {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Checks if a GEORADIUS command is a readable operation by parsing the
-     * arguments array of the specified commad instance.
-     *
-     * @param CommandInterface $command Command instance.
-     *
-     * @return bool
-     */
-    protected function isGeoradiusReadOnly(CommandInterface $command)
-    {
-        $arguments = $command->getArguments();
-        $argc = count($arguments);
-        $startIndex = $command->getId() === 'GEORADIUS' ? 5 : 4;
-
-        if ($argc > $startIndex) {
-            for ($i = $startIndex; $i < $argc; ++$i) {
-                $argument = strtoupper($arguments[$i]);
-                if ($argument === 'STORE' || $argument === 'STOREDIST') {
-                    return false;
-                }
-            }
-        }
-
-        return true;
     }
 }

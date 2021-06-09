@@ -32,19 +32,19 @@ class Error implements ErrorInterface
     /**
      * {@inheritdoc}
      */
-    public function getErrorType()
+    public function getMessage()
     {
-        list($errorType) = explode(' ', $this->getMessage(), 2);
-
-        return $errorType;
+        return $this->message;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getMessage()
+    public function getErrorType()
     {
-        return $this->message;
+        list($errorType) = explode(' ', $this->getMessage(), 2);
+
+        return $errorType;
     }
 
     /**

@@ -206,6 +206,28 @@ class PrimaryReadReplicaConnection extends Connection
     }
 
     /**
+     * Connects to the primary node of the database cluster.
+     *
+     * All following statements after this will be executed against the primary node.
+     */
+    public function ensureConnectedToPrimary(): bool
+    {
+        return $this->performConnect('primary');
+    }
+
+    /**
+     * Connects to a replica node of the database cluster.
+     *
+     * All following statements after this will be executed against the replica node,
+     * unless the keepReplica option is set to false and a primary connection
+     * was already opened.
+     */
+    public function ensureConnectedToReplica(): bool
+    {
+        return $this->performConnect('replica');
+    }
+
+    /**
      * Connects to a specific connection.
      *
      * @param string $connectionName
@@ -248,18 +270,6 @@ class PrimaryReadReplicaConnection extends Connection
     }
 
     /**
-     * Connects to a replica node of the database cluster.
-     *
-     * All following statements after this will be executed against the replica node,
-     * unless the keepReplica option is set to false and a primary connection
-     * was already opened.
-     */
-    public function ensureConnectedToReplica(): bool
-    {
-        return $this->performConnect('replica');
-    }
-
-    /**
      * {@inheritDoc}
      *
      * @deprecated Use {@link executeStatement()} instead.
@@ -269,16 +279,6 @@ class PrimaryReadReplicaConnection extends Connection
         $this->ensureConnectedToPrimary();
 
         return parent::executeUpdate($sql, $params, $types);
-    }
-
-    /**
-     * Connects to the primary node of the database cluster.
-     *
-     * All following statements after this will be executed against the primary node.
-     */
-    public function ensureConnectedToPrimary(): bool
-    {
-        return $this->performConnect('primary');
     }
 
     /**

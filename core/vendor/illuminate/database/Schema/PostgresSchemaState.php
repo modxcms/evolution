@@ -32,6 +32,27 @@ class PostgresSchemaState extends SchemaState
     }
 
     /**
+     * Load the given schema file into the database.
+     *
+     * @param  string  $path
+     * @return void
+     */
+    public function load($path)
+    {
+        $command = 'pg_restore --no-owner --no-acl --clean --if-exists --host="${:LARAVEL_LOAD_HOST}" --port="${:LARAVEL_LOAD_PORT}" --username="${:LARAVEL_LOAD_USER}" --dbname="${:LARAVEL_LOAD_DATABASE}" "${:LARAVEL_LOAD_PATH}"';
+
+        if (Str::endsWith($path, '.sql')) {
+            $command = 'psql --file="${:LARAVEL_LOAD_PATH}" --host="${:LARAVEL_LOAD_HOST}" --port="${:LARAVEL_LOAD_PORT}" --username="${:LARAVEL_LOAD_USER}" --dbname="${:LARAVEL_LOAD_DATABASE}"';
+        }
+
+        $process = $this->makeProcess($command);
+
+        $process->mustRun(null, array_merge($this->baseVariables($this->connection->getConfig()), [
+            'LARAVEL_LOAD_PATH' => $path,
+        ]));
+    }
+
+    /**
      * Get the base dump command arguments for PostgreSQL as a string.
      *
      * @return string
@@ -58,26 +79,5 @@ class PostgresSchemaState extends SchemaState
             'PGPASSWORD' => $config['password'],
             'LARAVEL_LOAD_DATABASE' => $config['database'],
         ];
-    }
-
-    /**
-     * Load the given schema file into the database.
-     *
-     * @param  string  $path
-     * @return void
-     */
-    public function load($path)
-    {
-        $command = 'pg_restore --no-owner --no-acl --clean --if-exists --host="${:LARAVEL_LOAD_HOST}" --port="${:LARAVEL_LOAD_PORT}" --username="${:LARAVEL_LOAD_USER}" --dbname="${:LARAVEL_LOAD_DATABASE}" "${:LARAVEL_LOAD_PATH}"';
-
-        if (Str::endsWith($path, '.sql')) {
-            $command = 'psql --file="${:LARAVEL_LOAD_PATH}" --host="${:LARAVEL_LOAD_HOST}" --port="${:LARAVEL_LOAD_PORT}" --username="${:LARAVEL_LOAD_USER}" --dbname="${:LARAVEL_LOAD_DATABASE}"';
-        }
-
-        $process = $this->makeProcess($command);
-
-        $process->mustRun(null, array_merge($this->baseVariables($this->connection->getConfig()), [
-            'LARAVEL_LOAD_PATH' => $path,
-        ]));
     }
 }

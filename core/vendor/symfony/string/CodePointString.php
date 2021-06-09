@@ -80,14 +80,6 @@ class CodePointString extends AbstractUnicodeString
         return '' === $str->string ? [] : [mb_ord($str->string, 'UTF-8')];
     }
 
-    public function slice(int $start = 0, int $length = null): AbstractString
-    {
-        $str = clone $this;
-        $str->string = mb_substr($this->string, $start, $length, 'UTF-8');
-
-        return $str;
-    }
-
     public function endsWith($suffix): bool
     {
         if ($suffix instanceof AbstractString) {
@@ -198,6 +190,14 @@ class CodePointString extends AbstractUnicodeString
         } else {
             $str->string = str_replace($from, $to, $this->string);
         }
+
+        return $str;
+    }
+
+    public function slice(int $start = 0, int $length = null): AbstractString
+    {
+        $str = clone $this;
+        $str->string = mb_substr($this->string, $start, $length, 'UTF-8');
 
         return $str;
     }

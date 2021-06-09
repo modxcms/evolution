@@ -68,17 +68,6 @@ class PoFileDumper extends FileDumper
         return $output;
     }
 
-    private function formatComments($comments, string $prefix = ''): ?string
-    {
-        $output = null;
-
-        foreach ((array) $comments as $comment) {
-            $output .= sprintf('#%s %s'."\n", $prefix, $comment);
-        }
-
-        return $output;
-    }
-
     private function getStandardRules(string $id)
     {
         // Partly copied from TranslatorTrait::trans.
@@ -122,16 +111,27 @@ EOF;
         return $standardRules;
     }
 
-    private function escape(string $str): string
-    {
-        return addcslashes($str, "\0..\37\42\134");
-    }
-
     /**
      * {@inheritdoc}
      */
     protected function getExtension()
     {
         return 'po';
+    }
+
+    private function escape(string $str): string
+    {
+        return addcslashes($str, "\0..\37\42\134");
+    }
+
+    private function formatComments($comments, string $prefix = ''): ?string
+    {
+        $output = null;
+
+        foreach ((array) $comments as $comment) {
+            $output .= sprintf('#%s %s'."\n", $prefix, $comment);
+        }
+
+        return $output;
     }
 }

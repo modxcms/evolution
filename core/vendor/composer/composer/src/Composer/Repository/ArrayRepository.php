@@ -43,55 +43,9 @@ class ArrayRepository implements RepositoryInterface
         }
     }
 
-    /**
-     * Adds a new package to the repository
-     *
-     * @param PackageInterface $package
-     */
-    public function addPackage(PackageInterface $package)
-    {
-        if (null === $this->packages) {
-            $this->initialize();
-        }
-        $package->setRepository($this);
-        $this->packages[] = $package;
-
-        if ($package instanceof AliasPackage) {
-            $aliasedPackage = $package->getAliasOf();
-            if (null === $aliasedPackage->getRepository()) {
-                $this->addPackage($aliasedPackage);
-            }
-        }
-
-        // invalidate package map cache
-        $this->packageMap = null;
-    }
-
-    /**
-     * Initializes the packages array. Mostly meant as an extension point.
-     */
-    protected function initialize()
-    {
-        $this->packages = array();
-    }
-
     public function getRepoName()
     {
         return 'array repo (defining '.$this->count().' package'.($this->count() > 1 ? 's' : '').')';
-    }
-
-    /**
-     * Returns the number of packages in this repository
-     *
-     * @return int Number of packages
-     */
-    public function count()
-    {
-        if (null === $this->packages) {
-            $this->initialize();
-        }
-
-        return count($this->packages);
     }
 
     /**
@@ -132,18 +86,6 @@ class ArrayRepository implements RepositoryInterface
         }
 
         return array('namesFound' => array_keys($namesFound), 'packages' => $result);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getPackages()
-    {
-        if (null === $this->packages) {
-            $this->initialize();
-        }
-
-        return $this->packages;
     }
 
     /**
@@ -241,6 +183,30 @@ class ArrayRepository implements RepositoryInterface
     }
 
     /**
+     * Adds a new package to the repository
+     *
+     * @param PackageInterface $package
+     */
+    public function addPackage(PackageInterface $package)
+    {
+        if (null === $this->packages) {
+            $this->initialize();
+        }
+        $package->setRepository($this);
+        $this->packages[] = $package;
+
+        if ($package instanceof AliasPackage) {
+            $aliasedPackage = $package->getAliasOf();
+            if (null === $aliasedPackage->getRepository()) {
+                $this->addPackage($aliasedPackage);
+            }
+        }
+
+        // invalidate package map cache
+        $this->packageMap = null;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function getProviders($packageName)
@@ -266,6 +232,19 @@ class ArrayRepository implements RepositoryInterface
         return $result;
     }
 
+    protected function createAliasPackage(PackageInterface $package, $alias, $prettyAlias)
+    {
+        while ($package instanceof AliasPackage) {
+            $package = $package->getAliasOf();
+        }
+
+        if ($package instanceof CompletePackageInterface) {
+            return new CompleteAliasPackage($package, $alias, $prettyAlias);
+        }
+
+        return new AliasPackage($package, $alias, $prettyAlias);
+    }
+
     /**
      * Removes package from repository.
      *
@@ -287,16 +266,37 @@ class ArrayRepository implements RepositoryInterface
         }
     }
 
-    protected function createAliasPackage(PackageInterface $package, $alias, $prettyAlias)
+    /**
+     * {@inheritDoc}
+     */
+    public function getPackages()
     {
-        while ($package instanceof AliasPackage) {
-            $package = $package->getAliasOf();
+        if (null === $this->packages) {
+            $this->initialize();
         }
 
-        if ($package instanceof CompletePackageInterface) {
-            return new CompleteAliasPackage($package, $alias, $prettyAlias);
+        return $this->packages;
+    }
+
+    /**
+     * Returns the number of packages in this repository
+     *
+     * @return int Number of packages
+     */
+    public function count()
+    {
+        if (null === $this->packages) {
+            $this->initialize();
         }
 
-        return new AliasPackage($package, $alias, $prettyAlias);
+        return count($this->packages);
+    }
+
+    /**
+     * Initializes the packages array. Mostly meant as an extension point.
+     */
+    protected function initialize()
+    {
+        $this->packages = array();
     }
 }

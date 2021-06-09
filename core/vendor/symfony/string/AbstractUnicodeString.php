@@ -157,6 +157,16 @@ abstract class AbstractUnicodeString extends AbstractString
         return $str;
     }
 
+    public function camel(): parent
+    {
+        $str = clone $this;
+        $str->string = str_replace(' ', '', preg_replace_callback('/\b./u', static function ($m) use (&$i) {
+            return 1 === ++$i ? ('İ' === $m[0] ? 'i̇' : mb_strtolower($m[0], 'UTF-8')) : mb_convert_case($m[0], \MB_CASE_TITLE, 'UTF-8');
+        }, preg_replace('/[^\pL0-9]++/u', ' ', $this->string)));
+
+        return $str;
+    }
+
     /**
      * @return int[]
      */
@@ -269,45 +279,6 @@ abstract class AbstractUnicodeString extends AbstractString
         return $this->pad($length, $pad, \STR_PAD_BOTH);
     }
 
-    /**
-     * @return static
-     */
-    private function pad(int $len, self $pad, int $type): parent
-    {
-        $sLen = $this->length();
-
-        if ($len <= $sLen) {
-            return clone $this;
-        }
-
-        $padLen = $pad->length();
-        $freeLen = $len - $sLen;
-        $len = $freeLen % $padLen;
-
-        switch ($type) {
-            case \STR_PAD_RIGHT:
-                return $this->append(str_repeat($pad->string, $freeLen / $padLen).($len ? $pad->slice(0, $len) : ''));
-
-            case \STR_PAD_LEFT:
-                return $this->prepend(str_repeat($pad->string, $freeLen / $padLen).($len ? $pad->slice(0, $len) : ''));
-
-            case \STR_PAD_BOTH:
-                $freeLen /= 2;
-
-                $rightLen = ceil($freeLen);
-                $len = $rightLen % $padLen;
-                $str = $this->append(str_repeat($pad->string, $rightLen / $padLen).($len ? $pad->slice(0, $len) : ''));
-
-                $leftLen = floor($freeLen);
-                $len = $leftLen % $padLen;
-
-                return $str->prepend(str_repeat($pad->string, $leftLen / $padLen).($len ? $pad->slice(0, $len) : ''));
-
-            default:
-                throw new InvalidArgumentException('Invalid padding type.');
-        }
-    }
-
     public function padEnd(int $length, string $padStr = ' '): parent
     {
         if ('' === $padStr || !preg_match('//u', $padStr)) {
@@ -395,16 +366,6 @@ abstract class AbstractUnicodeString extends AbstractString
     {
         $str = $this->camel()->title();
         $str->string = mb_strtolower(preg_replace(['/(\p{Lu}+)(\p{Lu}\p{Ll})/u', '/([\p{Ll}0-9])(\p{Lu})/u'], '\1_\2', $str->string), 'UTF-8');
-
-        return $str;
-    }
-
-    public function camel(): parent
-    {
-        $str = clone $this;
-        $str->string = str_replace(' ', '', preg_replace_callback('/\b./u', static function ($m) use (&$i) {
-            return 1 === ++$i ? ('İ' === $m[0] ? 'i̇' : mb_strtolower($m[0], 'UTF-8')) : mb_convert_case($m[0], \MB_CASE_TITLE, 'UTF-8');
-        }, preg_replace('/[^\pL0-9]++/u', ' ', $this->string)));
 
         return $str;
     }
@@ -500,6 +461,45 @@ abstract class AbstractUnicodeString extends AbstractString
         }
 
         return $width;
+    }
+
+    /**
+     * @return static
+     */
+    private function pad(int $len, self $pad, int $type): parent
+    {
+        $sLen = $this->length();
+
+        if ($len <= $sLen) {
+            return clone $this;
+        }
+
+        $padLen = $pad->length();
+        $freeLen = $len - $sLen;
+        $len = $freeLen % $padLen;
+
+        switch ($type) {
+            case \STR_PAD_RIGHT:
+                return $this->append(str_repeat($pad->string, $freeLen / $padLen).($len ? $pad->slice(0, $len) : ''));
+
+            case \STR_PAD_LEFT:
+                return $this->prepend(str_repeat($pad->string, $freeLen / $padLen).($len ? $pad->slice(0, $len) : ''));
+
+            case \STR_PAD_BOTH:
+                $freeLen /= 2;
+
+                $rightLen = ceil($freeLen);
+                $len = $rightLen % $padLen;
+                $str = $this->append(str_repeat($pad->string, $rightLen / $padLen).($len ? $pad->slice(0, $len) : ''));
+
+                $leftLen = floor($freeLen);
+                $len = $leftLen % $padLen;
+
+                return $str->prepend(str_repeat($pad->string, $leftLen / $padLen).($len ? $pad->slice(0, $len) : ''));
+
+            default:
+                throw new InvalidArgumentException('Invalid padding type.');
+        }
     }
 
     /**

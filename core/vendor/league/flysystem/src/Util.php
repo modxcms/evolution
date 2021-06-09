@@ -8,6 +8,52 @@ use LogicException;
 class Util
 {
     /**
+     * Get normalized pathinfo.
+     *
+     * @param string $path
+     *
+     * @return array pathinfo
+     */
+    public static function pathinfo($path)
+    {
+        $pathinfo = compact('path');
+
+        if ('' !== $dirname = dirname($path)) {
+            $pathinfo['dirname'] = static::normalizeDirname($dirname);
+        }
+
+        $pathinfo['basename'] = static::basename($path);
+
+        $pathinfo += pathinfo($pathinfo['basename']);
+
+        return $pathinfo + ['dirname' => ''];
+    }
+
+    /**
+     * Normalize a dirname return value.
+     *
+     * @param string $dirname
+     *
+     * @return string normalized dirname
+     */
+    public static function normalizeDirname($dirname)
+    {
+        return $dirname === '.' ? '' : $dirname;
+    }
+
+    /**
+     * Get a normalized dirname from a path.
+     *
+     * @param string $path
+     *
+     * @return string dirname
+     */
+    public static function dirname($path)
+    {
+        return static::normalizeDirname(dirname($path));
+    }
+
+    /**
      * Map result arrays.
      *
      * @param array $object
@@ -172,123 +218,6 @@ class Util
     }
 
     /**
-     * Emulate the directories of a single object.
-     *
-     * @param array $object
-     * @param array $directories
-     * @param array $listedDirectories
-     *
-     * @return array
-     */
-    protected static function emulateObjectDirectories(array $object, array $directories, array $listedDirectories)
-    {
-        if ($object['type'] === 'dir') {
-            $listedDirectories[] = $object['path'];
-        }
-
-        if ( ! isset($object['dirname']) || trim($object['dirname']) === '') {
-            return [$directories, $listedDirectories];
-        }
-
-        $parent = $object['dirname'];
-
-        while (isset($parent) && trim($parent) !== '' && ! in_array($parent, $directories)) {
-            $directories[] = $parent;
-            $parent = static::dirname($parent);
-        }
-
-        if (isset($object['type']) && $object['type'] === 'dir') {
-            $listedDirectories[] = $object['path'];
-
-            return [$directories, $listedDirectories];
-        }
-
-        return [$directories, $listedDirectories];
-    }
-
-    /**
-     * Get a normalized dirname from a path.
-     *
-     * @param string $path
-     *
-     * @return string dirname
-     */
-    public static function dirname($path)
-    {
-        return static::normalizeDirname(dirname($path));
-    }
-
-    /**
-     * Normalize a dirname return value.
-     *
-     * @param string $dirname
-     *
-     * @return string normalized dirname
-     */
-    public static function normalizeDirname($dirname)
-    {
-        return $dirname === '.' ? '' : $dirname;
-    }
-
-    /**
-     * Get normalized pathinfo.
-     *
-     * @param string $path
-     *
-     * @return array pathinfo
-     */
-    public static function pathinfo($path)
-    {
-        $pathinfo = compact('path');
-
-        if ('' !== $dirname = dirname($path)) {
-            $pathinfo['dirname'] = static::normalizeDirname($dirname);
-        }
-
-        $pathinfo['basename'] = static::basename($path);
-
-        $pathinfo += pathinfo($pathinfo['basename']);
-
-        return $pathinfo + ['dirname' => ''];
-    }
-
-    /**
-     * Returns the trailing name component of the path.
-     *
-     * @param string $path
-     *
-     * @return string
-     */
-    private static function basename($path)
-    {
-        $separators = DIRECTORY_SEPARATOR === '/' ? '/' : '\/';
-
-        $path = rtrim($path, $separators);
-
-        $basename = preg_replace('#.*?([^' . preg_quote($separators, '#') . ']+$)#', '$1', $path);
-
-        if (DIRECTORY_SEPARATOR === '/') {
-            return $basename;
-        }
-        // @codeCoverageIgnoreStart
-        // Extra Windows path munging. This is tested via AppVeyor, but code
-        // coverage is not reported.
-
-        // Handle relative paths with drive letters. c:file.txt.
-        while (preg_match('#^[a-zA-Z]{1}:[^\\\/]#', $basename)) {
-            $basename = substr($basename, 2);
-        }
-
-        // Remove colon for standalone drive letter names.
-        if (preg_match('#^[a-zA-Z]{1}:$#', $basename)) {
-            $basename = rtrim($basename, ':');
-        }
-
-        return $basename;
-        // @codeCoverageIgnoreEnd
-    }
-
-    /**
      * Ensure a Config instance.
      *
      * @param null|array|Config $config
@@ -349,5 +278,76 @@ class Util
         }
 
         return $stat['size'];
+    }
+
+    /**
+     * Emulate the directories of a single object.
+     *
+     * @param array $object
+     * @param array $directories
+     * @param array $listedDirectories
+     *
+     * @return array
+     */
+    protected static function emulateObjectDirectories(array $object, array $directories, array $listedDirectories)
+    {
+        if ($object['type'] === 'dir') {
+            $listedDirectories[] = $object['path'];
+        }
+
+        if ( ! isset($object['dirname']) || trim($object['dirname']) === '') {
+            return [$directories, $listedDirectories];
+        }
+
+        $parent = $object['dirname'];
+
+        while (isset($parent) && trim($parent) !== '' && ! in_array($parent, $directories)) {
+            $directories[] = $parent;
+            $parent = static::dirname($parent);
+        }
+
+        if (isset($object['type']) && $object['type'] === 'dir') {
+            $listedDirectories[] = $object['path'];
+
+            return [$directories, $listedDirectories];
+        }
+
+        return [$directories, $listedDirectories];
+    }
+
+    /**
+     * Returns the trailing name component of the path.
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    private static function basename($path)
+    {
+        $separators = DIRECTORY_SEPARATOR === '/' ? '/' : '\/';
+
+        $path = rtrim($path, $separators);
+
+        $basename = preg_replace('#.*?([^' . preg_quote($separators, '#') . ']+$)#', '$1', $path);
+
+        if (DIRECTORY_SEPARATOR === '/') {
+            return $basename;
+        }
+        // @codeCoverageIgnoreStart
+        // Extra Windows path munging. This is tested via AppVeyor, but code
+        // coverage is not reported.
+
+        // Handle relative paths with drive letters. c:file.txt.
+        while (preg_match('#^[a-zA-Z]{1}:[^\\\/]#', $basename)) {
+            $basename = substr($basename, 2);
+        }
+
+        // Remove colon for standalone drive letter names.
+        if (preg_match('#^[a-zA-Z]{1}:$#', $basename)) {
+            $basename = rtrim($basename, ':');
+        }
+
+        return $basename;
+        // @codeCoverageIgnoreEnd
     }
 }

@@ -31,11 +31,6 @@ class UidProcessor implements ProcessorInterface, ResettableInterface
         $this->uid = $this->generateUid($length);
     }
 
-    private function generateUid(int $length): string
-    {
-        return substr(bin2hex(random_bytes((int) ceil($length / 2))), 0, $length);
-    }
-
     public function __invoke(array $record): array
     {
         $record['extra']['uid'] = $this->uid;
@@ -51,5 +46,10 @@ class UidProcessor implements ProcessorInterface, ResettableInterface
     public function reset()
     {
         $this->uid = $this->generateUid(strlen($this->uid));
+    }
+
+    private function generateUid(int $length): string
+    {
+        return substr(bin2hex(random_bytes((int) ceil($length / 2))), 0, $length);
     }
 }

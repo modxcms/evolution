@@ -5,13 +5,6 @@ namespace WebPConvert\Helpers;
 class Sanitize
 {
 
-    public static function path($string)
-    {
-        $string = self::removeNUL($string);
-        $string = self::removeStreamWrappers($string);
-        return $string;
-    }
-
     /**
      *  The NUL character is a demon, because it can be used to bypass other tests
      *  See https://st-g.de/2011/04/doing-filename-checks-securely-in-PHP.
@@ -26,5 +19,12 @@ class Sanitize
     public static function removeStreamWrappers($string)
     {
         return preg_replace('#^\\w+://#', '', $string);
+    }
+
+    public static function path($string)
+    {
+        $string = self::removeNUL($string);
+        $string = self::removeStreamWrappers($string);
+        return $string;
     }
 }

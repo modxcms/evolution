@@ -31,17 +31,6 @@ class RouterDataCollector extends DataCollector
         $this->reset();
     }
 
-    public function reset()
-    {
-        $this->controllers = new \SplObjectStorage();
-
-        $this->data = [
-            'redirect' => false,
-            'url' => null,
-            'route' => null,
-        ];
-    }
-
     /**
      * {@inheritdoc}
      *
@@ -59,6 +48,17 @@ class RouterDataCollector extends DataCollector
         }
 
         unset($this->controllers[$request]);
+    }
+
+    public function reset()
+    {
+        $this->controllers = new \SplObjectStorage();
+
+        $this->data = [
+            'redirect' => false,
+            'url' => null,
+            'route' => null,
+        ];
     }
 
     protected function guessRoute(Request $request, $controller)

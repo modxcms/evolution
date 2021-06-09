@@ -50,26 +50,6 @@ class CompositeProtocolProcessor implements ProtocolProcessorInterface
     }
 
     /**
-     * Sets the request serializer used by the protocol processor.
-     *
-     * @param RequestSerializerInterface $serializer Request serializer.
-     */
-    public function setRequestSerializer(RequestSerializerInterface $serializer)
-    {
-        $this->serializer = $serializer;
-    }
-
-    /**
-     * Sets the response reader used by the protocol processor.
-     *
-     * @param ResponseReaderInterface $reader Response reader.
-     */
-    public function setResponseReader(ResponseReaderInterface $reader)
-    {
-        $this->reader = $reader;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function write(CompositeConnectionInterface $connection, CommandInterface $command)
@@ -86,6 +66,16 @@ class CompositeProtocolProcessor implements ProtocolProcessorInterface
     }
 
     /**
+     * Sets the request serializer used by the protocol processor.
+     *
+     * @param RequestSerializerInterface $serializer Request serializer.
+     */
+    public function setRequestSerializer(RequestSerializerInterface $serializer)
+    {
+        $this->serializer = $serializer;
+    }
+
+    /**
      * Returns the request serializer used by the protocol processor.
      *
      * @return RequestSerializerInterface
@@ -93,6 +83,16 @@ class CompositeProtocolProcessor implements ProtocolProcessorInterface
     public function getRequestSerializer()
     {
         return $this->serializer;
+    }
+
+    /**
+     * Sets the response reader used by the protocol processor.
+     *
+     * @param ResponseReaderInterface $reader Response reader.
+     */
+    public function setResponseReader(ResponseReaderInterface $reader)
+    {
+        $this->reader = $reader;
     }
 
     /**

@@ -79,6 +79,18 @@ class ParameterBag implements \IteratorAggregate, \Countable
     }
 
     /**
+     * Returns a parameter by name.
+     *
+     * @param mixed $default The default value if the parameter key does not exist
+     *
+     * @return mixed
+     */
+    public function get(string $key, $default = null)
+    {
+        return \array_key_exists($key, $this->parameters) ? $this->parameters[$key] : $default;
+    }
+
+    /**
      * Sets a parameter by name.
      *
      * @param mixed $value The value
@@ -117,18 +129,6 @@ class ParameterBag implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Returns a parameter by name.
-     *
-     * @param mixed $default The default value if the parameter key does not exist
-     *
-     * @return mixed
-     */
-    public function get(string $key, $default = null)
-    {
-        return \array_key_exists($key, $this->parameters) ? $this->parameters[$key] : $default;
-    }
-
-    /**
      * Returns the alphabetic characters and digits of the parameter value.
      *
      * @return string The filtered value
@@ -147,6 +147,26 @@ class ParameterBag implements \IteratorAggregate, \Countable
     {
         // we need to remove - and + because they're allowed in the filter
         return str_replace(['-', '+'], '', $this->filter($key, $default, \FILTER_SANITIZE_NUMBER_INT));
+    }
+
+    /**
+     * Returns the parameter value converted to integer.
+     *
+     * @return int The filtered value
+     */
+    public function getInt(string $key, int $default = 0)
+    {
+        return (int) $this->get($key, $default);
+    }
+
+    /**
+     * Returns the parameter value converted to boolean.
+     *
+     * @return bool The filtered value
+     */
+    public function getBoolean(string $key, bool $default = false)
+    {
+        return $this->filter($key, $default, \FILTER_VALIDATE_BOOLEAN);
     }
 
     /**
@@ -180,26 +200,6 @@ class ParameterBag implements \IteratorAggregate, \Countable
         }
 
         return filter_var($value, $filter, $options);
-    }
-
-    /**
-     * Returns the parameter value converted to integer.
-     *
-     * @return int The filtered value
-     */
-    public function getInt(string $key, int $default = 0)
-    {
-        return (int) $this->get($key, $default);
-    }
-
-    /**
-     * Returns the parameter value converted to boolean.
-     *
-     * @return bool The filtered value
-     */
-    public function getBoolean(string $key, bool $default = false)
-    {
-        return $this->filter($key, $default, \FILTER_VALIDATE_BOOLEAN);
     }
 
     /**

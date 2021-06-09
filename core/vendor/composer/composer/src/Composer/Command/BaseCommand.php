@@ -49,50 +49,6 @@ abstract class BaseCommand extends Command
     private $io;
 
     /**
-     * Removes the cached composer instance
-     */
-    public function resetComposer()
-    {
-        $this->composer = null;
-        $this->getApplication()->resetComposer();
-    }
-
-    /**
-     * Whether or not this command is meant to call another command.
-     *
-     * This is mainly needed to avoid duplicated warnings messages.
-     *
-     * @return bool
-     */
-    public function isProxyCommand()
-    {
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function initialize(InputInterface $input, OutputInterface $output)
-    {
-        // initialize a plugin-enabled Composer instance, either local or global
-        $disablePlugins = $input->hasParameterOption('--no-plugins');
-        $composer = $this->getComposer(false, $disablePlugins);
-        if (null === $composer) {
-            $composer = Factory::createGlobal($this->getIO(), $disablePlugins);
-        }
-        if ($composer) {
-            $preCommandRunEvent = new PreCommandRunEvent(PluginEvents::PRE_COMMAND_RUN, $input, $this->getName());
-            $composer->getEventDispatcher()->dispatch($preCommandRunEvent->getName(), $preCommandRunEvent);
-        }
-
-        if (true === $input->hasParameterOption(array('--no-ansi')) && $input->hasOption('no-progress')) {
-            $input->setOption('no-progress', true);
-        }
-
-        parent::initialize($input, $output);
-    }
-
-    /**
      * @param  bool              $required
      * @param  bool|null         $disablePlugins
      * @throws \RuntimeException
@@ -125,6 +81,27 @@ abstract class BaseCommand extends Command
     }
 
     /**
+     * Removes the cached composer instance
+     */
+    public function resetComposer()
+    {
+        $this->composer = null;
+        $this->getApplication()->resetComposer();
+    }
+
+    /**
+     * Whether or not this command is meant to call another command.
+     *
+     * This is mainly needed to avoid duplicated warnings messages.
+     *
+     * @return bool
+     */
+    public function isProxyCommand()
+    {
+        return false;
+    }
+
+    /**
      * @return IOInterface
      */
     public function getIO()
@@ -148,6 +125,29 @@ abstract class BaseCommand extends Command
     public function setIO(IOInterface $io)
     {
         $this->io = $io;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        // initialize a plugin-enabled Composer instance, either local or global
+        $disablePlugins = $input->hasParameterOption('--no-plugins');
+        $composer = $this->getComposer(false, $disablePlugins);
+        if (null === $composer) {
+            $composer = Factory::createGlobal($this->getIO(), $disablePlugins);
+        }
+        if ($composer) {
+            $preCommandRunEvent = new PreCommandRunEvent(PluginEvents::PRE_COMMAND_RUN, $input, $this->getName());
+            $composer->getEventDispatcher()->dispatch($preCommandRunEvent->getName(), $preCommandRunEvent);
+        }
+
+        if (true === $input->hasParameterOption(array('--no-ansi')) && $input->hasOption('no-progress')) {
+            $input->setOption('no-progress', true);
+        }
+
+        parent::initialize($input, $output);
     }
 
     /**

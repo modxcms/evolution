@@ -334,43 +334,14 @@ class JsonParser
         }
     }
 
-    private function failOnBOM($input)
-    {
-        // UTF-8 ByteOrderMark sequence
-        $bom = "\xEF\xBB\xBF";
-
-        if (substr($input, 0, 3) === $bom) {
-            $this->parseError("BOM detected, make sure your input does not include a Unicode Byte-Order-Mark", array());
-        }
-    }
-
-    // $$ = $tokens // needs to be passed by ref?
-    // $ = $token
-    // _$ removed, useless?
-
     protected function parseError($str, $hash)
     {
         throw new ParsingException($str, $hash);
     }
 
-    private function lex()
-    {
-        $token = $this->lexer->lex() ?: 1; // $end = 1
-        // if token isn't its numeric value, convert
-        if (!is_numeric($token)) {
-            $token = isset($this->symbols[$token]) ? $this->symbols[$token] : $token;
-        }
-
-        return $token;
-    }
-
-    private function popStack($n)
-    {
-        $this->stack = \array_slice($this->stack, 0, - (2 * $n));
-        $this->vstack = \array_slice($this->vstack, 0, - $n);
-        $this->lstack = \array_slice($this->lstack, 0, - $n);
-    }
-
+    // $$ = $tokens // needs to be passed by ref?
+    // $ = $token
+    // _$ removed, useless?
     private function performAction(stdClass $yyval, $yytext, $yyleng, $yylineno, $yystate, &$tokens)
     {
         // $0 = $len
@@ -503,6 +474,34 @@ class JsonParser
             return "/";
         default:
             return html_entity_decode('&#x'.ltrim(substr($match[0], 2), '0').';', ENT_QUOTES, 'UTF-8');
+        }
+    }
+
+    private function popStack($n)
+    {
+        $this->stack = \array_slice($this->stack, 0, - (2 * $n));
+        $this->vstack = \array_slice($this->vstack, 0, - $n);
+        $this->lstack = \array_slice($this->lstack, 0, - $n);
+    }
+
+    private function lex()
+    {
+        $token = $this->lexer->lex() ?: 1; // $end = 1
+        // if token isn't its numeric value, convert
+        if (!is_numeric($token)) {
+            $token = isset($this->symbols[$token]) ? $this->symbols[$token] : $token;
+        }
+
+        return $token;
+    }
+
+    private function failOnBOM($input)
+    {
+        // UTF-8 ByteOrderMark sequence
+        $bom = "\xEF\xBB\xBF";
+
+        if (substr($input, 0, 3) === $bom) {
+            $this->parseError("BOM detected, make sure your input does not include a Unicode Byte-Order-Mark", array());
         }
     }
 }

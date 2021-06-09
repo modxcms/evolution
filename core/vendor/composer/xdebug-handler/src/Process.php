@@ -19,23 +19,6 @@ namespace Composer\XdebugHandler;
 class Process
 {
     /**
-     * Escapes an array of arguments that make up a shell command
-     *
-     * @param array $args Argument list, with the module name first
-     *
-     * @return string The escaped command line
-     */
-    public static function escapeShellCommand(array $args)
-    {
-        $cmd = self::escape(array_shift($args), true, true);
-        foreach ($args as $arg) {
-            $cmd .= ' '.self::escape($arg);
-        }
-
-        return $cmd;
-    }
-
-    /**
      * Escapes a string to be used as a shell argument.
      *
      * From https://github.com/johnstevenson/winbox-args
@@ -76,6 +59,23 @@ class Process
         }
 
         return $arg;
+    }
+
+    /**
+     * Escapes an array of arguments that make up a shell command
+     *
+     * @param array $args Argument list, with the module name first
+     *
+     * @return string The escaped command line
+     */
+    public static function escapeShellCommand(array $args)
+    {
+        $cmd = self::escape(array_shift($args), true, true);
+        foreach ($args as $arg) {
+            $cmd .= ' '.self::escape($arg);
+        }
+
+        return $cmd;
     }
 
     /**

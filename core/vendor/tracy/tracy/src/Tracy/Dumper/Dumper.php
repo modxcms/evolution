@@ -90,6 +90,83 @@ class Dumper
 	/** @var Renderer */
 	private $renderer;
 
+
+	/**
+	 * Dumps variable to the output.
+	 * @return mixed  variable
+	 */
+	public static function dump($var, array $options = [])
+	{
+		if (PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg') {
+			$useColors = self::$terminalColors && Helpers::detectColors();
+			$dumper = new self($options);
+			fwrite(STDOUT, $dumper->asTerminal($var, $useColors ? self::$terminalColors : []));
+
+		} elseif (preg_match('#^Content-Type: (?!text/html)#im', implode("\n", headers_list()))) { // non-html
+			echo self::toText($var, $options);
+
+		} else { // html
+			$options[self::LOCATION] = $options[self::LOCATION] ?? true;
+			self::renderAssets();
+			echo self::toHtml($var, $options);
+		}
+		return $var;
+	}
+
+
+	/**
+	 * Dumps variable to HTML.
+	 */
+	public static function toHtml($var, array $options = [], $key = null): string
+	{
+		return (new self($options))->asHtml($var, $key);
+	}
+
+
+	/**
+	 * Dumps variable to plain text.
+	 */
+	public static function toText($var, array $options = []): string
+	{
+		return (new self($options))->asTerminal($var);
+	}
+
+
+	/**
+	 * Dumps variable to x-terminal.
+	 */
+	public static function toTerminal($var, array $options = []): string
+	{
+		return (new self($options))->asTerminal($var, self::$terminalColors);
+	}
+
+
+	/**
+	 * Renders <script> & <style>
+	 */
+	public static function renderAssets(): void
+	{
+		static $sent;
+		if (Debugger::$productionMode === true || $sent) {
+			return;
+		}
+		$sent = true;
+
+		$nonce = Helpers::getNonce();
+		$nonceAttr = $nonce ? ' nonce="' . Helpers::escapeHtml($nonce) . '"' : '';
+		$s = file_get_contents(__DIR__ . '/../Toggle/toggle.css')
+			. file_get_contents(__DIR__ . '/assets/dumper-light.css')
+			. file_get_contents(__DIR__ . '/assets/dumper-dark.css');
+		echo "<style{$nonceAttr}>", str_replace('</', '<\/', Helpers::minifyCss($s)), "</style>\n";
+
+		if (!Debugger::isEnabled()) {
+			$s = '(function(){' . file_get_contents(__DIR__ . '/../Toggle/toggle.js') . '})();'
+				. '(function(){' . file_get_contents(__DIR__ . '/../Dumper/assets/dumper.js') . '})();';
+			echo "<script{$nonceAttr}>", str_replace(['<!--', '</s'], ['<\!--', '<\/s'], Helpers::minifyJs($s)), "</script>\n";
+		}
+	}
+
+
 	private function __construct(array $options = [])
 	{
 		$location = $options[self::LOCATION] ?? 0;
@@ -129,77 +206,6 @@ class Dumper
 		$renderer->theme = $options[self::THEME] ?? $renderer->theme;
 	}
 
-	/**
-	 * Dumps variable to the output.
-	 * @return mixed  variable
-	 */
-	public static function dump($var, array $options = [])
-	{
-		if (PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg') {
-			$useColors = self::$terminalColors && Helpers::detectColors();
-			$dumper = new self($options);
-			fwrite(STDOUT, $dumper->asTerminal($var, $useColors ? self::$terminalColors : []));
-
-		} elseif (preg_match('#^Content-Type: (?!text/html)#im', implode("\n", headers_list()))) { // non-html
-			echo self::toText($var, $options);
-
-		} else { // html
-			$options[self::LOCATION] = $options[self::LOCATION] ?? true;
-			self::renderAssets();
-			echo self::toHtml($var, $options);
-		}
-		return $var;
-	}
-
-	/**
-	 * Dumps variable to x-terminal.
-	 */
-	private function asTerminal($var, array $colors = []): string
-	{
-		$model = $this->describer->describe($var);
-		return $this->renderer->renderAsText($model, $colors);
-	}
-
-	/**
-	 * Dumps variable to plain text.
-	 */
-	public static function toText($var, array $options = []): string
-	{
-		return (new self($options))->asTerminal($var);
-	}
-
-	/**
-	 * Renders <script> & <style>
-	 */
-	public static function renderAssets(): void
-	{
-		static $sent;
-		if (Debugger::$productionMode === true || $sent) {
-			return;
-		}
-		$sent = true;
-
-		$nonce = Helpers::getNonce();
-		$nonceAttr = $nonce ? ' nonce="' . Helpers::escapeHtml($nonce) . '"' : '';
-		$s = file_get_contents(__DIR__ . '/../Toggle/toggle.css')
-			. file_get_contents(__DIR__ . '/assets/dumper-light.css')
-			. file_get_contents(__DIR__ . '/assets/dumper-dark.css');
-		echo "<style{$nonceAttr}>", str_replace('</', '<\/', Helpers::minifyCss($s)), "</style>\n";
-
-		if (!Debugger::isEnabled()) {
-			$s = '(function(){' . file_get_contents(__DIR__ . '/../Toggle/toggle.js') . '})();'
-				. '(function(){' . file_get_contents(__DIR__ . '/../Dumper/assets/dumper.js') . '})();';
-			echo "<script{$nonceAttr}>", str_replace(['<!--', '</s'], ['<\!--', '<\/s'], Helpers::minifyJs($s)), "</script>\n";
-		}
-	}
-
-	/**
-	 * Dumps variable to HTML.
-	 */
-	public static function toHtml($var, array $options = [], $key = null): string
-	{
-		return (new self($options))->asHtml($var, $key);
-	}
 
 	/**
 	 * Dumps variable to HTML.
@@ -215,13 +221,16 @@ class Dumper
 		return $this->renderer->renderAsHtml($model);
 	}
 
+
 	/**
 	 * Dumps variable to x-terminal.
 	 */
-	public static function toTerminal($var, array $options = []): string
+	private function asTerminal($var, array $colors = []): string
 	{
-		return (new self($options))->asTerminal($var, self::$terminalColors);
+		$model = $this->describer->describe($var);
+		return $this->renderer->renderAsText($model, $colors);
 	}
+
 
 	public static function formatSnapshotAttribute(array &$snapshot): string
 	{

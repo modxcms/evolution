@@ -61,16 +61,6 @@ trait InteractsWithIO
     }
 
     /**
-     * Get all of the arguments passed to the command.
-     *
-     * @return array
-     */
-    public function arguments()
-    {
-        return $this->argument();
-    }
-
-    /**
      * Get the value of a command argument.
      *
      * @param  string|null  $key
@@ -86,6 +76,16 @@ trait InteractsWithIO
     }
 
     /**
+     * Get all of the arguments passed to the command.
+     *
+     * @return array
+     */
+    public function arguments()
+    {
+        return $this->argument();
+    }
+
+    /**
      * Determine if the given option is present.
      *
      * @param  string  $name
@@ -94,16 +94,6 @@ trait InteractsWithIO
     public function hasOption($name)
     {
         return $this->input->hasOption($name);
-    }
-
-    /**
-     * Get all of the options passed to the command.
-     *
-     * @return array
-     */
-    public function options()
-    {
-        return $this->option();
     }
 
     /**
@@ -119,6 +109,16 @@ trait InteractsWithIO
         }
 
         return $this->input->getOption($key);
+    }
+
+    /**
+     * Get all of the options passed to the command.
+     *
+     * @return array
+     */
+    public function options()
+    {
+        return $this->option();
     }
 
     /**
@@ -298,20 +298,15 @@ trait InteractsWithIO
     }
 
     /**
-     * Get the verbosity level in terms of Symfony's OutputInterface level.
+     * Write a string as comment output.
      *
-     * @param  string|int|null  $level
-     * @return int
+     * @param  string  $string
+     * @param  int|string|null  $verbosity
+     * @return void
      */
-    protected function parseVerbosity($level = null)
+    public function comment($string, $verbosity = null)
     {
-        if (isset($this->verbosityMap[$level])) {
-            $level = $this->verbosityMap[$level];
-        } elseif (! is_int($level)) {
-            $level = $this->verbosity;
-        }
-
-        return $level;
+        $this->line($string, 'comment', $verbosity);
     }
 
     /**
@@ -374,18 +369,6 @@ trait InteractsWithIO
     }
 
     /**
-     * Write a string as comment output.
-     *
-     * @param  string  $string
-     * @param  int|string|null  $verbosity
-     * @return void
-     */
-    public function comment($string, $verbosity = null)
-    {
-        $this->line($string, 'comment', $verbosity);
-    }
-
-    /**
      * Write a blank line.
      *
      * @param  int  $count
@@ -408,16 +391,6 @@ trait InteractsWithIO
     }
 
     /**
-     * Get the output implementation.
-     *
-     * @return \Illuminate\Console\OutputStyle
-     */
-    public function getOutput()
-    {
-        return $this->output;
-    }
-
-    /**
      * Set the output interface implementation.
      *
      * @param  \Illuminate\Console\OutputStyle  $output
@@ -437,5 +410,32 @@ trait InteractsWithIO
     protected function setVerbosity($level)
     {
         $this->verbosity = $this->parseVerbosity($level);
+    }
+
+    /**
+     * Get the verbosity level in terms of Symfony's OutputInterface level.
+     *
+     * @param  string|int|null  $level
+     * @return int
+     */
+    protected function parseVerbosity($level = null)
+    {
+        if (isset($this->verbosityMap[$level])) {
+            $level = $this->verbosityMap[$level];
+        } elseif (! is_int($level)) {
+            $level = $this->verbosity;
+        }
+
+        return $level;
+    }
+
+    /**
+     * Get the output implementation.
+     *
+     * @return \Illuminate\Console\OutputStyle
+     */
+    public function getOutput()
+    {
+        return $this->output;
     }
 }

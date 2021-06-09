@@ -110,15 +110,15 @@ class Request
         unset($this->lockedPackages[spl_object_hash($package)]);
     }
 
-    public function getUpdateAllowList()
-    {
-        return $this->updateAllowList;
-    }
-
     public function setUpdateAllowList($updateAllowList, $updateAllowTransitiveDependencies)
     {
         $this->updateAllowList = $updateAllowList;
         $this->updateAllowTransitiveDependencies = $updateAllowTransitiveDependencies;
+    }
+
+    public function getUpdateAllowList()
+    {
+        return $this->updateAllowList;
     }
 
     public function getUpdateAllowTransitiveDependencies()

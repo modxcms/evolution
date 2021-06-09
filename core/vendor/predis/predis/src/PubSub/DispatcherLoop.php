@@ -19,10 +19,11 @@ namespace Predis\PubSub;
  */
 class DispatcherLoop
 {
+    private $pubsub;
+
     protected $callbacks;
     protected $defaultCallback;
     protected $subscriptionCallback;
-    private $pubsub;
 
     /**
      * @param Consumer $pubsub PubSub consumer instance used by the loop.
@@ -31,6 +32,20 @@ class DispatcherLoop
     {
         $this->callbacks = array();
         $this->pubsub = $pubsub;
+    }
+
+    /**
+     * Checks if the passed argument is a valid callback.
+     *
+     * @param mixed $callable A callback.
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function assertCallback($callable)
+    {
+        if (!is_callable($callable)) {
+            throw new \InvalidArgumentException('The given argument must be a callable object.');
+        }
     }
 
     /**
@@ -55,20 +70,6 @@ class DispatcherLoop
         }
 
         $this->subscriptionCallback = $callable;
-    }
-
-    /**
-     * Checks if the passed argument is a valid callback.
-     *
-     * @param mixed $callable A callback.
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected function assertCallback($callable)
-    {
-        if (!is_callable($callable)) {
-            throw new \InvalidArgumentException('The given argument must be a callable object.');
-        }
     }
 
     /**
@@ -99,22 +100,6 @@ class DispatcherLoop
         $this->assertCallback($callback);
         $this->callbacks[$callbackName] = $callback;
         $this->pubsub->subscribe($channel);
-    }
-
-    /**
-     * Return the prefix used for keys.
-     *
-     * @return string
-     */
-    protected function getPrefixKeys()
-    {
-        $options = $this->pubsub->getClient()->getOptions();
-
-        if (isset($options->prefix)) {
-            return $options->prefix->getPrefix();
-        }
-
-        return '';
     }
 
     /**
@@ -165,5 +150,21 @@ class DispatcherLoop
     public function stop()
     {
         $this->pubsub->stop();
+    }
+
+    /**
+     * Return the prefix used for keys.
+     *
+     * @return string
+     */
+    protected function getPrefixKeys()
+    {
+        $options = $this->pubsub->getClient()->getOptions();
+
+        if (isset($options->prefix)) {
+            return $options->prefix->getPrefix();
+        }
+
+        return '';
     }
 }

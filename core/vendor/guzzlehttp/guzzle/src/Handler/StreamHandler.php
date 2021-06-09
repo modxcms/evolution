@@ -79,6 +79,19 @@ class StreamHandler
         }
     }
 
+    private function invokeStats(
+        array $options,
+        RequestInterface $request,
+        ?float $startTime,
+        ResponseInterface $response = null,
+        \Throwable $error = null
+    ): void {
+        if (isset($options['on_stats'])) {
+            $stats = new TransferStats($request, $response, Utils::currentTime() - $startTime, $error, []);
+            ($options['on_stats'])($stats);
+        }
+    }
+
     /**
      * @param resource $stream
      */
@@ -132,6 +145,17 @@ class StreamHandler
         return new FulfilledPromise($response);
     }
 
+    private function createSink(StreamInterface $stream, array $options): StreamInterface
+    {
+        if (!empty($options['stream'])) {
+            return $stream;
+        }
+
+        $sink = $options['sink'] ?? Psr7\Utils::tryFopen('php://temp', 'r+');
+
+        return \is_string($sink) ? new Psr7\LazyOpenStream($sink, 'w+') : Psr7\Utils::streamFor($sink);
+    }
+
     /**
      * @param resource $stream
      */
@@ -166,17 +190,6 @@ class StreamHandler
         return [$stream, $headers];
     }
 
-    private function createSink(StreamInterface $stream, array $options): StreamInterface
-    {
-        if (!empty($options['stream'])) {
-            return $stream;
-        }
-
-        $sink = $options['sink'] ?? Psr7\Utils::tryFopen('php://temp', 'r+');
-
-        return \is_string($sink) ? new Psr7\LazyOpenStream($sink, 'w+') : Psr7\Utils::streamFor($sink);
-    }
-
     /**
      * Drains the source stream into the "sink" client option.
      *
@@ -203,17 +216,41 @@ class StreamHandler
         return $sink;
     }
 
-    private function invokeStats(
-        array $options,
-        RequestInterface $request,
-        ?float $startTime,
-        ResponseInterface $response = null,
-        \Throwable $error = null
-    ): void {
-        if (isset($options['on_stats'])) {
-            $stats = new TransferStats($request, $response, Utils::currentTime() - $startTime, $error, []);
-            ($options['on_stats'])($stats);
+    /**
+     * Create a resource and check to ensure it was created successfully
+     *
+     * @param callable $callback Callable that returns stream resource
+     *
+     * @return resource
+     *
+     * @throws \RuntimeException on error
+     */
+    private function createResource(callable $callback)
+    {
+        $errors = [];
+        \set_error_handler(static function ($_, $msg, $file, $line) use (&$errors): bool {
+            $errors[] = [
+                'message' => $msg,
+                'file'    => $file,
+                'line'    => $line
+            ];
+            return true;
+        });
+
+        $resource = $callback();
+        \restore_error_handler();
+
+        if (!$resource) {
+            $message = 'Error creating resource: ';
+            foreach ($errors as $err) {
+                foreach ($err as $key => $value) {
+                    $message .= "[$key] $value" . \PHP_EOL;
+                }
+            }
+            throw new \RuntimeException(\trim($message));
         }
+
+        return $resource;
     }
 
     /**
@@ -296,6 +333,30 @@ class StreamHandler
         );
     }
 
+    private function resolveHost(RequestInterface $request, array $options): UriInterface
+    {
+        $uri = $request->getUri();
+
+        if (isset($options['force_ip_resolve']) && !\filter_var($uri->getHost(), \FILTER_VALIDATE_IP)) {
+            if ('v4' === $options['force_ip_resolve']) {
+                $records = \dns_get_record($uri->getHost(), \DNS_A);
+                if (false === $records || !isset($records[0]['ip'])) {
+                    throw new ConnectException(\sprintf("Could not resolve IPv4 address for host '%s'", $uri->getHost()), $request);
+                }
+                return $uri->withHost($records[0]['ip']);
+            }
+            if ('v6' === $options['force_ip_resolve']) {
+                $records = \dns_get_record($uri->getHost(), \DNS_AAAA);
+                if (false === $records || !isset($records[0]['ipv6'])) {
+                    throw new ConnectException(\sprintf("Could not resolve IPv6 address for host '%s'", $uri->getHost()), $request);
+                }
+                return $uri->withHost('[' . $records[0]['ipv6'] . ']');
+            }
+        }
+
+        return $uri;
+    }
+
     private function getDefaultContext(RequestInterface $request): array
     {
         $headers = '';
@@ -328,67 +389,6 @@ class StreamHandler
         $context['http']['header'] = \rtrim($context['http']['header']);
 
         return $context;
-    }
-
-    private function resolveHost(RequestInterface $request, array $options): UriInterface
-    {
-        $uri = $request->getUri();
-
-        if (isset($options['force_ip_resolve']) && !\filter_var($uri->getHost(), \FILTER_VALIDATE_IP)) {
-            if ('v4' === $options['force_ip_resolve']) {
-                $records = \dns_get_record($uri->getHost(), \DNS_A);
-                if (false === $records || !isset($records[0]['ip'])) {
-                    throw new ConnectException(\sprintf("Could not resolve IPv4 address for host '%s'", $uri->getHost()), $request);
-                }
-                return $uri->withHost($records[0]['ip']);
-            }
-            if ('v6' === $options['force_ip_resolve']) {
-                $records = \dns_get_record($uri->getHost(), \DNS_AAAA);
-                if (false === $records || !isset($records[0]['ipv6'])) {
-                    throw new ConnectException(\sprintf("Could not resolve IPv6 address for host '%s'", $uri->getHost()), $request);
-                }
-                return $uri->withHost('[' . $records[0]['ipv6'] . ']');
-            }
-        }
-
-        return $uri;
-    }
-
-    /**
-     * Create a resource and check to ensure it was created successfully
-     *
-     * @param callable $callback Callable that returns stream resource
-     *
-     * @return resource
-     *
-     * @throws \RuntimeException on error
-     */
-    private function createResource(callable $callback)
-    {
-        $errors = [];
-        \set_error_handler(static function ($_, $msg, $file, $line) use (&$errors): bool {
-            $errors[] = [
-                'message' => $msg,
-                'file'    => $file,
-                'line'    => $line
-            ];
-            return true;
-        });
-
-        $resource = $callback();
-        \restore_error_handler();
-
-        if (!$resource) {
-            $message = 'Error creating resource: ';
-            foreach ($errors as $err) {
-                foreach ($err as $key => $value) {
-                    $message .= "[$key] $value" . \PHP_EOL;
-                }
-            }
-            throw new \RuntimeException(\trim($message));
-        }
-
-        return $resource;
     }
 
     /**
@@ -520,28 +520,6 @@ class StreamHandler
         );
     }
 
-    private static function addNotification(array &$params, callable $notify): void
-    {
-        // Wrap the existing function if needed.
-        if (!isset($params['notification'])) {
-            $params['notification'] = $notify;
-        } else {
-            $params['notification'] = self::callArray([
-                $params['notification'],
-                $notify
-            ]);
-        }
-    }
-
-    private static function callArray(array $functions): callable
-    {
-        return static function (...$args) use ($functions) {
-            foreach ($functions as $fn) {
-                $fn(...$args);
-            }
-        };
-    }
-
     /**
      * @param mixed $value as passed via Request transfer options.
      */
@@ -577,5 +555,27 @@ class StreamHandler
                 \fwrite($value, "\n");
             }
         );
+    }
+
+    private static function addNotification(array &$params, callable $notify): void
+    {
+        // Wrap the existing function if needed.
+        if (!isset($params['notification'])) {
+            $params['notification'] = $notify;
+        } else {
+            $params['notification'] = self::callArray([
+                $params['notification'],
+                $notify
+            ]);
+        }
+    }
+
+    private static function callArray(array $functions): callable
+    {
+        return static function (...$args) use ($functions) {
+            foreach ($functions as $fn) {
+                $fn(...$args);
+            }
+        };
     }
 }

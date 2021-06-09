@@ -61,20 +61,6 @@ class MultiBulkTuple extends MultiBulk implements \OuterIterator
     /**
      * {@inheritdoc}
      */
-    protected function getValue()
-    {
-        $k = $this->iterator->current();
-        $this->iterator->next();
-
-        $v = $this->iterator->current();
-        $this->iterator->next();
-
-        return array($k, $v);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getInnerIterator()
     {
         return $this->iterator;
@@ -86,5 +72,19 @@ class MultiBulkTuple extends MultiBulk implements \OuterIterator
     public function __destruct()
     {
         $this->iterator->drop(true);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getValue()
+    {
+        $k = $this->iterator->current();
+        $this->iterator->next();
+
+        $v = $this->iterator->current();
+        $this->iterator->next();
+
+        return array($k, $v);
     }
 }

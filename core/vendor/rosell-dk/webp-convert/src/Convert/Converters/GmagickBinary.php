@@ -14,15 +14,15 @@ use WebPConvert\Convert\Exceptions\ConversionFailedException;
  */
 class GmagickBinary extends AbstractConverter
 {
-    protected function doActualConvert()
-    {
-        $this->checkOperationality();
-    }
-
     public function checkOperationality()
     {
         throw new ConversionFailedException(
             'This converter has changed ID from "gmagickbinary" to "graphicsmagick". You need to change!'
         );
+    }
+
+    protected function doActualConvert()
+    {
+        $this->checkOperationality();
     }
 }

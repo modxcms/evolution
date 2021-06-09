@@ -16,13 +16,30 @@ use WebPConvert\Convert\Exceptions\ConversionFailedException;
  */
 class Gd extends AbstractConverter
 {
-    private $errorMessageWhileCreating = '';
-    private $errorNumberWhileCreating;
-
     public function supportsLossless()
     {
         return false;
     }
+
+    protected function getUnsupportedDefaultOptions()
+    {
+        return [
+            'alpha-quality',
+            'auto-filter',
+            'encoding',
+            'low-memory',
+            'metadata',
+            'method',
+            'near-lossless',
+            'preset',
+            'sharp-yuv',
+            'size-in-percentage',
+            'use-nice'
+        ];
+    }
+
+    private $errorMessageWhileCreating = '';
+    private $errorNumberWhileCreating;
 
     /**
      * Check (general) operationality of Gd converter.
@@ -68,56 +85,100 @@ class Gd extends AbstractConverter
         }
     }
 
-    protected function getUnsupportedDefaultOptions()
+    /**
+     * Find out if all functions exists.
+     *
+     * @return boolean
+     */
+    private static function functionsExist($functionNamesArr)
     {
-        return [
-            'alpha-quality',
-            'auto-filter',
-            'encoding',
-            'low-memory',
-            'metadata',
-            'method',
-            'near-lossless',
-            'preset',
-            'sharp-yuv',
-            'size-in-percentage',
-            'use-nice'
-        ];
-    }
-
-    protected function errorHandlerWhileCreatingWebP($errno, $errstr, $errfile, $errline)
-    {
-        $this->errorNumberWhileCreating = $errno;
-        $this->errorMessageWhileCreating = $errstr . ' in ' . $errfile . ', line ' . $errline .
-            ', PHP ' . PHP_VERSION . ' (' . PHP_OS . ')';
-        //return false;
-    }
-
-    protected function doActualConvert()
-    {
-
-        $this->logLn('GD Version: ' . gd_info()["GD Version"]);
-
-        // Btw: Check out processWebp here:
-        // https://github.com/Intervention/image/blob/master/src/Intervention/Image/Gd/Encoder.php
-
-        // Create image resource
-        $image = $this->createImageResource();
-
-        // Try to convert color palette if it is not true color
-        $this->tryToMakeTrueColorIfNot($image);
-
-
-        if ($this->getMimeTypeOfSource() == 'image/png') {
-            // Try to set alpha blending
-            $this->trySettingAlphaBlending($image);
+        foreach ($functionNamesArr as $functionName) {
+            if (!function_exists($functionName)) {
+                return false;
+            }
         }
+        return true;
+    }
 
-        // Try to convert it to webp
-        $this->tryConverting($image);
+    /**
+     * Try to convert image pallette to true color on older systems that does not have imagepalettetotruecolor().
+     *
+     * The aim is to function as imagepalettetotruecolor, but for older systems.
+     * So, if the image is already rgb, nothing will be done, and true will be returned
+     * PS: Got the workaround here: https://secure.php.net/manual/en/function.imagepalettetotruecolor.php
+     *
+     * @param  resource|\GdImage  $image
+     * @return boolean  TRUE if the convertion was complete, or if the source image already is a true color image,
+     *          otherwise FALSE is returned.
+     */
+    private function makeTrueColorUsingWorkaround(&$image)
+    {
+        //return $this->makeTrueColor($image);
+        /*
+        if (function_exists('imageistruecolor') && imageistruecolor($image)) {
+            return true;
+        }*/
+        if (self::functionsExist(['imagecreatetruecolor', 'imagealphablending', 'imagecolorallocatealpha',
+                'imagefilledrectangle', 'imagecopy', 'imagedestroy', 'imagesx', 'imagesy'])) {
+            $dst = imagecreatetruecolor(imagesx($image), imagesy($image));
 
-        // End of story
-        imagedestroy($image);
+            if ($dst === false) {
+                return false;
+            }
+
+            //prevent blending with default black
+            if (imagealphablending($dst, false) === false) {
+                return false;
+            }
+
+            //change the RGB values if you need, but leave alpha at 127
+            $transparent = imagecolorallocatealpha($dst, 255, 255, 255, 127);
+
+            if ($transparent === false) {
+                return false;
+            }
+
+            //simpler than flood fill
+            if (imagefilledrectangle($dst, 0, 0, imagesx($image), imagesy($image), $transparent) === false) {
+                return false;
+            }
+
+            //restore default blending
+            if (imagealphablending($dst, true) === false) {
+                return false;
+            };
+
+            if (imagecopy($dst, $image, 0, 0, 0, 0, imagesx($image), imagesy($image)) === false) {
+                return false;
+            }
+            imagedestroy($image);
+
+            $image = $dst;
+            return true;
+        } else {
+            // The necessary methods for converting color palette are not avalaible
+            return false;
+        }
+    }
+
+    /**
+     * Try to convert image pallette to true color.
+     *
+     * Try to convert image pallette to true color. If imagepalettetotruecolor() exists, that is used (available from
+     * PHP >= 5.5.0). Otherwise using workaround found on the net.
+     *
+     * @param  resource|\GdImage  $image
+     * @return boolean  TRUE if the convertion was complete, or if the source image already is a true color image,
+     *          otherwise FALSE is returned.
+     */
+    private function makeTrueColor(&$image)
+    {
+        if (function_exists('imagepalettetotruecolor')) {
+            return imagepalettetotruecolor($image);
+        } else {
+            // imagepalettetotruecolor() is not available on this system. Using custom implementation instead
+            return $this->makeTrueColorUsingWorkaround($image);
+        }
     }
 
     /**
@@ -188,102 +249,6 @@ class Gd extends AbstractConverter
     }
 
     /**
-     * Try to convert image pallette to true color.
-     *
-     * Try to convert image pallette to true color. If imagepalettetotruecolor() exists, that is used (available from
-     * PHP >= 5.5.0). Otherwise using workaround found on the net.
-     *
-     * @param  resource|\GdImage  $image
-     * @return boolean  TRUE if the convertion was complete, or if the source image already is a true color image,
-     *          otherwise FALSE is returned.
-     */
-    private function makeTrueColor(&$image)
-    {
-        if (function_exists('imagepalettetotruecolor')) {
-            return imagepalettetotruecolor($image);
-        } else {
-            // imagepalettetotruecolor() is not available on this system. Using custom implementation instead
-            return $this->makeTrueColorUsingWorkaround($image);
-        }
-    }
-
-    /**
-     * Try to convert image pallette to true color on older systems that does not have imagepalettetotruecolor().
-     *
-     * The aim is to function as imagepalettetotruecolor, but for older systems.
-     * So, if the image is already rgb, nothing will be done, and true will be returned
-     * PS: Got the workaround here: https://secure.php.net/manual/en/function.imagepalettetotruecolor.php
-     *
-     * @param  resource|\GdImage  $image
-     * @return boolean  TRUE if the convertion was complete, or if the source image already is a true color image,
-     *          otherwise FALSE is returned.
-     */
-    private function makeTrueColorUsingWorkaround(&$image)
-    {
-        //return $this->makeTrueColor($image);
-        /*
-        if (function_exists('imageistruecolor') && imageistruecolor($image)) {
-            return true;
-        }*/
-        if (self::functionsExist(['imagecreatetruecolor', 'imagealphablending', 'imagecolorallocatealpha',
-                'imagefilledrectangle', 'imagecopy', 'imagedestroy', 'imagesx', 'imagesy'])) {
-            $dst = imagecreatetruecolor(imagesx($image), imagesy($image));
-
-            if ($dst === false) {
-                return false;
-            }
-
-            //prevent blending with default black
-            if (imagealphablending($dst, false) === false) {
-                return false;
-            }
-
-            //change the RGB values if you need, but leave alpha at 127
-            $transparent = imagecolorallocatealpha($dst, 255, 255, 255, 127);
-
-            if ($transparent === false) {
-                return false;
-            }
-
-            //simpler than flood fill
-            if (imagefilledrectangle($dst, 0, 0, imagesx($image), imagesy($image), $transparent) === false) {
-                return false;
-            }
-
-            //restore default blending
-            if (imagealphablending($dst, true) === false) {
-                return false;
-            };
-
-            if (imagecopy($dst, $image, 0, 0, 0, 0, imagesx($image), imagesy($image)) === false) {
-                return false;
-            }
-            imagedestroy($image);
-
-            $image = $dst;
-            return true;
-        } else {
-            // The necessary methods for converting color palette are not avalaible
-            return false;
-        }
-    }
-
-    /**
-     * Find out if all functions exists.
-     *
-     * @return boolean
-     */
-    private static function functionsExist($functionNamesArr)
-    {
-        foreach ($functionNamesArr as $functionName) {
-            if (!function_exists($functionName)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
      *
      * @param  resource|\GdImage  $image
      * @return boolean  true if alpha blending was set successfully, false otherwise
@@ -321,6 +286,27 @@ class Gd extends AbstractConverter
             return false;
         }
         return true;
+    }
+
+    protected function errorHandlerWhileCreatingWebP($errno, $errstr, $errfile, $errline)
+    {
+        $this->errorNumberWhileCreating = $errno;
+        $this->errorMessageWhileCreating = $errstr . ' in ' . $errfile . ', line ' . $errline .
+            ', PHP ' . PHP_VERSION . ' (' . PHP_OS . ')';
+        //return false;
+    }
+
+    /**
+     *
+     * @param  resource|\GdImage  $image
+     * @return void
+     */
+    protected function destroyAndRemove($image)
+    {
+        imagedestroy($image);
+        if (file_exists($this->destination)) {
+            unlink($this->destination);
+        }
     }
 
     /**
@@ -447,17 +433,30 @@ class Gd extends AbstractConverter
     // Although this method is public, do not call directly.
     // You should rather call the static convert() function, defined in AbstractConverter, which
     // takes care of preparing stuff before calling doConvert, and validating after.
-
-    /**
-     *
-     * @param  resource|\GdImage  $image
-     * @return void
-     */
-    protected function destroyAndRemove($image)
+    protected function doActualConvert()
     {
-        imagedestroy($image);
-        if (file_exists($this->destination)) {
-            unlink($this->destination);
+
+        $this->logLn('GD Version: ' . gd_info()["GD Version"]);
+
+        // Btw: Check out processWebp here:
+        // https://github.com/Intervention/image/blob/master/src/Intervention/Image/Gd/Encoder.php
+
+        // Create image resource
+        $image = $this->createImageResource();
+
+        // Try to convert color palette if it is not true color
+        $this->tryToMakeTrueColorIfNot($image);
+
+
+        if ($this->getMimeTypeOfSource() == 'image/png') {
+            // Try to set alpha blending
+            $this->trySettingAlphaBlending($image);
         }
+
+        // Try to convert it to webp
+        $this->tryConverting($image);
+
+        // End of story
+        imagedestroy($image);
     }
 }

@@ -111,6 +111,27 @@ class RedirectMiddleware
     }
 
     /**
+     * Enable tracking on promise.
+     */
+    private function withTracking(PromiseInterface $promise, string $uri, int $statusCode): PromiseInterface
+    {
+        return $promise->then(
+            static function (ResponseInterface $response) use ($uri, $statusCode) {
+                // Note that we are pushing to the front of the list as this
+                // would be an earlier response than what is currently present
+                // in the history header.
+                $historyHeader = $response->getHeader(self::HISTORY_HEADER);
+                $statusHeader = $response->getHeader(self::STATUS_HISTORY_HEADER);
+                \array_unshift($historyHeader, $uri);
+                \array_unshift($statusHeader, (string) $statusCode);
+
+                return $response->withHeader(self::HISTORY_HEADER, $historyHeader)
+                                ->withHeader(self::STATUS_HISTORY_HEADER, $statusHeader);
+            }
+        );
+    }
+
+    /**
      * Check for too many redirects
      *
      * @throws TooManyRedirectsException Too many redirects.
@@ -191,26 +212,5 @@ class RedirectMiddleware
         }
 
         return $location;
-    }
-
-    /**
-     * Enable tracking on promise.
-     */
-    private function withTracking(PromiseInterface $promise, string $uri, int $statusCode): PromiseInterface
-    {
-        return $promise->then(
-            static function (ResponseInterface $response) use ($uri, $statusCode) {
-                // Note that we are pushing to the front of the list as this
-                // would be an earlier response than what is currently present
-                // in the history header.
-                $historyHeader = $response->getHeader(self::HISTORY_HEADER);
-                $statusHeader = $response->getHeader(self::STATUS_HISTORY_HEADER);
-                \array_unshift($historyHeader, $uri);
-                \array_unshift($statusHeader, (string) $statusCode);
-
-                return $response->withHeader(self::HISTORY_HEADER, $historyHeader)
-                                ->withHeader(self::STATUS_HISTORY_HEADER, $statusHeader);
-            }
-        );
     }
 }

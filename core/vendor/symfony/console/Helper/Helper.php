@@ -24,6 +24,22 @@ abstract class Helper implements HelperInterface
     protected $helperSet = null;
 
     /**
+     * {@inheritdoc}
+     */
+    public function setHelperSet(HelperSet $helperSet = null)
+    {
+        $this->helperSet = $helperSet;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getHelperSet()
+    {
+        return $this->helperSet;
+    }
+
+    /**
      * Returns the length of a string, using mb_strwidth if it is available.
      *
      * @deprecated since 5.3
@@ -158,21 +174,5 @@ abstract class Helper implements HelperInterface
         $formatter->setDecorated($isDecorated);
 
         return $string;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getHelperSet()
-    {
-        return $this->helperSet;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setHelperSet(HelperSet $helperSet = null)
-    {
-        $this->helperSet = $helperSet;
     }
 }

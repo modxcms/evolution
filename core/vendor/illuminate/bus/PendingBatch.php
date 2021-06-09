@@ -14,29 +14,32 @@ use Throwable;
 class PendingBatch
 {
     /**
+     * The IoC container instance.
+     *
+     * @var \Illuminate\Contracts\Container\Container
+     */
+    protected $container;
+
+    /**
      * The batch name.
      *
      * @var string
      */
     public $name = '';
+
     /**
      * The jobs that belong to the batch.
      *
      * @var \Illuminate\Support\Collection
      */
     public $jobs;
+
     /**
      * The batch options.
      *
      * @var array
      */
     public $options = [];
-    /**
-     * The IoC container instance.
-     *
-     * @var \Illuminate\Contracts\Container\Container
-     */
-    protected $container;
 
     /**
      * Create a new pending batch instance.

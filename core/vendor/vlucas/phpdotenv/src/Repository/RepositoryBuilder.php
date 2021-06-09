@@ -113,6 +113,22 @@ final class RepositoryBuilder
     }
 
     /**
+     * Determine if the given name if of an adapaterclass.
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    private static function isAnAdapterClass(string $name)
+    {
+        if (!\class_exists($name)) {
+            return false;
+        }
+
+        return (new ReflectionClass($name))->implementsInterface(AdapterInterface::class);
+    }
+
+    /**
      * Creates a repository builder with the given reader added.
      *
      * Accepts either a reader instance, or a class-string for an adapter. If
@@ -143,22 +159,6 @@ final class RepositoryBuilder
         $readers = \array_merge($this->readers, \iterator_to_array($optional));
 
         return new self($readers, $this->writers, $this->immutable, $this->allowList);
-    }
-
-    /**
-     * Determine if the given name if of an adapaterclass.
-     *
-     * @param string $name
-     *
-     * @return bool
-     */
-    private static function isAnAdapterClass(string $name)
-    {
-        if (!\class_exists($name)) {
-            return false;
-        }
-
-        return (new ReflectionClass($name))->implementsInterface(AdapterInterface::class);
     }
 
     /**

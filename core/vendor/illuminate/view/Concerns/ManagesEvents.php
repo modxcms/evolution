@@ -27,6 +27,41 @@ trait ManagesEvents
     }
 
     /**
+     * Register multiple view composers via an array.
+     *
+     * @param  array  $composers
+     * @return array
+     */
+    public function composers(array $composers)
+    {
+        $registered = [];
+
+        foreach ($composers as $callback => $views) {
+            $registered = array_merge($registered, $this->composer($views, $callback));
+        }
+
+        return $registered;
+    }
+
+    /**
+     * Register a view composer event.
+     *
+     * @param  array|string  $views
+     * @param  \Closure|string  $callback
+     * @return array
+     */
+    public function composer($views, $callback)
+    {
+        $composers = [];
+
+        foreach ((array) $views as $view) {
+            $composers[] = $this->addViewEvent($view, $callback, 'composing: ');
+        }
+
+        return $composers;
+    }
+
+    /**
      * Add an event for a given view.
      *
      * @param  string  $view
@@ -45,24 +80,6 @@ trait ManagesEvents
         } elseif (is_string($callback)) {
             return $this->addClassEvent($view, $callback, $prefix);
         }
-    }
-
-    /**
-     * Add a listener to the event dispatcher.
-     *
-     * @param  string  $name
-     * @param  \Closure  $callback
-     * @return void
-     */
-    protected function addEventListener($name, $callback)
-    {
-        if (Str::contains($name, '*')) {
-            $callback = function ($name, array $data) use ($callback) {
-                return $callback($data[0]);
-            };
-        }
-
-        $this->events->listen($name, $callback);
     }
 
     /**
@@ -132,38 +149,21 @@ trait ManagesEvents
     }
 
     /**
-     * Register multiple view composers via an array.
+     * Add a listener to the event dispatcher.
      *
-     * @param  array  $composers
-     * @return array
+     * @param  string  $name
+     * @param  \Closure  $callback
+     * @return void
      */
-    public function composers(array $composers)
+    protected function addEventListener($name, $callback)
     {
-        $registered = [];
-
-        foreach ($composers as $callback => $views) {
-            $registered = array_merge($registered, $this->composer($views, $callback));
+        if (Str::contains($name, '*')) {
+            $callback = function ($name, array $data) use ($callback) {
+                return $callback($data[0]);
+            };
         }
 
-        return $registered;
-    }
-
-    /**
-     * Register a view composer event.
-     *
-     * @param  array|string  $views
-     * @param  \Closure|string  $callback
-     * @return array
-     */
-    public function composer($views, $callback)
-    {
-        $composers = [];
-
-        foreach ((array) $views as $view) {
-            $composers[] = $this->addViewEvent($view, $callback, 'composing: ');
-        }
-
-        return $composers;
+        $this->events->listen($name, $callback);
     }
 
     /**

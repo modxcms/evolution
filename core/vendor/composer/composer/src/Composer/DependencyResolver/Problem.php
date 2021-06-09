@@ -52,23 +52,6 @@ class Problem
     }
 
     /**
-     * Store a reason descriptor but ignore duplicates
-     *
-     * @param string $id     A canonical identifier for the reason
-     * @param Rule   $reason The reason descriptor
-     */
-    protected function addReason($id, Rule $reason)
-    {
-        // TODO: if a rule is part of a problem description in two sections, isn't this going to remove a message
-        // that is important to understand the issue?
-
-        if (!isset($this->reasonSeen[$id])) {
-            $this->reasonSeen[$id] = true;
-            $this->reasons[$this->section][] = $reason;
-        }
-    }
-
-    /**
      * Retrieve all reasons for this problem
      *
      * @return array The problem's reasons
@@ -113,6 +96,83 @@ class Problem
         }
 
         return self::formatDeduplicatedRules($reasons, '    ', $repositorySet, $request, $pool, $isVerbose, $installedMap, $learnedPool);
+    }
+
+    /**
+     * @internal
+     */
+    public static function formatDeduplicatedRules($rules, $indent, RepositorySet $repositorySet, Request $request, Pool $pool, $isVerbose, array $installedMap = array(), array $learnedPool = array())
+    {
+        $messages = array();
+        $templates = array();
+        $parser = new VersionParser;
+        $deduplicatableRuleTypes = array(Rule::RULE_PACKAGE_REQUIRES, Rule::RULE_PACKAGE_CONFLICT);
+        foreach ($rules as $rule) {
+            $message = $rule->getPrettyString($repositorySet, $request, $pool, $isVerbose, $installedMap, $learnedPool);
+            if (in_array($rule->getReason(), $deduplicatableRuleTypes, true) && preg_match('{^(?P<package>\S+) (?P<version>\S+) (?P<type>requires|conflicts)}', $message, $m)) {
+                $template = preg_replace('{^\S+ \S+ }', '%s%s ', $message);
+                $messages[] = $template;
+                $templates[$template][$m[1]][$parser->normalize($m[2])] = $m[2];
+            } elseif ($message !== '') {
+                $messages[] = $message;
+            }
+        }
+
+        $result = array();
+        foreach (array_unique($messages) as $message) {
+            if (isset($templates[$message])) {
+                foreach ($templates[$message] as $package => $versions) {
+                    uksort($versions, 'version_compare');
+                    if (!$isVerbose) {
+                        $versions = self::condenseVersionList($versions, 1);
+                    }
+                    if (count($versions) > 1) {
+                        // remove the s from requires/conflicts to correct grammar
+                        $message = preg_replace('{^(%s%s (?:require|conflict))s}', '$1', $message);
+                        $result[] = sprintf($message, $package, '['.implode(', ', $versions).']');
+                    } else {
+                        $result[] = sprintf($message, $package, ' '.reset($versions));
+                    }
+                }
+            } else {
+                $result[] = $message;
+            }
+        }
+
+        return "\n$indent- ".implode("\n$indent- ", $result);
+    }
+
+    public function isCausedByLock(RepositorySet $repositorySet, Request $request, Pool $pool)
+    {
+        foreach ($this->reasons as $sectionRules) {
+            foreach ($sectionRules as $rule) {
+                if ($rule->isCausedByLock($repositorySet, $request, $pool)) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    /**
+     * Store a reason descriptor but ignore duplicates
+     *
+     * @param string $id     A canonical identifier for the reason
+     * @param Rule   $reason The reason descriptor
+     */
+    protected function addReason($id, Rule $reason)
+    {
+        // TODO: if a rule is part of a problem description in two sections, isn't this going to remove a message
+        // that is important to understand the issue?
+
+        if (!isset($this->reasonSeen[$id])) {
+            $this->reasonSeen[$id] = true;
+            $this->reasons[$this->section][] = $reason;
+        }
+    }
+
+    public function nextSection()
+    {
+        $this->section++;
     }
 
     /**
@@ -267,33 +327,6 @@ class Problem
         return array("- Root composer.json requires $packageName, it ", "could not be found in any version, there may be a typo in the package name.");
     }
 
-    private static function getPlatformPackageVersion(Pool $pool, $packageName, $version)
-    {
-        $available = $pool->whatProvides($packageName);
-
-        if (count($available)) {
-            $firstAvailable = reset($available);
-            $version = $firstAvailable->getPrettyVersion();
-            $extra = $firstAvailable->getExtra();
-            if ($firstAvailable instanceof CompletePackageInterface && isset($extra['config.platform']) && $extra['config.platform'] === true) {
-                $version .= '; ' . str_replace('Package ', '', $firstAvailable->getDescription());
-            }
-        }
-
-        return $version;
-    }
-
-    /**
-     * Turns a constraint into text usable in a sentence describing a request
-     *
-     * @param  \Composer\Semver\Constraint\ConstraintInterface $constraint
-     * @return string
-     */
-    protected static function constraintToText($constraint)
-    {
-        return $constraint ? ' '.$constraint->getPrettyString() : '';
-    }
-
     /**
      * @internal
      */
@@ -323,6 +356,22 @@ class Problem
         }
 
         return implode(', ', $prepared);
+    }
+
+    private static function getPlatformPackageVersion(Pool $pool, $packageName, $version)
+    {
+        $available = $pool->whatProvides($packageName);
+
+        if (count($available)) {
+            $firstAvailable = reset($available);
+            $version = $firstAvailable->getPrettyVersion();
+            $extra = $firstAvailable->getExtra();
+            if ($firstAvailable instanceof CompletePackageInterface && isset($extra['config.platform']) && $extra['config.platform'] === true) {
+                $version .= '; ' . str_replace('Package ', '', $firstAvailable->getDescription());
+            }
+        }
+
+        return $version;
     }
 
     /**
@@ -408,62 +457,13 @@ class Problem
     }
 
     /**
-     * @internal
+     * Turns a constraint into text usable in a sentence describing a request
+     *
+     * @param  \Composer\Semver\Constraint\ConstraintInterface $constraint
+     * @return string
      */
-    public static function formatDeduplicatedRules($rules, $indent, RepositorySet $repositorySet, Request $request, Pool $pool, $isVerbose, array $installedMap = array(), array $learnedPool = array())
+    protected static function constraintToText($constraint)
     {
-        $messages = array();
-        $templates = array();
-        $parser = new VersionParser;
-        $deduplicatableRuleTypes = array(Rule::RULE_PACKAGE_REQUIRES, Rule::RULE_PACKAGE_CONFLICT);
-        foreach ($rules as $rule) {
-            $message = $rule->getPrettyString($repositorySet, $request, $pool, $isVerbose, $installedMap, $learnedPool);
-            if (in_array($rule->getReason(), $deduplicatableRuleTypes, true) && preg_match('{^(?P<package>\S+) (?P<version>\S+) (?P<type>requires|conflicts)}', $message, $m)) {
-                $template = preg_replace('{^\S+ \S+ }', '%s%s ', $message);
-                $messages[] = $template;
-                $templates[$template][$m[1]][$parser->normalize($m[2])] = $m[2];
-            } elseif ($message !== '') {
-                $messages[] = $message;
-            }
-        }
-
-        $result = array();
-        foreach (array_unique($messages) as $message) {
-            if (isset($templates[$message])) {
-                foreach ($templates[$message] as $package => $versions) {
-                    uksort($versions, 'version_compare');
-                    if (!$isVerbose) {
-                        $versions = self::condenseVersionList($versions, 1);
-                    }
-                    if (count($versions) > 1) {
-                        // remove the s from requires/conflicts to correct grammar
-                        $message = preg_replace('{^(%s%s (?:require|conflict))s}', '$1', $message);
-                        $result[] = sprintf($message, $package, '['.implode(', ', $versions).']');
-                    } else {
-                        $result[] = sprintf($message, $package, ' '.reset($versions));
-                    }
-                }
-            } else {
-                $result[] = $message;
-            }
-        }
-
-        return "\n$indent- ".implode("\n$indent- ", $result);
-    }
-
-    public function isCausedByLock(RepositorySet $repositorySet, Request $request, Pool $pool)
-    {
-        foreach ($this->reasons as $sectionRules) {
-            foreach ($sectionRules as $rule) {
-                if ($rule->isCausedByLock($repositorySet, $request, $pool)) {
-                    return true;
-                }
-            }
-        }
-    }
-
-    public function nextSection()
-    {
-        $this->section++;
+        return $constraint ? ' '.$constraint->getPrettyString() : '';
     }
 }

@@ -145,116 +145,6 @@ abstract class AnnotationClassLoader implements LoaderInterface
         return $collection;
     }
 
-    protected function getGlobals(\ReflectionClass $class)
-    {
-        $globals = $this->resetGlobals();
-
-        $annot = null;
-        if (\PHP_VERSION_ID >= 80000 && ($attribute = $class->getAttributes($this->routeAnnotationClass, \ReflectionAttribute::IS_INSTANCEOF)[0] ?? null)) {
-            $annot = $attribute->newInstance();
-        }
-        if (!$annot && $this->reader) {
-            $annot = $this->reader->getClassAnnotation($class, $this->routeAnnotationClass);
-        }
-
-        if ($annot) {
-            if (null !== $annot->getName()) {
-                $globals['name'] = $annot->getName();
-            }
-
-            if (null !== $annot->getPath()) {
-                $globals['path'] = $annot->getPath();
-            }
-
-            $globals['localized_paths'] = $annot->getLocalizedPaths();
-
-            if (null !== $annot->getRequirements()) {
-                $globals['requirements'] = $annot->getRequirements();
-            }
-
-            if (null !== $annot->getOptions()) {
-                $globals['options'] = $annot->getOptions();
-            }
-
-            if (null !== $annot->getDefaults()) {
-                $globals['defaults'] = $annot->getDefaults();
-            }
-
-            if (null !== $annot->getSchemes()) {
-                $globals['schemes'] = $annot->getSchemes();
-            }
-
-            if (null !== $annot->getMethods()) {
-                $globals['methods'] = $annot->getMethods();
-            }
-
-            if (null !== $annot->getHost()) {
-                $globals['host'] = $annot->getHost();
-            }
-
-            if (null !== $annot->getCondition()) {
-                $globals['condition'] = $annot->getCondition();
-            }
-
-            $globals['priority'] = $annot->getPriority() ?? 0;
-            $globals['env'] = $annot->getEnv();
-
-            foreach ($globals['requirements'] as $placeholder => $requirement) {
-                if (\is_int($placeholder)) {
-                    throw new \InvalidArgumentException(sprintf('A placeholder name must be a string (%d given). Did you forget to specify the placeholder key for the requirement "%s" in "%s"?', $placeholder, $requirement, $class->getName()));
-                }
-            }
-        }
-
-        return $globals;
-    }
-
-    private function resetGlobals(): array
-    {
-        return [
-            'path' => null,
-            'localized_paths' => [],
-            'requirements' => [],
-            'options' => [],
-            'defaults' => [],
-            'schemes' => [],
-            'methods' => [],
-            'host' => '',
-            'condition' => '',
-            'name' => '',
-            'priority' => 0,
-            'env' => null,
-        ];
-    }
-
-    /**
-     * @param \ReflectionClass|\ReflectionMethod $reflection
-     *
-     * @return iterable|RouteAnnotation[]
-     */
-    private function getAnnotations(object $reflection): iterable
-    {
-        if (\PHP_VERSION_ID >= 80000) {
-            foreach ($reflection->getAttributes($this->routeAnnotationClass, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
-                yield $attribute->newInstance();
-            }
-        }
-
-        if (!$this->reader) {
-            return;
-        }
-
-        $anntotations = $reflection instanceof \ReflectionClass
-            ? $this->reader->getClassAnnotations($reflection)
-            : $this->reader->getMethodAnnotations($reflection);
-
-        foreach ($anntotations as $annotation) {
-            if ($annotation instanceof $this->routeAnnotationClass) {
-                yield $annotation;
-            }
-        }
-    }
-
     /**
      * @param RouteAnnotation $annot or an object that exposes a similar interface
      */
@@ -347,30 +237,6 @@ abstract class AnnotationClassLoader implements LoaderInterface
     }
 
     /**
-     * Gets the default route name for a class method.
-     *
-     * @return string
-     */
-    protected function getDefaultRouteName(\ReflectionClass $class, \ReflectionMethod $method)
-    {
-        $name = str_replace('\\', '_', $class->name).'_'.$method->name;
-        $name = \function_exists('mb_strtolower') && preg_match('//u', $name) ? mb_strtolower($name, 'UTF-8') : strtolower($name);
-        if ($this->defaultRouteIndex > 0) {
-            $name .= '_'.$this->defaultRouteIndex;
-        }
-        ++$this->defaultRouteIndex;
-
-        return $name;
-    }
-
-    protected function createRoute(string $path, array $defaults, array $requirements, array $options, ?string $host, array $schemes, array $methods, ?string $condition)
-    {
-        return new Route($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition);
-    }
-
-    abstract protected function configureRoute(Route $route, \ReflectionClass $class, \ReflectionMethod $method, object $annot);
-
-    /**
      * {@inheritdoc}
      */
     public function supports($resource, string $type = null)
@@ -390,5 +256,139 @@ abstract class AnnotationClassLoader implements LoaderInterface
      */
     public function getResolver()
     {
+    }
+
+    /**
+     * Gets the default route name for a class method.
+     *
+     * @return string
+     */
+    protected function getDefaultRouteName(\ReflectionClass $class, \ReflectionMethod $method)
+    {
+        $name = str_replace('\\', '_', $class->name).'_'.$method->name;
+        $name = \function_exists('mb_strtolower') && preg_match('//u', $name) ? mb_strtolower($name, 'UTF-8') : strtolower($name);
+        if ($this->defaultRouteIndex > 0) {
+            $name .= '_'.$this->defaultRouteIndex;
+        }
+        ++$this->defaultRouteIndex;
+
+        return $name;
+    }
+
+    protected function getGlobals(\ReflectionClass $class)
+    {
+        $globals = $this->resetGlobals();
+
+        $annot = null;
+        if (\PHP_VERSION_ID >= 80000 && ($attribute = $class->getAttributes($this->routeAnnotationClass, \ReflectionAttribute::IS_INSTANCEOF)[0] ?? null)) {
+            $annot = $attribute->newInstance();
+        }
+        if (!$annot && $this->reader) {
+            $annot = $this->reader->getClassAnnotation($class, $this->routeAnnotationClass);
+        }
+
+        if ($annot) {
+            if (null !== $annot->getName()) {
+                $globals['name'] = $annot->getName();
+            }
+
+            if (null !== $annot->getPath()) {
+                $globals['path'] = $annot->getPath();
+            }
+
+            $globals['localized_paths'] = $annot->getLocalizedPaths();
+
+            if (null !== $annot->getRequirements()) {
+                $globals['requirements'] = $annot->getRequirements();
+            }
+
+            if (null !== $annot->getOptions()) {
+                $globals['options'] = $annot->getOptions();
+            }
+
+            if (null !== $annot->getDefaults()) {
+                $globals['defaults'] = $annot->getDefaults();
+            }
+
+            if (null !== $annot->getSchemes()) {
+                $globals['schemes'] = $annot->getSchemes();
+            }
+
+            if (null !== $annot->getMethods()) {
+                $globals['methods'] = $annot->getMethods();
+            }
+
+            if (null !== $annot->getHost()) {
+                $globals['host'] = $annot->getHost();
+            }
+
+            if (null !== $annot->getCondition()) {
+                $globals['condition'] = $annot->getCondition();
+            }
+
+            $globals['priority'] = $annot->getPriority() ?? 0;
+            $globals['env'] = $annot->getEnv();
+
+            foreach ($globals['requirements'] as $placeholder => $requirement) {
+                if (\is_int($placeholder)) {
+                    throw new \InvalidArgumentException(sprintf('A placeholder name must be a string (%d given). Did you forget to specify the placeholder key for the requirement "%s" in "%s"?', $placeholder, $requirement, $class->getName()));
+                }
+            }
+        }
+
+        return $globals;
+    }
+
+    private function resetGlobals(): array
+    {
+        return [
+            'path' => null,
+            'localized_paths' => [],
+            'requirements' => [],
+            'options' => [],
+            'defaults' => [],
+            'schemes' => [],
+            'methods' => [],
+            'host' => '',
+            'condition' => '',
+            'name' => '',
+            'priority' => 0,
+            'env' => null,
+        ];
+    }
+
+    protected function createRoute(string $path, array $defaults, array $requirements, array $options, ?string $host, array $schemes, array $methods, ?string $condition)
+    {
+        return new Route($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition);
+    }
+
+    abstract protected function configureRoute(Route $route, \ReflectionClass $class, \ReflectionMethod $method, object $annot);
+
+    /**
+     * @param \ReflectionClass|\ReflectionMethod $reflection
+     *
+     * @return iterable|RouteAnnotation[]
+     */
+    private function getAnnotations(object $reflection): iterable
+    {
+        if (\PHP_VERSION_ID >= 80000) {
+            foreach ($reflection->getAttributes($this->routeAnnotationClass, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
+                yield $attribute->newInstance();
+            }
+        }
+
+        if (!$this->reader) {
+            return;
+        }
+
+        $anntotations = $reflection instanceof \ReflectionClass
+            ? $this->reader->getClassAnnotations($reflection)
+            : $this->reader->getMethodAnnotations($reflection);
+
+        foreach ($anntotations as $annotation) {
+            if ($annotation instanceof $this->routeAnnotationClass) {
+                yield $annotation;
+            }
+        }
     }
 }

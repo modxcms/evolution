@@ -29,14 +29,6 @@ class RootPackage extends CompletePackage implements RootPackageInterface
     protected $aliases = array();
 
     /**
-     * {@inheritDoc}
-     */
-    public function getMinimumStability()
-    {
-        return $this->minimumStability;
-    }
-
-    /**
      * {@inerhitDoc}
      */
     public function setMinimumStability($minimumStability)
@@ -47,9 +39,9 @@ class RootPackage extends CompletePackage implements RootPackageInterface
     /**
      * {@inheritDoc}
      */
-    public function getStabilityFlags()
+    public function getMinimumStability()
     {
-        return $this->stabilityFlags;
+        return $this->minimumStability;
     }
 
     /**
@@ -63,9 +55,9 @@ class RootPackage extends CompletePackage implements RootPackageInterface
     /**
      * {@inheritDoc}
      */
-    public function getPreferStable()
+    public function getStabilityFlags()
     {
-        return $this->preferStable;
+        return $this->stabilityFlags;
     }
 
     /**
@@ -79,9 +71,9 @@ class RootPackage extends CompletePackage implements RootPackageInterface
     /**
      * {@inheritDoc}
      */
-    public function getConfig()
+    public function getPreferStable()
     {
-        return $this->config;
+        return $this->preferStable;
     }
 
     /**
@@ -95,9 +87,9 @@ class RootPackage extends CompletePackage implements RootPackageInterface
     /**
      * {@inheritDoc}
      */
-    public function getReferences()
+    public function getConfig()
     {
-        return $this->references;
+        return $this->config;
     }
 
     /**
@@ -111,9 +103,9 @@ class RootPackage extends CompletePackage implements RootPackageInterface
     /**
      * {@inheritDoc}
      */
-    public function getAliases()
+    public function getReferences()
     {
-        return $this->aliases;
+        return $this->references;
     }
 
     /**
@@ -122,5 +114,13 @@ class RootPackage extends CompletePackage implements RootPackageInterface
     public function setAliases(array $aliases)
     {
         $this->aliases = $aliases;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAliases()
+    {
+        return $this->aliases;
     }
 }

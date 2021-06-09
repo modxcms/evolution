@@ -7,29 +7,127 @@ use Illuminate\Support\Str;
 trait GuardsAttributes
 {
     /**
-     * Indicates if all mass assignment is enabled.
-     *
-     * @var bool
-     */
-    protected static $unguarded = false;
-    /**
-     * The actual columns that exist on the database and can be guarded.
-     *
-     * @var array
-     */
-    protected static $guardableColumns = [];
-    /**
      * The attributes that are mass assignable.
      *
      * @var string[]
      */
     protected $fillable = [];
+
     /**
      * The attributes that aren't mass assignable.
      *
      * @var string[]|bool
      */
     protected $guarded = ['*'];
+
+    /**
+     * Indicates if all mass assignment is enabled.
+     *
+     * @var bool
+     */
+    protected static $unguarded = false;
+
+    /**
+     * The actual columns that exist on the database and can be guarded.
+     *
+     * @var array
+     */
+    protected static $guardableColumns = [];
+
+    /**
+     * Get the fillable attributes for the model.
+     *
+     * @return array
+     */
+    public function getFillable()
+    {
+        return $this->fillable;
+    }
+
+    /**
+     * Set the fillable attributes for the model.
+     *
+     * @param  array  $fillable
+     * @return $this
+     */
+    public function fillable(array $fillable)
+    {
+        $this->fillable = $fillable;
+
+        return $this;
+    }
+
+    /**
+     * Merge new fillable attributes with existing fillable attributes on the model.
+     *
+     * @param  array  $fillable
+     * @return $this
+     */
+    public function mergeFillable(array $fillable)
+    {
+        $this->fillable = array_merge($this->fillable, $fillable);
+
+        return $this;
+    }
+
+    /**
+     * Get the guarded attributes for the model.
+     *
+     * @return array
+     */
+    public function getGuarded()
+    {
+        return $this->guarded === false
+                    ? []
+                    : $this->guarded;
+    }
+
+    /**
+     * Set the guarded attributes for the model.
+     *
+     * @param  array  $guarded
+     * @return $this
+     */
+    public function guard(array $guarded)
+    {
+        $this->guarded = $guarded;
+
+        return $this;
+    }
+
+    /**
+     * Merge new guarded attributes with existing guarded attributes on the model.
+     *
+     * @param  array  $guarded
+     * @return $this
+     */
+    public function mergeGuarded(array $guarded)
+    {
+        $this->guarded = array_merge($this->guarded, $guarded);
+
+        return $this;
+    }
+
+    /**
+     * Disable all mass assignable restrictions.
+     *
+     * @param  bool  $state
+     * @return void
+     */
+    public static function unguard($state = true)
+    {
+        static::$unguarded = $state;
+    }
+
+    /**
+     * Enable the mass assignment restrictions.
+     *
+     * @return void
+     */
+    public static function reguard()
+    {
+        static::$unguarded = false;
+    }
 
     /**
      * Determine if the current state is "unguarded".
@@ -60,79 +158,6 @@ trait GuardsAttributes
         } finally {
             static::reguard();
         }
-    }
-
-    /**
-     * Disable all mass assignable restrictions.
-     *
-     * @param  bool  $state
-     * @return void
-     */
-    public static function unguard($state = true)
-    {
-        static::$unguarded = $state;
-    }
-
-    /**
-     * Enable the mass assignment restrictions.
-     *
-     * @return void
-     */
-    public static function reguard()
-    {
-        static::$unguarded = false;
-    }
-
-    /**
-     * Set the fillable attributes for the model.
-     *
-     * @param  array  $fillable
-     * @return $this
-     */
-    public function fillable(array $fillable)
-    {
-        $this->fillable = $fillable;
-
-        return $this;
-    }
-
-    /**
-     * Merge new fillable attributes with existing fillable attributes on the model.
-     *
-     * @param  array  $fillable
-     * @return $this
-     */
-    public function mergeFillable(array $fillable)
-    {
-        $this->fillable = array_merge($this->fillable, $fillable);
-
-        return $this;
-    }
-
-    /**
-     * Set the guarded attributes for the model.
-     *
-     * @param  array  $guarded
-     * @return $this
-     */
-    public function guard(array $guarded)
-    {
-        $this->guarded = $guarded;
-
-        return $this;
-    }
-
-    /**
-     * Merge new guarded attributes with existing guarded attributes on the model.
-     *
-     * @param  array  $guarded
-     * @return $this
-     */
-    public function mergeGuarded(array $guarded)
-    {
-        $this->guarded = array_merge($this->guarded, $guarded);
-
-        return $this;
     }
 
     /**
@@ -167,16 +192,6 @@ trait GuardsAttributes
     }
 
     /**
-     * Get the fillable attributes for the model.
-     *
-     * @return array
-     */
-    public function getFillable()
-    {
-        return $this->fillable;
-    }
-
-    /**
      * Determine if the given key is guarded.
      *
      * @param  string  $key
@@ -191,18 +206,6 @@ trait GuardsAttributes
         return $this->getGuarded() == ['*'] ||
                ! empty(preg_grep('/^'.preg_quote($key).'$/i', $this->getGuarded())) ||
                ! $this->isGuardableColumn($key);
-    }
-
-    /**
-     * Get the guarded attributes for the model.
-     *
-     * @return array
-     */
-    public function getGuarded()
-    {
-        return $this->guarded === false
-                    ? []
-                    : $this->guarded;
     }
 
     /**

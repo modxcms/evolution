@@ -17,23 +17,19 @@ class JsonResource implements ArrayAccess, JsonSerializable, Responsable, UrlRou
     use ConditionallyLoadsAttributes, DelegatesToResource;
 
     /**
-     * The "data" wrapper that should be applied.
-     *
-     * @var string|null
-     */
-    public static $wrap = 'data';
-    /**
      * The resource instance.
      *
      * @var mixed
      */
     public $resource;
+
     /**
      * The additional data that should be added to the top-level resource array.
      *
      * @var array
      */
     public $with = [];
+
     /**
      * The additional meta data that should be added to the resource response.
      *
@@ -42,6 +38,13 @@ class JsonResource implements ArrayAccess, JsonSerializable, Responsable, UrlRou
      * @var array
      */
     public $additional = [];
+
+    /**
+     * The "data" wrapper that should be applied.
+     *
+     * @var string|null
+     */
+    public static $wrap = 'data';
 
     /**
      * Create a new resource instance.
@@ -78,56 +81,6 @@ class JsonResource implements ArrayAccess, JsonSerializable, Responsable, UrlRou
                 $collection->preserveKeys = (new static([]))->preserveKeys === true;
             }
         });
-    }
-
-    /**
-     * Set the string that should wrap the outer-most resource array.
-     *
-     * @param  string  $value
-     * @return void
-     */
-    public static function wrap($value)
-    {
-        static::$wrap = $value;
-    }
-
-    /**
-     * Disable wrapping of the outer-most resource array.
-     *
-     * @return void
-     */
-    public static function withoutWrapping()
-    {
-        static::$wrap = null;
-    }
-
-    /**
-     * Convert the model instance to JSON.
-     *
-     * @param  int  $options
-     * @return string
-     *
-     * @throws \Illuminate\Database\Eloquent\JsonEncodingException
-     */
-    public function toJson($options = 0)
-    {
-        $json = json_encode($this->jsonSerialize(), $options);
-
-        if (JSON_ERROR_NONE !== json_last_error()) {
-            throw JsonEncodingException::forResource($this, json_last_error_msg());
-        }
-
-        return $json;
-    }
-
-    /**
-     * Prepare the resource for JSON serialization.
-     *
-     * @return array
-     */
-    public function jsonSerialize()
-    {
-        return $this->resolve(Container::getInstance()->make('request'));
     }
 
     /**
@@ -169,6 +122,25 @@ class JsonResource implements ArrayAccess, JsonSerializable, Responsable, UrlRou
     }
 
     /**
+     * Convert the model instance to JSON.
+     *
+     * @param  int  $options
+     * @return string
+     *
+     * @throws \Illuminate\Database\Eloquent\JsonEncodingException
+     */
+    public function toJson($options = 0)
+    {
+        $json = json_encode($this->jsonSerialize(), $options);
+
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            throw JsonEncodingException::forResource($this, json_last_error_msg());
+        }
+
+        return $json;
+    }
+
+    /**
      * Get any additional data that should be returned with the resource array.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -205,6 +177,27 @@ class JsonResource implements ArrayAccess, JsonSerializable, Responsable, UrlRou
     }
 
     /**
+     * Set the string that should wrap the outer-most resource array.
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public static function wrap($value)
+    {
+        static::$wrap = $value;
+    }
+
+    /**
+     * Disable wrapping of the outer-most resource array.
+     *
+     * @return void
+     */
+    public static function withoutWrapping()
+    {
+        static::$wrap = null;
+    }
+
+    /**
      * Transform the resource into an HTTP response.
      *
      * @param  \Illuminate\Http\Request|null  $request
@@ -226,5 +219,15 @@ class JsonResource implements ArrayAccess, JsonSerializable, Responsable, UrlRou
     public function toResponse($request)
     {
         return (new ResourceResponse($this))->toResponse($request);
+    }
+
+    /**
+     * Prepare the resource for JSON serialization.
+     *
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return $this->resolve(Container::getInstance()->make('request'));
     }
 }

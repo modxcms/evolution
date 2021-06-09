@@ -40,28 +40,7 @@ class EmailLexer extends AbstractLexer
     const INVALID            = 302;
     const ASCII_INVALID_FROM = 127;
     const ASCII_INVALID_TO   = 199;
-    /**
-     * @psalm-var array{value:'', type:null, position:0}
-     */
-    private static $nullToken = [
-        'value' => '',
-        'type' => null,
-        'position' => 0,
-    ];
-    /**
-     * The last matched/seen token.
-     *
-     * @var array
-     *
-     * @psalm-var array{value:string, type:null|int, position:int}
-     */
-    public $token;
-    /**
-     * The next token in the input.
-     *
-     * @var array|null
-     */
-    public $lookahead;
+
     /**
      * US-ASCII visible characters not valid for atext (@link http://tools.ietf.org/html/rfc5322#section-3.2.3)
      *
@@ -97,16 +76,43 @@ class EmailLexer extends AbstractLexer
         ''     => self::S_EMPTY,
         '\0'   => self::C_NUL,
     );
+
     /**
      * @var bool
      */
     protected $hasInvalidTokens = false;
+
     /**
      * @var array
      *
      * @psalm-var array{value:string, type:null|int, position:int}|array<empty, empty>
      */
     protected $previous = [];
+
+    /**
+     * The last matched/seen token.
+     *
+     * @var array
+     *
+     * @psalm-var array{value:string, type:null|int, position:int}
+     */
+    public $token;
+
+    /**
+     * The next token in the input.
+     *
+     * @var array|null
+     */
+    public $lookahead;
+
+    /**
+     * @psalm-var array{value:'', type:null, position:0}
+     */
+    private static $nullToken = [
+        'value' => '',
+        'type' => null,
+        'position' => 0,
+    ];
 
     public function __construct()
     {
@@ -229,11 +235,12 @@ class EmailLexer extends AbstractLexer
 
     /**
      * @param string $value
+     *
      * @return bool
      */
-    protected function isNullType($value)
+    protected function isValid($value)
     {
-        if ($value === "\0") {
+        if (isset($this->charValue[$value])) {
             return true;
         }
 
@@ -242,12 +249,11 @@ class EmailLexer extends AbstractLexer
 
     /**
      * @param string $value
-     *
      * @return bool
      */
-    protected function isValid($value)
+    protected function isNullType($value)
     {
-        if (isset($this->charValue[$value])) {
+        if ($value === "\0") {
             return true;
         }
 

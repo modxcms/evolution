@@ -47,49 +47,6 @@ class SvnDriver extends VcsDriver
     /**
      * {@inheritDoc}
      */
-    public static function supports(IOInterface $io, Config $config, $url, $deep = false)
-    {
-        $url = self::normalizeUrl($url);
-        if (preg_match('#(^svn://|^svn\+ssh://|svn\.)#i', $url)) {
-            return true;
-        }
-
-        // proceed with deep check for local urls since they are fast to process
-        if (!$deep && !Filesystem::isLocalPath($url)) {
-            return false;
-        }
-
-        $process = new ProcessExecutor($io);
-        $exit = $process->execute(
-            "svn info --non-interactive -- ".ProcessExecutor::escape($url),
-            $ignoredOutput
-        );
-
-        if ($exit === 0) {
-            // This is definitely a Subversion repository.
-            return true;
-        }
-
-        // Subversion client 1.7 and older
-        if (false !== stripos($process->getErrorOutput(), 'authorization failed:')) {
-            // This is likely a remote Subversion repository that requires
-            // authentication. We will handle actual authentication later.
-            return true;
-        }
-
-        // Subversion client 1.8 and newer
-        if (false !== stripos($process->getErrorOutput(), 'Authentication failed')) {
-            // This is likely a remote Subversion or newer repository that requires
-            // authentication. We will handle actual authentication later.
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function initialize()
     {
         $this->url = $this->baseUrl = rtrim(self::normalizeUrl($this->url), '/');
@@ -121,147 +78,6 @@ class SvnDriver extends VcsDriver
 
         $this->getBranches();
         $this->getTags();
-    }
-
-    /**
-     * An absolute path (leading '/') is converted to a file:// url.
-     *
-     * @param string $url
-     *
-     * @return string
-     */
-    protected static function normalizeUrl($url)
-    {
-        $fs = new Filesystem();
-        if ($fs->isAbsolutePath($url)) {
-            return 'file://' . strtr($url, '\\', '/');
-        }
-
-        return $url;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getBranches()
-    {
-        if (null === $this->branches) {
-            $this->branches = array();
-
-            if (false === $this->trunkPath) {
-                $trunkParent = $this->baseUrl . '/';
-            } else {
-                $trunkParent = $this->baseUrl . '/' . $this->trunkPath;
-            }
-
-            $output = $this->execute('svn ls --verbose', $trunkParent);
-            if ($output) {
-                foreach ($this->process->splitLines($output) as $line) {
-                    $line = trim($line);
-                    if ($line && preg_match('{^\s*(\S+).*?(\S+)\s*$}', $line, $match)) {
-                        if (isset($match[1], $match[2]) && $match[2] === './') {
-                            $this->branches['trunk'] = $this->buildIdentifier(
-                                '/' . $this->trunkPath,
-                                $match[1]
-                            );
-                            $this->rootIdentifier = $this->branches['trunk'];
-                            break;
-                        }
-                    }
-                }
-            }
-            unset($output);
-
-            if ($this->branchesPath !== false) {
-                $output = $this->execute('svn ls --verbose', $this->baseUrl . '/' . $this->branchesPath);
-                if ($output) {
-                    foreach ($this->process->splitLines(trim($output)) as $line) {
-                        $line = trim($line);
-                        if ($line && preg_match('{^\s*(\S+).*?(\S+)\s*$}', $line, $match)) {
-                            if (isset($match[1], $match[2]) && $match[2] !== './') {
-                                $this->branches[rtrim($match[2], '/')] = $this->buildIdentifier(
-                                    '/' . $this->branchesPath . '/' . $match[2],
-                                    $match[1]
-                                );
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return $this->branches;
-    }
-
-    /**
-     * Execute an SVN command and try to fix up the process with credentials
-     * if necessary.
-     *
-     * @param  string            $command The svn command to run.
-     * @param  string            $url     The SVN URL.
-     * @throws \RuntimeException
-     * @return string
-     */
-    protected function execute($command, $url)
-    {
-        if (null === $this->util) {
-            $this->util = new SvnUtil($this->baseUrl, $this->io, $this->config, $this->process);
-            $this->util->setCacheCredentials($this->cacheCredentials);
-        }
-
-        try {
-            return $this->util->execute($command, $url);
-        } catch (\RuntimeException $e) {
-            if (null === $this->util->binaryVersion()) {
-                throw new \RuntimeException('Failed to load '.$this->url.', svn was not found, check that it is installed and in your PATH env.' . "\n\n" . $this->process->getErrorOutput());
-            }
-
-            throw new \RuntimeException(
-                'Repository '.$this->url.' could not be processed, '.$e->getMessage()
-            );
-        }
-    }
-
-    /**
-     * Build the identifier respecting "package-path" config option
-     *
-     * @param string $baseDir  The path to trunk/branch/tag
-     * @param int    $revision The revision mark to add to identifier
-     *
-     * @return string
-     */
-    protected function buildIdentifier($baseDir, $revision)
-    {
-        return rtrim($baseDir, '/') . $this->packagePath . '/@' . $revision;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getTags()
-    {
-        if (null === $this->tags) {
-            $this->tags = array();
-
-            if ($this->tagsPath !== false) {
-                $output = $this->execute('svn ls --verbose', $this->baseUrl . '/' . $this->tagsPath);
-                if ($output) {
-                    foreach ($this->process->splitLines($output) as $line) {
-                        $line = trim($line);
-                        if ($line && preg_match('{^\s*(\S+).*?(\S+)\s*$}', $line, $match)) {
-                            if (isset($match[1], $match[2]) && $match[2] !== './') {
-                                $this->tags[rtrim($match[2], '/')] = $this->buildIdentifier(
-                                    '/' . $this->tagsPath . '/' . $match[2],
-                                    $match[1]
-                                );
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return $this->tags;
     }
 
     /**
@@ -299,6 +115,14 @@ class SvnDriver extends VcsDriver
     /**
      * {@inheritdoc}
      */
+    protected function shouldCache($identifier)
+    {
+        return $this->cache && preg_match('{@\d+$}', $identifier);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getComposerInformation($identifier)
     {
         if (!isset($this->infoCache[$identifier])) {
@@ -325,14 +149,6 @@ class SvnDriver extends VcsDriver
         }
 
         return $this->infoCache[$identifier];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function shouldCache($identifier)
-    {
-        return $this->cache && preg_match('{@\d+$}', $identifier);
     }
 
     /**
@@ -389,5 +205,189 @@ class SvnDriver extends VcsDriver
         }
 
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTags()
+    {
+        if (null === $this->tags) {
+            $this->tags = array();
+
+            if ($this->tagsPath !== false) {
+                $output = $this->execute('svn ls --verbose', $this->baseUrl . '/' . $this->tagsPath);
+                if ($output) {
+                    foreach ($this->process->splitLines($output) as $line) {
+                        $line = trim($line);
+                        if ($line && preg_match('{^\s*(\S+).*?(\S+)\s*$}', $line, $match)) {
+                            if (isset($match[1], $match[2]) && $match[2] !== './') {
+                                $this->tags[rtrim($match[2], '/')] = $this->buildIdentifier(
+                                    '/' . $this->tagsPath . '/' . $match[2],
+                                    $match[1]
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $this->tags;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBranches()
+    {
+        if (null === $this->branches) {
+            $this->branches = array();
+
+            if (false === $this->trunkPath) {
+                $trunkParent = $this->baseUrl . '/';
+            } else {
+                $trunkParent = $this->baseUrl . '/' . $this->trunkPath;
+            }
+
+            $output = $this->execute('svn ls --verbose', $trunkParent);
+            if ($output) {
+                foreach ($this->process->splitLines($output) as $line) {
+                    $line = trim($line);
+                    if ($line && preg_match('{^\s*(\S+).*?(\S+)\s*$}', $line, $match)) {
+                        if (isset($match[1], $match[2]) && $match[2] === './') {
+                            $this->branches['trunk'] = $this->buildIdentifier(
+                                '/' . $this->trunkPath,
+                                $match[1]
+                            );
+                            $this->rootIdentifier = $this->branches['trunk'];
+                            break;
+                        }
+                    }
+                }
+            }
+            unset($output);
+
+            if ($this->branchesPath !== false) {
+                $output = $this->execute('svn ls --verbose', $this->baseUrl . '/' . $this->branchesPath);
+                if ($output) {
+                    foreach ($this->process->splitLines(trim($output)) as $line) {
+                        $line = trim($line);
+                        if ($line && preg_match('{^\s*(\S+).*?(\S+)\s*$}', $line, $match)) {
+                            if (isset($match[1], $match[2]) && $match[2] !== './') {
+                                $this->branches[rtrim($match[2], '/')] = $this->buildIdentifier(
+                                    '/' . $this->branchesPath . '/' . $match[2],
+                                    $match[1]
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $this->branches;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function supports(IOInterface $io, Config $config, $url, $deep = false)
+    {
+        $url = self::normalizeUrl($url);
+        if (preg_match('#(^svn://|^svn\+ssh://|svn\.)#i', $url)) {
+            return true;
+        }
+
+        // proceed with deep check for local urls since they are fast to process
+        if (!$deep && !Filesystem::isLocalPath($url)) {
+            return false;
+        }
+
+        $process = new ProcessExecutor($io);
+        $exit = $process->execute(
+            "svn info --non-interactive -- ".ProcessExecutor::escape($url),
+            $ignoredOutput
+        );
+
+        if ($exit === 0) {
+            // This is definitely a Subversion repository.
+            return true;
+        }
+
+        // Subversion client 1.7 and older
+        if (false !== stripos($process->getErrorOutput(), 'authorization failed:')) {
+            // This is likely a remote Subversion repository that requires
+            // authentication. We will handle actual authentication later.
+            return true;
+        }
+
+        // Subversion client 1.8 and newer
+        if (false !== stripos($process->getErrorOutput(), 'Authentication failed')) {
+            // This is likely a remote Subversion or newer repository that requires
+            // authentication. We will handle actual authentication later.
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * An absolute path (leading '/') is converted to a file:// url.
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    protected static function normalizeUrl($url)
+    {
+        $fs = new Filesystem();
+        if ($fs->isAbsolutePath($url)) {
+            return 'file://' . strtr($url, '\\', '/');
+        }
+
+        return $url;
+    }
+
+    /**
+     * Execute an SVN command and try to fix up the process with credentials
+     * if necessary.
+     *
+     * @param  string            $command The svn command to run.
+     * @param  string            $url     The SVN URL.
+     * @throws \RuntimeException
+     * @return string
+     */
+    protected function execute($command, $url)
+    {
+        if (null === $this->util) {
+            $this->util = new SvnUtil($this->baseUrl, $this->io, $this->config, $this->process);
+            $this->util->setCacheCredentials($this->cacheCredentials);
+        }
+
+        try {
+            return $this->util->execute($command, $url);
+        } catch (\RuntimeException $e) {
+            if (null === $this->util->binaryVersion()) {
+                throw new \RuntimeException('Failed to load '.$this->url.', svn was not found, check that it is installed and in your PATH env.' . "\n\n" . $this->process->getErrorOutput());
+            }
+
+            throw new \RuntimeException(
+                'Repository '.$this->url.' could not be processed, '.$e->getMessage()
+            );
+        }
+    }
+
+    /**
+     * Build the identifier respecting "package-path" config option
+     *
+     * @param string $baseDir  The path to trunk/branch/tag
+     * @param int    $revision The revision mark to add to identifier
+     *
+     * @return string
+     */
+    protected function buildIdentifier($baseDir, $revision)
+    {
+        return rtrim($baseDir, '/') . $this->packagePath . '/@' . $revision;
     }
 }

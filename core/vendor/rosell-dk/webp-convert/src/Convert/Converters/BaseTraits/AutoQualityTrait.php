@@ -17,12 +17,18 @@ use WebPConvert\Convert\Helpers\JpegQualityDetector;
 trait AutoQualityTrait
 {
 
+    abstract public function logLn($msg, $style = '');
+    abstract public function getMimeTypeOfSource();
+
     /** @var boolean  Whether the quality option has been processed or not */
     private $processed = false;
+
     /** @var boolean  Whether the quality of the source could be detected or not (set upon processing) */
     private $qualityCouldNotBeDetected = false;
+
     /** @var integer  The calculated quality (set upon processing - on successful detection) */
     private $calculatedQuality;
+
 
     /**
      *  Determine if quality detection is required but failing.
@@ -39,6 +45,23 @@ trait AutoQualityTrait
     {
         $this->processQualityOptionIfNotAlready();
         return $this->qualityCouldNotBeDetected;
+    }
+
+    /**
+     * Get calculated quality.
+     *
+     * If the "quality" option is a number, that number is returned.
+     * If mime type of source is something else than "image/jpeg", the "default-quality" option is returned
+     * If quality is "auto" and source is a jpeg image, it will be attempted to detect jpeg quality.
+     * In case of failure, the value of the "default-quality" option is returned.
+     * In case of success, the detected quality is returned, or the value of the "max-quality" if that is lower.
+     *
+     *  @return  int
+     */
+    public function getCalculatedQuality()
+    {
+        $this->processQualityOptionIfNotAlready();
+        return $this->calculatedQuality;
     }
 
     /**
@@ -147,26 +170,5 @@ trait AutoQualityTrait
             }
         }
         $this->calculatedQuality = $q;
-    }
-
-    abstract public function logLn($msg, $style = '');
-
-    abstract public function getMimeTypeOfSource();
-
-    /**
-     * Get calculated quality.
-     *
-     * If the "quality" option is a number, that number is returned.
-     * If mime type of source is something else than "image/jpeg", the "default-quality" option is returned
-     * If quality is "auto" and source is a jpeg image, it will be attempted to detect jpeg quality.
-     * In case of failure, the value of the "default-quality" option is returned.
-     * In case of success, the detected quality is returned, or the value of the "max-quality" if that is lower.
-     *
-     *  @return  int
-     */
-    public function getCalculatedQuality()
-    {
-        $this->processQualityOptionIfNotAlready();
-        return $this->calculatedQuality;
     }
 }

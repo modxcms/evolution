@@ -120,40 +120,6 @@ class DynamoDbStore implements LockProvider, Store
     }
 
     /**
-     * Determine if the given item is expired.
-     *
-     * @param  array  $item
-     * @param  \DateTimeInterface|null  $expiration
-     * @return bool
-     */
-    protected function isExpired(array $item, $expiration = null)
-    {
-        $expiration = $expiration ?: Carbon::now();
-
-        return isset($item[$this->expirationAttribute]) &&
-               $expiration->getTimestamp() >= $item[$this->expirationAttribute]['N'];
-    }
-
-    /**
-     * Unserialize the value.
-     *
-     * @param  mixed  $value
-     * @return mixed
-     */
-    protected function unserialize($value)
-    {
-        if (filter_var($value, FILTER_VALIDATE_INT) !== false) {
-            return (int) $value;
-        }
-
-        if (is_numeric($value)) {
-            return (float) $value;
-        }
-
-        return unserialize($value);
-    }
-
-    /**
      * Retrieve multiple items from the cache by key.
      *
      * Items not found in the cache will have a null value.
@@ -202,6 +168,49 @@ class DynamoDbStore implements LockProvider, Store
     }
 
     /**
+     * Determine if the given item is expired.
+     *
+     * @param  array  $item
+     * @param  \DateTimeInterface|null  $expiration
+     * @return bool
+     */
+    protected function isExpired(array $item, $expiration = null)
+    {
+        $expiration = $expiration ?: Carbon::now();
+
+        return isset($item[$this->expirationAttribute]) &&
+               $expiration->getTimestamp() >= $item[$this->expirationAttribute]['N'];
+    }
+
+    /**
+     * Store an item in the cache for a given number of seconds.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @param  int  $seconds
+     * @return bool
+     */
+    public function put($key, $value, $seconds)
+    {
+        $this->dynamo->putItem([
+            'TableName' => $this->table,
+            'Item' => [
+                $this->keyAttribute => [
+                    'S' => $this->prefix.$key,
+                ],
+                $this->valueAttribute => [
+                    $this->type($value) => $this->serialize($value),
+                ],
+                $this->expirationAttribute => [
+                    'N' => (string) $this->toTimestamp($seconds),
+                ],
+            ],
+        ]);
+
+        return true;
+    }
+
+    /**
      * Store multiple items in the cache for a given number of $seconds.
      *
      * @param  array  $values
@@ -235,41 +244,6 @@ class DynamoDbStore implements LockProvider, Store
         ]);
 
         return true;
-    }
-
-    /**
-     * Get the UNIX timestamp for the given number of seconds.
-     *
-     * @param  int  $seconds
-     * @return int
-     */
-    protected function toTimestamp($seconds)
-    {
-        return $seconds > 0
-                    ? $this->availableAt($seconds)
-                    : Carbon::now()->getTimestamp();
-    }
-
-    /**
-     * Get the DynamoDB type for the given value.
-     *
-     * @param  mixed  $value
-     * @return string
-     */
-    protected function type($value)
-    {
-        return is_numeric($value) ? 'N' : 'S';
-    }
-
-    /**
-     * Serialize the value.
-     *
-     * @param  mixed  $value
-     * @return mixed
-     */
-    protected function serialize($value)
-    {
-        return is_numeric($value) ? (string) $value : serialize($value);
     }
 
     /**
@@ -421,31 +395,16 @@ class DynamoDbStore implements LockProvider, Store
     }
 
     /**
-     * Store an item in the cache for a given number of seconds.
+     * Get a lock instance.
      *
-     * @param  string  $key
-     * @param  mixed  $value
+     * @param  string  $name
      * @param  int  $seconds
-     * @return bool
+     * @param  string|null  $owner
+     * @return \Illuminate\Contracts\Cache\Lock
      */
-    public function put($key, $value, $seconds)
+    public function lock($name, $seconds = 0, $owner = null)
     {
-        $this->dynamo->putItem([
-            'TableName' => $this->table,
-            'Item' => [
-                $this->keyAttribute => [
-                    'S' => $this->prefix.$key,
-                ],
-                $this->valueAttribute => [
-                    $this->type($value) => $this->serialize($value),
-                ],
-                $this->expirationAttribute => [
-                    'N' => (string) $this->toTimestamp($seconds),
-                ],
-            ],
-        ]);
-
-        return true;
+        return new DynamoDbLock($this, $this->prefix.$name, $seconds, $owner);
     }
 
     /**
@@ -458,19 +417,6 @@ class DynamoDbStore implements LockProvider, Store
     public function restoreLock($name, $owner)
     {
         return $this->lock($name, 0, $owner);
-    }
-
-    /**
-     * Get a lock instance.
-     *
-     * @param  string  $name
-     * @param  int  $seconds
-     * @param  string|null  $owner
-     * @return \Illuminate\Contracts\Cache\Lock
-     */
-    public function lock($name, $seconds = 0, $owner = null)
-    {
-        return new DynamoDbLock($this, $this->prefix.$name, $seconds, $owner);
     }
 
     /**
@@ -503,6 +449,60 @@ class DynamoDbStore implements LockProvider, Store
     public function flush()
     {
         throw new RuntimeException('DynamoDb does not support flushing an entire table. Please create a new table.');
+    }
+
+    /**
+     * Get the UNIX timestamp for the given number of seconds.
+     *
+     * @param  int  $seconds
+     * @return int
+     */
+    protected function toTimestamp($seconds)
+    {
+        return $seconds > 0
+                    ? $this->availableAt($seconds)
+                    : Carbon::now()->getTimestamp();
+    }
+
+    /**
+     * Serialize the value.
+     *
+     * @param  mixed  $value
+     * @return mixed
+     */
+    protected function serialize($value)
+    {
+        return is_numeric($value) ? (string) $value : serialize($value);
+    }
+
+    /**
+     * Unserialize the value.
+     *
+     * @param  mixed  $value
+     * @return mixed
+     */
+    protected function unserialize($value)
+    {
+        if (filter_var($value, FILTER_VALIDATE_INT) !== false) {
+            return (int) $value;
+        }
+
+        if (is_numeric($value)) {
+            return (float) $value;
+        }
+
+        return unserialize($value);
+    }
+
+    /**
+     * Get the DynamoDB type for the given value.
+     *
+     * @param  mixed  $value
+     * @return string
+     */
+    protected function type($value)
+    {
+        return is_numeric($value) ? 'N' : 'S';
     }
 
     /**

@@ -53,27 +53,6 @@ class LoggingTranslator implements TranslatorInterface, TranslatorBagInterface, 
     }
 
     /**
-     * Logs for missing translations.
-     */
-    private function log(string $id, ?string $domain, ?string $locale)
-    {
-        if (null === $domain) {
-            $domain = 'messages';
-        }
-
-        $catalogue = $this->translator->getCatalogue($locale);
-        if ($catalogue->defines($id, $domain)) {
-            return;
-        }
-
-        if ($catalogue->has($id, $domain)) {
-            $this->logger->debug('Translation use fallback catalogue.', ['id' => $id, 'domain' => $domain, 'locale' => $catalogue->getLocale()]);
-        } else {
-            $this->logger->warning('Translation not found.', ['id' => $id, 'domain' => $domain, 'locale' => $catalogue->getLocale()]);
-        }
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function setLocale(string $locale)
@@ -131,5 +110,26 @@ class LoggingTranslator implements TranslatorInterface, TranslatorBagInterface, 
     public function __call(string $method, array $args)
     {
         return $this->translator->{$method}(...$args);
+    }
+
+    /**
+     * Logs for missing translations.
+     */
+    private function log(string $id, ?string $domain, ?string $locale)
+    {
+        if (null === $domain) {
+            $domain = 'messages';
+        }
+
+        $catalogue = $this->translator->getCatalogue($locale);
+        if ($catalogue->defines($id, $domain)) {
+            return;
+        }
+
+        if ($catalogue->has($id, $domain)) {
+            $this->logger->debug('Translation use fallback catalogue.', ['id' => $id, 'domain' => $domain, 'locale' => $catalogue->getLocale()]);
+        } else {
+            $this->logger->warning('Translation not found.', ['id' => $id, 'domain' => $domain, 'locale' => $catalogue->getLocale()]);
+        }
     }
 }

@@ -42,6 +42,71 @@ abstract class AbstractConsumer implements \Iterator
     }
 
     /**
+     * Checks if the specified flag is valid based on the state of the consumer.
+     *
+     * @param int $value Flag.
+     *
+     * @return bool
+     */
+    protected function isFlagSet($value)
+    {
+        return ($this->statusFlags & $value) === $value;
+    }
+
+    /**
+     * Subscribes to the specified channels.
+     *
+     * @param mixed $channel,... One or more channel names.
+     */
+    public function subscribe($channel /*, ... */)
+    {
+        $this->writeRequest(self::SUBSCRIBE, func_get_args());
+        $this->statusFlags |= self::STATUS_SUBSCRIBED;
+    }
+
+    /**
+     * Unsubscribes from the specified channels.
+     *
+     * @param string ... One or more channel names.
+     */
+    public function unsubscribe(/* ... */)
+    {
+        $this->writeRequest(self::UNSUBSCRIBE, func_get_args());
+    }
+
+    /**
+     * Subscribes to the specified channels using a pattern.
+     *
+     * @param mixed $pattern,... One or more channel name patterns.
+     */
+    public function psubscribe($pattern /* ... */)
+    {
+        $this->writeRequest(self::PSUBSCRIBE, func_get_args());
+        $this->statusFlags |= self::STATUS_PSUBSCRIBED;
+    }
+
+    /**
+     * Unsubscribes from the specified channels using a pattern.
+     *
+     * @param string ... One or more channel name patterns.
+     */
+    public function punsubscribe(/* ... */)
+    {
+        $this->writeRequest(self::PUNSUBSCRIBE, func_get_args());
+    }
+
+    /**
+     * PING the server with an optional payload that will be echoed as a
+     * PONG message in the pub/sub loop.
+     *
+     * @param string $payload Optional PING payload.
+     */
+    public function ping($payload = null)
+    {
+        $this->writeRequest('PING', array($payload));
+    }
+
+    /**
      * Closes the context by unsubscribing from all the subscribed channels. The
      * context can be forcefully closed by dropping the underlying connection.
      *
@@ -71,53 +136,9 @@ abstract class AbstractConsumer implements \Iterator
     }
 
     /**
-     * Checks if the the consumer is still in a valid state to continue.
-     *
-     * @return bool
-     */
-    public function valid()
-    {
-        $isValid = $this->isFlagSet(self::STATUS_VALID);
-        $subscriptionFlags = self::STATUS_SUBSCRIBED | self::STATUS_PSUBSCRIBED;
-        $hasSubscriptions = ($this->statusFlags & $subscriptionFlags) > 0;
-
-        return $isValid && $hasSubscriptions;
-    }
-
-    /**
-     * Checks if the specified flag is valid based on the state of the consumer.
-     *
-     * @param int $value Flag.
-     *
-     * @return bool
-     */
-    protected function isFlagSet($value)
-    {
-        return ($this->statusFlags & $value) === $value;
-    }
-
-    /**
-     * Resets the state of the consumer.
-     */
-    protected function invalidate()
-    {
-        $this->statusFlags = 0;    // 0b0000;
-    }
-
-    /**
      * Closes the underlying connection when forcing a disconnection.
      */
     abstract protected function disconnect();
-
-    /**
-     * Unsubscribes from the specified channels.
-     *
-     * @param string ... One or more channel names.
-     */
-    public function unsubscribe(/* ... */)
-    {
-        $this->writeRequest(self::UNSUBSCRIBE, func_get_args());
-    }
 
     /**
      * Writes a Redis command on the underlying connection.
@@ -126,49 +147,6 @@ abstract class AbstractConsumer implements \Iterator
      * @param array  $arguments Arguments for the command.
      */
     abstract protected function writeRequest($method, $arguments);
-
-    /**
-     * Unsubscribes from the specified channels using a pattern.
-     *
-     * @param string ... One or more channel name patterns.
-     */
-    public function punsubscribe(/* ... */)
-    {
-        $this->writeRequest(self::PUNSUBSCRIBE, func_get_args());
-    }
-
-    /**
-     * Subscribes to the specified channels.
-     *
-     * @param mixed $channel,... One or more channel names.
-     */
-    public function subscribe($channel /*, ... */)
-    {
-        $this->writeRequest(self::SUBSCRIBE, func_get_args());
-        $this->statusFlags |= self::STATUS_SUBSCRIBED;
-    }
-
-    /**
-     * Subscribes to the specified channels using a pattern.
-     *
-     * @param mixed $pattern,... One or more channel name patterns.
-     */
-    public function psubscribe($pattern /* ... */)
-    {
-        $this->writeRequest(self::PSUBSCRIBE, func_get_args());
-        $this->statusFlags |= self::STATUS_PSUBSCRIBED;
-    }
-
-    /**
-     * PING the server with an optional payload that will be echoed as a
-     * PONG message in the pub/sub loop.
-     *
-     * @param string $payload Optional PING payload.
-     */
-    public function ping($payload = null)
-    {
-        $this->writeRequest('PING', array($payload));
-    }
 
     /**
      * {@inheritdoc}
@@ -190,14 +168,6 @@ abstract class AbstractConsumer implements \Iterator
     }
 
     /**
-     * Waits for a new message from the server generated by one of the active
-     * subscriptions and returns it when available.
-     *
-     * @return array
-     */
-    abstract protected function getValue();
-
-    /**
      * {@inheritdoc}
      */
     public function key()
@@ -216,4 +186,34 @@ abstract class AbstractConsumer implements \Iterator
 
         return $this->position;
     }
+
+    /**
+     * Checks if the the consumer is still in a valid state to continue.
+     *
+     * @return bool
+     */
+    public function valid()
+    {
+        $isValid = $this->isFlagSet(self::STATUS_VALID);
+        $subscriptionFlags = self::STATUS_SUBSCRIBED | self::STATUS_PSUBSCRIBED;
+        $hasSubscriptions = ($this->statusFlags & $subscriptionFlags) > 0;
+
+        return $isValid && $hasSubscriptions;
+    }
+
+    /**
+     * Resets the state of the consumer.
+     */
+    protected function invalidate()
+    {
+        $this->statusFlags = 0;    // 0b0000;
+    }
+
+    /**
+     * Waits for a new message from the server generated by one of the active
+     * subscriptions and returns it when available.
+     *
+     * @return array
+     */
+    abstract protected function getValue();
 }

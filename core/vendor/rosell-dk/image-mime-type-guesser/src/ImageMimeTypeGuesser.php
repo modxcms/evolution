@@ -19,18 +19,6 @@ class ImageMimeTypeGuesser
 
 
     /**
-     * Check if the *detected* mime type is in a list of accepted mime types.
-     *
-     * @param  string  $filePath  The path to the file
-     * @param  string[]  $mimeTypes  Mime types to accept
-     * @return bool  Whether the detected mime type is in the $mimeTypes array or not
-     */
-    public static function detectIsIn($filePath, $mimeTypes)
-    {
-        return in_array(self::detect($filePath), $mimeTypes);
-    }
-
-    /**
      * Try to detect mime type of image using all available detectors (the "stack" detector).
      *
      * Returns:
@@ -46,18 +34,6 @@ class ImageMimeTypeGuesser
     public static function detect($filePath)
     {
         return Stack::detect($filePath);
-    }
-
-    /**
-     * Check if the *guessed* mime type is in a list of accepted mime types.
-     *
-     * @param  string  $filePath  The path to the file
-     * @param  string[]  $mimeTypes  Mime types to accept
-     * @return bool  Whether the detected / guessed mime type is in the $mimeTypes array or not
-     */
-    public static function guessIsIn($filePath, $mimeTypes)
-    {
-        return in_array(self::guess($filePath), $mimeTypes);
     }
 
     /**
@@ -85,18 +61,6 @@ class ImageMimeTypeGuesser
 
         // fall back to the wild west method
         return GuessFromExtension::guess($filePath);
-    }
-
-    /**
-     * Check if the *leniently guessed* mime type is in a list of accepted mime types.
-     *
-     * @param  string  $filePath  The path to the file
-     * @param  string[]  $mimeTypes  Mime types to accept
-     * @return bool  Whether the detected / leniently guessed mime type is in the $mimeTypes array or not
-     */
-    public static function lenientGuessIsIn($filePath, $mimeTypes)
-    {
-        return in_array(self::lenientGuess($filePath), $mimeTypes);
     }
 
     /**
@@ -129,5 +93,42 @@ class ImageMimeTypeGuesser
             return GuessFromExtension::guess($filePath);
         }
         return $detectResult;
+    }
+
+
+    /**
+     * Check if the *detected* mime type is in a list of accepted mime types.
+     *
+     * @param  string  $filePath  The path to the file
+     * @param  string[]  $mimeTypes  Mime types to accept
+     * @return bool  Whether the detected mime type is in the $mimeTypes array or not
+     */
+    public static function detectIsIn($filePath, $mimeTypes)
+    {
+        return in_array(self::detect($filePath), $mimeTypes);
+    }
+
+    /**
+     * Check if the *guessed* mime type is in a list of accepted mime types.
+     *
+     * @param  string  $filePath  The path to the file
+     * @param  string[]  $mimeTypes  Mime types to accept
+     * @return bool  Whether the detected / guessed mime type is in the $mimeTypes array or not
+     */
+    public static function guessIsIn($filePath, $mimeTypes)
+    {
+        return in_array(self::guess($filePath), $mimeTypes);
+    }
+
+    /**
+     * Check if the *leniently guessed* mime type is in a list of accepted mime types.
+     *
+     * @param  string  $filePath  The path to the file
+     * @param  string[]  $mimeTypes  Mime types to accept
+     * @return bool  Whether the detected / leniently guessed mime type is in the $mimeTypes array or not
+     */
+    public static function lenientGuessIsIn($filePath, $mimeTypes)
+    {
+        return in_array(self::lenientGuess($filePath), $mimeTypes);
     }
 }

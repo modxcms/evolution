@@ -91,28 +91,14 @@ class ListKey implements \Iterator
     }
 
     /**
-     * {@inheritdoc}
+     * Fetches a new set of elements from the remote collection, effectively
+     * advancing the iteration process.
+     *
+     * @return array
      */
-    public function rewind()
+    protected function executeCommand()
     {
-        $this->reset();
-        $this->next();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function next()
-    {
-        if (!$this->elements && $this->fetchmore) {
-            $this->fetch();
-        }
-
-        if ($this->elements) {
-            $this->extractNext();
-        } else {
-            $this->valid = false;
-        }
+        return $this->client->lrange($this->key, $this->position + 1, $this->position + $this->count);
     }
 
     /**
@@ -131,23 +117,21 @@ class ListKey implements \Iterator
     }
 
     /**
-     * Fetches a new set of elements from the remote collection, effectively
-     * advancing the iteration process.
-     *
-     * @return array
-     */
-    protected function executeCommand()
-    {
-        return $this->client->lrange($this->key, $this->position + 1, $this->position + $this->count);
-    }
-
-    /**
      * Extracts next values for key() and current().
      */
     protected function extractNext()
     {
         ++$this->position;
         $this->current = array_shift($this->elements);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rewind()
+    {
+        $this->reset();
+        $this->next();
     }
 
     /**
@@ -164,6 +148,22 @@ class ListKey implements \Iterator
     public function key()
     {
         return $this->position;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function next()
+    {
+        if (!$this->elements && $this->fetchmore) {
+            $this->fetch();
+        }
+
+        if ($this->elements) {
+            $this->extractNext();
+        } else {
+            $this->valid = false;
+        }
     }
 
     /**

@@ -92,14 +92,85 @@ class BinaryInstaller
                 }
             } elseif ($this->binCompat === "full") {
                 $this->installFullBinaries($binPath, $link, $bin, $package);
+            } elseif ($this->binCompat === "symlink") {
+                $this->installSymlinkBinaries($binPath, $link);
             }
-            Silencer::call('chmod', $link, 0777 & ~umask());
+            Silencer::call('chmod', $binPath, 0777 & ~umask());
         }
+    }
+
+    public function removeBinaries(PackageInterface $package)
+    {
+        $this->initializeBinDir();
+
+        $binaries = $this->getBinaries($package);
+        if (!$binaries) {
+            return;
+        }
+        foreach ($binaries as $bin) {
+            $link = $this->binDir.'/'.basename($bin);
+            if (is_link($link) || file_exists($link)) {
+                $this->filesystem->unlink($link);
+            }
+            if (file_exists($link.'.bat')) {
+                $this->filesystem->unlink($link.'.bat');
+            }
+        }
+
+        // attempt removing the bin dir in case it is left empty
+        if (is_dir($this->binDir) && $this->filesystem->isDirEmpty($this->binDir)) {
+            Silencer::call('rmdir', $this->binDir);
+        }
+    }
+
+    public static function determineBinaryCaller($bin)
+    {
+        if ('.bat' === substr($bin, -4) || '.exe' === substr($bin, -4)) {
+            return 'call';
+        }
+
+        $handle = fopen($bin, 'r');
+        $line = fgets($handle);
+        fclose($handle);
+        if (preg_match('{^#!/(?:usr/bin/env )?(?:[^/]+/)*(.+)$}m', $line, $match)) {
+            return trim($match[1]);
+        }
+
+        return 'php';
     }
 
     protected function getBinaries(PackageInterface $package)
     {
         return $package->getBinaries();
+    }
+
+    protected function installFullBinaries($binPath, $link, $bin, PackageInterface $package)
+    {
+        // add unixy support for cygwin and similar environments
+        if ('.bat' !== substr($binPath, -4)) {
+            $this->installUnixyProxyBinaries($binPath, $link);
+            $link .= '.bat';
+            if (file_exists($link)) {
+                $this->io->writeError('    Skipped installation of bin '.$bin.'.bat proxy for package '.$package->getName().': a .bat proxy was already installed');
+            }
+        }
+        if (!file_exists($link)) {
+            file_put_contents($link, $this->generateWindowsProxyCode($binPath, $link));
+            Silencer::call('chmod', $link, 0777 & ~umask());
+        }
+    }
+
+    protected function installSymlinkBinaries($binPath, $link)
+    {
+        if (!$this->filesystem->relativeSymlink($binPath, $link)) {
+            $this->installUnixyProxyBinaries($binPath, $link);
+        }
+    }
+
+    protected function installUnixyProxyBinaries($binPath, $link)
+    {
+        file_put_contents($link, $this->generateUnixyProxyCode($binPath, $link));
+        Silencer::call('chmod', $link, 0777 & ~umask());
     }
 
     protected function initializeBinDir()
@@ -108,25 +179,15 @@ class BinaryInstaller
         $this->binDir = realpath($this->binDir);
     }
 
-    protected function installFullBinaries($binPath, $link, $bin, PackageInterface $package)
+    protected function generateWindowsProxyCode($bin, $link)
     {
-        // add unixy support for cygwin and similar environments
-        if ('.bat' !== substr($binPath, -4)) {
-            $this->installUnixyProxyBinaries($binPath, $link);
-            @chmod($link, 0777 & ~umask());
-            $link .= '.bat';
-            if (file_exists($link)) {
-                $this->io->writeError('    Skipped installation of bin '.$bin.'.bat proxy for package '.$package->getName().': a .bat proxy was already installed');
-            }
-        }
-        if (!file_exists($link)) {
-            file_put_contents($link, $this->generateWindowsProxyCode($binPath, $link));
-        }
-    }
+        $binPath = $this->filesystem->findShortestPath($link, $bin);
+        $caller = self::determineBinaryCaller($bin);
 
-    protected function installUnixyProxyBinaries($binPath, $link)
-    {
-        file_put_contents($link, $this->generateUnixyProxyCode($binPath, $link));
+        return "@ECHO OFF\r\n".
+            "setlocal DISABLEDELAYEDEXPANSION\r\n".
+            "SET BIN_TARGET=%~dp0/".trim(ProcessExecutor::escape($binPath), '"\'')."\r\n".
+            "{$caller} \"%BIN_TARGET%\" %*\r\n";
     }
 
     protected function generateUnixyProxyCode($bin, $link)
@@ -197,63 +258,5 @@ fi
 PROXY;
 
         return $proxyCode;
-    }
-
-    protected function generateWindowsProxyCode($bin, $link)
-    {
-        $binPath = $this->filesystem->findShortestPath($link, $bin);
-        $caller = self::determineBinaryCaller($bin);
-
-        return "@ECHO OFF\r\n".
-            "setlocal DISABLEDELAYEDEXPANSION\r\n".
-            "SET BIN_TARGET=%~dp0/".trim(ProcessExecutor::escape($binPath), '"\'')."\r\n".
-            "{$caller} \"%BIN_TARGET%\" %*\r\n";
-    }
-
-    public static function determineBinaryCaller($bin)
-    {
-        if ('.bat' === substr($bin, -4) || '.exe' === substr($bin, -4)) {
-            return 'call';
-        }
-
-        $handle = fopen($bin, 'r');
-        $line = fgets($handle);
-        fclose($handle);
-        if (preg_match('{^#!/(?:usr/bin/env )?(?:[^/]+/)*(.+)$}m', $line, $match)) {
-            return trim($match[1]);
-        }
-
-        return 'php';
-    }
-
-    protected function installSymlinkBinaries($binPath, $link)
-    {
-        if (!$this->filesystem->relativeSymlink($binPath, $link)) {
-            $this->installUnixyProxyBinaries($binPath, $link);
-        }
-    }
-
-    public function removeBinaries(PackageInterface $package)
-    {
-        $this->initializeBinDir();
-
-        $binaries = $this->getBinaries($package);
-        if (!$binaries) {
-            return;
-        }
-        foreach ($binaries as $bin) {
-            $link = $this->binDir.'/'.basename($bin);
-            if (is_link($link) || file_exists($link)) {
-                $this->filesystem->unlink($link);
-            }
-            if (file_exists($link.'.bat')) {
-                $this->filesystem->unlink($link.'.bat');
-            }
-        }
-
-        // attempt removing the bin dir in case it is left empty
-        if (is_dir($this->binDir) && $this->filesystem->isDirEmpty($this->binDir)) {
-            Silencer::call('rmdir', $this->binDir);
-        }
     }
 }

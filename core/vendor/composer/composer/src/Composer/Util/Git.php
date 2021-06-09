@@ -39,125 +39,6 @@ class Git
         $this->filesystem = $fs;
     }
 
-    public static function getNoShowSignatureFlag(ProcessExecutor $process)
-    {
-        $gitVersion = self::getVersion($process);
-        if ($gitVersion && version_compare($gitVersion, '2.10.0-rc0', '>=')) {
-            return ' --no-show-signature';
-        }
-
-        return '';
-    }
-
-    /**
-     * Retrieves the current git version.
-     *
-     * @return string|null The git version number, if present.
-     */
-    public static function getVersion(ProcessExecutor $process)
-    {
-        if (false === self::$version) {
-            self::$version = null;
-            if (0 === $process->execute('git --version', $output) && preg_match('/^git version (\d+(?:\.\d+)+)/m', $output, $matches)) {
-                self::$version = $matches[1];
-            }
-        }
-
-        return self::$version;
-    }
-
-    public static function cleanEnv()
-    {
-        if (PHP_VERSION_ID < 50400 && ini_get('safe_mode') && false === strpos(ini_get('safe_mode_allowed_env_vars'), 'GIT_ASKPASS')) {
-            throw new \RuntimeException('safe_mode is enabled and safe_mode_allowed_env_vars does not contain GIT_ASKPASS, can not set env var. You can disable safe_mode with "-dsafe_mode=0" when running composer');
-        }
-
-        // added in git 1.7.1, prevents prompting the user for username/password
-        if (getenv('GIT_ASKPASS') !== 'echo') {
-            Platform::putEnv('GIT_ASKPASS', 'echo');
-        }
-
-        // clean up rogue git env vars in case this is running in a git hook
-        if (getenv('GIT_DIR')) {
-            Platform::clearEnv('GIT_DIR');
-        }
-        if (getenv('GIT_WORK_TREE')) {
-            Platform::clearEnv('GIT_WORK_TREE');
-        }
-
-        // Run processes with predictable LANGUAGE
-        if (getenv('LANGUAGE') !== 'C') {
-            Platform::putEnv('LANGUAGE', 'C');
-        }
-
-        // clean up env for OSX, see https://github.com/composer/composer/issues/2146#issuecomment-35478940
-        Platform::clearEnv('DYLD_LIBRARY_PATH');
-    }
-
-    public function fetchRefOrSyncMirror($url, $dir, $ref)
-    {
-        if ($this->checkRefIsInMirror($dir, $ref)) {
-            return true;
-        }
-
-        if ($this->syncMirror($url, $dir)) {
-            return $this->checkRefIsInMirror($dir, $ref);
-        }
-
-        return false;
-    }
-
-    private function checkRefIsInMirror($dir, $ref)
-    {
-        if (is_dir($dir) && 0 === $this->process->execute('git rev-parse --git-dir', $output, $dir) && trim($output) === '.') {
-            $escapedRef = ProcessExecutor::escape($ref.'^{commit}');
-            $exitCode = $this->process->execute(sprintf('git rev-parse --quiet --verify %s', $escapedRef), $ignoredOutput, $dir);
-            if ($exitCode === 0) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function syncMirror($url, $dir)
-    {
-        if (getenv('COMPOSER_DISABLE_NETWORK') && getenv('COMPOSER_DISABLE_NETWORK') !== 'prime') {
-            $this->io->writeError('<warning>Aborting git mirror sync of '.$url.' as network is disabled</warning>');
-
-            return false;
-        }
-
-        // update the repo if it is a valid git repository
-        if (is_dir($dir) && 0 === $this->process->execute('git rev-parse --git-dir', $output, $dir) && trim($output) === '.') {
-            try {
-                $commandCallable = function ($url) {
-                    $sanitizedUrl = preg_replace('{://([^@]+?):(.+?)@}', '://', $url);
-
-                    return sprintf('git remote set-url origin -- %s && git remote update --prune origin && git remote set-url origin -- %s && git gc --auto', ProcessExecutor::escape($url), ProcessExecutor::escape($sanitizedUrl));
-                };
-                $this->runCommand($commandCallable, $url, $dir);
-            } catch (\Exception $e) {
-                $this->io->writeError('<error>Sync mirror failed: ' . $e->getMessage() . '</error>', true, IOInterface::DEBUG);
-
-                return false;
-            }
-
-            return true;
-        }
-
-        // clean up directory and do a fresh clone into it
-        $this->filesystem->removeDirectory($dir);
-
-        $commandCallable = function ($url) use ($dir) {
-            return sprintf('git clone --mirror -- %s %s', ProcessExecutor::escape($url), ProcessExecutor::escape($dir));
-        };
-
-        $this->runCommand($commandCallable, $url, $dir, true);
-
-        return true;
-    }
-
     public function runCommand($commandCallable, $url, $cwd, $initialClone = false)
     {
         // Ensure we are allowed to use this URL by config
@@ -366,26 +247,78 @@ class Git
         }
     }
 
-    public static function getGitHubDomainsRegex(Config $config)
+    public function syncMirror($url, $dir)
     {
-        return '(' . implode('|', array_map('preg_quote', $config->get('github-domains'))) . ')';
-    }
+        if (getenv('COMPOSER_DISABLE_NETWORK') && getenv('COMPOSER_DISABLE_NETWORK') !== 'prime') {
+            $this->io->writeError('<warning>Aborting git mirror sync of '.$url.' as network is disabled</warning>');
 
-    private function throwException($message, $url)
-    {
-        // git might delete a directory when it fails and php will not know
-        clearstatcache();
-
-        if (0 !== $this->process->execute('git --version', $ignoredOutput)) {
-            throw new \RuntimeException(Url::sanitize('Failed to clone ' . $url . ', git was not found, check that it is installed and in your PATH env.' . "\n\n" . $this->process->getErrorOutput()));
+            return false;
         }
 
-        throw new \RuntimeException(Url::sanitize($message));
+        // update the repo if it is a valid git repository
+        if (is_dir($dir) && 0 === $this->process->execute('git rev-parse --git-dir', $output, $dir) && trim($output) === '.') {
+            try {
+                $commandCallable = function ($url) {
+                    $sanitizedUrl = preg_replace('{://([^@]+?):(.+?)@}', '://', $url);
+
+                    return sprintf('git remote set-url origin -- %s && git remote update --prune origin && git remote set-url origin -- %s && git gc --auto', ProcessExecutor::escape($url), ProcessExecutor::escape($sanitizedUrl));
+                };
+                $this->runCommand($commandCallable, $url, $dir);
+            } catch (\Exception $e) {
+                $this->io->writeError('<error>Sync mirror failed: ' . $e->getMessage() . '</error>', true, IOInterface::DEBUG);
+
+                return false;
+            }
+
+            return true;
+        }
+
+        // clean up directory and do a fresh clone into it
+        $this->filesystem->removeDirectory($dir);
+
+        $commandCallable = function ($url) use ($dir) {
+            return sprintf('git clone --mirror -- %s %s', ProcessExecutor::escape($url), ProcessExecutor::escape($dir));
+        };
+
+        $this->runCommand($commandCallable, $url, $dir, true);
+
+        return true;
     }
 
-    public static function getGitLabDomainsRegex(Config $config)
+    public function fetchRefOrSyncMirror($url, $dir, $ref)
     {
-        return '(' . implode('|', array_map('preg_quote', $config->get('gitlab-domains'))) . ')';
+        if ($this->checkRefIsInMirror($dir, $ref)) {
+            return true;
+        }
+
+        if ($this->syncMirror($url, $dir)) {
+            return $this->checkRefIsInMirror($dir, $ref);
+        }
+
+        return false;
+    }
+
+    public static function getNoShowSignatureFlag(ProcessExecutor $process)
+    {
+        $gitVersion = self::getVersion($process);
+        if ($gitVersion && version_compare($gitVersion, '2.10.0-rc0', '>=')) {
+            return ' --no-show-signature';
+        }
+
+        return '';
+    }
+
+    private function checkRefIsInMirror($dir, $ref)
+    {
+        if (is_dir($dir) && 0 === $this->process->execute('git rev-parse --git-dir', $output, $dir) && trim($output) === '.') {
+            $escapedRef = ProcessExecutor::escape($ref.'^{commit}');
+            $exitCode = $this->process->execute(sprintf('git rev-parse --quiet --verify %s', $escapedRef), $ignoredOutput, $dir);
+            if ($exitCode === 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function isAuthenticationFailure($url, &$match)
@@ -410,5 +343,72 @@ class Git
         }
 
         return false;
+    }
+
+    public static function cleanEnv()
+    {
+        if (PHP_VERSION_ID < 50400 && ini_get('safe_mode') && false === strpos(ini_get('safe_mode_allowed_env_vars'), 'GIT_ASKPASS')) {
+            throw new \RuntimeException('safe_mode is enabled and safe_mode_allowed_env_vars does not contain GIT_ASKPASS, can not set env var. You can disable safe_mode with "-dsafe_mode=0" when running composer');
+        }
+
+        // added in git 1.7.1, prevents prompting the user for username/password
+        if (getenv('GIT_ASKPASS') !== 'echo') {
+            Platform::putEnv('GIT_ASKPASS', 'echo');
+        }
+
+        // clean up rogue git env vars in case this is running in a git hook
+        if (getenv('GIT_DIR')) {
+            Platform::clearEnv('GIT_DIR');
+        }
+        if (getenv('GIT_WORK_TREE')) {
+            Platform::clearEnv('GIT_WORK_TREE');
+        }
+
+        // Run processes with predictable LANGUAGE
+        if (getenv('LANGUAGE') !== 'C') {
+            Platform::putEnv('LANGUAGE', 'C');
+        }
+
+        // clean up env for OSX, see https://github.com/composer/composer/issues/2146#issuecomment-35478940
+        Platform::clearEnv('DYLD_LIBRARY_PATH');
+    }
+
+    public static function getGitHubDomainsRegex(Config $config)
+    {
+        return '(' . implode('|', array_map('preg_quote', $config->get('github-domains'))) . ')';
+    }
+
+    public static function getGitLabDomainsRegex(Config $config)
+    {
+        return '(' . implode('|', array_map('preg_quote', $config->get('gitlab-domains'))) . ')';
+    }
+
+    private function throwException($message, $url)
+    {
+        // git might delete a directory when it fails and php will not know
+        clearstatcache();
+
+        if (0 !== $this->process->execute('git --version', $ignoredOutput)) {
+            throw new \RuntimeException(Url::sanitize('Failed to clone ' . $url . ', git was not found, check that it is installed and in your PATH env.' . "\n\n" . $this->process->getErrorOutput()));
+        }
+
+        throw new \RuntimeException(Url::sanitize($message));
+    }
+
+    /**
+     * Retrieves the current git version.
+     *
+     * @return string|null The git version number, if present.
+     */
+    public static function getVersion(ProcessExecutor $process)
+    {
+        if (false === self::$version) {
+            self::$version = null;
+            if (0 === $process->execute('git --version', $output) && preg_match('/^git version (\d+(?:\.\d+)+)/m', $output, $matches)) {
+                self::$version = $matches[1];
+            }
+        }
+
+        return self::$version;
     }
 }

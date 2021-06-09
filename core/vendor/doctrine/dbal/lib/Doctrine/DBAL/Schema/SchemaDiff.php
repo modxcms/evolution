@@ -93,6 +93,14 @@ class SchemaDiff
     }
 
     /**
+     * @return string[]
+     */
+    public function toSql(AbstractPlatform $platform)
+    {
+        return $this->_toSql($platform, false);
+    }
+
+    /**
      * @param bool $saveMode
      *
      * @return string[]
@@ -158,13 +166,5 @@ class SchemaDiff
         }
 
         return $sql;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function toSql(AbstractPlatform $platform)
-    {
-        return $this->_toSql($platform, false);
     }
 }

@@ -247,6 +247,60 @@ final class DriverManager
     }
 
     /**
+     * Returns the list of supported drivers.
+     *
+     * @return string[]
+     */
+    public static function getAvailableDrivers(): array
+    {
+        return array_keys(self::DRIVER_MAP);
+    }
+
+    /**
+     * @param array<string,mixed> $params
+     *
+     * @throws Exception
+     *
+     * @phpstan-param array<string,mixed> $params
+     * @psalm-param Params $params
+     */
+    private static function createDriver(array $params): Driver
+    {
+        if (isset($params['driverClass'])) {
+            $interfaces = class_implements($params['driverClass'], true);
+
+            if ($interfaces === false || ! in_array(Driver::class, $interfaces)) {
+                throw Exception::invalidDriverClass($params['driverClass']);
+            }
+
+            return new $params['driverClass']();
+        }
+
+        if (isset($params['driver'])) {
+            if (! isset(self::DRIVER_MAP[$params['driver']])) {
+                throw Exception::unknownDriver($params['driver'], array_keys(self::DRIVER_MAP));
+            }
+
+            $class = self::DRIVER_MAP[$params['driver']];
+
+            return new $class();
+        }
+
+        throw Exception::driverRequired();
+    }
+
+    /**
+     * Normalizes the given connection URL path.
+     *
+     * @return string The normalized connection URL path
+     */
+    private static function normalizeDatabaseUrlPath(string $urlPath): string
+    {
+        // Trim leading slash from URL path.
+        return substr($urlPath, 1);
+    }
+
+    /**
      * Extracts parts from a database URL, if present, and returns an
      * updated list of parameters.
      *
@@ -315,44 +369,6 @@ final class DriverManager
     }
 
     /**
-     * Parses the scheme part from given connection URL and resolves the given connection parameters.
-     *
-     * @param string|null $scheme The connection URL scheme, if available
-     * @param mixed[]     $params The connection parameters to resolve.
-     *
-     * @return mixed[] The resolved connection parameters.
-     *
-     * @throws Exception If parsing failed or resolution is not possible.
-     */
-    private static function parseDatabaseUrlScheme($scheme, array $params): array
-    {
-        if ($scheme !== null) {
-            // The requested driver from the URL scheme takes precedence
-            // over the default custom driver from the connection parameters (if any).
-            unset($params['driverClass']);
-
-            // URL schemes must not contain underscores, but dashes are ok
-            $driver = str_replace('-', '_', $scheme);
-
-            // The requested driver from the URL scheme takes precedence over the
-            // default driver from the connection parameters. If the driver is
-            // an alias (e.g. "postgres"), map it to the actual name ("pdo-pgsql").
-            // Otherwise, let checkParams decide later if the driver exists.
-            $params['driver'] = self::$driverSchemeAliases[$driver] ?? $driver;
-
-            return $params;
-        }
-
-        // If a schemeless connection URL is given, we require a default driver or default custom driver
-        // as connection parameter.
-        if (! isset($params['driverClass']) && ! isset($params['driver'])) {
-            throw Exception::driverRequired($params['url']);
-        }
-
-        return $params;
-    }
-
-    /**
      * Parses the given connection URL and resolves the given connection parameters.
      *
      * Assumes that the connection URL scheme is already parsed and resolved into the given connection parameters
@@ -387,14 +403,24 @@ final class DriverManager
     }
 
     /**
-     * Normalizes the given connection URL path.
+     * Parses the query part of the given connection URL and resolves the given connection parameters.
      *
-     * @return string The normalized connection URL path
+     * @param mixed[] $url    The connection URL parts to evaluate.
+     * @param mixed[] $params The connection parameters to resolve.
+     *
+     * @return mixed[] The resolved connection parameters.
      */
-    private static function normalizeDatabaseUrlPath(string $urlPath): string
+    private static function parseDatabaseUrlQuery(array $url, array $params): array
     {
-        // Trim leading slash from URL path.
-        return substr($urlPath, 1);
+        if (! isset($url['query'])) {
+            return $params;
+        }
+
+        $query = [];
+
+        parse_str($url['query'], $query); // simply ingest query as extra params, e.g. charset or sslmode
+
+        return array_merge($params, $query); // parse_str wipes existing array elements
     }
 
     /**
@@ -442,66 +468,40 @@ final class DriverManager
     }
 
     /**
-     * Parses the query part of the given connection URL and resolves the given connection parameters.
+     * Parses the scheme part from given connection URL and resolves the given connection parameters.
      *
-     * @param mixed[] $url    The connection URL parts to evaluate.
-     * @param mixed[] $params The connection parameters to resolve.
+     * @param string|null $scheme The connection URL scheme, if available
+     * @param mixed[]     $params The connection parameters to resolve.
      *
      * @return mixed[] The resolved connection parameters.
+     *
+     * @throws Exception If parsing failed or resolution is not possible.
      */
-    private static function parseDatabaseUrlQuery(array $url, array $params): array
+    private static function parseDatabaseUrlScheme($scheme, array $params): array
     {
-        if (! isset($url['query'])) {
+        if ($scheme !== null) {
+            // The requested driver from the URL scheme takes precedence
+            // over the default custom driver from the connection parameters (if any).
+            unset($params['driverClass']);
+
+            // URL schemes must not contain underscores, but dashes are ok
+            $driver = str_replace('-', '_', $scheme);
+
+            // The requested driver from the URL scheme takes precedence over the
+            // default driver from the connection parameters. If the driver is
+            // an alias (e.g. "postgres"), map it to the actual name ("pdo-pgsql").
+            // Otherwise, let checkParams decide later if the driver exists.
+            $params['driver'] = self::$driverSchemeAliases[$driver] ?? $driver;
+
             return $params;
         }
 
-        $query = [];
-
-        parse_str($url['query'], $query); // simply ingest query as extra params, e.g. charset or sslmode
-
-        return array_merge($params, $query); // parse_str wipes existing array elements
-    }
-
-    /**
-     * @param array<string,mixed> $params
-     *
-     * @throws Exception
-     *
-     * @phpstan-param array<string,mixed> $params
-     * @psalm-param Params $params
-     */
-    private static function createDriver(array $params): Driver
-    {
-        if (isset($params['driverClass'])) {
-            $interfaces = class_implements($params['driverClass'], true);
-
-            if ($interfaces === false || ! in_array(Driver::class, $interfaces)) {
-                throw Exception::invalidDriverClass($params['driverClass']);
-            }
-
-            return new $params['driverClass']();
+        // If a schemeless connection URL is given, we require a default driver or default custom driver
+        // as connection parameter.
+        if (! isset($params['driverClass']) && ! isset($params['driver'])) {
+            throw Exception::driverRequired($params['url']);
         }
 
-        if (isset($params['driver'])) {
-            if (! isset(self::DRIVER_MAP[$params['driver']])) {
-                throw Exception::unknownDriver($params['driver'], array_keys(self::DRIVER_MAP));
-            }
-
-            $class = self::DRIVER_MAP[$params['driver']];
-
-            return new $class();
-        }
-
-        throw Exception::driverRequired();
-    }
-
-    /**
-     * Returns the list of supported drivers.
-     *
-     * @return string[]
-     */
-    public static function getAvailableDrivers(): array
-    {
-        return array_keys(self::DRIVER_MAP);
+        return $params;
     }
 }

@@ -79,30 +79,6 @@ class ConfigDataCollector extends DataCollector implements LateDataCollectorInte
     }
 
     /**
-     * Tries to retrieve information about the current Symfony version.
-     *
-     * @return string One of: dev, stable, eom, eol
-     */
-    private function determineSymfonyState(): string
-    {
-        $now = new \DateTime();
-        $eom = \DateTime::createFromFormat('d/m/Y', '01/'.Kernel::END_OF_MAINTENANCE)->modify('last day of this month');
-        $eol = \DateTime::createFromFormat('d/m/Y', '01/'.Kernel::END_OF_LIFE)->modify('last day of this month');
-
-        if ($now > $eol) {
-            $versionState = 'eol';
-        } elseif ($now > $eom) {
-            $versionState = 'eom';
-        } elseif ('' !== Kernel::EXTRA_VERSION) {
-            $versionState = 'dev';
-        } else {
-            $versionState = 'stable';
-        }
-
-        return $versionState;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function reset()
@@ -301,5 +277,29 @@ class ConfigDataCollector extends DataCollector implements LateDataCollectorInte
     public function getName()
     {
         return 'config';
+    }
+
+    /**
+     * Tries to retrieve information about the current Symfony version.
+     *
+     * @return string One of: dev, stable, eom, eol
+     */
+    private function determineSymfonyState(): string
+    {
+        $now = new \DateTime();
+        $eom = \DateTime::createFromFormat('d/m/Y', '01/'.Kernel::END_OF_MAINTENANCE)->modify('last day of this month');
+        $eol = \DateTime::createFromFormat('d/m/Y', '01/'.Kernel::END_OF_LIFE)->modify('last day of this month');
+
+        if ($now > $eol) {
+            $versionState = 'eol';
+        } elseif ($now > $eom) {
+            $versionState = 'eom';
+        } elseif ('' !== Kernel::EXTRA_VERSION) {
+            $versionState = 'dev';
+        } else {
+            $versionState = 'stable';
+        }
+
+        return $versionState;
     }
 }

@@ -13,40 +13,6 @@ class JpegQualityDetector
 {
 
     /**
-     * Try to detect quality of jpeg.
-     *
-     * Note: This method does not throw errors, but might dispatch warnings.
-     * You can use the WarningsIntoExceptions class if it is critical to you that nothing gets "printed"
-     *
-     * @param  string  $filename  A complete file path to file to be examined
-     * @return int|null  Quality, or null if it was not possible to detect quality
-     */
-    public static function detectQualityOfJpg($filename)
-    {
-
-        //trigger_error('warning test', E_USER_WARNING);
-
-        // Test that file exists in order not to break things.
-        if (!file_exists($filename)) {
-            // One could argue that it would be better to throw an Exception...?
-            return null;
-        }
-
-        // Try Imagick extension, if available
-        $quality = self::detectQualityOfJpgUsingImagick($filename);
-
-        if (is_null($quality)) {
-            $quality = self::detectQualityOfJpgUsingImageMagick($filename);
-        }
-
-        if (is_null($quality)) {
-            $quality = self::detectQualityOfJpgUsingGraphicsMagick($filename);
-        }
-
-        return $quality;
-    }
-
-    /**
      * Try to detect quality of jpeg using imagick extension.
      *
      * Note that the detection might fail for two different reasons:
@@ -83,6 +49,7 @@ class JpegQualityDetector
         return null;
     }
 
+
     /**
      * Try to detect quality of jpeg using imagick binary.
      *
@@ -111,6 +78,7 @@ class JpegQualityDetector
         }
         return null;
     }
+
 
     /**
      * Try to detect quality of jpeg using graphicsmagick binary.
@@ -141,5 +109,40 @@ class JpegQualityDetector
             }
         }
         return null;
+    }
+
+
+    /**
+     * Try to detect quality of jpeg.
+     *
+     * Note: This method does not throw errors, but might dispatch warnings.
+     * You can use the WarningsIntoExceptions class if it is critical to you that nothing gets "printed"
+     *
+     * @param  string  $filename  A complete file path to file to be examined
+     * @return int|null  Quality, or null if it was not possible to detect quality
+     */
+    public static function detectQualityOfJpg($filename)
+    {
+
+        //trigger_error('warning test', E_USER_WARNING);
+
+        // Test that file exists in order not to break things.
+        if (!file_exists($filename)) {
+            // One could argue that it would be better to throw an Exception...?
+            return null;
+        }
+
+        // Try Imagick extension, if available
+        $quality = self::detectQualityOfJpgUsingImagick($filename);
+
+        if (is_null($quality)) {
+            $quality = self::detectQualityOfJpgUsingImageMagick($filename);
+        }
+
+        if (is_null($quality)) {
+            $quality = self::detectQualityOfJpgUsingGraphicsMagick($filename);
+        }
+
+        return $quality;
     }
 }

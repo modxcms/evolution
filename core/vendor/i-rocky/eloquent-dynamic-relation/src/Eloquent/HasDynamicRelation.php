@@ -23,6 +23,18 @@ trait HasDynamicRelation
     }
 
     /**
+     * Determine if a relation exists in dynamic relationships list
+     *
+     * @param $name
+     *
+     * @return bool
+     */
+    public static function hasDynamicRelation($name)
+    {
+        return array_key_exists($name, static::$dynamic_relations);
+    }
+
+    /**
      * If the key exists in relations then
      * return call to relation or else
      * return the call to the parent
@@ -44,18 +56,6 @@ trait HasDynamicRelation
         }
 
         return parent::__get($name);
-    }
-
-    /**
-     * Determine if a relation exists in dynamic relationships list
-     *
-     * @param $name
-     *
-     * @return bool
-     */
-    public static function hasDynamicRelation($name)
-    {
-        return array_key_exists($name, static::$dynamic_relations);
     }
 
     /**

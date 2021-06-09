@@ -31,42 +31,6 @@ final class ResponseCookieValueSame extends Constraint
     }
 
     /**
-     * @param Response $response
-     *
-     * {@inheritdoc}
-     */
-    protected function matches($response): bool
-    {
-        $cookie = $this->getCookie($response);
-        if (!$cookie) {
-            return false;
-        }
-
-        return $this->value === $cookie->getValue();
-    }
-
-    protected function getCookie(Response $response): ?Cookie
-    {
-        $cookies = $response->headers->getCookies();
-
-        $filteredCookies = array_filter($cookies, function (Cookie $cookie) {
-            return $cookie->getName() === $this->name && $cookie->getPath() === $this->path && $cookie->getDomain() === $this->domain;
-        });
-
-        return reset($filteredCookies) ?: null;
-    }
-
-    /**
-     * @param Response $response
-     *
-     * {@inheritdoc}
-     */
-    protected function failureDescription($response): string
-    {
-        return 'the Response '.$this->toString();
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function toString(): string
@@ -81,5 +45,41 @@ final class ResponseCookieValueSame extends Constraint
         $str .= sprintf(' with value "%s"', $this->value);
 
         return $str;
+    }
+
+    /**
+     * @param Response $response
+     *
+     * {@inheritdoc}
+     */
+    protected function matches($response): bool
+    {
+        $cookie = $this->getCookie($response);
+        if (!$cookie) {
+            return false;
+        }
+
+        return $this->value === $cookie->getValue();
+    }
+
+    /**
+     * @param Response $response
+     *
+     * {@inheritdoc}
+     */
+    protected function failureDescription($response): string
+    {
+        return 'the Response '.$this->toString();
+    }
+
+    protected function getCookie(Response $response): ?Cookie
+    {
+        $cookies = $response->headers->getCookies();
+
+        $filteredCookies = array_filter($cookies, function (Cookie $cookie) {
+            return $cookie->getName() === $this->name && $cookie->getPath() === $this->path && $cookie->getDomain() === $this->domain;
+        });
+
+        return reset($filteredCookies) ?: null;
     }
 }

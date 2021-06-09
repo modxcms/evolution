@@ -133,6 +133,18 @@ class DateFactory
     }
 
     /**
+     * Use the default date class when generating dates.
+     *
+     * @return void
+     */
+    public static function useDefault()
+    {
+        static::$dateClass = null;
+        static::$callable = null;
+        static::$factory = null;
+    }
+
+    /**
      * Execute the given callable on each date creation.
      *
      * @param  callable  $callable
@@ -172,18 +184,6 @@ class DateFactory
 
         static::$dateClass = null;
         static::$callable = null;
-    }
-
-    /**
-     * Use the default date class when generating dates.
-     *
-     * @return void
-     */
-    public static function useDefault()
-    {
-        static::$dateClass = null;
-        static::$callable = null;
-        static::$factory = null;
     }
 
     /**

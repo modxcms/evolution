@@ -14,7 +14,9 @@ class DbCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'db {connection? : The database connection that should be used}';
+    protected $signature = 'db {connection? : The database connection that should be used}
+               {--read : Connect to the read connection}
+               {--write : Connect to the write connection}';
 
     /**
      * The console command description.
@@ -64,23 +66,13 @@ class DbCommand extends Command
             $connection = (new ConfigurationUrlParser)->parseConfiguration($connection);
         }
 
-        return $connection;
-    }
+        if ($this->option('read')) {
+            $connection = array_merge($connection, $connection['read']);
+        } elseif ($this->option('write')) {
+            $connection = array_merge($connection, $connection['write']);
+        }
 
-    /**
-     * Get the database client command to run.
-     *
-     * @param  array  $connection
-     * @return string
-     */
-    public function getCommand(array $connection)
-    {
-        return [
-            'mysql' => 'mysql',
-            'pgsql' => 'psql',
-            'sqlite' => 'sqlite3',
-            'sqlsrv' => 'sqlcmd',
-        ][$connection['driver']];
+        return $connection;
     }
 
     /**
@@ -114,6 +106,22 @@ class DbCommand extends Command
     }
 
     /**
+     * Get the database client command to run.
+     *
+     * @param  array  $connection
+     * @return string
+     */
+    public function getCommand(array $connection)
+    {
+        return [
+            'mysql' => 'mysql',
+            'pgsql' => 'psql',
+            'sqlite' => 'sqlite3',
+            'sqlsrv' => 'sqlcmd',
+        ][$connection['driver']];
+    }
+
+    /**
      * Get the arguments for the MySQL CLI.
      *
      * @param  array  $connection
@@ -130,20 +138,6 @@ class DbCommand extends Command
             'unix_socket' => '--socket='.$connection['unix_socket'],
             'charset' => '--default-character-set='.$connection['charset'],
         ], $connection), [$connection['database']]);
-    }
-
-    /**
-     * Get the optional arguments based on the connection configuration.
-     *
-     * @param  array  $args
-     * @param  array  $connection
-     * @return array
-     */
-    protected function getOptionalArguments(array $args, array $connection)
-    {
-        return array_values(array_filter($args, function ($key) use ($connection) {
-            return ! empty($connection[$key]);
-        }, ARRAY_FILTER_USE_KEY));
     }
 
     /**
@@ -199,5 +193,19 @@ class DbCommand extends Command
             'port' => ['PGPORT' => $connection['port']],
             'password' => ['PGPASSWORD' => $connection['password']],
         ], $connection));
+    }
+
+    /**
+     * Get the optional arguments based on the connection configuration.
+     *
+     * @param  array  $args
+     * @param  array  $connection
+     * @return array
+     */
+    protected function getOptionalArguments(array $args, array $connection)
+    {
+        return array_values(array_filter($args, function ($key) use ($connection) {
+            return ! empty($connection[$key]);
+        }, ARRAY_FILTER_USE_KEY));
     }
 }

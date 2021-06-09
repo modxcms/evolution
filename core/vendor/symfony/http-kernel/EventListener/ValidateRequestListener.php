@@ -25,18 +25,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class ValidateRequestListener implements EventSubscriberInterface
 {
     /**
-     * {@inheritdoc}
-     */
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            KernelEvents::REQUEST => [
-                ['onKernelRequest', 256],
-            ],
-        ];
-    }
-
-    /**
      * Performs the validation.
      */
     public function onKernelRequest(RequestEvent $event)
@@ -51,5 +39,17 @@ class ValidateRequestListener implements EventSubscriberInterface
         }
 
         $request->getHost();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            KernelEvents::REQUEST => [
+                ['onKernelRequest', 256],
+            ],
+        ];
     }
 }

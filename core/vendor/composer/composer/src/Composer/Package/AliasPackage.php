@@ -64,45 +64,6 @@ class AliasPackage extends BasePackage
     }
 
     /**
-     * @param Link[] $links
-     * @param string $linkType
-     *
-     * @return Link[]
-     */
-    protected function replaceSelfVersionDependencies(array $links, $linkType)
-    {
-        // for self.version requirements, we use the original package's branch name instead, to avoid leaking the magic dev-master-alias to users
-        $prettyVersion = $this->prettyVersion;
-        if ($prettyVersion === VersionParser::DEFAULT_BRANCH_ALIAS) {
-            $prettyVersion = $this->aliasOf->getPrettyVersion();
-        }
-
-        if (\in_array($linkType, array(Link::TYPE_CONFLICT, Link::TYPE_PROVIDE, Link::TYPE_REPLACE), true)) {
-            $newLinks = array();
-            foreach ($links as $link) {
-                // link is self.version, but must be replacing also the replaced version
-                if ('self.version' === $link->getPrettyConstraint()) {
-                    $newLinks[] = new Link($link->getSource(), $link->getTarget(), $constraint = new Constraint('=', $this->version), $linkType, $prettyVersion);
-                    $constraint->setPrettyString($prettyVersion);
-                }
-            }
-            $links = array_merge($links, $newLinks);
-        } else {
-            foreach ($links as $index => $link) {
-                if ('self.version' === $link->getPrettyConstraint()) {
-                    if ($linkType === Link::TYPE_REQUIRE) {
-                        $this->hasSelfVersionRequires = true;
-                    }
-                    $links[$index] = new Link($link->getSource(), $link->getTarget(), $constraint = new Constraint('=', $this->version), $linkType, $prettyVersion);
-                    $constraint->setPrettyString($prettyVersion);
-                }
-            }
-        }
-
-        return $links;
-    }
-
-    /**
      * @return BasePackage
      */
     public function getAliasOf()
@@ -183,15 +144,6 @@ class AliasPackage extends BasePackage
     }
 
     /**
-     * @see setRootPackageAlias
-     * @return bool
-     */
-    public function isRootPackageAlias()
-    {
-        return $this->rootPackageAlias;
-    }
-
-    /**
      * Stores whether this is an alias created by an aliasing in the requirements of the root package or not
      *
      * Use by the policy for sorting manually aliased packages first, see #576
@@ -203,6 +155,54 @@ class AliasPackage extends BasePackage
     public function setRootPackageAlias($value)
     {
         return $this->rootPackageAlias = $value;
+    }
+
+    /**
+     * @see setRootPackageAlias
+     * @return bool
+     */
+    public function isRootPackageAlias()
+    {
+        return $this->rootPackageAlias;
+    }
+
+    /**
+     * @param Link[] $links
+     * @param string $linkType
+     *
+     * @return Link[]
+     */
+    protected function replaceSelfVersionDependencies(array $links, $linkType)
+    {
+        // for self.version requirements, we use the original package's branch name instead, to avoid leaking the magic dev-master-alias to users
+        $prettyVersion = $this->prettyVersion;
+        if ($prettyVersion === VersionParser::DEFAULT_BRANCH_ALIAS) {
+            $prettyVersion = $this->aliasOf->getPrettyVersion();
+        }
+
+        if (\in_array($linkType, array(Link::TYPE_CONFLICT, Link::TYPE_PROVIDE, Link::TYPE_REPLACE), true)) {
+            $newLinks = array();
+            foreach ($links as $link) {
+                // link is self.version, but must be replacing also the replaced version
+                if ('self.version' === $link->getPrettyConstraint()) {
+                    $newLinks[] = new Link($link->getSource(), $link->getTarget(), $constraint = new Constraint('=', $this->version), $linkType, $prettyVersion);
+                    $constraint->setPrettyString($prettyVersion);
+                }
+            }
+            $links = array_merge($links, $newLinks);
+        } else {
+            foreach ($links as $index => $link) {
+                if ('self.version' === $link->getPrettyConstraint()) {
+                    if ($linkType === Link::TYPE_REQUIRE) {
+                        $this->hasSelfVersionRequires = true;
+                    }
+                    $links[$index] = new Link($link->getSource(), $link->getTarget(), $constraint = new Constraint('=', $this->version), $linkType, $prettyVersion);
+                    $constraint->setPrettyString($prettyVersion);
+                }
+            }
+        }
+
+        return $links;
     }
 
     public function hasSelfVersionRequires()

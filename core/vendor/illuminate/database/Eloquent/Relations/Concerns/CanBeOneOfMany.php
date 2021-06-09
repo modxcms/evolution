@@ -33,19 +33,29 @@ trait CanBeOneOfMany
     protected $oneOfManySubQuery;
 
     /**
-     * Indicate that the relation is the latest single result of a larger one-to-many relationship.
+     * Add constraints for inner join subselect for one of many relationships.
      *
-     * @param  string|array|null  $column
-     * @param  string|Closure|null  $aggregate
-     * @param  string|null  $relation
-     * @return $this
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  string|null  $column
+     * @param  string|null  $aggregate
+     * @return void
      */
-    public function latestOfMany($column = 'id', $relation = null)
-    {
-        return $this->ofMany(collect(Arr::wrap($column))->mapWithKeys(function ($column) {
-            return [$column => 'MAX'];
-        })->all(), 'MAX', $relation ?: $this->guessRelationship());
-    }
+    abstract public function addOneOfManySubQueryConstraints(Builder $query, $column = null, $aggregate = null);
+
+    /**
+     * Get the columns the determine the relationship groups.
+     *
+     * @return array|string
+     */
+    abstract public function getOneOfManySubQuerySelectColumns();
+
+    /**
+     * Add join query constraints for one of many relationships.
+     *
+     * @param  \Illuminate\Database\Eloquent\JoinClause  $join
+     * @return void
+     */
+    abstract public function addOneOfManyJoinSubQueryConstraints(JoinClause $join);
 
     /**
      * Indicate that the relation is a single result of a larger one-to-many relationship.
@@ -116,6 +126,36 @@ trait CanBeOneOfMany
     }
 
     /**
+     * Indicate that the relation is the latest single result of a larger one-to-many relationship.
+     *
+     * @param  string|array|null  $column
+     * @param  string|Closure|null  $aggregate
+     * @param  string|null  $relation
+     * @return $this
+     */
+    public function latestOfMany($column = 'id', $relation = null)
+    {
+        return $this->ofMany(collect(Arr::wrap($column))->mapWithKeys(function ($column) {
+            return [$column => 'MAX'];
+        })->all(), 'MAX', $relation ?: $this->guessRelationship());
+    }
+
+    /**
+     * Indicate that the relation is the oldest single result of a larger one-to-many relationship.
+     *
+     * @param  string|array|null  $column
+     * @param  string|Closure|null  $aggregate
+     * @param  string|null  $relation
+     * @return $this
+     */
+    public function oldestOfMany($column = 'id', $relation = null)
+    {
+        return $this->ofMany(collect(Arr::wrap($column))->mapWithKeys(function ($column) {
+            return [$column => 'MIN'];
+        })->all(), 'MIN', $relation ?: $this->guessRelationship());
+    }
+
+    /**
      * Get the default alias for the one of many inner join clause.
      *
      * @param  string  $relation
@@ -126,16 +166,6 @@ trait CanBeOneOfMany
         return $relation == $this->query->getModel()->getTable()
             ? $relation.'_of_many'
             : $relation;
-    }
-
-    /**
-     * Guess the "hasOne" relationship's name via backtrace.
-     *
-     * @return string
-     */
-    protected function guessRelationship()
-    {
-        return debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3)[2]['function'];
     }
 
     /**
@@ -165,34 +195,6 @@ trait CanBeOneOfMany
     }
 
     /**
-     * Qualify related column using the related table name if it is not already qualified.
-     *
-     * @param  string  $column
-     * @return string
-     */
-    protected function qualifyRelatedColumn($column)
-    {
-        return Str::contains($column, '.') ? $column : $this->query->getModel()->getTable().'.'.$column;
-    }
-
-    /**
-     * Add constraints for inner join subselect for one of many relationships.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  string|null  $column
-     * @param  string|null  $aggregate
-     * @return void
-     */
-    abstract public function addOneOfManySubQueryConstraints(Builder $query, $column = null, $aggregate = null);
-
-    /**
-     * Get the columns the determine the relationship groups.
-     *
-     * @return array|string
-     */
-    abstract public function getOneOfManySubQuerySelectColumns();
-
-    /**
      * Add the join subquery to the given query on the given column and the relationship's foreign key.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $parent
@@ -203,66 +205,14 @@ trait CanBeOneOfMany
     protected function addOneOfManyJoinSubQuery(Builder $parent, Builder $subQuery, $on)
     {
         $parent->beforeQuery(function ($parent) use ($subQuery, $on) {
+            $subQuery->applyBeforeQueryCallbacks();
+
             $parent->joinSub($subQuery, $this->relationName, function ($join) use ($on) {
                 $join->on($this->qualifySubSelectColumn($on), '=', $this->qualifyRelatedColumn($on));
 
                 $this->addOneOfManyJoinSubQueryConstraints($join, $on);
             });
         });
-    }
-
-    /**
-     * Get the qualified column name for the one-of-many relationship using the subselect join query's alias.
-     *
-     * @param  string  $column
-     * @return string
-     */
-    public function qualifySubSelectColumn($column)
-    {
-        return $this->getRelationName().'.'.last(explode('.', $column));
-    }
-
-    /**
-     * Get the name of the relationship.
-     *
-     * @return string
-     */
-    public function getRelationName()
-    {
-        return $this->relationName;
-    }
-
-    /**
-     * Add join query constraints for one of many relationships.
-     *
-     * @param  \Illuminate\Database\Eloquent\JoinClause  $join
-     * @return void
-     */
-    abstract public function addOneOfManyJoinSubQueryConstraints(JoinClause $join);
-
-    /**
-     * Indicate that the relation is the oldest single result of a larger one-to-many relationship.
-     *
-     * @param  string|array|null  $column
-     * @param  string|Closure|null  $aggregate
-     * @param  string|null  $relation
-     * @return $this
-     */
-    public function oldestOfMany($column = 'id', $relation = null)
-    {
-        return $this->ofMany(collect(Arr::wrap($column))->mapWithKeys(function ($column) {
-            return [$column => 'MIN'];
-        })->all(), 'MIN', $relation ?: $this->guessRelationship());
-    }
-
-    /**
-     * Get the one of many inner join subselect builder instance.
-     *
-     * @return \Illuminate\Database\Eloquent\Builder|void
-     */
-    public function getOneOfManySubQuery()
-    {
-        return $this->oneOfManySubQuery;
     }
 
     /**
@@ -291,6 +241,48 @@ trait CanBeOneOfMany
     }
 
     /**
+     * Get the one of many inner join subselect builder instance.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder|void
+     */
+    public function getOneOfManySubQuery()
+    {
+        return $this->oneOfManySubQuery;
+    }
+
+    /**
+     * Get the qualified column name for the one-of-many relationship using the subselect join query's alias.
+     *
+     * @param  string  $column
+     * @return string
+     */
+    public function qualifySubSelectColumn($column)
+    {
+        return $this->getRelationName().'.'.last(explode('.', $column));
+    }
+
+    /**
+     * Qualify related column using the related table name if it is not already qualified.
+     *
+     * @param  string  $column
+     * @return string
+     */
+    protected function qualifyRelatedColumn($column)
+    {
+        return Str::contains($column, '.') ? $column : $this->query->getModel()->getTable().'.'.$column;
+    }
+
+    /**
+     * Guess the "hasOne" relationship's name via backtrace.
+     *
+     * @return string
+     */
+    protected function guessRelationship()
+    {
+        return debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3)[2]['function'];
+    }
+
+    /**
      * Determine whether the relationship is a one-of-many relationship.
      *
      * @return bool
@@ -298,5 +290,15 @@ trait CanBeOneOfMany
     public function isOneOfMany()
     {
         return $this->isOneOfMany;
+    }
+
+    /**
+     * Get the name of the relationship.
+     *
+     * @return string
+     */
+    public function getRelationName()
+    {
+        return $this->relationName;
     }
 }

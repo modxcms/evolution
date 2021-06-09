@@ -32,6 +32,18 @@ class DefaultPolicy implements PolicyInterface
         $this->preferLowest = $preferLowest;
     }
 
+    public function versionCompare(PackageInterface $a, PackageInterface $b, $operator)
+    {
+        if ($this->preferStable && ($stabA = $a->getStability()) !== ($stabB = $b->getStability())) {
+            return BasePackage::$stabilities[$stabA] < BasePackage::$stabilities[$stabB];
+        }
+
+        $constraint = new Constraint($operator, $b->getVersion());
+        $version = new Constraint('==', $a->getVersion());
+
+        return $constraint->matchSpecific($version, true);
+    }
+
     public function selectPreferredPackages(Pool $pool, array $literals, $requiredPackage = null)
     {
         $packages = $this->groupLiteralsByName($pool, $literals);
@@ -166,18 +178,6 @@ class DefaultPolicy implements PolicyInterface
         }
 
         return $bestLiterals;
-    }
-
-    public function versionCompare(PackageInterface $a, PackageInterface $b, $operator)
-    {
-        if ($this->preferStable && ($stabA = $a->getStability()) !== ($stabB = $b->getStability())) {
-            return BasePackage::$stabilities[$stabA] < BasePackage::$stabilities[$stabB];
-        }
-
-        $constraint = new Constraint($operator, $b->getVersion());
-        $version = new Constraint('==', $a->getVersion());
-
-        return $constraint->matchSpecific($version, true);
     }
 
     /**

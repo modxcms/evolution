@@ -191,6 +191,24 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         $this->connector->getDebugDispatcher()->dispatchDebug($message, $tags, $this->options['classesPartialsTraceIgnore']);
     }
 
+    private function handleExceptionRecord(array $record): void
+    {
+        $this->connector->getErrorsDispatcher()->dispatchException($record['context']['exception']);
+    }
+
+    private function handleErrorRecord(array $record): void
+    {
+        $context = $record['context'];
+
+        $this->connector->getErrorsDispatcher()->dispatchError(
+            $context['code'] ?? null,
+            $context['message'] ?? $record['message'],
+            $context['file'] ?? null,
+            $context['line'] ?? null,
+            $this->options['classesPartialsTraceIgnore']
+        );
+    }
+
     private function getRecordTags(array &$record)
     {
         $tags = null;
@@ -210,24 +228,6 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         }
 
         return $tags ?: strtolower($record['level_name']);
-    }
-
-    private function handleExceptionRecord(array $record): void
-    {
-        $this->connector->getErrorsDispatcher()->dispatchException($record['context']['exception']);
-    }
-
-    private function handleErrorRecord(array $record): void
-    {
-        $context = $record['context'];
-
-        $this->connector->getErrorsDispatcher()->dispatchError(
-            $context['code'] ?? null,
-            $context['message'] ?? $record['message'],
-            $context['file'] ?? null,
-            $context['line'] ?? null,
-            $this->options['classesPartialsTraceIgnore']
-        );
     }
 
     /**

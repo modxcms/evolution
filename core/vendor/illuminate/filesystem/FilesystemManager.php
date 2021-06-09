@@ -79,13 +79,15 @@ class FilesystemManager implements FactoryContract
     }
 
     /**
-     * Get the default driver name.
+     * Get a default cloud filesystem instance.
      *
-     * @return string
+     * @return \Illuminate\Contracts\Filesystem\Filesystem
      */
-    public function getDefaultDriver()
+    public function cloud()
     {
-        return $this->app['config']['filesystems.default'];
+        $name = $this->getDefaultCloudDriver();
+
+        return $this->disks[$name] = $this->get($name);
     }
 
     /**
@@ -131,17 +133,6 @@ class FilesystemManager implements FactoryContract
     }
 
     /**
-     * Get the filesystem connection configuration.
-     *
-     * @param  string  $name
-     * @return array
-     */
-    protected function getConfig($name)
-    {
-        return $this->app['config']["filesystems.disks.{$name}"] ?: [];
-    }
-
-    /**
      * Call a custom driver creator.
      *
      * @param  array  $config
@@ -156,39 +147,6 @@ class FilesystemManager implements FactoryContract
         }
 
         return $driver;
-    }
-
-    /**
-     * Adapt the filesystem implementation.
-     *
-     * @param  \League\Flysystem\FilesystemInterface  $filesystem
-     * @return \Illuminate\Contracts\Filesystem\Filesystem
-     */
-    protected function adapt(FilesystemInterface $filesystem)
-    {
-        return new FilesystemAdapter($filesystem);
-    }
-
-    /**
-     * Get a default cloud filesystem instance.
-     *
-     * @return \Illuminate\Contracts\Filesystem\Filesystem
-     */
-    public function cloud()
-    {
-        $name = $this->getDefaultCloudDriver();
-
-        return $this->disks[$name] = $this->get($name);
-    }
-
-    /**
-     * Get the default cloud driver name.
-     *
-     * @return string
-     */
-    public function getDefaultCloudDriver()
-    {
-        return $this->app['config']['filesystems.cloud'] ?? 's3';
     }
 
     /**
@@ -208,47 +166,6 @@ class FilesystemManager implements FactoryContract
         return $this->adapt($this->createFlysystem(new LocalAdapter(
             $config['root'], $config['lock'] ?? LOCK_EX, $links, $permissions
         ), $config));
-    }
-
-    /**
-     * Create a Flysystem instance with the given adapter.
-     *
-     * @param  \League\Flysystem\AdapterInterface  $adapter
-     * @param  array  $config
-     * @return \League\Flysystem\FilesystemInterface
-     */
-    protected function createFlysystem(AdapterInterface $adapter, array $config)
-    {
-        $cache = Arr::pull($config, 'cache');
-
-        $config = Arr::only($config, ['visibility', 'disable_asserts', 'url', 'temporary_url']);
-
-        if ($cache) {
-            $adapter = new CachedAdapter($adapter, $this->createCacheStore($cache));
-        }
-
-        return new Flysystem($adapter, count($config) > 0 ? $config : null);
-    }
-
-    /**
-     * Create a cache store instance.
-     *
-     * @param  mixed  $config
-     * @return \League\Flysystem\Cached\CacheInterface
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected function createCacheStore($config)
-    {
-        if ($config === true) {
-            return new MemoryStore;
-        }
-
-        return new Cache(
-            $this->app['cache']->store($config['store']),
-            $config['prefix'] ?? 'flysystem',
-            $config['expire'] ?? null
-        );
     }
 
     /**
@@ -316,6 +233,58 @@ class FilesystemManager implements FactoryContract
     }
 
     /**
+     * Create a Flysystem instance with the given adapter.
+     *
+     * @param  \League\Flysystem\AdapterInterface  $adapter
+     * @param  array  $config
+     * @return \League\Flysystem\FilesystemInterface
+     */
+    protected function createFlysystem(AdapterInterface $adapter, array $config)
+    {
+        $cache = Arr::pull($config, 'cache');
+
+        $config = Arr::only($config, ['visibility', 'disable_asserts', 'url', 'temporary_url']);
+
+        if ($cache) {
+            $adapter = new CachedAdapter($adapter, $this->createCacheStore($cache));
+        }
+
+        return new Flysystem($adapter, count($config) > 0 ? $config : null);
+    }
+
+    /**
+     * Create a cache store instance.
+     *
+     * @param  mixed  $config
+     * @return \League\Flysystem\Cached\CacheInterface
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function createCacheStore($config)
+    {
+        if ($config === true) {
+            return new MemoryStore;
+        }
+
+        return new Cache(
+            $this->app['cache']->store($config['store']),
+            $config['prefix'] ?? 'flysystem',
+            $config['expire'] ?? null
+        );
+    }
+
+    /**
+     * Adapt the filesystem implementation.
+     *
+     * @param  \League\Flysystem\FilesystemInterface  $filesystem
+     * @return \Illuminate\Contracts\Filesystem\Filesystem
+     */
+    protected function adapt(FilesystemInterface $filesystem)
+    {
+        return new FilesystemAdapter($filesystem);
+    }
+
+    /**
      * Set the given disk instance.
      *
      * @param  string  $name
@@ -327,6 +296,37 @@ class FilesystemManager implements FactoryContract
         $this->disks[$name] = $disk;
 
         return $this;
+    }
+
+    /**
+     * Get the filesystem connection configuration.
+     *
+     * @param  string  $name
+     * @return array
+     */
+    protected function getConfig($name)
+    {
+        return $this->app['config']["filesystems.disks.{$name}"] ?: [];
+    }
+
+    /**
+     * Get the default driver name.
+     *
+     * @return string
+     */
+    public function getDefaultDriver()
+    {
+        return $this->app['config']['filesystems.default'];
+    }
+
+    /**
+     * Get the default cloud driver name.
+     *
+     * @return string
+     */
+    public function getDefaultCloudDriver()
+    {
+        return $this->app['config']['filesystems.cloud'] ?? 's3';
     }
 
     /**

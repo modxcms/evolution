@@ -106,6 +106,19 @@ class PhpStringTokenParser
         );
     }
 
+    private static function parseCallback(array $matches): string
+    {
+        $str = $matches[1];
+
+        if (isset(self::$replacements[$str])) {
+            return self::$replacements[$str];
+        } elseif ('x' === $str[0] || 'X' === $str[0]) {
+            return \chr(hexdec($str));
+        } else {
+            return \chr(octdec($str));
+        }
+    }
+
     /**
      * Parses a constant doc string.
      *
@@ -125,18 +138,5 @@ class PhpStringTokenParser
         }
 
         return self::parseEscapeSequences($str, null);
-    }
-
-    private static function parseCallback(array $matches): string
-    {
-        $str = $matches[1];
-
-        if (isset(self::$replacements[$str])) {
-            return self::$replacements[$str];
-        } elseif ('x' === $str[0] || 'X' === $str[0]) {
-            return \chr(hexdec($str));
-        } else {
-            return \chr(octdec($str));
-        }
     }
 }

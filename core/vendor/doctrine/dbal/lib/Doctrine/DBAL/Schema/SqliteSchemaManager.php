@@ -74,63 +74,6 @@ class SqliteSchemaManager extends AbstractSchemaManager
     }
 
     /**
-     * @param string $name
-     */
-    public function listTableDetails($name): Table
-    {
-        $table = parent::listTableDetails($name);
-
-        $tableCreateSql = $this->getCreateTableSQL($name) ?? '';
-
-        $comment = $this->parseTableCommentFromSQL($name, $tableCreateSql);
-
-        if ($comment !== null) {
-            $table->addOption('comment', $comment);
-        }
-
-        return $table;
-    }
-
-    private function getCreateTableSQL(string $table): ?string
-    {
-        return $this->_conn->fetchColumn(
-            <<<'SQL'
-SELECT sql
-  FROM (
-      SELECT *
-        FROM sqlite_master
-   UNION ALL
-      SELECT *
-        FROM sqlite_temp_master
-  )
-WHERE type = 'table'
-AND name = ?
-SQL
-            ,
-            [$table]
-        ) ?: null;
-    }
-
-    private function parseTableCommentFromSQL(string $table, string $sql): ?string
-    {
-        $pattern = '/\s* # Allow whitespace characters at start of line
-CREATE\sTABLE # Match "CREATE TABLE"
-(?:\W"' . preg_quote($this->_platform->quoteSingleIdentifier($table), '/') . '"\W|\W' . preg_quote($table, '/')
-            . '\W) # Match table name (quoted and unquoted)
-( # Start capture
-   (?:\s*--[^\n]*\n?)+ # Capture anything that starts with whitespaces followed by -- until the end of the line(s)
-)/ix';
-
-        if (preg_match($pattern, $sql, $match) !== 1) {
-            return null;
-        }
-
-        $comment = preg_replace('{^\s*--}m', '', rtrim($match[1], "\n"));
-
-        return $comment === '' ? null : $comment;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function createForeignKey(ForeignKeyConstraint $foreignKey, $table)
@@ -139,33 +82,6 @@ CREATE\sTABLE # Match "CREATE TABLE"
         $tableDiff->addedForeignKeys[] = $foreignKey;
 
         $this->alterTable($tableDiff);
-    }
-
-    /**
-     * @param Table|string $table
-     *
-     * @return TableDiff
-     *
-     * @throws Exception
-     */
-    private function getTableDiffForAlterForeignKey($table)
-    {
-        if (! $table instanceof Table) {
-            $tableDetails = $this->tryMethod('listTableDetails', $table);
-
-            if ($tableDetails === false) {
-                throw new Exception(
-                    sprintf('Sqlite schema manager requires to modify foreign keys table definition "%s".', $table)
-                );
-            }
-
-            $table = $tableDetails;
-        }
-
-        $tableDiff            = new TableDiff($table->getName());
-        $tableDiff->fromTable = $table;
-
-        return $tableDiff;
     }
 
     /**
@@ -239,59 +155,6 @@ CREATE\sTABLE # Match "CREATE TABLE"
         }
 
         return $this->_getPortableTableForeignKeysList($tableForeignKeys);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function _getPortableTableForeignKeysList($tableForeignKeys)
-    {
-        $list = [];
-        foreach ($tableForeignKeys as $value) {
-            $value = array_change_key_case($value, CASE_LOWER);
-            $name  = $value['constraint_name'];
-            if (! isset($list[$name])) {
-                if (! isset($value['on_delete']) || $value['on_delete'] === 'RESTRICT') {
-                    $value['on_delete'] = null;
-                }
-
-                if (! isset($value['on_update']) || $value['on_update'] === 'RESTRICT') {
-                    $value['on_update'] = null;
-                }
-
-                $list[$name] = [
-                    'name' => $name,
-                    'local' => [],
-                    'foreign' => [],
-                    'foreignTable' => $value['table'],
-                    'onDelete' => $value['on_delete'],
-                    'onUpdate' => $value['on_update'],
-                    'deferrable' => $value['deferrable'],
-                    'deferred' => $value['deferred'],
-                ];
-            }
-
-            $list[$name]['local'][]   = $value['from'];
-            $list[$name]['foreign'][] = $value['to'];
-        }
-
-        $result = [];
-        foreach ($list as $constraint) {
-            $result[] = new ForeignKeyConstraint(
-                array_values($constraint['local']),
-                $constraint['foreignTable'],
-                array_values($constraint['foreign']),
-                $constraint['name'],
-                [
-                    'onDelete' => $constraint['onDelete'],
-                    'onUpdate' => $constraint['onUpdate'],
-                    'deferrable' => $constraint['deferrable'],
-                    'deferred' => $constraint['deferred'],
-                ]
-            );
-        }
-
-        return $result;
     }
 
     /**
@@ -454,33 +317,6 @@ CREATE\sTABLE # Match "CREATE TABLE"
         return $list;
     }
 
-    private function parseColumnCollationFromSQL(string $column, string $sql): ?string
-    {
-        $pattern = '{(?:\W' . preg_quote($column) . '\W|\W'
-            . preg_quote($this->_platform->quoteSingleIdentifier($column))
-            . '\W)[^,(]+(?:\([^()]+\)[^,]*)?(?:(?:DEFAULT|CHECK)\s*(?:\(.*?\))?[^,]*)*COLLATE\s+["\']?([^\s,"\')]+)}is';
-
-        if (preg_match($pattern, $sql, $match) !== 1) {
-            return null;
-        }
-
-        return $match[1];
-    }
-
-    private function parseColumnCommentFromSQL(string $column, string $sql): ?string
-    {
-        $pattern = '{[\s(,](?:\W' . preg_quote($this->_platform->quoteSingleIdentifier($column))
-            . '\W|\W' . preg_quote($column) . '\W)(?:\([^)]*?\)|[^,(])*?,?((?:(?!\n))(?:\s*--[^\n]*\n?)+)}i';
-
-        if (preg_match($pattern, $sql, $match) !== 1) {
-            return null;
-        }
-
-        $comment = preg_replace('{^\s*--}m', '', rtrim($match[1], "\n"));
-
-        return $comment === '' ? null : $comment;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -566,5 +402,169 @@ CREATE\sTABLE # Match "CREATE TABLE"
     protected function _getPortableViewDefinition($view)
     {
         return new View($view['name'], $view['sql']);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function _getPortableTableForeignKeysList($tableForeignKeys)
+    {
+        $list = [];
+        foreach ($tableForeignKeys as $value) {
+            $value = array_change_key_case($value, CASE_LOWER);
+            $name  = $value['constraint_name'];
+            if (! isset($list[$name])) {
+                if (! isset($value['on_delete']) || $value['on_delete'] === 'RESTRICT') {
+                    $value['on_delete'] = null;
+                }
+
+                if (! isset($value['on_update']) || $value['on_update'] === 'RESTRICT') {
+                    $value['on_update'] = null;
+                }
+
+                $list[$name] = [
+                    'name' => $name,
+                    'local' => [],
+                    'foreign' => [],
+                    'foreignTable' => $value['table'],
+                    'onDelete' => $value['on_delete'],
+                    'onUpdate' => $value['on_update'],
+                    'deferrable' => $value['deferrable'],
+                    'deferred' => $value['deferred'],
+                ];
+            }
+
+            $list[$name]['local'][]   = $value['from'];
+            $list[$name]['foreign'][] = $value['to'];
+        }
+
+        $result = [];
+        foreach ($list as $constraint) {
+            $result[] = new ForeignKeyConstraint(
+                array_values($constraint['local']),
+                $constraint['foreignTable'],
+                array_values($constraint['foreign']),
+                $constraint['name'],
+                [
+                    'onDelete' => $constraint['onDelete'],
+                    'onUpdate' => $constraint['onUpdate'],
+                    'deferrable' => $constraint['deferrable'],
+                    'deferred' => $constraint['deferred'],
+                ]
+            );
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param Table|string $table
+     *
+     * @return TableDiff
+     *
+     * @throws Exception
+     */
+    private function getTableDiffForAlterForeignKey($table)
+    {
+        if (! $table instanceof Table) {
+            $tableDetails = $this->tryMethod('listTableDetails', $table);
+
+            if ($tableDetails === false) {
+                throw new Exception(
+                    sprintf('Sqlite schema manager requires to modify foreign keys table definition "%s".', $table)
+                );
+            }
+
+            $table = $tableDetails;
+        }
+
+        $tableDiff            = new TableDiff($table->getName());
+        $tableDiff->fromTable = $table;
+
+        return $tableDiff;
+    }
+
+    private function parseColumnCollationFromSQL(string $column, string $sql): ?string
+    {
+        $pattern = '{(?:\W' . preg_quote($column) . '\W|\W'
+            . preg_quote($this->_platform->quoteSingleIdentifier($column))
+            . '\W)[^,(]+(?:\([^()]+\)[^,]*)?(?:(?:DEFAULT|CHECK)\s*(?:\(.*?\))?[^,]*)*COLLATE\s+["\']?([^\s,"\')]+)}is';
+
+        if (preg_match($pattern, $sql, $match) !== 1) {
+            return null;
+        }
+
+        return $match[1];
+    }
+
+    private function parseTableCommentFromSQL(string $table, string $sql): ?string
+    {
+        $pattern = '/\s* # Allow whitespace characters at start of line
+CREATE\sTABLE # Match "CREATE TABLE"
+(?:\W"' . preg_quote($this->_platform->quoteSingleIdentifier($table), '/') . '"\W|\W' . preg_quote($table, '/')
+            . '\W) # Match table name (quoted and unquoted)
+( # Start capture
+   (?:\s*--[^\n]*\n?)+ # Capture anything that starts with whitespaces followed by -- until the end of the line(s)
+)/ix';
+
+        if (preg_match($pattern, $sql, $match) !== 1) {
+            return null;
+        }
+
+        $comment = preg_replace('{^\s*--}m', '', rtrim($match[1], "\n"));
+
+        return $comment === '' ? null : $comment;
+    }
+
+    private function parseColumnCommentFromSQL(string $column, string $sql): ?string
+    {
+        $pattern = '{[\s(,](?:\W' . preg_quote($this->_platform->quoteSingleIdentifier($column))
+            . '\W|\W' . preg_quote($column) . '\W)(?:\([^)]*?\)|[^,(])*?,?((?:(?!\n))(?:\s*--[^\n]*\n?)+)}i';
+
+        if (preg_match($pattern, $sql, $match) !== 1) {
+            return null;
+        }
+
+        $comment = preg_replace('{^\s*--}m', '', rtrim($match[1], "\n"));
+
+        return $comment === '' ? null : $comment;
+    }
+
+    private function getCreateTableSQL(string $table): ?string
+    {
+        return $this->_conn->fetchColumn(
+            <<<'SQL'
+SELECT sql
+  FROM (
+      SELECT *
+        FROM sqlite_master
+   UNION ALL
+      SELECT *
+        FROM sqlite_temp_master
+  )
+WHERE type = 'table'
+AND name = ?
+SQL
+            ,
+            [$table]
+        ) ?: null;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function listTableDetails($name): Table
+    {
+        $table = parent::listTableDetails($name);
+
+        $tableCreateSql = $this->getCreateTableSQL($name) ?? '';
+
+        $comment = $this->parseTableCommentFromSQL($name, $tableCreateSql);
+
+        if ($comment !== null) {
+            $table->addOption('comment', $comment);
+        }
+
+        return $table;
     }
 }

@@ -93,6 +93,21 @@ class PredisCluster implements ClusterInterface, \IteratorAggregate, \Countable
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function remove(NodeConnectionInterface $connection)
+    {
+        if (($id = array_search($connection, $this->pool, true)) !== false) {
+            unset($this->pool[$id]);
+            $this->distributor->remove($connection);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Removes a connection instance using its alias or index.
      *
      * @param string $connectionID Alias or index of a connection.
@@ -111,24 +126,27 @@ class PredisCluster implements ClusterInterface, \IteratorAggregate, \Countable
     /**
      * {@inheritdoc}
      */
-    public function getConnectionById($connectionID)
+    public function getConnection(CommandInterface $command)
     {
-        return isset($this->pool[$connectionID]) ? $this->pool[$connectionID] : null;
+        $slot = $this->strategy->getSlot($command);
+
+        if (!isset($slot)) {
+            throw new NotSupportedException(
+                "Cannot use '{$command->getId()}' over clusters of connections."
+            );
+        }
+
+        $node = $this->distributor->getBySlot($slot);
+
+        return $node;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function remove(NodeConnectionInterface $connection)
+    public function getConnectionById($connectionID)
     {
-        if (($id = array_search($connection, $this->pool, true)) !== false) {
-            unset($this->pool[$id]);
-            $this->distributor->remove($connection);
-
-            return true;
-        }
-
-        return false;
+        return isset($this->pool[$connectionID]) ? $this->pool[$connectionID] : null;
     }
 
     /**
@@ -179,24 +197,6 @@ class PredisCluster implements ClusterInterface, \IteratorAggregate, \Countable
     public function writeRequest(CommandInterface $command)
     {
         $this->getConnection($command)->writeRequest($command);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getConnection(CommandInterface $command)
-    {
-        $slot = $this->strategy->getSlot($command);
-
-        if (!isset($slot)) {
-            throw new NotSupportedException(
-                "Cannot use '{$command->getId()}' over clusters of connections."
-            );
-        }
-
-        $node = $this->distributor->getBySlot($slot);
-
-        return $node;
     }
 
     /**

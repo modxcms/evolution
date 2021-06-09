@@ -81,37 +81,6 @@ class Logger implements ILogger
 		return $exceptionFile;
 	}
 
-	public function getExceptionFile(\Throwable $exception, string $level = self::EXCEPTION): string
-	{
-		while ($exception) {
-			$data[] = [
-				get_class($exception), $exception->getMessage(), $exception->getCode(), $exception->getFile(), $exception->getLine(),
-				array_map(function (array $item): array { unset($item['args']); return $item; }, $exception->getTrace()),
-			];
-			$exception = $exception->getPrevious();
-		}
-		$hash = substr(md5(serialize($data)), 0, 10);
-		$dir = strtr($this->directory . '/', '\\/', DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR);
-		foreach (new \DirectoryIterator($this->directory) as $file) {
-			if (strpos($file->getBasename(), $hash)) {
-				return $dir . $file;
-			}
-		}
-		return $dir . $level . '--' . date('Y-m-d--H-i') . "--$hash.html";
-	}
-
-	/**
-	 * @param  mixed  $message
-	 */
-	public static function formatLogLine($message, string $exceptionFile = null): string
-	{
-		return implode(' ', [
-			date('[Y-m-d H-i-s]'),
-			preg_replace('#\s*\r?\n\s*#', ' ', static::formatMessage($message)),
-			' @  ' . Helpers::getSource(),
-			$exceptionFile ? ' @@  ' . basename($exceptionFile) : null,
-		]);
-	}
 
 	/**
 	 * @param  mixed  $message
@@ -134,6 +103,41 @@ class Logger implements ILogger
 
 		return trim($message);
 	}
+
+
+	/**
+	 * @param  mixed  $message
+	 */
+	public static function formatLogLine($message, string $exceptionFile = null): string
+	{
+		return implode(' ', [
+			date('[Y-m-d H-i-s]'),
+			preg_replace('#\s*\r?\n\s*#', ' ', static::formatMessage($message)),
+			' @  ' . Helpers::getSource(),
+			$exceptionFile ? ' @@  ' . basename($exceptionFile) : null,
+		]);
+	}
+
+
+	public function getExceptionFile(\Throwable $exception, string $level = self::EXCEPTION): string
+	{
+		while ($exception) {
+			$data[] = [
+				get_class($exception), $exception->getMessage(), $exception->getCode(), $exception->getFile(), $exception->getLine(),
+				array_map(function (array $item): array { unset($item['args']); return $item; }, $exception->getTrace()),
+			];
+			$exception = $exception->getPrevious();
+		}
+		$hash = substr(md5(serialize($data)), 0, 10);
+		$dir = strtr($this->directory . '/', '\\/', DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR);
+		foreach (new \DirectoryIterator($this->directory) as $file) {
+			if (strpos($file->getBasename(), $hash)) {
+				return $dir . $file;
+			}
+		}
+		return $dir . $level . '--' . date('Y-m-d--H-i') . "--$hash.html";
+	}
+
 
 	/**
 	 * Logs exception to the file if file doesn't exist.

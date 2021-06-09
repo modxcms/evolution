@@ -141,6 +141,14 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
+    public function getDocComment(): ?string
+    {
+        return $this->reflectionFunction->getDocComment() ?: null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getFileName()
     {
         return $this->reflectionFunction->getFileName();
@@ -195,14 +203,6 @@ final class Macro implements BuiltinMethodReflection
             $this->reflectionFunction->isDeprecated() ||
             preg_match('/@deprecated/i', $this->getDocComment() ?: '')
         );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDocComment(): ?string
-    {
-        return $this->reflectionFunction->getDocComment() ?: null;
     }
 
     /**

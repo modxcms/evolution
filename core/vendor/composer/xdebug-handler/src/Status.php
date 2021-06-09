@@ -73,17 +73,6 @@ class Status
         }
     }
 
-    private function reportCheck($loaded)
-    {
-        list($version, $mode) = explode('|', $loaded);
-
-        if ($version) {
-            $this->loaded = '('.$version.')'.($mode ? ' mode='.$mode : '');
-        }
-        $this->modeOff = $mode === 'off';
-        $this->output('Checking '.$this->envAllowXdebug);
-    }
-
     /**
      * Outputs a status message
      *
@@ -99,6 +88,17 @@ class Status
         if ($this->debug) {
             fwrite(STDERR, sprintf('xdebug-handler[%d] %s', getmypid(), $text.PHP_EOL));
         }
+    }
+
+    private function reportCheck($loaded)
+    {
+        list($version, $mode) = explode('|', $loaded);
+
+        if ($version) {
+            $this->loaded = '('.$version.')'.($mode ? ' mode='.$mode : '');
+        }
+        $this->modeOff = $mode === 'off';
+        $this->output('Checking '.$this->envAllowXdebug);
     }
 
     private function reportError($error)
@@ -124,27 +124,6 @@ class Status
         }
     }
 
-    /**
-     * Returns the Xdebug status and version
-     *
-     * @return string
-     */
-    private function getLoadedMessage()
-    {
-        $loaded = $this->loaded ? sprintf('loaded %s', $this->loaded) : 'not loaded';
-        return 'The Xdebug extension is '.$loaded;
-    }
-
-    /**
-     * Returns the _ALLOW_XDEBUG environment variable as name=value
-     *
-     * @return string
-     */
-    private function getEnvAllow()
-    {
-        return $this->envAllowXdebug.'='.getenv($this->envAllowXdebug);
-    }
-
     private function reportRestart()
     {
         $this->output($this->getLoadedMessage());
@@ -165,5 +144,26 @@ class Status
         $this->output($text);
         $text = 'Running '.$command;
         $this->output($text);
+    }
+
+    /**
+     * Returns the _ALLOW_XDEBUG environment variable as name=value
+     *
+     * @return string
+     */
+    private function getEnvAllow()
+    {
+        return $this->envAllowXdebug.'='.getenv($this->envAllowXdebug);
+    }
+
+    /**
+     * Returns the Xdebug status and version
+     *
+     * @return string
+     */
+    private function getLoadedMessage()
+    {
+        $loaded = $this->loaded ? sprintf('loaded %s', $this->loaded) : 'not loaded';
+        return 'The Xdebug extension is '.$loaded;
     }
 }

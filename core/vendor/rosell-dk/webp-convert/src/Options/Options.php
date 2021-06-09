@@ -19,6 +19,17 @@ class Options
     private $options = [];
 
     /**
+     * Add option.
+     *
+     * @param  Option  $option  The option object to add to collection.
+     * @return void
+     */
+    public function addOption($option)
+    {
+        $this->options[$option->getId()] = $option;
+    }
+
+    /**
      * Add options.
      *
      * Conveniently add several options in one call.
@@ -33,17 +44,6 @@ class Options
         }
     }
 
-    /**
-     * Add option.
-     *
-     * @param  Option  $option  The option object to add to collection.
-     * @return void
-     */
-    public function addOption($option)
-    {
-        $this->options[$option->getId()] = $option;
-    }
-
     /*
      In some years, we can use the splat instead (requires PHP 5.6):
      @param  Option[]  ...$options  Array of options objects to add
@@ -53,6 +53,24 @@ class Options
             $this->addOption($option);
         }
     }*/
+
+    /**
+     * Set the value of an option.
+     *
+     * @param  string  $id      Id of the option
+     * @param  mixed   $value   Value of the option
+     * @return void
+     */
+    public function setOption($id, $value)
+    {
+        if (!isset($this->options[$id])) {
+            throw new OptionNotFoundException(
+                'Could not set option. There is no option called "' . $id . '" in the collection.'
+            );
+        }
+        $option = $this->options[$id];
+        $option->setValue($value);
+    }
 
     /**
      * Set option, or create a new, if no such option exists.
@@ -74,24 +92,6 @@ class Options
     }
 
     /**
-     * Set the value of an option.
-     *
-     * @param  string  $id      Id of the option
-     * @param  mixed   $value   Value of the option
-     * @return void
-     */
-    public function setOption($id, $value)
-    {
-        if (!isset($this->options[$id])) {
-            throw new OptionNotFoundException(
-                'Could not set option. There is no option called "' . $id . '" in the collection.'
-            );
-        }
-        $option = $this->options[$id];
-        $option->setValue($value);
-    }
-
-    /**
      * Get the value of an option in the collection - by id.
      *
      * @deprecated  Use getOptionValue() instead
@@ -102,19 +102,6 @@ class Options
     public function getOption($id)
     {
         return $this->getOptionValue($id);
-    }
-
-    /**
-     * Get the value of an option in the collection - by id.
-     *
-     * @param  string  $id      Id of the option to get
-     * @throws  OptionNotFoundException  if the option is not in the collection
-     * @return mixed  The value of the option
-     */
-    public function getOptionValue($id)
-    {
-        $option = $this->getOptionById($id);
-        return $option->getValue();
     }
 
     /**
@@ -132,6 +119,19 @@ class Options
             );
         }
         return $this->options[$id];
+    }
+
+    /**
+     * Get the value of an option in the collection - by id.
+     *
+     * @param  string  $id      Id of the option to get
+     * @throws  OptionNotFoundException  if the option is not in the collection
+     * @return mixed  The value of the option
+     */
+    public function getOptionValue($id)
+    {
+        $option = $this->getOptionById($id);
+        return $option->getValue();
     }
 
     /**

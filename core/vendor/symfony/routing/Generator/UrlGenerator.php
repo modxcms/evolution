@@ -50,6 +50,9 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
     protected $strictRequirements = true;
 
     protected $logger;
+
+    private $defaultLocale;
+
     /**
      * This array defines the characters (besides alphanumeric ones) that will not be percent-encoded in the path segment of the generated URL.
      *
@@ -78,7 +81,6 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
         '%2A' => '*',
         '%7C' => '|',
     ];
-    private $defaultLocale;
 
     public function __construct(RouteCollection $routes, RequestContext $context, LoggerInterface $logger = null, string $defaultLocale = null)
     {
@@ -91,17 +93,17 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
     /**
      * {@inheritdoc}
      */
-    public function getContext()
+    public function setContext(RequestContext $context)
     {
-        return $this->context;
+        $this->context = $context;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setContext(RequestContext $context)
+    public function getContext()
     {
-        $this->context = $context;
+        return $this->context;
     }
 
     /**

@@ -81,28 +81,6 @@ class RateLimiter
     }
 
     /**
-     * Get the number of attempts for the given key.
-     *
-     * @param  string  $key
-     * @return mixed
-     */
-    public function attempts($key)
-    {
-        return $this->cache->get($key, 0);
-    }
-
-    /**
-     * Reset the number of attempts for the given key.
-     *
-     * @param  string  $key
-     * @return mixed
-     */
-    public function resetAttempts($key)
-    {
-        return $this->cache->forget($key);
-    }
-
-    /**
      * Increment the counter for a given key for a given decay time.
      *
      * @param  string  $key
@@ -124,6 +102,28 @@ class RateLimiter
         }
 
         return $hits;
+    }
+
+    /**
+     * Get the number of attempts for the given key.
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+    public function attempts($key)
+    {
+        return $this->cache->get($key, 0);
+    }
+
+    /**
+     * Reset the number of attempts for the given key.
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+    public function resetAttempts($key)
+    {
+        return $this->cache->forget($key);
     }
 
     /**

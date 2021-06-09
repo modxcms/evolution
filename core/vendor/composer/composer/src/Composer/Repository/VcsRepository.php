@@ -92,6 +92,16 @@ class VcsRepository extends ArrayRepository implements ConfigurableRepositoryInt
         return 'vcs repo ('.$driverType.' '.Url::sanitize($this->url).')';
     }
 
+    public function getRepoConfig()
+    {
+        return $this->repoConfig;
+    }
+
+    public function setLoader(LoaderInterface $loader)
+    {
+        $this->loader = $loader;
+    }
+
     public function getDriver()
     {
         if ($this->driver) {
@@ -123,16 +133,6 @@ class VcsRepository extends ArrayRepository implements ConfigurableRepositoryInt
                 return $this->driver;
             }
         }
-    }
-
-    public function getRepoConfig()
-    {
-        return $this->repoConfig;
-    }
-
-    public function setLoader(LoaderInterface $loader)
-    {
-        $this->loader = $loader;
     }
 
     public function hadInvalidBranches()
@@ -383,6 +383,49 @@ class VcsRepository extends ArrayRepository implements ConfigurableRepositoryInt
         }
     }
 
+    protected function preProcess(VcsDriverInterface $driver, array $data, $identifier)
+    {
+        // keep the name of the main identifier for all packages
+        // this ensures that a package can be renamed in one place and that all old tags
+        // will still be installable using that new name without requiring re-tagging
+        $dataPackageName = isset($data['name']) ? $data['name'] : null;
+        $data['name'] = $this->packageName ?: $dataPackageName;
+
+        if (!isset($data['dist'])) {
+            $data['dist'] = $driver->getDist($identifier);
+        }
+        if (!isset($data['source'])) {
+            $data['source'] = $driver->getSource($identifier);
+        }
+
+        return $data;
+    }
+
+    private function validateBranch($branch)
+    {
+        try {
+            $normalizedBranch = $this->versionParser->normalizeBranch($branch);
+
+            // validate that the branch name has no weird characters conflicting with constraints
+            $this->versionParser->parseConstraints($normalizedBranch);
+
+            return $normalizedBranch;
+        } catch (\Exception $e) {
+        }
+
+        return false;
+    }
+
+    private function validateTag($version)
+    {
+        try {
+            return $this->versionParser->normalize($version);
+        } catch (\Exception $e) {
+        }
+
+        return false;
+    }
+
     private function getCachedPackageVersion($version, $identifier, $isVerbose, $isVeryVerbose, $isDefaultBranch = false)
     {
         if (!$this->versionCache) {
@@ -424,48 +467,5 @@ class VcsRepository extends ArrayRepository implements ConfigurableRepositoryInt
         }
 
         return null;
-    }
-
-    private function validateTag($version)
-    {
-        try {
-            return $this->versionParser->normalize($version);
-        } catch (\Exception $e) {
-        }
-
-        return false;
-    }
-
-    protected function preProcess(VcsDriverInterface $driver, array $data, $identifier)
-    {
-        // keep the name of the main identifier for all packages
-        // this ensures that a package can be renamed in one place and that all old tags
-        // will still be installable using that new name without requiring re-tagging
-        $dataPackageName = isset($data['name']) ? $data['name'] : null;
-        $data['name'] = $this->packageName ?: $dataPackageName;
-
-        if (!isset($data['dist'])) {
-            $data['dist'] = $driver->getDist($identifier);
-        }
-        if (!isset($data['source'])) {
-            $data['source'] = $driver->getSource($identifier);
-        }
-
-        return $data;
-    }
-
-    private function validateBranch($branch)
-    {
-        try {
-            $normalizedBranch = $this->versionParser->normalizeBranch($branch);
-
-            // validate that the branch name has no weird characters conflicting with constraints
-            $this->versionParser->parseConstraints($normalizedBranch);
-
-            return $normalizedBranch;
-        } catch (\Exception $e) {
-        }
-
-        return false;
     }
 }

@@ -31,13 +31,6 @@ class SimpleDebuggableConnection extends StreamConnection
         parent::connect();
     }
 
-    public function writeRequest(CommandInterface $command)
-    {
-        parent::writeRequest($command);
-
-        $this->storeDebug($command, '->');
-    }
-
     private function storeDebug(CommandInterface $command, $direction)
     {
         $firtsArg = $command->getArgument(0);
@@ -49,6 +42,13 @@ class SimpleDebuggableConnection extends StreamConnection
         $debug .= " [{$timestamp}s]";
 
         $this->debugBuffer[] = $debug;
+    }
+
+    public function writeRequest(CommandInterface $command)
+    {
+        parent::writeRequest($command);
+
+        $this->storeDebug($command, '->');
     }
 
     public function readResponse(CommandInterface $command)

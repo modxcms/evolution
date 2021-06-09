@@ -50,16 +50,6 @@ abstract class AbstractSessionListener implements EventSubscriberInterface
         $this->debug = $debug;
     }
 
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            KernelEvents::REQUEST => ['onKernelRequest', 128],
-            // low priority to come after regular response listeners, but higher than StreamedResponseListener
-            KernelEvents::RESPONSE => ['onKernelResponse', -1000],
-            KernelEvents::FINISH_REQUEST => ['onFinishRequest'],
-        ];
-    }
-
     public function onKernelRequest(RequestEvent $event)
     {
         if (!$event->isMainRequest()) {
@@ -75,13 +65,6 @@ abstract class AbstractSessionListener implements EventSubscriberInterface
         $session = $this->container && $this->container->has('initialized_session') ? $this->container->get('initialized_session') : null;
         $this->sessionUsageStack[] = $session instanceof Session ? $session->getUsageIndex() : 0;
     }
-
-    /**
-     * Gets the session object.
-     *
-     * @return SessionInterface|null A SessionInterface instance or null if no session is available
-     */
-    abstract protected function getSession();
 
     public function onKernelResponse(ResponseEvent $event)
     {
@@ -193,4 +176,21 @@ abstract class AbstractSessionListener implements EventSubscriberInterface
 
         throw new UnexpectedSessionUsageException('Session was used while the request was declared stateless.');
     }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            KernelEvents::REQUEST => ['onKernelRequest', 128],
+            // low priority to come after regular response listeners, but higher than StreamedResponseListener
+            KernelEvents::RESPONSE => ['onKernelResponse', -1000],
+            KernelEvents::FINISH_REQUEST => ['onFinishRequest'],
+        ];
+    }
+
+    /**
+     * Gets the session object.
+     *
+     * @return SessionInterface|null A SessionInterface instance or null if no session is available
+     */
+    abstract protected function getSession();
 }

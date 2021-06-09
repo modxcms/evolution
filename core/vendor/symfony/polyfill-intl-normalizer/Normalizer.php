@@ -110,13 +110,88 @@ class Normalizer
         return $r;
     }
 
-    private static function getData($file)
+    private static function recompose($s)
     {
-        if (file_exists($file = __DIR__.'/Resources/unidata/'.$file.'.php')) {
-            return require $file;
+        $ASCII = self::$ASCII;
+        $compMap = self::$C;
+        $combClass = self::$cC;
+        $ulenMask = self::$ulenMask;
+
+        $result = $tail = '';
+
+        $i = $s[0] < "\x80" ? 1 : $ulenMask[$s[0] & "\xF0"];
+        $len = \strlen($s);
+
+        $lastUchr = substr($s, 0, $i);
+        $lastUcls = isset($combClass[$lastUchr]) ? 256 : 0;
+
+        while ($i < $len) {
+            if ($s[$i] < "\x80") {
+                // ASCII chars
+
+                if ($tail) {
+                    $lastUchr .= $tail;
+                    $tail = '';
+                }
+
+                if ($j = strspn($s, $ASCII, $i + 1)) {
+                    $lastUchr .= substr($s, $i, $j);
+                    $i += $j;
+                }
+
+                $result .= $lastUchr;
+                $lastUchr = $s[$i];
+                $lastUcls = 0;
+                ++$i;
+                continue;
+            }
+
+            $ulen = $ulenMask[$s[$i] & "\xF0"];
+            $uchr = substr($s, $i, $ulen);
+
+            if ($lastUchr < "\xE1\x84\x80" || "\xE1\x84\x92" < $lastUchr
+                || $uchr < "\xE1\x85\xA1" || "\xE1\x85\xB5" < $uchr
+                || $lastUcls) {
+                // Table lookup and combining chars composition
+
+                $ucls = $combClass[$uchr] ?? 0;
+
+                if (isset($compMap[$lastUchr.$uchr]) && (!$lastUcls || $lastUcls < $ucls)) {
+                    $lastUchr = $compMap[$lastUchr.$uchr];
+                } elseif ($lastUcls = $ucls) {
+                    $tail .= $uchr;
+                } else {
+                    if ($tail) {
+                        $lastUchr .= $tail;
+                        $tail = '';
+                    }
+
+                    $result .= $lastUchr;
+                    $lastUchr = $uchr;
+                }
+            } else {
+                // Hangul chars
+
+                $L = \ord($lastUchr[2]) - 0x80;
+                $V = \ord($uchr[2]) - 0xA1;
+                $T = 0;
+
+                $uchr = substr($s, $i + $ulen, 3);
+
+                if ("\xE1\x86\xA7" <= $uchr && $uchr <= "\xE1\x87\x82") {
+                    $T = \ord($uchr[2]) - 0xA7;
+                    0 > $T && $T += 0x40;
+                    $ulen += 3;
+                }
+
+                $L = 0xAC00 + ($L * 21 + $V) * 28 + $T;
+                $lastUchr = \chr(0xE0 | $L >> 12).\chr(0x80 | $L >> 6 & 0x3F).\chr(0x80 | $L & 0x3F);
+            }
+
+            $i += $ulen;
         }
 
-        return false;
+        return $result.$lastUchr.$tail;
     }
 
     private static function decompose($s, $c)
@@ -224,87 +299,12 @@ class Normalizer
         return $result;
     }
 
-    private static function recompose($s)
+    private static function getData($file)
     {
-        $ASCII = self::$ASCII;
-        $compMap = self::$C;
-        $combClass = self::$cC;
-        $ulenMask = self::$ulenMask;
-
-        $result = $tail = '';
-
-        $i = $s[0] < "\x80" ? 1 : $ulenMask[$s[0] & "\xF0"];
-        $len = \strlen($s);
-
-        $lastUchr = substr($s, 0, $i);
-        $lastUcls = isset($combClass[$lastUchr]) ? 256 : 0;
-
-        while ($i < $len) {
-            if ($s[$i] < "\x80") {
-                // ASCII chars
-
-                if ($tail) {
-                    $lastUchr .= $tail;
-                    $tail = '';
-                }
-
-                if ($j = strspn($s, $ASCII, $i + 1)) {
-                    $lastUchr .= substr($s, $i, $j);
-                    $i += $j;
-                }
-
-                $result .= $lastUchr;
-                $lastUchr = $s[$i];
-                $lastUcls = 0;
-                ++$i;
-                continue;
-            }
-
-            $ulen = $ulenMask[$s[$i] & "\xF0"];
-            $uchr = substr($s, $i, $ulen);
-
-            if ($lastUchr < "\xE1\x84\x80" || "\xE1\x84\x92" < $lastUchr
-                || $uchr < "\xE1\x85\xA1" || "\xE1\x85\xB5" < $uchr
-                || $lastUcls) {
-                // Table lookup and combining chars composition
-
-                $ucls = $combClass[$uchr] ?? 0;
-
-                if (isset($compMap[$lastUchr.$uchr]) && (!$lastUcls || $lastUcls < $ucls)) {
-                    $lastUchr = $compMap[$lastUchr.$uchr];
-                } elseif ($lastUcls = $ucls) {
-                    $tail .= $uchr;
-                } else {
-                    if ($tail) {
-                        $lastUchr .= $tail;
-                        $tail = '';
-                    }
-
-                    $result .= $lastUchr;
-                    $lastUchr = $uchr;
-                }
-            } else {
-                // Hangul chars
-
-                $L = \ord($lastUchr[2]) - 0x80;
-                $V = \ord($uchr[2]) - 0xA1;
-                $T = 0;
-
-                $uchr = substr($s, $i + $ulen, 3);
-
-                if ("\xE1\x86\xA7" <= $uchr && $uchr <= "\xE1\x87\x82") {
-                    $T = \ord($uchr[2]) - 0xA7;
-                    0 > $T && $T += 0x40;
-                    $ulen += 3;
-                }
-
-                $L = 0xAC00 + ($L * 21 + $V) * 28 + $T;
-                $lastUchr = \chr(0xE0 | $L >> 12).\chr(0x80 | $L >> 6 & 0x3F).\chr(0x80 | $L & 0x3F);
-            }
-
-            $i += $ulen;
+        if (file_exists($file = __DIR__.'/Resources/unidata/'.$file.'.php')) {
+            return require $file;
         }
 
-        return $result.$lastUchr.$tail;
+        return false;
     }
 }

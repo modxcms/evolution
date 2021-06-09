@@ -165,20 +165,6 @@ class LockableFile
     }
 
     /**
-     * Close the file.
-     *
-     * @return bool
-     */
-    public function close()
-    {
-        if ($this->isLocked) {
-            $this->releaseLock();
-        }
-
-        return fclose($this->handle);
-    }
-
-    /**
      * Release the lock on the file.
      *
      * @return $this
@@ -190,5 +176,19 @@ class LockableFile
         $this->isLocked = false;
 
         return $this;
+    }
+
+    /**
+     * Close the file.
+     *
+     * @return bool
+     */
+    public function close()
+    {
+        if ($this->isLocked) {
+            $this->releaseLock();
+        }
+
+        return fclose($this->handle);
     }
 }

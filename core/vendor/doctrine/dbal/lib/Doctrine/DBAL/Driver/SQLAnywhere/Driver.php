@@ -41,6 +41,22 @@ class Driver extends AbstractSQLAnywhereDriver
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * @deprecated
+     */
+    public function getName()
+    {
+        Deprecation::trigger(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/issues/3580',
+            'Driver::getName() is deprecated'
+        );
+
+        return 'sqlanywhere';
+    }
+
+    /**
      * Build the connection string for given connection parameters and driver options.
      *
      * @param string|null $host          Host address to connect to.
@@ -82,21 +98,5 @@ class Driver extends AbstractSQLAnywhereDriver
                     return $key . '=' . $value;
                 }, array_keys($driverOptions), $driverOptions)
             );
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @deprecated
-     */
-    public function getName()
-    {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/3580',
-            'Driver::getName() is deprecated'
-        );
-
-        return 'sqlanywhere';
     }
 }

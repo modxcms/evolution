@@ -54,129 +54,6 @@ class SQLServerSchemaManager extends AbstractSchemaManager
     }
 
     /**
-     * Closes currently active connections on the given database.
-     *
-     * This is useful to force DROP DATABASE operations which could fail because of active connections.
-     *
-     * @param string $database The name of the database to close currently active connections for.
-     *
-     * @return void
-     */
-    private function closeActiveDatabaseConnections($database)
-    {
-        $database = new Identifier($database);
-
-        $this->_execSql(
-            sprintf(
-                'ALTER DATABASE %s SET SINGLE_USER WITH ROLLBACK IMMEDIATE',
-                $database->getQuotedName($this->_platform)
-            )
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function listTableIndexes($table)
-    {
-        $sql = $this->_platform->getListTableIndexesSQL($table, $this->_conn->getDatabase());
-
-        try {
-            $tableIndexes = $this->_conn->fetchAllAssociative($sql);
-        } catch (PDOException $e) {
-            if ($e->getCode() === 'IMSSP') {
-                return [];
-            }
-
-            throw $e;
-        } catch (DBALException $e) {
-            if (strpos($e->getMessage(), 'SQLSTATE [01000, 15472]') === 0) {
-                return [];
-            }
-
-            throw $e;
-        }
-
-        return $this->_getPortableTableIndexesList($tableIndexes, $table);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function _getPortableTableIndexesList($tableIndexes, $tableName = null)
-    {
-        foreach ($tableIndexes as &$tableIndex) {
-            $tableIndex['non_unique'] = (bool) $tableIndex['non_unique'];
-            $tableIndex['primary']    = (bool) $tableIndex['primary'];
-            $tableIndex['flags']      = $tableIndex['flags'] ? [$tableIndex['flags']] : null;
-        }
-
-        return parent::_getPortableTableIndexesList($tableIndexes, $tableName);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function alterTable(TableDiff $tableDiff)
-    {
-        if (count($tableDiff->removedColumns) > 0) {
-            foreach ($tableDiff->removedColumns as $col) {
-                $columnConstraintSql = $this->getColumnConstraintSQL($tableDiff->name, $col->getName());
-                foreach ($this->_conn->fetchAllAssociative($columnConstraintSql) as $constraint) {
-                    $this->_conn->exec(
-                        sprintf(
-                            'ALTER TABLE %s DROP CONSTRAINT %s',
-                            $tableDiff->name,
-                            $constraint['Name']
-                        )
-                    );
-                }
-            }
-        }
-
-        parent::alterTable($tableDiff);
-    }
-
-    /**
-     * Returns the SQL to retrieve the constraints for a given column.
-     *
-     * @param string $table
-     * @param string $column
-     *
-     * @return string
-     */
-    private function getColumnConstraintSQL($table, $column)
-    {
-        return "SELECT sysobjects.[Name]
-            FROM sysobjects INNER JOIN (SELECT [Name],[ID] FROM sysobjects WHERE XType = 'U') AS Tab
-            ON Tab.[ID] = sysobjects.[Parent_Obj]
-            INNER JOIN sys.default_constraints DefCons ON DefCons.[object_id] = sysobjects.[ID]
-            INNER JOIN syscolumns Col ON Col.[ColID] = DefCons.[parent_column_id] AND Col.[ID] = Tab.[ID]
-            WHERE Col.[Name] = " . $this->_conn->quote($column) . ' AND Tab.[Name] = ' . $this->_conn->quote($table) . '
-            ORDER BY Col.[Name]';
-    }
-
-    /**
-     * @param string $name
-     */
-    public function listTableDetails($name): Table
-    {
-        $table = parent::listTableDetails($name);
-
-        $platform = $this->_platform;
-        assert($platform instanceof SQLServerPlatform);
-        $sql = $platform->getListTableMetadataSQL($name);
-
-        $tableOptions = $this->_conn->fetchAssociative($sql);
-
-        if ($tableOptions !== false) {
-            $table->addOption('comment', $tableOptions['table_comment']);
-        }
-
-        return $table;
-    }
-
-    /**
      * {@inheritdoc}
      */
     protected function _getPortableSequenceDefinition($sequence)
@@ -304,6 +181,20 @@ class SQLServerSchemaManager extends AbstractSchemaManager
     /**
      * {@inheritdoc}
      */
+    protected function _getPortableTableIndexesList($tableIndexes, $tableName = null)
+    {
+        foreach ($tableIndexes as &$tableIndex) {
+            $tableIndex['non_unique'] = (bool) $tableIndex['non_unique'];
+            $tableIndex['primary']    = (bool) $tableIndex['primary'];
+            $tableIndex['flags']      = $tableIndex['flags'] ? [$tableIndex['flags']] : null;
+        }
+
+        return parent::_getPortableTableIndexesList($tableIndexes, $tableName);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function _getPortableTableForeignKeyDefinition($tableForeignKey)
     {
         return new ForeignKeyConstraint(
@@ -350,5 +241,114 @@ class SQLServerSchemaManager extends AbstractSchemaManager
     {
         // @todo
         return new View($view['name'], '');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function listTableIndexes($table)
+    {
+        $sql = $this->_platform->getListTableIndexesSQL($table, $this->_conn->getDatabase());
+
+        try {
+            $tableIndexes = $this->_conn->fetchAllAssociative($sql);
+        } catch (PDOException $e) {
+            if ($e->getCode() === 'IMSSP') {
+                return [];
+            }
+
+            throw $e;
+        } catch (DBALException $e) {
+            if (strpos($e->getMessage(), 'SQLSTATE [01000, 15472]') === 0) {
+                return [];
+            }
+
+            throw $e;
+        }
+
+        return $this->_getPortableTableIndexesList($tableIndexes, $table);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function alterTable(TableDiff $tableDiff)
+    {
+        if (count($tableDiff->removedColumns) > 0) {
+            foreach ($tableDiff->removedColumns as $col) {
+                $columnConstraintSql = $this->getColumnConstraintSQL($tableDiff->name, $col->getName());
+                foreach ($this->_conn->fetchAllAssociative($columnConstraintSql) as $constraint) {
+                    $this->_conn->exec(
+                        sprintf(
+                            'ALTER TABLE %s DROP CONSTRAINT %s',
+                            $tableDiff->name,
+                            $constraint['Name']
+                        )
+                    );
+                }
+            }
+        }
+
+        parent::alterTable($tableDiff);
+    }
+
+    /**
+     * Returns the SQL to retrieve the constraints for a given column.
+     *
+     * @param string $table
+     * @param string $column
+     *
+     * @return string
+     */
+    private function getColumnConstraintSQL($table, $column)
+    {
+        return "SELECT sysobjects.[Name]
+            FROM sysobjects INNER JOIN (SELECT [Name],[ID] FROM sysobjects WHERE XType = 'U') AS Tab
+            ON Tab.[ID] = sysobjects.[Parent_Obj]
+            INNER JOIN sys.default_constraints DefCons ON DefCons.[object_id] = sysobjects.[ID]
+            INNER JOIN syscolumns Col ON Col.[ColID] = DefCons.[parent_column_id] AND Col.[ID] = Tab.[ID]
+            WHERE Col.[Name] = " . $this->_conn->quote($column) . ' AND Tab.[Name] = ' . $this->_conn->quote($table) . '
+            ORDER BY Col.[Name]';
+    }
+
+    /**
+     * Closes currently active connections on the given database.
+     *
+     * This is useful to force DROP DATABASE operations which could fail because of active connections.
+     *
+     * @param string $database The name of the database to close currently active connections for.
+     *
+     * @return void
+     */
+    private function closeActiveDatabaseConnections($database)
+    {
+        $database = new Identifier($database);
+
+        $this->_execSql(
+            sprintf(
+                'ALTER DATABASE %s SET SINGLE_USER WITH ROLLBACK IMMEDIATE',
+                $database->getQuotedName($this->_platform)
+            )
+        );
+    }
+
+    /**
+     * @param string $name
+     */
+    public function listTableDetails($name): Table
+    {
+        $table = parent::listTableDetails($name);
+
+        $platform = $this->_platform;
+        assert($platform instanceof SQLServerPlatform);
+        $sql = $platform->getListTableMetadataSQL($name);
+
+        $tableOptions = $this->_conn->fetchAssociative($sql);
+
+        if ($tableOptions !== false) {
+            $table->addOption('comment', $tableOptions['table_comment']);
+        }
+
+        return $table;
     }
 }

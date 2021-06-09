@@ -76,12 +76,6 @@ final class Coroutine implements PromiseInterface
         }
     }
 
-    private function nextCoroutine($yielded)
-    {
-        $this->currentPromise = Create::promiseFor($yielded)
-            ->then([$this, '_handleSuccess'], [$this, '_handleFailure']);
-    }
-
     /**
      * Create a new coroutine.
      *
@@ -128,6 +122,12 @@ final class Coroutine implements PromiseInterface
     {
         $this->currentPromise->cancel();
         $this->result->cancel();
+    }
+
+    private function nextCoroutine($yielded)
+    {
+        $this->currentPromise = Create::promiseFor($yielded)
+            ->then([$this, '_handleSuccess'], [$this, '_handleFailure']);
     }
 
     /**

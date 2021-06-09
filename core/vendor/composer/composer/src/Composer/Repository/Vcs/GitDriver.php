@@ -33,47 +33,6 @@ class GitDriver extends VcsDriver
     /**
      * {@inheritDoc}
      */
-    public static function supports(IOInterface $io, Config $config, $url, $deep = false)
-    {
-        if (preg_match('#(^git://|\.git/?$|git(?:olite)?@|//git\.|//github.com/)#i', $url)) {
-            return true;
-        }
-
-        // local filesystem
-        if (Filesystem::isLocalPath($url)) {
-            $url = Filesystem::getPlatformPath($url);
-            if (!is_dir($url)) {
-                return false;
-            }
-
-            $process = new ProcessExecutor($io);
-            // check whether there is a git repo in that path
-            if ($process->execute('git tag', $output, $url) === 0) {
-                return true;
-            }
-        }
-
-        if (!$deep) {
-            return false;
-        }
-
-        $gitUtil = new GitUtil($io, $config, new ProcessExecutor($io), new Filesystem());
-        GitUtil::cleanEnv();
-
-        try {
-            $gitUtil->runCommand(function ($url) {
-                return 'git ls-remote --heads -- ' . ProcessExecutor::escape($url);
-            }, $url, sys_get_temp_dir());
-        } catch (\RuntimeException $e) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function initialize()
     {
         if (Filesystem::isLocalPath($this->url)) {
@@ -124,6 +83,82 @@ class GitDriver extends VcsDriver
     /**
      * {@inheritDoc}
      */
+    public function getRootIdentifier()
+    {
+        if (null === $this->rootIdentifier) {
+            $this->rootIdentifier = 'master';
+
+            // select currently checked out branch if master is not available
+            $this->process->execute('git branch --no-color', $output, $this->repoDir);
+            $branches = $this->process->splitLines($output);
+            if (!in_array('* master', $branches)) {
+                foreach ($branches as $branch) {
+                    if ($branch && preg_match('{^\* +(\S+)}', $branch, $match)) {
+                        $this->rootIdentifier = $match[1];
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $this->rootIdentifier;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSource($identifier)
+    {
+        return array('type' => 'git', 'url' => $this->getUrl(), 'reference' => $identifier);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDist($identifier)
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFileContent($file, $identifier)
+    {
+        $resource = sprintf('%s:%s', ProcessExecutor::escape($identifier), ProcessExecutor::escape($file));
+        $this->process->execute(sprintf('git show %s', $resource), $content, $this->repoDir);
+
+        if (!trim($content)) {
+            return null;
+        }
+
+        return $content;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChangeDate($identifier)
+    {
+        $this->process->execute(sprintf(
+            'git -c log.showSignature=false log -1 --format=%%at %s',
+            ProcessExecutor::escape($identifier)
+        ), $output, $this->repoDir);
+
+        return new \DateTime('@'.trim($output), new \DateTimeZone('UTC'));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getTags()
     {
         if (null === $this->tags) {
@@ -166,76 +201,41 @@ class GitDriver extends VcsDriver
     /**
      * {@inheritDoc}
      */
-    public function getRootIdentifier()
+    public static function supports(IOInterface $io, Config $config, $url, $deep = false)
     {
-        if (null === $this->rootIdentifier) {
-            $this->rootIdentifier = 'master';
+        if (preg_match('#(^git://|\.git/?$|git(?:olite)?@|//git\.|//github.com/)#i', $url)) {
+            return true;
+        }
 
-            // select currently checked out branch if master is not available
-            $this->process->execute('git branch --no-color', $output, $this->repoDir);
-            $branches = $this->process->splitLines($output);
-            if (!in_array('* master', $branches)) {
-                foreach ($branches as $branch) {
-                    if ($branch && preg_match('{^\* +(\S+)}', $branch, $match)) {
-                        $this->rootIdentifier = $match[1];
-                        break;
-                    }
-                }
+        // local filesystem
+        if (Filesystem::isLocalPath($url)) {
+            $url = Filesystem::getPlatformPath($url);
+            if (!is_dir($url)) {
+                return false;
+            }
+
+            $process = new ProcessExecutor($io);
+            // check whether there is a git repo in that path
+            if ($process->execute('git tag', $output, $url) === 0) {
+                return true;
             }
         }
 
-        return $this->rootIdentifier;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getSource($identifier)
-    {
-        return array('type' => 'git', 'url' => $this->getUrl(), 'reference' => $identifier);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getDist($identifier)
-    {
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFileContent($file, $identifier)
-    {
-        $resource = sprintf('%s:%s', ProcessExecutor::escape($identifier), ProcessExecutor::escape($file));
-        $this->process->execute(sprintf('git show %s', $resource), $content, $this->repoDir);
-
-        if (!trim($content)) {
-            return null;
+        if (!$deep) {
+            return false;
         }
 
-        return $content;
-    }
+        $gitUtil = new GitUtil($io, $config, new ProcessExecutor($io), new Filesystem());
+        GitUtil::cleanEnv();
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getChangeDate($identifier)
-    {
-        $this->process->execute(sprintf(
-            'git -c log.showSignature=false log -1 --format=%%at %s',
-            ProcessExecutor::escape($identifier)
-        ), $output, $this->repoDir);
+        try {
+            $gitUtil->runCommand(function ($url) {
+                return 'git ls-remote --heads -- ' . ProcessExecutor::escape($url);
+            }, $url, sys_get_temp_dir());
+        } catch (\RuntimeException $e) {
+            return false;
+        }
 
-        return new \DateTime('@'.trim($output), new \DateTimeZone('UTC'));
+        return true;
     }
 }

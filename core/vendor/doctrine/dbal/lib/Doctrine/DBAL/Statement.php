@@ -146,24 +146,6 @@ class Statement implements IteratorAggregate, DriverStatement, Result
     }
 
     /**
-     * Executes the statement with the currently bound parameters and return result.
-     *
-     * @param mixed[] $params
-     *
-     * @throws Exception
-     */
-    public function executeQuery(array $params = []): BaseResult
-    {
-        if ($params === []) {
-            $params = null; // Workaround as long execute() exists and used internally.
-        }
-
-        $this->execute($params);
-
-        return new ForwardCompatibility\Result($this);
-    }
-
-    /**
      * Executes the statement with the currently bound parameters.
      *
      * @deprecated Statement::execute() is deprecated, use Statement::executeQuery() or executeStatement() instead
@@ -209,6 +191,24 @@ class Statement implements IteratorAggregate, DriverStatement, Result
     }
 
     /**
+     * Executes the statement with the currently bound parameters and return result.
+     *
+     * @param mixed[] $params
+     *
+     * @throws Exception
+     */
+    public function executeQuery(array $params = []): BaseResult
+    {
+        if ($params === []) {
+            $params = null; // Workaround as long execute() exists and used internally.
+        }
+
+        $this->execute($params);
+
+        return new ForwardCompatibility\Result($this);
+    }
+
+    /**
      * Executes the statement with the currently bound parameters and return affected rows.
      *
      * @param mixed[] $params
@@ -227,16 +227,6 @@ class Statement implements IteratorAggregate, DriverStatement, Result
     }
 
     /**
-     * Returns the number of rows affected by the last execution of this statement.
-     *
-     * @return int The number of affected rows.
-     */
-    public function rowCount()
-    {
-        return $this->stmt->rowCount();
-    }
-
-    /**
      * Closes the cursor, freeing the database resources used by this statement.
      *
      * @deprecated Use Result::free() instead.
@@ -252,6 +242,16 @@ class Statement implements IteratorAggregate, DriverStatement, Result
         );
 
         return $this->stmt->closeCursor();
+    }
+
+    /**
+     * Returns the number of columns in the result set.
+     *
+     * @return int
+     */
+    public function columnCount()
+    {
+        return $this->stmt->columnCount();
     }
 
     /**
@@ -345,6 +345,31 @@ class Statement implements IteratorAggregate, DriverStatement, Result
         );
 
         return $this->stmt->fetch($fetchMode);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @deprecated Use fetchAllNumeric(), fetchAllAssociative() or fetchFirstColumn() instead.
+     */
+    public function fetchAll($fetchMode = null, $fetchArgument = null, $ctorArgs = null)
+    {
+        Deprecation::triggerIfCalledFromOutside(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/pull/4019',
+            'Statement::fetchAll() is deprecated, use Result::fetchAllNumeric(), fetchAllAssociative() or ' .
+            'fetchFirstColumn() instead.'
+        );
+
+        if ($ctorArgs !== null) {
+            return $this->stmt->fetchAll($fetchMode, $fetchArgument, $ctorArgs);
+        }
+
+        if ($fetchArgument !== null) {
+            return $this->stmt->fetchAll($fetchMode, $fetchArgument);
+        }
+
+        return $this->stmt->fetchAll($fetchMode);
     }
 
     /**
@@ -450,6 +475,34 @@ class Statement implements IteratorAggregate, DriverStatement, Result
     /**
      * {@inheritdoc}
      *
+     * @deprecated Use Result::fetchAllNumeric() instead
+     *
+     * @throws Exception
+     */
+    public function fetchAllNumeric(): array
+    {
+        Deprecation::triggerIfCalledFromOutside(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/issues/4554',
+            'Statement::%s() is deprecated, use Result::%s() instead.',
+            __FUNCTION__,
+            __FUNCTION__
+        );
+
+        try {
+            if ($this->stmt instanceof Result) {
+                return $this->stmt->fetchAllNumeric();
+            }
+
+            return $this->stmt->fetchAll(FetchMode::NUMERIC);
+        } catch (Exception $e) {
+            $this->conn->handleDriverException($e);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @deprecated Use Result::fetchAllAssociative() instead
      *
      * @throws Exception
@@ -507,53 +560,6 @@ class Statement implements IteratorAggregate, DriverStatement, Result
         return $data;
     }
 
-    private function ensureHasKeyValue(): void
-    {
-        $columnCount = $this->columnCount();
-
-        if ($columnCount < 2) {
-            throw NoKeyValue::fromColumnCount($columnCount);
-        }
-    }
-
-    /**
-     * Returns the number of columns in the result set.
-     *
-     * @return int
-     */
-    public function columnCount()
-    {
-        return $this->stmt->columnCount();
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @deprecated Use Result::fetchAllNumeric() instead
-     *
-     * @throws Exception
-     */
-    public function fetchAllNumeric(): array
-    {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/4554',
-            'Statement::%s() is deprecated, use Result::%s() instead.',
-            __FUNCTION__,
-            __FUNCTION__
-        );
-
-        try {
-            if ($this->stmt instanceof Result) {
-                return $this->stmt->fetchAllNumeric();
-            }
-
-            return $this->stmt->fetchAll(FetchMode::NUMERIC);
-        } catch (Exception $e) {
-            $this->conn->handleDriverException($e);
-        }
-    }
-
     /**
      * Returns an associative array with the keys mapped to the first column and the values being
      * an associative array representing the rest of the columns and their values.
@@ -586,31 +592,6 @@ class Statement implements IteratorAggregate, DriverStatement, Result
     /**
      * {@inheritdoc}
      *
-     * @deprecated Use fetchAllNumeric(), fetchAllAssociative() or fetchFirstColumn() instead.
-     */
-    public function fetchAll($fetchMode = null, $fetchArgument = null, $ctorArgs = null)
-    {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4019',
-            'Statement::fetchAll() is deprecated, use Result::fetchAllNumeric(), fetchAllAssociative() or ' .
-            'fetchFirstColumn() instead.'
-        );
-
-        if ($ctorArgs !== null) {
-            return $this->stmt->fetchAll($fetchMode, $fetchArgument, $ctorArgs);
-        }
-
-        if ($fetchArgument !== null) {
-            return $this->stmt->fetchAll($fetchMode, $fetchArgument);
-        }
-
-        return $this->stmt->fetchAll($fetchMode);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
      * @deprecated Use Result::fetchFirstColumn() instead
      *
      * @throws Exception
@@ -631,6 +612,40 @@ class Statement implements IteratorAggregate, DriverStatement, Result
             }
 
             return $this->stmt->fetchAll(FetchMode::COLUMN);
+        } catch (Exception $e) {
+            $this->conn->handleDriverException($e);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated Use Result::iterateNumeric() instead
+     *
+     * @return Traversable<int,array<int,mixed>>
+     *
+     * @throws Exception
+     */
+    public function iterateNumeric(): Traversable
+    {
+        Deprecation::triggerIfCalledFromOutside(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/issues/4554',
+            'Statement::%s() is deprecated, use Result::%s() instead.',
+            __FUNCTION__,
+            __FUNCTION__
+        );
+
+        try {
+            if ($this->stmt instanceof Result) {
+                while (($row = $this->stmt->fetchNumeric()) !== false) {
+                    yield $row;
+                }
+            } else {
+                while (($row = $this->stmt->fetch(FetchMode::NUMERIC)) !== false) {
+                    yield $row;
+                }
+            }
         } catch (Exception $e) {
             $this->conn->handleDriverException($e);
         }
@@ -700,40 +715,6 @@ class Statement implements IteratorAggregate, DriverStatement, Result
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @deprecated Use Result::iterateNumeric() instead
-     *
-     * @return Traversable<int,array<int,mixed>>
-     *
-     * @throws Exception
-     */
-    public function iterateNumeric(): Traversable
-    {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/issues/4554',
-            'Statement::%s() is deprecated, use Result::%s() instead.',
-            __FUNCTION__,
-            __FUNCTION__
-        );
-
-        try {
-            if ($this->stmt instanceof Result) {
-                while (($row = $this->stmt->fetchNumeric()) !== false) {
-                    yield $row;
-                }
-            } else {
-                while (($row = $this->stmt->fetch(FetchMode::NUMERIC)) !== false) {
-                    yield $row;
-                }
-            }
-        } catch (Exception $e) {
-            $this->conn->handleDriverException($e);
-        }
-    }
-
-    /**
      * Returns an iterator over the result set with the keys mapped to the first column and the values being
      * an associative array representing the rest of the columns and their values.
      *
@@ -792,6 +773,16 @@ class Statement implements IteratorAggregate, DriverStatement, Result
         }
     }
 
+    /**
+     * Returns the number of rows affected by the last execution of this statement.
+     *
+     * @return int The number of affected rows.
+     */
+    public function rowCount()
+    {
+        return $this->stmt->rowCount();
+    }
+
     public function free(): void
     {
         if ($this->stmt instanceof Result) {
@@ -811,5 +802,14 @@ class Statement implements IteratorAggregate, DriverStatement, Result
     public function getWrappedStatement()
     {
         return $this->stmt;
+    }
+
+    private function ensureHasKeyValue(): void
+    {
+        $columnCount = $this->columnCount();
+
+        if ($columnCount < 2) {
+            throw NoKeyValue::fromColumnCount($columnCount);
+        }
     }
 }

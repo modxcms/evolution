@@ -53,6 +53,8 @@ class EventDispatcher
     protected $process;
     /** @var array<string, array<int, array<callable|string>>> */
     protected $listeners = array();
+    /** @var bool */
+    protected $runScripts = true;
     /** @var list<string> */
     private $eventStack;
 
@@ -72,6 +74,18 @@ class EventDispatcher
     }
 
     /**
+     * Set whether script handlers are active or not
+     *
+     * @param bool $runScripts
+     */
+    public function setRunScripts($runScripts = true)
+    {
+        $this->runScripts = (bool) $runScripts;
+
+        return $this;
+    }
+
+    /**
      * Dispatch an event
      *
      * @param  string $eventName An event name
@@ -86,6 +100,54 @@ class EventDispatcher
         }
 
         return $this->doDispatch($event);
+    }
+
+    /**
+     * Dispatch a script event.
+     *
+     * @param  string $eventName      The constant in ScriptEvents
+     * @param  bool   $devMode
+     * @param  array  $additionalArgs Arguments passed by the user
+     * @param  array  $flags          Optional flags to pass data not as argument
+     * @return int    return code of the executed script if any, for php scripts a false return
+     *                               value is changed to 1, anything else to 0
+     */
+    public function dispatchScript($eventName, $devMode = false, $additionalArgs = array(), $flags = array())
+    {
+        return $this->doDispatch(new Script\Event($eventName, $this->composer, $this->io, $devMode, $additionalArgs, $flags));
+    }
+
+    /**
+     * Dispatch a package event.
+     *
+     * @param string              $eventName  The constant in PackageEvents
+     * @param bool                $devMode    Whether or not we are in dev mode
+     * @param RepositoryInterface $localRepo  The installed repository
+     * @param array               $operations The list of operations
+     * @param OperationInterface  $operation  The package being installed/updated/removed
+     *
+     * @return int return code of the executed script if any, for php scripts a false return
+     *             value is changed to 1, anything else to 0
+     */
+    public function dispatchPackageEvent($eventName, $devMode, RepositoryInterface $localRepo, array $operations, OperationInterface $operation)
+    {
+        return $this->doDispatch(new PackageEvent($eventName, $this->composer, $this->io, $devMode, $localRepo, $operations, $operation));
+    }
+
+    /**
+     * Dispatch a installer event.
+     *
+     * @param string      $eventName         The constant in InstallerEvents
+     * @param bool        $devMode           Whether or not we are in dev mode
+     * @param bool        $executeOperations True if operations will be executed, false in --dry-run
+     * @param Transaction $transaction       The transaction contains the list of operations
+     *
+     * @return int return code of the executed script if any, for php scripts a false return
+     *             value is changed to 1, anything else to 0
+     */
+    public function dispatchInstallerEvent($eventName, $devMode, $executeOperations, Transaction $transaction)
+    {
+        return $this->doDispatch(new InstallerEvent($eventName, $this->composer, $this->io, $devMode, $executeOperations, $transaction));
     }
 
     /**
@@ -217,8 +279,8 @@ class EventDispatcher
                         }
                         // match somename (not in quote, and not a qualified path) and if it is not a valid path from CWD then try to find it
                         // in $PATH. This allows support for `@php foo` where foo is a binary name found in PATH but not an actual relative path
-                        preg_match('{^[^\'"\s/\\\\]+}', $pathAndArgs, $match);
-                        if (!file_exists($match[0])) {
+                        $matched = preg_match('{^[^\'"\s/\\\\]+}', $pathAndArgs, $match);
+                        if ($matched && !file_exists($match[0])) {
                             $finder = new ExecutableFinder;
                             if ($pathToExec = $finder->find($match[0])) {
                                 $pathAndArgs = $pathToExec . substr($pathAndArgs, strlen($match[0]));
@@ -274,103 +336,13 @@ class EventDispatcher
         return $returnMax;
     }
 
-    /**
-     * Retrieves all listeners for a given event
-     *
-     * @param  Event $event
-     * @return array All listeners: callables and scripts
-     */
-    protected function getListeners(Event $event)
+    protected function executeTty($exec)
     {
-        $scriptListeners = $this->getScriptListeners($event);
-
-        if (!isset($this->listeners[$event->getName()][0])) {
-            $this->listeners[$event->getName()][0] = array();
-        }
-        krsort($this->listeners[$event->getName()]);
-
-        $listeners = $this->listeners;
-        $listeners[$event->getName()][0] = array_merge($listeners[$event->getName()][0], $scriptListeners);
-
-        return call_user_func_array('array_merge', $listeners[$event->getName()]);
-    }
-
-    /**
-     * Finds all listeners defined as scripts in the package
-     *
-     * @param  Event $event Event object
-     * @return array Listeners
-     */
-    protected function getScriptListeners(Event $event)
-    {
-        $package = $this->composer->getPackage();
-        $scripts = $package->getScripts();
-
-        if (empty($scripts[$event->getName()])) {
-            return array();
+        if ($this->io->isInteractive()) {
+            return $this->process->executeTty($exec);
         }
 
-        if ($this->loader) {
-            $this->loader->unregister();
-        }
-
-        $generator = $this->composer->getAutoloadGenerator();
-        if ($event instanceof ScriptEvent) {
-            $generator->setDevMode($event->isDevMode());
-        }
-
-        $packages = $this->composer->getRepositoryManager()->getLocalRepository()->getCanonicalPackages();
-        $packageMap = $generator->buildPackageMap($this->composer->getInstallationManager(), $package, $packages);
-        $map = $generator->parseAutoloads($packageMap, $package);
-        $this->loader = $generator->createLoader($map, $this->composer->getConfig()->get('vendor-dir'));
-        $this->loader->register(false);
-
-        return $scripts[$event->getName()];
-    }
-
-    /**
-     * Push an event to the stack of active event
-     *
-     * @param  Event             $event
-     * @throws \RuntimeException
-     * @return int
-     */
-    protected function pushEvent(Event $event)
-    {
-        $eventName = $event->getName();
-        if (in_array($eventName, $this->eventStack)) {
-            throw new \RuntimeException(sprintf("Circular call to script handler '%s' detected", $eventName));
-        }
-
-        return array_push($this->eventStack, $eventName);
-    }
-
-    private function ensureBinDirIsInPath()
-    {
-        $pathStr = 'PATH';
-        if (!isset($_SERVER[$pathStr]) && isset($_SERVER['Path'])) {
-            $pathStr = 'Path';
-        }
-
-        // add the bin dir to the PATH to make local binaries of deps usable in scripts
-        $binDir = $this->composer->getConfig()->get('bin-dir');
-        if (is_dir($binDir)) {
-            $binDir = realpath($binDir);
-            if (isset($_SERVER[$pathStr]) && !preg_match('{(^|'.PATH_SEPARATOR.')'.preg_quote($binDir).'($|'.PATH_SEPARATOR.')}', $_SERVER[$pathStr])) {
-                Platform::putEnv($pathStr, $binDir.PATH_SEPARATOR.getenv($pathStr));
-            }
-        }
-    }
-
-    /**
-     * Checks if string given references a composer run-script
-     *
-     * @param  string $callable
-     * @return bool
-     */
-    protected function isComposerScript($callable)
-    {
-        return strpos($callable, '@') === 0 && strpos($callable, '@php ') !== 0 && strpos($callable, '@putenv ') !== 0;
+        return $this->process->execute($exec);
     }
 
     protected function getPhpExecCommand()
@@ -387,26 +359,6 @@ class EventDispatcher
         $memoryLimitFlag = ' -d memory_limit=' . ProcessExecutor::escape(ini_get('memory_limit'));
 
         return ProcessExecutor::escape($phpPath) . $phpArgs . $allowUrlFOpenFlag . $disableFunctionsFlag . $memoryLimitFlag;
-    }
-
-    protected function executeTty($exec)
-    {
-        if ($this->io->isInteractive()) {
-            return $this->process->executeTty($exec);
-        }
-
-        return $this->process->execute($exec);
-    }
-
-    /**
-     * Checks if string given references a class path and method
-     *
-     * @param  string $callable
-     * @return bool
-     */
-    protected function isPhpScript($callable)
-    {
-        return false === strpos($callable, ' ') && false !== strpos($callable, '::');
     }
 
     /**
@@ -426,61 +378,15 @@ class EventDispatcher
     }
 
     /**
-     * Pops the active event from the stack
+     * Add a listener for a particular event
      *
-     * @return mixed
+     * @param string   $eventName The event name - typically a constant
+     * @param callable $listener  A callable expecting an event argument
+     * @param int      $priority  A higher value represents a higher priority
      */
-    protected function popEvent()
+    public function addListener($eventName, $listener, $priority = 0)
     {
-        return array_pop($this->eventStack);
-    }
-
-    /**
-     * Dispatch a script event.
-     *
-     * @param  string $eventName      The constant in ScriptEvents
-     * @param  bool   $devMode
-     * @param  array  $additionalArgs Arguments passed by the user
-     * @param  array  $flags          Optional flags to pass data not as argument
-     * @return int    return code of the executed script if any, for php scripts a false return
-     *                               value is changed to 1, anything else to 0
-     */
-    public function dispatchScript($eventName, $devMode = false, $additionalArgs = array(), $flags = array())
-    {
-        return $this->doDispatch(new Script\Event($eventName, $this->composer, $this->io, $devMode, $additionalArgs, $flags));
-    }
-
-    /**
-     * Dispatch a package event.
-     *
-     * @param string              $eventName  The constant in PackageEvents
-     * @param bool                $devMode    Whether or not we are in dev mode
-     * @param RepositoryInterface $localRepo  The installed repository
-     * @param array               $operations The list of operations
-     * @param OperationInterface  $operation  The package being installed/updated/removed
-     *
-     * @return int return code of the executed script if any, for php scripts a false return
-     *             value is changed to 1, anything else to 0
-     */
-    public function dispatchPackageEvent($eventName, $devMode, RepositoryInterface $localRepo, array $operations, OperationInterface $operation)
-    {
-        return $this->doDispatch(new PackageEvent($eventName, $this->composer, $this->io, $devMode, $localRepo, $operations, $operation));
-    }
-
-    /**
-     * Dispatch a installer event.
-     *
-     * @param string      $eventName         The constant in InstallerEvents
-     * @param bool        $devMode           Whether or not we are in dev mode
-     * @param bool        $executeOperations True if operations will be executed, false in --dry-run
-     * @param Transaction $transaction       The transaction contains the list of operations
-     *
-     * @return int return code of the executed script if any, for php scripts a false return
-     *             value is changed to 1, anything else to 0
-     */
-    public function dispatchInstallerEvent($eventName, $devMode, $executeOperations, Transaction $transaction)
-    {
-        return $this->doDispatch(new InstallerEvent($eventName, $this->composer, $this->io, $devMode, $executeOperations, $transaction));
+        $this->listeners[$eventName][$priority][] = $listener;
     }
 
     /**
@@ -522,15 +428,24 @@ class EventDispatcher
     }
 
     /**
-     * Add a listener for a particular event
+     * Retrieves all listeners for a given event
      *
-     * @param string   $eventName The event name - typically a constant
-     * @param callable $listener  A callable expecting an event argument
-     * @param int      $priority  A higher value represents a higher priority
+     * @param  Event $event
+     * @return array All listeners: callables and scripts
      */
-    public function addListener($eventName, $listener, $priority = 0)
+    protected function getListeners(Event $event)
     {
-        $this->listeners[$eventName][$priority][] = $listener;
+        $scriptListeners = $this->runScripts ? $this->getScriptListeners($event) : array();
+
+        if (!isset($this->listeners[$event->getName()][0])) {
+            $this->listeners[$event->getName()][0] = array();
+        }
+        krsort($this->listeners[$event->getName()]);
+
+        $listeners = $this->listeners;
+        $listeners[$event->getName()][0] = array_merge($listeners[$event->getName()][0], $scriptListeners);
+
+        return call_user_func_array('array_merge', $listeners[$event->getName()]);
     }
 
     /**
@@ -544,5 +459,104 @@ class EventDispatcher
         $listeners = $this->getListeners($event);
 
         return count($listeners) > 0;
+    }
+
+    /**
+     * Finds all listeners defined as scripts in the package
+     *
+     * @param  Event $event Event object
+     * @return array Listeners
+     */
+    protected function getScriptListeners(Event $event)
+    {
+        $package = $this->composer->getPackage();
+        $scripts = $package->getScripts();
+
+        if (empty($scripts[$event->getName()])) {
+            return array();
+        }
+
+        if ($this->loader) {
+            $this->loader->unregister();
+        }
+
+        $generator = $this->composer->getAutoloadGenerator();
+        if ($event instanceof ScriptEvent) {
+            $generator->setDevMode($event->isDevMode());
+        }
+
+        $packages = $this->composer->getRepositoryManager()->getLocalRepository()->getCanonicalPackages();
+        $packageMap = $generator->buildPackageMap($this->composer->getInstallationManager(), $package, $packages);
+        $map = $generator->parseAutoloads($packageMap, $package);
+        $this->loader = $generator->createLoader($map, $this->composer->getConfig()->get('vendor-dir'));
+        $this->loader->register(false);
+
+        return $scripts[$event->getName()];
+    }
+
+    /**
+     * Checks if string given references a class path and method
+     *
+     * @param  string $callable
+     * @return bool
+     */
+    protected function isPhpScript($callable)
+    {
+        return false === strpos($callable, ' ') && false !== strpos($callable, '::');
+    }
+
+    /**
+     * Checks if string given references a composer run-script
+     *
+     * @param  string $callable
+     * @return bool
+     */
+    protected function isComposerScript($callable)
+    {
+        return strpos($callable, '@') === 0 && strpos($callable, '@php ') !== 0 && strpos($callable, '@putenv ') !== 0;
+    }
+
+    /**
+     * Push an event to the stack of active event
+     *
+     * @param  Event             $event
+     * @throws \RuntimeException
+     * @return int
+     */
+    protected function pushEvent(Event $event)
+    {
+        $eventName = $event->getName();
+        if (in_array($eventName, $this->eventStack)) {
+            throw new \RuntimeException(sprintf("Circular call to script handler '%s' detected", $eventName));
+        }
+
+        return array_push($this->eventStack, $eventName);
+    }
+
+    /**
+     * Pops the active event from the stack
+     *
+     * @return mixed
+     */
+    protected function popEvent()
+    {
+        return array_pop($this->eventStack);
+    }
+
+    private function ensureBinDirIsInPath()
+    {
+        $pathStr = 'PATH';
+        if (!isset($_SERVER[$pathStr]) && isset($_SERVER['Path'])) {
+            $pathStr = 'Path';
+        }
+
+        // add the bin dir to the PATH to make local binaries of deps usable in scripts
+        $binDir = $this->composer->getConfig()->get('bin-dir');
+        if (is_dir($binDir)) {
+            $binDir = realpath($binDir);
+            if (isset($_SERVER[$pathStr]) && !preg_match('{(^|'.PATH_SEPARATOR.')'.preg_quote($binDir).'($|'.PATH_SEPARATOR.')}', $_SERVER[$pathStr])) {
+                Platform::putEnv($pathStr, $binDir.PATH_SEPARATOR.getenv($pathStr));
+            }
+        }
     }
 }

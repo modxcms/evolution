@@ -130,28 +130,6 @@ final class StreamContextFactory
     }
 
     /**
-     * A bug in PHP prevents the headers from correctly being sent when a content-type header is present and
-     * NOT at the end of the array
-     *
-     * This method fixes the array by moving the content-type header to the end
-     *
-     * @link https://bugs.php.net/bug.php?id=61548
-     * @param  string|array $header
-     * @return array
-     */
-    private static function fixHttpHeaderField($header)
-    {
-        if (!is_array($header)) {
-            $header = explode("\r\n", $header);
-        }
-        uasort($header, function ($el) {
-            return stripos($el, 'content-type') === 0 ? 1 : -1;
-        });
-
-        return $header;
-    }
-
-    /**
      * @param array $options
      *
      * @return array
@@ -252,5 +230,27 @@ final class StreamContextFactory
         }
 
         return $defaults;
+    }
+
+    /**
+     * A bug in PHP prevents the headers from correctly being sent when a content-type header is present and
+     * NOT at the end of the array
+     *
+     * This method fixes the array by moving the content-type header to the end
+     *
+     * @link https://bugs.php.net/bug.php?id=61548
+     * @param  string|array $header
+     * @return array
+     */
+    private static function fixHttpHeaderField($header)
+    {
+        if (!is_array($header)) {
+            $header = explode("\r\n", $header);
+        }
+        uasort($header, function ($el) {
+            return stripos($el, 'content-type') === 0 ? 1 : -1;
+        });
+
+        return $header;
     }
 }

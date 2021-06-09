@@ -48,14 +48,6 @@ class SchemaDropTableEventArgs extends SchemaEventArgs
     }
 
     /**
-     * @return string|null
-     */
-    public function getSql()
-    {
-        return $this->sql;
-    }
-
-    /**
      * @param string $sql
      *
      * @return SchemaDropTableEventArgs
@@ -65,5 +57,13 @@ class SchemaDropTableEventArgs extends SchemaEventArgs
         $this->sql = $sql;
 
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSql()
+    {
+        return $this->sql;
     }
 }

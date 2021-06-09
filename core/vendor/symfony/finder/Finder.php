@@ -42,7 +42,7 @@ class Finder implements \IteratorAggregate, \Countable
     public const IGNORE_VCS_FILES = 1;
     public const IGNORE_DOT_FILES = 2;
     public const IGNORE_VCS_IGNORED_FILES = 4;
-    private static $vcsPatterns = ['.svn', '_svn', 'CVS', '_darcs', '.arch-params', '.monotone', '.bzr', '.git', '.hg'];
+
     private $mode = 0;
     private $names = [];
     private $notNames = [];
@@ -63,6 +63,8 @@ class Finder implements \IteratorAggregate, \Countable
     private $notPaths = [];
     private $ignoreUnreadableDirs = false;
 
+    private static $vcsPatterns = ['.svn', '_svn', 'CVS', '_darcs', '.arch-params', '.monotone', '.bzr', '.git', '.hg'];
+
     public function __construct()
     {
         $this->ignore = static::IGNORE_VCS_FILES | static::IGNORE_DOT_FILES;
@@ -76,22 +78,6 @@ class Finder implements \IteratorAggregate, \Countable
     public static function create()
     {
         return new static();
-    }
-
-    /**
-     * Adds VCS patterns.
-     *
-     * @see ignoreVCS()
-     *
-     * @param string|string[] $pattern VCS patterns to ignore
-     */
-    public static function addVCSPattern($pattern)
-    {
-        foreach ((array) $pattern as $p) {
-            self::$vcsPatterns[] = $p;
-        }
-
-        self::$vcsPatterns = array_unique(self::$vcsPatterns);
     }
 
     /**
@@ -405,6 +391,22 @@ class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
+     * Adds VCS patterns.
+     *
+     * @see ignoreVCS()
+     *
+     * @param string|string[] $pattern VCS patterns to ignore
+     */
+    public static function addVCSPattern($pattern)
+    {
+        foreach ((array) $pattern as $p) {
+            self::$vcsPatterns[] = $p;
+        }
+
+        self::$vcsPatterns = array_unique(self::$vcsPatterns);
+    }
+
+    /**
      * Sorts files and directories by an anonymous function.
      *
      * The anonymous function receives two \SplFileInfo instances to compare.
@@ -595,23 +597,46 @@ class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Normalizes given directory names by removing trailing slashes.
+     * Returns an Iterator for the current Finder configuration.
      *
-     * Excluding: (s)ftp:// or ssh2.(s)ftp:// wrapper
+     * This method implements the IteratorAggregate interface.
+     *
+     * @return \Iterator|SplFileInfo[] An iterator
+     *
+     * @throws \LogicException if the in() method has not been called
      */
-    private function normalizeDir(string $dir): string
+    public function getIterator()
     {
-        if ('/' === $dir) {
-            return $dir;
+        if (0 === \count($this->dirs) && 0 === \count($this->iterators)) {
+            throw new \LogicException('You must call one of in() or append() methods before iterating over a Finder.');
         }
 
-        $dir = rtrim($dir, '/'.\DIRECTORY_SEPARATOR);
+        if (1 === \count($this->dirs) && 0 === \count($this->iterators)) {
+            $iterator = $this->searchInDirectory($this->dirs[0]);
 
-        if (preg_match('#^(ssh2\.)?s?ftp://#', $dir)) {
-            $dir .= '/';
+            if ($this->sort || $this->reverseSorting) {
+                $iterator = (new Iterator\SortableIterator($iterator, $this->sort, $this->reverseSorting))->getIterator();
+            }
+
+            return $iterator;
         }
 
-        return $dir;
+        $iterator = new \AppendIterator();
+        foreach ($this->dirs as $dir) {
+            $iterator->append(new \IteratorIterator(new LazyIterator(function () use ($dir) {
+                return $this->searchInDirectory($dir);
+            })));
+        }
+
+        foreach ($this->iterators as $it) {
+            $iterator->append($it);
+        }
+
+        if ($this->sort || $this->reverseSorting) {
+            $iterator = (new Iterator\SortableIterator($iterator, $this->sort, $this->reverseSorting))->getIterator();
+        }
+
+        return $iterator;
     }
 
     /**
@@ -658,46 +683,13 @@ class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Returns an Iterator for the current Finder configuration.
+     * Counts all the results collected by the iterators.
      *
-     * This method implements the IteratorAggregate interface.
-     *
-     * @return \Iterator|SplFileInfo[] An iterator
-     *
-     * @throws \LogicException if the in() method has not been called
+     * @return int
      */
-    public function getIterator()
+    public function count()
     {
-        if (0 === \count($this->dirs) && 0 === \count($this->iterators)) {
-            throw new \LogicException('You must call one of in() or append() methods before iterating over a Finder.');
-        }
-
-        if (1 === \count($this->dirs) && 0 === \count($this->iterators)) {
-            $iterator = $this->searchInDirectory($this->dirs[0]);
-
-            if ($this->sort || $this->reverseSorting) {
-                $iterator = (new Iterator\SortableIterator($iterator, $this->sort, $this->reverseSorting))->getIterator();
-            }
-
-            return $iterator;
-        }
-
-        $iterator = new \AppendIterator();
-        foreach ($this->dirs as $dir) {
-            $iterator->append(new \IteratorIterator(new LazyIterator(function () use ($dir) {
-                return $this->searchInDirectory($dir);
-            })));
-        }
-
-        foreach ($this->iterators as $it) {
-            $iterator->append($it);
-        }
-
-        if ($this->sort || $this->reverseSorting) {
-            $iterator = (new Iterator\SortableIterator($iterator, $this->sort, $this->reverseSorting))->getIterator();
-        }
-
-        return $iterator;
+        return iterator_count($this->getIterator());
     }
 
     private function searchInDirectory(string $dir): \Iterator
@@ -793,12 +785,22 @@ class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Counts all the results collected by the iterators.
+     * Normalizes given directory names by removing trailing slashes.
      *
-     * @return int
+     * Excluding: (s)ftp:// or ssh2.(s)ftp:// wrapper
      */
-    public function count()
+    private function normalizeDir(string $dir): string
     {
-        return iterator_count($this->getIterator());
+        if ('/' === $dir) {
+            return $dir;
+        }
+
+        $dir = rtrim($dir, '/'.\DIRECTORY_SEPARATOR);
+
+        if (preg_match('#^(ssh2\.)?s?ftp://#', $dir)) {
+            $dir .= '/';
+        }
+
+        return $dir;
     }
 }

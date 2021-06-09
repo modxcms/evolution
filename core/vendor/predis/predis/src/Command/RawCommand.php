@@ -71,6 +71,15 @@ class RawCommand implements CommandInterface
     /**
      * {@inheritdoc}
      */
+    public function setArguments(array $arguments)
+    {
+        $this->arguments = $arguments;
+        unset($this->slot);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function setRawArguments(array $arguments)
     {
         $this->setArguments($arguments);
@@ -87,15 +96,6 @@ class RawCommand implements CommandInterface
     /**
      * {@inheritdoc}
      */
-    public function setArguments(array $arguments)
-    {
-        $this->arguments = $arguments;
-        unset($this->slot);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getArgument($index)
     {
         if (isset($this->arguments[$index])) {
@@ -106,19 +106,19 @@ class RawCommand implements CommandInterface
     /**
      * {@inheritdoc}
      */
-    public function getSlot()
+    public function setSlot($slot)
     {
-        if (isset($this->slot)) {
-            return $this->slot;
-        }
+        $this->slot = $slot;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setSlot($slot)
+    public function getSlot()
     {
-        $this->slot = $slot;
+        if (isset($this->slot)) {
+            return $this->slot;
+        }
     }
 
     /**

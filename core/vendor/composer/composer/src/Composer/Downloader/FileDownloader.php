@@ -43,10 +43,6 @@ use React\Promise\PromiseInterface;
  */
 class FileDownloader implements DownloaderInterface, ChangeReportInterface
 {
-    /**
-     * @private this is only public for php 5.3 support in closures
-     */
-    public $lastCacheWrites = array();
     /** @var IOInterface */
     protected $io;
     /** @var Config */
@@ -61,6 +57,10 @@ class FileDownloader implements DownloaderInterface, ChangeReportInterface
     protected $eventDispatcher;
     /** @var ProcessExecutor */
     protected $process;
+    /**
+     * @private this is only public for php 5.3 support in closures
+     */
+    public $lastCacheWrites = array();
     private $additionalCleanupPaths = array();
 
     /**
@@ -95,198 +95,6 @@ class FileDownloader implements DownloaderInterface, ChangeReportInterface
     public function getInstallationSource()
     {
         return 'dist';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function prepare($type, PackageInterface $package, $path, PackageInterface $prevPackage = null)
-    {
-        return \React\Promise\resolve();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function cleanup($type, PackageInterface $package, $path, PackageInterface $prevPackage = null)
-    {
-        $fileName = $this->getFileName($package, $path);
-        if (file_exists($fileName)) {
-            $this->filesystem->unlink($fileName);
-        }
-
-        $dirsToCleanUp = array(
-            $this->config->get('vendor-dir').'/composer/',
-            $this->config->get('vendor-dir'),
-            $path,
-        );
-
-        if (isset($this->additionalCleanupPaths[$package->getName()])) {
-            foreach ($this->additionalCleanupPaths[$package->getName()] as $path) {
-                $this->filesystem->remove($path);
-            }
-        }
-
-        foreach ($dirsToCleanUp as $dir) {
-            if (is_dir($dir) && $this->filesystem->isDirEmpty($dir) && realpath($dir) !== getcwd()) {
-                $this->filesystem->removeDirectoryPhp($dir);
-            }
-        }
-
-        return \React\Promise\resolve();
-    }
-
-    /**
-     * Gets file name for specific package
-     *
-     * @param  PackageInterface $package package instance
-     * @param  string           $path    download path
-     * @return string           file name
-     */
-    protected function getFileName(PackageInterface $package, $path)
-    {
-        return rtrim($this->config->get('vendor-dir').'/composer/tmp-'.md5($package.spl_object_hash($package)).'.'.pathinfo(parse_url($package->getDistUrl(), PHP_URL_PATH), PATHINFO_EXTENSION), '.');
-    }
-
-    /**
-     * TODO mark private in v3
-     * @protected This is public due to PHP 5.3
-     */
-    public function addCleanupPath(PackageInterface $package, $path)
-    {
-        $this->additionalCleanupPaths[$package->getName()][] = $path;
-    }
-
-    /**
-     * TODO mark private in v3
-     * @protected This is public due to PHP 5.3
-     */
-    public function removeCleanupPath(PackageInterface $package, $path)
-    {
-        if (isset($this->additionalCleanupPaths[$package->getName()])) {
-            $idx = array_search($path, $this->additionalCleanupPaths[$package->getName()]);
-            if (false !== $idx) {
-                unset($this->additionalCleanupPaths[$package->getName()][$idx]);
-            }
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function update(PackageInterface $initial, PackageInterface $target, $path)
-    {
-        $this->io->writeError("  - " . UpdateOperation::format($initial, $target) . $this->getInstallOperationAppendix($target, $path));
-
-        $promise = $this->remove($initial, $path, false);
-        if (!$promise instanceof PromiseInterface) {
-            $promise = \React\Promise\resolve();
-        }
-        $self = $this;
-        $io = $this->io;
-
-        return $promise->then(function () use ($self, $target, $path) {
-            $promise = $self->install($target, $path, false);
-
-            return $promise;
-        });
-    }
-
-    /**
-     * Gets appendix message to add to the "- Upgrading x" string being output on update
-     *
-     * @param  PackageInterface $package package instance
-     * @param  string           $path    download path
-     * @return string
-     */
-    protected function getInstallOperationAppendix(PackageInterface $package, $path)
-    {
-        return '';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function remove(PackageInterface $package, $path, $output = true)
-    {
-        if ($output) {
-            $this->io->writeError("  - " . UninstallOperation::format($package));
-        }
-        $promise = $this->filesystem->removeDirectoryAsync($path);
-
-        return $promise->then(function ($result) use ($path) {
-            if (!$result) {
-                throw new \RuntimeException('Could not completely delete '.$path.', aborting.');
-            }
-        });
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function install(PackageInterface $package, $path, $output = true)
-    {
-        if ($output) {
-            $this->io->writeError("  - " . InstallOperation::format($package));
-        }
-
-        $this->filesystem->emptyDirectory($path);
-        $this->filesystem->ensureDirectoryExists($path);
-        $this->filesystem->rename($this->getFileName($package, $path), $path . '/' . pathinfo(parse_url($package->getDistUrl(), PHP_URL_PATH), PATHINFO_BASENAME));
-
-        if ($package->getBinaries()) {
-            // Single files can not have a mode set like files in archives
-            // so we make sure if the file is a binary that it is executable
-            foreach ($package->getBinaries() as $bin) {
-                if (file_exists($path . '/' . $bin) && !is_executable($path . '/' . $bin)) {
-                    Silencer::call('chmod', $path . '/' . $bin, 0777 & ~umask());
-                }
-            }
-        }
-
-        return \React\Promise\resolve();
-    }
-
-    /**
-     * {@inheritDoc}
-     * @throws \RuntimeException
-     */
-    public function getLocalChanges(PackageInterface $package, $targetDir)
-    {
-        $prevIO = $this->io;
-
-        $this->io = new NullIO;
-        $this->io->loadConfiguration($this->config);
-        $e = null;
-        $output = '';
-
-        $targetDir = Filesystem::trimTrailingSlash($targetDir);
-        try {
-            if (is_dir($targetDir.'_compare')) {
-                $this->filesystem->removeDirectory($targetDir.'_compare');
-            }
-
-            $this->download($package, $targetDir.'_compare', null, false);
-            $this->httpDownloader->wait();
-            $this->install($package, $targetDir.'_compare', false);
-            $this->process->wait();
-
-            $comparer = new Comparer();
-            $comparer->setSource($targetDir.'_compare');
-            $comparer->setUpdate($targetDir);
-            $comparer->doCompare();
-            $output = $comparer->getChanged(true, true);
-            $this->filesystem->removeDirectory($targetDir.'_compare');
-        } catch (\Exception $e) {
-        }
-
-        $this->io = $prevIO;
-
-        if ($e) {
-            throw $e;
-        }
-
-        return trim($output);
     }
 
     /**
@@ -467,6 +275,168 @@ class FileDownloader implements DownloaderInterface, ChangeReportInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function prepare($type, PackageInterface $package, $path, PackageInterface $prevPackage = null)
+    {
+        return \React\Promise\resolve();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function cleanup($type, PackageInterface $package, $path, PackageInterface $prevPackage = null)
+    {
+        $fileName = $this->getFileName($package, $path);
+        if (file_exists($fileName)) {
+            $this->filesystem->unlink($fileName);
+        }
+
+        $dirsToCleanUp = array(
+            $this->config->get('vendor-dir').'/composer/',
+            $this->config->get('vendor-dir'),
+            $path,
+        );
+
+        if (isset($this->additionalCleanupPaths[$package->getName()])) {
+            foreach ($this->additionalCleanupPaths[$package->getName()] as $path) {
+                $this->filesystem->remove($path);
+            }
+        }
+
+        foreach ($dirsToCleanUp as $dir) {
+            if (is_dir($dir) && $this->filesystem->isDirEmpty($dir) && realpath($dir) !== getcwd()) {
+                $this->filesystem->removeDirectoryPhp($dir);
+            }
+        }
+
+        return \React\Promise\resolve();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function install(PackageInterface $package, $path, $output = true)
+    {
+        if ($output) {
+            $this->io->writeError("  - " . InstallOperation::format($package));
+        }
+
+        $this->filesystem->emptyDirectory($path);
+        $this->filesystem->ensureDirectoryExists($path);
+        $this->filesystem->rename($this->getFileName($package, $path), $path . '/' . pathinfo(parse_url($package->getDistUrl(), PHP_URL_PATH), PATHINFO_BASENAME));
+
+        if ($package->getBinaries()) {
+            // Single files can not have a mode set like files in archives
+            // so we make sure if the file is a binary that it is executable
+            foreach ($package->getBinaries() as $bin) {
+                if (file_exists($path . '/' . $bin) && !is_executable($path . '/' . $bin)) {
+                    Silencer::call('chmod', $path . '/' . $bin, 0777 & ~umask());
+                }
+            }
+        }
+
+        return \React\Promise\resolve();
+    }
+
+    /**
+     * TODO mark private in v3
+     * @protected This is public due to PHP 5.3
+     */
+    public function clearLastCacheWrite(PackageInterface $package)
+    {
+        if ($this->cache && isset($this->lastCacheWrites[$package->getName()])) {
+            $this->cache->remove($this->lastCacheWrites[$package->getName()]);
+            unset($this->lastCacheWrites[$package->getName()]);
+        }
+    }
+
+    /**
+     * TODO mark private in v3
+     * @protected This is public due to PHP 5.3
+     */
+    public function addCleanupPath(PackageInterface $package, $path)
+    {
+        $this->additionalCleanupPaths[$package->getName()][] = $path;
+    }
+
+    /**
+     * TODO mark private in v3
+     * @protected This is public due to PHP 5.3
+     */
+    public function removeCleanupPath(PackageInterface $package, $path)
+    {
+        if (isset($this->additionalCleanupPaths[$package->getName()])) {
+            $idx = array_search($path, $this->additionalCleanupPaths[$package->getName()]);
+            if (false !== $idx) {
+                unset($this->additionalCleanupPaths[$package->getName()][$idx]);
+            }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function update(PackageInterface $initial, PackageInterface $target, $path)
+    {
+        $this->io->writeError("  - " . UpdateOperation::format($initial, $target) . $this->getInstallOperationAppendix($target, $path));
+
+        $promise = $this->remove($initial, $path, false);
+        if (!$promise instanceof PromiseInterface) {
+            $promise = \React\Promise\resolve();
+        }
+        $self = $this;
+        $io = $this->io;
+
+        return $promise->then(function () use ($self, $target, $path) {
+            $promise = $self->install($target, $path, false);
+
+            return $promise;
+        });
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function remove(PackageInterface $package, $path, $output = true)
+    {
+        if ($output) {
+            $this->io->writeError("  - " . UninstallOperation::format($package));
+        }
+        $promise = $this->filesystem->removeDirectoryAsync($path);
+
+        return $promise->then(function ($result) use ($path) {
+            if (!$result) {
+                throw new \RuntimeException('Could not completely delete '.$path.', aborting.');
+            }
+        });
+    }
+
+    /**
+     * Gets file name for specific package
+     *
+     * @param  PackageInterface $package package instance
+     * @param  string           $path    download path
+     * @return string           file name
+     */
+    protected function getFileName(PackageInterface $package, $path)
+    {
+        return rtrim($this->config->get('vendor-dir').'/composer/tmp-'.md5($package.spl_object_hash($package)).'.'.pathinfo(parse_url($package->getDistUrl(), PHP_URL_PATH), PATHINFO_EXTENSION), '.');
+    }
+
+    /**
+     * Gets appendix message to add to the "- Upgrading x" string being output on update
+     *
+     * @param  PackageInterface $package package instance
+     * @param  string           $path    download path
+     * @return string
+     */
+    protected function getInstallOperationAppendix(PackageInterface $package, $path)
+    {
+        return '';
+    }
+
+    /**
      * Process the download url
      *
      * @param  PackageInterface  $package package the url is coming from
@@ -488,14 +458,44 @@ class FileDownloader implements DownloaderInterface, ChangeReportInterface
     }
 
     /**
-     * TODO mark private in v3
-     * @protected This is public due to PHP 5.3
+     * {@inheritDoc}
+     * @throws \RuntimeException
      */
-    public function clearLastCacheWrite(PackageInterface $package)
+    public function getLocalChanges(PackageInterface $package, $targetDir)
     {
-        if ($this->cache && isset($this->lastCacheWrites[$package->getName()])) {
-            $this->cache->remove($this->lastCacheWrites[$package->getName()]);
-            unset($this->lastCacheWrites[$package->getName()]);
+        $prevIO = $this->io;
+
+        $this->io = new NullIO;
+        $this->io->loadConfiguration($this->config);
+        $e = null;
+        $output = '';
+
+        $targetDir = Filesystem::trimTrailingSlash($targetDir);
+        try {
+            if (is_dir($targetDir.'_compare')) {
+                $this->filesystem->removeDirectory($targetDir.'_compare');
+            }
+
+            $this->download($package, $targetDir.'_compare', null, false);
+            $this->httpDownloader->wait();
+            $this->install($package, $targetDir.'_compare', false);
+            $this->process->wait();
+
+            $comparer = new Comparer();
+            $comparer->setSource($targetDir.'_compare');
+            $comparer->setUpdate($targetDir);
+            $comparer->doCompare();
+            $output = $comparer->getChanged(true, true);
+            $this->filesystem->removeDirectory($targetDir.'_compare');
+        } catch (\Exception $e) {
         }
+
+        $this->io = $prevIO;
+
+        if ($e) {
+            throw $e;
+        }
+
+        return trim($output);
     }
 }

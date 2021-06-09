@@ -31,6 +31,7 @@ use DateTimeInterface;
 use DateTimeZone;
 use InvalidArgumentException;
 use ReflectionException;
+use ReturnTypeWillChange;
 use Throwable;
 
 /**
@@ -610,202 +611,31 @@ trait Date
     ];
 
     /**
-     * Get the days of the week
+     * Creates a DateTimeZone from a string, DateTimeZone or integer offset.
      *
-     * @return array
+     * @param DateTimeZone|string|int|null $object     original value to get CarbonTimeZone from it.
+     * @param DateTimeZone|string|int|null $objectDump dump of the object for error messages.
+     *
+     * @throws InvalidTimeZoneException
+     *
+     * @return CarbonTimeZone|false
      */
-    public static function getDays()
+    protected static function safeCreateDateTimeZone($object, $objectDump = null)
     {
-        return static::$days;
+        return CarbonTimeZone::instance($object, $objectDump);
     }
 
     /**
-     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
-     *             Use $weekEndsAt optional parameter instead when using endOfWeek method. You can also use the
-     *             'first_day_of_week' locale setting to change the start of week according to current locale
-     *             selected and implicitly the end of week.
+     * Get the TimeZone associated with the Carbon instance (as CarbonTimeZone).
      *
-     * Set the first day of week
+     * @return CarbonTimeZone
      *
-     * @param int|string $day week start day (or 'auto' to get the first day of week from Carbon::getLocale() culture).
-     *
-     * @return void
+     * @link http://php.net/manual/en/datetime.gettimezone.php
      */
-    public static function setWeekStartsAt($day)
+    #[ReturnTypeWillChange]
+    public function getTimezone()
     {
-        static::$weekStartsAt = $day === static::WEEK_DAY_AUTO ? $day : max(0, (7 + $day) % 7);
-    }
-
-    /**
-     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
-     *             Use $weekStartsAt optional parameter instead when using startOfWeek, floorWeek, ceilWeek
-     *             or roundWeek method. You can also use the 'first_day_of_week' locale setting to change the
-     *             start of week according to current locale selected and implicitly the end of week.
-     *
-     * Set the last day of week
-     *
-     * @param int|string $day week end day (or 'auto' to get the day before the first day of week
-     *                        from Carbon::getLocale() culture).
-     *
-     * @return void
-     */
-    public static function setWeekEndsAt($day)
-    {
-        static::$weekEndsAt = $day === static::WEEK_DAY_AUTO ? $day : max(0, (7 + $day) % 7);
-    }
-
-    /**
-     * Get weekend days
-     *
-     * @return array
-     */
-    public static function getWeekendDays()
-    {
-        return static::$weekendDays;
-    }
-
-    /**
-     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
-     *             You should rather consider week-end is always saturday and sunday, and if you have some custom
-     *             week-end days to handle, give to those days an other name and create a macro for them:
-     *
-     *             ```
-     *             Carbon::macro('isDayOff', function ($date) {
-     *                 return $date->isSunday() || $date->isMonday();
-     *             });
-     *             Carbon::macro('isNotDayOff', function ($date) {
-     *                 return !$date->isDayOff();
-     *             });
-     *             if ($someDate->isDayOff()) ...
-     *             if ($someDate->isNotDayOff()) ...
-     *             // Add 5 not-off days
-     *             $count = 5;
-     *             while ($someDate->isDayOff() || ($count-- > 0)) {
-     *                 $someDate->addDay();
-     *             }
-     *             ```
-     *
-     * Set weekend days
-     *
-     * @param array $days
-     *
-     * @return void
-     */
-    public static function setWeekendDays($days)
-    {
-        static::$weekendDays = $days;
-    }
-
-    /**
-     * Determine if a time string will produce a relative date.
-     *
-     * @param string $time
-     *
-     * @return bool true if time match a relative date, false if absolute or invalid time string
-     */
-    public static function hasRelativeKeywords($time)
-    {
-        if (!$time || strtotime($time) === false) {
-            return false;
-        }
-
-        $date1 = new DateTime('2000-01-01T00:00:00Z');
-        $date1->modify($time);
-        $date2 = new DateTime('2001-12-25T00:00:00Z');
-        $date2->modify($time);
-
-        return $date1 != $date2;
-    }
-
-    /**
-     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
-     *             You should rather use UTF-8 language packages on every machine.
-     *
-     * Set if UTF8 will be used for localized date/time.
-     *
-     * @param bool $utf8
-     */
-    public static function setUtf8($utf8)
-    {
-        static::$utf8 = $utf8;
-    }
-
-    /**
-     * Dynamically handle calls to the class.
-     *
-     * @param string $method     magic method name called
-     * @param array  $parameters parameters list
-     *
-     * @throws BadMethodCallException
-     *
-     * @return mixed
-     */
-    public static function __callStatic($method, $parameters)
-    {
-        if (!static::hasMacro($method)) {
-            foreach (static::getGenericMacros() as $callback) {
-                try {
-                    return static::executeStaticCallable($callback, $method, ...$parameters);
-                } catch (BadMethodCallException $exception) {
-                    continue;
-                }
-            }
-            if (static::isStrictModeEnabled()) {
-                throw new UnknownMethodException(sprintf('%s::%s', static::class, $method));
-            }
-
-            return null;
-        }
-
-        return static::executeStaticCallable(static::$globalMacros[$method], ...$parameters);
-    }
-
-    protected static function getGenericMacros()
-    {
-        foreach (static::$globalGenericMacros as $list) {
-            foreach ($list as $macro) {
-                yield $macro;
-            }
-        }
-    }
-
-    protected static function executeStaticCallable($macro, ...$parameters)
-    {
-        return static::bindMacroContext(null, function () use (&$macro, &$parameters) {
-            if ($macro instanceof Closure) {
-                $boundMacro = @Closure::bind($macro, null, static::class);
-
-                return ($boundMacro ?: $macro)(...$parameters);
-            }
-
-            return $macro(...$parameters);
-        });
-    }
-
-    ///////////////////////////////////////////////////////////////////
-    ///////////////////////// GETTERS AND SETTERS /////////////////////
-    ///////////////////////////////////////////////////////////////////
-
-    /**
-     * Returns standardized plural of a given singular/plural unit name (in English).
-     *
-     * @param string $unit
-     *
-     * @return string
-     */
-    public static function pluralUnit(string $unit): string
-    {
-        $unit = rtrim(strtolower($unit), 's');
-
-        if ($unit === 'century') {
-            return 'centuries';
-        }
-
-        if ($unit === 'millennium' || $unit === 'millennia') {
-            return 'millennia';
-        }
-
-        return "${unit}s";
+        return CarbonTimeZone::instance(parent::getTimezone());
     }
 
     /**
@@ -832,6 +662,16 @@ trait Date
     }
 
     /**
+     * Get a copy of the instance.
+     *
+     * @return static
+     */
+    public function copy()
+    {
+        return clone $this;
+    }
+
+    /**
      * @alias copy
      *
      * Get a copy of the instance.
@@ -844,34 +684,36 @@ trait Date
     }
 
     /**
-     * Return the Carbon instance passed through, a now instance in the same timezone
-     * if null given or parse the input if string given.
-     *
-     * @param Carbon|\Carbon\CarbonPeriod|\Carbon\CarbonInterval|\DateInterval|\DatePeriod|DateTimeInterface|string|null $date
+     * Returns a present instance in the same timezone.
      *
      * @return static
      */
-    public function carbonize($date = null)
+    public function nowWithSameTz()
     {
-        if ($date instanceof DateInterval) {
-            return $this->copy()->add($date);
-        }
-
-        if ($date instanceof DatePeriod || $date instanceof CarbonPeriod) {
-            $date = $date->getStartDate();
-        }
-
-        return $this->resolveCarbon($date);
+        return static::now($this->getTimezone());
     }
 
     /**
-     * Get a copy of the instance.
+     * Throws an exception if the given object is not a DateTime and does not implement DateTimeInterface.
      *
-     * @return static
+     * @param mixed        $date
+     * @param string|array $other
+     *
+     * @throws InvalidTypeException
      */
-    public function copy()
+    protected static function expectDateTime($date, $other = [])
     {
-        return clone $this;
+        $message = 'Expected ';
+        foreach ((array) $other as $expect) {
+            $message .= "$expect, ";
+        }
+
+        if (!$date instanceof DateTime && !$date instanceof DateTimeInterface) {
+            throw new InvalidTypeException(
+                $message.'DateTime or DateTimeInterface, '.
+                (\is_object($date) ? \get_class($date) : \gettype($date)).' given'
+            );
+        }
     }
 
     /**
@@ -898,32 +740,53 @@ trait Date
     }
 
     /**
-     * Returns a present instance in the same timezone.
+     * Return the Carbon instance passed through, a now instance in UTC
+     * if null given or parse the input if string given (using current timezone
+     * then switching to UTC).
+     *
+     * @param Carbon|DateTimeInterface|string|null $date
      *
      * @return static
      */
-    public function nowWithSameTz()
+    protected function resolveUTC($date = null): self
     {
-        return static::now($this->getTimezone());
+        if (!$date) {
+            return static::now('UTC');
+        }
+
+        if (\is_string($date)) {
+            return static::parse($date, $this->getTimezone())->utc();
+        }
+
+        static::expectDateTime($date, ['null', 'string']);
+
+        return $date instanceof self ? $date : static::instance($date)->utc();
     }
 
     /**
-     * Check if an attribute exists on the object
+     * Return the Carbon instance passed through, a now instance in the same timezone
+     * if null given or parse the input if string given.
      *
-     * @param string $name
+     * @param Carbon|\Carbon\CarbonPeriod|\Carbon\CarbonInterval|\DateInterval|\DatePeriod|DateTimeInterface|string|null $date
      *
-     * @return bool
+     * @return static
      */
-    public function __isset($name)
+    public function carbonize($date = null)
     {
-        try {
-            $this->__get($name);
-        } catch (UnknownGetterException | ReflectionException $e) {
-            return false;
+        if ($date instanceof DateInterval) {
+            return $this->copy()->add($date);
         }
 
-        return true;
+        if ($date instanceof DatePeriod || $date instanceof CarbonPeriod) {
+            $date = $date->getStartDate();
+        }
+
+        return $this->resolveCarbon($date);
     }
+
+    ///////////////////////////////////////////////////////////////////
+    ///////////////////////// GETTERS AND SETTERS /////////////////////
+    ///////////////////////////////////////////////////////////////////
 
     /**
      * Get a part of the Carbon object
@@ -937,27 +800,6 @@ trait Date
     public function __get($name)
     {
         return $this->get($name);
-    }
-
-    /**
-     * Set a part of the Carbon object
-     *
-     * @param string                  $name
-     * @param string|int|DateTimeZone $value
-     *
-     * @throws UnknownSetterException|ReflectionException
-     *
-     * @return void
-     */
-    public function __set($name, $value)
-    {
-        if ($this->constructedObjectId === spl_object_hash($this)) {
-            $this->set($name, $value);
-
-            return;
-        }
-
-        $this->$name = $value;
     }
 
     /**
@@ -1203,181 +1045,42 @@ trait Date
     }
 
     /**
-     * Get the translation of the current week day name (with context for languages with multiple forms).
+     * Check if an attribute exists on the object
      *
-     * @param string|null $context      whole format string
-     * @param string      $keySuffix    "", "_short" or "_min"
-     * @param string|null $defaultValue default value if translation missing
+     * @param string $name
      *
-     * @return string
+     * @return bool
      */
-    public function getTranslatedDayName($context = null, $keySuffix = '', $defaultValue = null)
+    public function __isset($name)
     {
-        return $this->getTranslatedFormByRegExp('weekdays', $keySuffix, $context, $this->dayOfWeek, $defaultValue ?: $this->englishDayOfWeek);
-    }
-
-    protected function getTranslatedFormByRegExp($baseKey, $keySuffix, $context, $subKey, $defaultValue)
-    {
-        $key = $baseKey.$keySuffix;
-        $standaloneKey = "${key}_standalone";
-        $baseTranslation = $this->getTranslationMessage($key);
-
-        if ($baseTranslation instanceof Closure) {
-            return $baseTranslation($this, $context, $subKey) ?: $defaultValue;
+        try {
+            $this->__get($name);
+        } catch (UnknownGetterException | ReflectionException $e) {
+            return false;
         }
 
-        if (
-            $this->getTranslationMessage("$standaloneKey.$subKey") &&
-            (!$context || ($regExp = $this->getTranslationMessage("${baseKey}_regexp")) && !preg_match($regExp, $context))
-        ) {
-            $key = $standaloneKey;
-        }
-
-        return $this->getTranslationMessage("$key.$subKey", null, $defaultValue);
+        return true;
     }
 
     /**
-     * Get the translation of the current short week day name (with context for languages with multiple forms).
+     * Set a part of the Carbon object
      *
-     * @param string|null $context whole format string
+     * @param string                  $name
+     * @param string|int|DateTimeZone $value
      *
-     * @return string
+     * @throws UnknownSetterException|ReflectionException
+     *
+     * @return void
      */
-    public function getTranslatedShortDayName($context = null)
+    public function __set($name, $value)
     {
-        return $this->getTranslatedDayName($context, '_short', $this->shortEnglishDayOfWeek);
-    }
+        if ($this->constructedObjectId === spl_object_hash($this)) {
+            $this->set($name, $value);
 
-    /**
-     * Get the translation of the current abbreviated week day name (with context for languages with multiple forms).
-     *
-     * @param string|null $context whole format string
-     *
-     * @return string
-     */
-    public function getTranslatedMinDayName($context = null)
-    {
-        return $this->getTranslatedDayName($context, '_min', $this->shortEnglishDayOfWeek);
-    }
-
-    /**
-     * Get the translation of the current month day name (with context for languages with multiple forms).
-     *
-     * @param string|null $context      whole format string
-     * @param string      $keySuffix    "" or "_short"
-     * @param string|null $defaultValue default value if translation missing
-     *
-     * @return string
-     */
-    public function getTranslatedMonthName($context = null, $keySuffix = '', $defaultValue = null)
-    {
-        return $this->getTranslatedFormByRegExp('months', $keySuffix, $context, $this->month - 1, $defaultValue ?: $this->englishMonth);
-    }
-
-    /**
-     * Get the translation of the current short month day name (with context for languages with multiple forms).
-     *
-     * @param string|null $context whole format string
-     *
-     * @return string
-     */
-    public function getTranslatedShortMonthName($context = null)
-    {
-        return $this->getTranslatedMonthName($context, '_short', $this->shortEnglishMonth);
-    }
-
-    /**
-     * Return the meridiem of the current time in the current locale.
-     *
-     * @param bool $isLower if true, returns lowercase variant if available in the current locale.
-     *
-     * @return string
-     */
-    public function meridiem(bool $isLower = false): string
-    {
-        $hour = $this->hour;
-        $index = $hour < 12 ? 0 : 1;
-
-        if ($isLower) {
-            $key = 'meridiem.'.($index + 2);
-            $result = $this->translate($key);
-
-            if ($result !== $key) {
-                return $result;
-            }
+            return;
         }
 
-        $key = "meridiem.$index";
-        $result = $this->translate($key);
-        if ($result === $key) {
-            $result = $this->translate('meridiem', [
-                ':hour' => $this->hour,
-                ':minute' => $this->minute,
-                ':isLower' => $isLower,
-            ]);
-
-            if ($result === 'meridiem') {
-                return $isLower ? $this->latinMeridiem : $this->latinUpperMeridiem;
-            }
-        } elseif ($isLower) {
-            $result = mb_strtolower($result);
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get the first day of week
-     *
-     * @return int
-     */
-    public static function getWeekStartsAt()
-    {
-        if (static::$weekStartsAt === static::WEEK_DAY_AUTO) {
-            return static::getFirstDayOfWeek();
-        }
-
-        return static::$weekStartsAt;
-    }
-
-    private static function getFirstDayOfWeek(): int
-    {
-        return (int) static::getTranslationMessageWith(
-            static::getTranslator(),
-            'first_day_of_week'
-        );
-    }
-
-    /**
-     * Get the last day of week
-     *
-     * @return int
-     */
-    public static function getWeekEndsAt()
-    {
-        if (static::$weekStartsAt === static::WEEK_DAY_AUTO) {
-            return (int) (static::DAYS_PER_WEEK - 1 + static::getFirstDayOfWeek()) % static::DAYS_PER_WEEK;
-        }
-
-        return static::$weekEndsAt;
-    }
-
-    protected function executeCallableWithContext($macro, ...$parameters)
-    {
-        return static::bindMacroContext($this, function () use (&$macro, &$parameters) {
-            return $this->executeCallable($macro, ...$parameters);
-        });
-    }
-
-    protected function executeCallable($macro, ...$parameters)
-    {
-        if ($macro instanceof Closure) {
-            $boundMacro = @$macro->bindTo($this, static::class) ?: @$macro->bindTo(null, static::class);
-
-            return ($boundMacro ?: $macro)(...$parameters);
-        }
-
-        return $macro(...$parameters);
+        $this->$name = $value;
     }
 
     /**
@@ -1511,71 +1214,88 @@ trait Date
         return $this;
     }
 
-    /**
-     * Set the date and time all together.
-     *
-     * @param int $year
-     * @param int $month
-     * @param int $day
-     * @param int $hour
-     * @param int $minute
-     * @param int $second
-     * @param int $microseconds
-     *
-     * @return static
-     */
-    public function setDateTime($year, $month, $day, $hour, $minute, $second = 0, $microseconds = 0)
+    protected function getTranslatedFormByRegExp($baseKey, $keySuffix, $context, $subKey, $defaultValue)
     {
-        return $this->setDate($year, $month, $day)->setTime((int) $hour, (int) $minute, (int) $second, (int) $microseconds);
+        $key = $baseKey.$keySuffix;
+        $standaloneKey = "${key}_standalone";
+        $baseTranslation = $this->getTranslationMessage($key);
+
+        if ($baseTranslation instanceof Closure) {
+            return $baseTranslation($this, $context, $subKey) ?: $defaultValue;
+        }
+
+        if (
+            $this->getTranslationMessage("$standaloneKey.$subKey") &&
+            (!$context || ($regExp = $this->getTranslationMessage("${baseKey}_regexp")) && !preg_match($regExp, $context))
+        ) {
+            $key = $standaloneKey;
+        }
+
+        return $this->getTranslationMessage("$key.$subKey", null, $defaultValue);
     }
 
     /**
-     * Resets the current time of the DateTime object to a different time.
+     * Get the translation of the current week day name (with context for languages with multiple forms).
      *
-     * @see https://php.net/manual/en/datetime.settime.php
+     * @param string|null $context      whole format string
+     * @param string      $keySuffix    "", "_short" or "_min"
+     * @param string|null $defaultValue default value if translation missing
      *
-     * @param int $hour
-     * @param int $minute
-     * @param int $second
-     * @param int $microseconds
-     *
-     * @return static
+     * @return string
      */
-    public function setTime($hour, $minute, $second = 0, $microseconds = 0)
+    public function getTranslatedDayName($context = null, $keySuffix = '', $defaultValue = null)
     {
-        return parent::setTime((int) $hour, (int) $minute, (int) $second, (int) $microseconds);
+        return $this->getTranslatedFormByRegExp('weekdays', $keySuffix, $context, $this->dayOfWeek, $defaultValue ?: $this->englishDayOfWeek);
     }
 
     /**
-     * Set the date with gregorian year, month and day numbers.
+     * Get the translation of the current short week day name (with context for languages with multiple forms).
      *
-     * @see https://php.net/manual/en/datetime.setdate.php
+     * @param string|null $context whole format string
      *
-     * @param int $year
-     * @param int $month
-     * @param int $day
-     *
-     * @return static
+     * @return string
      */
-    public function setDate($year, $month, $day)
+    public function getTranslatedShortDayName($context = null)
     {
-        return parent::setDate((int) $year, (int) $month, (int) $day);
+        return $this->getTranslatedDayName($context, '_short', $this->shortEnglishDayOfWeek);
     }
 
     /**
-     * Set the instance's timestamp.
+     * Get the translation of the current abbreviated week day name (with context for languages with multiple forms).
      *
-     * Timestamp input can be given as int, float or a string containing one or more numbers.
+     * @param string|null $context whole format string
      *
-     * @param float|int|string $unixTimestamp
-     *
-     * @return static
+     * @return string
      */
-    public function setTimestamp($unixTimestamp)
+    public function getTranslatedMinDayName($context = null)
     {
-        [$timestamp, $microseconds] = self::getIntegerAndDecimalParts($unixTimestamp);
+        return $this->getTranslatedDayName($context, '_min', $this->shortEnglishDayOfWeek);
+    }
 
-        return parent::setTimestamp((int) $timestamp)->setMicroseconds((int) $microseconds);
+    /**
+     * Get the translation of the current month day name (with context for languages with multiple forms).
+     *
+     * @param string|null $context      whole format string
+     * @param string      $keySuffix    "" or "_short"
+     * @param string|null $defaultValue default value if translation missing
+     *
+     * @return string
+     */
+    public function getTranslatedMonthName($context = null, $keySuffix = '', $defaultValue = null)
+    {
+        return $this->getTranslatedFormByRegExp('months', $keySuffix, $context, $this->month - 1, $defaultValue ?: $this->englishMonth);
+    }
+
+    /**
+     * Get the translation of the current short month day name (with context for languages with multiple forms).
+     *
+     * @param string|null $context whole format string
+     *
+     * @return string
+     */
+    public function getTranslatedShortMonthName($context = null)
+    {
+        return $this->getTranslatedMonthName($context, '_short', $this->shortEnglishMonth);
     }
 
     /**
@@ -1621,20 +1341,6 @@ trait Date
     }
 
     /**
-     * Add any unit to a new value without overflowing current other unit given.
-     *
-     * @param string $valueUnit    unit name to modify
-     * @param int    $value        amount to add to the input unit
-     * @param string $overflowUnit unit name to not overflow
-     *
-     * @return static
-     */
-    public function addUnitNoOverflow($valueUnit, $value, $overflowUnit)
-    {
-        return $this->setUnitNoOverflow($valueUnit, $this->$valueUnit + $value, $overflowUnit);
-    }
-
-    /**
      * Set any unit to a new value without overflowing current other unit given.
      *
      * @param string $valueUnit    unit name to modify
@@ -1663,22 +1369,18 @@ trait Date
         }
     }
 
-    ///////////////////////////////////////////////////////////////////
-    /////////////////////// WEEK SPECIAL DAYS /////////////////////////
-    ///////////////////////////////////////////////////////////////////
-
     /**
-     * Set the date and time for this instance to that of the passed instance.
+     * Add any unit to a new value without overflowing current other unit given.
      *
-     * @param Carbon|DateTimeInterface $date
+     * @param string $valueUnit    unit name to modify
+     * @param int    $value        amount to add to the input unit
+     * @param string $overflowUnit unit name to not overflow
      *
      * @return static
      */
-    public function setDateTimeFrom($date = null)
+    public function addUnitNoOverflow($valueUnit, $value, $overflowUnit)
     {
-        $date = $this->resolveCarbon($date);
-
-        return $this->modify($date->rawFormat('Y-m-d H:i:s.u'));
+        return $this->setUnitNoOverflow($valueUnit, $this->$valueUnit + $value, $overflowUnit);
     }
 
     /**
@@ -1712,6 +1414,23 @@ trait Date
     }
 
     /**
+     * Set the date with gregorian year, month and day numbers.
+     *
+     * @see https://php.net/manual/en/datetime.setdate.php
+     *
+     * @param int $year
+     * @param int $month
+     * @param int $day
+     *
+     * @return static
+     */
+    #[ReturnTypeWillChange]
+    public function setDate($year, $month, $day)
+    {
+        return parent::setDate((int) $year, (int) $month, (int) $day);
+    }
+
+    /**
      * Set a date according to the ISO 8601 standard - using weeks and day offsets rather than specific dates.
      *
      * @see https://php.net/manual/en/datetime.setisodate.php
@@ -1722,9 +1441,63 @@ trait Date
      *
      * @return static
      */
+    #[ReturnTypeWillChange]
     public function setISODate($year, $week, $day = 1)
     {
         return parent::setISODate((int) $year, (int) $week, (int) $day);
+    }
+
+    /**
+     * Set the date and time all together.
+     *
+     * @param int $year
+     * @param int $month
+     * @param int $day
+     * @param int $hour
+     * @param int $minute
+     * @param int $second
+     * @param int $microseconds
+     *
+     * @return static
+     */
+    public function setDateTime($year, $month, $day, $hour, $minute, $second = 0, $microseconds = 0)
+    {
+        return $this->setDate($year, $month, $day)->setTime((int) $hour, (int) $minute, (int) $second, (int) $microseconds);
+    }
+
+    /**
+     * Resets the current time of the DateTime object to a different time.
+     *
+     * @see https://php.net/manual/en/datetime.settime.php
+     *
+     * @param int $hour
+     * @param int $minute
+     * @param int $second
+     * @param int $microseconds
+     *
+     * @return static
+     */
+    #[ReturnTypeWillChange]
+    public function setTime($hour, $minute, $second = 0, $microseconds = 0)
+    {
+        return parent::setTime((int) $hour, (int) $minute, (int) $second, (int) $microseconds);
+    }
+
+    /**
+     * Set the instance's timestamp.
+     *
+     * Timestamp input can be given as int, float or a string containing one or more numbers.
+     *
+     * @param float|int|string $unixTimestamp
+     *
+     * @return static
+     */
+    #[ReturnTypeWillChange]
+    public function setTimestamp($unixTimestamp)
+    {
+        [$timestamp, $microseconds] = self::getIntegerAndDecimalParts($unixTimestamp);
+
+        return parent::setTimestamp((int) $timestamp)->setMicroseconds((int) $microseconds);
     }
 
     /**
@@ -1772,6 +1545,19 @@ trait Date
     }
 
     /**
+     * Set the instance's timezone from a string or object.
+     *
+     * @param DateTimeZone|string $value
+     *
+     * @return static
+     */
+    #[ReturnTypeWillChange]
+    public function setTimezone($value)
+    {
+        return parent::setTimezone(static::safeCreateDateTimeZone($value));
+    }
+
+    /**
      * Set the instance's timezone from a string or object and add/subtract the offset difference.
      *
      * @param DateTimeZone|string $value
@@ -1786,9 +1572,15 @@ trait Date
         return $date->addRealMicroseconds(($offset - $date->offset) * static::MICROSECONDS_PER_SECOND);
     }
 
-    ///////////////////////////////////////////////////////////////////
-    /////////////////////// STRING FORMATTING /////////////////////////
-    ///////////////////////////////////////////////////////////////////
+    /**
+     * Set the instance's timezone to UTC.
+     *
+     * @return static
+     */
+    public function utc()
+    {
+        return $this->setTimezone('UTC');
+    }
 
     /**
      * Set the year, month, and date for this instance to that of the passed instance.
@@ -1819,6 +1611,185 @@ trait Date
     }
 
     /**
+     * Set the date and time for this instance to that of the passed instance.
+     *
+     * @param Carbon|DateTimeInterface $date
+     *
+     * @return static
+     */
+    public function setDateTimeFrom($date = null)
+    {
+        $date = $this->resolveCarbon($date);
+
+        return $this->modify($date->rawFormat('Y-m-d H:i:s.u'));
+    }
+
+    /**
+     * Get the days of the week
+     *
+     * @return array
+     */
+    public static function getDays()
+    {
+        return static::$days;
+    }
+
+    ///////////////////////////////////////////////////////////////////
+    /////////////////////// WEEK SPECIAL DAYS /////////////////////////
+    ///////////////////////////////////////////////////////////////////
+
+    private static function getFirstDayOfWeek(): int
+    {
+        return (int) static::getTranslationMessageWith(
+            static::getTranslator(),
+            'first_day_of_week'
+        );
+    }
+
+    /**
+     * Get the first day of week
+     *
+     * @return int
+     */
+    public static function getWeekStartsAt()
+    {
+        if (static::$weekStartsAt === static::WEEK_DAY_AUTO) {
+            return static::getFirstDayOfWeek();
+        }
+
+        return static::$weekStartsAt;
+    }
+
+    /**
+     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
+     *             Use $weekEndsAt optional parameter instead when using endOfWeek method. You can also use the
+     *             'first_day_of_week' locale setting to change the start of week according to current locale
+     *             selected and implicitly the end of week.
+     *
+     * Set the first day of week
+     *
+     * @param int|string $day week start day (or 'auto' to get the first day of week from Carbon::getLocale() culture).
+     *
+     * @return void
+     */
+    public static function setWeekStartsAt($day)
+    {
+        static::$weekStartsAt = $day === static::WEEK_DAY_AUTO ? $day : max(0, (7 + $day) % 7);
+    }
+
+    /**
+     * Get the last day of week
+     *
+     * @return int
+     */
+    public static function getWeekEndsAt()
+    {
+        if (static::$weekStartsAt === static::WEEK_DAY_AUTO) {
+            return (int) (static::DAYS_PER_WEEK - 1 + static::getFirstDayOfWeek()) % static::DAYS_PER_WEEK;
+        }
+
+        return static::$weekEndsAt;
+    }
+
+    /**
+     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
+     *             Use $weekStartsAt optional parameter instead when using startOfWeek, floorWeek, ceilWeek
+     *             or roundWeek method. You can also use the 'first_day_of_week' locale setting to change the
+     *             start of week according to current locale selected and implicitly the end of week.
+     *
+     * Set the last day of week
+     *
+     * @param int|string $day week end day (or 'auto' to get the day before the first day of week
+     *                        from Carbon::getLocale() culture).
+     *
+     * @return void
+     */
+    public static function setWeekEndsAt($day)
+    {
+        static::$weekEndsAt = $day === static::WEEK_DAY_AUTO ? $day : max(0, (7 + $day) % 7);
+    }
+
+    /**
+     * Get weekend days
+     *
+     * @return array
+     */
+    public static function getWeekendDays()
+    {
+        return static::$weekendDays;
+    }
+
+    /**
+     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
+     *             You should rather consider week-end is always saturday and sunday, and if you have some custom
+     *             week-end days to handle, give to those days an other name and create a macro for them:
+     *
+     *             ```
+     *             Carbon::macro('isDayOff', function ($date) {
+     *                 return $date->isSunday() || $date->isMonday();
+     *             });
+     *             Carbon::macro('isNotDayOff', function ($date) {
+     *                 return !$date->isDayOff();
+     *             });
+     *             if ($someDate->isDayOff()) ...
+     *             if ($someDate->isNotDayOff()) ...
+     *             // Add 5 not-off days
+     *             $count = 5;
+     *             while ($someDate->isDayOff() || ($count-- > 0)) {
+     *                 $someDate->addDay();
+     *             }
+     *             ```
+     *
+     * Set weekend days
+     *
+     * @param array $days
+     *
+     * @return void
+     */
+    public static function setWeekendDays($days)
+    {
+        static::$weekendDays = $days;
+    }
+
+    /**
+     * Determine if a time string will produce a relative date.
+     *
+     * @param string $time
+     *
+     * @return bool true if time match a relative date, false if absolute or invalid time string
+     */
+    public static function hasRelativeKeywords($time)
+    {
+        if (!$time || strtotime($time) === false) {
+            return false;
+        }
+
+        $date1 = new DateTime('2000-01-01T00:00:00Z');
+        $date1->modify($time);
+        $date2 = new DateTime('2001-12-25T00:00:00Z');
+        $date2->modify($time);
+
+        return $date1 != $date2;
+    }
+
+    ///////////////////////////////////////////////////////////////////
+    /////////////////////// STRING FORMATTING /////////////////////////
+    ///////////////////////////////////////////////////////////////////
+
+    /**
+     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
+     *             You should rather use UTF-8 language packages on every machine.
+     *
+     * Set if UTF8 will be used for localized date/time.
+     *
+     * @param bool $utf8
+     */
+    public static function setUtf8($utf8)
+    {
+        static::$utf8 = $utf8;
+    }
+
+    /**
      * Format the instance with the current locale.  You can set the current
      * locale using setlocale() http://php.net/setlocale.
      *
@@ -1839,308 +1810,6 @@ trait Date
     }
 
     /**
-     * Returns list of calendar formats for ISO formatting.
-     *
-     * @param string|null $locale current locale used if null
-     *
-     * @return array
-     */
-    public function getCalendarFormats($locale = null)
-    {
-        return [
-            'sameDay' => $this->getTranslationMessage('calendar.sameDay', $locale, '[Today at] LT'),
-            'nextDay' => $this->getTranslationMessage('calendar.nextDay', $locale, '[Tomorrow at] LT'),
-            'nextWeek' => $this->getTranslationMessage('calendar.nextWeek', $locale, 'dddd [at] LT'),
-            'lastDay' => $this->getTranslationMessage('calendar.lastDay', $locale, '[Yesterday at] LT'),
-            'lastWeek' => $this->getTranslationMessage('calendar.lastWeek', $locale, '[Last] dddd [at] LT'),
-            'sameElse' => $this->getTranslationMessage('calendar.sameElse', $locale, 'L'),
-        ];
-    }
-
-    /**
-     * Returns a unit of the instance padded with 0 by default or any other string if specified.
-     *
-     * @param string $unit      Carbon unit name
-     * @param int    $length    Length of the output (2 by default)
-     * @param string $padString String to use for padding ("0" by default)
-     * @param int    $padType   Side(s) to pad (STR_PAD_LEFT by default)
-     *
-     * @return string
-     */
-    public function getPaddedUnit($unit, $length = 2, $padString = '0', $padType = STR_PAD_LEFT)
-    {
-        return ($this->$unit < 0 ? '-' : '').str_pad((string) abs($this->$unit), $length, $padString, $padType);
-    }
-
-    /**
-     * Return a property with its ordinal.
-     *
-     * @param string      $key
-     * @param string|null $period
-     *
-     * @return string
-     */
-    public function ordinal(string $key, string $period = null): string
-    {
-        $number = $this->$key;
-        $result = $this->translate('ordinal', [
-            ':number' => $number,
-            ':period' => $period,
-        ]);
-
-        return \strval($result === 'ordinal' ? $number : $result);
-    }
-
-    /**
-     * Returns the alternative number for a given date property if available in the current locale.
-     *
-     * @param string $key date property
-     *
-     * @return string
-     */
-    public function getAltNumber(string $key): string
-    {
-        return $this->translateNumber(\strlen($key) > 1 ? $this->$key : $this->rawFormat('h'));
-    }
-
-    /**
-     * Format as ->format() do (using date replacements patterns from http://php.net/manual/fr/function.date.php)
-     * but translate words whenever possible (months, day names, etc.) using the current locale.
-     *
-     * @param string $format
-     *
-     * @return string
-     */
-    public function translatedFormat(string $format): string
-    {
-        $replacements = static::getFormatsToIsoReplacements();
-        $context = '';
-        $isoFormat = '';
-        $length = mb_strlen($format);
-
-        for ($i = 0; $i < $length; $i++) {
-            $char = mb_substr($format, $i, 1);
-
-            if ($char === '\\') {
-                $replacement = mb_substr($format, $i, 2);
-                $isoFormat .= $replacement;
-                $i++;
-
-                continue;
-            }
-
-            if (!isset($replacements[$char])) {
-                $replacement = preg_match('/^[A-Za-z]$/', $char) ? "\\$char" : $char;
-                $isoFormat .= $replacement;
-                $context .= $replacement;
-
-                continue;
-            }
-
-            $replacement = $replacements[$char];
-
-            if ($replacement === true) {
-                static $contextReplacements = null;
-
-                if ($contextReplacements === null) {
-                    $contextReplacements = [
-                        'm' => 'MM',
-                        'd' => 'DD',
-                        't' => 'D',
-                        'j' => 'D',
-                        'N' => 'e',
-                        'w' => 'e',
-                        'n' => 'M',
-                        'o' => 'YYYY',
-                        'Y' => 'YYYY',
-                        'y' => 'YY',
-                        'g' => 'h',
-                        'G' => 'H',
-                        'h' => 'hh',
-                        'H' => 'HH',
-                        'i' => 'mm',
-                        's' => 'ss',
-                    ];
-                }
-
-                $isoFormat .= '['.$this->rawFormat($char).']';
-                $context .= $contextReplacements[$char] ?? ' ';
-
-                continue;
-            }
-
-            if ($replacement instanceof Closure) {
-                $replacement = '['.$replacement($this).']';
-                $isoFormat .= $replacement;
-                $context .= $replacement;
-
-                continue;
-            }
-
-            $isoFormat .= $replacement;
-            $context .= $replacement;
-        }
-
-        return $this->isoFormat($isoFormat, $context);
-    }
-
-    /**
-     * List of replacements from date() format to isoFormat().
-     *
-     * @return array
-     */
-    public static function getFormatsToIsoReplacements()
-    {
-        static $replacements = null;
-
-        if ($replacements === null) {
-            $replacements = [
-                'd' => true,
-                'D' => 'ddd',
-                'j' => true,
-                'l' => 'dddd',
-                'N' => true,
-                'S' => function ($date) {
-                    $day = $date->rawFormat('j');
-
-                    return str_replace("$day", '', $date->isoFormat('Do'));
-                },
-                'w' => true,
-                'z' => true,
-                'W' => true,
-                'F' => 'MMMM',
-                'm' => true,
-                'M' => 'MMM',
-                'n' => true,
-                't' => true,
-                'L' => true,
-                'o' => true,
-                'Y' => true,
-                'y' => true,
-                'a' => 'a',
-                'A' => 'A',
-                'B' => true,
-                'g' => true,
-                'G' => true,
-                'h' => true,
-                'H' => true,
-                'i' => true,
-                's' => true,
-                'u' => true,
-                'v' => true,
-                'E' => true,
-                'I' => true,
-                'O' => true,
-                'P' => true,
-                'Z' => true,
-                'c' => true,
-                'r' => true,
-                'U' => true,
-            ];
-        }
-
-        return $replacements;
-    }
-
-    /**
-     * Format in the current language using ISO replacement patterns.
-     *
-     * @param string      $format
-     * @param string|null $originalFormat provide context if a chunk has been passed alone
-     *
-     * @return string
-     */
-    public function isoFormat(string $format, string $originalFormat = null): string
-    {
-        $result = '';
-        $length = mb_strlen($format);
-        $originalFormat = $originalFormat ?: $format;
-        $inEscaped = false;
-        $formats = null;
-        $units = null;
-
-        for ($i = 0; $i < $length; $i++) {
-            $char = mb_substr($format, $i, 1);
-
-            if ($char === '\\') {
-                $result .= mb_substr($format, ++$i, 1);
-
-                continue;
-            }
-
-            if ($char === '[' && !$inEscaped) {
-                $inEscaped = true;
-
-                continue;
-            }
-
-            if ($char === ']' && $inEscaped) {
-                $inEscaped = false;
-
-                continue;
-            }
-
-            if ($inEscaped) {
-                $result .= $char;
-
-                continue;
-            }
-
-            $input = mb_substr($format, $i);
-
-            if (preg_match('/^(LTS|LT|[Ll]{1,4})/', $input, $match)) {
-                if ($formats === null) {
-                    $formats = $this->getIsoFormats();
-                }
-
-                $code = $match[0];
-                $sequence = $formats[$code] ?? preg_replace_callback(
-                    '/MMMM|MM|DD|dddd/',
-                    function ($code) {
-                        return mb_substr($code[0], 1);
-                    },
-                    $formats[strtoupper($code)] ?? ''
-                );
-                $rest = mb_substr($format, $i + mb_strlen($code));
-                $format = mb_substr($format, 0, $i).$sequence.$rest;
-                $length = mb_strlen($format);
-                $input = $sequence.$rest;
-            }
-
-            if (preg_match('/^'.CarbonInterface::ISO_FORMAT_REGEXP.'/', $input, $match)) {
-                $code = $match[0];
-
-                if ($units === null) {
-                    $units = static::getIsoUnits();
-                }
-
-                $sequence = $units[$code] ?? '';
-
-                if ($sequence instanceof Closure) {
-                    $sequence = $sequence($this, $originalFormat);
-                } elseif (\is_array($sequence)) {
-                    try {
-                        $sequence = $this->{$sequence[0]}(...$sequence[1]);
-                    } catch (ReflectionException | InvalidArgumentException | BadMethodCallException $e) {
-                        $sequence = '';
-                    }
-                } elseif (\is_string($sequence)) {
-                    $sequence = $this->$sequence ?? $code;
-                }
-
-                $format = mb_substr($format, 0, $i).$sequence.mb_substr($format, $i + mb_strlen($code));
-                $i += mb_strlen("$sequence") - 1;
-                $length = mb_strlen($format);
-                $char = $sequence;
-            }
-
-            $result .= $char;
-        }
-
-        return $result;
-    }
-
-    /**
      * Returns list of locale formats for ISO formatting.
      *
      * @param string|null $locale current locale used if null
@@ -2156,6 +1825,25 @@ trait Date
             'LL' => $this->getTranslationMessage('formats.LL', $locale, 'MMMM D, YYYY'),
             'LLL' => $this->getTranslationMessage('formats.LLL', $locale, 'MMMM D, YYYY h:mm A'),
             'LLLL' => $this->getTranslationMessage('formats.LLLL', $locale, 'dddd, MMMM D, YYYY h:mm A'),
+        ];
+    }
+
+    /**
+     * Returns list of calendar formats for ISO formatting.
+     *
+     * @param string|null $locale current locale used if null
+     *
+     * @return array
+     */
+    public function getCalendarFormats($locale = null)
+    {
+        return [
+            'sameDay' => $this->getTranslationMessage('calendar.sameDay', $locale, '[Today at] LT'),
+            'nextDay' => $this->getTranslationMessage('calendar.nextDay', $locale, '[Tomorrow at] LT'),
+            'nextWeek' => $this->getTranslationMessage('calendar.nextWeek', $locale, 'dddd [at] LT'),
+            'lastDay' => $this->getTranslationMessage('calendar.lastDay', $locale, '[Yesterday at] LT'),
+            'lastWeek' => $this->getTranslationMessage('calendar.lastWeek', $locale, '[Last] dddd [at] LT'),
+            'sameElse' => $this->getTranslationMessage('calendar.sameElse', $locale, 'L'),
         ];
     }
 
@@ -2289,6 +1977,329 @@ trait Date
     }
 
     /**
+     * Returns a unit of the instance padded with 0 by default or any other string if specified.
+     *
+     * @param string $unit      Carbon unit name
+     * @param int    $length    Length of the output (2 by default)
+     * @param string $padString String to use for padding ("0" by default)
+     * @param int    $padType   Side(s) to pad (STR_PAD_LEFT by default)
+     *
+     * @return string
+     */
+    public function getPaddedUnit($unit, $length = 2, $padString = '0', $padType = STR_PAD_LEFT)
+    {
+        return ($this->$unit < 0 ? '-' : '').str_pad((string) abs($this->$unit), $length, $padString, $padType);
+    }
+
+    /**
+     * Return a property with its ordinal.
+     *
+     * @param string      $key
+     * @param string|null $period
+     *
+     * @return string
+     */
+    public function ordinal(string $key, string $period = null): string
+    {
+        $number = $this->$key;
+        $result = $this->translate('ordinal', [
+            ':number' => $number,
+            ':period' => $period,
+        ]);
+
+        return \strval($result === 'ordinal' ? $number : $result);
+    }
+
+    /**
+     * Return the meridiem of the current time in the current locale.
+     *
+     * @param bool $isLower if true, returns lowercase variant if available in the current locale.
+     *
+     * @return string
+     */
+    public function meridiem(bool $isLower = false): string
+    {
+        $hour = $this->hour;
+        $index = $hour < 12 ? 0 : 1;
+
+        if ($isLower) {
+            $key = 'meridiem.'.($index + 2);
+            $result = $this->translate($key);
+
+            if ($result !== $key) {
+                return $result;
+            }
+        }
+
+        $key = "meridiem.$index";
+        $result = $this->translate($key);
+        if ($result === $key) {
+            $result = $this->translate('meridiem', [
+                ':hour' => $this->hour,
+                ':minute' => $this->minute,
+                ':isLower' => $isLower,
+            ]);
+
+            if ($result === 'meridiem') {
+                return $isLower ? $this->latinMeridiem : $this->latinUpperMeridiem;
+            }
+        } elseif ($isLower) {
+            $result = mb_strtolower($result);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Returns the alternative number for a given date property if available in the current locale.
+     *
+     * @param string $key date property
+     *
+     * @return string
+     */
+    public function getAltNumber(string $key): string
+    {
+        return $this->translateNumber(\strlen($key) > 1 ? $this->$key : $this->rawFormat('h'));
+    }
+
+    /**
+     * Format in the current language using ISO replacement patterns.
+     *
+     * @param string      $format
+     * @param string|null $originalFormat provide context if a chunk has been passed alone
+     *
+     * @return string
+     */
+    public function isoFormat(string $format, string $originalFormat = null): string
+    {
+        $result = '';
+        $length = mb_strlen($format);
+        $originalFormat = $originalFormat ?: $format;
+        $inEscaped = false;
+        $formats = null;
+        $units = null;
+
+        for ($i = 0; $i < $length; $i++) {
+            $char = mb_substr($format, $i, 1);
+
+            if ($char === '\\') {
+                $result .= mb_substr($format, ++$i, 1);
+
+                continue;
+            }
+
+            if ($char === '[' && !$inEscaped) {
+                $inEscaped = true;
+
+                continue;
+            }
+
+            if ($char === ']' && $inEscaped) {
+                $inEscaped = false;
+
+                continue;
+            }
+
+            if ($inEscaped) {
+                $result .= $char;
+
+                continue;
+            }
+
+            $input = mb_substr($format, $i);
+
+            if (preg_match('/^(LTS|LT|[Ll]{1,4})/', $input, $match)) {
+                if ($formats === null) {
+                    $formats = $this->getIsoFormats();
+                }
+
+                $code = $match[0];
+                $sequence = $formats[$code] ?? preg_replace_callback(
+                    '/MMMM|MM|DD|dddd/',
+                    function ($code) {
+                        return mb_substr($code[0], 1);
+                    },
+                    $formats[strtoupper($code)] ?? ''
+                );
+                $rest = mb_substr($format, $i + mb_strlen($code));
+                $format = mb_substr($format, 0, $i).$sequence.$rest;
+                $length = mb_strlen($format);
+                $input = $sequence.$rest;
+            }
+
+            if (preg_match('/^'.CarbonInterface::ISO_FORMAT_REGEXP.'/', $input, $match)) {
+                $code = $match[0];
+
+                if ($units === null) {
+                    $units = static::getIsoUnits();
+                }
+
+                $sequence = $units[$code] ?? '';
+
+                if ($sequence instanceof Closure) {
+                    $sequence = $sequence($this, $originalFormat);
+                } elseif (\is_array($sequence)) {
+                    try {
+                        $sequence = $this->{$sequence[0]}(...$sequence[1]);
+                    } catch (ReflectionException | InvalidArgumentException | BadMethodCallException $e) {
+                        $sequence = '';
+                    }
+                } elseif (\is_string($sequence)) {
+                    $sequence = $this->$sequence ?? $code;
+                }
+
+                $format = mb_substr($format, 0, $i).$sequence.mb_substr($format, $i + mb_strlen($code));
+                $i += mb_strlen("$sequence") - 1;
+                $length = mb_strlen($format);
+                $char = $sequence;
+            }
+
+            $result .= $char;
+        }
+
+        return $result;
+    }
+
+    /**
+     * List of replacements from date() format to isoFormat().
+     *
+     * @return array
+     */
+    public static function getFormatsToIsoReplacements()
+    {
+        static $replacements = null;
+
+        if ($replacements === null) {
+            $replacements = [
+                'd' => true,
+                'D' => 'ddd',
+                'j' => true,
+                'l' => 'dddd',
+                'N' => true,
+                'S' => function ($date) {
+                    $day = $date->rawFormat('j');
+
+                    return str_replace("$day", '', $date->isoFormat('Do'));
+                },
+                'w' => true,
+                'z' => true,
+                'W' => true,
+                'F' => 'MMMM',
+                'm' => true,
+                'M' => 'MMM',
+                'n' => true,
+                't' => true,
+                'L' => true,
+                'o' => true,
+                'Y' => true,
+                'y' => true,
+                'a' => 'a',
+                'A' => 'A',
+                'B' => true,
+                'g' => true,
+                'G' => true,
+                'h' => true,
+                'H' => true,
+                'i' => true,
+                's' => true,
+                'u' => true,
+                'v' => true,
+                'E' => true,
+                'I' => true,
+                'O' => true,
+                'P' => true,
+                'Z' => true,
+                'c' => true,
+                'r' => true,
+                'U' => true,
+            ];
+        }
+
+        return $replacements;
+    }
+
+    /**
+     * Format as ->format() do (using date replacements patterns from http://php.net/manual/fr/function.date.php)
+     * but translate words whenever possible (months, day names, etc.) using the current locale.
+     *
+     * @param string $format
+     *
+     * @return string
+     */
+    public function translatedFormat(string $format): string
+    {
+        $replacements = static::getFormatsToIsoReplacements();
+        $context = '';
+        $isoFormat = '';
+        $length = mb_strlen($format);
+
+        for ($i = 0; $i < $length; $i++) {
+            $char = mb_substr($format, $i, 1);
+
+            if ($char === '\\') {
+                $replacement = mb_substr($format, $i, 2);
+                $isoFormat .= $replacement;
+                $i++;
+
+                continue;
+            }
+
+            if (!isset($replacements[$char])) {
+                $replacement = preg_match('/^[A-Za-z]$/', $char) ? "\\$char" : $char;
+                $isoFormat .= $replacement;
+                $context .= $replacement;
+
+                continue;
+            }
+
+            $replacement = $replacements[$char];
+
+            if ($replacement === true) {
+                static $contextReplacements = null;
+
+                if ($contextReplacements === null) {
+                    $contextReplacements = [
+                        'm' => 'MM',
+                        'd' => 'DD',
+                        't' => 'D',
+                        'j' => 'D',
+                        'N' => 'e',
+                        'w' => 'e',
+                        'n' => 'M',
+                        'o' => 'YYYY',
+                        'Y' => 'YYYY',
+                        'y' => 'YY',
+                        'g' => 'h',
+                        'G' => 'H',
+                        'h' => 'hh',
+                        'H' => 'HH',
+                        'i' => 'mm',
+                        's' => 'ss',
+                    ];
+                }
+
+                $isoFormat .= '['.$this->rawFormat($char).']';
+                $context .= $contextReplacements[$char] ?? ' ';
+
+                continue;
+            }
+
+            if ($replacement instanceof Closure) {
+                $replacement = '['.$replacement($this).']';
+                $isoFormat .= $replacement;
+                $context .= $replacement;
+
+                continue;
+            }
+
+            $isoFormat .= $replacement;
+            $context .= $replacement;
+        }
+
+        return $this->isoFormat($isoFormat, $context);
+    }
+
+    /**
      * Returns the offset hour and minute formatted with +/- and a given separator (":" by default).
      * For example, if the time zone is 9 hours 30 minutes, you'll get "+09:30", with "@@" as first
      * argument, "+09@@30", with "" as first argument, "+0930". Negative offset will return something
@@ -2307,6 +2318,151 @@ trait Date
         $minute = str_pad((string) ($minute % static::MINUTES_PER_HOUR), 2, '0', STR_PAD_LEFT);
 
         return "$symbol$hour$separator$minute";
+    }
+
+    protected static function executeStaticCallable($macro, ...$parameters)
+    {
+        return static::bindMacroContext(null, function () use (&$macro, &$parameters) {
+            if ($macro instanceof Closure) {
+                $boundMacro = @Closure::bind($macro, null, static::class);
+
+                return ($boundMacro ?: $macro)(...$parameters);
+            }
+
+            return $macro(...$parameters);
+        });
+    }
+
+    /**
+     * Dynamically handle calls to the class.
+     *
+     * @param string $method     magic method name called
+     * @param array  $parameters parameters list
+     *
+     * @throws BadMethodCallException
+     *
+     * @return mixed
+     */
+    public static function __callStatic($method, $parameters)
+    {
+        if (!static::hasMacro($method)) {
+            foreach (static::getGenericMacros() as $callback) {
+                try {
+                    return static::executeStaticCallable($callback, $method, ...$parameters);
+                } catch (BadMethodCallException $exception) {
+                    continue;
+                }
+            }
+            if (static::isStrictModeEnabled()) {
+                throw new UnknownMethodException(sprintf('%s::%s', static::class, $method));
+            }
+
+            return null;
+        }
+
+        return static::executeStaticCallable(static::$globalMacros[$method], ...$parameters);
+    }
+
+    /**
+     * Set specified unit to new given value.
+     *
+     * @param string $unit  year, month, day, hour, minute, second or microsecond
+     * @param int    $value new value for given unit
+     *
+     * @return static
+     */
+    public function setUnit($unit, $value = null)
+    {
+        $unit = static::singularUnit($unit);
+        $dateUnits = ['year', 'month', 'day'];
+        if (\in_array($unit, $dateUnits)) {
+            return $this->setDate(...array_map(function ($name) use ($unit, $value) {
+                return (int) ($name === $unit ? $value : $this->$name);
+            }, $dateUnits));
+        }
+
+        $units = ['hour', 'minute', 'second', 'micro'];
+        if ($unit === 'millisecond' || $unit === 'milli') {
+            $value *= 1000;
+            $unit = 'micro';
+        } elseif ($unit === 'microsecond') {
+            $unit = 'micro';
+        }
+
+        return $this->setTime(...array_map(function ($name) use ($unit, $value) {
+            return (int) ($name === $unit ? $value : $this->$name);
+        }, $units));
+    }
+
+    /**
+     * Returns standardized singular of a given singular/plural unit name (in English).
+     *
+     * @param string $unit
+     *
+     * @return string
+     */
+    public static function singularUnit(string $unit): string
+    {
+        $unit = rtrim(mb_strtolower($unit), 's');
+
+        if ($unit === 'centurie') {
+            return 'century';
+        }
+
+        if ($unit === 'millennia') {
+            return 'millennium';
+        }
+
+        return $unit;
+    }
+
+    /**
+     * Returns standardized plural of a given singular/plural unit name (in English).
+     *
+     * @param string $unit
+     *
+     * @return string
+     */
+    public static function pluralUnit(string $unit): string
+    {
+        $unit = rtrim(strtolower($unit), 's');
+
+        if ($unit === 'century') {
+            return 'centuries';
+        }
+
+        if ($unit === 'millennium' || $unit === 'millennia') {
+            return 'millennia';
+        }
+
+        return "${unit}s";
+    }
+
+    protected function executeCallable($macro, ...$parameters)
+    {
+        if ($macro instanceof Closure) {
+            $boundMacro = @$macro->bindTo($this, static::class) ?: @$macro->bindTo(null, static::class);
+
+            return ($boundMacro ?: $macro)(...$parameters);
+        }
+
+        return $macro(...$parameters);
+    }
+
+    protected function executeCallableWithContext($macro, ...$parameters)
+    {
+        return static::bindMacroContext($this, function () use (&$macro, &$parameters) {
+            return $this->executeCallable($macro, ...$parameters);
+        });
+    }
+
+    protected static function getGenericMacros()
+    {
+        foreach (static::$globalGenericMacros as $list) {
+            foreach ($list as $macro) {
+                yield $macro;
+            }
+        }
     }
 
     /**
@@ -2484,154 +2640,5 @@ trait Date
 
             return $this->executeCallable($macro, ...$parameters);
         });
-    }
-
-    /**
-     * Set specified unit to new given value.
-     *
-     * @param string $unit  year, month, day, hour, minute, second or microsecond
-     * @param int    $value new value for given unit
-     *
-     * @return static
-     */
-    public function setUnit($unit, $value = null)
-    {
-        $unit = static::singularUnit($unit);
-        $dateUnits = ['year', 'month', 'day'];
-        if (\in_array($unit, $dateUnits)) {
-            return $this->setDate(...array_map(function ($name) use ($unit, $value) {
-                return (int) ($name === $unit ? $value : $this->$name);
-            }, $dateUnits));
-        }
-
-        $units = ['hour', 'minute', 'second', 'micro'];
-        if ($unit === 'millisecond' || $unit === 'milli') {
-            $value *= 1000;
-            $unit = 'micro';
-        } elseif ($unit === 'microsecond') {
-            $unit = 'micro';
-        }
-
-        return $this->setTime(...array_map(function ($name) use ($unit, $value) {
-            return (int) ($name === $unit ? $value : $this->$name);
-        }, $units));
-    }
-
-    /**
-     * Returns standardized singular of a given singular/plural unit name (in English).
-     *
-     * @param string $unit
-     *
-     * @return string
-     */
-    public static function singularUnit(string $unit): string
-    {
-        $unit = rtrim(mb_strtolower($unit), 's');
-
-        if ($unit === 'centurie') {
-            return 'century';
-        }
-
-        if ($unit === 'millennia') {
-            return 'millennium';
-        }
-
-        return $unit;
-    }
-
-    /**
-     * Return the Carbon instance passed through, a now instance in UTC
-     * if null given or parse the input if string given (using current timezone
-     * then switching to UTC).
-     *
-     * @param Carbon|DateTimeInterface|string|null $date
-     *
-     * @return static
-     */
-    protected function resolveUTC($date = null): self
-    {
-        if (!$date) {
-            return static::now('UTC');
-        }
-
-        if (\is_string($date)) {
-            return static::parse($date, $this->getTimezone())->utc();
-        }
-
-        static::expectDateTime($date, ['null', 'string']);
-
-        return $date instanceof self ? $date : static::instance($date)->utc();
-    }
-
-    /**
-     * Set the instance's timezone to UTC.
-     *
-     * @return static
-     */
-    public function utc()
-    {
-        return $this->setTimezone('UTC');
-    }
-
-    /**
-     * Set the instance's timezone from a string or object.
-     *
-     * @param DateTimeZone|string $value
-     *
-     * @return static
-     */
-    public function setTimezone($value)
-    {
-        return parent::setTimezone(static::safeCreateDateTimeZone($value));
-    }
-
-    /**
-     * Creates a DateTimeZone from a string, DateTimeZone or integer offset.
-     *
-     * @param DateTimeZone|string|int|null $object     original value to get CarbonTimeZone from it.
-     * @param DateTimeZone|string|int|null $objectDump dump of the object for error messages.
-     *
-     * @throws InvalidTimeZoneException
-     *
-     * @return CarbonTimeZone|false
-     */
-    protected static function safeCreateDateTimeZone($object, $objectDump = null)
-    {
-        return CarbonTimeZone::instance($object, $objectDump);
-    }
-
-    /**
-     * Get the TimeZone associated with the Carbon instance (as CarbonTimeZone).
-     *
-     * @return CarbonTimeZone
-     *
-     * @link http://php.net/manual/en/datetime.gettimezone.php
-     */
-    public function getTimezone()
-    {
-        return CarbonTimeZone::instance(parent::getTimezone());
-    }
-
-    /**
-     * Throws an exception if the given object is not a DateTime and does not implement DateTimeInterface.
-     *
-     * @param mixed        $date
-     * @param string|array $other
-     *
-     * @throws InvalidTypeException
-     */
-    protected static function expectDateTime($date, $other = [])
-    {
-        $message = 'Expected ';
-        foreach ((array) $other as $expect) {
-            $message .= "$expect, ";
-        }
-
-        if (!$date instanceof DateTime && !$date instanceof DateTimeInterface) {
-            throw new InvalidTypeException(
-                $message.'DateTime or DateTimeInterface, '.
-                (\is_object($date) ? \get_class($date) : \gettype($date)).' given'
-            );
-        }
     }
 }

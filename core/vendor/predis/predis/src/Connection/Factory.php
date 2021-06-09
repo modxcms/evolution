@@ -20,6 +20,8 @@ use Predis\Command\RawCommand;
  */
 class Factory implements FactoryInterface
 {
+    private $defaults = array();
+
     protected $schemes = array(
         'tcp' => 'Predis\Connection\StreamConnection',
         'unix' => 'Predis\Connection\StreamConnection',
@@ -28,15 +30,6 @@ class Factory implements FactoryInterface
         'rediss' => 'Predis\Connection\StreamConnection',
         'http' => 'Predis\Connection\WebdisConnection',
     );
-    private $defaults = array();
-
-    /**
-     * {@inheritdoc}
-     */
-    public function define($scheme, $initializer)
-    {
-        $this->schemes[$scheme] = $this->checkInitializer($initializer);
-    }
 
     /**
      * Checks if the provided argument represents a valid connection class
@@ -69,19 +62,17 @@ class Factory implements FactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function undefine($scheme)
+    public function define($scheme, $initializer)
     {
-        unset($this->schemes[$scheme]);
+        $this->schemes[$scheme] = $this->checkInitializer($initializer);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function aggregate(AggregateConnectionInterface $connection, array $parameters)
+    public function undefine($scheme)
     {
-        foreach ($parameters as $node) {
-            $connection->add($node instanceof NodeConnectionInterface ? $node : $this->create($node));
-        }
+        unset($this->schemes[$scheme]);
     }
 
     /**
@@ -116,6 +107,39 @@ class Factory implements FactoryInterface
         }
 
         return $connection;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function aggregate(AggregateConnectionInterface $connection, array $parameters)
+    {
+        foreach ($parameters as $node) {
+            $connection->add($node instanceof NodeConnectionInterface ? $node : $this->create($node));
+        }
+    }
+
+    /**
+     * Assigns a default set of parameters applied to new connections.
+     *
+     * The set of parameters passed to create a new connection have precedence
+     * over the default values set for the connection factory.
+     *
+     * @param array $parameters Set of connection parameters.
+     */
+    public function setDefaultParameters(array $parameters)
+    {
+        $this->defaults = $parameters;
+    }
+
+    /**
+     * Returns the default set of parameters applied to new connections.
+     *
+     * @return array
+     */
+    public function getDefaultParameters()
+    {
+        return $this->defaults;
     }
 
     /**
@@ -164,28 +188,5 @@ class Factory implements FactoryInterface
                 new RawCommand(array('SELECT', $parameters->database))
             );
         }
-    }
-
-    /**
-     * Assigns a default set of parameters applied to new connections.
-     *
-     * The set of parameters passed to create a new connection have precedence
-     * over the default values set for the connection factory.
-     *
-     * @param array $parameters Set of connection parameters.
-     */
-    public function setDefaultParameters(array $parameters)
-    {
-        $this->defaults = $parameters;
-    }
-
-    /**
-     * Returns the default set of parameters applied to new connections.
-     *
-     * @return array
-     */
-    public function getDefaultParameters()
-    {
-        return $this->defaults;
     }
 }

@@ -137,8 +137,16 @@ abstract class ArchiveDownloader extends FileDownloader
             };
 
             $renameAsOne = false;
-            if (!file_exists($path) || ($filesystem->isDirEmpty($path) && $filesystem->removeDirectoryPhp($path))) {
+            if (!file_exists($path)) {
                 $renameAsOne = true;
+            } elseif ($filesystem->isDirEmpty($path)) {
+                try {
+                    if ($filesystem->removeDirectoryPhp($path)) {
+                        $renameAsOne = true;
+                    }
+                } catch (\RuntimeException $e) {
+                    // ignore error, and simply do not renameAsOne
+                }
             }
 
             $contentDir = $getFolderContent($temporaryDir);

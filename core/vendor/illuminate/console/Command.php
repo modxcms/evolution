@@ -105,24 +105,6 @@ class Command extends SymfonyCommand
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function isHidden()
-    {
-        return $this->hidden;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setHidden(bool $hidden)
-    {
-        parent::setHidden($this->hidden = $hidden);
-
-        return $this;
-    }
-
-    /**
      * Run the console command.
      *
      * @param  \Symfony\Component\Console\Input\InputInterface  $input
@@ -177,6 +159,24 @@ class Command extends SymfonyCommand
         }
 
         return $command;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isHidden()
+    {
+        return $this->hidden;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setHidden(bool $hidden)
+    {
+        parent::setHidden($this->hidden = $hidden);
+
+        return $this;
     }
 
     /**

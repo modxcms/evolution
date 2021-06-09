@@ -62,31 +62,6 @@ class SvnDownloader extends VcsDownloader
     }
 
     /**
-     * Execute an SVN command and try to fix up the process with credentials
-     * if necessary.
-     *
-     * @param  string            $baseUrl Base URL of the repository
-     * @param  string            $command SVN command to run
-     * @param  string            $url     SVN url
-     * @param  string            $cwd     Working directory
-     * @param  string            $path    Target for a checkout
-     * @throws \RuntimeException
-     * @return string
-     */
-    protected function execute(PackageInterface $package, $baseUrl, $command, $url, $cwd = null, $path = null)
-    {
-        $util = new SvnUtil($baseUrl, $this->io, $this->config, $this->process);
-        $util->setCacheCredentials($this->cacheCredentials);
-        try {
-            return $util->execute($command, $url, $cwd, $path, $this->io->isVerbose());
-        } catch (\RuntimeException $e) {
-            throw new \RuntimeException(
-                $package->getPrettyName().' could not be downloaded, '.$e->getMessage()
-            );
-        }
-    }
-
-    /**
      * {@inheritDoc}
      */
     protected function doUpdate(PackageInterface $initial, PackageInterface $target, $path, $url)
@@ -113,9 +88,40 @@ class SvnDownloader extends VcsDownloader
     /**
      * {@inheritDoc}
      */
-    protected function hasMetadataRepository($path)
+    public function getLocalChanges(PackageInterface $package, $path)
     {
-        return is_dir($path.'/.svn');
+        if (!$this->hasMetadataRepository($path)) {
+            return null;
+        }
+
+        $this->process->execute('svn status --ignore-externals', $output, $path);
+
+        return preg_match('{^ *[^X ] +}m', $output) ? $output : null;
+    }
+
+    /**
+     * Execute an SVN command and try to fix up the process with credentials
+     * if necessary.
+     *
+     * @param  string            $baseUrl Base URL of the repository
+     * @param  string            $command SVN command to run
+     * @param  string            $url     SVN url
+     * @param  string            $cwd     Working directory
+     * @param  string            $path    Target for a checkout
+     * @throws \RuntimeException
+     * @return string
+     */
+    protected function execute(PackageInterface $package, $baseUrl, $command, $url, $cwd = null, $path = null)
+    {
+        $util = new SvnUtil($baseUrl, $this->io, $this->config, $this->process);
+        $util->setCacheCredentials($this->cacheCredentials);
+        try {
+            return $util->execute($command, $url, $cwd, $path, $this->io->isVerbose());
+        } catch (\RuntimeException $e) {
+            throw new \RuntimeException(
+                $package->getPrettyName().' could not be downloaded, '.$e->getMessage()
+            );
+        }
     }
 
     /**
@@ -180,27 +186,6 @@ class SvnDownloader extends VcsDownloader
     /**
      * {@inheritDoc}
      */
-    public function getLocalChanges(PackageInterface $package, $path)
-    {
-        if (!$this->hasMetadataRepository($path)) {
-            return null;
-        }
-
-        $this->process->execute('svn status --ignore-externals', $output, $path);
-
-        return preg_match('{^ *[^X ] +}m', $output) ? $output : null;
-    }
-
-    protected function discardChanges($path)
-    {
-        if (0 !== $this->process->execute('svn revert -R .', $output, $path)) {
-            throw new \RuntimeException("Could not reset changes\n\n:".$this->process->getErrorOutput());
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     protected function getCommitLogs($fromReference, $toReference, $path)
     {
         if (preg_match('{@(\d+)$}', $fromReference) && preg_match('{@(\d+)$}', $toReference)) {
@@ -239,5 +224,20 @@ class SvnDownloader extends VcsDownloader
         }
 
         return "Could not retrieve changes between $fromReference and $toReference due to missing revision information";
+    }
+
+    protected function discardChanges($path)
+    {
+        if (0 !== $this->process->execute('svn revert -R .', $output, $path)) {
+            throw new \RuntimeException("Could not reset changes\n\n:".$this->process->getErrorOutput());
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function hasMetadataRepository($path)
+    {
+        return is_dir($path.'/.svn');
     }
 }

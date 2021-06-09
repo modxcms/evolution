@@ -81,16 +81,6 @@ class ArrayLock extends Lock
     }
 
     /**
-     * Releases this lock in disregard of ownership.
-     *
-     * @return void
-     */
-    public function forceRelease()
-    {
-        unset($this->store->locks[$this->name]);
-    }
-
-    /**
      * Returns the owner value written into the driver for this lock.
      *
      * @return string
@@ -98,5 +88,15 @@ class ArrayLock extends Lock
     protected function getCurrentOwner()
     {
         return $this->store->locks[$this->name]['owner'];
+    }
+
+    /**
+     * Releases this lock in disregard of ownership.
+     *
+     * @return void
+     */
+    public function forceRelease()
+    {
+        unset($this->store->locks[$this->name]);
     }
 }

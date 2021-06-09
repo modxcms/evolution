@@ -161,22 +161,6 @@ class DB2Statement implements IteratorAggregate, StatementInterface, Result
     }
 
     /**
-     * @return resource
-     *
-     * @throws DB2Exception
-     */
-    private function createTemporaryFile()
-    {
-        $handle = @tmpfile();
-
-        if ($handle === false) {
-            throw CannotCreateTemporaryFile::new(error_get_last());
-        }
-
-        return $handle;
-    }
-
-    /**
      * {@inheritdoc}
      *
      * @deprecated Use free() instead.
@@ -268,31 +252,6 @@ class DB2Statement implements IteratorAggregate, StatementInterface, Result
     }
 
     /**
-     * @param resource $source
-     * @param resource $target
-     *
-     * @throws DB2Exception
-     */
-    private function copyStreamToStream($source, $target): void
-    {
-        if (@stream_copy_to_stream($source, $target) === false) {
-            throw CannotCopyStreamToStream::new(error_get_last());
-        }
-    }
-
-    /**
-     * @param resource $target
-     *
-     * @throws DB2Exception
-     */
-    private function writeStringToStream(string $string, $target): void
-    {
-        if (@fwrite($target, $string) === false) {
-            throw CannotWriteToTemporaryFile::new(error_get_last());
-        }
-    }
-
-    /**
      * {@inheritdoc}
      *
      * @deprecated Use one of the fetch- or iterate-related methods.
@@ -314,39 +273,6 @@ class DB2Statement implements IteratorAggregate, StatementInterface, Result
     public function getIterator()
     {
         return new StatementIterator($this);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @deprecated Use fetchAllNumeric(), fetchAllAssociative() or fetchFirstColumn() instead.
-     */
-    public function fetchAll($fetchMode = null, $fetchArgument = null, $ctorArgs = null)
-    {
-        $rows = [];
-
-        switch ($fetchMode) {
-            case FetchMode::CUSTOM_OBJECT:
-                while (($row = $this->fetch(...func_get_args())) !== false) {
-                    $rows[] = $row;
-                }
-
-                break;
-
-            case FetchMode::COLUMN:
-                while (($row = $this->fetchColumn()) !== false) {
-                    $rows[] = $row;
-                }
-
-                break;
-
-            default:
-                while (($row = $this->fetch($fetchMode)) !== false) {
-                    $rows[] = $row;
-                }
-        }
-
-        return $rows;
     }
 
     /**
@@ -405,6 +331,39 @@ class DB2Statement implements IteratorAggregate, StatementInterface, Result
     /**
      * {@inheritdoc}
      *
+     * @deprecated Use fetchAllNumeric(), fetchAllAssociative() or fetchFirstColumn() instead.
+     */
+    public function fetchAll($fetchMode = null, $fetchArgument = null, $ctorArgs = null)
+    {
+        $rows = [];
+
+        switch ($fetchMode) {
+            case FetchMode::CUSTOM_OBJECT:
+                while (($row = $this->fetch(...func_get_args())) !== false) {
+                    $rows[] = $row;
+                }
+
+                break;
+
+            case FetchMode::COLUMN:
+                while (($row = $this->fetchColumn()) !== false) {
+                    $rows[] = $row;
+                }
+
+                break;
+
+            default:
+                while (($row = $this->fetch($fetchMode)) !== false) {
+                    $rows[] = $row;
+                }
+        }
+
+        return $rows;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @deprecated Use fetchOne() instead.
      */
     public function fetchColumn($columnIndex = 0)
@@ -416,71 +375,6 @@ class DB2Statement implements IteratorAggregate, StatementInterface, Result
         }
 
         return $row[$columnIndex] ?? null;
-    }
-
-    /**
-     * Casts a stdClass object to the given class name mapping its' properties.
-     *
-     * @param stdClass            $sourceObject     Object to cast from.
-     * @param class-string|object $destinationClass Name of the class or class instance to cast to.
-     * @param mixed[]             $ctorArgs         Arguments to use for constructing the destination class instance.
-     *
-     * @return object
-     *
-     * @throws DB2Exception
-     */
-    private function castObject(stdClass $sourceObject, $destinationClass, array $ctorArgs = [])
-    {
-        if (! is_string($destinationClass)) {
-            if (! is_object($destinationClass)) {
-                throw new DB2Exception(sprintf(
-                    'Destination class has to be of type string or object, %s given.',
-                    gettype($destinationClass)
-                ));
-            }
-        } else {
-            $destinationClass = new ReflectionClass($destinationClass);
-            $destinationClass = $destinationClass->newInstanceArgs($ctorArgs);
-        }
-
-        $sourceReflection           = new ReflectionObject($sourceObject);
-        $destinationClassReflection = new ReflectionObject($destinationClass);
-        /** @var ReflectionProperty[] $destinationProperties */
-        $destinationProperties = array_change_key_case($destinationClassReflection->getProperties(), CASE_LOWER);
-
-        foreach ($sourceReflection->getProperties() as $sourceProperty) {
-            $sourceProperty->setAccessible(true);
-
-            $name  = $sourceProperty->getName();
-            $value = $sourceProperty->getValue($sourceObject);
-
-            // Try to find a case-matching property.
-            if ($destinationClassReflection->hasProperty($name)) {
-                $destinationProperty = $destinationClassReflection->getProperty($name);
-
-                $destinationProperty->setAccessible(true);
-                $destinationProperty->setValue($destinationClass, $value);
-
-                continue;
-            }
-
-            $name = strtolower($name);
-
-            // Try to find a property without matching case.
-            // Fallback for the driver returning either all uppercase or all lowercase column names.
-            if (isset($destinationProperties[$name])) {
-                $destinationProperty = $destinationProperties[$name];
-
-                $destinationProperty->setAccessible(true);
-                $destinationProperty->setValue($destinationClass, $value);
-
-                continue;
-            }
-
-            $destinationClass->$name = $value;
-        }
-
-        return $destinationClass;
     }
 
     /**
@@ -556,5 +450,111 @@ class DB2Statement implements IteratorAggregate, StatementInterface, Result
         db2_free_result($this->stmt);
 
         $this->result = false;
+    }
+
+    /**
+     * Casts a stdClass object to the given class name mapping its' properties.
+     *
+     * @param stdClass            $sourceObject     Object to cast from.
+     * @param class-string|object $destinationClass Name of the class or class instance to cast to.
+     * @param mixed[]             $ctorArgs         Arguments to use for constructing the destination class instance.
+     *
+     * @return object
+     *
+     * @throws DB2Exception
+     */
+    private function castObject(stdClass $sourceObject, $destinationClass, array $ctorArgs = [])
+    {
+        if (! is_string($destinationClass)) {
+            if (! is_object($destinationClass)) {
+                throw new DB2Exception(sprintf(
+                    'Destination class has to be of type string or object, %s given.',
+                    gettype($destinationClass)
+                ));
+            }
+        } else {
+            $destinationClass = new ReflectionClass($destinationClass);
+            $destinationClass = $destinationClass->newInstanceArgs($ctorArgs);
+        }
+
+        $sourceReflection           = new ReflectionObject($sourceObject);
+        $destinationClassReflection = new ReflectionObject($destinationClass);
+        /** @var ReflectionProperty[] $destinationProperties */
+        $destinationProperties = array_change_key_case($destinationClassReflection->getProperties(), CASE_LOWER);
+
+        foreach ($sourceReflection->getProperties() as $sourceProperty) {
+            $sourceProperty->setAccessible(true);
+
+            $name  = $sourceProperty->getName();
+            $value = $sourceProperty->getValue($sourceObject);
+
+            // Try to find a case-matching property.
+            if ($destinationClassReflection->hasProperty($name)) {
+                $destinationProperty = $destinationClassReflection->getProperty($name);
+
+                $destinationProperty->setAccessible(true);
+                $destinationProperty->setValue($destinationClass, $value);
+
+                continue;
+            }
+
+            $name = strtolower($name);
+
+            // Try to find a property without matching case.
+            // Fallback for the driver returning either all uppercase or all lowercase column names.
+            if (isset($destinationProperties[$name])) {
+                $destinationProperty = $destinationProperties[$name];
+
+                $destinationProperty->setAccessible(true);
+                $destinationProperty->setValue($destinationClass, $value);
+
+                continue;
+            }
+
+            $destinationClass->$name = $value;
+        }
+
+        return $destinationClass;
+    }
+
+    /**
+     * @return resource
+     *
+     * @throws DB2Exception
+     */
+    private function createTemporaryFile()
+    {
+        $handle = @tmpfile();
+
+        if ($handle === false) {
+            throw CannotCreateTemporaryFile::new(error_get_last());
+        }
+
+        return $handle;
+    }
+
+    /**
+     * @param resource $source
+     * @param resource $target
+     *
+     * @throws DB2Exception
+     */
+    private function copyStreamToStream($source, $target): void
+    {
+        if (@stream_copy_to_stream($source, $target) === false) {
+            throw CannotCopyStreamToStream::new(error_get_last());
+        }
+    }
+
+    /**
+     * @param resource $target
+     *
+     * @throws DB2Exception
+     */
+    private function writeStringToStream(string $string, $target): void
+    {
+        if (@fwrite($target, $string) === false) {
+            throw CannotWriteToTemporaryFile::new(error_get_last());
+        }
     }
 }

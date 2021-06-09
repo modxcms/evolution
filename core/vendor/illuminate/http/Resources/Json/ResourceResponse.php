@@ -83,16 +83,6 @@ class ResourceResponse implements Responsable
     }
 
     /**
-     * Get the default data wrapper for the resource.
-     *
-     * @return string
-     */
-    protected function wrapper()
-    {
-        return get_class($this->resource)::$wrap;
-    }
-
-    /**
      * Determine if "with" data has been added and our data is unwrapped.
      *
      * @param  array  $data
@@ -105,6 +95,16 @@ class ResourceResponse implements Responsable
         return (! empty($with) || ! empty($additional)) &&
                (! $this->wrapper() ||
                 ! array_key_exists($this->wrapper(), $data));
+    }
+
+    /**
+     * Get the default data wrapper for the resource.
+     *
+     * @return string
+     */
+    protected function wrapper()
+    {
+        return get_class($this->resource)::$wrap;
     }
 
     /**

@@ -107,20 +107,9 @@ class Config
         $this->baseDir = $baseDir;
     }
 
-    /**
-     * Used by long-running custom scripts in composer.json
-     *
-     * "scripts": {
-     *   "watch": [
-     *     "Composer\\Config::disableProcessTimeout",
-     *     "vendor/bin/long-running-script --watch"
-     *   ]
-     * }
-     */
-    public static function disableProcessTimeout()
+    public function setConfigSource(ConfigSourceInterface $source)
     {
-        // Override global timeout set earlier by environment or config
-        ProcessExecutor::setTimeout(0);
+        $this->configSource = $source;
     }
 
     public function getConfigSource()
@@ -128,19 +117,14 @@ class Config
         return $this->configSource;
     }
 
-    public function setConfigSource(ConfigSourceInterface $source)
+    public function setAuthConfigSource(ConfigSourceInterface $source)
     {
-        $this->configSource = $source;
+        $this->authConfigSource = $source;
     }
 
     public function getAuthConfigSource()
     {
         return $this->authConfigSource;
-    }
-
-    public function setAuthConfigSource(ConfigSourceInterface $source)
-    {
-        $this->authConfigSource = $source;
     }
 
     /**
@@ -215,27 +199,6 @@ class Config
             }
             $this->repositories = array_reverse($this->repositories, true);
         }
-    }
-
-    private function disableRepoByName($name)
-    {
-        if (isset($this->repositories[$name])) {
-            unset($this->repositories[$name]);
-        } elseif ($name === 'packagist') { // BC support for default "packagist" named repo
-            unset($this->repositories['packagist.org']);
-        }
-    }
-
-    public function all($flags = 0)
-    {
-        $all = array(
-            'repositories' => $this->getRepositories(),
-        );
-        foreach (array_keys($this->config) as $key) {
-            $all['config'][$key] = $this->get($key, $flags);
-        }
-
-        return $all;
     }
 
     /**
@@ -352,9 +315,9 @@ class Config
             case 'bin-compat':
                 $value = $this->getComposerEnv('COMPOSER_BIN_COMPAT') ?: $this->config[$key];
 
-                if (!in_array($value, array('auto', 'full'))) {
+                if (!in_array($value, array('auto', 'full', 'symlink'))) {
                     throw new \RuntimeException(
-                        "Invalid value for 'bin-compat': {$value}. Expected auto, full"
+                        "Invalid value for 'bin-compat': {$value}. Expected auto, full or symlink"
                     );
                 }
 
@@ -403,22 +366,35 @@ class Config
         }
     }
 
-    /**
-     * Reads the value of a Composer environment variable
-     *
-     * This should be used to read COMPOSER_ environment variables
-     * that overload config values.
-     *
-     * @param  string      $var
-     * @return string|bool
-     */
-    private function getComposerEnv($var)
+    public function all($flags = 0)
     {
-        if ($this->useEnvironment) {
-            return getenv($var);
+        $all = array(
+            'repositories' => $this->getRepositories(),
+        );
+        foreach (array_keys($this->config) as $key) {
+            $all['config'][$key] = $this->get($key, $flags);
         }
 
-        return false;
+        return $all;
+    }
+
+    public function raw()
+    {
+        return array(
+            'repositories' => $this->getRepositories(),
+            'config' => $this->config,
+        );
+    }
+
+    /**
+     * Checks whether a setting exists
+     *
+     * @param  string $key
+     * @return bool
+     */
+    public function has($key)
+    {
+        return array_key_exists($key, $this->config);
     }
 
     /**
@@ -458,23 +434,31 @@ class Config
         return $this->baseDir . '/' . $path;
     }
 
-    public function raw()
+    /**
+     * Reads the value of a Composer environment variable
+     *
+     * This should be used to read COMPOSER_ environment variables
+     * that overload config values.
+     *
+     * @param  string      $var
+     * @return string|bool
+     */
+    private function getComposerEnv($var)
     {
-        return array(
-            'repositories' => $this->getRepositories(),
-            'config' => $this->config,
-        );
+        if ($this->useEnvironment) {
+            return getenv($var);
+        }
+
+        return false;
     }
 
-    /**
-     * Checks whether a setting exists
-     *
-     * @param  string $key
-     * @return bool
-     */
-    public function has($key)
+    private function disableRepoByName($name)
     {
-        return array_key_exists($key, $this->config);
+        if (isset($this->repositories[$name])) {
+            unset($this->repositories[$name]);
+        } elseif ($name === 'packagist') { // BC support for default "packagist" named repo
+            unset($this->repositories['packagist.org']);
+        }
     }
 
     /**
@@ -513,5 +497,21 @@ class Config
                 $this->warnedHosts[$host] = true;
             }
         }
+    }
+
+    /**
+     * Used by long-running custom scripts in composer.json
+     *
+     * "scripts": {
+     *   "watch": [
+     *     "Composer\\Config::disableProcessTimeout",
+     *     "vendor/bin/long-running-script --watch"
+     *   ]
+     * }
+     */
+    public static function disableProcessTimeout()
+    {
+        // Override global timeout set earlier by environment or config
+        ProcessExecutor::setTimeout(0);
     }
 }

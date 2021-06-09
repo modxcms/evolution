@@ -28,6 +28,8 @@ abstract class HttpClientTestCase extends TestCase
         TestHttpServer::start();
     }
 
+    abstract protected function getHttpClient(string $testCase): HttpClientInterface;
+
     public function testGetRequest()
     {
         $client = $this->getHttpClient(__FUNCTION__);
@@ -66,8 +68,6 @@ abstract class HttpClientTestCase extends TestCase
         $this->expectException(TransportExceptionInterface::class);
         $response->getContent();
     }
-
-    abstract protected function getHttpClient(string $testCase): HttpClientInterface;
 
     public function testHeadRequest()
     {

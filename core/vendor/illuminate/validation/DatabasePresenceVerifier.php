@@ -56,14 +56,19 @@ class DatabasePresenceVerifier implements DatabasePresenceVerifierInterface
     }
 
     /**
-     * Get a query builder for the given table.
+     * Count the number of objects in a collection with the given values.
      *
-     * @param  string  $table
-     * @return \Illuminate\Database\Query\Builder
+     * @param  string  $collection
+     * @param  string  $column
+     * @param  array  $values
+     * @param  array  $extra
+     * @return int
      */
-    protected function table($table)
+    public function getMultiCount($collection, $column, array $values, array $extra = [])
     {
-        return $this->db->connection($this->connection)->table($table)->useWritePdo();
+        $query = $this->table($collection)->whereIn($column, $values);
+
+        return $this->addConditions($query, $extra)->distinct()->count($column);
     }
 
     /**
@@ -110,19 +115,14 @@ class DatabasePresenceVerifier implements DatabasePresenceVerifierInterface
     }
 
     /**
-     * Count the number of objects in a collection with the given values.
+     * Get a query builder for the given table.
      *
-     * @param  string  $collection
-     * @param  string  $column
-     * @param  array  $values
-     * @param  array  $extra
-     * @return int
+     * @param  string  $table
+     * @return \Illuminate\Database\Query\Builder
      */
-    public function getMultiCount($collection, $column, array $values, array $extra = [])
+    protected function table($table)
     {
-        $query = $this->table($collection)->whereIn($column, $values);
-
-        return $this->addConditions($query, $extra)->distinct()->count($column);
+        return $this->db->connection($this->connection)->table($table)->useWritePdo();
     }
 
     /**

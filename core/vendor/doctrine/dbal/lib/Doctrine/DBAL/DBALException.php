@@ -160,6 +160,32 @@ class DBALException extends \Exception
     }
 
     /**
+     * @deprecated
+     *
+     * @return Exception
+     */
+    public static function driverException(Driver $driver, Throwable $driverEx)
+    {
+        return static::wrapException($driver, $driverEx, 'An exception occurred in driver: ' . $driverEx->getMessage());
+    }
+
+    /**
+     * @return Exception
+     */
+    private static function wrapException(Driver $driver, Throwable $driverEx, string $msg)
+    {
+        if ($driverEx instanceof DriverException) {
+            return $driverEx;
+        }
+
+        if ($driver instanceof ExceptionConverterDriver && $driverEx instanceof DeprecatedDriverException) {
+            return $driver->convertException($msg, $driverEx);
+        }
+
+        return new Exception($msg, 0, $driverEx);
+    }
+
+    /**
      * Returns a human-readable representation of an array of parameters.
      * This properly handles binary data by returning a hex representation.
      *
@@ -183,32 +209,6 @@ class DBALException extends \Exception
 
             return $json;
         }, $params)) . ']';
-    }
-
-    /**
-     * @return Exception
-     */
-    private static function wrapException(Driver $driver, Throwable $driverEx, string $msg)
-    {
-        if ($driverEx instanceof DriverException) {
-            return $driverEx;
-        }
-
-        if ($driver instanceof ExceptionConverterDriver && $driverEx instanceof DeprecatedDriverException) {
-            return $driver->convertException($msg, $driverEx);
-        }
-
-        return new Exception($msg, 0, $driverEx);
-    }
-
-    /**
-     * @deprecated
-     *
-     * @return Exception
-     */
-    public static function driverException(Driver $driver, Throwable $driverEx)
-    {
-        return static::wrapException($driver, $driverEx, 'An exception occurred in driver: ' . $driverEx->getMessage());
     }
 
     /**

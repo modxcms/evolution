@@ -58,16 +58,6 @@ class Option
     }
 
     /**
-     * Check if the value is valid.
-     *
-     * This base class does no checking, but this method is overridden by most other options.
-     * @return  void
-     */
-    public function check()
-    {
-    }
-
-    /**
      * Get Id.
      *
      * @return  string  The id of the option
@@ -87,6 +77,21 @@ class Option
         return $this->defaultValue;
     }
 
+
+    /**
+     * Get value, or default value if value has not been explicitly set.
+     *
+     * @return  mixed  The value/default value
+     */
+    public function getValue()
+    {
+        if (!$this->isExplicitlySet) {
+            return $this->defaultValue;
+        } else {
+            return $this->value;
+        }
+    }
+
     /**
      * Get to know if value has been set.
      *
@@ -97,19 +102,26 @@ class Option
         return $this->isExplicitlySet;
     }
 
-    public function markDeprecated()
+    /**
+     * Set value
+     *
+     * @param  mixed  $value  The value
+     * @return  void
+     */
+    public function setValue($value)
     {
-        $this->deprecated = true;
+        $this->isExplicitlySet = true;
+        $this->value = $value;
     }
 
-    public function isDeprecated()
+    /**
+     * Check if the value is valid.
+     *
+     * This base class does no checking, but this method is overridden by most other options.
+     * @return  void
+     */
+    public function check()
     {
-        return $this->deprecated;
-    }
-
-    public function getValueForPrint()
-    {
-        return print_r($this->getValue(), true);
     }
 
     /**
@@ -129,30 +141,19 @@ class Option
         }
     }
 
-    /**
-     * Get value, or default value if value has not been explicitly set.
-     *
-     * @return  mixed  The value/default value
-     */
-    public function getValue()
+    public function markDeprecated()
     {
-        if (!$this->isExplicitlySet) {
-            return $this->defaultValue;
-        } else {
-            return $this->value;
-        }
+        $this->deprecated = true;
     }
 
-    /**
-     * Set value
-     *
-     * @param  mixed  $value  The value
-     * @return  void
-     */
-    public function setValue($value)
+    public function isDeprecated()
     {
-        $this->isExplicitlySet = true;
-        $this->value = $value;
+        return $this->deprecated;
+    }
+
+    public function getValueForPrint()
+    {
+        return print_r($this->getValue(), true);
     }
 
 

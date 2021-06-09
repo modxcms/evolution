@@ -39,40 +39,6 @@ class DB2SchemaManager extends AbstractSchemaManager
     /**
      * {@inheritdoc}
      */
-    protected function _getPortableTablesList($tables)
-    {
-        $tableNames = [];
-        foreach ($tables as $tableRow) {
-            $tableRow     = array_change_key_case($tableRow, CASE_LOWER);
-            $tableNames[] = $tableRow['name'];
-        }
-
-        return $tableNames;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function listTableDetails($name): Table
-    {
-        $table = parent::listTableDetails($name);
-
-        $platform = $this->_platform;
-        assert($platform instanceof DB2Platform);
-        $sql = $platform->getListTableCommentsSQL($name);
-
-        $tableOptions = $this->_conn->fetchAssociative($sql);
-
-        if ($tableOptions !== false) {
-            $table->addOption('comment', $tableOptions['REMARKS']);
-        }
-
-        return $table;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function _getPortableTableColumnDefinition($tableColumn)
     {
         $tableColumn = array_change_key_case($tableColumn, CASE_LOWER);
@@ -143,6 +109,20 @@ class DB2SchemaManager extends AbstractSchemaManager
         }
 
         return new Column($tableColumn['colname'], Type::getType($type), $options);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function _getPortableTablesList($tables)
+    {
+        $tableNames = [];
+        foreach ($tables as $tableRow) {
+            $tableRow     = array_change_key_case($tableRow, CASE_LOWER);
+            $tableNames[] = $tableRow['name'];
+        }
+
+        return $tableNames;
     }
 
     /**
@@ -235,5 +215,25 @@ class DB2SchemaManager extends AbstractSchemaManager
         }
 
         return new View($view['name'], $sql);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function listTableDetails($name): Table
+    {
+        $table = parent::listTableDetails($name);
+
+        $platform = $this->_platform;
+        assert($platform instanceof DB2Platform);
+        $sql = $platform->getListTableCommentsSQL($name);
+
+        $tableOptions = $this->_conn->fetchAssociative($sql);
+
+        if ($tableOptions !== false) {
+            $table->addOption('comment', $tableOptions['REMARKS']);
+        }
+
+        return $table;
     }
 }

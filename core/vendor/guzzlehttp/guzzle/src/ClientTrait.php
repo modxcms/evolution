@@ -13,6 +13,21 @@ use Psr\Http\Message\UriInterface;
 trait ClientTrait
 {
     /**
+     * Create and send an HTTP request.
+     *
+     * Use an absolute path to override the base path of the client, or a
+     * relative path to append to the base path of the client. The URL can
+     * contain the query string as well.
+     *
+     * @param string              $method  HTTP method.
+     * @param string|UriInterface $uri     URI object or string.
+     * @param array               $options Request options to apply.
+     *
+     * @throws GuzzleException
+     */
+    abstract public function request(string $method, $uri, array $options = []): ResponseInterface;
+
+    /**
      * Create and send an HTTP GET request.
      *
      * Use an absolute path to override the base path of the client, or a
@@ -28,21 +43,6 @@ trait ClientTrait
     {
         return $this->request('GET', $uri, $options);
     }
-
-    /**
-     * Create and send an HTTP request.
-     *
-     * Use an absolute path to override the base path of the client, or a
-     * relative path to append to the base path of the client. The URL can
-     * contain the query string as well.
-     *
-     * @param string              $method  HTTP method.
-     * @param string|UriInterface $uri     URI object or string.
-     * @param array               $options Request options to apply.
-     *
-     * @throws GuzzleException
-     */
-    abstract public function request(string $method, $uri, array $options = []): ResponseInterface;
 
     /**
      * Create and send an HTTP HEAD request.
@@ -130,6 +130,20 @@ trait ClientTrait
     }
 
     /**
+     * Create and send an asynchronous HTTP request.
+     *
+     * Use an absolute path to override the base path of the client, or a
+     * relative path to append to the base path of the client. The URL can
+     * contain the query string as well. Use an array to provide a URL
+     * template and additional variables to use in the URL template expansion.
+     *
+     * @param string              $method  HTTP method
+     * @param string|UriInterface $uri     URI object or string.
+     * @param array               $options Request options to apply.
+     */
+    abstract public function requestAsync(string $method, $uri, array $options = []): PromiseInterface;
+
+    /**
      * Create and send an asynchronous HTTP GET request.
      *
      * Use an absolute path to override the base path of the client, or a
@@ -144,20 +158,6 @@ trait ClientTrait
     {
         return $this->requestAsync('GET', $uri, $options);
     }
-
-    /**
-     * Create and send an asynchronous HTTP request.
-     *
-     * Use an absolute path to override the base path of the client, or a
-     * relative path to append to the base path of the client. The URL can
-     * contain the query string as well. Use an array to provide a URL
-     * template and additional variables to use in the URL template expansion.
-     *
-     * @param string              $method  HTTP method
-     * @param string|UriInterface $uri     URI object or string.
-     * @param array               $options Request options to apply.
-     */
-    abstract public function requestAsync(string $method, $uri, array $options = []): PromiseInterface;
 
     /**
      * Create and send an asynchronous HTTP HEAD request.

@@ -130,6 +130,43 @@ class BaseDependencyCommand extends BaseCommand
     }
 
     /**
+     * Assembles and prints a bottom-up table of the dependencies.
+     *
+     * @param OutputInterface $output
+     * @param array           $results
+     */
+    protected function printTable(OutputInterface $output, $results)
+    {
+        $table = array();
+        $doubles = array();
+        do {
+            $queue = array();
+            $rows = array();
+            foreach ($results as $result) {
+                /**
+                 * @var PackageInterface $package
+                 * @var Link             $link
+                 */
+                list($package, $link, $children) = $result;
+                $unique = (string) $link;
+                if (isset($doubles[$unique])) {
+                    continue;
+                }
+                $doubles[$unique] = true;
+                $version = $package->getPrettyVersion() === RootPackage::DEFAULT_PRETTY_VERSION ? '-' : $package->getPrettyVersion();
+                $rows[] = array($package->getPrettyName(), $version, $link->getDescription(), sprintf('%s (%s)', $link->getTarget(), $link->getPrettyConstraint()));
+                if ($children) {
+                    $queue = array_merge($queue, $children);
+                }
+            }
+            $results = $queue;
+            $table = array_merge($rows, $table);
+        } while (!empty($results));
+
+        $this->renderTable($table, $output);
+    }
+
+    /**
      * Init styles for tree
      *
      * @param OutputInterface $output
@@ -191,42 +228,5 @@ class BaseDependencyCommand extends BaseCommand
         }
 
         $io->write($line);
-    }
-
-    /**
-     * Assembles and prints a bottom-up table of the dependencies.
-     *
-     * @param OutputInterface $output
-     * @param array           $results
-     */
-    protected function printTable(OutputInterface $output, $results)
-    {
-        $table = array();
-        $doubles = array();
-        do {
-            $queue = array();
-            $rows = array();
-            foreach ($results as $result) {
-                /**
-                 * @var PackageInterface $package
-                 * @var Link             $link
-                 */
-                list($package, $link, $children) = $result;
-                $unique = (string) $link;
-                if (isset($doubles[$unique])) {
-                    continue;
-                }
-                $doubles[$unique] = true;
-                $version = $package->getPrettyVersion() === RootPackage::DEFAULT_PRETTY_VERSION ? '-' : $package->getPrettyVersion();
-                $rows[] = array($package->getPrettyName(), $version, $link->getDescription(), sprintf('%s (%s)', $link->getTarget(), $link->getPrettyConstraint()));
-                if ($children) {
-                    $queue = array_merge($queue, $children);
-                }
-            }
-            $results = $queue;
-            $table = array_merge($rows, $table);
-        } while (!empty($results));
-
-        $this->renderTable($table, $output);
     }
 }

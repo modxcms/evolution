@@ -60,17 +60,6 @@ class Repository implements ArrayAccess, CacheContract
     }
 
     /**
-     * Determine if an item doesn't exist in the cache.
-     *
-     * @param  string  $key
-     * @return bool
-     */
-    public function missing($key)
-    {
-        return ! $this->has($key);
-    }
-
-    /**
      * Determine if an item exists in the cache.
      *
      * @param  string  $key
@@ -79,6 +68,17 @@ class Repository implements ArrayAccess, CacheContract
     public function has($key)
     {
         return ! is_null($this->get($key));
+    }
+
+    /**
+     * Determine if an item doesn't exist in the cache.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    public function missing($key)
+    {
+        return ! $this->has($key);
     }
 
     /**
@@ -130,6 +130,20 @@ class Repository implements ArrayAccess, CacheContract
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getMultiple($keys, $default = null)
+    {
+        $defaults = [];
+
+        foreach ($keys as $key) {
+            $defaults[$key] = $default;
+        }
+
+        return $this->many($defaults);
+    }
+
+    /**
      * Handle a result for the "many" method.
      *
      * @param  array  $keys
@@ -157,44 +171,6 @@ class Repository implements ArrayAccess, CacheContract
     }
 
     /**
-     * Fire an event for this cache instance.
-     *
-     * @param  string  $event
-     * @return void
-     */
-    protected function event($event)
-    {
-        if (isset($this->events)) {
-            $this->events->dispatch($event);
-        }
-    }
-
-    /**
-     * Format the key for a cache item.
-     *
-     * @param  string  $key
-     * @return string
-     */
-    protected function itemKey($key)
-    {
-        return $key;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getMultiple($keys, $default = null)
-    {
-        $defaults = [];
-
-        foreach ($keys as $key) {
-            $defaults[$key] = $default;
-        }
-
-        return $this->many($defaults);
-    }
-
-    /**
      * Retrieve an item from the cache and delete it.
      *
      * @param  string  $key
@@ -206,29 +182,6 @@ class Repository implements ArrayAccess, CacheContract
         return tap($this->get($key, $default), function () use ($key) {
             $this->forget($key);
         });
-    }
-
-    /**
-     * Remove an item from the cache.
-     *
-     * @param  string  $key
-     * @return bool
-     */
-    public function forget($key)
-    {
-        return tap($this->store->forget($this->itemKey($key)), function ($result) use ($key) {
-            if ($result) {
-                $this->event(new KeyForgotten($key));
-            }
-        });
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function set($key, $value, $ttl = null)
-    {
-        return $this->put($key, $value, $ttl);
     }
 
     /**
@@ -262,6 +215,14 @@ class Repository implements ArrayAccess, CacheContract
         }
 
         return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function set($key, $value, $ttl = null)
+    {
+        return $this->put($key, $value, $ttl);
     }
 
     /**
@@ -306,57 +267,6 @@ class Repository implements ArrayAccess, CacheContract
 
         foreach ($values as $key => $value) {
             if (! $this->forever($key, $value)) {
-                $result = false;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Store an item in the cache indefinitely.
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function forever($key, $value)
-    {
-        $result = $this->store->forever($this->itemKey($key), $value);
-
-        if ($result) {
-            $this->event(new KeyWritten($key, $value));
-        }
-
-        return $result;
-    }
-
-    /**
-     * Calculate the number of seconds for the given TTL.
-     *
-     * @param  \DateTimeInterface|\DateInterval|int  $ttl
-     * @return int
-     */
-    protected function getSeconds($ttl)
-    {
-        $duration = $this->parseDateInterval($ttl);
-
-        if ($duration instanceof DateTimeInterface) {
-            $duration = Carbon::now()->diffInRealSeconds($duration, false);
-        }
-
-        return (int) $duration > 0 ? $duration : 0;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteMultiple($keys)
-    {
-        $result = true;
-
-        foreach ($keys as $key) {
-            if (! $this->forget($key)) {
                 $result = false;
             }
         }
@@ -436,6 +346,24 @@ class Repository implements ArrayAccess, CacheContract
     }
 
     /**
+     * Store an item in the cache indefinitely.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return bool
+     */
+    public function forever($key, $value)
+    {
+        $result = $this->store->forever($this->itemKey($key), $value);
+
+        if ($result) {
+            $this->event(new KeyWritten($key, $value));
+        }
+
+        return $result;
+    }
+
+    /**
      * Get an item from the cache, or execute the given Closure and store the result.
      *
      * @param  string  $key
@@ -495,11 +423,42 @@ class Repository implements ArrayAccess, CacheContract
     }
 
     /**
+     * Remove an item from the cache.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    public function forget($key)
+    {
+        return tap($this->store->forget($this->itemKey($key)), function ($result) use ($key) {
+            if ($result) {
+                $this->event(new KeyForgotten($key));
+            }
+        });
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function delete($key)
     {
         return $this->forget($key);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteMultiple($keys)
+    {
+        $result = true;
+
+        foreach ($keys as $key) {
+            if (! $this->forget($key)) {
+                $result = false;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -531,6 +490,34 @@ class Repository implements ArrayAccess, CacheContract
         }
 
         return $cache->setDefaultCacheTime($this->default);
+    }
+
+    /**
+     * Format the key for a cache item.
+     *
+     * @param  string  $key
+     * @return string
+     */
+    protected function itemKey($key)
+    {
+        return $key;
+    }
+
+    /**
+     * Calculate the number of seconds for the given TTL.
+     *
+     * @param  \DateTimeInterface|\DateInterval|int  $ttl
+     * @return int
+     */
+    protected function getSeconds($ttl)
+    {
+        $duration = $this->parseDateInterval($ttl);
+
+        if ($duration instanceof DateTimeInterface) {
+            $duration = Carbon::now()->diffInRealSeconds($duration, false);
+        }
+
+        return (int) $duration > 0 ? $duration : 0;
     }
 
     /**
@@ -574,6 +561,19 @@ class Repository implements ArrayAccess, CacheContract
     public function getStore()
     {
         return $this->store;
+    }
+
+    /**
+     * Fire an event for this cache instance.
+     *
+     * @param  string  $event
+     * @return void
+     */
+    protected function event($event)
+    {
+        if (isset($this->events)) {
+            $this->events->dispatch($event);
+        }
     }
 
     /**

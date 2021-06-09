@@ -29,6 +29,14 @@ class NullOutput implements OutputInterface
     /**
      * {@inheritdoc}
      */
+    public function setFormatter(OutputFormatterInterface $formatter)
+    {
+        // do nothing
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getFormatter()
     {
         if ($this->formatter) {
@@ -36,14 +44,6 @@ class NullOutput implements OutputInterface
         }
         // to comply with the interface we must return a OutputFormatterInterface
         return $this->formatter = new NullOutputFormatter();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setFormatter(OutputFormatterInterface $formatter)
-    {
-        // do nothing
     }
 
     /**

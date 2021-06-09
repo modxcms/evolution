@@ -57,11 +57,66 @@ class FirePHPHandler extends AbstractProcessingHandler
     protected static $sendHeaders = true;
 
     /**
+     * Base header creation function used by init headers & record headers
+     *
+     * @param  array  $meta    Wildfire Plugin, Protocol & Structure Indexes
+     * @param  string $message Log message
+     * @return array  Complete header string ready for the client as key and message as value
+     */
+    protected function createHeader(array $meta, string $message): array
+    {
+        $header = sprintf('%s-%s', static::HEADER_PREFIX, join('-', $meta));
+
+        return [$header => $message];
+    }
+
+    /**
+     * Creates message header from record
+     *
+     * @see createHeader()
+     */
+    protected function createRecordHeader(array $record): array
+    {
+        // Wildfire is extensible to support multiple protocols & plugins in a single request,
+        // but we're not taking advantage of that (yet), so we're using "1" for simplicity's sake.
+        return $this->createHeader(
+            [1, 1, 1, self::$messageIndex++],
+            $record['formatted']
+        );
+    }
+
+    /**
      * {@inheritDoc}
      */
     protected function getDefaultFormatter(): FormatterInterface
     {
         return new WildfireFormatter();
+    }
+
+    /**
+     * Wildfire initialization headers to enable message parsing
+     *
+     * @see createHeader()
+     * @see sendHeader()
+     */
+    protected function getInitHeaders(): array
+    {
+        // Initial payload consists of required headers for Wildfire
+        return array_merge(
+            $this->createHeader(['Protocol', 1], static::PROTOCOL_URI),
+            $this->createHeader([1, 'Structure', 1], static::STRUCTURE_URI),
+            $this->createHeader([1, 'Plugin', 1], static::PLUGIN_URI)
+        );
+    }
+
+    /**
+     * Send header string to the client
+     */
+    protected function sendHeader(string $header, string $content): void
+    {
+        if (!headers_sent() && self::$sendHeaders) {
+            header(sprintf('%s: %s', $header, $content));
+        }
     }
 
     /**
@@ -107,60 +162,5 @@ class FirePHPHandler extends AbstractProcessingHandler
         }
 
         return isset($_SERVER['HTTP_X_FIREPHP_VERSION']);
-    }
-
-    /**
-     * Wildfire initialization headers to enable message parsing
-     *
-     * @see createHeader()
-     * @see sendHeader()
-     */
-    protected function getInitHeaders(): array
-    {
-        // Initial payload consists of required headers for Wildfire
-        return array_merge(
-            $this->createHeader(['Protocol', 1], static::PROTOCOL_URI),
-            $this->createHeader([1, 'Structure', 1], static::STRUCTURE_URI),
-            $this->createHeader([1, 'Plugin', 1], static::PLUGIN_URI)
-        );
-    }
-
-    /**
-     * Base header creation function used by init headers & record headers
-     *
-     * @param  array  $meta    Wildfire Plugin, Protocol & Structure Indexes
-     * @param  string $message Log message
-     * @return array  Complete header string ready for the client as key and message as value
-     */
-    protected function createHeader(array $meta, string $message): array
-    {
-        $header = sprintf('%s-%s', static::HEADER_PREFIX, join('-', $meta));
-
-        return [$header => $message];
-    }
-
-    /**
-     * Send header string to the client
-     */
-    protected function sendHeader(string $header, string $content): void
-    {
-        if (!headers_sent() && self::$sendHeaders) {
-            header(sprintf('%s: %s', $header, $content));
-        }
-    }
-
-    /**
-     * Creates message header from record
-     *
-     * @see createHeader()
-     */
-    protected function createRecordHeader(array $record): array
-    {
-        // Wildfire is extensible to support multiple protocols & plugins in a single request,
-        // but we're not taking advantage of that (yet), so we're using "1" for simplicity's sake.
-        return $this->createHeader(
-            [1, 1, 1, self::$messageIndex++],
-            $record['formatted']
-        );
     }
 }

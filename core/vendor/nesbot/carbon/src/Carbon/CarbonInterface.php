@@ -634,17 +634,16 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     // <methods>
 
     /**
-     * Create a new Carbon instance.
+     * Dynamically handle calls to the class.
      *
-     * Please see the testing aids section (specifically static::setTestNow())
-     * for more on the possibility of this constructor returning a test instance.
+     * @param string $method     magic method name called
+     * @param array  $parameters parameters list
      *
-     * @param DateTimeInterface|string|null $time
-     * @param DateTimeZone|string|null      $tz
+     * @throws UnknownMethodException|BadMethodCallException|ReflectionException|Throwable
      *
-     * @throws InvalidFormatException
+     * @return mixed
      */
-    public function __construct($time = null, $tz = null);
+    public function __call($method, $parameters);
 
     /**
      * Dynamically handle calls to the class.
@@ -659,6 +658,63 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     public static function __callStatic($method, $parameters);
 
     /**
+     * Update constructedObjectId on cloned.
+     */
+    public function __clone();
+
+    /**
+     * Create a new Carbon instance.
+     *
+     * Please see the testing aids section (specifically static::setTestNow())
+     * for more on the possibility of this constructor returning a test instance.
+     *
+     * @param DateTimeInterface|string|null $time
+     * @param DateTimeZone|string|null      $tz
+     *
+     * @throws InvalidFormatException
+     */
+    public function __construct($time = null, $tz = null);
+
+    /**
+     * Show truthy properties on var_dump().
+     *
+     * @return array
+     */
+    public function __debugInfo();
+
+    /**
+     * Get a part of the Carbon object
+     *
+     * @param string $name
+     *
+     * @throws UnknownGetterException
+     *
+     * @return string|int|bool|DateTimeZone|null
+     */
+    public function __get($name);
+
+    /**
+     * Check if an attribute exists on the object
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function __isset($name);
+
+    /**
+     * Set a part of the Carbon object
+     *
+     * @param string                  $name
+     * @param string|int|DateTimeZone $value
+     *
+     * @throws UnknownSetterException|ReflectionException
+     *
+     * @return void
+     */
+    public function __set($name, $value);
+
+    /**
      * The __set_state handler.
      *
      * @param string|array $dump
@@ -666,6 +722,183 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      * @return static
      */
     public static function __set_state($dump);
+
+    /**
+     * Returns the list of properties to dump on serialize() called on.
+     *
+     * @return array
+     */
+    public function __sleep();
+
+    /**
+     * Format the instance as a string using the set format
+     *
+     * @example
+     * ```
+     * echo Carbon::now(); // Carbon instances can be casted to string
+     * ```
+     *
+     * @return string
+     */
+    public function __toString();
+
+    /**
+     * Add given units or interval to the current instance.
+     *
+     * @example $date->add('hour', 3)
+     * @example $date->add(15, 'days')
+     * @example $date->add(CarbonInterval::days(4))
+     *
+     * @param string|DateInterval|Closure|CarbonConverterInterface $unit
+     * @param int                                                  $value
+     * @param bool|null                                            $overflow
+     *
+     * @return static
+     */
+    public function add($unit, $value = 1, $overflow = null);
+
+    /**
+     * Add seconds to the instance using timestamp. Positive $value travels
+     * forward while negative $value travels into the past.
+     *
+     * @param string $unit
+     * @param int    $value
+     *
+     * @return static
+     */
+    public function addRealUnit($unit, $value = 1);
+
+    /**
+     * Add given units to the current instance.
+     *
+     * @param string    $unit
+     * @param int       $value
+     * @param bool|null $overflow
+     *
+     * @return static
+     */
+    public function addUnit($unit, $value = 1, $overflow = null);
+
+    /**
+     * Add any unit to a new value without overflowing current other unit given.
+     *
+     * @param string $valueUnit    unit name to modify
+     * @param int    $value        amount to add to the input unit
+     * @param string $overflowUnit unit name to not overflow
+     *
+     * @return static
+     */
+    public function addUnitNoOverflow($valueUnit, $value, $overflowUnit);
+
+    /**
+     * Get the difference in a human readable format in the current locale from an other
+     * instance given to now
+     *
+     * @param int|array $syntax  if array passed, parameters will be extracted from it, the array may contains:
+     *                           - 'syntax' entry (see below)
+     *                           - 'short' entry (see below)
+     *                           - 'parts' entry (see below)
+     *                           - 'options' entry (see below)
+     *                           - 'join' entry determines how to join multiple parts of the string
+     *                           `  - if $join is a string, it's used as a joiner glue
+     *                           `  - if $join is a callable/closure, it get the list of string and should return a string
+     *                           `  - if $join is an array, the first item will be the default glue, and the second item
+     *                           `    will be used instead of the glue for the last item
+     *                           `  - if $join is true, it will be guessed from the locale ('list' translation file entry)
+     *                           `  - if $join is missing, a space will be used as glue
+     *                           if int passed, it add modifiers:
+     *                           Possible values:
+     *                           - CarbonInterface::DIFF_ABSOLUTE          no modifiers
+     *                           - CarbonInterface::DIFF_RELATIVE_TO_NOW   add ago/from now modifier
+     *                           - CarbonInterface::DIFF_RELATIVE_TO_OTHER add before/after modifier
+     *                           Default value: CarbonInterface::DIFF_ABSOLUTE
+     * @param bool      $short   displays short format of time units
+     * @param int       $parts   maximum number of parts to display (default value: 1: single part)
+     * @param int       $options human diff options
+     *
+     * @return string
+     */
+    public function ago($syntax = null, $short = false, $parts = 1, $options = null);
+
+    /**
+     * Modify the current instance to the average of a given instance (default now) and the current instance
+     * (second-precision).
+     *
+     * @param \Carbon\Carbon|\DateTimeInterface|null $date
+     *
+     * @return static
+     */
+    public function average($date = null);
+
+    /**
+     * Determines if the instance is between two others.
+     *
+     * The third argument allow you to specify if bounds are included or not (true by default)
+     * but for when you including/excluding bounds may produce different results in your application,
+     * we recommend to use the explicit methods ->betweenIncluded() or ->betweenExcluded() instead.
+     *
+     * @example
+     * ```
+     * Carbon::parse('2018-07-25')->between('2018-07-14', '2018-08-01'); // true
+     * Carbon::parse('2018-07-25')->between('2018-08-01', '2018-08-20'); // false
+     * Carbon::parse('2018-07-25')->between('2018-07-25', '2018-08-01'); // true
+     * Carbon::parse('2018-07-25')->between('2018-07-25', '2018-08-01', false); // false
+     * ```
+     *
+     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date1
+     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date2
+     * @param bool                                    $equal Indicates if an equal to comparison should be done
+     *
+     * @return bool
+     */
+    public function between($date1, $date2, $equal = true): bool;
+
+    /**
+     * Determines if the instance is between two others, bounds excluded.
+     *
+     * @example
+     * ```
+     * Carbon::parse('2018-07-25')->betweenExcluded('2018-07-14', '2018-08-01'); // true
+     * Carbon::parse('2018-07-25')->betweenExcluded('2018-08-01', '2018-08-20'); // false
+     * Carbon::parse('2018-07-25')->betweenExcluded('2018-07-25', '2018-08-01'); // false
+     * ```
+     *
+     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date1
+     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date2
+     *
+     * @return bool
+     */
+    public function betweenExcluded($date1, $date2): bool;
+
+    /**
+     * Determines if the instance is between two others, bounds included.
+     *
+     * @example
+     * ```
+     * Carbon::parse('2018-07-25')->betweenIncluded('2018-07-14', '2018-08-01'); // true
+     * Carbon::parse('2018-07-25')->betweenIncluded('2018-08-01', '2018-08-20'); // false
+     * Carbon::parse('2018-07-25')->betweenIncluded('2018-07-25', '2018-08-01'); // true
+     * ```
+     *
+     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date1
+     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date2
+     *
+     * @return bool
+     */
+    public function betweenIncluded($date1, $date2): bool;
+
+    /**
+     * Returns either day of week + time (e.g. "Last Friday at 3:30 PM") if reference time is within 7 days,
+     * or a calendar date (e.g. "10/29/2017") otherwise.
+     *
+     * Language, date and time formats will change according to the current locale.
+     *
+     * @param Carbon|\DateTimeInterface|string|null $referenceTime
+     * @param array                                 $formats
+     *
+     * @return string
+     */
+    public function calendar($referenceTime = null, array $formats = []);
 
     /**
      * Checks if the (date)time string is in a given format and valid to create a
@@ -683,6 +916,104 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      * @return bool
      */
     public static function canBeCreatedFromFormat($date, $format);
+
+    /**
+     * Return the Carbon instance passed through, a now instance in the same timezone
+     * if null given or parse the input if string given.
+     *
+     * @param Carbon|\Carbon\CarbonPeriod|\Carbon\CarbonInterval|\DateInterval|\DatePeriod|DateTimeInterface|string|null $date
+     *
+     * @return static
+     */
+    public function carbonize($date = null);
+
+    /**
+     * Cast the current instance into the given class.
+     *
+     * @param string $className The $className::instance() method will be called to cast the current object.
+     *
+     * @return DateTimeInterface
+     */
+    public function cast(string $className);
+
+    /**
+     * Ceil the current instance second with given precision if specified.
+     *
+     * @param float|int|string|\DateInterval|null $precision
+     *
+     * @return CarbonInterface
+     */
+    public function ceil($precision = 1);
+
+    /**
+     * Ceil the current instance at the given unit with given precision if specified.
+     *
+     * @param string    $unit
+     * @param float|int $precision
+     *
+     * @return CarbonInterface
+     */
+    public function ceilUnit($unit, $precision = 1);
+
+    /**
+     * Ceil the current instance week.
+     *
+     * @param int $weekStartsAt optional start allow you to specify the day of week to use to start the week
+     *
+     * @return CarbonInterface
+     */
+    public function ceilWeek($weekStartsAt = null);
+
+    /**
+     * Similar to native modify() method of DateTime but can handle more grammars.
+     *
+     * @example
+     * ```
+     * echo Carbon::now()->change('next 2pm');
+     * ```
+     *
+     * @link https://php.net/manual/en/datetime.modify.php
+     *
+     * @param string $modifier
+     *
+     * @return static
+     */
+    public function change($modifier);
+
+    /**
+     * Cleanup properties attached to the public scope of DateTime when a dump of the date is requested.
+     * foreach ($date as $_) {}
+     * serializer($date)
+     * var_export($date)
+     * get_object_vars($date)
+     */
+    public function cleanupDumpProperties();
+
+    /**
+     * @alias copy
+     *
+     * Get a copy of the instance.
+     *
+     * @return static
+     */
+    public function clone();
+
+    /**
+     * Get the closest date from the instance (second-precision).
+     *
+     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date1
+     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date2
+     *
+     * @return static
+     */
+    public function closest($date1, $date2);
+
+    /**
+     * Get a copy of the instance.
+     *
+     * @return static
+     */
+    public function copy();
 
     /**
      * Create a new Carbon instance from a specific date and time.
@@ -896,1170 +1227,23 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     public static function createSafe($year = null, $month = null, $day = null, $hour = null, $minute = null, $second = null, $tz = null);
 
     /**
-     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
-     *             You should rather use the ->settings() method.
-     * @see settings
-     *
-     * @param int $humanDiffOption
-     */
-    public static function disableHumanDiffOption($humanDiffOption);
-
-    /**
-     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
-     *             You should rather use the ->settings() method.
-     * @see settings
-     *
-     * @param int $humanDiffOption
-     */
-    public static function enableHumanDiffOption($humanDiffOption);
-
-    /**
-     * Set the current locale to the given, execute the passed function, reset the locale to previous one,
-     * then return the result of the closure (or null if the closure was void).
-     *
-     * @param string   $locale locale ex. en
-     * @param callable $func
-     *
-     * @return mixed
-     */
-    public static function executeWithLocale($locale, $func);
-
-    /**
-     * Create an instance from a serialized string.
-     *
-     * @param string $value
-     *
-     * @throws InvalidFormatException
-     *
-     * @return static
-     */
-    public static function fromSerialized($value);
-
-    /**
-     * Register a custom macro.
-     *
-     * @param object|callable $macro
-     * @param int             $priority marco with higher priority is tried first
-     *
-     * @return void
-     */
-    public static function genericMacro($macro, $priority = 0);
-
-    /**
-     * Returns the list of internally available locales and already loaded custom locales.
-     * (It will ignore custom translator dynamic loading.)
-     *
-     * @return array
-     */
-    public static function getAvailableLocales();
-
-    /**
-     * Returns list of Language object for each available locale. This object allow you to get the ISO name, native
-     * name, region and variant of the locale.
-     *
-     * @return Language[]
-     */
-    public static function getAvailableLocalesInfo();
-
-    /**
-     * Get the days of the week
-     *
-     * @return array
-     */
-    public static function getDays();
-
-    /**
-     * Get the fallback locale.
-     *
-     * @see https://symfony.com/doc/current/components/translation.html#fallback-locales
-     *
-     * @return string|null
-     */
-    public static function getFallbackLocale();
-
-    /**
-     * List of replacements from date() format to isoFormat().
-     *
-     * @return array
-     */
-    public static function getFormatsToIsoReplacements();
-
-    /**
-     * Return default humanDiff() options (merged flags as integer).
-     *
-     * @return int
-     */
-    public static function getHumanDiffOptions();
-
-    /**
-     * Returns list of locale units for ISO formatting.
-     *
-     * @return array
-     */
-    public static function getIsoUnits();
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getLastErrors();
-
-    /**
-     * Get the current translator locale.
-     *
-     * @return string
-     */
-    public static function getLocale();
-
-    /**
-     * Get the raw callable macro registered globally for a given name.
-     *
-     * @param string $name
-     *
-     * @return callable|null
-     */
-    public static function getMacro($name);
-
-    /**
-     * get midday/noon hour
-     *
-     * @return int
-     */
-    public static function getMidDayAt();
-
-    /**
-     * Get the Carbon instance (real or mock) to be returned when a "now"
-     * instance is created.
-     *
-     * @return Closure|static the current instance used for testing
-     */
-    public static function getTestNow();
-
-    /**
-     * Return a format from H:i to H:i:s.u according to given unit precision.
-     *
-     * @param string $unitPrecision "minute", "second", "millisecond" or "microsecond"
-     *
-     * @return string
-     */
-    public static function getTimeFormatByPrecision($unitPrecision);
-
-    /**
-     * Returns raw translation message for a given key.
-     *
-     * @param \Symfony\Component\Translation\TranslatorInterface $translator the translator to use
-     * @param string                                             $key        key to find
-     * @param string|null                                        $locale     current locale used if null
-     * @param string|null                                        $default    default value if translation returns the key
-     *
-     * @return string
-     */
-    public static function getTranslationMessageWith($translator, string $key, string $locale = null, string $default = null);
-
-    /**
-     * Get the default translator instance in use.
-     *
-     * @return \Symfony\Component\Translation\TranslatorInterface
-     */
-    public static function getTranslator();
-
-    /**
-     * Get the last day of week
-     *
-     * @return int
-     */
-    public static function getWeekEndsAt();
-
-    /**
-     * Get the first day of week
-     *
-     * @return int
-     */
-    public static function getWeekStartsAt();
-
-    /**
-     * Get weekend days
-     *
-     * @return array
-     */
-    public static function getWeekendDays();
-
-    /**
-     * Checks if the (date)time string is in a given format.
-     *
-     * @example
-     * ```
-     * Carbon::hasFormat('11:12:45', 'h:i:s'); // true
-     * Carbon::hasFormat('13:12:45', 'h:i:s'); // false
-     * ```
-     *
-     * @param string $date
-     * @param string $format
-     *
-     * @return bool
-     */
-    public static function hasFormat($date, $format);
-
-    /**
-     * Checks if the (date)time string is in a given format.
-     *
-     * @example
-     * ```
-     * Carbon::hasFormatWithModifiers('31/08/2015', 'd#m#Y'); // true
-     * Carbon::hasFormatWithModifiers('31/08/2015', 'm#d#Y'); // false
-     * ```
-     *
-     * @param string $date
-     * @param string $format
-     *
-     * @return bool
-     */
-    public static function hasFormatWithModifiers($date, $format): bool;
-
-    /**
-     * Checks if macro is registered globally.
-     *
-     * @param string $name
-     *
-     * @return bool
-     */
-    public static function hasMacro($name);
-
-    /**
-     * Determine if a time string will produce a relative date.
-     *
-     * @param string $time
-     *
-     * @return bool true if time match a relative date, false if absolute or invalid time string
-     */
-    public static function hasRelativeKeywords($time);
-
-    /**
-     * Determine if there is a valid test instance set. A valid test instance
-     * is anything that is not null.
-     *
-     * @return bool true if there is a test instance, otherwise false
-     */
-    public static function hasTestNow();
-
-    /**
-     * Create a Carbon instance from a DateTime one.
-     *
-     * @param DateTimeInterface $date
-     *
-     * @return static
-     */
-    public static function instance($date);
-
-    /**
-     * Returns true if the current class/instance is immutable.
-     *
-     * @return bool
-     */
-    public static function isImmutable();
-
-    /**
-     * Returns true if a property can be changed via setter.
-     *
-     * @param string $unit
-     *
-     * @return bool
-     */
-    public static function isModifiableUnit($unit);
-
-    /**
-     * Returns true if the current class/instance is mutable.
-     *
-     * @return bool
-     */
-    public static function isMutable();
-
-    /**
-     * Returns true if the strict mode is globally in use, false else.
-     * (It can be overridden in specific instances.)
-     *
-     * @return bool
-     */
-    public static function isStrictModeEnabled();
-
-    /**
-     * Returns true if the given locale is internally supported and has words for 1-day diff (just now, yesterday, tomorrow).
-     * Support is considered enabled if the 3 words are translated in the given locale.
-     *
-     * @param string $locale locale ex. en
-     *
-     * @return bool
-     */
-    public static function localeHasDiffOneDayWords($locale);
-
-    /**
-     * Returns true if the given locale is internally supported and has diff syntax support (ago, from now, before, after).
-     * Support is considered enabled if the 4 sentences are translated in the given locale.
-     *
-     * @param string $locale locale ex. en
-     *
-     * @return bool
-     */
-    public static function localeHasDiffSyntax($locale);
-
-    /**
-     * Returns true if the given locale is internally supported and has words for 2-days diff (before yesterday, after tomorrow).
-     * Support is considered enabled if the 2 words are translated in the given locale.
-     *
-     * @param string $locale locale ex. en
-     *
-     * @return bool
-     */
-    public static function localeHasDiffTwoDayWords($locale);
-
-    /**
-     * Returns true if the given locale is internally supported and has period syntax support (X times, every X, from X, to X).
-     * Support is considered enabled if the 4 sentences are translated in the given locale.
-     *
-     * @param string $locale locale ex. en
-     *
-     * @return bool
-     */
-    public static function localeHasPeriodSyntax($locale);
-
-    /**
-     * Returns true if the given locale is internally supported and has short-units support.
-     * Support is considered enabled if either year, day or hour has a short variant translated.
-     *
-     * @param string $locale locale ex. en
-     *
-     * @return bool
-     */
-    public static function localeHasShortUnits($locale);
-
-    /**
-     * Register a custom macro.
-     *
-     * @example
-     * ```
-     * $userSettings = [
-     *   'locale' => 'pt',
-     *   'timezone' => 'America/Sao_Paulo',
-     * ];
-     * Carbon::macro('userFormat', function () use ($userSettings) {
-     *   return $this->copy()->locale($userSettings['locale'])->tz($userSettings['timezone'])->calendar();
-     * });
-     * echo Carbon::yesterday()->hours(11)->userFormat();
-     * ```
-     *
-     * @param string          $name
-     * @param object|callable $macro
-     *
-     * @return void
-     */
-    public static function macro($name, $macro);
-
-    /**
-     * Make a Carbon instance from given variable if possible.
-     *
-     * Always return a new instance. Parse only strings and only these likely to be dates (skip intervals
-     * and recurrences). Throw an exception for invalid format, but otherwise return null.
-     *
-     * @param mixed $var
-     *
-     * @throws InvalidFormatException
-     *
-     * @return static|null
-     */
-    public static function make($var);
-
-    /**
-     * Create a Carbon instance for the greatest supported date.
-     *
-     * @return static
-     */
-    public static function maxValue();
-
-    /**
-     * Create a Carbon instance for the lowest supported date.
-     *
-     * @return static
-     */
-    public static function minValue();
-
-    /**
-     * Mix another object into the class.
-     *
-     * @example
-     * ```
-     * Carbon::mixin(new class {
-     *   public function addMoon() {
-     *     return function () {
-     *       return $this->addDays(30);
-     *     };
-     *   }
-     *   public function subMoon() {
-     *     return function () {
-     *       return $this->subDays(30);
-     *     };
-     *   }
-     * });
-     * $fullMoon = Carbon::create('2018-12-22');
-     * $nextFullMoon = $fullMoon->addMoon();
-     * $blackMoon = Carbon::create('2019-01-06');
-     * $previousBlackMoon = $blackMoon->subMoon();
-     * echo "$nextFullMoon\n";
-     * echo "$previousBlackMoon\n";
-     * ```
-     *
-     * @param object|string $mixin
-     *
-     * @throws ReflectionException
-     *
-     * @return void
-     */
-    public static function mixin($mixin);
-
-    /**
-     * Get a Carbon instance for the current date and time.
-     *
+     * Create a new Carbon instance from a specific date and time using strict validation.
+     *
+     * @see create()
+     *
+     * @param int|null                 $year
+     * @param int|null                 $month
+     * @param int|null                 $day
+     * @param int|null                 $hour
+     * @param int|null                 $minute
+     * @param int|null                 $second
      * @param DateTimeZone|string|null $tz
      *
-     * @return static
-     */
-    public static function now($tz = null);
-
-    /**
-     * Create a carbon instance from a string.
-     *
-     * This is an alias for the constructor that allows better fluent syntax
-     * as it allows you to do Carbon::parse('Monday next week')->fn() rather
-     * than (new Carbon('Monday next week'))->fn().
-     *
-     * @param string|DateTimeInterface|null $time
-     * @param DateTimeZone|string|null      $tz
-     *
      * @throws InvalidFormatException
      *
      * @return static
      */
-    public static function parse($time = null, $tz = null);
-
-    /**
-     * Create a carbon instance from a localized string (in French, Japanese, Arabic, etc.).
-     *
-     * @param string                   $time   date/time string in the given language (may also contain English).
-     * @param string|null              $locale if locale is null or not specified, current global locale will be
-     *                                         used instead.
-     * @param DateTimeZone|string|null $tz     optional timezone for the new instance.
-     *
-     * @throws InvalidFormatException
-     *
-     * @return static
-     */
-    public static function parseFromLocale($time, $locale = null, $tz = null);
-
-    /**
-     * Returns standardized plural of a given singular/plural unit name (in English).
-     *
-     * @param string $unit
-     *
-     * @return string
-     */
-    public static function pluralUnit(string $unit): string;
-
-    /**
-     * Create a Carbon instance from a specific format.
-     *
-     * @param string                         $format Datetime format
-     * @param string                         $time
-     * @param DateTimeZone|string|false|null $tz
-     *
-     * @throws InvalidFormatException
-     *
-     * @return static|false
-     */
-    public static function rawCreateFromFormat($format, $time, $tz = null);
-
-    /**
-     * Create a carbon instance from a string.
-     *
-     * This is an alias for the constructor that allows better fluent syntax
-     * as it allows you to do Carbon::parse('Monday next week')->fn() rather
-     * than (new Carbon('Monday next week'))->fn().
-     *
-     * @param string|DateTimeInterface|null $time
-     * @param DateTimeZone|string|null      $tz
-     *
-     * @throws InvalidFormatException
-     *
-     * @return static
-     */
-    public static function rawParse($time = null, $tz = null);
-
-    /**
-     * Remove all macros and generic macros.
-     */
-    public static function resetMacros();
-
-    /**
-     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
-     *             You should rather use the ->settings() method.
-     *             Or you can use method variants: addMonthsWithOverflow/addMonthsNoOverflow, same variants
-     *             are available for quarters, years, decade, centuries, millennia (singular and plural forms).
-     * @see settings
-     *
-     * Reset the month overflow behavior.
-     *
-     * @return void
-     */
-    public static function resetMonthsOverflow();
-
-    /**
-     * Reset the format used to the default when type juggling a Carbon instance to a string
-     *
-     * @return void
-     */
-    public static function resetToStringFormat();
-
-    /**
-     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
-     *             You should rather use the ->settings() method.
-     *             Or you can use method variants: addYearsWithOverflow/addYearsNoOverflow, same variants
-     *             are available for quarters, years, decade, centuries, millennia (singular and plural forms).
-     * @see settings
-     *
-     * Reset the month overflow behavior.
-     *
-     * @return void
-     */
-    public static function resetYearsOverflow();
-
-    /**
-     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
-     *             You should rather transform Carbon object before the serialization.
-     *
-     * JSON serialize all Carbon instances using the given callback.
-     *
-     * @param callable $callback
-     *
-     * @return void
-     */
-    public static function serializeUsing($callback);
-
-    /**
-     * Set the fallback locale.
-     *
-     * @see https://symfony.com/doc/current/components/translation.html#fallback-locales
-     *
-     * @param string $locale
-     */
-    public static function setFallbackLocale($locale);
-
-    /**
-     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
-     *             You should rather use the ->settings() method.
-     * @see settings
-     *
-     * @param int $humanDiffOptions
-     */
-    public static function setHumanDiffOptions($humanDiffOptions);
-
-    /**
-     * Set the current translator locale and indicate if the source locale file exists.
-     * Pass 'auto' as locale to use closest language from the current LC_TIME locale.
-     *
-     * @param string $locale locale ex. en
-     *
-     * @return bool
-     */
-    public static function setLocale($locale);
-
-    /**
-     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
-     *             You should rather consider mid-day is always 12pm, then if you need to test if it's an other
-     *             hour, test it explicitly:
-     *                 $date->format('G') == 13
-     *             or to set explicitly to a given hour:
-     *                 $date->setTime(13, 0, 0, 0)
-     *
-     * Set midday/noon hour
-     *
-     * @param int $hour midday hour
-     *
-     * @return void
-     */
-    public static function setMidDayAt($hour);
-
-    /**
-     * Set a Carbon instance (real or mock) to be returned when a "now"
-     * instance is created.  The provided instance will be returned
-     * specifically under the following conditions:
-     *   - A call to the static now() method, ex. Carbon::now()
-     *   - When a null (or blank string) is passed to the constructor or parse(), ex. new Carbon(null)
-     *   - When the string "now" is passed to the constructor or parse(), ex. new Carbon('now')
-     *   - When a string containing the desired time is passed to Carbon::parse().
-     *
-     * Note the timezone parameter was left out of the examples above and
-     * has no affect as the mock value will be returned regardless of its value.
-     *
-     * To clear the test instance call this method using the default
-     * parameter of null.
-     *
-     * /!\ Use this method for unit tests only.
-     *
-     * @param Closure|static|string|false|null $testNow real or mock Carbon instance
-     */
-    public static function setTestNow($testNow = null);
-
-    /**
-     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
-     *             You should rather let Carbon object being casted to string with DEFAULT_TO_STRING_FORMAT, and
-     *             use other method or custom format passed to format() method if you need to dump an other string
-     *             format.
-     *
-     * Set the default format used when type juggling a Carbon instance to a string
-     *
-     * @param string|Closure|null $format
-     *
-     * @return void
-     */
-    public static function setToStringFormat($format);
-
-    /**
-     * Set the default translator instance to use.
-     *
-     * @param \Symfony\Component\Translation\TranslatorInterface $translator
-     *
-     * @return void
-     */
-    public static function setTranslator(\Symfony\Component\Translation\TranslatorInterface $translator);
-
-    /**
-     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
-     *             You should rather use UTF-8 language packages on every machine.
-     *
-     * Set if UTF8 will be used for localized date/time.
-     *
-     * @param bool $utf8
-     */
-    public static function setUtf8($utf8);
-
-    /**
-     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
-     *             Use $weekStartsAt optional parameter instead when using startOfWeek, floorWeek, ceilWeek
-     *             or roundWeek method. You can also use the 'first_day_of_week' locale setting to change the
-     *             start of week according to current locale selected and implicitly the end of week.
-     *
-     * Set the last day of week
-     *
-     * @param int|string $day week end day (or 'auto' to get the day before the first day of week
-     *                        from Carbon::getLocale() culture).
-     *
-     * @return void
-     */
-    public static function setWeekEndsAt($day);
-
-    /**
-     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
-     *             Use $weekEndsAt optional parameter instead when using endOfWeek method. You can also use the
-     *             'first_day_of_week' locale setting to change the start of week according to current locale
-     *             selected and implicitly the end of week.
-     *
-     * Set the first day of week
-     *
-     * @param int|string $day week start day (or 'auto' to get the first day of week from Carbon::getLocale() culture).
-     *
-     * @return void
-     */
-    public static function setWeekStartsAt($day);
-
-    /**
-     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
-     *             You should rather consider week-end is always saturday and sunday, and if you have some custom
-     *             week-end days to handle, give to those days an other name and create a macro for them:
-     *
-     *             ```
-     *             Carbon::macro('isDayOff', function ($date) {
-     *                 return $date->isSunday() || $date->isMonday();
-     *             });
-     *             Carbon::macro('isNotDayOff', function ($date) {
-     *                 return !$date->isDayOff();
-     *             });
-     *             if ($someDate->isDayOff()) ...
-     *             if ($someDate->isNotDayOff()) ...
-     *             // Add 5 not-off days
-     *             $count = 5;
-     *             while ($someDate->isDayOff() || ($count-- > 0)) {
-     *                 $someDate->addDay();
-     *             }
-     *             ```
-     *
-     * Set weekend days
-     *
-     * @param array $days
-     *
-     * @return void
-     */
-    public static function setWeekendDays($days);
-
-    /**
-     * Get the month overflow global behavior (can be overridden in specific instances).
-     *
-     * @return bool
-     */
-    public static function shouldOverflowMonths();
-
-    /**
-     * Get the month overflow global behavior (can be overridden in specific instances).
-     *
-     * @return bool
-     */
-    public static function shouldOverflowYears();
-
-    /**
-     * Returns standardized singular of a given singular/plural unit name (in English).
-     *
-     * @param string $unit
-     *
-     * @return string
-     */
-    public static function singularUnit(string $unit): string;
-
-    /**
-     * Create a Carbon instance for today.
-     *
-     * @param DateTimeZone|string|null $tz
-     *
-     * @return static
-     */
-    public static function today($tz = null);
-
-    /**
-     * Create a Carbon instance for tomorrow.
-     *
-     * @param DateTimeZone|string|null $tz
-     *
-     * @return static
-     */
-    public static function tomorrow($tz = null);
-
-    /**
-     * Translate a time string from a locale to an other.
-     *
-     * @param string      $timeString date/time/duration string to translate (may also contain English)
-     * @param string|null $from       input locale of the $timeString parameter (`Carbon::getLocale()` by default)
-     * @param string|null $to         output locale of the result returned (`"en"` by default)
-     * @param int         $mode       specify what to translate with options:
-     *                                - self::TRANSLATE_ALL (default)
-     *                                - CarbonInterface::TRANSLATE_MONTHS
-     *                                - CarbonInterface::TRANSLATE_DAYS
-     *                                - CarbonInterface::TRANSLATE_UNITS
-     *                                - CarbonInterface::TRANSLATE_MERIDIEM
-     *                                You can use pipe to group: CarbonInterface::TRANSLATE_MONTHS | CarbonInterface::TRANSLATE_DAYS
-     *
-     * @return string
-     */
-    public static function translateTimeString($timeString, $from = null, $to = null, $mode = self::TRANSLATE_ALL);
-
-    /**
-     * Translate using translation string or callback available.
-     *
-     * @param \Symfony\Component\Translation\TranslatorInterface $translator
-     * @param string                                             $key
-     * @param array                                              $parameters
-     * @param null                                               $number
-     *
-     * @return string
-     */
-    public static function translateWith(\Symfony\Component\Translation\TranslatorInterface $translator, string $key, array $parameters = [], $number = null): string;
-
-    /**
-     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
-     *             You should rather use the ->settings() method.
-     *             Or you can use method variants: addMonthsWithOverflow/addMonthsNoOverflow, same variants
-     *             are available for quarters, years, decade, centuries, millennia (singular and plural forms).
-     * @see settings
-     *
-     * Indicates if months should be calculated with overflow.
-     *
-     * @param bool $monthsOverflow
-     *
-     * @return void
-     */
-    public static function useMonthsOverflow($monthsOverflow = true);
-
-    /**
-     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
-     *             You should rather use the ->settings() method.
-     * @see settings
-     *
-     * Enable the strict mode (or disable with passing false).
-     *
-     * @param bool $strictModeEnabled
-     */
-    public static function useStrictMode($strictModeEnabled = true);
-
-    /**
-     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
-     *             You should rather use the ->settings() method.
-     *             Or you can use method variants: addYearsWithOverflow/addYearsNoOverflow, same variants
-     *             are available for quarters, years, decade, centuries, millennia (singular and plural forms).
-     * @see settings
-     *
-     * Indicates if years should be calculated with overflow.
-     *
-     * @param bool $yearsOverflow
-     *
-     * @return void
-     */
-    public static function useYearsOverflow($yearsOverflow = true);
-
-    /**
-     * Temporarily sets a static date to be used within the callback.
-     * Using setTestNow to set the date, executing the callback, then
-     * clearing the test instance.
-     *
-     * /!\ Use this method for unit tests only.
-     *
-     * @param Closure|static|string|false|null $testNow real or mock Carbon instance
-     * @param Closure|null $callback
-     */
-    public static function withTestNow($testNow = null, $callback = null);
-
-    /**
-     * Create a Carbon instance for yesterday.
-     *
-     * @param DateTimeZone|string|null $tz
-     *
-     * @return static
-     */
-    public static function yesterday($tz = null);
-
-    /**
-     * Dynamically handle calls to the class.
-     *
-     * @param string $method     magic method name called
-     * @param array  $parameters parameters list
-     *
-     * @throws UnknownMethodException|BadMethodCallException|ReflectionException|Throwable
-     *
-     * @return mixed
-     */
-    public function __call($method, $parameters);
-
-    /**
-     * Update constructedObjectId on cloned.
-     */
-    public function __clone();
-
-    /**
-     * Show truthy properties on var_dump().
-     *
-     * @return array
-     */
-    public function __debugInfo();
-
-    /**
-     * Get a part of the Carbon object
-     *
-     * @param string $name
-     *
-     * @throws UnknownGetterException
-     *
-     * @return string|int|bool|DateTimeZone|null
-     */
-    public function __get($name);
-
-    /**
-     * Set a part of the Carbon object
-     *
-     * @param string                  $name
-     * @param string|int|DateTimeZone $value
-     *
-     * @throws UnknownSetterException|ReflectionException
-     *
-     * @return void
-     */
-    public function __set($name, $value);
-
-    /**
-     * Check if an attribute exists on the object
-     *
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function __isset($name);
-
-    /**
-     * Returns the list of properties to dump on serialize() called on.
-     *
-     * @return array
-     */
-    public function __sleep();
-
-    /**
-     * Format the instance as a string using the set format
-     *
-     * @example
-     * ```
-     * echo Carbon::now(); // Carbon instances can be casted to string
-     * ```
-     *
-     * @return string
-     */
-    public function __toString();
-
-    /**
-     * Add given units or interval to the current instance.
-     *
-     * @example $date->add('hour', 3)
-     * @example $date->add(15, 'days')
-     * @example $date->add(CarbonInterval::days(4))
-     *
-     * @param string|DateInterval|Closure|CarbonConverterInterface $unit
-     * @param int                                                  $value
-     * @param bool|null                                            $overflow
-     *
-     * @return static
-     */
-    public function add($unit, $value = 1, $overflow = null);
-
-    /**
-     * Add seconds to the instance using timestamp. Positive $value travels
-     * forward while negative $value travels into the past.
-     *
-     * @param string $unit
-     * @param int    $value
-     *
-     * @return static
-     */
-    public function addRealUnit($unit, $value = 1);
-
-    /**
-     * Add given units to the current instance.
-     *
-     * @param string    $unit
-     * @param int       $value
-     * @param bool|null $overflow
-     *
-     * @return static
-     */
-    public function addUnit($unit, $value = 1, $overflow = null);
-
-    /**
-     * Add any unit to a new value without overflowing current other unit given.
-     *
-     * @param string $valueUnit    unit name to modify
-     * @param int    $value        amount to add to the input unit
-     * @param string $overflowUnit unit name to not overflow
-     *
-     * @return static
-     */
-    public function addUnitNoOverflow($valueUnit, $value, $overflowUnit);
-
-    /**
-     * Get the difference in a human readable format in the current locale from an other
-     * instance given to now
-     *
-     * @param int|array $syntax  if array passed, parameters will be extracted from it, the array may contains:
-     *                           - 'syntax' entry (see below)
-     *                           - 'short' entry (see below)
-     *                           - 'parts' entry (see below)
-     *                           - 'options' entry (see below)
-     *                           - 'join' entry determines how to join multiple parts of the string
-     *                           `  - if $join is a string, it's used as a joiner glue
-     *                           `  - if $join is a callable/closure, it get the list of string and should return a string
-     *                           `  - if $join is an array, the first item will be the default glue, and the second item
-     *                           `    will be used instead of the glue for the last item
-     *                           `  - if $join is true, it will be guessed from the locale ('list' translation file entry)
-     *                           `  - if $join is missing, a space will be used as glue
-     *                           if int passed, it add modifiers:
-     *                           Possible values:
-     *                           - CarbonInterface::DIFF_ABSOLUTE          no modifiers
-     *                           - CarbonInterface::DIFF_RELATIVE_TO_NOW   add ago/from now modifier
-     *                           - CarbonInterface::DIFF_RELATIVE_TO_OTHER add before/after modifier
-     *                           Default value: CarbonInterface::DIFF_ABSOLUTE
-     * @param bool      $short   displays short format of time units
-     * @param int       $parts   maximum number of parts to display (default value: 1: single part)
-     * @param int       $options human diff options
-     *
-     * @return string
-     */
-    public function ago($syntax = null, $short = false, $parts = 1, $options = null);
-
-    /**
-     * Modify the current instance to the average of a given instance (default now) and the current instance
-     * (second-precision).
-     *
-     * @param \Carbon\Carbon|\DateTimeInterface|null $date
-     *
-     * @return static
-     */
-    public function average($date = null);
-
-    /**
-     * Determines if the instance is between two others.
-     *
-     * The third argument allow you to specify if bounds are included or not (true by default)
-     * but for when you including/excluding bounds may produce different results in your application,
-     * we recommend to use the explicit methods ->betweenIncluded() or ->betweenExcluded() instead.
-     *
-     * @example
-     * ```
-     * Carbon::parse('2018-07-25')->between('2018-07-14', '2018-08-01'); // true
-     * Carbon::parse('2018-07-25')->between('2018-08-01', '2018-08-20'); // false
-     * Carbon::parse('2018-07-25')->between('2018-07-25', '2018-08-01'); // true
-     * Carbon::parse('2018-07-25')->between('2018-07-25', '2018-08-01', false); // false
-     * ```
-     *
-     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date1
-     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date2
-     * @param bool                                    $equal Indicates if an equal to comparison should be done
-     *
-     * @return bool
-     */
-    public function between($date1, $date2, $equal = true): bool;
-
-    /**
-     * Determines if the instance is between two others, bounds excluded.
-     *
-     * @example
-     * ```
-     * Carbon::parse('2018-07-25')->betweenExcluded('2018-07-14', '2018-08-01'); // true
-     * Carbon::parse('2018-07-25')->betweenExcluded('2018-08-01', '2018-08-20'); // false
-     * Carbon::parse('2018-07-25')->betweenExcluded('2018-07-25', '2018-08-01'); // false
-     * ```
-     *
-     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date1
-     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date2
-     *
-     * @return bool
-     */
-    public function betweenExcluded($date1, $date2): bool;
-
-    /**
-     * Determines if the instance is between two others, bounds included.
-     *
-     * @example
-     * ```
-     * Carbon::parse('2018-07-25')->betweenIncluded('2018-07-14', '2018-08-01'); // true
-     * Carbon::parse('2018-07-25')->betweenIncluded('2018-08-01', '2018-08-20'); // false
-     * Carbon::parse('2018-07-25')->betweenIncluded('2018-07-25', '2018-08-01'); // true
-     * ```
-     *
-     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date1
-     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date2
-     *
-     * @return bool
-     */
-    public function betweenIncluded($date1, $date2): bool;
-
-    /**
-     * Returns either day of week + time (e.g. "Last Friday at 3:30 PM") if reference time is within 7 days,
-     * or a calendar date (e.g. "10/29/2017") otherwise.
-     *
-     * Language, date and time formats will change according to the current locale.
-     *
-     * @param Carbon|\DateTimeInterface|string|null $referenceTime
-     * @param array                                 $formats
-     *
-     * @return string
-     */
-    public function calendar($referenceTime = null, array $formats = []);
-
-    /**
-     * Return the Carbon instance passed through, a now instance in the same timezone
-     * if null given or parse the input if string given.
-     *
-     * @param Carbon|\Carbon\CarbonPeriod|\Carbon\CarbonInterval|\DateInterval|\DatePeriod|DateTimeInterface|string|null $date
-     *
-     * @return static
-     */
-    public function carbonize($date = null);
-
-    /**
-     * Cast the current instance into the given class.
-     *
-     * @param string $className The $className::instance() method will be called to cast the current object.
-     *
-     * @return DateTimeInterface
-     */
-    public function cast(string $className);
-
-    /**
-     * Ceil the current instance second with given precision if specified.
-     *
-     * @param float|int|string|\DateInterval|null $precision
-     *
-     * @return CarbonInterface
-     */
-    public function ceil($precision = 1);
-
-    /**
-     * Ceil the current instance at the given unit with given precision if specified.
-     *
-     * @param string    $unit
-     * @param float|int $precision
-     *
-     * @return CarbonInterface
-     */
-    public function ceilUnit($unit, $precision = 1);
-
-    /**
-     * Ceil the current instance week.
-     *
-     * @param int $weekStartsAt optional start allow you to specify the day of week to use to start the week
-     *
-     * @return CarbonInterface
-     */
-    public function ceilWeek($weekStartsAt = null);
-
-    /**
-     * Similar to native modify() method of DateTime but can handle more grammars.
-     *
-     * @example
-     * ```
-     * echo Carbon::now()->change('next 2pm');
-     * ```
-     *
-     * @link https://php.net/manual/en/datetime.modify.php
-     *
-     * @param string $modifier
-     *
-     * @return static
-     */
-    public function change($modifier);
-
-    /**
-     * Cleanup properties attached to the public scope of DateTime when a dump of the date is requested.
-     * foreach ($date as $_) {}
-     * serializer($date)
-     * var_export($date)
-     * get_object_vars($date)
-     */
-    public function cleanupDumpProperties();
-
-    /**
-     * @alias copy
-     *
-     * Get a copy of the instance.
-     *
-     * @return static
-     */
-    public function clone();
-
-    /**
-     * Get the closest date from the instance (second-precision).
-     *
-     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date1
-     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date2
-     *
-     * @return static
-     */
-    public function closest($date1, $date2);
-
-    /**
-     * Get a copy of the instance.
-     *
-     * @return static
-     */
-    public function copy();
+    public static function createStrict(?int $year = 0, ?int $month = 1, ?int $day = 1, ?int $hour = 0, ?int $minute = 0, ?int $second = 0, $tz = null);
 
     /**
      * Get/set the day of year.
@@ -2329,6 +1513,24 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     public function diffInYears($date = null, $absolute = true);
 
     /**
+     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
+     *             You should rather use the ->settings() method.
+     * @see settings
+     *
+     * @param int $humanDiffOption
+     */
+    public static function disableHumanDiffOption($humanDiffOption);
+
+    /**
+     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
+     *             You should rather use the ->settings() method.
+     * @see settings
+     *
+     * @param int $humanDiffOption
+     */
+    public static function enableHumanDiffOption($humanDiffOption);
+
+    /**
      * Modify to end of current given unit.
      *
      * @example
@@ -2516,6 +1718,17 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      * @return bool
      */
     public function equalTo($date): bool;
+
+    /**
+     * Set the current locale to the given, execute the passed function, reset the locale to previous one,
+     * then return the result of the closure (or null if the closure was void).
+     *
+     * @param string   $locale locale ex. en
+     * @param callable $func
+     *
+     * @return mixed
+     */
+    public static function executeWithLocale($locale, $func);
 
     /**
      * Get the farthest date from the instance (second-precision).
@@ -2808,6 +2021,27 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     public function fromNow($syntax = null, $short = false, $parts = 1, $options = null);
 
     /**
+     * Create an instance from a serialized string.
+     *
+     * @param string $value
+     *
+     * @throws InvalidFormatException
+     *
+     * @return static
+     */
+    public static function fromSerialized($value);
+
+    /**
+     * Register a custom macro.
+     *
+     * @param object|callable $macro
+     * @param int             $priority marco with higher priority is tried first
+     *
+     * @return void
+     */
+    public static function genericMacro($macro, $priority = 0);
+
+    /**
      * Get a part of the Carbon object
      *
      * @param string $name
@@ -2828,6 +2062,22 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     public function getAltNumber(string $key): string;
 
     /**
+     * Returns the list of internally available locales and already loaded custom locales.
+     * (It will ignore custom translator dynamic loading.)
+     *
+     * @return array
+     */
+    public static function getAvailableLocales();
+
+    /**
+     * Returns list of Language object for each available locale. This object allow you to get the ISO name, native
+     * name, region and variant of the locale.
+     *
+     * @return Language[]
+     */
+    public static function getAvailableLocalesInfo();
+
+    /**
      * Returns list of calendar formats for ISO formatting.
      *
      * @param string|null $locale current locale used if null
@@ -2837,6 +2087,36 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     public function getCalendarFormats($locale = null);
 
     /**
+     * Get the days of the week
+     *
+     * @return array
+     */
+    public static function getDays();
+
+    /**
+     * Get the fallback locale.
+     *
+     * @see https://symfony.com/doc/current/components/translation.html#fallback-locales
+     *
+     * @return string|null
+     */
+    public static function getFallbackLocale();
+
+    /**
+     * List of replacements from date() format to isoFormat().
+     *
+     * @return array
+     */
+    public static function getFormatsToIsoReplacements();
+
+    /**
+     * Return default humanDiff() options (merged flags as integer).
+     *
+     * @return int
+     */
+    public static function getHumanDiffOptions();
+
+    /**
      * Returns list of locale formats for ISO formatting.
      *
      * @param string|null $locale current locale used if null
@@ -2844,6 +2124,18 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      * @return array
      */
     public function getIsoFormats($locale = null);
+
+    /**
+     * Returns list of locale units for ISO formatting.
+     *
+     * @return array
+     */
+    public static function getIsoUnits();
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getLastErrors();
 
     /**
      * Get the raw callable macro registered globally or locally for a given name.
@@ -2860,6 +2152,29 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      * @return \Symfony\Component\Translation\TranslatorInterface
      */
     public function getLocalTranslator();
+
+    /**
+     * Get the current translator locale.
+     *
+     * @return string
+     */
+    public static function getLocale();
+
+    /**
+     * Get the raw callable macro registered globally for a given name.
+     *
+     * @param string $name
+     *
+     * @return callable|null
+     */
+    public static function getMacro($name);
+
+    /**
+     * get midday/noon hour
+     *
+     * @return int
+     */
+    public static function getMidDayAt();
 
     /**
      * Returns the offset hour and minute formatted with +/- and a given separator (":" by default).
@@ -2911,6 +2226,23 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      * @return array
      */
     public function getSettings();
+
+    /**
+     * Get the Carbon instance (real or mock) to be returned when a "now"
+     * instance is created.
+     *
+     * @return Closure|static the current instance used for testing
+     */
+    public static function getTestNow();
+
+    /**
+     * Return a format from H:i to H:i:s.u according to given unit precision.
+     *
+     * @param string $unitPrecision "minute", "second", "millisecond" or "microsecond"
+     *
+     * @return string
+     */
+    public static function getTimeFormatByPrecision($unitPrecision);
 
     /**
      * Get the translation of the current week day name (with context for languages with multiple forms).
@@ -2971,7 +2303,47 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      *
      * @return string
      */
-    public function getTranslationMessage(string $key, string $locale = null, string $default = null, $translator = null);
+    public function getTranslationMessage(string $key, ?string $locale = null, ?string $default = null, $translator = null);
+
+    /**
+     * Returns raw translation message for a given key.
+     *
+     * @param \Symfony\Component\Translation\TranslatorInterface $translator the translator to use
+     * @param string                                             $key        key to find
+     * @param string|null                                        $locale     current locale used if null
+     * @param string|null                                        $default    default value if translation returns the key
+     *
+     * @return string
+     */
+    public static function getTranslationMessageWith($translator, string $key, ?string $locale = null, ?string $default = null);
+
+    /**
+     * Get the default translator instance in use.
+     *
+     * @return \Symfony\Component\Translation\TranslatorInterface
+     */
+    public static function getTranslator();
+
+    /**
+     * Get the last day of week
+     *
+     * @return int
+     */
+    public static function getWeekEndsAt();
+
+    /**
+     * Get the first day of week
+     *
+     * @return int
+     */
+    public static function getWeekStartsAt();
+
+    /**
+     * Get weekend days
+     *
+     * @return array
+     */
+    public static function getWeekendDays();
 
     /**
      * Determines if the instance is greater (after) than another
@@ -3042,6 +2414,38 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     public function gte($date): bool;
 
     /**
+     * Checks if the (date)time string is in a given format.
+     *
+     * @example
+     * ```
+     * Carbon::hasFormat('11:12:45', 'h:i:s'); // true
+     * Carbon::hasFormat('13:12:45', 'h:i:s'); // false
+     * ```
+     *
+     * @param string $date
+     * @param string $format
+     *
+     * @return bool
+     */
+    public static function hasFormat($date, $format);
+
+    /**
+     * Checks if the (date)time string is in a given format.
+     *
+     * @example
+     * ```
+     * Carbon::hasFormatWithModifiers('31/08/2015', 'd#m#Y'); // true
+     * Carbon::hasFormatWithModifiers('31/08/2015', 'm#d#Y'); // false
+     * ```
+     *
+     * @param string $date
+     * @param string $format
+     *
+     * @return bool
+     */
+    public static function hasFormatWithModifiers($date, $format): bool;
+
+    /**
      * Checks if macro is registered globally or locally.
      *
      * @param string $name
@@ -3056,6 +2460,41 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      * @return bool
      */
     public function hasLocalTranslator();
+
+    /**
+     * Checks if macro is registered globally.
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    public static function hasMacro($name);
+
+    /**
+     * Determine if a time string will produce a relative date.
+     *
+     * @param string $time
+     *
+     * @return bool true if time match a relative date, false if absolute or invalid time string
+     */
+    public static function hasRelativeKeywords($time);
+
+    /**
+     * Determine if there is a valid test instance set. A valid test instance
+     * is anything that is not null.
+     *
+     * @return bool true if there is a test instance, otherwise false
+     */
+    public static function hasTestNow();
+
+    /**
+     * Create a Carbon instance from a DateTime one.
+     *
+     * @param DateTimeInterface $date
+     *
+     * @return static
+     */
+    public static function instance($date);
 
     /**
      * Returns true if the current date matches the given string.
@@ -3230,6 +2669,13 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     public function isFuture();
 
     /**
+     * Returns true if the current class/instance is immutable.
+     *
+     * @return bool
+     */
+    public static function isImmutable();
+
+    /**
      * Check if today is the last day of the Month
      *
      * @example
@@ -3301,6 +2747,22 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      * @return bool
      */
     public function isMidnight();
+
+    /**
+     * Returns true if a property can be changed via setter.
+     *
+     * @param string $unit
+     *
+     * @return bool
+     */
+    public static function isModifiableUnit($unit);
+
+    /**
+     * Returns true if the current class/instance is mutable.
+     *
+     * @return bool
+     */
+    public static function isMutable();
 
     /**
      * Determines if the instance is in the past, ie. less (before) than now.
@@ -3411,6 +2873,14 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     public function isStartOfTime(): bool;
 
     /**
+     * Returns true if the strict mode is globally in use, false else.
+     * (It can be overridden in specific instances.)
+     *
+     * @return bool
+     */
+    public static function isStrictModeEnabled();
+
+    /**
      * Determines if the instance is today.
      *
      * @example
@@ -3483,7 +2953,7 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      *
      * @return string
      */
-    public function isoFormat(string $format, string $originalFormat = null): string;
+    public function isoFormat(string $format, ?string $originalFormat = null): string;
 
     /**
      * Get/set the week number using given first day of week and first
@@ -3615,7 +3085,57 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      *
      * @return $this|string
      */
-    public function locale(string $locale = null, ...$fallbackLocales);
+    public function locale(?string $locale = null, ...$fallbackLocales);
+
+    /**
+     * Returns true if the given locale is internally supported and has words for 1-day diff (just now, yesterday, tomorrow).
+     * Support is considered enabled if the 3 words are translated in the given locale.
+     *
+     * @param string $locale locale ex. en
+     *
+     * @return bool
+     */
+    public static function localeHasDiffOneDayWords($locale);
+
+    /**
+     * Returns true if the given locale is internally supported and has diff syntax support (ago, from now, before, after).
+     * Support is considered enabled if the 4 sentences are translated in the given locale.
+     *
+     * @param string $locale locale ex. en
+     *
+     * @return bool
+     */
+    public static function localeHasDiffSyntax($locale);
+
+    /**
+     * Returns true if the given locale is internally supported and has words for 2-days diff (before yesterday, after tomorrow).
+     * Support is considered enabled if the 2 words are translated in the given locale.
+     *
+     * @param string $locale locale ex. en
+     *
+     * @return bool
+     */
+    public static function localeHasDiffTwoDayWords($locale);
+
+    /**
+     * Returns true if the given locale is internally supported and has period syntax support (X times, every X, from X, to X).
+     * Support is considered enabled if the 4 sentences are translated in the given locale.
+     *
+     * @param string $locale locale ex. en
+     *
+     * @return bool
+     */
+    public static function localeHasPeriodSyntax($locale);
+
+    /**
+     * Returns true if the given locale is internally supported and has short-units support.
+     * Support is considered enabled if either year, day or hour has a short variant translated.
+     *
+     * @param string $locale locale ex. en
+     *
+     * @return bool
+     */
+    public static function localeHasShortUnits($locale);
 
     /**
      * Determines if the instance is less (before) than another
@@ -3654,6 +3174,42 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     public function lte($date): bool;
 
     /**
+     * Register a custom macro.
+     *
+     * @example
+     * ```
+     * $userSettings = [
+     *   'locale' => 'pt',
+     *   'timezone' => 'America/Sao_Paulo',
+     * ];
+     * Carbon::macro('userFormat', function () use ($userSettings) {
+     *   return $this->copy()->locale($userSettings['locale'])->tz($userSettings['timezone'])->calendar();
+     * });
+     * echo Carbon::yesterday()->hours(11)->userFormat();
+     * ```
+     *
+     * @param string          $name
+     * @param object|callable $macro
+     *
+     * @return void
+     */
+    public static function macro($name, $macro);
+
+    /**
+     * Make a Carbon instance from given variable if possible.
+     *
+     * Always return a new instance. Parse only strings and only these likely to be dates (skip intervals
+     * and recurrences). Throw an exception for invalid format, but otherwise return null.
+     *
+     * @param mixed $var
+     *
+     * @throws InvalidFormatException
+     *
+     * @return static|null
+     */
+    public static function make($var);
+
+    /**
      * Get the maximum instance between a given instance (default now) and the current instance.
      *
      * @param \Carbon\Carbon|\DateTimeInterface|mixed $date
@@ -3661,6 +3217,13 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      * @return static
      */
     public function max($date = null);
+
+    /**
+     * Create a Carbon instance for the greatest supported date.
+     *
+     * @return static
+     */
+    public static function maxValue();
 
     /**
      * Get the maximum instance between a given instance (default now) and the current instance.
@@ -3699,6 +3262,13 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     public function min($date = null);
 
     /**
+     * Create a Carbon instance for the lowest supported date.
+     *
+     * @return static
+     */
+    public static function minValue();
+
+    /**
      * Get the minimum instance between a given instance (default now) and the current instance.
      *
      * @param \Carbon\Carbon|\DateTimeInterface|mixed $date
@@ -3708,6 +3278,39 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      * @return static
      */
     public function minimum($date = null);
+
+    /**
+     * Mix another object into the class.
+     *
+     * @example
+     * ```
+     * Carbon::mixin(new class {
+     *   public function addMoon() {
+     *     return function () {
+     *       return $this->addDays(30);
+     *     };
+     *   }
+     *   public function subMoon() {
+     *     return function () {
+     *       return $this->subDays(30);
+     *     };
+     *   }
+     * });
+     * $fullMoon = Carbon::create('2018-12-22');
+     * $nextFullMoon = $fullMoon->addMoon();
+     * $blackMoon = Carbon::create('2019-01-06');
+     * $previousBlackMoon = $blackMoon->subMoon();
+     * echo "$nextFullMoon\n";
+     * echo "$previousBlackMoon\n";
+     * ```
+     *
+     * @param object|string $mixin
+     *
+     * @throws ReflectionException
+     *
+     * @return void
+     */
+    public static function mixin($mixin);
 
     /**
      * Calls \DateTime::modify if mutable or \DateTimeImmutable::modify else.
@@ -3777,6 +3380,15 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     public function notEqualTo($date): bool;
 
     /**
+     * Get a Carbon instance for the current date and time.
+     *
+     * @param DateTimeZone|string|null $tz
+     *
+     * @return static
+     */
+    public static function now($tz = null);
+
+    /**
      * Returns a present instance in the same timezone.
      *
      * @return static
@@ -3830,7 +3442,46 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      *
      * @return string
      */
-    public function ordinal(string $key, string $period = null): string;
+    public function ordinal(string $key, ?string $period = null): string;
+
+    /**
+     * Create a carbon instance from a string.
+     *
+     * This is an alias for the constructor that allows better fluent syntax
+     * as it allows you to do Carbon::parse('Monday next week')->fn() rather
+     * than (new Carbon('Monday next week'))->fn().
+     *
+     * @param string|DateTimeInterface|null $time
+     * @param DateTimeZone|string|null      $tz
+     *
+     * @throws InvalidFormatException
+     *
+     * @return static
+     */
+    public static function parse($time = null, $tz = null);
+
+    /**
+     * Create a carbon instance from a localized string (in French, Japanese, Arabic, etc.).
+     *
+     * @param string                   $time   date/time string in the given language (may also contain English).
+     * @param string|null              $locale if locale is null or not specified, current global locale will be
+     *                                         used instead.
+     * @param DateTimeZone|string|null $tz     optional timezone for the new instance.
+     *
+     * @throws InvalidFormatException
+     *
+     * @return static
+     */
+    public static function parseFromLocale($time, $locale = null, $tz = null);
+
+    /**
+     * Returns standardized plural of a given singular/plural unit name (in English).
+     *
+     * @param string $unit
+     *
+     * @return string
+     */
+    public static function pluralUnit(string $unit): string;
 
     /**
      * Modify to the previous occurrence of a given modifier such as a day of
@@ -3879,6 +3530,19 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     public function rawAdd(DateInterval $interval);
 
     /**
+     * Create a Carbon instance from a specific format.
+     *
+     * @param string                         $format Datetime format
+     * @param string                         $time
+     * @param DateTimeZone|string|false|null $tz
+     *
+     * @throws InvalidFormatException
+     *
+     * @return static|false
+     */
+    public static function rawCreateFromFormat($format, $time, $tz = null);
+
+    /**
      * @see https://php.net/manual/en/datetime.format.php
      *
      * @param string $format
@@ -3888,6 +3552,22 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     public function rawFormat($format);
 
     /**
+     * Create a carbon instance from a string.
+     *
+     * This is an alias for the constructor that allows better fluent syntax
+     * as it allows you to do Carbon::parse('Monday next week')->fn() rather
+     * than (new Carbon('Monday next week'))->fn().
+     *
+     * @param string|DateTimeInterface|null $time
+     * @param DateTimeZone|string|null      $tz
+     *
+     * @throws InvalidFormatException
+     *
+     * @return static
+     */
+    public static function rawParse($time = null, $tz = null);
+
+    /**
      * Call native PHP DateTime/DateTimeImmutable sub() method.
      *
      * @param DateInterval $interval
@@ -3895,6 +3575,44 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      * @return static
      */
     public function rawSub(DateInterval $interval);
+
+    /**
+     * Remove all macros and generic macros.
+     */
+    public static function resetMacros();
+
+    /**
+     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
+     *             You should rather use the ->settings() method.
+     *             Or you can use method variants: addMonthsWithOverflow/addMonthsNoOverflow, same variants
+     *             are available for quarters, years, decade, centuries, millennia (singular and plural forms).
+     * @see settings
+     *
+     * Reset the month overflow behavior.
+     *
+     * @return void
+     */
+    public static function resetMonthsOverflow();
+
+    /**
+     * Reset the format used to the default when type juggling a Carbon instance to a string
+     *
+     * @return void
+     */
+    public static function resetToStringFormat();
+
+    /**
+     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
+     *             You should rather use the ->settings() method.
+     *             Or you can use method variants: addYearsWithOverflow/addYearsNoOverflow, same variants
+     *             are available for quarters, years, decade, centuries, millennia (singular and plural forms).
+     * @see settings
+     *
+     * Reset the month overflow behavior.
+     *
+     * @return void
+     */
+    public static function resetYearsOverflow();
 
     /**
      * Round the current instance second with given precision if specified.
@@ -3946,6 +3664,18 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      * @return string
      */
     public function serialize();
+
+    /**
+     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
+     *             You should rather transform Carbon object before the serialization.
+     *
+     * JSON serialize all Carbon instances using the given callback.
+     *
+     * @param callable $callback
+     *
+     * @return void
+     */
+    public static function serializeUsing($callback);
 
     /**
      * Set a part of the Carbon object
@@ -4006,6 +3736,24 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     public function setDateTimeFrom($date = null);
 
     /**
+     * Set the fallback locale.
+     *
+     * @see https://symfony.com/doc/current/components/translation.html#fallback-locales
+     *
+     * @param string $locale
+     */
+    public static function setFallbackLocale($locale);
+
+    /**
+     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
+     *             You should rather use the ->settings() method.
+     * @see settings
+     *
+     * @param int $humanDiffOptions
+     */
+    public static function setHumanDiffOptions($humanDiffOptions);
+
+    /**
      * Set a date according to the ISO 8601 standard - using weeks and day offsets rather than specific dates.
      *
      * @see https://php.net/manual/en/datetime.setisodate.php
@@ -4026,6 +3774,53 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      * @return $this
      */
     public function setLocalTranslator(\Symfony\Component\Translation\TranslatorInterface $translator);
+
+    /**
+     * Set the current translator locale and indicate if the source locale file exists.
+     * Pass 'auto' as locale to use closest language from the current LC_TIME locale.
+     *
+     * @param string $locale locale ex. en
+     *
+     * @return bool
+     */
+    public static function setLocale($locale);
+
+    /**
+     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
+     *             You should rather consider mid-day is always 12pm, then if you need to test if it's an other
+     *             hour, test it explicitly:
+     *                 $date->format('G') == 13
+     *             or to set explicitly to a given hour:
+     *                 $date->setTime(13, 0, 0, 0)
+     *
+     * Set midday/noon hour
+     *
+     * @param int $hour midday hour
+     *
+     * @return void
+     */
+    public static function setMidDayAt($hour);
+
+    /**
+     * Set a Carbon instance (real or mock) to be returned when a "now"
+     * instance is created.  The provided instance will be returned
+     * specifically under the following conditions:
+     *   - A call to the static now() method, ex. Carbon::now()
+     *   - When a null (or blank string) is passed to the constructor or parse(), ex. new Carbon(null)
+     *   - When the string "now" is passed to the constructor or parse(), ex. new Carbon('now')
+     *   - When a string containing the desired time is passed to Carbon::parse().
+     *
+     * Note the timezone parameter was left out of the examples above and
+     * has no affect as the mock value will be returned regardless of its value.
+     *
+     * To clear the test instance call this method using the default
+     * parameter of null.
+     *
+     * /!\ Use this method for unit tests only.
+     *
+     * @param Closure|static|string|false|null $testNow real or mock Carbon instance
+     */
+    public static function setTestNow($testNow = null);
 
     /**
      * Resets the current time of the DateTime object to a different time.
@@ -4080,6 +3875,29 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     public function setTimezone($value);
 
     /**
+     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
+     *             You should rather let Carbon object being casted to string with DEFAULT_TO_STRING_FORMAT, and
+     *             use other method or custom format passed to format() method if you need to dump an other string
+     *             format.
+     *
+     * Set the default format used when type juggling a Carbon instance to a string
+     *
+     * @param string|Closure|null $format
+     *
+     * @return void
+     */
+    public static function setToStringFormat($format);
+
+    /**
+     * Set the default translator instance to use.
+     *
+     * @param \Symfony\Component\Translation\TranslatorInterface $translator
+     *
+     * @return void
+     */
+    public static function setTranslator(\Symfony\Component\Translation\TranslatorInterface $translator);
+
+    /**
      * Set specified unit to new given value.
      *
      * @param string $unit  year, month, day, hour, minute, second or microsecond
@@ -4099,6 +3917,74 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      * @return static
      */
     public function setUnitNoOverflow($valueUnit, $value, $overflowUnit);
+
+    /**
+     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
+     *             You should rather use UTF-8 language packages on every machine.
+     *
+     * Set if UTF8 will be used for localized date/time.
+     *
+     * @param bool $utf8
+     */
+    public static function setUtf8($utf8);
+
+    /**
+     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
+     *             Use $weekStartsAt optional parameter instead when using startOfWeek, floorWeek, ceilWeek
+     *             or roundWeek method. You can also use the 'first_day_of_week' locale setting to change the
+     *             start of week according to current locale selected and implicitly the end of week.
+     *
+     * Set the last day of week
+     *
+     * @param int|string $day week end day (or 'auto' to get the day before the first day of week
+     *                        from Carbon::getLocale() culture).
+     *
+     * @return void
+     */
+    public static function setWeekEndsAt($day);
+
+    /**
+     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
+     *             Use $weekEndsAt optional parameter instead when using endOfWeek method. You can also use the
+     *             'first_day_of_week' locale setting to change the start of week according to current locale
+     *             selected and implicitly the end of week.
+     *
+     * Set the first day of week
+     *
+     * @param int|string $day week start day (or 'auto' to get the first day of week from Carbon::getLocale() culture).
+     *
+     * @return void
+     */
+    public static function setWeekStartsAt($day);
+
+    /**
+     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
+     *             You should rather consider week-end is always saturday and sunday, and if you have some custom
+     *             week-end days to handle, give to those days an other name and create a macro for them:
+     *
+     *             ```
+     *             Carbon::macro('isDayOff', function ($date) {
+     *                 return $date->isSunday() || $date->isMonday();
+     *             });
+     *             Carbon::macro('isNotDayOff', function ($date) {
+     *                 return !$date->isDayOff();
+     *             });
+     *             if ($someDate->isDayOff()) ...
+     *             if ($someDate->isNotDayOff()) ...
+     *             // Add 5 not-off days
+     *             $count = 5;
+     *             while ($someDate->isDayOff() || ($count-- > 0)) {
+     *                 $someDate->addDay();
+     *             }
+     *             ```
+     *
+     * Set weekend days
+     *
+     * @param array $days
+     *
+     * @return void
+     */
+    public static function setWeekendDays($days);
 
     /**
      * Set specific options.
@@ -4129,12 +4015,35 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     public function shiftTimezone($value);
 
     /**
+     * Get the month overflow global behavior (can be overridden in specific instances).
+     *
+     * @return bool
+     */
+    public static function shouldOverflowMonths();
+
+    /**
+     * Get the month overflow global behavior (can be overridden in specific instances).
+     *
+     * @return bool
+     */
+    public static function shouldOverflowYears();
+
+    /**
      * @alias diffForHumans
      *
      * Get the difference in a human readable format in the current locale from current instance to an other
      * instance given (or now if null given).
      */
     public function since($other = null, $syntax = null, $short = false, $parts = 1, $options = null);
+
+    /**
+     * Returns standardized singular of a given singular/plural unit name (in English).
+     *
+     * @param string $unit
+     *
+     * @return string
+     */
+    public static function singularUnit(string $unit): string;
 
     /**
      * Modify to start of current given unit.
@@ -4820,6 +4729,24 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     public function toW3cString();
 
     /**
+     * Create a Carbon instance for today.
+     *
+     * @param DateTimeZone|string|null $tz
+     *
+     * @return static
+     */
+    public static function today($tz = null);
+
+    /**
+     * Create a Carbon instance for tomorrow.
+     *
+     * @param DateTimeZone|string|null $tz
+     *
+     * @return static
+     */
+    public static function tomorrow($tz = null);
+
+    /**
      * Translate using translation string or callback available.
      *
      * @param string                                             $key
@@ -4829,7 +4756,7 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      *
      * @return string
      */
-    public function translate(string $key, array $parameters = [], $number = null, \Symfony\Component\Translation\TranslatorInterface $translator = null, bool $altNumbers = false): string;
+    public function translate(string $key, array $parameters = [], $number = null, ?\Symfony\Component\Translation\TranslatorInterface $translator = null, bool $altNumbers = false): string;
 
     /**
      * Returns the alternative number for a given integer if available in the current locale.
@@ -4841,6 +4768,24 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     public function translateNumber(int $number): string;
 
     /**
+     * Translate a time string from a locale to an other.
+     *
+     * @param string      $timeString date/time/duration string to translate (may also contain English)
+     * @param string|null $from       input locale of the $timeString parameter (`Carbon::getLocale()` by default)
+     * @param string|null $to         output locale of the result returned (`"en"` by default)
+     * @param int         $mode       specify what to translate with options:
+     *                                - self::TRANSLATE_ALL (default)
+     *                                - CarbonInterface::TRANSLATE_MONTHS
+     *                                - CarbonInterface::TRANSLATE_DAYS
+     *                                - CarbonInterface::TRANSLATE_UNITS
+     *                                - CarbonInterface::TRANSLATE_MERIDIEM
+     *                                You can use pipe to group: CarbonInterface::TRANSLATE_MONTHS | CarbonInterface::TRANSLATE_DAYS
+     *
+     * @return string
+     */
+    public static function translateTimeString($timeString, $from = null, $to = null, $mode = self::TRANSLATE_ALL);
+
+    /**
      * Translate a time string from the current locale (`$date->locale()`) to an other.
      *
      * @param string      $timeString time string to translate
@@ -4849,6 +4794,18 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      * @return string
      */
     public function translateTimeStringTo($timeString, $to = null);
+
+    /**
+     * Translate using translation string or callback available.
+     *
+     * @param \Symfony\Component\Translation\TranslatorInterface $translator
+     * @param string                                             $key
+     * @param array                                              $parameters
+     * @param null                                               $number
+     *
+     * @return string
+     */
+    public static function translateWith(\Symfony\Component\Translation\TranslatorInterface $translator, string $key, array $parameters = [], $number = null): string;
 
     /**
      * Format as ->format() do (using date replacements patterns from http://php.net/manual/fr/function.date.php)
@@ -4915,6 +4872,47 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     public function until($other = null, $syntax = null, $short = false, $parts = 1, $options = null);
 
     /**
+     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
+     *             You should rather use the ->settings() method.
+     *             Or you can use method variants: addMonthsWithOverflow/addMonthsNoOverflow, same variants
+     *             are available for quarters, years, decade, centuries, millennia (singular and plural forms).
+     * @see settings
+     *
+     * Indicates if months should be calculated with overflow.
+     *
+     * @param bool $monthsOverflow
+     *
+     * @return void
+     */
+    public static function useMonthsOverflow($monthsOverflow = true);
+
+    /**
+     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
+     *             You should rather use the ->settings() method.
+     * @see settings
+     *
+     * Enable the strict mode (or disable with passing false).
+     *
+     * @param bool $strictModeEnabled
+     */
+    public static function useStrictMode($strictModeEnabled = true);
+
+    /**
+     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
+     *             You should rather use the ->settings() method.
+     *             Or you can use method variants: addYearsWithOverflow/addYearsNoOverflow, same variants
+     *             are available for quarters, years, decade, centuries, millennia (singular and plural forms).
+     * @see settings
+     *
+     * Indicates if years should be calculated with overflow.
+     *
+     * @param bool $yearsOverflow
+     *
+     * @return void
+     */
+    public static function useYearsOverflow($yearsOverflow = true);
+
+    /**
      * Set the instance's timezone to UTC.
      *
      * @return static
@@ -4928,7 +4926,7 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      *
      * @return int|static
      */
-    public function utcOffset(int $minuteOffset = null);
+    public function utcOffset(?int $minuteOffset = null);
 
     /**
      * Returns the milliseconds timestamps used amongst other by Date javascript objects.
@@ -4983,6 +4981,27 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      * @return int
      */
     public function weeksInYear($dayOfWeek = null, $dayOfYear = null);
+
+    /**
+     * Temporarily sets a static date to be used within the callback.
+     * Using setTestNow to set the date, executing the callback, then
+     * clearing the test instance.
+     *
+     * /!\ Use this method for unit tests only.
+     *
+     * @param Closure|static|string|false|null $testNow real or mock Carbon instance
+     * @param Closure|null $callback
+     */
+    public static function withTestNow($testNow = null, $callback = null);
+
+    /**
+     * Create a Carbon instance for yesterday.
+     *
+     * @param DateTimeZone|string|null $tz
+     *
+     * @return static
+     */
+    public static function yesterday($tz = null);
 
     // </methods>
 }

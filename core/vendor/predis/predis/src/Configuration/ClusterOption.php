@@ -25,24 +25,6 @@ use Predis\Connection\Aggregate\RedisCluster;
 class ClusterOption implements OptionInterface
 {
     /**
-     * {@inheritdoc}
-     */
-    public function filter(OptionsInterface $options, $value)
-    {
-        if (is_string($value)) {
-            $value = $this->createByDescription($options, $value);
-        }
-
-        if (!$value instanceof ClusterInterface) {
-            throw new \InvalidArgumentException(
-                "An instance of type 'Predis\Connection\Aggregate\ClusterInterface' was expected."
-            );
-        }
-
-        return $value;
-    }
-
-    /**
      * Creates a new cluster connection from on a known descriptive name.
      *
      * @param OptionsInterface $options Instance of the client options.
@@ -64,6 +46,24 @@ class ClusterOption implements OptionInterface
             default:
                 return;
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function filter(OptionsInterface $options, $value)
+    {
+        if (is_string($value)) {
+            $value = $this->createByDescription($options, $value);
+        }
+
+        if (!$value instanceof ClusterInterface) {
+            throw new \InvalidArgumentException(
+                "An instance of type 'Predis\Connection\Aggregate\ClusterInterface' was expected."
+            );
+        }
+
+        return $value;
     }
 
     /**

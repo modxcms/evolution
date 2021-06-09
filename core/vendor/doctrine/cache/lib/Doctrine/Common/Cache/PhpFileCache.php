@@ -57,27 +57,6 @@ class PhpFileCache extends FileCache
     }
 
     /**
-     * @return mixed[]|null
-     */
-    private function includeFileForId(string $id): ?array
-    {
-        $fileName = $this->getFilename($id);
-
-        // note: error suppression is still faster than `file_exists`, `is_file` and `is_readable`
-        set_error_handler(self::$emptyErrorHandler);
-
-        $value = include $fileName;
-
-        restore_error_handler();
-
-        if (! isset($value['lifetime'])) {
-            return null;
-        }
-
-        return $value;
-    }
-
-    /**
      * {@inheritdoc}
      */
     protected function doContains($id)
@@ -116,5 +95,26 @@ class PhpFileCache extends FileCache
         }
 
         return $this->writeFile($filename, $code);
+    }
+
+    /**
+     * @return mixed[]|null
+     */
+    private function includeFileForId(string $id): ?array
+    {
+        $fileName = $this->getFilename($id);
+
+        // note: error suppression is still faster than `file_exists`, `is_file` and `is_readable`
+        set_error_handler(self::$emptyErrorHandler);
+
+        $value = include $fileName;
+
+        restore_error_handler();
+
+        if (! isset($value['lifetime'])) {
+            return null;
+        }
+
+        return $value;
     }
 }

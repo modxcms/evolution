@@ -62,13 +62,14 @@ class TextPart extends AbstractPart
         }
     }
 
-    private function chooseEncoding(): string
+    public function getMediaType(): string
     {
-        if (null === $this->charset) {
-            return 'base64';
-        }
+        return 'text';
+    }
 
-        return 'quoted-printable';
+    public function getMediaSubtype(): string
+    {
+        return $this->subtype;
     }
 
     /**
@@ -95,24 +96,6 @@ class TextPart extends AbstractPart
         return $this;
     }
 
-    public function bodyToString(): string
-    {
-        return $this->getEncoder()->encodeString($this->getBody(), $this->charset);
-    }
-
-    private function getEncoder(): ContentEncoderInterface
-    {
-        if ('8bit' === $this->encoding) {
-            return self::$encoders[$this->encoding] ?? (self::$encoders[$this->encoding] = new EightBitContentEncoder());
-        }
-
-        if ('quoted-printable' === $this->encoding) {
-            return self::$encoders[$this->encoding] ?? (self::$encoders[$this->encoding] = new QpContentEncoder());
-        }
-
-        return self::$encoders[$this->encoding] ?? (self::$encoders[$this->encoding] = new Base64ContentEncoder());
-    }
-
     public function getBody(): string
     {
         if (null === $this->seekable) {
@@ -124,6 +107,11 @@ class TextPart extends AbstractPart
         }
 
         return stream_get_contents($this->body) ?: '';
+    }
+
+    public function bodyToString(): string
+    {
+        return $this->getEncoder()->encodeString($this->getBody(), $this->charset);
     }
 
     public function bodyToIterable(): iterable
@@ -161,16 +149,6 @@ class TextPart extends AbstractPart
         return $headers;
     }
 
-    public function getMediaType(): string
-    {
-        return 'text';
-    }
-
-    public function getMediaSubtype(): string
-    {
-        return $this->subtype;
-    }
-
     public function asDebugString(): string
     {
         $str = parent::asDebugString();
@@ -182,6 +160,28 @@ class TextPart extends AbstractPart
         }
 
         return $str;
+    }
+
+    private function getEncoder(): ContentEncoderInterface
+    {
+        if ('8bit' === $this->encoding) {
+            return self::$encoders[$this->encoding] ?? (self::$encoders[$this->encoding] = new EightBitContentEncoder());
+        }
+
+        if ('quoted-printable' === $this->encoding) {
+            return self::$encoders[$this->encoding] ?? (self::$encoders[$this->encoding] = new QpContentEncoder());
+        }
+
+        return self::$encoders[$this->encoding] ?? (self::$encoders[$this->encoding] = new Base64ContentEncoder());
+    }
+
+    private function chooseEncoding(): string
+    {
+        if (null === $this->charset) {
+            return 'base64';
+        }
+
+        return 'quoted-printable';
     }
 
     /**

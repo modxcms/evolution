@@ -67,46 +67,6 @@ class DatabaseManager implements ConnectionResolverInterface
     }
 
     /**
-     * Reconnect to the given database.
-     *
-     * @param  string|null  $name
-     * @return \Illuminate\Database\Connection
-     */
-    public function reconnect($name = null)
-    {
-        $this->disconnect($name = $name ?: $this->getDefaultConnection());
-
-        if (! isset($this->connections[$name])) {
-            return $this->connection($name);
-        }
-
-        return $this->refreshPdoConnections($name);
-    }
-
-    /**
-     * Disconnect from the given database.
-     *
-     * @param  string|null  $name
-     * @return void
-     */
-    public function disconnect($name = null)
-    {
-        if (isset($this->connections[$name = $name ?: $this->getDefaultConnection()])) {
-            $this->connections[$name]->disconnect();
-        }
-    }
-
-    /**
-     * Get the default connection name.
-     *
-     * @return string
-     */
-    public function getDefaultConnection()
-    {
-        return $this->app['config']['database.default'];
-    }
-
-    /**
      * Get a database connection instance.
      *
      * @param  string|null  $name
@@ -142,54 +102,6 @@ class DatabaseManager implements ConnectionResolverInterface
 
         return Str::endsWith($name, ['::read', '::write'])
                             ? explode('::', $name, 2) : [$name, null];
-    }
-
-    /**
-     * Prepare the database connection instance.
-     *
-     * @param  \Illuminate\Database\Connection  $connection
-     * @param  string  $type
-     * @return \Illuminate\Database\Connection
-     */
-    protected function configure(Connection $connection, $type)
-    {
-        $connection = $this->setPdoForType($connection, $type)->setReadWriteType($type);
-
-        // First we'll set the fetch mode and a few other dependencies of the database
-        // connection. This method basically just configures and prepares it to get
-        // used by the application. Once we're finished we'll return it back out.
-        if ($this->app->bound('events')) {
-            $connection->setEventDispatcher($this->app['events']);
-        }
-
-        if ($this->app->bound('db.transactions')) {
-            $connection->setTransactionManager($this->app['db.transactions']);
-        }
-
-        // Here we'll set a reconnector callback. This reconnector can be any callable
-        // so we will set a Closure to reconnect from this manager with the name of
-        // the connection, which will allow us to reconnect from the connections.
-        $connection->setReconnector($this->reconnector);
-
-        return $connection;
-    }
-
-    /**
-     * Prepare the read / write mode for database connection instance.
-     *
-     * @param  \Illuminate\Database\Connection  $connection
-     * @param  string|null  $type
-     * @return \Illuminate\Database\Connection
-     */
-    protected function setPdoForType(Connection $connection, $type = null)
-    {
-        if ($type === 'read') {
-            $connection->setPdo($connection->getReadPdo());
-        } elseif ($type === 'write') {
-            $connection->setReadPdo($connection->getPdo());
-        }
-
-        return $connection;
     }
 
     /**
@@ -245,22 +157,51 @@ class DatabaseManager implements ConnectionResolverInterface
     }
 
     /**
-     * Refresh the PDO connections on a given connection.
+     * Prepare the database connection instance.
      *
-     * @param  string  $name
+     * @param  \Illuminate\Database\Connection  $connection
+     * @param  string  $type
      * @return \Illuminate\Database\Connection
      */
-    protected function refreshPdoConnections($name)
+    protected function configure(Connection $connection, $type)
     {
-        [$database, $type] = $this->parseConnectionName($name);
+        $connection = $this->setPdoForType($connection, $type)->setReadWriteType($type);
 
-        $fresh = $this->configure(
-            $this->makeConnection($database), $type
-        );
+        // First we'll set the fetch mode and a few other dependencies of the database
+        // connection. This method basically just configures and prepares it to get
+        // used by the application. Once we're finished we'll return it back out.
+        if ($this->app->bound('events')) {
+            $connection->setEventDispatcher($this->app['events']);
+        }
 
-        return $this->connections[$name]
-                    ->setPdo($fresh->getRawPdo())
-                    ->setReadPdo($fresh->getRawReadPdo());
+        if ($this->app->bound('db.transactions')) {
+            $connection->setTransactionManager($this->app['db.transactions']);
+        }
+
+        // Here we'll set a reconnector callback. This reconnector can be any callable
+        // so we will set a Closure to reconnect from this manager with the name of
+        // the connection, which will allow us to reconnect from the connections.
+        $connection->setReconnector($this->reconnector);
+
+        return $connection;
+    }
+
+    /**
+     * Prepare the read / write mode for database connection instance.
+     *
+     * @param  \Illuminate\Database\Connection  $connection
+     * @param  string|null  $type
+     * @return \Illuminate\Database\Connection
+     */
+    protected function setPdoForType(Connection $connection, $type = null)
+    {
+        if ($type === 'read') {
+            $connection->setPdo($connection->getReadPdo());
+        } elseif ($type === 'write') {
+            $connection->setReadPdo($connection->getPdo());
+        }
+
+        return $connection;
     }
 
     /**
@@ -276,6 +217,36 @@ class DatabaseManager implements ConnectionResolverInterface
         $this->disconnect($name);
 
         unset($this->connections[$name]);
+    }
+
+    /**
+     * Disconnect from the given database.
+     *
+     * @param  string|null  $name
+     * @return void
+     */
+    public function disconnect($name = null)
+    {
+        if (isset($this->connections[$name = $name ?: $this->getDefaultConnection()])) {
+            $this->connections[$name]->disconnect();
+        }
+    }
+
+    /**
+     * Reconnect to the given database.
+     *
+     * @param  string|null  $name
+     * @return \Illuminate\Database\Connection
+     */
+    public function reconnect($name = null)
+    {
+        $this->disconnect($name = $name ?: $this->getDefaultConnection());
+
+        if (! isset($this->connections[$name])) {
+            return $this->connection($name);
+        }
+
+        return $this->refreshPdoConnections($name);
     }
 
     /**
@@ -297,6 +268,35 @@ class DatabaseManager implements ConnectionResolverInterface
     }
 
     /**
+     * Refresh the PDO connections on a given connection.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Database\Connection
+     */
+    protected function refreshPdoConnections($name)
+    {
+        [$database, $type] = $this->parseConnectionName($name);
+
+        $fresh = $this->configure(
+            $this->makeConnection($database), $type
+        );
+
+        return $this->connections[$name]
+                    ->setPdo($fresh->getRawPdo())
+                    ->setReadPdo($fresh->getRawReadPdo());
+    }
+
+    /**
+     * Get the default connection name.
+     *
+     * @return string
+     */
+    public function getDefaultConnection()
+    {
+        return $this->app['config']['database.default'];
+    }
+
+    /**
      * Set the default connection name.
      *
      * @param  string  $name
@@ -305,6 +305,16 @@ class DatabaseManager implements ConnectionResolverInterface
     public function setDefaultConnection($name)
     {
         $this->app['config']['database.default'] = $name;
+    }
+
+    /**
+     * Get all of the support drivers.
+     *
+     * @return array
+     */
+    public function supportedDrivers()
+    {
+        return ['mysql', 'pgsql', 'sqlite', 'sqlsrv'];
     }
 
     /**
@@ -318,16 +328,6 @@ class DatabaseManager implements ConnectionResolverInterface
             $this->supportedDrivers(),
             str_replace('dblib', 'sqlsrv', PDO::getAvailableDrivers())
         );
-    }
-
-    /**
-     * Get all of the support drivers.
-     *
-     * @return array
-     */
-    public function supportedDrivers()
-    {
-        return ['mysql', 'pgsql', 'sqlite', 'sqlsrv'];
     }
 
     /**

@@ -106,9 +106,84 @@ final class Grapheme
         return $ret;
     }
 
+    public static function grapheme_strlen($s)
+    {
+        preg_replace('/'.SYMFONY_GRAPHEME_CLUSTER_RX.'/u', '', $s, -1, $len);
+
+        return 0 === $len && '' !== $s ? null : $len;
+    }
+
+    public static function grapheme_substr($s, $start, $len = null)
+    {
+        if (null === $len) {
+            $len = 2147483647;
+        }
+
+        preg_match_all('/'.SYMFONY_GRAPHEME_CLUSTER_RX.'/u', $s, $s);
+
+        $slen = \count($s[0]);
+        $start = (int) $start;
+
+        if (0 > $start) {
+            $start += $slen;
+        }
+        if (0 > $start) {
+            if (\PHP_VERSION_ID < 80000) {
+                return false;
+            }
+
+            $start = 0;
+        }
+        if ($start >= $slen) {
+            return \PHP_VERSION_ID >= 80000 ? '' : false;
+        }
+
+        $rem = $slen - $start;
+
+        if (0 > $len) {
+            $len += $rem;
+        }
+        if (0 === $len) {
+            return '';
+        }
+        if (0 > $len) {
+            return \PHP_VERSION_ID >= 80000 ? '' : false;
+        }
+        if ($len > $rem) {
+            $len = $rem;
+        }
+
+        return implode('', \array_slice($s[0], $start, $len));
+    }
+
     public static function grapheme_strpos($s, $needle, $offset = 0)
     {
         return self::grapheme_position($s, $needle, $offset, 0);
+    }
+
+    public static function grapheme_stripos($s, $needle, $offset = 0)
+    {
+        return self::grapheme_position($s, $needle, $offset, 1);
+    }
+
+    public static function grapheme_strrpos($s, $needle, $offset = 0)
+    {
+        return self::grapheme_position($s, $needle, $offset, 2);
+    }
+
+    public static function grapheme_strripos($s, $needle, $offset = 0)
+    {
+        return self::grapheme_position($s, $needle, $offset, 3);
+    }
+
+    public static function grapheme_stristr($s, $needle, $beforeNeedle = false)
+    {
+        return mb_stristr($s, $needle, $beforeNeedle, 'UTF-8');
+    }
+
+    public static function grapheme_strstr($s, $needle, $beforeNeedle = false)
+    {
+        return mb_strstr($s, $needle, $beforeNeedle, 'UTF-8');
     }
 
     private static function grapheme_position($s, $needle, $offset, $mode)
@@ -158,80 +233,5 @@ final class Grapheme
         }
 
         return false !== $needlePos ? self::grapheme_strlen(substr($s, 0, $needlePos)) + $offset : false;
-    }
-
-    public static function grapheme_substr($s, $start, $len = null)
-    {
-        if (null === $len) {
-            $len = 2147483647;
-        }
-
-        preg_match_all('/'.SYMFONY_GRAPHEME_CLUSTER_RX.'/u', $s, $s);
-
-        $slen = \count($s[0]);
-        $start = (int) $start;
-
-        if (0 > $start) {
-            $start += $slen;
-        }
-        if (0 > $start) {
-            if (\PHP_VERSION_ID < 80000) {
-                return false;
-            }
-
-            $start = 0;
-        }
-        if ($start >= $slen) {
-            return \PHP_VERSION_ID >= 80000 ? '' : false;
-        }
-
-        $rem = $slen - $start;
-
-        if (0 > $len) {
-            $len += $rem;
-        }
-        if (0 === $len) {
-            return '';
-        }
-        if (0 > $len) {
-            return \PHP_VERSION_ID >= 80000 ? '' : false;
-        }
-        if ($len > $rem) {
-            $len = $rem;
-        }
-
-        return implode('', \array_slice($s[0], $start, $len));
-    }
-
-    public static function grapheme_strlen($s)
-    {
-        preg_replace('/'.SYMFONY_GRAPHEME_CLUSTER_RX.'/u', '', $s, -1, $len);
-
-        return 0 === $len && '' !== $s ? null : $len;
-    }
-
-    public static function grapheme_stripos($s, $needle, $offset = 0)
-    {
-        return self::grapheme_position($s, $needle, $offset, 1);
-    }
-
-    public static function grapheme_strrpos($s, $needle, $offset = 0)
-    {
-        return self::grapheme_position($s, $needle, $offset, 2);
-    }
-
-    public static function grapheme_strripos($s, $needle, $offset = 0)
-    {
-        return self::grapheme_position($s, $needle, $offset, 3);
-    }
-
-    public static function grapheme_stristr($s, $needle, $beforeNeedle = false)
-    {
-        return mb_stristr($s, $needle, $beforeNeedle, 'UTF-8');
-    }
-
-    public static function grapheme_strstr($s, $needle, $beforeNeedle = false)
-    {
-        return mb_strstr($s, $needle, $beforeNeedle, 'UTF-8');
     }
 }

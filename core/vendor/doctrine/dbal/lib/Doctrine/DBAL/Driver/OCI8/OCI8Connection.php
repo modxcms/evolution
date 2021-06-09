@@ -116,6 +116,28 @@ class OCI8Connection implements ConnectionInterface, ServerInfoAwareConnection
     /**
      * {@inheritdoc}
      */
+    public function prepare($sql)
+    {
+        return new Statement($this->dbh, $sql, $this);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function query()
+    {
+        $args = func_get_args();
+        $sql  = $args[0];
+        //$fetchMode = $args[1];
+        $stmt = $this->prepare($sql);
+        $stmt->execute();
+
+        return $stmt;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function quote($value, $type = ParameterType::STRING)
     {
         if (is_int($value) || is_float($value)) {
@@ -140,14 +162,6 @@ class OCI8Connection implements ConnectionInterface, ServerInfoAwareConnection
 
     /**
      * {@inheritdoc}
-     */
-    public function prepare($sql)
-    {
-        return new Statement($this->dbh, $sql, $this);
-    }
-
-    /**
-     * {@inheritdoc}
      *
      * @param string|null $name
      *
@@ -168,20 +182,6 @@ class OCI8Connection implements ConnectionInterface, ServerInfoAwareConnection
         }
 
         return (int) $result;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function query()
-    {
-        $args = func_get_args();
-        $sql  = $args[0];
-        //$fetchMode = $args[1];
-        $stmt = $this->prepare($sql);
-        $stmt->execute();
-
-        return $stmt;
     }
 
     /**
@@ -222,22 +222,6 @@ class OCI8Connection implements ConnectionInterface, ServerInfoAwareConnection
 
     /**
      * {@inheritdoc}
-     *
-     * @deprecated The error information is available via exceptions.
-     */
-    public function errorInfo()
-    {
-        $error = oci_error($this->dbh);
-
-        if ($error === false) {
-            return [];
-        }
-
-        return $error;
-    }
-
-    /**
-     * {@inheritdoc}
      */
     public function rollBack()
     {
@@ -264,5 +248,21 @@ class OCI8Connection implements ConnectionInterface, ServerInfoAwareConnection
         }
 
         return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @deprecated The error information is available via exceptions.
+     */
+    public function errorInfo()
+    {
+        $error = oci_error($this->dbh);
+
+        if ($error === false) {
+            return [];
+        }
+
+        return $error;
     }
 }

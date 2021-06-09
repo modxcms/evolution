@@ -144,6 +144,20 @@ class ArrayInput extends Input
     }
 
     /**
+     * Adds a short option value.
+     *
+     * @throws InvalidOptionException When option given doesn't exist
+     */
+    private function addShortOption(string $shortcut, $value)
+    {
+        if (!$this->definition->hasShortcut($shortcut)) {
+            throw new InvalidOptionException(sprintf('The "-%s" option does not exist.', $shortcut));
+        }
+
+        $this->addLongOption($this->definition->getOptionForShortcut($shortcut)->getName(), $value);
+    }
+
+    /**
      * Adds a long option value.
      *
      * @throws InvalidOptionException When option given doesn't exist
@@ -175,20 +189,6 @@ class ArrayInput extends Input
         }
 
         $this->options[$name] = $value;
-    }
-
-    /**
-     * Adds a short option value.
-     *
-     * @throws InvalidOptionException When option given doesn't exist
-     */
-    private function addShortOption(string $shortcut, $value)
-    {
-        if (!$this->definition->hasShortcut($shortcut)) {
-            throw new InvalidOptionException(sprintf('The "-%s" option does not exist.', $shortcut));
-        }
-
-        $this->addLongOption($this->definition->getOptionForShortcut($shortcut)->getName(), $value);
     }
 
     /**

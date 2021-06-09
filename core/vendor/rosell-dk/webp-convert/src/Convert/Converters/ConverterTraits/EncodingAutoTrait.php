@@ -13,13 +13,20 @@ namespace WebPConvert\Convert\Converters\ConverterTraits;
 trait EncodingAutoTrait
 {
 
-    protected function runActualConvert()
+    abstract protected function doActualConvert();
+    abstract public function getSource();
+    abstract public function getDestination();
+    abstract public function setDestination($destination);
+    abstract public function getOptions();
+    abstract protected function setOption($optionName, $optionValue);
+    abstract protected function logLn($msg, $style = '');
+    abstract protected function log($msg, $style = '');
+    abstract protected function ln();
+    abstract protected function logReduction($source, $destination);
+
+    public function supportsLossless()
     {
-        if (!$this->passOnEncodingAuto() && ($this->getOptions()['encoding'] == 'auto') && $this->supportsLossless()) {
-            $this->convertTwoAndSelectSmallest();
-        } else {
-            $this->doActualConvert();
-        }
+        return true;
     }
 
     /** Default is to not pass "lossless:auto" on, but implement it.
@@ -31,13 +38,6 @@ trait EncodingAutoTrait
     public function passOnEncodingAuto()
     {
         return false;
-    }
-
-    abstract public function getOptions();
-
-    public function supportsLossless()
-    {
-        return true;
     }
 
     private function convertTwoAndSelectSmallest()
@@ -80,21 +80,12 @@ trait EncodingAutoTrait
         $this->setOption('encoding', 'auto');
     }
 
-    abstract public function getDestination();
-
-    abstract protected function logLn($msg, $style = '');
-
-    abstract protected function ln();
-
-    abstract public function setDestination($destination);
-
-    abstract protected function setOption($optionName, $optionValue);
-
-    abstract protected function doActualConvert();
-
-    abstract protected function log($msg, $style = '');
-
-    abstract protected function logReduction($source, $destination);
-
-    abstract public function getSource();
+    protected function runActualConvert()
+    {
+        if (!$this->passOnEncodingAuto() && ($this->getOptions()['encoding'] == 'auto') && $this->supportsLossless()) {
+            $this->convertTwoAndSelectSmallest();
+        } else {
+            $this->doActualConvert();
+        }
+    }
 }

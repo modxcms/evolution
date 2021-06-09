@@ -33,11 +33,6 @@ class DateTimeImmutable extends \DateTimeImmutable implements \JsonSerializable
         parent::__construct('now', $timezone);
     }
 
-    public function __toString(): string
-    {
-        return $this->jsonSerialize();
-    }
-
     public function jsonSerialize(): string
     {
         if ($this->useMicroseconds) {
@@ -45,5 +40,10 @@ class DateTimeImmutable extends \DateTimeImmutable implements \JsonSerializable
         }
 
         return $this->format('Y-m-d\TH:i:sP');
+    }
+
+    public function __toString(): string
+    {
+        return $this->jsonSerialize();
     }
 }

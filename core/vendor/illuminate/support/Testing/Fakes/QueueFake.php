@@ -23,29 +23,6 @@ class QueueFake extends QueueManager implements Queue
     /**
      * Assert if a job was pushed based on a truth-test callback.
      *
-     * @param  string  $queue
-     * @param  string|\Closure  $job
-     * @param  callable|null  $callback
-     * @return void
-     */
-    public function assertPushedOn($queue, $job, $callback = null)
-    {
-        if ($job instanceof Closure) {
-            [$job, $callback] = [$this->firstClosureParameterType($job), $job];
-        }
-
-        $this->assertPushed($job, function ($job, $pushedQueue) use ($callback, $queue) {
-            if ($pushedQueue !== $queue) {
-                return false;
-            }
-
-            return $callback ? $callback(...func_get_args()) : true;
-        });
-    }
-
-    /**
-     * Assert if a job was pushed based on a truth-test callback.
-     *
      * @param  string|\Closure  $job
      * @param  callable|int|null  $callback
      * @return void
@@ -84,36 +61,26 @@ class QueueFake extends QueueManager implements Queue
     }
 
     /**
-     * Get all of the jobs matching a truth-test callback.
+     * Assert if a job was pushed based on a truth-test callback.
      *
-     * @param  string  $job
+     * @param  string  $queue
+     * @param  string|\Closure  $job
      * @param  callable|null  $callback
-     * @return \Illuminate\Support\Collection
+     * @return void
      */
-    public function pushed($job, $callback = null)
+    public function assertPushedOn($queue, $job, $callback = null)
     {
-        if (! $this->hasPushed($job)) {
-            return collect();
+        if ($job instanceof Closure) {
+            [$job, $callback] = [$this->firstClosureParameterType($job), $job];
         }
 
-        $callback = $callback ?: function () {
-            return true;
-        };
+        $this->assertPushed($job, function ($job, $pushedQueue) use ($callback, $queue) {
+            if ($pushedQueue !== $queue) {
+                return false;
+            }
 
-        return collect($this->jobs[$job])->filter(function ($data) use ($callback) {
-            return $callback($data['job'], $data['queue']);
-        })->pluck('job');
-    }
-
-    /**
-     * Determine if there are any stored jobs for a given class.
-     *
-     * @param  string  $job
-     * @return bool
-     */
-    public function hasPushed($job)
-    {
-        return isset($this->jobs[$job]) && ! empty($this->jobs[$job]);
+            return $callback ? $callback(...func_get_args()) : true;
+        });
     }
 
     /**
@@ -142,16 +109,20 @@ class QueueFake extends QueueManager implements Queue
     }
 
     /**
-     * Determine if the given chain is entirely composed of objects.
+     * Assert if a job was pushed with an empty chain based on a truth-test callback.
      *
-     * @param  array  $chain
-     * @return bool
+     * @param  string  $job
+     * @param  callable|null  $callback
+     * @return void
      */
-    protected function isChainOfObjects($chain)
+    public function assertPushedWithoutChain($job, $callback = null)
     {
-        return ! collect($chain)->contains(function ($job) {
-            return ! is_object($job);
-        });
+        PHPUnit::assertTrue(
+            $this->pushed($job, $callback)->isNotEmpty(),
+            "The expected [{$job}] job was not pushed."
+        );
+
+        $this->assertPushedWithChainOfClasses($job, [], $callback);
     }
 
     /**
@@ -200,20 +171,16 @@ class QueueFake extends QueueManager implements Queue
     }
 
     /**
-     * Assert if a job was pushed with an empty chain based on a truth-test callback.
+     * Determine if the given chain is entirely composed of objects.
      *
-     * @param  string  $job
-     * @param  callable|null  $callback
-     * @return void
+     * @param  array  $chain
+     * @return bool
      */
-    public function assertPushedWithoutChain($job, $callback = null)
+    protected function isChainOfObjects($chain)
     {
-        PHPUnit::assertTrue(
-            $this->pushed($job, $callback)->isNotEmpty(),
-            "The expected [{$job}] job was not pushed."
-        );
-
-        $this->assertPushedWithChainOfClasses($job, [], $callback);
+        return ! collect($chain)->contains(function ($job) {
+            return ! is_object($job);
+        });
     }
 
     /**
@@ -246,6 +213,39 @@ class QueueFake extends QueueManager implements Queue
     }
 
     /**
+     * Get all of the jobs matching a truth-test callback.
+     *
+     * @param  string  $job
+     * @param  callable|null  $callback
+     * @return \Illuminate\Support\Collection
+     */
+    public function pushed($job, $callback = null)
+    {
+        if (! $this->hasPushed($job)) {
+            return collect();
+        }
+
+        $callback = $callback ?: function () {
+            return true;
+        };
+
+        return collect($this->jobs[$job])->filter(function ($data) use ($callback) {
+            return $callback($data['job'], $data['queue']);
+        })->pluck('job');
+    }
+
+    /**
+     * Determine if there are any stored jobs for a given class.
+     *
+     * @param  string  $job
+     * @return bool
+     */
+    public function hasPushed($job)
+    {
+        return isset($this->jobs[$job]) && ! empty($this->jobs[$job]);
+    }
+
+    /**
      * Resolve a queue connection instance.
      *
      * @param  mixed  $value
@@ -267,6 +267,22 @@ class QueueFake extends QueueManager implements Queue
         return collect($this->jobs)->flatten(1)->filter(function ($job) use ($queue) {
             return $job['queue'] === $queue;
         })->count();
+    }
+
+    /**
+     * Push a new job onto the queue.
+     *
+     * @param  string  $job
+     * @param  mixed  $data
+     * @param  string|null  $queue
+     * @return mixed
+     */
+    public function push($job, $data = '', $queue = null)
+    {
+        $this->jobs[is_object($job) ? get_class($job) : $job][] = [
+            'job' => $job,
+            'queue' => $queue,
+        ];
     }
 
     /**
@@ -294,22 +310,6 @@ class QueueFake extends QueueManager implements Queue
     public function later($delay, $job, $data = '', $queue = null)
     {
         return $this->push($job, $data, $queue);
-    }
-
-    /**
-     * Push a new job onto the queue.
-     *
-     * @param  string  $job
-     * @param  mixed  $data
-     * @param  string|null  $queue
-     * @return mixed
-     */
-    public function push($job, $data = '', $queue = null)
-    {
-        $this->jobs[is_object($job) ? get_class($job) : $job][] = [
-            'job' => $job,
-            'queue' => $queue,
-        ];
     }
 
     /**

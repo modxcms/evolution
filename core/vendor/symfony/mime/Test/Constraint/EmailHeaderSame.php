@@ -27,6 +27,14 @@ final class EmailHeaderSame extends Constraint
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function toString(): string
+    {
+        return sprintf('has header "%s" with value "%s"', $this->headerName, $this->expectedValue);
+    }
+
+    /**
      * @param RawMessage $message
      *
      * {@inheritdoc}
@@ -40,13 +48,6 @@ final class EmailHeaderSame extends Constraint
         return $this->expectedValue === $this->getHeaderValue($message);
     }
 
-    private function getHeaderValue($message): string
-    {
-        $header = $message->getHeaders()->get($this->headerName);
-
-        return $header instanceof UnstructuredHeader ? $header->getValue() : $header->getBodyAsString();
-    }
-
     /**
      * @param RawMessage $message
      *
@@ -57,11 +58,10 @@ final class EmailHeaderSame extends Constraint
         return sprintf('the Email %s (value is %s)', $this->toString(), $this->getHeaderValue($message));
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function toString(): string
+    private function getHeaderValue($message): string
     {
-        return sprintf('has header "%s" with value "%s"', $this->headerName, $this->expectedValue);
+        $header = $message->getHeaders()->get($this->headerName);
+
+        return $header instanceof UnstructuredHeader ? $header->getValue() : $header->getBodyAsString();
     }
 }

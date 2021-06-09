@@ -10,23 +10,25 @@ use Illuminate\Redis\Limiters\DurationLimiter;
 class ThrottleRequestsWithRedis extends ThrottleRequests
 {
     /**
+     * The Redis factory implementation.
+     *
+     * @var \Illuminate\Contracts\Redis\Factory
+     */
+    protected $redis;
+
+    /**
      * The timestamp of the end of the current duration by key.
      *
      * @var array
      */
     public $decaysAt = [];
+
     /**
      * The number of remaining slots by key.
      *
      * @var array
      */
     public $remaining = [];
-    /**
-     * The Redis factory implementation.
-     *
-     * @var \Illuminate\Contracts\Redis\Factory
-     */
-    protected $redis;
 
     /**
      * Create a new request throttler.

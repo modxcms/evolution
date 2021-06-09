@@ -111,22 +111,6 @@ abstract class FileCache extends CacheProvider
     }
 
     /**
-     * Create path if needed.
-     *
-     * @return bool TRUE on success or if path already exists, FALSE if path cannot be created.
-     */
-    private function createPathIfNeeded(string $path): bool
-    {
-        if (! is_dir($path)) {
-            if (@mkdir($path, 0777 & (~$this->umask), true) === false && ! is_dir($path)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * Gets the cache directory.
      *
      * @return string
@@ -144,16 +128,6 @@ abstract class FileCache extends CacheProvider
     public function getExtension()
     {
         return $this->extension;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function doDelete($id)
-    {
-        $filename = $this->getFilename($id);
-
-        return @unlink($filename) || ! file_exists($filename);
     }
 
     /**
@@ -192,6 +166,16 @@ abstract class FileCache extends CacheProvider
     /**
      * {@inheritdoc}
      */
+    protected function doDelete($id)
+    {
+        $filename = $this->getFilename($id);
+
+        return @unlink($filename) || ! file_exists($filename);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function doFlush()
     {
         foreach ($this->getIterator() as $name => $file) {
@@ -208,26 +192,6 @@ abstract class FileCache extends CacheProvider
         }
 
         return true;
-    }
-
-    /**
-     * @return Iterator<string, SplFileInfo>
-     */
-    private function getIterator(): Iterator
-    {
-        return new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($this->directory, FilesystemIterator::SKIP_DOTS),
-            RecursiveIteratorIterator::CHILD_FIRST
-        );
-    }
-
-    /**
-     * @param string $name The filename
-     */
-    private function isFilenameEndingWithExtension(string $name): bool
-    {
-        return $this->extension === ''
-            || strrpos($name, $this->extension) === strlen($name) - $this->extensionStringLength;
     }
 
     /**
@@ -253,6 +217,22 @@ abstract class FileCache extends CacheProvider
             Cache::STATS_MEMORY_USAGE       => $usage,
             Cache::STATS_MEMORY_AVAILABLE   => $free,
         ];
+    }
+
+    /**
+     * Create path if needed.
+     *
+     * @return bool TRUE on success or if path already exists, FALSE if path cannot be created.
+     */
+    private function createPathIfNeeded(string $path): bool
+    {
+        if (! is_dir($path)) {
+            if (@mkdir($path, 0777 & (~$this->umask), true) === false && ! is_dir($path)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -288,5 +268,25 @@ abstract class FileCache extends CacheProvider
         }
 
         return false;
+    }
+
+    /**
+     * @return Iterator<string, SplFileInfo>
+     */
+    private function getIterator(): Iterator
+    {
+        return new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($this->directory, FilesystemIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::CHILD_FIRST
+        );
+    }
+
+    /**
+     * @param string $name The filename
+     */
+    private function isFilenameEndingWithExtension(string $name): bool
+    {
+        return $this->extension === ''
+            || strrpos($name, $this->extension) === strlen($name) - $this->extensionStringLength;
     }
 }

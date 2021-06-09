@@ -93,51 +93,6 @@ final class TlsHelper
     }
 
     /**
-     * Convert certificate name into matching function.
-     *
-     * @param string $certName CN/SAN
-     *
-     * @return callable|null
-     */
-    private static function certNameMatcher($certName)
-    {
-        $wildcards = substr_count($certName, '*');
-
-        if (0 === $wildcards) {
-            // Literal match.
-            return function ($hostname) use ($certName) {
-                return $hostname === $certName;
-            };
-        }
-
-        if (1 === $wildcards) {
-            $components = explode('.', $certName);
-
-            if (3 > count($components)) {
-                // Must have 3+ components
-                return null;
-            }
-
-            $firstComponent = $components[0];
-
-            // Wildcard must be the last character.
-            if ('*' !== $firstComponent[strlen($firstComponent) - 1]) {
-                return null;
-            }
-
-            $wildcardRegex = preg_quote($certName);
-            $wildcardRegex = str_replace('\\*', '[a-z0-9-]+', $wildcardRegex);
-            $wildcardRegex = "{^{$wildcardRegex}$}";
-
-            return function ($hostname) use ($wildcardRegex) {
-                return 1 === preg_match($wildcardRegex, $hostname);
-            };
-        }
-
-        return null;
-    }
-
-    /**
      * Get the certificate pin.
      *
      * By Kevin McArthur of StormTide Digital Studios Inc.
@@ -200,5 +155,50 @@ final class TlsHelper
     public static function isOpensslParseSafe()
     {
         return CaBundle::isOpensslParseSafe();
+    }
+
+    /**
+     * Convert certificate name into matching function.
+     *
+     * @param string $certName CN/SAN
+     *
+     * @return callable|null
+     */
+    private static function certNameMatcher($certName)
+    {
+        $wildcards = substr_count($certName, '*');
+
+        if (0 === $wildcards) {
+            // Literal match.
+            return function ($hostname) use ($certName) {
+                return $hostname === $certName;
+            };
+        }
+
+        if (1 === $wildcards) {
+            $components = explode('.', $certName);
+
+            if (3 > count($components)) {
+                // Must have 3+ components
+                return null;
+            }
+
+            $firstComponent = $components[0];
+
+            // Wildcard must be the last character.
+            if ('*' !== $firstComponent[strlen($firstComponent) - 1]) {
+                return null;
+            }
+
+            $wildcardRegex = preg_quote($certName);
+            $wildcardRegex = str_replace('\\*', '[a-z0-9-]+', $wildcardRegex);
+            $wildcardRegex = "{^{$wildcardRegex}$}";
+
+            return function ($hostname) use ($wildcardRegex) {
+                return 1 === preg_match($wildcardRegex, $hostname);
+            };
+        }
+
+        return null;
     }
 }

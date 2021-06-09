@@ -34,18 +34,6 @@ class IntegerOption extends Option
         parent::__construct($id, $defaultValue);
     }
 
-    public function check()
-    {
-        $this->checkType('integer');
-        $this->checkMinMax();
-    }
-
-    protected function checkMinMax()
-    {
-        $this->checkMin();
-        $this->checkMax();
-    }
-
     protected function checkMin()
     {
         if (!is_null($this->minValue) && $this->getValue() < $this->minValue) {
@@ -64,5 +52,17 @@ class IntegerOption extends Option
                 'It was however set to: ' . $this->getValue()
             );
         }
+    }
+
+    protected function checkMinMax()
+    {
+        $this->checkMin();
+        $this->checkMax();
+    }
+
+    public function check()
+    {
+        $this->checkType('integer');
+        $this->checkMinMax();
     }
 }

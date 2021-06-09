@@ -50,6 +50,17 @@ class QueryBuilder
      */
     public const STATE_DIRTY = 0;
     public const STATE_CLEAN = 1;
+
+    /**
+     * The DBAL Connection.
+     *
+     * @var Connection
+     */
+    private $connection;
+
+    /*
+     * The default values of SQL parts collection
+     */
     private const SQL_PARTS_DEFAULTS = [
         'select'   => [],
         'distinct' => false,
@@ -63,15 +74,6 @@ class QueryBuilder
         'values'   => [],
     ];
 
-    /*
-     * The default values of SQL parts collection
-     */
-    /**
-     * The DBAL Connection.
-     *
-     * @var Connection
-     */
-    private $connection;
     /**
      * The array of SQL parts collected.
      *
@@ -258,156 +260,31 @@ class QueryBuilder
     }
 
     /**
-     * Converts this instance into an INSERT string in SQL.
+     * Sets a query parameter for the query being constructed.
      *
-     * @return string
-     */
-    private function getSQLForInsert()
-    {
-        return 'INSERT INTO ' . $this->sqlParts['from']['table'] .
-        ' (' . implode(', ', array_keys($this->sqlParts['values'])) . ')' .
-        ' VALUES(' . implode(', ', $this->sqlParts['values']) . ')';
-    }
-
-    /**
-     * Converts this instance into a DELETE string in SQL.
+     * <code>
+     *     $qb = $conn->createQueryBuilder()
+     *         ->select('u')
+     *         ->from('users', 'u')
+     *         ->where('u.id = :user_id')
+     *         ->setParameter(':user_id', 1);
+     * </code>
      *
-     * @return string
-     */
-    private function getSQLForDelete()
-    {
-        $table = $this->sqlParts['from']['table']
-            . ($this->sqlParts['from']['alias'] ? ' ' . $this->sqlParts['from']['alias'] : '');
-
-        return 'DELETE FROM ' . $table
-            . ($this->sqlParts['where'] !== null ? ' WHERE ' . ((string) $this->sqlParts['where']) : '');
-    }
-
-    /**
-     * Converts this instance into an UPDATE string in SQL.
+     * @param int|string           $key   Parameter position or name
+     * @param mixed                $value Parameter value
+     * @param int|string|Type|null $type  Parameter type
      *
-     * @return string
+     * @return $this This QueryBuilder instance.
      */
-    private function getSQLForUpdate()
+    public function setParameter($key, $value, $type = null)
     {
-        $table = $this->sqlParts['from']['table']
-            . ($this->sqlParts['from']['alias'] ? ' ' . $this->sqlParts['from']['alias'] : '');
-
-        return 'UPDATE ' . $table
-            . ' SET ' . implode(', ', $this->sqlParts['set'])
-            . ($this->sqlParts['where'] !== null ? ' WHERE ' . ((string) $this->sqlParts['where']) : '');
-    }
-
-    /**
-     * @return string
-     *
-     * @throws QueryException
-     */
-    private function getSQLForSelect()
-    {
-        $query = 'SELECT ' . ($this->sqlParts['distinct'] ? 'DISTINCT ' : '') .
-                  implode(', ', $this->sqlParts['select']);
-
-        $query .= ($this->sqlParts['from'] ? ' FROM ' . implode(', ', $this->getFromClauses()) : '')
-            . ($this->sqlParts['where'] !== null ? ' WHERE ' . ((string) $this->sqlParts['where']) : '')
-            . ($this->sqlParts['groupBy'] ? ' GROUP BY ' . implode(', ', $this->sqlParts['groupBy']) : '')
-            . ($this->sqlParts['having'] !== null ? ' HAVING ' . ((string) $this->sqlParts['having']) : '')
-            . ($this->sqlParts['orderBy'] ? ' ORDER BY ' . implode(', ', $this->sqlParts['orderBy']) : '');
-
-        if ($this->isLimitQuery()) {
-            return $this->connection->getDatabasePlatform()->modifyLimitQuery(
-                $query,
-                $this->maxResults,
-                $this->firstResult
-            );
+        if ($type !== null) {
+            $this->paramTypes[$key] = $type;
         }
 
-        return $query;
-    }
+        $this->params[$key] = $value;
 
-    /**
-     * @return string[]
-     */
-    private function getFromClauses()
-    {
-        $fromClauses  = [];
-        $knownAliases = [];
-
-        // Loop through all FROM clauses
-        foreach ($this->sqlParts['from'] as $from) {
-            if ($from['alias'] === null) {
-                $tableSql       = $from['table'];
-                $tableReference = $from['table'];
-            } else {
-                $tableSql       = $from['table'] . ' ' . $from['alias'];
-                $tableReference = $from['alias'];
-            }
-
-            $knownAliases[$tableReference] = true;
-
-            $fromClauses[$tableReference] = $tableSql . $this->getSQLForJoins($tableReference, $knownAliases);
-        }
-
-        $this->verifyAllAliasesAreKnown($knownAliases);
-
-        return $fromClauses;
-    }
-
-    /**
-     * @param string             $fromAlias
-     * @param array<string,true> $knownAliases
-     *
-     * @return string
-     *
-     * @throws QueryException
-     */
-    private function getSQLForJoins($fromAlias, array &$knownAliases)
-    {
-        $sql = '';
-
-        if (isset($this->sqlParts['join'][$fromAlias])) {
-            foreach ($this->sqlParts['join'][$fromAlias] as $join) {
-                if (array_key_exists($join['joinAlias'], $knownAliases)) {
-                    throw QueryException::nonUniqueAlias($join['joinAlias'], array_keys($knownAliases));
-                }
-
-                $sql .= ' ' . strtoupper($join['joinType'])
-                    . ' JOIN ' . $join['joinTable'] . ' ' . $join['joinAlias'];
-                if ($join['joinCondition'] !== null) {
-                    $sql .= ' ON ' . $join['joinCondition'];
-                }
-
-                $knownAliases[$join['joinAlias']] = true;
-            }
-
-            foreach ($this->sqlParts['join'][$fromAlias] as $join) {
-                $sql .= $this->getSQLForJoins($join['joinAlias'], $knownAliases);
-            }
-        }
-
-        return $sql;
-    }
-
-    /**
-     * @param array<string,true> $knownAliases
-     *
-     * @throws QueryException
-     */
-    private function verifyAllAliasesAreKnown(array $knownAliases): void
-    {
-        foreach ($this->sqlParts['join'] as $fromAlias => $joins) {
-            if (! isset($knownAliases[$fromAlias])) {
-                throw QueryException::unknownAlias($fromAlias, array_keys($knownAliases));
-            }
-        }
-    }
-
-    /**
-     * @return bool
-     */
-    private function isLimitQuery()
-    {
-        return $this->maxResults !== null || $this->firstResult !== 0;
+        return $this;
     }
 
     /**
@@ -483,16 +360,6 @@ class QueryBuilder
     }
 
     /**
-     * Gets the position of the first result the query object was set to retrieve (the "offset").
-     *
-     * @return int The position of the first result.
-     */
-    public function getFirstResult()
-    {
-        return $this->firstResult;
-    }
-
-    /**
      * Sets the position of the first result to retrieve (the "offset").
      *
      * @param int $firstResult The first result to return.
@@ -508,14 +375,13 @@ class QueryBuilder
     }
 
     /**
-     * Gets the maximum number of results the query object was set to retrieve (the "limit").
-     * Returns NULL if all results will be returned.
+     * Gets the position of the first result the query object was set to retrieve (the "offset").
      *
-     * @return int|null The maximum number of results.
+     * @return int The position of the first result.
      */
-    public function getMaxResults()
+    public function getFirstResult()
     {
-        return $this->maxResults;
+        return $this->firstResult;
     }
 
     /**
@@ -534,43 +400,14 @@ class QueryBuilder
     }
 
     /**
-     * Specifies an item that is to be returned in the query result.
-     * Replaces any previously specified selections, if any.
+     * Gets the maximum number of results the query object was set to retrieve (the "limit").
+     * Returns NULL if all results will be returned.
      *
-     * USING AN ARRAY ARGUMENT IS DEPRECATED. Pass each value as an individual argument.
-     *
-     * <code>
-     *     $qb = $conn->createQueryBuilder()
-     *         ->select('u.id', 'p.id')
-     *         ->from('users', 'u')
-     *         ->leftJoin('u', 'phonenumbers', 'p', 'u.id = p.user_id');
-     * </code>
-     *
-     * @param string|string[]|null $select The selection expression. USING AN ARRAY OR NULL IS DEPRECATED.
-     *                                     Pass each value as an individual argument.
-     *
-     * @return $this This QueryBuilder instance.
+     * @return int|null The maximum number of results.
      */
-    public function select($select = null/*, string ...$selects*/)
+    public function getMaxResults()
     {
-        $this->type = self::SELECT;
-
-        if (empty($select)) {
-            return $this;
-        }
-
-        if (is_array($select)) {
-            Deprecation::trigger(
-                'doctrine/dbal',
-                'https://github.com/doctrine/dbal/issues/3837',
-                'Passing an array for the first argument to QueryBuilder::select is deprecated, ' .
-                'pass each value as an individual variadic argument instead.'
-            );
-        }
-
-        $selects = is_array($select) ? $select : func_get_args();
-
-        return $this->add('select', $selects);
+        return $this->maxResults;
     }
 
     /**
@@ -621,6 +458,46 @@ class QueryBuilder
         $this->sqlParts[$sqlPartName] = $sqlPart;
 
         return $this;
+    }
+
+    /**
+     * Specifies an item that is to be returned in the query result.
+     * Replaces any previously specified selections, if any.
+     *
+     * USING AN ARRAY ARGUMENT IS DEPRECATED. Pass each value as an individual argument.
+     *
+     * <code>
+     *     $qb = $conn->createQueryBuilder()
+     *         ->select('u.id', 'p.id')
+     *         ->from('users', 'u')
+     *         ->leftJoin('u', 'phonenumbers', 'p', 'u.id = p.user_id');
+     * </code>
+     *
+     * @param string|string[]|null $select The selection expression. USING AN ARRAY OR NULL IS DEPRECATED.
+     *                                     Pass each value as an individual argument.
+     *
+     * @return $this This QueryBuilder instance.
+     */
+    public function select($select = null/*, string ...$selects*/)
+    {
+        $this->type = self::SELECT;
+
+        if (empty($select)) {
+            return $this;
+        }
+
+        if (is_array($select)) {
+            Deprecation::trigger(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/issues/3837',
+                'Passing an array for the first argument to QueryBuilder::select is deprecated, ' .
+                'pass each value as an individual variadic argument instead.'
+            );
+        }
+
+        $selects = is_array($select) ? $select : func_get_args();
+
+        return $this->add('select', $selects);
     }
 
     /**
@@ -996,18 +873,6 @@ class QueryBuilder
     }
 
     /**
-     * Gets a query part by its name.
-     *
-     * @param string $queryPartName
-     *
-     * @return mixed
-     */
-    public function getQueryPart($queryPartName)
-    {
-        return $this->sqlParts[$queryPartName];
-    }
-
-    /**
      * Adds one or more restrictions to the query results, forming a logical
      * disjunction with any previously specified restrictions.
      *
@@ -1262,6 +1127,18 @@ class QueryBuilder
     }
 
     /**
+     * Gets a query part by its name.
+     *
+     * @param string $queryPartName
+     *
+     * @return mixed
+     */
+    public function getQueryPart($queryPartName)
+    {
+        return $this->sqlParts[$queryPartName];
+    }
+
+    /**
      * Gets all query parts.
      *
      * @return mixed[]
@@ -1305,6 +1182,124 @@ class QueryBuilder
         $this->state = self::STATE_DIRTY;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     *
+     * @throws QueryException
+     */
+    private function getSQLForSelect()
+    {
+        $query = 'SELECT ' . ($this->sqlParts['distinct'] ? 'DISTINCT ' : '') .
+                  implode(', ', $this->sqlParts['select']);
+
+        $query .= ($this->sqlParts['from'] ? ' FROM ' . implode(', ', $this->getFromClauses()) : '')
+            . ($this->sqlParts['where'] !== null ? ' WHERE ' . ((string) $this->sqlParts['where']) : '')
+            . ($this->sqlParts['groupBy'] ? ' GROUP BY ' . implode(', ', $this->sqlParts['groupBy']) : '')
+            . ($this->sqlParts['having'] !== null ? ' HAVING ' . ((string) $this->sqlParts['having']) : '')
+            . ($this->sqlParts['orderBy'] ? ' ORDER BY ' . implode(', ', $this->sqlParts['orderBy']) : '');
+
+        if ($this->isLimitQuery()) {
+            return $this->connection->getDatabasePlatform()->modifyLimitQuery(
+                $query,
+                $this->maxResults,
+                $this->firstResult
+            );
+        }
+
+        return $query;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getFromClauses()
+    {
+        $fromClauses  = [];
+        $knownAliases = [];
+
+        // Loop through all FROM clauses
+        foreach ($this->sqlParts['from'] as $from) {
+            if ($from['alias'] === null) {
+                $tableSql       = $from['table'];
+                $tableReference = $from['table'];
+            } else {
+                $tableSql       = $from['table'] . ' ' . $from['alias'];
+                $tableReference = $from['alias'];
+            }
+
+            $knownAliases[$tableReference] = true;
+
+            $fromClauses[$tableReference] = $tableSql . $this->getSQLForJoins($tableReference, $knownAliases);
+        }
+
+        $this->verifyAllAliasesAreKnown($knownAliases);
+
+        return $fromClauses;
+    }
+
+    /**
+     * @param array<string,true> $knownAliases
+     *
+     * @throws QueryException
+     */
+    private function verifyAllAliasesAreKnown(array $knownAliases): void
+    {
+        foreach ($this->sqlParts['join'] as $fromAlias => $joins) {
+            if (! isset($knownAliases[$fromAlias])) {
+                throw QueryException::unknownAlias($fromAlias, array_keys($knownAliases));
+            }
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    private function isLimitQuery()
+    {
+        return $this->maxResults !== null || $this->firstResult !== 0;
+    }
+
+    /**
+     * Converts this instance into an INSERT string in SQL.
+     *
+     * @return string
+     */
+    private function getSQLForInsert()
+    {
+        return 'INSERT INTO ' . $this->sqlParts['from']['table'] .
+        ' (' . implode(', ', array_keys($this->sqlParts['values'])) . ')' .
+        ' VALUES(' . implode(', ', $this->sqlParts['values']) . ')';
+    }
+
+    /**
+     * Converts this instance into an UPDATE string in SQL.
+     *
+     * @return string
+     */
+    private function getSQLForUpdate()
+    {
+        $table = $this->sqlParts['from']['table']
+            . ($this->sqlParts['from']['alias'] ? ' ' . $this->sqlParts['from']['alias'] : '');
+
+        return 'UPDATE ' . $table
+            . ' SET ' . implode(', ', $this->sqlParts['set'])
+            . ($this->sqlParts['where'] !== null ? ' WHERE ' . ((string) $this->sqlParts['where']) : '');
+    }
+
+    /**
+     * Converts this instance into a DELETE string in SQL.
+     *
+     * @return string
+     */
+    private function getSQLForDelete()
+    {
+        $table = $this->sqlParts['from']['table']
+            . ($this->sqlParts['from']['alias'] ? ' ' . $this->sqlParts['from']['alias'] : '');
+
+        return 'DELETE FROM ' . $table
+            . ($this->sqlParts['where'] !== null ? ' WHERE ' . ((string) $this->sqlParts['where']) : '');
     }
 
     /**
@@ -1359,34 +1354,6 @@ class QueryBuilder
     }
 
     /**
-     * Sets a query parameter for the query being constructed.
-     *
-     * <code>
-     *     $qb = $conn->createQueryBuilder()
-     *         ->select('u')
-     *         ->from('users', 'u')
-     *         ->where('u.id = :user_id')
-     *         ->setParameter(':user_id', 1);
-     * </code>
-     *
-     * @param int|string           $key   Parameter position or name
-     * @param mixed                $value Parameter value
-     * @param int|string|Type|null $type  Parameter type
-     *
-     * @return $this This QueryBuilder instance.
-     */
-    public function setParameter($key, $value, $type = null)
-    {
-        if ($type !== null) {
-            $this->paramTypes[$key] = $type;
-        }
-
-        $this->params[$key] = $value;
-
-        return $this;
-    }
-
-    /**
      * Creates a new positional parameter and bind the given value to it.
      *
      * Attention: If you are using positional parameters with the query builder you have
@@ -1414,6 +1381,41 @@ class QueryBuilder
         $this->setParameter($this->boundCounter, $value, $type);
 
         return '?';
+    }
+
+    /**
+     * @param string             $fromAlias
+     * @param array<string,true> $knownAliases
+     *
+     * @return string
+     *
+     * @throws QueryException
+     */
+    private function getSQLForJoins($fromAlias, array &$knownAliases)
+    {
+        $sql = '';
+
+        if (isset($this->sqlParts['join'][$fromAlias])) {
+            foreach ($this->sqlParts['join'][$fromAlias] as $join) {
+                if (array_key_exists($join['joinAlias'], $knownAliases)) {
+                    throw QueryException::nonUniqueAlias($join['joinAlias'], array_keys($knownAliases));
+                }
+
+                $sql .= ' ' . strtoupper($join['joinType'])
+                    . ' JOIN ' . $join['joinTable'] . ' ' . $join['joinAlias'];
+                if ($join['joinCondition'] !== null) {
+                    $sql .= ' ON ' . $join['joinCondition'];
+                }
+
+                $knownAliases[$join['joinAlias']] = true;
+            }
+
+            foreach ($this->sqlParts['join'][$fromAlias] as $join) {
+                $sql .= $this->getSQLForJoins($join['joinAlias'], $knownAliases);
+            }
+        }
+
+        return $sql;
     }
 
     /**

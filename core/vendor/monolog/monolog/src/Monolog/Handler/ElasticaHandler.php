@@ -66,6 +66,14 @@ class ElasticaHandler extends AbstractProcessingHandler
     }
 
     /**
+     * {@inheritDoc}
+     */
+    protected function write(array $record): void
+    {
+        $this->bulkSend([$record['formatted']]);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
@@ -83,20 +91,20 @@ class ElasticaHandler extends AbstractProcessingHandler
     }
 
     /**
+     * {@inheritDoc}
+     */
+    protected function getDefaultFormatter(): FormatterInterface
+    {
+        return new ElasticaFormatter($this->options['index'], $this->options['type']);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handleBatch(array $records): void
     {
         $documents = $this->getFormatter()->formatBatch($records);
         $this->bulkSend($documents);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function write(array $record): void
-    {
-        $this->bulkSend([$record['formatted']]);
     }
 
     /**
@@ -112,13 +120,5 @@ class ElasticaHandler extends AbstractProcessingHandler
                 throw new \RuntimeException("Error sending messages to Elasticsearch", 0, $e);
             }
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function getDefaultFormatter(): FormatterInterface
-    {
-        return new ElasticaFormatter($this->options['index'], $this->options['type']);
     }
 }

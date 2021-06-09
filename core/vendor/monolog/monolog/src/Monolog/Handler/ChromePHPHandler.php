@@ -99,6 +99,31 @@ class ChromePHPHandler extends AbstractProcessingHandler
     }
 
     /**
+     * {@inheritDoc}
+     */
+    protected function getDefaultFormatter(): FormatterInterface
+    {
+        return new ChromePHPFormatter();
+    }
+
+    /**
+     * Creates & sends header for a record
+     *
+     * @see sendHeader()
+     * @see send()
+     */
+    protected function write(array $record): void
+    {
+        if (!$this->isWebRequest()) {
+            return;
+        }
+
+        self::$json['rows'][] = $record['formatted'];
+
+        $this->send();
+    }
+
+    /**
      * Sends the log header
      *
      * @see sendHeader()
@@ -145,18 +170,6 @@ class ChromePHPHandler extends AbstractProcessingHandler
     }
 
     /**
-     * Verifies if the headers are accepted by the current user agent
-     */
-    protected function headersAccepted(): bool
-    {
-        if (empty($_SERVER['HTTP_USER_AGENT'])) {
-            return false;
-        }
-
-        return preg_match(static::USER_AGENT_REGEX, $_SERVER['HTTP_USER_AGENT']) === 1;
-    }
-
-    /**
      * Send header string to the client
      */
     protected function sendHeader(string $header, string $content): void
@@ -167,27 +180,14 @@ class ChromePHPHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * Verifies if the headers are accepted by the current user agent
      */
-    protected function getDefaultFormatter(): FormatterInterface
+    protected function headersAccepted(): bool
     {
-        return new ChromePHPFormatter();
-    }
-
-    /**
-     * Creates & sends header for a record
-     *
-     * @see sendHeader()
-     * @see send()
-     */
-    protected function write(array $record): void
-    {
-        if (!$this->isWebRequest()) {
-            return;
+        if (empty($_SERVER['HTTP_USER_AGENT'])) {
+            return false;
         }
 
-        self::$json['rows'][] = $record['formatted'];
-
-        $this->send();
+        return preg_match(static::USER_AGENT_REGEX, $_SERVER['HTTP_USER_AGENT']) === 1;
     }
 }

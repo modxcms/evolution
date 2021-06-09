@@ -22,19 +22,14 @@ class TransportException extends \RuntimeException
     protected $statusCode;
     protected $responseInfo = array();
 
-    public function getHeaders()
-    {
-        return $this->headers;
-    }
-
     public function setHeaders($headers)
     {
         $this->headers = $headers;
     }
 
-    public function getResponse()
+    public function getHeaders()
     {
-        return $this->response;
+        return $this->headers;
     }
 
     public function setResponse($response)
@@ -42,14 +37,19 @@ class TransportException extends \RuntimeException
         $this->response = $response;
     }
 
-    public function getStatusCode()
+    public function getResponse()
     {
-        return $this->statusCode;
+        return $this->response;
     }
 
     public function setStatusCode($statusCode)
     {
         $this->statusCode = $statusCode;
+    }
+
+    public function getStatusCode()
+    {
+        return $this->statusCode;
     }
 
     /**

@@ -1,6 +1,10 @@
 This file shows the changes in recent releases of Evolution CMS. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+Evolution CMS 3.1.5 (Jun 09, 2021)
+* [GitHub: 67766f17e] - composer update (Dmi3yy)
+* [GitHub: 67766f17e] hot fix in install (mnoskov)
+
 Evolution CMS 3.1.4 (Jun 03, 2021)
 * [GitHub: 67766f17e] - composer update (Dmi3yy)
 * [GitHub: d0e0638b9] - update git ignore (Dmi3yy)

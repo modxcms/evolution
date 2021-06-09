@@ -89,13 +89,6 @@ class Timestamps
         }
     }
 
-    private function readUint($pos, $bytes)
-    {
-        $res = unpack('V', substr($this->contents, $pos, $bytes));
-
-        return $res[1];
-    }
-
     /**
      * Saves the updated phar file, optionally with an updated signature.
      *
@@ -130,6 +123,13 @@ class Timestamps
         $this->contents = substr($this->contents, 0, $pos) . $signature;
 
         return file_put_contents($path, $this->contents);
+    }
+
+    private function readUint($pos, $bytes)
+    {
+        $res = unpack('V', substr($this->contents, $pos, $bytes));
+
+        return $res[1];
     }
 
     /**

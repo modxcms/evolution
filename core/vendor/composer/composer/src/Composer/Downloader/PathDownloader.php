@@ -160,6 +160,62 @@ class PathDownloader extends FileDownloader implements VcsCapableDownloaderInter
     /**
      * {@inheritDoc}
      */
+    public function remove(PackageInterface $package, $path, $output = true)
+    {
+        $path = Filesystem::trimTrailingSlash($path);
+        /**
+         * realpath() may resolve Windows junctions to the source path, so we'll check for a junction first
+         * to prevent a false positive when checking if the dist and install paths are the same.
+         * See https://bugs.php.net/bug.php?id=77639
+         *
+         * For junctions don't blindly rely on Filesystem::removeDirectory as it may be overzealous. If a process
+         * inadvertently locks the file the removal will fail, but it would fall back to recursive delete which
+         * is disastrous within a junction. So in that case we have no other real choice but to fail hard.
+         */
+        if (Platform::isWindows() && $this->filesystem->isJunction($path)) {
+            if ($output) {
+                $this->io->writeError("  - " . UninstallOperation::format($package).", source is still present in $path");
+            }
+            if (!$this->filesystem->removeJunction($path)) {
+                $this->io->writeError("    <warning>Could not remove junction at " . $path . " - is another process locking it?</warning>");
+                throw new \RuntimeException('Could not reliably remove junction for package ' . $package->getName());
+            }
+
+            return \React\Promise\resolve();
+        }
+
+        if (realpath($path) === realpath($package->getDistUrl())) {
+            if ($output) {
+                $this->io->writeError("  - " . UninstallOperation::format($package).", source is still present in $path");
+            }
+
+            return \React\Promise\resolve();
+        }
+
+        return parent::remove($package, $path, $output);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getVcsReference(PackageInterface $package, $path)
+    {
+        $path = Filesystem::trimTrailingSlash($path);
+        $parser = new VersionParser;
+        $guesser = new VersionGuesser($this->config, $this->process, $parser);
+        $dumper = new ArrayDumper;
+
+        $packageConfig = $dumper->dump($package);
+        if ($packageVersion = $guesser->guessVersion($packageConfig, $path)) {
+            return $packageVersion['commit'];
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     protected function getInstallOperationAppendix(PackageInterface $package, $path)
     {
         $realUrl = realpath($package->getDistUrl());
@@ -230,61 +286,5 @@ class PathDownloader extends FileDownloader implements VcsCapableDownloaderInter
         return function_exists('proc_open') &&
             (PHP_WINDOWS_VERSION_MAJOR > 6 ||
             (PHP_WINDOWS_VERSION_MAJOR === 6 && PHP_WINDOWS_VERSION_MINOR >= 1));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function remove(PackageInterface $package, $path, $output = true)
-    {
-        $path = Filesystem::trimTrailingSlash($path);
-        /**
-         * realpath() may resolve Windows junctions to the source path, so we'll check for a junction first
-         * to prevent a false positive when checking if the dist and install paths are the same.
-         * See https://bugs.php.net/bug.php?id=77639
-         *
-         * For junctions don't blindly rely on Filesystem::removeDirectory as it may be overzealous. If a process
-         * inadvertently locks the file the removal will fail, but it would fall back to recursive delete which
-         * is disastrous within a junction. So in that case we have no other real choice but to fail hard.
-         */
-        if (Platform::isWindows() && $this->filesystem->isJunction($path)) {
-            if ($output) {
-                $this->io->writeError("  - " . UninstallOperation::format($package).", source is still present in $path");
-            }
-            if (!$this->filesystem->removeJunction($path)) {
-                $this->io->writeError("    <warning>Could not remove junction at " . $path . " - is another process locking it?</warning>");
-                throw new \RuntimeException('Could not reliably remove junction for package ' . $package->getName());
-            }
-
-            return \React\Promise\resolve();
-        }
-
-        if (realpath($path) === realpath($package->getDistUrl())) {
-            if ($output) {
-                $this->io->writeError("  - " . UninstallOperation::format($package).", source is still present in $path");
-            }
-
-            return \React\Promise\resolve();
-        }
-
-        return parent::remove($package, $path, $output);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getVcsReference(PackageInterface $package, $path)
-    {
-        $path = Filesystem::trimTrailingSlash($path);
-        $parser = new VersionParser;
-        $guesser = new VersionGuesser($this->config, $this->process, $parser);
-        $dumper = new ArrayDumper;
-
-        $packageConfig = $dumper->dump($package);
-        if ($packageVersion = $guesser->guessVersion($packageConfig, $path)) {
-            return $packageVersion['commit'];
-        }
-
-        return null;
     }
 }

@@ -30,26 +30,6 @@ trait AsPivot
     protected $relatedKey;
 
     /**
-     * Create a new pivot model from raw values returned from a query.
-     *
-     * @param  \Illuminate\Database\Eloquent\Model  $parent
-     * @param  array  $attributes
-     * @param  string  $table
-     * @param  bool  $exists
-     * @return static
-     */
-    public static function fromRawAttributes(Model $parent, $attributes, $table, $exists = false)
-    {
-        $instance = static::fromAttributes($parent, [], $table, $exists);
-
-        $instance->timestamps = $instance->hasTimestampAttributes($attributes);
-
-        $instance->setRawAttributes($attributes, $exists);
-
-        return $instance;
-    }
-
-    /**
      * Create a new pivot model instance.
      *
      * @param  \Illuminate\Database\Eloquent\Model  $parent
@@ -83,26 +63,55 @@ trait AsPivot
     }
 
     /**
-     * Determine if the pivot model or given attributes has timestamp attributes.
+     * Create a new pivot model from raw values returned from a query.
      *
-     * @param  array|null  $attributes
-     * @return bool
+     * @param  \Illuminate\Database\Eloquent\Model  $parent
+     * @param  array  $attributes
+     * @param  string  $table
+     * @param  bool  $exists
+     * @return static
      */
-    public function hasTimestampAttributes($attributes = null)
+    public static function fromRawAttributes(Model $parent, $attributes, $table, $exists = false)
     {
-        return array_key_exists($this->getCreatedAtColumn(), $attributes ?? $this->attributes);
+        $instance = static::fromAttributes($parent, [], $table, $exists);
+
+        $instance->timestamps = $instance->hasTimestampAttributes($attributes);
+
+        $instance->setRawAttributes($attributes, $exists);
+
+        return $instance;
     }
 
     /**
-     * Get the name of the "created at" column.
+     * Set the keys for a select query.
      *
-     * @return string
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function getCreatedAtColumn()
+    protected function setKeysForSelectQuery($query)
     {
-        return $this->pivotParent
-            ? $this->pivotParent->getCreatedAtColumn()
-            : parent::getCreatedAtColumn();
+        if (isset($this->attributes[$this->getKeyName()])) {
+            return parent::setKeysForSelectQuery($query);
+        }
+
+        $query->where($this->foreignKey, $this->getOriginal(
+            $this->foreignKey, $this->getAttribute($this->foreignKey)
+        ));
+
+        return $query->where($this->relatedKey, $this->getOriginal(
+            $this->relatedKey, $this->getAttribute($this->relatedKey)
+        ));
+    }
+
+    /**
+     * Set the keys for a save update query.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function setKeysForSaveQuery($query)
+    {
+        return $this->setKeysForSelectQuery($query);
     }
 
     /**
@@ -173,9 +182,9 @@ trait AsPivot
      *
      * @return string
      */
-    public function getOtherKey()
+    public function getRelatedKey()
     {
-        return $this->getRelatedKey();
+        return $this->relatedKey;
     }
 
     /**
@@ -183,9 +192,9 @@ trait AsPivot
      *
      * @return string
      */
-    public function getRelatedKey()
+    public function getOtherKey()
     {
-        return $this->relatedKey;
+        return $this->getRelatedKey();
     }
 
     /**
@@ -202,6 +211,29 @@ trait AsPivot
         $this->relatedKey = $relatedKey;
 
         return $this;
+    }
+
+    /**
+     * Determine if the pivot model or given attributes has timestamp attributes.
+     *
+     * @param  array|null  $attributes
+     * @return bool
+     */
+    public function hasTimestampAttributes($attributes = null)
+    {
+        return array_key_exists($this->getCreatedAtColumn(), $attributes ?? $this->attributes);
+    }
+
+    /**
+     * Get the name of the "created at" column.
+     *
+     * @return string
+     */
+    public function getCreatedAtColumn()
+    {
+        return $this->pivotParent
+            ? $this->pivotParent->getCreatedAtColumn()
+            : parent::getCreatedAtColumn();
     }
 
     /**
@@ -296,37 +328,5 @@ trait AsPivot
         $this->relations = [];
 
         return $this;
-    }
-
-    /**
-     * Set the keys for a save update query.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    protected function setKeysForSaveQuery($query)
-    {
-        return $this->setKeysForSelectQuery($query);
-    }
-
-    /**
-     * Set the keys for a select query.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    protected function setKeysForSelectQuery($query)
-    {
-        if (isset($this->attributes[$this->getKeyName()])) {
-            return parent::setKeysForSelectQuery($query);
-        }
-
-        $query->where($this->foreignKey, $this->getOriginal(
-            $this->foreignKey, $this->getAttribute($this->foreignKey)
-        ));
-
-        return $query->where($this->relatedKey, $this->getOriginal(
-            $this->relatedKey, $this->getAttribute($this->relatedKey)
-        ));
     }
 }

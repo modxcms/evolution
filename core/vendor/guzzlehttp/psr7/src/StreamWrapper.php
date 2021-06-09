@@ -46,16 +46,6 @@ class StreamWrapper
     }
 
     /**
-     * Registers the stream wrapper if needed
-     */
-    public static function register()
-    {
-        if (!in_array('guzzle', stream_get_wrappers())) {
-            stream_wrapper_register('guzzle', __CLASS__);
-        }
-    }
-
-    /**
      * Creates a stream context that can be used to open a stream as a php stream resource.
      *
      * @param StreamInterface $stream
@@ -67,6 +57,16 @@ class StreamWrapper
         return stream_context_create([
             'guzzle' => ['stream' => $stream]
         ]);
+    }
+
+    /**
+     * Registers the stream wrapper if needed
+     */
+    public static function register()
+    {
+        if (!in_array('guzzle', stream_get_wrappers())) {
+            stream_wrapper_register('guzzle', __CLASS__);
+        }
     }
 
     public function stream_open($path, $mode, $options, &$opened_path)

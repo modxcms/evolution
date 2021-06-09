@@ -83,15 +83,6 @@ class SymfonyQuestionHelper extends QuestionHelper
         $output->write($prompt);
     }
 
-    private function getEofShortcut(): string
-    {
-        if (false !== strpos(\PHP_OS, 'WIN')) {
-            return '<comment>Ctrl+Z</comment> then <comment>Enter</comment>';
-        }
-
-        return '<comment>Ctrl+D</comment>';
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -105,5 +96,14 @@ class SymfonyQuestionHelper extends QuestionHelper
         }
 
         parent::writeError($output, $error);
+    }
+
+    private function getEofShortcut(): string
+    {
+        if (false !== strpos(\PHP_OS, 'WIN')) {
+            return '<comment>Ctrl+Z</comment> then <comment>Enter</comment>';
+        }
+
+        return '<comment>Ctrl+D</comment>';
     }
 }

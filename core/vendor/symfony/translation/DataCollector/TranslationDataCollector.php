@@ -45,61 +45,6 @@ class TranslationDataCollector extends DataCollector implements LateDataCollecto
         $this->data = $this->cloneVar($this->data);
     }
 
-    private function sanitizeCollectedMessages(array $messages)
-    {
-        $result = [];
-        foreach ($messages as $key => $message) {
-            $messageId = $message['locale'].$message['domain'].$message['id'];
-
-            if (!isset($result[$messageId])) {
-                $message['count'] = 1;
-                $message['parameters'] = !empty($message['parameters']) ? [$message['parameters']] : [];
-                $messages[$key]['translation'] = $this->sanitizeString($message['translation']);
-                $result[$messageId] = $message;
-            } else {
-                if (!empty($message['parameters'])) {
-                    $result[$messageId]['parameters'][] = $message['parameters'];
-                }
-
-                ++$result[$messageId]['count'];
-            }
-
-            unset($messages[$key]);
-        }
-
-        return $result;
-    }
-
-    private function sanitizeString(string $string, int $length = 80)
-    {
-        $string = trim(preg_replace('/\s+/', ' ', $string));
-
-        if (false !== $encoding = mb_detect_encoding($string, null, true)) {
-            if (mb_strlen($string, $encoding) > $length) {
-                return mb_substr($string, 0, $length - 3, $encoding).'...';
-            }
-        } elseif (\strlen($string) > $length) {
-            return substr($string, 0, $length - 3).'...';
-        }
-
-        return $string;
-    }
-
-    private function computeCount(array $messages)
-    {
-        $count = [
-            DataCollectorTranslator::MESSAGE_DEFINED => 0,
-            DataCollectorTranslator::MESSAGE_MISSING => 0,
-            DataCollectorTranslator::MESSAGE_EQUALS_FALLBACK => 0,
-        ];
-
-        foreach ($messages as $message) {
-            ++$count[$message['state']];
-        }
-
-        return $count;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -168,5 +113,60 @@ class TranslationDataCollector extends DataCollector implements LateDataCollecto
     public function getName()
     {
         return 'translation';
+    }
+
+    private function sanitizeCollectedMessages(array $messages)
+    {
+        $result = [];
+        foreach ($messages as $key => $message) {
+            $messageId = $message['locale'].$message['domain'].$message['id'];
+
+            if (!isset($result[$messageId])) {
+                $message['count'] = 1;
+                $message['parameters'] = !empty($message['parameters']) ? [$message['parameters']] : [];
+                $messages[$key]['translation'] = $this->sanitizeString($message['translation']);
+                $result[$messageId] = $message;
+            } else {
+                if (!empty($message['parameters'])) {
+                    $result[$messageId]['parameters'][] = $message['parameters'];
+                }
+
+                ++$result[$messageId]['count'];
+            }
+
+            unset($messages[$key]);
+        }
+
+        return $result;
+    }
+
+    private function computeCount(array $messages)
+    {
+        $count = [
+            DataCollectorTranslator::MESSAGE_DEFINED => 0,
+            DataCollectorTranslator::MESSAGE_MISSING => 0,
+            DataCollectorTranslator::MESSAGE_EQUALS_FALLBACK => 0,
+        ];
+
+        foreach ($messages as $message) {
+            ++$count[$message['state']];
+        }
+
+        return $count;
+    }
+
+    private function sanitizeString(string $string, int $length = 80)
+    {
+        $string = trim(preg_replace('/\s+/', ' ', $string));
+
+        if (false !== $encoding = mb_detect_encoding($string, null, true)) {
+            if (mb_strlen($string, $encoding) > $length) {
+                return mb_substr($string, 0, $length - 3, $encoding).'...';
+            }
+        } elseif (\strlen($string) > $length) {
+            return substr($string, 0, $length - 3).'...';
+        }
+
+        return $string;
     }
 }

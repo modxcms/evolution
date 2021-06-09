@@ -45,14 +45,14 @@ class MessagePart extends DataPart
         return 'rfc822';
     }
 
-    public function bodyToString(): string
-    {
-        return $this->getBody();
-    }
-
     public function getBody(): string
     {
         return $this->message->toString();
+    }
+
+    public function bodyToString(): string
+    {
+        return $this->getBody();
     }
 
     public function bodyToIterable(): iterable

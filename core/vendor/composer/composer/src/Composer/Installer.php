@@ -185,28 +185,6 @@ class Installer
     }
 
     /**
-     * Create Installer
-     *
-     * @param  IOInterface $io
-     * @param  Composer    $composer
-     * @return Installer
-     */
-    public static function create(IOInterface $io, Composer $composer)
-    {
-        return new static(
-            $io,
-            $composer->getConfig(),
-            $composer->getPackage(),
-            $composer->getDownloadManager(),
-            $composer->getRepositoryManager(),
-            $composer->getLocker(),
-            $composer->getInstallationManager(),
-            $composer->getEventDispatcher(),
-            $composer->getAutoloadGenerator()
-        );
-    }
-
-    /**
      * Run installation (or update)
      *
      * @throws \Exception
@@ -368,31 +346,6 @@ class Installer
         }
 
         return 0;
-    }
-
-    /**
-     * Replace local repositories with InstalledArrayRepository instances
-     *
-     * This is to prevent any accidental modification of the existing repos on disk
-     *
-     * @param RepositoryManager $rm
-     */
-    private function mockLocalRepositories(RepositoryManager $rm)
-    {
-        $packages = array();
-        foreach ($rm->getLocalRepository()->getPackages() as $package) {
-            $packages[(string) $package] = clone $package;
-        }
-        foreach ($packages as $key => $package) {
-            if ($package instanceof AliasPackage) {
-                $alias = (string) $package->getAliasOf();
-                $className = get_class($package);
-                $packages[$key] = new $className($packages[$alias], $package->getVersion(), $package->getPrettyVersion());
-            }
-        }
-        $rm->setLocalRepository(
-            new InstalledArrayRepository($packages)
-        );
     }
 
     protected function doUpdate(InstalledRepositoryInterface $localRepo, $doInstall)
@@ -593,186 +546,6 @@ class Installer
         return 0;
     }
 
-    protected function createPlatformRepo($forUpdate)
-    {
-        if ($forUpdate) {
-            $platformOverrides = $this->config->get('platform') ?: array();
-        } else {
-            $platformOverrides = $this->locker->getPlatformOverrides();
-        }
-
-        return new PlatformRepository(array(), $platformOverrides);
-    }
-
-    /**
-     * @param  bool  $forUpdate
-     * @return array
-     */
-    private function getRootAliases($forUpdate)
-    {
-        if ($forUpdate) {
-            $aliases = $this->package->getAliases();
-        } else {
-            $aliases = $this->locker->getAliases();
-        }
-
-        return $aliases;
-    }
-
-    /**
-     * @return DefaultPolicy
-     */
-    private function createPolicy($forUpdate)
-    {
-        $preferStable = null;
-        $preferLowest = null;
-        if (!$forUpdate) {
-            $preferStable = $this->locker->getPreferStable();
-            $preferLowest = $this->locker->getPreferLowest();
-        }
-        // old lock file without prefer stable/lowest will return null
-        // so in this case we use the composer.json info
-        if (null === $preferStable) {
-            $preferStable = $this->preferStable || $this->package->getPreferStable();
-        }
-        if (null === $preferLowest) {
-            $preferLowest = $this->preferLowest;
-        }
-
-        return new DefaultPolicy($preferStable, $preferLowest);
-    }
-
-    /**
-     * @param  bool                     $forUpdate
-     * @param  PlatformRepository       $platformRepo
-     * @param  array                    $rootAliases
-     * @param  RepositoryInterface|null $lockedRepository
-     * @return RepositorySet
-     */
-    private function createRepositorySet($forUpdate, PlatformRepository $platformRepo, array $rootAliases = array(), $lockedRepository = null)
-    {
-        if ($forUpdate) {
-            $minimumStability = $this->package->getMinimumStability();
-            $stabilityFlags = $this->package->getStabilityFlags();
-
-            $requires = array_merge($this->package->getRequires(), $this->package->getDevRequires());
-        } else {
-            $minimumStability = $this->locker->getMinimumStability();
-            $stabilityFlags = $this->locker->getStabilityFlags();
-
-            $requires = array();
-            foreach ($lockedRepository->getPackages() as $package) {
-                $constraint = new Constraint('=', $package->getVersion());
-                $constraint->setPrettyString($package->getPrettyVersion());
-                $requires[$package->getName()] = $constraint;
-            }
-        }
-
-        $rootRequires = array();
-        foreach ($requires as $req => $constraint) {
-            // skip platform requirements from the root package to avoid filtering out existing platform packages
-            if ((true === $this->ignorePlatformReqs || (is_array($this->ignorePlatformReqs) && in_array($req, $this->ignorePlatformReqs, true))) && PlatformRepository::isPlatformPackage($req)) {
-                continue;
-            }
-            if ($constraint instanceof Link) {
-                $rootRequires[$req] = $constraint->getConstraint();
-            } else {
-                $rootRequires[$req] = $constraint;
-            }
-        }
-
-        $this->fixedRootPackage = clone $this->package;
-        $this->fixedRootPackage->setRequires(array());
-        $this->fixedRootPackage->setDevRequires(array());
-
-        $stabilityFlags[$this->package->getName()] = BasePackage::$stabilities[VersionParser::parseStability($this->package->getVersion())];
-
-        $repositorySet = new RepositorySet($minimumStability, $stabilityFlags, $rootAliases, $this->package->getReferences(), $rootRequires);
-        $repositorySet->addRepository(new RootPackageRepository($this->fixedRootPackage));
-        $repositorySet->addRepository($platformRepo);
-        if ($this->additionalFixedRepository) {
-            // allow using installed repos if needed to avoid warnings about installed repositories being used in the RepositorySet
-            // see https://github.com/composer/composer/pull/9574
-            $additionalFixedRepositories = $this->additionalFixedRepository;
-            if ($additionalFixedRepositories instanceof CompositeRepository) {
-                $additionalFixedRepositories = $additionalFixedRepositories->getRepositories();
-            } else {
-                $additionalFixedRepositories = array($additionalFixedRepositories);
-            }
-            foreach ($additionalFixedRepositories as $additionalFixedRepository) {
-                if ($additionalFixedRepository instanceof InstalledRepository || $additionalFixedRepository instanceof InstalledRepositoryInterface) {
-                    $repositorySet->allowInstalledRepositories();
-                    break;
-                }
-            }
-
-            $repositorySet->addRepository($this->additionalFixedRepository);
-        }
-
-        return $repositorySet;
-    }
-
-    /**
-     * @return Request
-     */
-    private function createRequest(RootPackageInterface $rootPackage, PlatformRepository $platformRepo, LockArrayRepository $lockedRepository = null)
-    {
-        $request = new Request($lockedRepository);
-
-        $request->fixPackage($rootPackage);
-        if ($rootPackage instanceof RootAliasPackage) {
-            $request->fixPackage($rootPackage->getAliasOf());
-        }
-
-        $fixedPackages = $platformRepo->getPackages();
-        if ($this->additionalFixedRepository) {
-            $fixedPackages = array_merge($fixedPackages, $this->additionalFixedRepository->getPackages());
-        }
-
-        // fix the version of all platform packages + additionally installed packages
-        // to prevent the solver trying to remove or update those
-        // TODO why not replaces?
-        $provided = $rootPackage->getProvides();
-        foreach ($fixedPackages as $package) {
-            // skip platform packages that are provided by the root package
-            if ($package->getRepository() !== $platformRepo
-                || !isset($provided[$package->getName()])
-                || !$provided[$package->getName()]->getConstraint()->matches(new Constraint('=', $package->getVersion()))
-            ) {
-                $request->fixPackage($package);
-            }
-        }
-
-        return $request;
-    }
-
-    private function requirePackagesForUpdate(Request $request, LockArrayRepository $lockedRepository = null, $includeDevRequires = true)
-    {
-        // if we're updating mirrors we want to keep exactly the same versions installed which are in the lock file, but we want current remote metadata
-        if ($this->updateMirrors) {
-            $excludedPackages = array();
-            if (!$includeDevRequires) {
-                $excludedPackages = array_flip($this->locker->getDevPackageNames());
-            }
-
-            foreach ($lockedRepository->getPackages() as $lockedPackage) {
-                // exclude alias packages here as for root aliases, both alias and aliased are
-                // present in the lock repo and we only want to require the aliased version
-                if (!$lockedPackage instanceof AliasPackage && !isset($excludedPackages[$lockedPackage->getName()])) {
-                    $request->requireName($lockedPackage->getName(), new Constraint('==', $lockedPackage->getVersion()));
-                }
-            }
-        } else {
-            $links = $this->package->getRequires();
-            if ($includeDevRequires) {
-                $links = array_merge($links, $this->package->getDevRequires());
-            }
-            foreach ($links as $link) {
-                $request->requireName($link->getTarget(), $link->getConstraint());
-            }
-        }
-    }
-
     /**
      * Run the solver a second time on top of the existing update result with only the current result set in the pool
      * and see what packages would get removed if we only had the non-dev packages in the solver request
@@ -820,22 +593,6 @@ class Installer
         $lockTransaction->setNonDevPackages($nonDevLockTransaction);
 
         return 0;
-    }
-
-    /**
-     * @param  array $links
-     * @return array
-     */
-    private function extractPlatformRequirements(array $links)
-    {
-        $platformReqs = array();
-        foreach ($links as $link) {
-            if (PlatformRepository::isPlatformPackage($link->getTarget())) {
-                $platformReqs[$link->getTarget()] = $link->getPrettyConstraint();
-            }
-        }
-
-        return $platformReqs;
     }
 
     /**
@@ -959,6 +716,249 @@ class Installer
         return 0;
     }
 
+    protected function createPlatformRepo($forUpdate)
+    {
+        if ($forUpdate) {
+            $platformOverrides = $this->config->get('platform') ?: array();
+        } else {
+            $platformOverrides = $this->locker->getPlatformOverrides();
+        }
+
+        return new PlatformRepository(array(), $platformOverrides);
+    }
+
+    /**
+     * @param  bool                     $forUpdate
+     * @param  PlatformRepository       $platformRepo
+     * @param  array                    $rootAliases
+     * @param  RepositoryInterface|null $lockedRepository
+     * @return RepositorySet
+     */
+    private function createRepositorySet($forUpdate, PlatformRepository $platformRepo, array $rootAliases = array(), $lockedRepository = null)
+    {
+        if ($forUpdate) {
+            $minimumStability = $this->package->getMinimumStability();
+            $stabilityFlags = $this->package->getStabilityFlags();
+
+            $requires = array_merge($this->package->getRequires(), $this->package->getDevRequires());
+        } else {
+            $minimumStability = $this->locker->getMinimumStability();
+            $stabilityFlags = $this->locker->getStabilityFlags();
+
+            $requires = array();
+            foreach ($lockedRepository->getPackages() as $package) {
+                $constraint = new Constraint('=', $package->getVersion());
+                $constraint->setPrettyString($package->getPrettyVersion());
+                $requires[$package->getName()] = $constraint;
+            }
+        }
+
+        $rootRequires = array();
+        foreach ($requires as $req => $constraint) {
+            // skip platform requirements from the root package to avoid filtering out existing platform packages
+            if ((true === $this->ignorePlatformReqs || (is_array($this->ignorePlatformReqs) && in_array($req, $this->ignorePlatformReqs, true))) && PlatformRepository::isPlatformPackage($req)) {
+                continue;
+            }
+            if ($constraint instanceof Link) {
+                $rootRequires[$req] = $constraint->getConstraint();
+            } else {
+                $rootRequires[$req] = $constraint;
+            }
+        }
+
+        $this->fixedRootPackage = clone $this->package;
+        $this->fixedRootPackage->setRequires(array());
+        $this->fixedRootPackage->setDevRequires(array());
+
+        $stabilityFlags[$this->package->getName()] = BasePackage::$stabilities[VersionParser::parseStability($this->package->getVersion())];
+
+        $repositorySet = new RepositorySet($minimumStability, $stabilityFlags, $rootAliases, $this->package->getReferences(), $rootRequires);
+        $repositorySet->addRepository(new RootPackageRepository($this->fixedRootPackage));
+        $repositorySet->addRepository($platformRepo);
+        if ($this->additionalFixedRepository) {
+            // allow using installed repos if needed to avoid warnings about installed repositories being used in the RepositorySet
+            // see https://github.com/composer/composer/pull/9574
+            $additionalFixedRepositories = $this->additionalFixedRepository;
+            if ($additionalFixedRepositories instanceof CompositeRepository) {
+                $additionalFixedRepositories = $additionalFixedRepositories->getRepositories();
+            } else {
+                $additionalFixedRepositories = array($additionalFixedRepositories);
+            }
+            foreach ($additionalFixedRepositories as $additionalFixedRepository) {
+                if ($additionalFixedRepository instanceof InstalledRepository || $additionalFixedRepository instanceof InstalledRepositoryInterface) {
+                    $repositorySet->allowInstalledRepositories();
+                    break;
+                }
+            }
+
+            $repositorySet->addRepository($this->additionalFixedRepository);
+        }
+
+        return $repositorySet;
+    }
+
+    /**
+     * @return DefaultPolicy
+     */
+    private function createPolicy($forUpdate)
+    {
+        $preferStable = null;
+        $preferLowest = null;
+        if (!$forUpdate) {
+            $preferStable = $this->locker->getPreferStable();
+            $preferLowest = $this->locker->getPreferLowest();
+        }
+        // old lock file without prefer stable/lowest will return null
+        // so in this case we use the composer.json info
+        if (null === $preferStable) {
+            $preferStable = $this->preferStable || $this->package->getPreferStable();
+        }
+        if (null === $preferLowest) {
+            $preferLowest = $this->preferLowest;
+        }
+
+        return new DefaultPolicy($preferStable, $preferLowest);
+    }
+
+    /**
+     * @return Request
+     */
+    private function createRequest(RootPackageInterface $rootPackage, PlatformRepository $platformRepo, LockArrayRepository $lockedRepository = null)
+    {
+        $request = new Request($lockedRepository);
+
+        $request->fixPackage($rootPackage);
+        if ($rootPackage instanceof RootAliasPackage) {
+            $request->fixPackage($rootPackage->getAliasOf());
+        }
+
+        $fixedPackages = $platformRepo->getPackages();
+        if ($this->additionalFixedRepository) {
+            $fixedPackages = array_merge($fixedPackages, $this->additionalFixedRepository->getPackages());
+        }
+
+        // fix the version of all platform packages + additionally installed packages
+        // to prevent the solver trying to remove or update those
+        // TODO why not replaces?
+        $provided = $rootPackage->getProvides();
+        foreach ($fixedPackages as $package) {
+            // skip platform packages that are provided by the root package
+            if ($package->getRepository() !== $platformRepo
+                || !isset($provided[$package->getName()])
+                || !$provided[$package->getName()]->getConstraint()->matches(new Constraint('=', $package->getVersion()))
+            ) {
+                $request->fixPackage($package);
+            }
+        }
+
+        return $request;
+    }
+
+    private function requirePackagesForUpdate(Request $request, LockArrayRepository $lockedRepository = null, $includeDevRequires = true)
+    {
+        // if we're updating mirrors we want to keep exactly the same versions installed which are in the lock file, but we want current remote metadata
+        if ($this->updateMirrors) {
+            $excludedPackages = array();
+            if (!$includeDevRequires) {
+                $excludedPackages = array_flip($this->locker->getDevPackageNames());
+            }
+
+            foreach ($lockedRepository->getPackages() as $lockedPackage) {
+                // exclude alias packages here as for root aliases, both alias and aliased are
+                // present in the lock repo and we only want to require the aliased version
+                if (!$lockedPackage instanceof AliasPackage && !isset($excludedPackages[$lockedPackage->getName()])) {
+                    $request->requireName($lockedPackage->getName(), new Constraint('==', $lockedPackage->getVersion()));
+                }
+            }
+        } else {
+            $links = $this->package->getRequires();
+            if ($includeDevRequires) {
+                $links = array_merge($links, $this->package->getDevRequires());
+            }
+            foreach ($links as $link) {
+                $request->requireName($link->getTarget(), $link->getConstraint());
+            }
+        }
+    }
+
+    /**
+     * @param  bool  $forUpdate
+     * @return array
+     */
+    private function getRootAliases($forUpdate)
+    {
+        if ($forUpdate) {
+            $aliases = $this->package->getAliases();
+        } else {
+            $aliases = $this->locker->getAliases();
+        }
+
+        return $aliases;
+    }
+
+    /**
+     * @param  array $links
+     * @return array
+     */
+    private function extractPlatformRequirements(array $links)
+    {
+        $platformReqs = array();
+        foreach ($links as $link) {
+            if (PlatformRepository::isPlatformPackage($link->getTarget())) {
+                $platformReqs[$link->getTarget()] = $link->getPrettyConstraint();
+            }
+        }
+
+        return $platformReqs;
+    }
+
+    /**
+     * Replace local repositories with InstalledArrayRepository instances
+     *
+     * This is to prevent any accidental modification of the existing repos on disk
+     *
+     * @param RepositoryManager $rm
+     */
+    private function mockLocalRepositories(RepositoryManager $rm)
+    {
+        $packages = array();
+        foreach ($rm->getLocalRepository()->getPackages() as $package) {
+            $packages[(string) $package] = clone $package;
+        }
+        foreach ($packages as $key => $package) {
+            if ($package instanceof AliasPackage) {
+                $alias = (string) $package->getAliasOf();
+                $className = get_class($package);
+                $packages[$key] = new $className($packages[$alias], $package->getVersion(), $package->getPrettyVersion());
+            }
+        }
+        $rm->setLocalRepository(
+            new InstalledArrayRepository($packages)
+        );
+    }
+
+    /**
+     * Create Installer
+     *
+     * @param  IOInterface $io
+     * @param  Composer    $composer
+     * @return Installer
+     */
+    public static function create(IOInterface $io, Composer $composer)
+    {
+        return new static(
+            $io,
+            $composer->getConfig(),
+            $composer->getPackage(),
+            $composer->getDownloadManager(),
+            $composer->getRepositoryManager(),
+            $composer->getLocker(),
+            $composer->getInstallationManager(),
+            $composer->getEventDispatcher(),
+            $composer->getAutoloadGenerator()
+        );
+    }
+
     /**
      * @param  RepositoryInterface $additionalFixedRepository
      * @return $this
@@ -968,16 +968,6 @@ class Installer
         $this->additionalFixedRepository = $additionalFixedRepository;
 
         return $this;
-    }
-
-    /**
-     * Checks, if this is a dry run (simulation mode).
-     *
-     * @return bool
-     */
-    public function isDryRun()
-    {
-        return $this->dryRun;
     }
 
     /**
@@ -991,6 +981,16 @@ class Installer
         $this->dryRun = (bool) $dryRun;
 
         return $this;
+    }
+
+    /**
+     * Checks, if this is a dry run (simulation mode).
+     *
+     * @return bool
+     */
+    public function isDryRun()
+    {
+        return $this->dryRun;
     }
 
     /**
@@ -1131,6 +1131,7 @@ class Installer
      *
      * @param  bool      $runScripts
      * @return Installer
+     * @deprecated Use setRunScripts(false) on the EventDispatcher instance being injected instead
      */
     public function setRunScripts($runScripts = true)
     {
@@ -1153,16 +1154,6 @@ class Installer
     }
 
     /**
-     * Checks, if running in verbose mode.
-     *
-     * @return bool
-     */
-    public function isVerbose()
-    {
-        return $this->verbose;
-    }
-
-    /**
      * run in verbose mode
      *
      * @param  bool      $verbose
@@ -1173,6 +1164,16 @@ class Installer
         $this->verbose = (bool) $verbose;
 
         return $this;
+    }
+
+    /**
+     * Checks, if running in verbose mode.
+     *
+     * @return bool
+     */
+    public function isVerbose()
+    {
+        return $this->verbose;
     }
 
     /**

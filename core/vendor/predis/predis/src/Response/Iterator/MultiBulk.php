@@ -35,16 +35,6 @@ class MultiBulk extends MultiBulkIterator
     }
 
     /**
-     * Reads the next item of the multibulk response from the connection.
-     *
-     * @return mixed
-     */
-    protected function getValue()
-    {
-        return $this->connection->read();
-    }
-
-    /**
      * Handles the synchronization of the client with the Redis protocol when
      * the garbage collector kicks in (e.g. when the iterator goes out of the
      * scope of a foreach or it is unset).
@@ -73,5 +63,15 @@ class MultiBulk extends MultiBulkIterator
                 $this->next();
             }
         }
+    }
+
+    /**
+     * Reads the next item of the multibulk response from the connection.
+     *
+     * @return mixed
+     */
+    protected function getValue()
+    {
+        return $this->connection->read();
     }
 }

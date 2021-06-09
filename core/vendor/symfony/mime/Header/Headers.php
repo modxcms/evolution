@@ -52,42 +52,6 @@ final class Headers
         }
     }
 
-    /**
-     * @return $this
-     */
-    public function add(HeaderInterface $header): self
-    {
-        self::checkHeaderClass($header);
-
-        $header->setMaxLineLength($this->lineLength);
-        $name = strtolower($header->getName());
-
-        if (\in_array($name, self::UNIQUE_HEADERS, true) && isset($this->headers[$name]) && \count($this->headers[$name]) > 0) {
-            throw new LogicException(sprintf('Impossible to set header "%s" as it\'s already defined and must be unique.', $header->getName()));
-        }
-
-        $this->headers[$name][] = $header;
-
-        return $this;
-    }
-
-    /**
-     * @throws LogicException if the header name and class are not compatible
-     */
-    public static function checkHeaderClass(HeaderInterface $header): void
-    {
-        $name = strtolower($header->getName());
-
-        if (($c = self::HEADER_CLASS_MAP[$name] ?? null) && !$header instanceof $c) {
-            throw new LogicException(sprintf('The "%s" header must be an instance of "%s" (got "%s").', $header->getName(), $c, get_debug_type($header)));
-        }
-    }
-
-    public static function isUniqueHeader(string $name): bool
-    {
-        return \in_array(strtolower($name), self::UNIQUE_HEADERS, true);
-    }
-
     public function __clone()
     {
         foreach ($this->headers as $name => $collection) {
@@ -102,21 +66,6 @@ final class Headers
         $this->lineLength = $lineLength;
         foreach ($this->all() as $header) {
             $header->setMaxLineLength($lineLength);
-        }
-    }
-
-    public function all(string $name = null): iterable
-    {
-        if (null === $name) {
-            foreach ($this->headers as $name => $collection) {
-                foreach ($collection as $header) {
-                    yield $name => $header;
-                }
-            }
-        } elseif (isset($this->headers[strtolower($name)])) {
-            foreach ($this->headers[strtolower($name)] as $header) {
-                yield $header;
-            }
         }
     }
 
@@ -205,6 +154,57 @@ final class Headers
         return $this->$method($name, $argument, $more);
     }
 
+    public function has(string $name): bool
+    {
+        return isset($this->headers[strtolower($name)]);
+    }
+
+    /**
+     * @return $this
+     */
+    public function add(HeaderInterface $header): self
+    {
+        self::checkHeaderClass($header);
+
+        $header->setMaxLineLength($this->lineLength);
+        $name = strtolower($header->getName());
+
+        if (\in_array($name, self::UNIQUE_HEADERS, true) && isset($this->headers[$name]) && \count($this->headers[$name]) > 0) {
+            throw new LogicException(sprintf('Impossible to set header "%s" as it\'s already defined and must be unique.', $header->getName()));
+        }
+
+        $this->headers[$name][] = $header;
+
+        return $this;
+    }
+
+    public function get(string $name): ?HeaderInterface
+    {
+        $name = strtolower($name);
+        if (!isset($this->headers[$name])) {
+            return null;
+        }
+
+        $values = array_values($this->headers[$name]);
+
+        return array_shift($values);
+    }
+
+    public function all(string $name = null): iterable
+    {
+        if (null === $name) {
+            foreach ($this->headers as $name => $collection) {
+                foreach ($collection as $header) {
+                    yield $name => $header;
+                }
+            }
+        } elseif (isset($this->headers[strtolower($name)])) {
+            foreach ($this->headers[strtolower($name)] as $header) {
+                yield $header;
+            }
+        }
+    }
+
     public function getNames(): array
     {
         return array_keys($this->headers);
@@ -213,6 +213,23 @@ final class Headers
     public function remove(string $name): void
     {
         unset($this->headers[strtolower($name)]);
+    }
+
+    public static function isUniqueHeader(string $name): bool
+    {
+        return \in_array(strtolower($name), self::UNIQUE_HEADERS, true);
+    }
+
+    /**
+     * @throws LogicException if the header name and class are not compatible
+     */
+    public static function checkHeaderClass(HeaderInterface $header): void
+    {
+        $name = strtolower($header->getName());
+
+        if (($c = self::HEADER_CLASS_MAP[$name] ?? null) && !$header instanceof $c) {
+            throw new LogicException(sprintf('The "%s" header must be an instance of "%s" (got "%s").', $header->getName(), $c, get_debug_type($header)));
+        }
     }
 
     public function toString(): string
@@ -240,23 +257,6 @@ final class Headers
     public function getHeaderBody($name)
     {
         return $this->has($name) ? $this->get($name)->getBody() : null;
-    }
-
-    public function has(string $name): bool
-    {
-        return isset($this->headers[strtolower($name)]);
-    }
-
-    public function get(string $name): ?HeaderInterface
-    {
-        $name = strtolower($name);
-        if (!isset($this->headers[$name])) {
-            return null;
-        }
-
-        $values = array_values($this->headers[$name]);
-
-        return array_shift($values);
     }
 
     /**

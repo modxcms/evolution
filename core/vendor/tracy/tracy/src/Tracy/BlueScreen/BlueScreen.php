@@ -55,86 +55,6 @@ class BlueScreen
 			: [dirname(__DIR__)];
 	}
 
-	/**
-	 * Returns syntax highlighted source code.
-	 */
-	public static function highlightFile(string $file, int $line, int $lines = 15): ?string
-	{
-		$source = @file_get_contents($file); // @ file may not exist
-		if ($source === false) {
-			return null;
-		}
-		$source = static::highlightPhp($source, $line, $lines);
-		if ($editor = Helpers::editorUri($file, $line)) {
-			$source = substr_replace($source, ' title="Ctrl-Click to open in editor" data-tracy-href="' . Helpers::escapeHtml($editor) . '"', 4, 0);
-		}
-		return $source;
-	}
-
-	/**
-	 * Returns syntax highlighted source code.
-	 */
-	public static function highlightPhp(string $source, int $line, int $lines = 15): string
-	{
-		if (function_exists('ini_set')) {
-			ini_set('highlight.comment', '#998; font-style: italic');
-			ini_set('highlight.default', '#000');
-			ini_set('highlight.html', '#06B');
-			ini_set('highlight.keyword', '#D24; font-weight: bold');
-			ini_set('highlight.string', '#080');
-		}
-
-		$source = preg_replace('#(__halt_compiler\s*\(\)\s*;).*#is', '$1', $source);
-		$source = str_replace(["\r\n", "\r"], "\n", $source);
-		$source = explode("\n", highlight_string($source, true));
-		$out = $source[0]; // <code><span color=highlight.html>
-		$source = str_replace('<br />', "\n", $source[1]);
-		$out .= static::highlightLine($source, $line, $lines);
-		$out = str_replace('&nbsp;', ' ', $out);
-		return "<pre class='code'><div>$out</div></pre>";
-	}
-
-	/**
-	 * Returns highlighted line in HTML code.
-	 */
-	public static function highlightLine(string $html, int $line, int $lines = 15): string
-	{
-		$source = explode("\n", "\n" . str_replace("\r\n", "\n", $html));
-		$out = '';
-		$spans = 1;
-		$start = $i = max(1, min($line, count($source) - 1) - (int) floor($lines * 2 / 3));
-		while (--$i >= 1) { // find last highlighted block
-			if (preg_match('#.*(</?span[^>]*>)#', $source[$i], $m)) {
-				if ($m[1] !== '</span>') {
-					$spans++;
-					$out .= $m[1];
-				}
-				break;
-			}
-		}
-
-		$source = array_slice($source, $start, $lines, true);
-		end($source);
-		$numWidth = strlen((string) key($source));
-
-		foreach ($source as $n => $s) {
-			$spans += substr_count($s, '<span') - substr_count($s, '</span');
-			$s = str_replace(["\r", "\n"], ['', ''], $s);
-			preg_match_all('#<[^>]+>#', $s, $tags);
-			if ($n == $line) {
-				$out .= sprintf(
-					"<span class='highlight'>%{$numWidth}s:    %s\n</span>%s",
-					$n,
-					strip_tags($s),
-					implode('', $tags[0])
-				);
-			} else {
-				$out .= sprintf("<span class='line'>%{$numWidth}s:</span>    %s\n", $n, $s);
-			}
-		}
-		$out .= str_repeat('</span>', $spans) . '</code>';
-		return $out;
-	}
 
 	/**
 	 * Add custom panel as function (?\Throwable $e): ?array
@@ -148,6 +68,7 @@ class BlueScreen
 		return $this;
 	}
 
+
 	/**
 	 * Add action.
 	 * @return static
@@ -157,6 +78,7 @@ class BlueScreen
 		$this->actions[] = $action;
 		return $this;
 	}
+
 
 	/**
 	 * Renders blue screen.
@@ -178,6 +100,25 @@ class BlueScreen
 			$this->renderTemplate($exception, __DIR__ . '/assets/page.phtml');
 		}
 	}
+
+
+	/**
+	 * Renders blue screen to file (if file exists, it will not be overwritten).
+	 */
+	public function renderToFile(\Throwable $exception, string $file): bool
+	{
+		if ($handle = @fopen($file, 'x')) {
+			ob_start(); // double buffer prevents sending HTTP headers in some PHP
+			ob_start(function ($buffer) use ($handle): void { fwrite($handle, $buffer); }, 4096);
+			$this->renderTemplate($exception, __DIR__ . '/assets/page.phtml', false);
+			ob_end_flush();
+			ob_end_clean();
+			fclose($handle);
+			return true;
+		}
+		return false;
+	}
+
 
 	private function renderTemplate(\Throwable $exception, string $template, $toScreen = true): void
 	{
@@ -216,20 +157,36 @@ class BlueScreen
 		require $template;
 	}
 
-	/** @internal */
-	public function getDumper(): \Closure
+
+	/**
+	 * @return \stdClass[]
+	 */
+	private function renderPanels(?\Throwable $ex): array
 	{
-		return function ($v, $k = null): string {
-			return Dumper::toHtml($v, [
-				Dumper::DEPTH => $this->maxDepth,
-				Dumper::TRUNCATE => $this->maxLength,
-				Dumper::SNAPSHOT => &$this->snapshot,
-				Dumper::LOCATION => Dumper::LOCATION_CLASS,
-				Dumper::SCRUBBER => $this->scrubber,
-				Dumper::KEYS_TO_HIDE => $this->keysToHide,
-			], $k);
-		};
+		$obLevel = ob_get_level();
+		$res = [];
+		foreach ($this->panels as $callback) {
+			try {
+				$panel = $callback($ex);
+				if (empty($panel['tab']) || empty($panel['panel'])) {
+					continue;
+				}
+				$res[] = (object) $panel;
+				continue;
+			} catch (\Throwable $e) {
+			}
+			while (ob_get_level() > $obLevel) { // restore ob-level if broken
+				ob_end_clean();
+			}
+			is_callable($callback, true, $name);
+			$res[] = (object) [
+				'tab' => "Error in panel $name",
+				'panel' => nl2br(Helpers::escapeHtml($e)),
+			];
+		}
+		return $res;
 	}
+
 
 	/**
 	 * @return array[]
@@ -294,22 +251,90 @@ class BlueScreen
 		return $actions;
 	}
 
+
 	/**
-	 * Renders blue screen to file (if file exists, it will not be overwritten).
+	 * Returns syntax highlighted source code.
 	 */
-	public function renderToFile(\Throwable $exception, string $file): bool
+	public static function highlightFile(string $file, int $line, int $lines = 15): ?string
 	{
-		if ($handle = @fopen($file, 'x')) {
-			ob_start(); // double buffer prevents sending HTTP headers in some PHP
-			ob_start(function ($buffer) use ($handle): void { fwrite($handle, $buffer); }, 4096);
-			$this->renderTemplate($exception, __DIR__ . '/assets/page.phtml', false);
-			ob_end_flush();
-			ob_end_clean();
-			fclose($handle);
-			return true;
+		$source = @file_get_contents($file); // @ file may not exist
+		if ($source === false) {
+			return null;
 		}
-		return false;
+		$source = static::highlightPhp($source, $line, $lines);
+		if ($editor = Helpers::editorUri($file, $line)) {
+			$source = substr_replace($source, ' title="Ctrl-Click to open in editor" data-tracy-href="' . Helpers::escapeHtml($editor) . '"', 4, 0);
+		}
+		return $source;
 	}
+
+
+	/**
+	 * Returns syntax highlighted source code.
+	 */
+	public static function highlightPhp(string $source, int $line, int $lines = 15): string
+	{
+		if (function_exists('ini_set')) {
+			ini_set('highlight.comment', '#998; font-style: italic');
+			ini_set('highlight.default', '#000');
+			ini_set('highlight.html', '#06B');
+			ini_set('highlight.keyword', '#D24; font-weight: bold');
+			ini_set('highlight.string', '#080');
+		}
+
+		$source = preg_replace('#(__halt_compiler\s*\(\)\s*;).*#is', '$1', $source);
+		$source = str_replace(["\r\n", "\r"], "\n", $source);
+		$source = explode("\n", highlight_string($source, true));
+		$out = $source[0]; // <code><span color=highlight.html>
+		$source = str_replace('<br />', "\n", $source[1]);
+		$out .= static::highlightLine($source, $line, $lines);
+		$out = str_replace('&nbsp;', ' ', $out);
+		return "<pre class='code'><div>$out</div></pre>";
+	}
+
+
+	/**
+	 * Returns highlighted line in HTML code.
+	 */
+	public static function highlightLine(string $html, int $line, int $lines = 15): string
+	{
+		$source = explode("\n", "\n" . str_replace("\r\n", "\n", $html));
+		$out = '';
+		$spans = 1;
+		$start = $i = max(1, min($line, count($source) - 1) - (int) floor($lines * 2 / 3));
+		while (--$i >= 1) { // find last highlighted block
+			if (preg_match('#.*(</?span[^>]*>)#', $source[$i], $m)) {
+				if ($m[1] !== '</span>') {
+					$spans++;
+					$out .= $m[1];
+				}
+				break;
+			}
+		}
+
+		$source = array_slice($source, $start, $lines, true);
+		end($source);
+		$numWidth = strlen((string) key($source));
+
+		foreach ($source as $n => $s) {
+			$spans += substr_count($s, '<span') - substr_count($s, '</span');
+			$s = str_replace(["\r", "\n"], ['', ''], $s);
+			preg_match_all('#<[^>]+>#', $s, $tags);
+			if ($n == $line) {
+				$out .= sprintf(
+					"<span class='highlight'>%{$numWidth}s:    %s\n</span>%s",
+					$n,
+					strip_tags($s),
+					implode('', $tags[0])
+				);
+			} else {
+				$out .= sprintf("<span class='line'>%{$numWidth}s:</span>    %s\n", $n, $s);
+			}
+		}
+		$out .= str_repeat('</span>', $spans) . '</code>';
+		return $out;
+	}
+
 
 	/**
 	 * Should a file be collapsed in stack trace?
@@ -326,6 +351,23 @@ class BlueScreen
 		}
 		return false;
 	}
+
+
+	/** @internal */
+	public function getDumper(): \Closure
+	{
+		return function ($v, $k = null): string {
+			return Dumper::toHtml($v, [
+				Dumper::DEPTH => $this->maxDepth,
+				Dumper::TRUNCATE => $this->maxLength,
+				Dumper::SNAPSHOT => &$this->snapshot,
+				Dumper::LOCATION => Dumper::LOCATION_CLASS,
+				Dumper::SCRUBBER => $this->scrubber,
+				Dumper::KEYS_TO_HIDE => $this->keysToHide,
+			], $k);
+		};
+	}
+
 
 	public function formatMessage(\Throwable $exception): string
 	{
@@ -370,34 +412,6 @@ class BlueScreen
 		return $msg;
 	}
 
-	/**
-	 * @return \stdClass[]
-	 */
-	private function renderPanels(?\Throwable $ex): array
-	{
-		$obLevel = ob_get_level();
-		$res = [];
-		foreach ($this->panels as $callback) {
-			try {
-				$panel = $callback($ex);
-				if (empty($panel['tab']) || empty($panel['panel'])) {
-					continue;
-				}
-				$res[] = (object) $panel;
-				continue;
-			} catch (\Throwable $e) {
-			}
-			while (ob_get_level() > $obLevel) { // restore ob-level if broken
-				ob_end_clean();
-			}
-			is_callable($callback, true, $name);
-			$res[] = (object) [
-				'tab' => "Error in panel $name",
-				'panel' => nl2br(Helpers::escapeHtml($e)),
-			];
-		}
-		return $res;
-	}
 
 	private function renderPhpInfo(): void
 	{

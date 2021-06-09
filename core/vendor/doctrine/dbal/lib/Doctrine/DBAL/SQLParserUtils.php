@@ -83,6 +83,28 @@ class SQLParserUtils
     }
 
     /**
+     * Returns a map of placeholder positions to their parameter names.
+     *
+     * @return array<int,string>
+     */
+    private static function getNamedPlaceholderPositions(string $statement): array
+    {
+        return self::collectPlaceholders(
+            $statement,
+            ':',
+            self::NAMED_TOKEN,
+            static function (
+                string $placeholder,
+                int $placeholderPosition,
+                int $fragmentPosition,
+                array &$carry
+            ): void {
+                $carry[$placeholderPosition + $fragmentPosition] = substr($placeholder, 1);
+            }
+        );
+    }
+
+    /**
      * @return mixed[]
      */
     private static function collectPlaceholders(
@@ -105,53 +127,6 @@ class SQLParserUtils
         }
 
         return $carry;
-    }
-
-    /**
-     * Slice the SQL statement around pairs of quotes and
-     * return string fragments of SQL outside of quoted literals.
-     * Each fragment is captured as a 2-element array:
-     *
-     * 0 => matched fragment string,
-     * 1 => offset of fragment in $statement
-     *
-     * @param string $statement
-     *
-     * @return mixed[][]
-     */
-    private static function getUnquotedStatementFragments($statement)
-    {
-        $literal    = self::ESCAPED_SINGLE_QUOTED_TEXT . '|' .
-            self::ESCAPED_DOUBLE_QUOTED_TEXT . '|' .
-            self::ESCAPED_BACKTICK_QUOTED_TEXT . '|' .
-            self::ESCAPED_BRACKET_QUOTED_TEXT;
-        $expression = sprintf('/((.+(?i:ARRAY)\\[.+\\])|([^\'"`\\[]+))(?:%s)?/s', $literal);
-
-        preg_match_all($expression, $statement, $fragments, PREG_OFFSET_CAPTURE);
-
-        return $fragments[1];
-    }
-
-    /**
-     * Returns a map of placeholder positions to their parameter names.
-     *
-     * @return array<int,string>
-     */
-    private static function getNamedPlaceholderPositions(string $statement): array
-    {
-        return self::collectPlaceholders(
-            $statement,
-            ':',
-            self::NAMED_TOKEN,
-            static function (
-                string $placeholder,
-                int $placeholderPosition,
-                int $fragmentPosition,
-                array &$carry
-            ): void {
-                $carry[$placeholderPosition + $fragmentPosition] = substr($placeholder, 1);
-            }
-        );
     }
 
     /**
@@ -275,6 +250,31 @@ class SQLParserUtils
         }
 
         return [$query, $paramsOrd, $typesOrd];
+    }
+
+    /**
+     * Slice the SQL statement around pairs of quotes and
+     * return string fragments of SQL outside of quoted literals.
+     * Each fragment is captured as a 2-element array:
+     *
+     * 0 => matched fragment string,
+     * 1 => offset of fragment in $statement
+     *
+     * @param string $statement
+     *
+     * @return mixed[][]
+     */
+    private static function getUnquotedStatementFragments($statement)
+    {
+        $literal    = self::ESCAPED_SINGLE_QUOTED_TEXT . '|' .
+            self::ESCAPED_DOUBLE_QUOTED_TEXT . '|' .
+            self::ESCAPED_BACKTICK_QUOTED_TEXT . '|' .
+            self::ESCAPED_BRACKET_QUOTED_TEXT;
+        $expression = sprintf('/((.+(?i:ARRAY)\\[.+\\])|([^\'"`\\[]+))(?:%s)?/s', $literal);
+
+        preg_match_all($expression, $statement, $fragments, PREG_OFFSET_CAPTURE);
+
+        return $fragments[1];
     }
 
     /**

@@ -53,6 +53,19 @@ class ElasticaFormatter extends NormalizerFormatter
         return $this->getDocument($record);
     }
 
+    public function getIndex(): string
+    {
+        return $this->index;
+    }
+
+    /**
+     * @deprecated since Elastica 7 type has no effect
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
     /**
      * Convert a log message into an Elastica Document
      * @param  array    $record
@@ -68,18 +81,5 @@ class ElasticaFormatter extends NormalizerFormatter
         $document->setIndex($this->index);
 
         return $document;
-    }
-
-    public function getIndex(): string
-    {
-        return $this->index;
-    }
-
-    /**
-     * @deprecated since Elastica 7 type has no effect
-     */
-    public function getType(): string
-    {
-        return $this->type;
     }
 }

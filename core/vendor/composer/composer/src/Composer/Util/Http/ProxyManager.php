@@ -22,8 +22,6 @@ use Composer\Util\Url;
  */
 class ProxyManager
 {
-    /** @var ?ProxyManager */
-    private static $instance = null;
     private $error;
     private $fullProxy;
     private $safeProxy;
@@ -33,6 +31,9 @@ class ProxyManager
     private $lastProxy;
     /** @var ?NoProxyPattern */
     private $noProxyHandler = null;
+
+    /** @var ?ProxyManager */
+    private static $instance = null;
 
     private function __construct()
     {
@@ -47,52 +48,6 @@ class ProxyManager
 
         $this->hasProxy = false;
         $this->initProxyData();
-    }
-
-    /**
-     * Initializes proxy values from the environment
-     */
-    private function initProxyData()
-    {
-        try {
-            list($httpProxy, $httpsProxy, $noProxy) = ProxyHelper::getProxyData();
-        } catch (\RuntimeException $e) {
-            $this->error = $e->getMessage();
-
-            return;
-        }
-
-        $info = array();
-
-        if ($httpProxy) {
-            $info[] = $this->setData($httpProxy, 'http');
-        }
-        if ($httpsProxy) {
-            $info[] = $this->setData($httpsProxy, 'https');
-        }
-        if ($this->hasProxy) {
-            $this->info = implode(', ', $info);
-            if ($noProxy) {
-                $this->noProxyHandler = new NoProxyPattern($noProxy);
-            }
-        }
-    }
-
-    /**
-     * Sets initial data
-     *
-     * @param string $url    Proxy url
-     * @param string $scheme Environment variable scheme
-     */
-    private function setData($url, $scheme)
-    {
-        $safeProxy = Url::sanitize($url);
-        $this->fullProxy[$scheme] = $url;
-        $this->safeProxy[$scheme] = $safeProxy;
-        $this->streams[$scheme]['options'] = ProxyHelper::getContextOptions($url);
-        $this->hasProxy = true;
-
-        return sprintf('%s=%s', $scheme, $safeProxy);
     }
 
     /**
@@ -147,25 +102,6 @@ class ProxyManager
     }
 
     /**
-     * Returns true if a url matches no_proxy value
-     *
-     * @param  string $requestUrl
-     * @return bool
-     */
-    private function noProxy($requestUrl)
-    {
-        if ($this->noProxyHandler) {
-            if ($this->noProxyHandler->test($requestUrl)) {
-                $this->lastProxy = 'excluded by no_proxy';
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Returns true if a proxy is being used
      *
      * @return bool If false any error will be in $message
@@ -183,5 +119,70 @@ class ProxyManager
     public function getFormattedProxy()
     {
         return $this->hasProxy ? $this->info : $this->error;
+    }
+
+    /**
+     * Initializes proxy values from the environment
+     */
+    private function initProxyData()
+    {
+        try {
+            list($httpProxy, $httpsProxy, $noProxy) = ProxyHelper::getProxyData();
+        } catch (\RuntimeException $e) {
+            $this->error = $e->getMessage();
+
+            return;
+        }
+
+        $info = array();
+
+        if ($httpProxy) {
+            $info[] = $this->setData($httpProxy, 'http');
+        }
+        if ($httpsProxy) {
+            $info[] = $this->setData($httpsProxy, 'https');
+        }
+        if ($this->hasProxy) {
+            $this->info = implode(', ', $info);
+            if ($noProxy) {
+                $this->noProxyHandler = new NoProxyPattern($noProxy);
+            }
+        }
+    }
+
+    /**
+     * Sets initial data
+     *
+     * @param string $url    Proxy url
+     * @param string $scheme Environment variable scheme
+     */
+    private function setData($url, $scheme)
+    {
+        $safeProxy = Url::sanitize($url);
+        $this->fullProxy[$scheme] = $url;
+        $this->safeProxy[$scheme] = $safeProxy;
+        $this->streams[$scheme]['options'] = ProxyHelper::getContextOptions($url);
+        $this->hasProxy = true;
+
+        return sprintf('%s=%s', $scheme, $safeProxy);
+    }
+
+    /**
+     * Returns true if a url matches no_proxy value
+     *
+     * @param  string $requestUrl
+     * @return bool
+     */
+    private function noProxy($requestUrl)
+    {
+        if ($this->noProxyHandler) {
+            if ($this->noProxyHandler->test($requestUrl)) {
+                $this->lastProxy = 'excluded by no_proxy';
+
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -15,36 +15,6 @@ use WebPConvert\Exceptions\InvalidInput\TargetNotFoundException;
 class PathChecker
 {
 
-    public static function checkSourceAndDestinationPaths($source, $destination)
-    {
-        self::checkSourcePath($source);
-        self::checkDestinationPath($destination);
-    }
-
-    /**
-     *  Checks that source path is secure, file exists and it is not a dir.
-     *
-     *  To also check mime type, use InputValidator::checkSource
-     */
-    public static function checkSourcePath($source)
-    {
-        self::checkAbsolutePathAndExists($source, 'source');
-    }
-
-    public static function checkAbsolutePathAndExists($absFilePath, $text = 'file')
-    {
-        if (empty($absFilePath)) {
-            throw new TargetNotFoundException($text . ' argument missing');
-        }
-        self::checkAbsolutePath($absFilePath, $text);
-        if (@!file_exists($absFilePath)) {
-            throw new TargetNotFoundException($text . ' file was not found');
-        }
-        if (@is_dir($absFilePath)) {
-            throw new InvalidInputException($text . ' is a directory');
-        }
-    }
-
     /**
      * Check absolute file path to prevent attacks.
      *
@@ -91,6 +61,30 @@ class PathChecker
         }
     }
 
+    public static function checkAbsolutePathAndExists($absFilePath, $text = 'file')
+    {
+        if (empty($absFilePath)) {
+            throw new TargetNotFoundException($text . ' argument missing');
+        }
+        self::checkAbsolutePath($absFilePath, $text);
+        if (@!file_exists($absFilePath)) {
+            throw new TargetNotFoundException($text . ' file was not found');
+        }
+        if (@is_dir($absFilePath)) {
+            throw new InvalidInputException($text . ' is a directory');
+        }
+    }
+
+    /**
+     *  Checks that source path is secure, file exists and it is not a dir.
+     *
+     *  To also check mime type, use InputValidator::checkSource
+     */
+    public static function checkSourcePath($source)
+    {
+        self::checkAbsolutePathAndExists($source, 'source');
+    }
+
     public static function checkDestinationPath($destination)
     {
         if (empty($destination)) {
@@ -111,5 +105,11 @@ class PathChecker
         if (@is_dir($destination)) {
             throw new InvalidInputException('Destination is a directory');
         }
+    }
+
+    public static function checkSourceAndDestinationPaths($source, $destination)
+    {
+        self::checkSourcePath($source);
+        self::checkDestinationPath($destination);
     }
 }

@@ -93,6 +93,21 @@ class MemcachedStore extends TaggableStore implements LockProvider
     }
 
     /**
+     * Store an item in the cache for a given number of seconds.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @param  int  $seconds
+     * @return bool
+     */
+    public function put($key, $value, $seconds)
+    {
+        return $this->memcached->set(
+            $this->prefix.$key, $value, $this->calculateExpiration($seconds)
+        );
+    }
+
+    /**
      * Store multiple items in the cache for a given number of seconds.
      *
      * @param  array  $values
@@ -110,28 +125,6 @@ class MemcachedStore extends TaggableStore implements LockProvider
         return $this->memcached->setMulti(
             $prefixedValues, $this->calculateExpiration($seconds)
         );
-    }
-
-    /**
-     * Get the expiration time of the key.
-     *
-     * @param  int  $seconds
-     * @return int
-     */
-    protected function calculateExpiration($seconds)
-    {
-        return $this->toTimestamp($seconds);
-    }
-
-    /**
-     * Get the UNIX timestamp for the given number of seconds.
-     *
-     * @param  int  $seconds
-     * @return int
-     */
-    protected function toTimestamp($seconds)
-    {
-        return $seconds > 0 ? $this->availableAt($seconds) : 0;
     }
 
     /**
@@ -186,18 +179,16 @@ class MemcachedStore extends TaggableStore implements LockProvider
     }
 
     /**
-     * Store an item in the cache for a given number of seconds.
+     * Get a lock instance.
      *
-     * @param  string  $key
-     * @param  mixed  $value
+     * @param  string  $name
      * @param  int  $seconds
-     * @return bool
+     * @param  string|null  $owner
+     * @return \Illuminate\Contracts\Cache\Lock
      */
-    public function put($key, $value, $seconds)
+    public function lock($name, $seconds = 0, $owner = null)
     {
-        return $this->memcached->set(
-            $this->prefix.$key, $value, $this->calculateExpiration($seconds)
-        );
+        return new MemcachedLock($this->memcached, $this->prefix.$name, $seconds, $owner);
     }
 
     /**
@@ -210,19 +201,6 @@ class MemcachedStore extends TaggableStore implements LockProvider
     public function restoreLock($name, $owner)
     {
         return $this->lock($name, 0, $owner);
-    }
-
-    /**
-     * Get a lock instance.
-     *
-     * @param  string  $name
-     * @param  int  $seconds
-     * @param  string|null  $owner
-     * @return \Illuminate\Contracts\Cache\Lock
-     */
-    public function lock($name, $seconds = 0, $owner = null)
-    {
-        return new MemcachedLock($this->memcached, $this->prefix.$name, $seconds, $owner);
     }
 
     /**
@@ -244,6 +222,28 @@ class MemcachedStore extends TaggableStore implements LockProvider
     public function flush()
     {
         return $this->memcached->flush();
+    }
+
+    /**
+     * Get the expiration time of the key.
+     *
+     * @param  int  $seconds
+     * @return int
+     */
+    protected function calculateExpiration($seconds)
+    {
+        return $this->toTimestamp($seconds);
+    }
+
+    /**
+     * Get the UNIX timestamp for the given number of seconds.
+     *
+     * @param  int  $seconds
+     * @return int
+     */
+    protected function toTimestamp($seconds)
+    {
+        return $seconds > 0 ? $this->availableAt($seconds) : 0;
     }
 
     /**

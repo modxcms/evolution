@@ -22,17 +22,6 @@ use Monolog\Formatter\FormatterInterface;
  */
 class TestCase extends \PHPUnit\Framework\TestCase
 {
-    protected function getMultipleRecords(): array
-    {
-        return [
-            $this->getRecord(Logger::DEBUG, 'debug message 1'),
-            $this->getRecord(Logger::DEBUG, 'debug message 2'),
-            $this->getRecord(Logger::INFO, 'information'),
-            $this->getRecord(Logger::WARNING, 'warning'),
-            $this->getRecord(Logger::ERROR, 'error'),
-        ];
-    }
-
     /**
      * @return array Record
      */
@@ -46,6 +35,17 @@ class TestCase extends \PHPUnit\Framework\TestCase
             'channel' => 'test',
             'datetime' => new DateTimeImmutable(true),
             'extra' => [],
+        ];
+    }
+
+    protected function getMultipleRecords(): array
+    {
+        return [
+            $this->getRecord(Logger::DEBUG, 'debug message 1'),
+            $this->getRecord(Logger::DEBUG, 'debug message 2'),
+            $this->getRecord(Logger::INFO, 'information'),
+            $this->getRecord(Logger::WARNING, 'warning'),
+            $this->getRecord(Logger::ERROR, 'error'),
         ];
     }
 

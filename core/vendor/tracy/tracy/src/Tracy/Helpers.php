@@ -223,25 +223,6 @@ class Helpers
 		}
 	}
 
-	/**
-	 * Finds the best suggestion.
-	 * @internal
-	 */
-	public static function getSuggestion(array $items, string $value): ?string
-	{
-		$best = null;
-		$min = (strlen($value) / 4 + 1) * 10 + .1;
-		$items = array_map(function ($item) {
-			return $item instanceof \Reflector ? $item->getName() : (string) $item;
-		}, $items);
-		foreach (array_unique($items) as $item) {
-			if (($len = levenshtein($item, $value, 10, 11, 10)) > 0 && $len < $min) {
-				$min = $len;
-				$best = $item;
-			}
-		}
-		return $best;
-	}
 
 	/** @internal */
 	public static function improveError(string $message, array $context = []): string
@@ -260,6 +241,7 @@ class Helpers
 		}
 		return $message;
 	}
+
 
 	/** @internal */
 	public static function guessClassFile(string $class): ?string
@@ -282,6 +264,28 @@ class Helpers
 		}
 		return $res;
 	}
+
+
+	/**
+	 * Finds the best suggestion.
+	 * @internal
+	 */
+	public static function getSuggestion(array $items, string $value): ?string
+	{
+		$best = null;
+		$min = (strlen($value) / 4 + 1) * 10 + .1;
+		$items = array_map(function ($item) {
+			return $item instanceof \Reflector ? $item->getName() : (string) $item;
+		}, $items);
+		foreach (array_unique($items) as $item) {
+			if (($len = levenshtein($item, $value, 10, 11, 10)) > 0 && $len < $min) {
+				$min = $len;
+				$best = $item;
+			}
+		}
+		return $best;
+	}
+
 
 	/** @internal */
 	public static function isHtmlMode(): bool
@@ -307,6 +311,22 @@ class Helpers
 			: null;
 	}
 
+
+	/**
+	 * Escape a string to be used as a shell argument.
+	 */
+	private static function escapeArg(string $s): string
+	{
+		if (preg_match('#^[a-z0-9._=/:-]+$#Di', $s)) {
+			return $s;
+		}
+
+		return defined('PHP_WINDOWS_VERSION_BUILD')
+			? '"' . str_replace('"', '""', $s) . '"'
+			: escapeshellarg($s);
+	}
+
+
 	/**
 	 * Captures PHP output into a string.
 	 */
@@ -321,6 +341,7 @@ class Helpers
 			throw $e;
 		}
 	}
+
 
 	/** @internal */
 	public static function encodeString(string $s, int $maxLength = null, &$utf = null): string
@@ -358,6 +379,7 @@ class Helpers
 		return $s;
 	}
 
+
 	/** @internal */
 	public static function truncateString(string $s, int $len, bool $utf): string
 	{
@@ -374,6 +396,7 @@ class Helpers
 			return $m[0];
 		}
 	}
+
 
 	/** @internal */
 	public static function minifyJs(string $s): string
@@ -418,6 +441,7 @@ XX
 		);
 	}
 
+
 	/** @internal */
 	public static function minifyCss(string $s): string
 	{
@@ -455,6 +479,7 @@ XX
 		);
 	}
 
+
 	public static function detectColors(): bool
 	{
 		return (PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg')
@@ -469,19 +494,5 @@ XX
 						|| getenv('term') === 'xterm-256color' // MSYS
 					)
 			);
-	}
-
-	/**
-	 * Escape a string to be used as a shell argument.
-	 */
-	private static function escapeArg(string $s): string
-	{
-		if (preg_match('#^[a-z0-9._=/:-]+$#Di', $s)) {
-			return $s;
-		}
-
-		return defined('PHP_WINDOWS_VERSION_BUILD')
-			? '"' . str_replace('"', '""', $s) . '"'
-			: escapeshellarg($s);
 	}
 }

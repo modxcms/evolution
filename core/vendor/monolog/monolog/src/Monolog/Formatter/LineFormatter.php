@@ -62,16 +62,6 @@ class LineFormatter extends NormalizerFormatter
         $this->ignoreEmptyContextAndExtra = $ignore;
     }
 
-    public function formatBatch(array $records): string
-    {
-        $message = '';
-        foreach ($records as $record) {
-            $message .= $this->format($record);
-        }
-
-        return $message;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -121,22 +111,32 @@ class LineFormatter extends NormalizerFormatter
         return $output;
     }
 
+    public function formatBatch(array $records): string
+    {
+        $message = '';
+        foreach ($records as $record) {
+            $message .= $this->format($record);
+        }
+
+        return $message;
+    }
+
     public function stringify($value): string
     {
         return $this->replaceNewlines($this->convertToString($value));
     }
 
-    protected function replaceNewlines(string $str): string
+    protected function normalizeException(\Throwable $e, int $depth = 0): string
     {
-        if ($this->allowInlineLineBreaks) {
-            if (0 === strpos($str, '{')) {
-                return str_replace(array('\r', '\n'), array("\r", "\n"), $str);
-            }
+        $str = $this->formatException($e);
 
-            return $str;
+        if ($previous = $e->getPrevious()) {
+            do {
+                $str .= "\n[previous exception] " . $this->formatException($previous);
+            } while ($previous = $previous->getPrevious());
         }
 
-        return str_replace(["\r\n", "\r", "\n"], ' ', $str);
+        return $str;
     }
 
     protected function convertToString($data): string
@@ -152,17 +152,17 @@ class LineFormatter extends NormalizerFormatter
         return $this->toJson($data, true);
     }
 
-    protected function normalizeException(\Throwable $e, int $depth = 0): string
+    protected function replaceNewlines(string $str): string
     {
-        $str = $this->formatException($e);
+        if ($this->allowInlineLineBreaks) {
+            if (0 === strpos($str, '{')) {
+                return str_replace(array('\r', '\n'), array("\r", "\n"), $str);
+            }
 
-        if ($previous = $e->getPrevious()) {
-            do {
-                $str .= "\n[previous exception] " . $this->formatException($previous);
-            } while ($previous = $previous->getPrevious());
+            return $str;
         }
 
-        return $str;
+        return str_replace(["\r\n", "\r", "\n"], ' ', $str);
     }
 
     private function formatException(\Throwable $e): string

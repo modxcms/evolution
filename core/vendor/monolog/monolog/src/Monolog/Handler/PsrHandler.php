@@ -70,6 +70,18 @@ class PsrHandler extends AbstractHandler implements FormattableHandlerInterface
     }
 
     /**
+     * Sets the formatter.
+     *
+     * @param FormatterInterface $formatter
+     */
+    public function setFormatter(FormatterInterface $formatter): HandlerInterface
+    {
+        $this->formatter = $formatter;
+
+        return $this;
+    }
+
+    /**
      * Gets the formatter.
      *
      * @return FormatterInterface
@@ -81,17 +93,5 @@ class PsrHandler extends AbstractHandler implements FormattableHandlerInterface
         }
 
         return $this->formatter;
-    }
-
-    /**
-     * Sets the formatter.
-     *
-     * @param FormatterInterface $formatter
-     */
-    public function setFormatter(FormatterInterface $formatter): HandlerInterface
-    {
-        $this->formatter = $formatter;
-
-        return $this;
     }
 }

@@ -22,6 +22,15 @@ class Vips extends AbstractConverter
 {
     use EncodingAutoTrait;
 
+    protected function getUnsupportedDefaultOptions()
+    {
+        return [
+            'auto-filter',
+            'size-in-percentage',
+            'use-nice'
+        ];
+    }
+
     /**
     *  Get the options unique for this converter
      *
@@ -95,41 +104,6 @@ class Vips extends AbstractConverter
             $this->logLn('vipslib version: ' . vips_version());
         }
         $this->logLn('vips extension version: ' . phpversion('vips'));
-    }
-
-    protected function getUnsupportedDefaultOptions()
-    {
-        return [
-            'auto-filter',
-            'size-in-percentage',
-            'use-nice'
-        ];
-    }
-
-    /**
-     * Convert with vips extension.
-     *
-     * Tries to create image resource and save it as webp using the calculated options.
-     * Vips fails when a parameter is not supported, but we detect this and unset that parameter and try again
-     * (repeat until success).
-     *
-     * @throws  ConversionFailedException  if conversion fails.
-     */
-    protected function doActualConvert()
-    {
-/*
-        $im = \Jcupitt\Vips\Image::newFromFile($this->source);
-        //$im->writeToFile(__DIR__ . '/images/small-vips.webp', ["Q" => 10]);
-
-        $im->webpsave($this->destination, [
-            "Q" => 80,
-            //'near_lossless' => true
-        ]);
-        return;*/
-
-        $im = $this->createImageResource();
-        $options = $this->createParamsForVipsWebPSave();
-        $this->webpsave($im, $options);
     }
 
     /**
@@ -302,5 +276,31 @@ class Vips extends AbstractConverter
                 throw new ConversionFailedException($message);
             }
         }
+    }
+
+    /**
+     * Convert with vips extension.
+     *
+     * Tries to create image resource and save it as webp using the calculated options.
+     * Vips fails when a parameter is not supported, but we detect this and unset that parameter and try again
+     * (repeat until success).
+     *
+     * @throws  ConversionFailedException  if conversion fails.
+     */
+    protected function doActualConvert()
+    {
+/*
+        $im = \Jcupitt\Vips\Image::newFromFile($this->source);
+        //$im->writeToFile(__DIR__ . '/images/small-vips.webp', ["Q" => 10]);
+
+        $im->webpsave($this->destination, [
+            "Q" => 80,
+            //'near_lossless' => true
+        ]);
+        return;*/
+
+        $im = $this->createImageResource();
+        $options = $this->createParamsForVipsWebPSave();
+        $this->webpsave($im, $options);
     }
 }

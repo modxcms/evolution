@@ -21,10 +21,6 @@ abstract class GenericLanguageInflectorFactory implements LanguageInflectorFacto
         $this->pluralRulesets[]   = $this->getPluralRuleset();
     }
 
-    abstract protected function getSingularRuleset() : Ruleset;
-
-    abstract protected function getPluralRuleset() : Ruleset;
-
     final public function build() : Inflector
     {
         return new Inflector(
@@ -62,4 +58,8 @@ abstract class GenericLanguageInflectorFactory implements LanguageInflectorFacto
 
         return $this;
     }
+
+    abstract protected function getSingularRuleset() : Ruleset;
+
+    abstract protected function getPluralRuleset() : Ruleset;
 }

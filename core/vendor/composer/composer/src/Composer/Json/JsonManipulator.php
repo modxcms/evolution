@@ -47,46 +47,6 @@ class JsonManipulator
         $this->detectIndenting();
     }
 
-    protected function pregMatch($re, $str, &$matches = array())
-    {
-        $count = preg_match($re, $str, $matches);
-
-        if ($count === false) {
-            switch (preg_last_error()) {
-                case PREG_NO_ERROR:
-                    throw new \RuntimeException('Failed to execute regex: PREG_NO_ERROR', PREG_NO_ERROR);
-                case PREG_INTERNAL_ERROR:
-                    throw new \RuntimeException('Failed to execute regex: PREG_INTERNAL_ERROR', PREG_INTERNAL_ERROR);
-                case PREG_BACKTRACK_LIMIT_ERROR:
-                    throw new \RuntimeException('Failed to execute regex: PREG_BACKTRACK_LIMIT_ERROR', PREG_BACKTRACK_LIMIT_ERROR);
-                case PREG_RECURSION_LIMIT_ERROR:
-                    throw new \RuntimeException('Failed to execute regex: PREG_RECURSION_LIMIT_ERROR', PREG_RECURSION_LIMIT_ERROR);
-                case PREG_BAD_UTF8_ERROR:
-                    throw new \RuntimeException('Failed to execute regex: PREG_BAD_UTF8_ERROR', PREG_BAD_UTF8_ERROR);
-                case PREG_BAD_UTF8_OFFSET_ERROR:
-                    throw new \RuntimeException('Failed to execute regex: PREG_BAD_UTF8_OFFSET_ERROR', PREG_BAD_UTF8_OFFSET_ERROR);
-                case 6: // PREG_JIT_STACKLIMIT_ERROR
-                    if (PHP_VERSION_ID > 70000) {
-                        throw new \RuntimeException('Failed to execute regex: PREG_JIT_STACKLIMIT_ERROR', 6);
-                    }
-                    // no break
-                default:
-                    throw new \RuntimeException('Failed to execute regex: Unknown error');
-            }
-        }
-
-        return $count;
-    }
-
-    protected function detectIndenting()
-    {
-        if ($this->pregMatch('{^([ \t]+)"}m', $this->contents, $match)) {
-            $this->indent = $match[1];
-        } else {
-            $this->indent = '    ';
-        }
-    }
-
     public function getContents()
     {
         return $this->contents . $this->newline;
@@ -147,71 +107,6 @@ class JsonManipulator
         return true;
     }
 
-    public function addMainKey($key, $content)
-    {
-        $decoded = JsonFile::parseJson($this->contents);
-        $content = $this->format($content);
-
-        // key exists already
-        $regex = '{'.self::$DEFINES.'^(?P<start>\s*\{\s*(?:(?&string)\s*:\s*(?&json)\s*,\s*)*?)'.
-            '(?P<key>'.preg_quote(JsonFile::encode($key)).'\s*:\s*(?&json))(?P<end>.*)}sx';
-        if (isset($decoded[$key]) && $this->pregMatch($regex, $this->contents, $matches)) {
-            // invalid match due to un-regexable content, abort
-            if (!@json_decode('{'.$matches['key'].'}')) {
-                return false;
-            }
-
-            $this->contents = $matches['start'] . JsonFile::encode($key).': '.$content . $matches['end'];
-
-            return true;
-        }
-
-        // append at the end of the file and keep whitespace
-        if ($this->pregMatch('#[^{\s](\s*)\}$#', $this->contents, $match)) {
-            $this->contents = preg_replace(
-                '#'.$match[1].'\}$#',
-                addcslashes(',' . $this->newline . $this->indent . JsonFile::encode($key). ': '. $content . $this->newline . '}', '\\$'),
-                $this->contents
-            );
-
-            return true;
-        }
-
-        // append at the end of the file
-        $this->contents = preg_replace(
-            '#\}$#',
-            addcslashes($this->indent . JsonFile::encode($key). ': '.$content . $this->newline . '}', '\\$'),
-            $this->contents
-        );
-
-        return true;
-    }
-
-    public function format($data, $depth = 0)
-    {
-        if (is_array($data)) {
-            reset($data);
-
-            if (is_numeric(key($data))) {
-                foreach ($data as $key => $val) {
-                    $data[$key] = $this->format($val, $depth + 1);
-                }
-
-                return '['.implode(', ', $data).']';
-            }
-
-            $out = '{' . $this->newline;
-            $elems = array();
-            foreach ($data as $key => $val) {
-                $elems[] = str_repeat($this->indent, $depth + 2) . JsonFile::encode($key). ': '.$this->format($val, $depth + 1);
-            }
-
-            return $out . implode(','.$this->newline, $elems) . $this->newline . str_repeat($this->indent, $depth + 1) . '}';
-        }
-
-        return JsonFile::encode($data);
-    }
-
     /**
      * Sorts packages by importance (platform packages first, then PHP dependencies) and alphabetically.
      *
@@ -253,6 +148,55 @@ class JsonManipulator
     public function addRepository($name, $config, $append = true)
     {
         return $this->addSubNode('repositories', $name, $config, $append);
+    }
+
+    public function removeRepository($name)
+    {
+        return $this->removeSubNode('repositories', $name);
+    }
+
+    public function addConfigSetting($name, $value)
+    {
+        return $this->addSubNode('config', $name, $value);
+    }
+
+    public function removeConfigSetting($name)
+    {
+        return $this->removeSubNode('config', $name);
+    }
+
+    public function addProperty($name, $value)
+    {
+        if (strpos($name, 'suggest.') === 0) {
+            return $this->addSubNode('suggest', substr($name, 8), $value);
+        }
+
+        if (strpos($name, 'extra.') === 0) {
+            return $this->addSubNode('extra', substr($name, 6), $value);
+        }
+
+        if (strpos($name, 'scripts.') === 0) {
+            return $this->addSubNode('scripts', substr($name, 8), $value);
+        }
+
+        return $this->addMainKey($name, $value);
+    }
+
+    public function removeProperty($name)
+    {
+        if (strpos($name, 'suggest.') === 0) {
+            return $this->removeSubNode('suggest', substr($name, 8));
+        }
+
+        if (strpos($name, 'extra.') === 0) {
+            return $this->removeSubNode('extra', substr($name, 6));
+        }
+
+        if (strpos($name, 'scripts.') === 0) {
+            return $this->removeSubNode('scripts', substr($name, 8));
+        }
+
+        return $this->removeMainKey($name);
     }
 
     public function addSubNode($mainNode, $name, $value, $append = true)
@@ -362,11 +306,6 @@ class JsonManipulator
         return true;
     }
 
-    public function removeRepository($name)
-    {
-        return $this->removeSubNode('repositories', $name);
-    }
-
     public function removeSubNode($mainNode, $name)
     {
         $decoded = JsonFile::parseJson($this->contents);
@@ -468,48 +407,44 @@ class JsonManipulator
         return true;
     }
 
-    public function addConfigSetting($name, $value)
+    public function addMainKey($key, $content)
     {
-        return $this->addSubNode('config', $name, $value);
-    }
+        $decoded = JsonFile::parseJson($this->contents);
+        $content = $this->format($content);
 
-    public function removeConfigSetting($name)
-    {
-        return $this->removeSubNode('config', $name);
-    }
+        // key exists already
+        $regex = '{'.self::$DEFINES.'^(?P<start>\s*\{\s*(?:(?&string)\s*:\s*(?&json)\s*,\s*)*?)'.
+            '(?P<key>'.preg_quote(JsonFile::encode($key)).'\s*:\s*(?&json))(?P<end>.*)}sx';
+        if (isset($decoded[$key]) && $this->pregMatch($regex, $this->contents, $matches)) {
+            // invalid match due to un-regexable content, abort
+            if (!@json_decode('{'.$matches['key'].'}')) {
+                return false;
+            }
 
-    public function addProperty($name, $value)
-    {
-        if (strpos($name, 'suggest.') === 0) {
-            return $this->addSubNode('suggest', substr($name, 8), $value);
+            $this->contents = $matches['start'] . JsonFile::encode($key).': '.$content . $matches['end'];
+
+            return true;
         }
 
-        if (strpos($name, 'extra.') === 0) {
-            return $this->addSubNode('extra', substr($name, 6), $value);
+        // append at the end of the file and keep whitespace
+        if ($this->pregMatch('#[^{\s](\s*)\}$#', $this->contents, $match)) {
+            $this->contents = preg_replace(
+                '#'.$match[1].'\}$#',
+                addcslashes(',' . $this->newline . $this->indent . JsonFile::encode($key). ': '. $content . $this->newline . '}', '\\$'),
+                $this->contents
+            );
+
+            return true;
         }
 
-        if (strpos($name, 'scripts.') === 0) {
-            return $this->addSubNode('scripts', substr($name, 8), $value);
-        }
+        // append at the end of the file
+        $this->contents = preg_replace(
+            '#\}$#',
+            addcslashes($this->indent . JsonFile::encode($key). ': '.$content . $this->newline . '}', '\\$'),
+            $this->contents
+        );
 
-        return $this->addMainKey($name, $value);
-    }
-
-    public function removeProperty($name)
-    {
-        if (strpos($name, 'suggest.') === 0) {
-            return $this->removeSubNode('suggest', substr($name, 8));
-        }
-
-        if (strpos($name, 'extra.') === 0) {
-            return $this->removeSubNode('extra', substr($name, 6));
-        }
-
-        if (strpos($name, 'scripts.') === 0) {
-            return $this->removeSubNode('scripts', substr($name, 8));
-        }
-
-        return $this->removeMainKey($name);
+        return true;
     }
 
     public function removeMainKey($key)
@@ -558,5 +493,70 @@ class JsonManipulator
         }
 
         return true;
+    }
+
+    public function format($data, $depth = 0)
+    {
+        if (is_array($data)) {
+            reset($data);
+
+            if (is_numeric(key($data))) {
+                foreach ($data as $key => $val) {
+                    $data[$key] = $this->format($val, $depth + 1);
+                }
+
+                return '['.implode(', ', $data).']';
+            }
+
+            $out = '{' . $this->newline;
+            $elems = array();
+            foreach ($data as $key => $val) {
+                $elems[] = str_repeat($this->indent, $depth + 2) . JsonFile::encode($key). ': '.$this->format($val, $depth + 1);
+            }
+
+            return $out . implode(','.$this->newline, $elems) . $this->newline . str_repeat($this->indent, $depth + 1) . '}';
+        }
+
+        return JsonFile::encode($data);
+    }
+
+    protected function detectIndenting()
+    {
+        if ($this->pregMatch('{^([ \t]+)"}m', $this->contents, $match)) {
+            $this->indent = $match[1];
+        } else {
+            $this->indent = '    ';
+        }
+    }
+
+    protected function pregMatch($re, $str, &$matches = array())
+    {
+        $count = preg_match($re, $str, $matches);
+
+        if ($count === false) {
+            switch (preg_last_error()) {
+                case PREG_NO_ERROR:
+                    throw new \RuntimeException('Failed to execute regex: PREG_NO_ERROR', PREG_NO_ERROR);
+                case PREG_INTERNAL_ERROR:
+                    throw new \RuntimeException('Failed to execute regex: PREG_INTERNAL_ERROR', PREG_INTERNAL_ERROR);
+                case PREG_BACKTRACK_LIMIT_ERROR:
+                    throw new \RuntimeException('Failed to execute regex: PREG_BACKTRACK_LIMIT_ERROR', PREG_BACKTRACK_LIMIT_ERROR);
+                case PREG_RECURSION_LIMIT_ERROR:
+                    throw new \RuntimeException('Failed to execute regex: PREG_RECURSION_LIMIT_ERROR', PREG_RECURSION_LIMIT_ERROR);
+                case PREG_BAD_UTF8_ERROR:
+                    throw new \RuntimeException('Failed to execute regex: PREG_BAD_UTF8_ERROR', PREG_BAD_UTF8_ERROR);
+                case PREG_BAD_UTF8_OFFSET_ERROR:
+                    throw new \RuntimeException('Failed to execute regex: PREG_BAD_UTF8_OFFSET_ERROR', PREG_BAD_UTF8_OFFSET_ERROR);
+                case 6: // PREG_JIT_STACKLIMIT_ERROR
+                    if (PHP_VERSION_ID > 70000) {
+                        throw new \RuntimeException('Failed to execute regex: PREG_JIT_STACKLIMIT_ERROR', 6);
+                    }
+                    // no break
+                default:
+                    throw new \RuntimeException('Failed to execute regex: Unknown error');
+            }
+        }
+
+        return $count;
     }
 }

@@ -10,30 +10,13 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
+use Illuminate\Support\Traits\Conditionable;
 use InvalidArgumentException;
 use RuntimeException;
 
 trait BuildsQueries
 {
-    /**
-     * Run a map over each item while chunking.
-     *
-     * @param  callable  $callback
-     * @param  int  $count
-     * @return \Illuminate\Support\Collection
-     */
-    public function chunkMap(callable $callback, $count = 1000)
-    {
-        $collection = Collection::make();
-
-        $this->chunk($count, function ($items) use ($collection, $callback) {
-            $items->each(function ($item) use ($collection, $callback) {
-                $collection->push($callback($item));
-            });
-        });
-
-        return $collection;
-    }
+    use Conditionable;
 
     /**
      * Chunk the results of the query.
@@ -76,6 +59,26 @@ trait BuildsQueries
     }
 
     /**
+     * Run a map over each item while chunking.
+     *
+     * @param  callable  $callback
+     * @param  int  $count
+     * @return \Illuminate\Support\Collection
+     */
+    public function chunkMap(callable $callback, $count = 1000)
+    {
+        $collection = Collection::make();
+
+        $this->chunk($count, function ($items) use ($collection, $callback) {
+            $items->each(function ($item) use ($collection, $callback) {
+                $collection->push($callback($item));
+            });
+        });
+
+        return $collection;
+    }
+
+    /**
      * Execute a callback over each item while chunking.
      *
      * @param  callable  $callback
@@ -93,26 +96,6 @@ trait BuildsQueries
                 }
             }
         });
-    }
-
-    /**
-     * Execute a callback over each item while chunking by ID.
-     *
-     * @param  callable  $callback
-     * @param  int  $count
-     * @param  string|null  $column
-     * @param  string|null  $alias
-     * @return bool
-     */
-    public function eachById(callable $callback, $count = 1000, $column = null, $alias = null)
-    {
-        return $this->chunkById($count, function ($results, $page) use ($callback, $count) {
-            foreach ($results as $key => $value) {
-                if ($callback($value, (($page - 1) * $count) + $key) === false) {
-                    return false;
-                }
-            }
-        }, $column, $alias);
     }
 
     /**
@@ -167,6 +150,26 @@ trait BuildsQueries
         } while ($countResults == $count);
 
         return true;
+    }
+
+    /**
+     * Execute a callback over each item while chunking by ID.
+     *
+     * @param  callable  $callback
+     * @param  int  $count
+     * @param  string|null  $column
+     * @param  string|null  $alias
+     * @return bool
+     */
+    public function eachById(callable $callback, $count = 1000, $column = null, $alias = null)
+    {
+        return $this->chunkById($count, function ($results, $page) use ($callback, $count) {
+            foreach ($results as $key => $value) {
+                if ($callback($value, (($page - 1) * $count) + $key) === false) {
+                    return false;
+                }
+            }
+        }, $column, $alias);
     }
 
     /**
@@ -287,44 +290,6 @@ trait BuildsQueries
     public function tap($callback)
     {
         return $this->when(true, $callback);
-    }
-
-    /**
-     * Apply the callback's query changes if the given "value" is true.
-     *
-     * @param  mixed  $value
-     * @param  callable  $callback
-     * @param  callable|null  $default
-     * @return mixed|$this
-     */
-    public function when($value, $callback, $default = null)
-    {
-        if ($value) {
-            return $callback($this, $value) ?: $this;
-        } elseif ($default) {
-            return $default($this, $value) ?: $this;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Apply the callback's query changes if the given "value" is false.
-     *
-     * @param  mixed  $value
-     * @param  callable  $callback
-     * @param  callable|null  $default
-     * @return mixed|$this
-     */
-    public function unless($value, $callback, $default = null)
-    {
-        if (! $value) {
-            return $callback($this, $value) ?: $this;
-        } elseif ($default) {
-            return $default($this, $value) ?: $this;
-        }
-
-        return $this;
     }
 
     /**

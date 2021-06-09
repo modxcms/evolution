@@ -58,11 +58,23 @@ abstract class Rule
             (255 << self::BITFIELD_TYPE);
     }
 
+    abstract public function getLiterals();
+
     abstract public function getHash();
 
     abstract public function __toString();
 
     abstract public function equals(Rule $rule);
+
+    public function getReason()
+    {
+        return ($this->bitfield & (255 << self::BITFIELD_REASON)) >> self::BITFIELD_REASON;
+    }
+
+    public function getReasonData()
+    {
+        return $this->reasonData;
+    }
 
     public function getRequiredPackage()
     {
@@ -79,11 +91,6 @@ abstract class Rule
         if ($reason === self::RULE_PACKAGE_REQUIRES) {
             return $this->reasonData->getTarget();
         }
-    }
-
-    public function getReason()
-    {
-        return ($this->bitfield & (255 << self::BITFIELD_REASON)) >> self::BITFIELD_REASON;
     }
 
     public function setType($type)
@@ -371,8 +378,6 @@ abstract class Rule
         }
     }
 
-    abstract public function getLiterals();
-
     /**
      * @param Pool  $pool
      * @param array $packages
@@ -397,10 +402,5 @@ abstract class Rule
         }
 
         return $package;
-    }
-
-    public function getReasonData()
-    {
-        return $this->reasonData;
     }
 }

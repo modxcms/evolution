@@ -26,24 +26,34 @@ abstract class Component
      * @var array
      */
     protected static $methodCache = [];
-    /**
-     * The component alias name.
-     *
-     * @var string
-     */
-    public $componentName;
-    /**
-     * The component attributes.
-     *
-     * @var \Illuminate\View\ComponentAttributeBag
-     */
-    public $attributes;
+
     /**
      * The properties / methods that should not be exposed to the component.
      *
      * @var array
      */
     protected $except = [];
+
+    /**
+     * The component alias name.
+     *
+     * @var string
+     */
+    public $componentName;
+
+    /**
+     * The component attributes.
+     *
+     * @var \Illuminate\View\ComponentAttributeBag
+     */
+    public $attributes;
+
+    /**
+     * Get the view / view contents that represent the component.
+     *
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\Support\Htmlable|\Closure|string
+     */
+    abstract public function render();
 
     /**
      * Resolve the Blade view or view file that should be used when rendering the component.
@@ -75,13 +85,6 @@ abstract class Component
         }
         : $resolver($view);
     }
-
-    /**
-     * Get the view / view contents that represent the component.
-     *
-     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\Support\Htmlable|\Closure|string
-     */
-    abstract public function render();
 
     /**
      * Create a Blade view with the raw component string content.
@@ -124,17 +127,6 @@ abstract class Component
     }
 
     /**
-     * Get a new attribute bag instance.
-     *
-     * @param  array  $attributes
-     * @return \Illuminate\View\ComponentAttributeBag
-     */
-    protected function newAttributeBag(array $attributes = [])
-    {
-        return new ComponentAttributeBag($attributes);
-    }
-
-    /**
      * Extract the public properties for the component.
      *
      * @return array
@@ -165,36 +157,6 @@ abstract class Component
         }
 
         return $values;
-    }
-
-    /**
-     * Determine if the given property / method should be ignored.
-     *
-     * @param  string  $name
-     * @return bool
-     */
-    protected function shouldIgnore($name)
-    {
-        return Str::startsWith($name, '__') ||
-               in_array($name, $this->ignoredMethods());
-    }
-
-    /**
-     * Get the methods that should be ignored.
-     *
-     * @return array
-     */
-    protected function ignoredMethods()
-    {
-        return array_merge([
-            'data',
-            'render',
-            'resolveView',
-            'shouldRender',
-            'view',
-            'withName',
-            'withAttributes',
-        ], $this->except);
     }
 
     /**
@@ -254,6 +216,36 @@ abstract class Component
     }
 
     /**
+     * Determine if the given property / method should be ignored.
+     *
+     * @param  string  $name
+     * @return bool
+     */
+    protected function shouldIgnore($name)
+    {
+        return Str::startsWith($name, '__') ||
+               in_array($name, $this->ignoredMethods());
+    }
+
+    /**
+     * Get the methods that should be ignored.
+     *
+     * @return array
+     */
+    protected function ignoredMethods()
+    {
+        return array_merge([
+            'data',
+            'render',
+            'resolveView',
+            'shouldRender',
+            'view',
+            'withName',
+            'withAttributes',
+        ], $this->except);
+    }
+
+    /**
      * Set the component alias name.
      *
      * @param  string  $name
@@ -279,6 +271,17 @@ abstract class Component
         $this->attributes->setAttributes($attributes);
 
         return $this;
+    }
+
+    /**
+     * Get a new attribute bag instance.
+     *
+     * @param  array  $attributes
+     * @return \Illuminate\View\ComponentAttributeBag
+     */
+    protected function newAttributeBag(array $attributes = [])
+    {
+        return new ComponentAttributeBag($attributes);
     }
 
     /**

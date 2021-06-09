@@ -129,21 +129,6 @@ class Profiler implements ResetInterface
         return $this->storage->find($ip, $url, $limit, $method, $this->getTimestamp($start), $this->getTimestamp($end), $statusCode);
     }
 
-    private function getTimestamp(?string $value): ?int
-    {
-        if (null === $value || '' === $value) {
-            return null;
-        }
-
-        try {
-            $value = new \DateTime(is_numeric($value) ? '@'.$value : $value);
-        } catch (\Exception $e) {
-            return null;
-        }
-
-        return $value->getTimestamp();
-    }
-
     /**
      * Collects data for the given Response.
      *
@@ -249,5 +234,20 @@ class Profiler implements ResetInterface
         }
 
         return $this->collectors[$name];
+    }
+
+    private function getTimestamp(?string $value): ?int
+    {
+        if (null === $value || '' === $value) {
+            return null;
+        }
+
+        try {
+            $value = new \DateTime(is_numeric($value) ? '@'.$value : $value);
+        } catch (\Exception $e) {
+            return null;
+        }
+
+        return $value->getTimestamp();
     }
 }

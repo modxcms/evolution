@@ -33,34 +33,6 @@ class Versions
         $this->config = $config;
     }
 
-    public function getLatest($channel = null)
-    {
-        $versions = $this->getVersionsData();
-
-        foreach ($versions[$channel ?: $this->getChannel()] as $version) {
-            if ($version['min-php'] <= PHP_VERSION_ID) {
-                return $version;
-            }
-        }
-
-        throw new \UnexpectedValueException('There is no version of Composer available for your PHP version ('.PHP_VERSION.')');
-    }
-
-    private function getVersionsData()
-    {
-        if (!$this->versionsData) {
-            if ($this->config->get('disable-tls') === true) {
-                $protocol = 'http';
-            } else {
-                $protocol = 'https';
-            }
-
-            $this->versionsData = $this->httpDownloader->get($protocol . '://getcomposer.org/versions')->decodeJson();
-        }
-
-        return $this->versionsData;
-    }
-
     public function getChannel()
     {
         if ($this->channel) {
@@ -87,5 +59,33 @@ class Versions
         $channelFile = $this->config->get('home').'/update-channel';
         $this->channel = $channel;
         file_put_contents($channelFile, (is_numeric($channel) ? 'stable' : $channel).PHP_EOL);
+    }
+
+    public function getLatest($channel = null)
+    {
+        $versions = $this->getVersionsData();
+
+        foreach ($versions[$channel ?: $this->getChannel()] as $version) {
+            if ($version['min-php'] <= PHP_VERSION_ID) {
+                return $version;
+            }
+        }
+
+        throw new \UnexpectedValueException('There is no version of Composer available for your PHP version ('.PHP_VERSION.')');
+    }
+
+    private function getVersionsData()
+    {
+        if (!$this->versionsData) {
+            if ($this->config->get('disable-tls') === true) {
+                $protocol = 'http';
+            } else {
+                $protocol = 'https';
+            }
+
+            $this->versionsData = $this->httpDownloader->get($protocol . '://getcomposer.org/versions')->decodeJson();
+        }
+
+        return $this->versionsData;
     }
 }

@@ -44,6 +44,19 @@ class TagSet
     }
 
     /**
+     * Reset the tag and return the new tag identifier.
+     *
+     * @param  string  $name
+     * @return string
+     */
+    public function resetTag($name)
+    {
+        $this->store->forever($this->tagKey($name), $id = str_replace('.', '', uniqid('', true)));
+
+        return $id;
+    }
+
+    /**
      * Get a unique namespace that changes when any of the tags are flushed.
      *
      * @return string
@@ -83,19 +96,6 @@ class TagSet
     public function tagKey($name)
     {
         return 'tag:'.$name.':key';
-    }
-
-    /**
-     * Reset the tag and return the new tag identifier.
-     *
-     * @param  string  $name
-     * @return string
-     */
-    public function resetTag($name)
-    {
-        $this->store->forever($this->tagKey($name), $id = str_replace('.', '', uniqid('', true)));
-
-        return $id;
     }
 
     /**

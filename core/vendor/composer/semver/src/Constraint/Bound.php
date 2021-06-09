@@ -34,30 +34,6 @@ class Bound
     }
 
     /**
-     * @return self
-     */
-    public static function zero()
-    {
-        return new Bound('0.0.0.0-dev', true);
-    }
-
-    /**
-     * @return self
-     */
-    public static function positiveInfinity()
-    {
-        return new Bound(PHP_INT_MAX.'.0.0.0', false);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isZero()
-    {
-        return $this->getVersion() === '0.0.0.0-dev' && $this->isInclusive();
-    }
-
-    /**
      * @return string
      */
     public function getVersion()
@@ -71,6 +47,14 @@ class Bound
     public function isInclusive()
     {
         return $this->isInclusive;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isZero()
+    {
+        return $this->getVersion() === '0.0.0.0-dev' && $this->isInclusive();
     }
 
     /**
@@ -118,5 +102,21 @@ class Bound
             $this->getVersion(),
             $this->isInclusive() ? 'inclusive' : 'exclusive'
         );
+    }
+
+    /**
+     * @return self
+     */
+    public static function zero()
+    {
+        return new Bound('0.0.0.0-dev', true);
+    }
+
+    /**
+     * @return self
+     */
+    public static function positiveInfinity()
+    {
+        return new Bound(PHP_INT_MAX.'.0.0.0', false);
     }
 }

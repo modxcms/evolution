@@ -87,22 +87,6 @@ class Factory implements FactoryContract
     }
 
     /**
-     * Validate the given data against the provided rules.
-     *
-     * @param  array  $data
-     * @param  array  $rules
-     * @param  array  $messages
-     * @param  array  $customAttributes
-     * @return array
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function validate(array $data, array $rules, array $messages = [], array $customAttributes = [])
-    {
-        return $this->make($data, $rules, $messages, $customAttributes)->validate();
-    }
-
-    /**
      * Create a new Validator instance.
      *
      * @param  array  $data
@@ -134,6 +118,22 @@ class Factory implements FactoryContract
         $this->addExtensions($validator);
 
         return $validator;
+    }
+
+    /**
+     * Validate the given data against the provided rules.
+     *
+     * @param  array  $data
+     * @param  array  $rules
+     * @param  array  $messages
+     * @param  array  $customAttributes
+     * @return array
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function validate(array $data, array $rules, array $messages = [], array $customAttributes = [])
+    {
+        return $this->make($data, $rules, $messages, $customAttributes)->validate();
     }
 
     /**

@@ -11,6 +11,10 @@
 
 class phpthumb_functions {
 
+	public static function is_windows() {
+		return (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN');
+	}
+
 	public static function user_function_exists($functionname) {
 		if (function_exists('get_defined_functions')) {
 			static $get_defined_functions = array();
@@ -21,6 +25,7 @@ class phpthumb_functions {
 		}
 		return function_exists($functionname);
 	}
+
 
 	public static function builtin_function_exists($functionname) {
 		if (function_exists('get_defined_functions')) {
@@ -33,178 +38,6 @@ class phpthumb_functions {
 		return function_exists($functionname);
 	}
 
-	public static function escapeshellarg_replacement($arg) {
-		if (function_exists('escapeshellarg') && !self::FunctionIsDisabled('escapeshellarg')) {
-			return escapeshellarg($arg);
-		}
-		return '\''.str_replace('\'', '\\\'', $arg).'\'';
-	}
-
-	public static function FunctionIsDisabled($function) {
-		static $DisabledFunctions = null;
-		if (null === $DisabledFunctions) {
-			$disable_functions_local  = explode(',',     strtolower(@ini_get('disable_functions')));
-			$disable_functions_global = explode(',', strtolower(@get_cfg_var('disable_functions')));
-			foreach ($disable_functions_local as $key => $value) {
-				$DisabledFunctions[trim($value)] = 'local';
-			}
-			foreach ($disable_functions_global as $key => $value) {
-				$DisabledFunctions[trim($value)] = 'global';
-			}
-			if (@ini_get('safe_mode')) {
-				$DisabledFunctions['shell_exec']     = 'local';
-				$DisabledFunctions['set_time_limit'] = 'local';
-			}
-		}
-		return isset($DisabledFunctions[strtolower($function)]);
-	}
-
-	public static function exif_info() {
-		static $exif_info = array();
-		if (empty($exif_info)) {
-			// based on code by johnschaefer at gmx dot de
-			// from PHP help on gd_info()
-			$exif_info = array(
-				'EXIF Support'           => '',
-				'EXIF Version'           => '',
-				'Supported EXIF Version' => '',
-				'Supported filetypes'    => ''
-			);
-			$phpinfo_array = self::phpinfo_array();
-			foreach ($phpinfo_array as $line) {
-				$line = trim(strip_tags($line));
-				foreach ($exif_info as $key => $value) {
-					if (strpos($line, $key) === 0) {
-						$newvalue = trim(str_replace($key, '', $line));
-						$exif_info[$key] = $newvalue;
-					}
-				}
-			}
-		}
-		return $exif_info;
-	}
-
-	public static function phpinfo_array() {
-		static $phpinfo_array = array();
-		if (empty($phpinfo_array)) {
-			ob_start();
-			phpinfo();
-			$phpinfo = ob_get_contents();
-			ob_end_clean();
-			$phpinfo_array = explode("\n", $phpinfo);
-		}
-		return $phpinfo_array;
-	}
-
-	public static function ImageTypeToMIMEtype($imagetype) {
-		if (function_exists('image_type_to_mime_type') && ($imagetype >= 1) && ($imagetype <= 18)) {
-			// PHP v4.3.0+
-			return image_type_to_mime_type($imagetype);
-		}
-		static $image_type_to_mime_type = array(
-			1  => 'image/gif',                     // IMAGETYPE_GIF
-			2  => 'image/jpeg',                    // IMAGETYPE_JPEG
-			3  => 'image/png',                     // IMAGETYPE_PNG
-			4  => 'application/x-shockwave-flash', // IMAGETYPE_SWF
-			5  => 'image/psd',                     // IMAGETYPE_PSD
-			6  => 'image/bmp',                     // IMAGETYPE_BMP
-			7  => 'image/tiff',                    // IMAGETYPE_TIFF_II (intel byte order)
-			8  => 'image/tiff',                    // IMAGETYPE_TIFF_MM (motorola byte order)
-			9  => 'application/octet-stream',      // IMAGETYPE_JPC
-			10 => 'image/jp2',                     // IMAGETYPE_JP2
-			11 => 'application/octet-stream',      // IMAGETYPE_JPX
-			12 => 'application/octet-stream',      // IMAGETYPE_JB2
-			13 => 'application/x-shockwave-flash', // IMAGETYPE_SWC
-			14 => 'image/iff',                     // IMAGETYPE_IFF
-			15 => 'image/vnd.wap.wbmp',            // IMAGETYPE_WBMP
-			16 => 'image/xbm',                     // IMAGETYPE_XBM
-			17 => 'image/x-icon',                  // IMAGETYPE_ICO
-			18 => 'image/webp',                    // IMAGETYPE_WEBP
-
-			'gif'  => 'image/gif',                 // IMAGETYPE_GIF
-			'jpg'  => 'image/jpeg',                // IMAGETYPE_JPEG
-			'jpeg' => 'image/jpeg',                // IMAGETYPE_JPEG
-			'png'  => 'image/png',                 // IMAGETYPE_PNG
-			'bmp'  => 'image/bmp',                 // IMAGETYPE_BMP
-			'ico'  => 'image/x-icon',              // IMAGETYPE_ICO
-			'webp' => 'image/webp',                // IMAGETYPE_WEBP
-		);
-
-		return (isset($image_type_to_mime_type[$imagetype]) ? $image_type_to_mime_type[$imagetype] : false);
-	}
-
-	public static function TranslateWHbyAngle($width, $height, $angle) {
-		if (($angle % 180) == 0) {
-			return array($width, $height);
-		}
-		$newwidth  = (abs(sin(deg2rad($angle))) * $height) + (abs(cos(deg2rad($angle))) * $width);
-		$newheight = (abs(sin(deg2rad($angle))) * $width)  + (abs(cos(deg2rad($angle))) * $height);
-		return array($newwidth, $newheight);
-	}
-
-	public static function HexCharDisplay($string) {
-		$len = strlen($string);
-		$output = '';
-		for ($i = 0; $i < $len; $i++) {
-			$output .= ' 0x'.str_pad(dechex(ord($string[$i])), 2, '0', STR_PAD_LEFT);
-		}
-		return $output;
-	}
-
-	public static function ImageHexColorAllocate(&$gdimg_hexcolorallocate, $HexColorString, $dieOnInvalid=false, $alpha=false) {
-		if (!is_resource($gdimg_hexcolorallocate) && !(is_object($gdimg_hexcolorallocate) && $gdimg_hexcolorallocate instanceOf \GdImage)) {
-			die('$gdimg_hexcolorallocate is not a GD resource in ImageHexColorAllocate()');
-		}
-		if (self::IsHexColor($HexColorString)) {
-			$R = hexdec(substr($HexColorString, 0, 2));
-			$G = hexdec(substr($HexColorString, 2, 2));
-			$B = hexdec(substr($HexColorString, 4, 2));
-			return self::ImageColorAllocateAlphaSafe($gdimg_hexcolorallocate, $R, $G, $B, $alpha);
-		}
-		if ($dieOnInvalid) {
-			die('Invalid hex color string: "'.$HexColorString.'"');
-		}
-		return imagecolorallocate($gdimg_hexcolorallocate, 0x00, 0x00, 0x00);
-	}
-
-	public static function IsHexColor($HexColorString) {
-		return preg_match('#^[0-9A-F]{6}$#i', $HexColorString);
-	}
-
-	public static function ImageColorAllocateAlphaSafe(&$gdimg_hexcolorallocate, $R, $G, $B, $alpha=false) {
-		if (self::version_compare_replacement(PHP_VERSION, '4.3.2', '>=') && ($alpha !== false)) {
-			return imagecolorallocatealpha($gdimg_hexcolorallocate, $R, $G, $B, (int) $alpha);
-		} else {
-			return imagecolorallocate($gdimg_hexcolorallocate, $R, $G, $B);
-		}
-	}
-
-	public static function version_compare_replacement($version1, $version2, $operator='') {
-		if (function_exists('version_compare')) {
-			// built into PHP v4.1.0+
-			return version_compare($version1, $version2, $operator);
-		}
-
-		// The function first replaces _, - and + with a dot . in the version strings
-		$version1 = strtr($version1, '_-+', '...');
-		$version2 = strtr($version2, '_-+', '...');
-
-		// and also inserts dots . before and after any non number so that for example '4.3.2RC1' becomes '4.3.2.RC.1'.
-		// Then it splits the results like if you were using explode('.',$ver). Then it compares the parts starting from left to right.
-		$version1 = preg_replace('#([\d]+)([A-Z]+)([\d]+)#i', '$1.$2.$3', $version1);
-		$version2 = preg_replace('#([\d]+)([A-Z]+)([\d]+)#i', '$1.$2.$3', $version2);
-
-		$parts1 = explode('.', $version1);
-		$parts2 = explode('.', $version1);
-		$parts_count = max(count($parts1), count($parts2));
-		for ($i = 0; $i < $parts_count; $i++) {
-			$comparison = self::version_compare_replacement_sub($version1, $version2, $operator);
-			if ($comparison != 0) {
-				return $comparison;
-			}
-		}
-		return 0;
-	}
 
 	public static function version_compare_replacement_sub($version1, $version2, $operator='') {
 		// If you specify the third optional operator argument, you can test for a particular relationship.
@@ -265,9 +98,179 @@ class phpthumb_functions {
 		return 1;
 	}
 
+
+	public static function version_compare_replacement($version1, $version2, $operator='') {
+		if (function_exists('version_compare')) {
+			// built into PHP v4.1.0+
+			return version_compare($version1, $version2, $operator);
+		}
+
+		// The function first replaces _, - and + with a dot . in the version strings
+		$version1 = strtr($version1, '_-+', '...');
+		$version2 = strtr($version2, '_-+', '...');
+
+		// and also inserts dots . before and after any non number so that for example '4.3.2RC1' becomes '4.3.2.RC.1'.
+		// Then it splits the results like if you were using explode('.',$ver). Then it compares the parts starting from left to right.
+		$version1 = preg_replace('#([\d]+)([A-Z]+)([\d]+)#i', '$1.$2.$3', $version1);
+		$version2 = preg_replace('#([\d]+)([A-Z]+)([\d]+)#i', '$1.$2.$3', $version2);
+
+		$parts1 = explode('.', $version1);
+		$parts2 = explode('.', $version1);
+		$parts_count = max(count($parts1), count($parts2));
+		for ($i = 0; $i < $parts_count; $i++) {
+			$comparison = self::version_compare_replacement_sub($version1, $version2, $operator);
+			if ($comparison != 0) {
+				return $comparison;
+			}
+		}
+		return 0;
+	}
+
+	public static function escapeshellarg_replacement($arg) {
+		if (function_exists('escapeshellarg') && !self::FunctionIsDisabled('escapeshellarg')) {
+			return escapeshellarg($arg);
+		}
+		return '\''.str_replace('\'', '\\\'', $arg).'\'';
+	}
+
+	public static function phpinfo_array() {
+		static $phpinfo_array = array();
+		if (empty($phpinfo_array)) {
+			ob_start();
+			phpinfo();
+			$phpinfo = ob_get_contents();
+			ob_end_clean();
+			$phpinfo_array = explode("\n", $phpinfo);
+		}
+		return $phpinfo_array;
+	}
+
+
+	public static function exif_info() {
+		static $exif_info = array();
+		if (empty($exif_info)) {
+			// based on code by johnschaefer at gmx dot de
+			// from PHP help on gd_info()
+			$exif_info = array(
+				'EXIF Support'           => '',
+				'EXIF Version'           => '',
+				'Supported EXIF Version' => '',
+				'Supported filetypes'    => ''
+			);
+			$phpinfo_array = self::phpinfo_array();
+			foreach ($phpinfo_array as $line) {
+				$line = trim(strip_tags($line));
+				foreach ($exif_info as $key => $value) {
+					if (strpos($line, $key) === 0) {
+						$newvalue = trim(str_replace($key, '', $line));
+						$exif_info[$key] = $newvalue;
+					}
+				}
+			}
+		}
+		return $exif_info;
+	}
+
+
+	public static function ImageTypeToMIMEtype($imagetype) {
+		if (function_exists('image_type_to_mime_type') && ($imagetype >= 1) && ($imagetype <= 18)) {
+			// PHP v4.3.0+
+			return image_type_to_mime_type($imagetype);
+		}
+		static $image_type_to_mime_type = array(
+			1  => 'image/gif',                     // IMAGETYPE_GIF
+			2  => 'image/jpeg',                    // IMAGETYPE_JPEG
+			3  => 'image/png',                     // IMAGETYPE_PNG
+			4  => 'application/x-shockwave-flash', // IMAGETYPE_SWF
+			5  => 'image/psd',                     // IMAGETYPE_PSD
+			6  => 'image/bmp',                     // IMAGETYPE_BMP
+			7  => 'image/tiff',                    // IMAGETYPE_TIFF_II (intel byte order)
+			8  => 'image/tiff',                    // IMAGETYPE_TIFF_MM (motorola byte order)
+			9  => 'application/octet-stream',      // IMAGETYPE_JPC
+			10 => 'image/jp2',                     // IMAGETYPE_JP2
+			11 => 'application/octet-stream',      // IMAGETYPE_JPX
+			12 => 'application/octet-stream',      // IMAGETYPE_JB2
+			13 => 'application/x-shockwave-flash', // IMAGETYPE_SWC
+			14 => 'image/iff',                     // IMAGETYPE_IFF
+			15 => 'image/vnd.wap.wbmp',            // IMAGETYPE_WBMP
+			16 => 'image/xbm',                     // IMAGETYPE_XBM
+			17 => 'image/x-icon',                  // IMAGETYPE_ICO
+			18 => 'image/webp',                    // IMAGETYPE_WEBP
+
+			'gif'  => 'image/gif',                 // IMAGETYPE_GIF
+			'jpg'  => 'image/jpeg',                // IMAGETYPE_JPEG
+			'jpeg' => 'image/jpeg',                // IMAGETYPE_JPEG
+			'png'  => 'image/png',                 // IMAGETYPE_PNG
+			'bmp'  => 'image/bmp',                 // IMAGETYPE_BMP
+			'ico'  => 'image/x-icon',              // IMAGETYPE_ICO
+			'webp' => 'image/webp',                // IMAGETYPE_WEBP
+		);
+
+		return (isset($image_type_to_mime_type[$imagetype]) ? $image_type_to_mime_type[$imagetype] : false);
+	}
+
+
+	public static function TranslateWHbyAngle($width, $height, $angle) {
+		if (($angle % 180) == 0) {
+			return array($width, $height);
+		}
+		$newwidth  = (abs(sin(deg2rad($angle))) * $height) + (abs(cos(deg2rad($angle))) * $width);
+		$newheight = (abs(sin(deg2rad($angle))) * $width)  + (abs(cos(deg2rad($angle))) * $height);
+		return array($newwidth, $newheight);
+	}
+
+	public static function HexCharDisplay($string) {
+		$len = strlen($string);
+		$output = '';
+		for ($i = 0; $i < $len; $i++) {
+			$output .= ' 0x'.str_pad(dechex(ord($string[$i])), 2, '0', STR_PAD_LEFT);
+		}
+		return $output;
+	}
+
+
+	public static function IsHexColor($HexColorString) {
+		return preg_match('#^[0-9A-F]{6}$#i', $HexColorString);
+	}
+
+
+	public static function ImageColorAllocateAlphaSafe(&$gdimg_hexcolorallocate, $R, $G, $B, $alpha=false) {
+		if (self::version_compare_replacement(PHP_VERSION, '4.3.2', '>=') && ($alpha !== false)) {
+			return imagecolorallocatealpha($gdimg_hexcolorallocate, $R, $G, $B, (int) $alpha);
+		} else {
+			return imagecolorallocate($gdimg_hexcolorallocate, $R, $G, $B);
+		}
+	}
+
+	public static function ImageHexColorAllocate(&$gdimg_hexcolorallocate, $HexColorString, $dieOnInvalid=false, $alpha=false) {
+		if (!is_resource($gdimg_hexcolorallocate) && !(is_object($gdimg_hexcolorallocate) && $gdimg_hexcolorallocate instanceOf \GdImage)) {
+			die('$gdimg_hexcolorallocate is not a GD resource in ImageHexColorAllocate()');
+		}
+		if (self::IsHexColor($HexColorString)) {
+			$R = hexdec(substr($HexColorString, 0, 2));
+			$G = hexdec(substr($HexColorString, 2, 2));
+			$B = hexdec(substr($HexColorString, 4, 2));
+			return self::ImageColorAllocateAlphaSafe($gdimg_hexcolorallocate, $R, $G, $B, $alpha);
+		}
+		if ($dieOnInvalid) {
+			die('Invalid hex color string: "'.$HexColorString.'"');
+		}
+		return imagecolorallocate($gdimg_hexcolorallocate, 0x00, 0x00, 0x00);
+	}
+
+
 	public static function HexColorXOR($hexcolor) {
 		return strtoupper(str_pad(dechex(~hexdec($hexcolor) & 0xFFFFFF), 6, '0', STR_PAD_LEFT));
 	}
+
+
+	public static function GetPixelColor(&$img, $x, $y) {
+		if (!is_resource($img) && !(is_object($img) && $img instanceOf \GdImage)) {
+			return false;
+		}
+		return @imagecolorsforindex($img, @imagecolorat($img, $x, $y));
+	}
+
 
 	public static function PixelColorDifferencePercent($currentPixel, $targetPixel) {
 		$diff = 0;
@@ -277,14 +280,16 @@ class phpthumb_functions {
 		return $diff * 100;
 	}
 
+	public static function GrayscaleValue($r, $g, $b) {
+		return round(($r * 0.30) + ($g * 0.59) + ($b * 0.11));
+	}
+
+
 	public static function GrayscalePixel($OriginalPixel) {
 		$gray = self::GrayscaleValue($OriginalPixel[ 'red'], $OriginalPixel[ 'green'], $OriginalPixel[ 'blue']);
 		return array('red'=>$gray, 'green'=>$gray, 'blue'=>$gray);
 	}
 
-	public static function GrayscaleValue($r, $g, $b) {
-		return round(($r * 0.30) + ($g * 0.59) + ($b * 0.11));
-	}
 
 	public static function GrayscalePixelRGB($rgb) {
 		$r = ($rgb >> 16) & 0xFF;
@@ -292,6 +297,7 @@ class phpthumb_functions {
 		$b =  $rgb        & 0xFF;
 		return ($r * 0.299) + ($g * 0.587) + ($b * 0.114);
 	}
+
 
 	public static function ScaleToFitInBox($width, $height, $maxwidth=null, $maxheight=null, $allow_enlarge=true, $allow_reduce=true) {
 		$maxwidth  = (null === $maxwidth  ? $width  : $maxwidth);
@@ -365,6 +371,7 @@ class phpthumb_functions {
 		return true;
 	}
 
+
 	public static function ImageCreateFunction($x_size, $y_size) {
 		$ImageCreateFunction = 'imagecreate';
 		if (self::gd_version() >= 2.0) {
@@ -379,20 +386,6 @@ class phpthumb_functions {
 		return $ImageCreateFunction(round($x_size), round($y_size));
 	}
 
-	public static function gd_version($fullstring=false) {
-		static $cache_gd_version = array();
-		if (empty($cache_gd_version)) {
-			$gd_info = gd_info();
-			if (preg_match('#bundled \((.+)\)$#i', $gd_info['GD Version'], $matches)) {
-				$cache_gd_version[1] = $gd_info['GD Version'];  // e.g. "bundled (2.0.15 compatible)"
-				$cache_gd_version[0] = (float) $matches[1];     // e.g. "2.0" (not "bundled (2.0.15 compatible)")
-			} else {
-				$cache_gd_version[1] = $gd_info['GD Version'];                       // e.g. "1.6.2 or higher"
-				$cache_gd_version[0] = (float) substr($gd_info['GD Version'], 0, 3); // e.g. "1.6" (not "1.6.2 or higher")
-			}
-		}
-		return $cache_gd_version[ (int) $fullstring ];
-	}
 
 	public static function ImageCopyRespectAlpha(&$dst_im, &$src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h, $opacity_pct=100) {
 		$opacipct = $opacity_pct / 100;
@@ -418,12 +411,6 @@ class phpthumb_functions {
 		return true;
 	}
 
-	public static function GetPixelColor(&$img, $x, $y) {
-		if (!is_resource($img) && !(is_object($img) && $img instanceOf \GdImage)) {
-			return false;
-		}
-		return @imagecolorsforindex($img, @imagecolorat($img, $x, $y));
-	}
 
 	public static function ProportionalResize($old_width, $old_height, $new_width=false, $new_height=false) {
 		$old_aspect_ratio = $old_width / $old_height;
@@ -449,6 +436,27 @@ class phpthumb_functions {
 			(int) round($new_height)
 		);
 	}
+
+
+	public static function FunctionIsDisabled($function) {
+		static $DisabledFunctions = null;
+		if (null === $DisabledFunctions) {
+			$disable_functions_local  = explode(',',     strtolower(@ini_get('disable_functions')));
+			$disable_functions_global = explode(',', strtolower(@get_cfg_var('disable_functions')));
+			foreach ($disable_functions_local as $key => $value) {
+				$DisabledFunctions[trim($value)] = 'local';
+			}
+			foreach ($disable_functions_global as $key => $value) {
+				$DisabledFunctions[trim($value)] = 'global';
+			}
+			if (@ini_get('safe_mode')) {
+				$DisabledFunctions['shell_exec']     = 'local';
+				$DisabledFunctions['set_time_limit'] = 'local';
+			}
+		}
+		return isset($DisabledFunctions[strtolower($function)]);
+	}
+
 
 	public static function SafeExec($command) {
 		static $AllowedExecFunctions = array();
@@ -517,6 +525,23 @@ class phpthumb_functions {
 		return $isbundled;
 	}
 
+
+	public static function gd_version($fullstring=false) {
+		static $cache_gd_version = array();
+		if (empty($cache_gd_version)) {
+			$gd_info = gd_info();
+			if (preg_match('#bundled \((.+)\)$#i', $gd_info['GD Version'], $matches)) {
+				$cache_gd_version[1] = $gd_info['GD Version'];  // e.g. "bundled (2.0.15 compatible)"
+				$cache_gd_version[0] = (float) $matches[1];     // e.g. "2.0" (not "bundled (2.0.15 compatible)")
+			} else {
+				$cache_gd_version[1] = $gd_info['GD Version'];                       // e.g. "1.6.2 or higher"
+				$cache_gd_version[0] = (float) substr($gd_info['GD Version'], 0, 3); // e.g. "1.6" (not "1.6.2 or higher")
+			}
+		}
+		return $cache_gd_version[ (int) $fullstring ];
+	}
+
+
 	public static function filesize_remote($remotefile, $timeout=10) {
 		$size = false;
 		$parsed_url = self::ParseURLbetter($remotefile);
@@ -537,25 +562,6 @@ class phpthumb_functions {
 		return $size;
 	}
 
-	public static function ParseURLbetter($url) {
-		$parsedURL = @parse_url($url);
-		foreach (array('scheme', 'host', 'port', 'user', 'pass', 'path', 'query', 'fragment') as $key) { // ensure all possible array keys are always returned
-			if (!array_key_exists($key, $parsedURL)) {
-				$parsedURL[$key] = null;
-			}
-		}
-		$parsedURL['port'] = ($parsedURL['port'] ? $parsedURL['port'] : self::URLschemeDefaultPort($parsedURL['scheme']));
-		return $parsedURL;
-	}
-
-	public static function URLschemeDefaultPort($scheme) {
-		static $schemePort = array(
-			'ftp'   => 21,
-			'http'  => 80,
-			'https' => 443,
-		);
-		return (isset($schemePort[strtolower($scheme)]) ? $schemePort[strtolower($scheme)] : null);
-	}
 
 	public static function filedate_remote($remotefile, $timeout=10) {
 		$date = false;
@@ -577,6 +583,7 @@ class phpthumb_functions {
 		return $date;
 	}
 
+
 	public static function md5_file_safe($filename) {
 		// md5_file() doesn't exist in PHP < 4.2.0
 		if (function_exists('md5_file')) {
@@ -594,6 +601,7 @@ class phpthumb_functions {
 		return false;
 	}
 
+
 	public static function nonempty_min() {
 		$arg_list = func_get_args();
 		$acceptable = array();
@@ -604,6 +612,7 @@ class phpthumb_functions {
 		}
 		return min($acceptable);
 	}
+
 
 	public static function LittleEndian2String($number, $minbytes=1) {
 		$intstring = '';
@@ -635,6 +644,59 @@ class phpthumb_functions {
 			}
 		}
 		return false;
+	}
+
+	public static function URLreadFsock($host, $file, &$errstr, $successonly=true, $port=-1, $timeout=10) {
+		if (!function_exists('fsockopen') || self::FunctionIsDisabled('fsockopen')) {
+			$errstr = 'URLreadFsock says: function fsockopen() unavailable';
+			return false;
+		}
+		$port = (int) ($port ? $port : -1); // passing anything as the $port parameter (even empty values like null, false, 0, "") will override the default -1. fsockopen uses -1 as the default port value.
+		//if ($fp = @fsockopen($host, $port, $errno, $errstr, $timeout)) {
+		if ($fp = @fsockopen((($port == 443) ? 'ssl://' : '').$host, $port, $errno, $errstr, $timeout)) { // https://github.com/JamesHeinrich/phpThumb/issues/39
+			$out  = 'GET '.$file.' HTTP/1.0'."\r\n";
+			$out .= 'Host: '.$host."\r\n";
+			$out .= 'Connection: Close'."\r\n\r\n";
+			fwrite($fp, $out);
+
+			$isHeader = true;
+			$data_header = '';
+			$data_body   = '';
+			$header_newlocation = '';
+			while (!feof($fp)) {
+				$line = fgets($fp, 1024);
+				if ($isHeader) {
+					$data_header .= $line;
+				} else {
+					$data_body .= $line;
+				}
+				if (preg_match('#^HTTP/[\\.\d]+ ([\d]+)\s*(.+)?$#i', rtrim($line), $matches)) {
+					list( , $errno, $errstr) = $matches;
+					$errno = (int) $errno;
+				} elseif (preg_match('#^Location: (.*)$#i', rtrim($line), $matches)) {
+					$header_newlocation = $matches[1];
+				}
+				if ($isHeader && ($line == "\r\n")) {
+					$isHeader = false;
+					if ($successonly) {
+						switch ($errno) {
+							case 200:
+								// great, continue
+								break;
+
+							default:
+								$errstr = $errno.' '.$errstr.($header_newlocation ? '; Location: '.$header_newlocation : '');
+								fclose($fp);
+								return false;
+								break;
+						}
+					}
+				}
+			}
+			fclose($fp);
+			return $data_body;
+		}
+		return null;
 	}
 
 	public static function CleanUpURLencoding($url, $queryseperator='&') {
@@ -673,6 +735,26 @@ class phpthumb_functions {
 		$cleaned_url .= '/'.implode('/', $CleanPathElements);
 		$cleaned_url .= (!empty($CleanQueries) ? '?'.implode($queryseperator, $CleanQueries) : '');
 		return $cleaned_url;
+	}
+
+	public static function URLschemeDefaultPort($scheme) {
+		static $schemePort = array(
+			'ftp'   => 21,
+			'http'  => 80,
+			'https' => 443,
+		);
+		return (isset($schemePort[strtolower($scheme)]) ? $schemePort[strtolower($scheme)] : null);
+	}
+
+	public static function ParseURLbetter($url) {
+		$parsedURL = @parse_url($url);
+		foreach (array('scheme', 'host', 'port', 'user', 'pass', 'path', 'query', 'fragment') as $key) { // ensure all possible array keys are always returned
+			if (!array_key_exists($key, $parsedURL)) {
+				$parsedURL[$key] = null;
+			}
+		}
+		$parsedURL['port'] = ($parsedURL['port'] ? $parsedURL['port'] : self::URLschemeDefaultPort($parsedURL['scheme']));
+		return $parsedURL;
 	}
 
 	public static function SafeURLread($url, &$error, $timeout=10, $followredirects=true) {
@@ -763,59 +845,6 @@ class phpthumb_functions {
 		return false;
 	}
 
-	public static function URLreadFsock($host, $file, &$errstr, $successonly=true, $port=-1, $timeout=10) {
-		if (!function_exists('fsockopen') || self::FunctionIsDisabled('fsockopen')) {
-			$errstr = 'URLreadFsock says: function fsockopen() unavailable';
-			return false;
-		}
-		$port = (int) ($port ? $port : -1); // passing anything as the $port parameter (even empty values like null, false, 0, "") will override the default -1. fsockopen uses -1 as the default port value.
-		//if ($fp = @fsockopen($host, $port, $errno, $errstr, $timeout)) {
-		if ($fp = @fsockopen((($port == 443) ? 'ssl://' : '').$host, $port, $errno, $errstr, $timeout)) { // https://github.com/JamesHeinrich/phpThumb/issues/39
-			$out  = 'GET '.$file.' HTTP/1.0'."\r\n";
-			$out .= 'Host: '.$host."\r\n";
-			$out .= 'Connection: Close'."\r\n\r\n";
-			fwrite($fp, $out);
-
-			$isHeader = true;
-			$data_header = '';
-			$data_body   = '';
-			$header_newlocation = '';
-			while (!feof($fp)) {
-				$line = fgets($fp, 1024);
-				if ($isHeader) {
-					$data_header .= $line;
-				} else {
-					$data_body .= $line;
-				}
-				if (preg_match('#^HTTP/[\\.\d]+ ([\d]+)\s*(.+)?$#i', rtrim($line), $matches)) {
-					list( , $errno, $errstr) = $matches;
-					$errno = (int) $errno;
-				} elseif (preg_match('#^Location: (.*)$#i', rtrim($line), $matches)) {
-					$header_newlocation = $matches[1];
-				}
-				if ($isHeader && ($line == "\r\n")) {
-					$isHeader = false;
-					if ($successonly) {
-						switch ($errno) {
-							case 200:
-								// great, continue
-								break;
-
-							default:
-								$errstr = $errno.' '.$errstr.($header_newlocation ? '; Location: '.$header_newlocation : '');
-								fclose($fp);
-								return false;
-								break;
-						}
-					}
-				}
-			}
-			fclose($fp);
-			return $data_body;
-		}
-		return null;
-	}
-
 	public static function EnsureDirectoryExists($dirname, $mask=0755) {
 		// https://www.php.net/manual/en/ini.core.php#ini.open-basedir says:
 		// "Under Windows, separate the directories with a semicolon. On all other systems, separate the directories with a colon."
@@ -861,9 +890,6 @@ class phpthumb_functions {
 		return true;
 	}
 
-	public static function is_windows() {
-		return (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN');
-	}
 
 	public static function GetAllFilesInSubfolders($dirname) {
 		$AllFiles = array();

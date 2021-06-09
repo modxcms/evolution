@@ -14,25 +14,6 @@ namespace WebPConvert\Convert\Helpers;
 class PhpIniSizes
 {
 
-    public static function getIniBytes($iniVarName)
-    {
-        $iniVarValue = ini_get($iniVarName);
-        if (($iniVarValue == '') || $iniVarValue === false) {
-            return false;
-        }
-        return self::parseShortHandSize($iniVarValue);
-    }
-
-    /*
-    * Get the size of an php.ini option.
-    *
-    * Calls ini_get() and parses the size to a number.
-    * If the configuration option is null, does not exist, or cannot be parsed as a shorthandsize, false is returned
-    *
-    * @param  string  $varname  The configuration option name.
-    * @return float|false  The parsed size or false if the configuration option does not exist
-    */
-
     /**
      * Parse a shordhandsize string as the ones returned by ini_get()
      *
@@ -67,5 +48,23 @@ class PhpIniSizes
         } else {
             return $digitsValue;
         }
+    }
+
+    /*
+    * Get the size of an php.ini option.
+    *
+    * Calls ini_get() and parses the size to a number.
+    * If the configuration option is null, does not exist, or cannot be parsed as a shorthandsize, false is returned
+    *
+    * @param  string  $varname  The configuration option name.
+    * @return float|false  The parsed size or false if the configuration option does not exist
+    */
+    public static function getIniBytes($iniVarName)
+    {
+        $iniVarValue = ini_get($iniVarName);
+        if (($iniVarValue == '') || $iniVarValue === false) {
+            return false;
+        }
+        return self::parseShortHandSize($iniVarValue);
     }
 }

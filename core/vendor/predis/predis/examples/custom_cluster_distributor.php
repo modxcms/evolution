@@ -46,17 +46,14 @@ class NaiveDistributor implements DistributorInterface, HashGeneratorInterface
         $this->nodesCount = count($this->nodes);
     }
 
-    public function get($value)
+    public function getSlot($hash)
     {
-        $hash = $this->hash($value);
-        $node = $this->getByHash($hash);
-
-        return $node;
+        return $this->nodesCount > 1 ? abs($hash % $this->nodesCount) : 0;
     }
 
-    public function hash($value)
+    public function getBySlot($slot)
     {
-        return crc32($value);
+        return isset($this->nodes[$slot]) ? $this->nodes[$slot] : null;
     }
 
     public function getByHash($hash)
@@ -71,14 +68,17 @@ class NaiveDistributor implements DistributorInterface, HashGeneratorInterface
         return $node;
     }
 
-    public function getSlot($hash)
+    public function get($value)
     {
-        return $this->nodesCount > 1 ? abs($hash % $this->nodesCount) : 0;
+        $hash = $this->hash($value);
+        $node = $this->getByHash($hash);
+
+        return $node;
     }
 
-    public function getBySlot($slot)
+    public function hash($value)
     {
-        return isset($this->nodes[$slot]) ? $this->nodes[$slot] : null;
+        return crc32($value);
     }
 
     public function getHashGenerator()

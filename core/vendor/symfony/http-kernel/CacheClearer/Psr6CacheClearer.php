@@ -23,6 +23,11 @@ class Psr6CacheClearer implements CacheClearerInterface
         $this->pools = $pools;
     }
 
+    public function hasPool(string $name)
+    {
+        return isset($this->pools[$name]);
+    }
+
     public function getPool(string $name)
     {
         if (!$this->hasPool($name)) {
@@ -30,11 +35,6 @@ class Psr6CacheClearer implements CacheClearerInterface
         }
 
         return $this->pools[$name];
-    }
-
-    public function hasPool(string $name)
-    {
-        return isset($this->pools[$name]);
     }
 
     public function clearPool(string $name)

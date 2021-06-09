@@ -28,6 +28,22 @@ use Illuminate\Support\Testing\Fakes\EventFake;
 class Event extends Facade
 {
     /**
+     * Replace the bound instance with a fake.
+     *
+     * @param  array|string  $eventsToFake
+     * @return \Illuminate\Support\Testing\Fakes\EventFake
+     */
+    public static function fake($eventsToFake = [])
+    {
+        static::swap($fake = new EventFake(static::getFacadeRoot(), $eventsToFake));
+
+        Model::setEventDispatcher($fake);
+        Cache::refreshEventDispatcher();
+
+        return $fake;
+    }
+
+    /**
      * Replace the bound instance with a fake during the given callable's execution.
      *
      * @param  callable  $callable
@@ -46,22 +62,6 @@ class Event extends Facade
             Model::setEventDispatcher($originalDispatcher);
             Cache::refreshEventDispatcher();
         });
-    }
-
-    /**
-     * Replace the bound instance with a fake.
-     *
-     * @param  array|string  $eventsToFake
-     * @return \Illuminate\Support\Testing\Fakes\EventFake
-     */
-    public static function fake($eventsToFake = [])
-    {
-        static::swap($fake = new EventFake(static::getFacadeRoot(), $eventsToFake));
-
-        Model::setEventDispatcher($fake);
-        Cache::refreshEventDispatcher();
-
-        return $fake;
     }
 
     /**

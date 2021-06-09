@@ -23,14 +23,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class OutdatedCommand extends ShowCommand
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function isProxyCommand()
-    {
-        return true;
-    }
-
     protected function configure()
     {
         $this
@@ -99,5 +91,13 @@ EOT
         $input = new ArrayInput($args);
 
         return $this->getApplication()->run($input, $output);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isProxyCommand()
+    {
+        return true;
     }
 }

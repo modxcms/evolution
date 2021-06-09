@@ -23,24 +23,6 @@ class GitBitbucketDriver extends BitbucketDriver
     /**
      * {@inheritDoc}
      */
-    public static function supports(IOInterface $io, Config $config, $url, $deep = false)
-    {
-        if (!preg_match('#^https?://bitbucket\.org/([^/]+)/(.+?)\.git$#i', $url)) {
-            return false;
-        }
-
-        if (!extension_loaded('openssl')) {
-            $io->writeError('Skipping Bitbucket git driver for '.$url.' because the OpenSSL PHP extension is missing.', true, IOInterface::VERBOSE);
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function getRootIdentifier()
     {
         if ($this->fallbackDriver) {
@@ -68,6 +50,24 @@ class GitBitbucketDriver extends BitbucketDriver
         }
 
         return $this->rootIdentifier;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function supports(IOInterface $io, Config $config, $url, $deep = false)
+    {
+        if (!preg_match('#^https?://bitbucket\.org/([^/]+)/(.+?)\.git$#i', $url)) {
+            return false;
+        }
+
+        if (!extension_loaded('openssl')) {
+            $io->writeError('Skipping Bitbucket git driver for '.$url.' because the OpenSSL PHP extension is missing.', true, IOInterface::VERBOSE);
+
+            return false;
+        }
+
+        return true;
     }
 
     /**

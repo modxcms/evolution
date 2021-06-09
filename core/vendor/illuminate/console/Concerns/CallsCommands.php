@@ -9,6 +9,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 trait CallsCommands
 {
     /**
+     * Resolve the console command instance for the given command.
+     *
+     * @param  \Symfony\Component\Console\Command\Command|string  $command
+     * @return \Symfony\Component\Console\Command\Command
+     */
+    abstract protected function resolveCommand($command);
+
+    /**
      * Call another console command.
      *
      * @param  \Symfony\Component\Console\Command\Command|string  $command
@@ -18,6 +26,30 @@ trait CallsCommands
     public function call($command, array $arguments = [])
     {
         return $this->runCommand($command, $arguments, $this->output);
+    }
+
+    /**
+     * Call another console command without output.
+     *
+     * @param  \Symfony\Component\Console\Command\Command|string  $command
+     * @param  array  $arguments
+     * @return int
+     */
+    public function callSilent($command, array $arguments = [])
+    {
+        return $this->runCommand($command, $arguments, new NullOutput);
+    }
+
+    /**
+     * Call another console command without output.
+     *
+     * @param  \Symfony\Component\Console\Command\Command|string  $command
+     * @param  array  $arguments
+     * @return int
+     */
+    public function callSilently($command, array $arguments = [])
+    {
+        return $this->callSilent($command, $arguments);
     }
 
     /**
@@ -36,14 +68,6 @@ trait CallsCommands
             $this->createInputFromArguments($arguments), $output
         );
     }
-
-    /**
-     * Resolve the console command instance for the given command.
-     *
-     * @param  \Symfony\Component\Console\Command\Command|string  $command
-     * @return \Symfony\Component\Console\Command\Command
-     */
-    abstract protected function resolveCommand($command);
 
     /**
      * Create an input instance from the given arguments.
@@ -76,29 +100,5 @@ trait CallsCommands
         ])->filter()->mapWithKeys(function ($value, $key) {
             return ["--{$key}" => $value];
         })->all();
-    }
-
-    /**
-     * Call another console command without output.
-     *
-     * @param  \Symfony\Component\Console\Command\Command|string  $command
-     * @param  array  $arguments
-     * @return int
-     */
-    public function callSilently($command, array $arguments = [])
-    {
-        return $this->callSilent($command, $arguments);
-    }
-
-    /**
-     * Call another console command without output.
-     *
-     * @param  \Symfony\Component\Console\Command\Command|string  $command
-     * @param  array  $arguments
-     * @return int
-     */
-    public function callSilent($command, array $arguments = [])
-    {
-        return $this->runCommand($command, $arguments, new NullOutput);
     }
 }

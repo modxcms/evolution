@@ -55,6 +55,19 @@ class ContextualBindingBuilder implements ContextualBindingBuilderContract
     }
 
     /**
+     * Define the implementation for the contextual binding.
+     *
+     * @param  \Closure|string|array  $implementation
+     * @return void
+     */
+    public function give($implementation)
+    {
+        foreach (Util::arrayWrap($this->concrete) as $concrete) {
+            $this->container->addContextualBinding($concrete, $this->needs, $implementation);
+        }
+    }
+
+    /**
      * Define tagged services to be used as the implementation for the contextual binding.
      *
      * @param  string  $tag
@@ -67,19 +80,6 @@ class ContextualBindingBuilder implements ContextualBindingBuilderContract
 
             return is_array($taggedServices) ? $taggedServices : iterator_to_array($taggedServices);
         });
-    }
-
-    /**
-     * Define the implementation for the contextual binding.
-     *
-     * @param  \Closure|string|array  $implementation
-     * @return void
-     */
-    public function give($implementation)
-    {
-        foreach (Util::arrayWrap($this->concrete) as $concrete) {
-            $this->container->addContextualBinding($concrete, $this->needs, $implementation);
-        }
     }
 
     /**

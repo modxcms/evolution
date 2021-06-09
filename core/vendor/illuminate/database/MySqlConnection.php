@@ -26,6 +26,16 @@ class MySqlConnection extends Connection
     }
 
     /**
+     * Get the default query grammar instance.
+     *
+     * @return \Illuminate\Database\Query\Grammars\MySqlGrammar
+     */
+    protected function getDefaultQueryGrammar()
+    {
+        return $this->withTablePrefix(new QueryGrammar);
+    }
+
+    /**
      * Get a schema builder instance for the connection.
      *
      * @return \Illuminate\Database\Schema\MySqlBuilder
@@ -40,6 +50,16 @@ class MySqlConnection extends Connection
     }
 
     /**
+     * Get the default schema grammar instance.
+     *
+     * @return \Illuminate\Database\Schema\Grammars\MySqlGrammar
+     */
+    protected function getDefaultSchemaGrammar()
+    {
+        return $this->withTablePrefix(new SchemaGrammar);
+    }
+
+    /**
      * Get the schema state for the connection.
      *
      * @param  \Illuminate\Filesystem\Filesystem|null  $files
@@ -49,26 +69,6 @@ class MySqlConnection extends Connection
     public function getSchemaState(Filesystem $files = null, callable $processFactory = null)
     {
         return new MySqlSchemaState($this, $files, $processFactory);
-    }
-
-    /**
-     * Get the default query grammar instance.
-     *
-     * @return \Illuminate\Database\Query\Grammars\MySqlGrammar
-     */
-    protected function getDefaultQueryGrammar()
-    {
-        return $this->withTablePrefix(new QueryGrammar);
-    }
-
-    /**
-     * Get the default schema grammar instance.
-     *
-     * @return \Illuminate\Database\Schema\Grammars\MySqlGrammar
-     */
-    protected function getDefaultSchemaGrammar()
-    {
-        return $this->withTablePrefix(new SchemaGrammar);
     }
 
     /**

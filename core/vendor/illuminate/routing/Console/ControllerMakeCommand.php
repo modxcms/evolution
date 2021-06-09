@@ -143,23 +143,6 @@ class ControllerMakeCommand extends GeneratorCommand
     }
 
     /**
-     * Get the fully-qualified model class name.
-     *
-     * @param  string  $model
-     * @return string
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected function parseModel($model)
-    {
-        if (preg_match('([^A-Za-z0-9_/\\\\])', $model)) {
-            throw new InvalidArgumentException('Model name contains invalid characters.');
-        }
-
-        return $this->qualifyModel($model);
-    }
-
-    /**
      * Build the model replacement values.
      *
      * @param  array  $replace
@@ -186,6 +169,23 @@ class ControllerMakeCommand extends GeneratorCommand
             '{{ modelVariable }}' => lcfirst(class_basename($modelClass)),
             '{{modelVariable}}' => lcfirst(class_basename($modelClass)),
         ]);
+    }
+
+    /**
+     * Get the fully-qualified model class name.
+     *
+     * @param  string  $model
+     * @return string
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function parseModel($model)
+    {
+        if (preg_match('([^A-Za-z0-9_/\\\\])', $model)) {
+            throw new InvalidArgumentException('Model name contains invalid characters.');
+        }
+
+        return $this->qualifyModel($model);
     }
 
     /**

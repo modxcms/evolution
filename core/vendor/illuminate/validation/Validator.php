@@ -24,131 +24,152 @@ class Validator implements ValidatorContract
         Concerns\ValidatesAttributes;
 
     /**
-     * The array of custom error messages.
-     *
-     * @var array
-     */
-    public $customMessages = [];
-    /**
-     * The array of fallback error messages.
-     *
-     * @var array
-     */
-    public $fallbackMessages = [];
-    /**
-     * The array of custom attribute names.
-     *
-     * @var array
-     */
-    public $customAttributes = [];
-    /**
-     * The array of custom displayable values.
-     *
-     * @var array
-     */
-    public $customValues = [];
-    /**
-     * All of the custom validator extensions.
-     *
-     * @var array
-     */
-    public $extensions = [];
-    /**
-     * All of the custom replacer extensions.
-     *
-     * @var array
-     */
-    public $replacers = [];
-    /**
      * The Translator implementation.
      *
      * @var \Illuminate\Contracts\Translation\Translator
      */
     protected $translator;
+
     /**
      * The container instance.
      *
      * @var \Illuminate\Contracts\Container\Container
      */
     protected $container;
+
     /**
      * The Presence Verifier implementation.
      *
      * @var \Illuminate\Validation\PresenceVerifierInterface
      */
     protected $presenceVerifier;
+
     /**
      * The failed validation rules.
      *
      * @var array
      */
     protected $failedRules = [];
+
     /**
      * Attributes that should be excluded from the validated data.
      *
      * @var array
      */
     protected $excludeAttributes = [];
+
     /**
      * The message bag instance.
      *
      * @var \Illuminate\Support\MessageBag
      */
     protected $messages;
+
     /**
      * The data under validation.
      *
      * @var array
      */
     protected $data;
+
     /**
      * The initial rules provided.
      *
      * @var array
      */
     protected $initialRules;
+
     /**
      * The rules to be applied to the data.
      *
      * @var array
      */
     protected $rules;
+
     /**
      * The current rule that is validating.
      *
      * @var string
      */
     protected $currentRule;
+
     /**
      * The array of wildcard attributes with their asterisks expanded.
      *
      * @var array
      */
     protected $implicitAttributes = [];
+
     /**
      * The callback that should be used to format the attribute.
      *
      * @var callable|null
      */
     protected $implicitAttributesFormatter;
+
     /**
      * The cached data for the "distinct" rule.
      *
      * @var array
      */
     protected $distinctValues = [];
+
     /**
      * All of the registered "after" callbacks.
      *
      * @var array
      */
     protected $after = [];
+
+    /**
+     * The array of custom error messages.
+     *
+     * @var array
+     */
+    public $customMessages = [];
+
+    /**
+     * The array of fallback error messages.
+     *
+     * @var array
+     */
+    public $fallbackMessages = [];
+
+    /**
+     * The array of custom attribute names.
+     *
+     * @var array
+     */
+    public $customAttributes = [];
+
+    /**
+     * The array of custom displayable values.
+     *
+     * @var array
+     */
+    public $customValues = [];
+
     /**
      * Indicates if the validator should stop on the first rule failure.
      *
      * @var bool
      */
     protected $stopOnFirstFailure = false;
+
+    /**
+     * All of the custom validator extensions.
+     *
+     * @var array
+     */
+    public $extensions = [];
+
+    /**
+     * All of the custom replacer extensions.
+     *
+     * @var array
+     */
+    public $replacers = [];
+
     /**
      * The validation rules that may be applied to files.
      *
@@ -296,6 +317,40 @@ class Validator implements ValidatorContract
     }
 
     /**
+     * Replace the placeholders used in data keys.
+     *
+     * @param  array  $data
+     * @return array
+     */
+    protected function replacePlaceholders($data)
+    {
+        $originalData = [];
+
+        foreach ($data as $key => $value) {
+            $originalData[$this->replacePlaceholderInString($key)] = is_array($value)
+                        ? $this->replacePlaceholders($value)
+                        : $value;
+        }
+
+        return $originalData;
+    }
+
+    /**
+     * Replace the placeholders in the given string.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    protected function replacePlaceholderInString(string $value)
+    {
+        return str_replace(
+            [$this->dotPlaceholder, '__asterisk__'],
+            ['.', '*'],
+            $value
+        );
+    }
+
+    /**
      * Add an after validation callback.
      *
      * @param  callable|string  $callback
@@ -308,51 +363,6 @@ class Validator implements ValidatorContract
         };
 
         return $this;
-    }
-
-    /**
-     * Run the validator's rules against its data.
-     *
-     * @param  string  $errorBag
-     * @return array
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function validateWithBag(string $errorBag)
-    {
-        try {
-            return $this->validate();
-        } catch (ValidationException $e) {
-            $e->errorBag = $errorBag;
-
-            throw $e;
-        }
-    }
-
-    /**
-     * Run the validator's rules against its data.
-     *
-     * @return array
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function validate()
-    {
-        if ($this->fails()) {
-            throw new ValidationException($this);
-        }
-
-        return $this->validated();
-    }
-
-    /**
-     * Determine if the data fails the validation rules.
-     *
-     * @return bool
-     */
-    public function fails()
-    {
-        return ! $this->passes();
     }
 
     /**
@@ -406,6 +416,16 @@ class Validator implements ValidatorContract
     }
 
     /**
+     * Determine if the data fails the validation rules.
+     *
+     * @return bool
+     */
+    public function fails()
+    {
+        return ! $this->passes();
+    }
+
+    /**
      * Determine if the attribute should be excluded.
      *
      * @param  string  $attribute
@@ -434,6 +454,69 @@ class Validator implements ValidatorContract
     {
         Arr::forget($this->data, $attribute);
         Arr::forget($this->rules, $attribute);
+    }
+
+    /**
+     * Run the validator's rules against its data.
+     *
+     * @return array
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function validate()
+    {
+        if ($this->fails()) {
+            throw new ValidationException($this);
+        }
+
+        return $this->validated();
+    }
+
+    /**
+     * Run the validator's rules against its data.
+     *
+     * @param  string  $errorBag
+     * @return array
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function validateWithBag(string $errorBag)
+    {
+        try {
+            return $this->validate();
+        } catch (ValidationException $e) {
+            $e->errorBag = $errorBag;
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Get the attributes and values that were validated.
+     *
+     * @return array
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function validated()
+    {
+        if ($this->invalid()) {
+            throw new ValidationException($this);
+        }
+
+        $results = [];
+
+        $missingValue = new stdClass;
+
+        foreach (array_keys($this->getRules()) as $key) {
+            $value = data_get($this->getData(), $key, $missingValue);
+
+            if ($value !== $missingValue) {
+                Arr::set($results, $key, $value);
+            }
+        }
+
+        return $this->replacePlaceholders($results);
     }
 
     /**
@@ -491,6 +574,17 @@ class Validator implements ValidatorContract
     }
 
     /**
+     * Determine if the given rule depends on other fields.
+     *
+     * @param  string  $rule
+     * @return bool
+     */
+    protected function dependsOnOtherFields($rule)
+    {
+        return in_array($rule, $this->dependentRules);
+    }
+
+    /**
      * Get the explicit keys from an attribute flattened with dot notation.
      *
      * E.g. 'foo.1.bar.spark.baz' -> [1, 'spark'] for 'foo.*.bar.*.baz'
@@ -531,17 +625,6 @@ class Validator implements ValidatorContract
     }
 
     /**
-     * Determine if the given rule depends on other fields.
-     *
-     * @param  string  $rule
-     * @return bool
-     */
-    protected function dependsOnOtherFields($rule)
-    {
-        return in_array($rule, $this->dependentRules);
-    }
-
-    /**
      * Replace each field parameter which has asterisks with the given keys.
      *
      * @param  array  $parameters
@@ -553,97 +636,6 @@ class Validator implements ValidatorContract
         return array_map(function ($field) use ($keys) {
             return vsprintf(str_replace('*', '%s', $field), $keys);
         }, $parameters);
-    }
-
-    /**
-     * Get the value of a given attribute.
-     *
-     * @param  string  $attribute
-     * @return mixed
-     */
-    protected function getValue($attribute)
-    {
-        return Arr::get($this->data, $attribute);
-    }
-
-    /**
-     * Determine if the given attribute has a rule in the given set.
-     *
-     * @param  string  $attribute
-     * @param  string|array  $rules
-     * @return bool
-     */
-    public function hasRule($attribute, $rules)
-    {
-        return ! is_null($this->getRule($attribute, $rules));
-    }
-
-    /**
-     * Get a rule and its parameters for a given attribute.
-     *
-     * @param  string  $attribute
-     * @param  string|array  $rules
-     * @return array|null
-     */
-    protected function getRule($attribute, $rules)
-    {
-        if (! array_key_exists($attribute, $this->rules)) {
-            return;
-        }
-
-        $rules = (array) $rules;
-
-        foreach ($this->rules[$attribute] as $rule) {
-            [$rule, $parameters] = ValidationRuleParser::parse($rule);
-
-            if (in_array($rule, $rules)) {
-                return [$rule, $parameters];
-            }
-        }
-    }
-
-    /**
-     * Add a failed rule and error message to the collection.
-     *
-     * @param  string  $attribute
-     * @param  string  $rule
-     * @param  array  $parameters
-     * @return void
-     */
-    public function addFailure($attribute, $rule, $parameters = [])
-    {
-        if (! $this->messages) {
-            $this->passes();
-        }
-
-        $attribute = str_replace(
-            [$this->dotPlaceholder, '__asterisk__'],
-            ['.', '*'],
-            $attribute
-        );
-
-        if (in_array($rule, $this->excludeRules)) {
-            return $this->excludeAttribute($attribute);
-        }
-
-        $this->messages->add($attribute, $this->makeReplacements(
-            $this->getMessage($attribute, $rule), $attribute, $rule, $parameters
-        ));
-
-        $this->failedRules[$attribute][$rule] = $parameters;
-    }
-
-    /**
-     * Add the given attribute to the list of excluded attributes.
-     *
-     * @param  string  $attribute
-     * @return void
-     */
-    protected function excludeAttribute(string $attribute)
-    {
-        $this->excludeAttributes[] = $attribute;
-
-        $this->excludeAttributes = array_unique($this->excludeAttributes);
     }
 
     /**
@@ -782,40 +774,6 @@ class Validator implements ValidatorContract
     }
 
     /**
-     * Replace the placeholders used in data keys.
-     *
-     * @param  array  $data
-     * @return array
-     */
-    protected function replacePlaceholders($data)
-    {
-        $originalData = [];
-
-        foreach ($data as $key => $value) {
-            $originalData[$this->replacePlaceholderInString($key)] = is_array($value)
-                        ? $this->replacePlaceholders($value)
-                        : $value;
-        }
-
-        return $originalData;
-    }
-
-    /**
-     * Replace the placeholders in the given string.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    protected function replacePlaceholderInString(string $value)
-    {
-        return str_replace(
-            [$this->dotPlaceholder, '__asterisk__'],
-            ['.', '*'],
-            $value
-        );
-    }
-
-    /**
      * Check if we should stop further validations on a given attribute.
      *
      * @param  string  $attribute
@@ -843,31 +801,63 @@ class Validator implements ValidatorContract
     }
 
     /**
-     * Get the attributes and values that were validated.
+     * Add a failed rule and error message to the collection.
+     *
+     * @param  string  $attribute
+     * @param  string  $rule
+     * @param  array  $parameters
+     * @return void
+     */
+    public function addFailure($attribute, $rule, $parameters = [])
+    {
+        if (! $this->messages) {
+            $this->passes();
+        }
+
+        $attribute = str_replace(
+            [$this->dotPlaceholder, '__asterisk__'],
+            ['.', '*'],
+            $attribute
+        );
+
+        if (in_array($rule, $this->excludeRules)) {
+            return $this->excludeAttribute($attribute);
+        }
+
+        $this->messages->add($attribute, $this->makeReplacements(
+            $this->getMessage($attribute, $rule), $attribute, $rule, $parameters
+        ));
+
+        $this->failedRules[$attribute][$rule] = $parameters;
+    }
+
+    /**
+     * Add the given attribute to the list of excluded attributes.
+     *
+     * @param  string  $attribute
+     * @return void
+     */
+    protected function excludeAttribute(string $attribute)
+    {
+        $this->excludeAttributes[] = $attribute;
+
+        $this->excludeAttributes = array_unique($this->excludeAttributes);
+    }
+
+    /**
+     * Returns the data which was valid.
      *
      * @return array
-     *
-     * @throws \Illuminate\Validation\ValidationException
      */
-    public function validated()
+    public function valid()
     {
-        if ($this->invalid()) {
-            throw new ValidationException($this);
+        if (! $this->messages) {
+            $this->passes();
         }
 
-        $results = [];
-
-        $missingValue = new stdClass;
-
-        foreach (array_keys($this->getRules()) as $key) {
-            $value = data_get($this->getData(), $key, $missingValue);
-
-            if ($value !== $missingValue) {
-                Arr::set($results, $key, $value);
-            }
-        }
-
-        return $this->replacePlaceholders($results);
+        return array_diff_key(
+            $this->data, $this->attributesThatHaveMessages()
+        );
     }
 
     /**
@@ -909,6 +899,16 @@ class Validator implements ValidatorContract
     }
 
     /**
+     * Get the failed validation rules.
+     *
+     * @return array
+     */
+    public function failed()
+    {
+        return $this->failedRules;
+    }
+
+    /**
      * Get the message container for the validator.
      *
      * @return \Illuminate\Support\MessageBag
@@ -923,13 +923,105 @@ class Validator implements ValidatorContract
     }
 
     /**
-     * Get the failed validation rules.
+     * An alternative more semantic shortcut to the message container.
+     *
+     * @return \Illuminate\Support\MessageBag
+     */
+    public function errors()
+    {
+        return $this->messages();
+    }
+
+    /**
+     * Get the messages for the instance.
+     *
+     * @return \Illuminate\Support\MessageBag
+     */
+    public function getMessageBag()
+    {
+        return $this->messages();
+    }
+
+    /**
+     * Determine if the given attribute has a rule in the given set.
+     *
+     * @param  string  $attribute
+     * @param  string|array  $rules
+     * @return bool
+     */
+    public function hasRule($attribute, $rules)
+    {
+        return ! is_null($this->getRule($attribute, $rules));
+    }
+
+    /**
+     * Get a rule and its parameters for a given attribute.
+     *
+     * @param  string  $attribute
+     * @param  string|array  $rules
+     * @return array|null
+     */
+    protected function getRule($attribute, $rules)
+    {
+        if (! array_key_exists($attribute, $this->rules)) {
+            return;
+        }
+
+        $rules = (array) $rules;
+
+        foreach ($this->rules[$attribute] as $rule) {
+            [$rule, $parameters] = ValidationRuleParser::parse($rule);
+
+            if (in_array($rule, $rules)) {
+                return [$rule, $parameters];
+            }
+        }
+    }
+
+    /**
+     * Get the data under validation.
      *
      * @return array
      */
-    public function failed()
+    public function attributes()
     {
-        return $this->failedRules;
+        return $this->getData();
+    }
+
+    /**
+     * Get the data under validation.
+     *
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Set the data under validation.
+     *
+     * @param  array  $data
+     * @return $this
+     */
+    public function setData(array $data)
+    {
+        $this->data = $this->parseData($data);
+
+        $this->setRules($this->initialRules);
+
+        return $this;
+    }
+
+    /**
+     * Get the value of a given attribute.
+     *
+     * @param  string  $attribute
+     * @return mixed
+     */
+    protected function getValue($attribute)
+    {
+        return Arr::get($this->data, $attribute);
     }
 
     /**
@@ -964,74 +1056,26 @@ class Validator implements ValidatorContract
     }
 
     /**
-     * Get the data under validation.
+     * Parse the given rules and merge them into current rules.
      *
-     * @return array
+     * @param  array  $rules
+     * @return void
      */
-    public function getData()
+    public function addRules($rules)
     {
-        return $this->data;
-    }
+        // The primary purpose of this parser is to expand any "*" rules to the all
+        // of the explicit rules needed for the given data. For example the rule
+        // names.* would get expanded to names.0, names.1, etc. for this data.
+        $response = (new ValidationRuleParser($this->data))
+                            ->explode($rules);
 
-    /**
-     * Set the data under validation.
-     *
-     * @param  array  $data
-     * @return $this
-     */
-    public function setData(array $data)
-    {
-        $this->data = $this->parseData($data);
-
-        $this->setRules($this->initialRules);
-
-        return $this;
-    }
-
-    /**
-     * Returns the data which was valid.
-     *
-     * @return array
-     */
-    public function valid()
-    {
-        if (! $this->messages) {
-            $this->passes();
-        }
-
-        return array_diff_key(
-            $this->data, $this->attributesThatHaveMessages()
+        $this->rules = array_merge_recursive(
+            $this->rules, $response->rules
         );
-    }
 
-    /**
-     * An alternative more semantic shortcut to the message container.
-     *
-     * @return \Illuminate\Support\MessageBag
-     */
-    public function errors()
-    {
-        return $this->messages();
-    }
-
-    /**
-     * Get the messages for the instance.
-     *
-     * @return \Illuminate\Support\MessageBag
-     */
-    public function getMessageBag()
-    {
-        return $this->messages();
-    }
-
-    /**
-     * Get the data under validation.
-     *
-     * @return array
-     */
-    public function attributes()
-    {
-        return $this->getData();
+        $this->implicitAttributes = array_merge(
+            $this->implicitAttributes, $response->implicitAttributes
+        );
     }
 
     /**
@@ -1056,29 +1100,6 @@ class Validator implements ValidatorContract
     }
 
     /**
-     * Parse the given rules and merge them into current rules.
-     *
-     * @param  array  $rules
-     * @return void
-     */
-    public function addRules($rules)
-    {
-        // The primary purpose of this parser is to expand any "*" rules to the all
-        // of the explicit rules needed for the given data. For example the rule
-        // names.* would get expanded to names.0, names.1, etc. for this data.
-        $response = (new ValidationRuleParser($this->data))
-                            ->explode($rules);
-
-        $this->rules = array_merge_recursive(
-            $this->rules, $response->rules
-        );
-
-        $this->implicitAttributes = array_merge(
-            $this->implicitAttributes, $response->implicitAttributes
-        );
-    }
-
-    /**
      * Instruct the validator to stop validating after the first rule failure.
      *
      * @param  bool  $stopOnFirstFailure
@@ -1089,21 +1110,6 @@ class Validator implements ValidatorContract
         $this->stopOnFirstFailure = $stopOnFirstFailure;
 
         return $this;
-    }
-
-    /**
-     * Register an array of custom implicit validator extensions.
-     *
-     * @param  array  $extensions
-     * @return void
-     */
-    public function addImplicitExtensions(array $extensions)
-    {
-        $this->addExtensions($extensions);
-
-        foreach ($extensions as $rule => $extension) {
-            $this->implicitRules[] = Str::studly($rule);
-        }
     }
 
     /**
@@ -1124,6 +1130,21 @@ class Validator implements ValidatorContract
     }
 
     /**
+     * Register an array of custom implicit validator extensions.
+     *
+     * @param  array  $extensions
+     * @return void
+     */
+    public function addImplicitExtensions(array $extensions)
+    {
+        $this->addExtensions($extensions);
+
+        foreach ($extensions as $rule => $extension) {
+            $this->implicitRules[] = Str::studly($rule);
+        }
+    }
+
+    /**
      * Register an array of custom dependent validator extensions.
      *
      * @param  array  $extensions
@@ -1139,6 +1160,18 @@ class Validator implements ValidatorContract
     }
 
     /**
+     * Register a custom validator extension.
+     *
+     * @param  string  $rule
+     * @param  \Closure|string  $extension
+     * @return void
+     */
+    public function addExtension($rule, $extension)
+    {
+        $this->extensions[Str::snake($rule)] = $extension;
+    }
+
+    /**
      * Register a custom implicit validator extension.
      *
      * @param  string  $rule
@@ -1150,18 +1183,6 @@ class Validator implements ValidatorContract
         $this->addExtension($rule, $extension);
 
         $this->implicitRules[] = Str::studly($rule);
-    }
-
-    /**
-     * Register a custom validator extension.
-     *
-     * @param  string  $rule
-     * @param  \Closure|string  $extension
-     * @return void
-     */
-    public function addExtension($rule, $extension)
-    {
-        $this->extensions[Str::snake($rule)] = $extension;
     }
 
     /**
@@ -1361,28 +1382,6 @@ class Validator implements ValidatorContract
     }
 
     /**
-     * Handle dynamic calls to class methods.
-     *
-     * @param  string  $method
-     * @param  array  $parameters
-     * @return mixed
-     *
-     * @throws \BadMethodCallException
-     */
-    public function __call($method, $parameters)
-    {
-        $rule = Str::snake(substr($method, 8));
-
-        if (isset($this->extensions[$rule])) {
-            return $this->callExtension($rule, $parameters);
-        }
-
-        throw new BadMethodCallException(sprintf(
-            'Method %s::%s does not exist.', static::class, $method
-        ));
-    }
-
-    /**
      * Call a custom validator extension.
      *
      * @param  string  $rule
@@ -1412,5 +1411,27 @@ class Validator implements ValidatorContract
         [$class, $method] = Str::parseCallback($callback, 'validate');
 
         return $this->container->make($class)->{$method}(...array_values($parameters));
+    }
+
+    /**
+     * Handle dynamic calls to class methods.
+     *
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return mixed
+     *
+     * @throws \BadMethodCallException
+     */
+    public function __call($method, $parameters)
+    {
+        $rule = Str::snake(substr($method, 8));
+
+        if (isset($this->extensions[$rule])) {
+            return $this->callExtension($rule, $parameters);
+        }
+
+        throw new BadMethodCallException(sprintf(
+            'Method %s::%s does not exist.', static::class, $method
+        ));
     }
 }

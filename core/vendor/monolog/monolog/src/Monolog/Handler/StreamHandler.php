@@ -26,10 +26,10 @@ class StreamHandler extends AbstractProcessingHandler
     /** @var resource|null */
     protected $stream;
     protected $url;
-    protected $filePermission;
-    protected $useLocking;
     /** @var string|null */
     private $errorMessage;
+    protected $filePermission;
+    protected $useLocking;
     private $dirCreated;
 
     /**
@@ -124,6 +124,37 @@ class StreamHandler extends AbstractProcessingHandler
         }
     }
 
+    /**
+     * Write to stream
+     * @param resource $stream
+     * @param array    $record
+     */
+    protected function streamWrite($stream, array $record): void
+    {
+        fwrite($stream, (string) $record['formatted']);
+    }
+
+    private function customErrorHandler($code, $msg): bool
+    {
+        $this->errorMessage = preg_replace('{^(fopen|mkdir)\(.*?\): }', '', $msg);
+
+        return true;
+    }
+
+    private function getDirFromStream(string $stream): ?string
+    {
+        $pos = strpos($stream, '://');
+        if ($pos === false) {
+            return dirname($stream);
+        }
+
+        if ('file://' === substr($stream, 0, 7)) {
+            return dirname(substr($stream, 7));
+        }
+
+        return null;
+    }
+
     private function createDir(): void
     {
         // Do not try to create dir if it has already been tried.
@@ -142,36 +173,5 @@ class StreamHandler extends AbstractProcessingHandler
             }
         }
         $this->dirCreated = true;
-    }
-
-    private function getDirFromStream(string $stream): ?string
-    {
-        $pos = strpos($stream, '://');
-        if ($pos === false) {
-            return dirname($stream);
-        }
-
-        if ('file://' === substr($stream, 0, 7)) {
-            return dirname(substr($stream, 7));
-        }
-
-        return null;
-    }
-
-    /**
-     * Write to stream
-     * @param resource $stream
-     * @param array    $record
-     */
-    protected function streamWrite($stream, array $record): void
-    {
-        fwrite($stream, (string) $record['formatted']);
-    }
-
-    private function customErrorHandler($code, $msg): bool
-    {
-        $this->errorMessage = preg_replace('{^(fopen|mkdir)\(.*?\): }', '', $msg);
-
-        return true;
     }
 }

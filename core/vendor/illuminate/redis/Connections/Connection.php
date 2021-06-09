@@ -37,6 +37,16 @@ abstract class Connection
     protected $events;
 
     /**
+     * Subscribe to a set of given channels for messages.
+     *
+     * @param  array|string  $channels
+     * @param  \Closure  $callback
+     * @param  string  $method
+     * @return void
+     */
+    abstract public function createSubscription($channels, Closure $callback, $method = 'subscribe');
+
+    /**
      * Funnel a callback for a maximum number of simultaneous executions.
      *
      * @param  string  $name
@@ -81,16 +91,6 @@ abstract class Connection
     }
 
     /**
-     * Subscribe to a set of given channels for messages.
-     *
-     * @param  array|string  $channels
-     * @param  \Closure  $callback
-     * @param  string  $method
-     * @return void
-     */
-    abstract public function createSubscription($channels, Closure $callback, $method = 'subscribe');
-
-    /**
      * Subscribe to a set of given channels with wildcards.
      *
      * @param  array|string  $channels
@@ -100,6 +100,41 @@ abstract class Connection
     public function psubscribe($channels, Closure $callback)
     {
         return $this->createSubscription($channels, $callback, __FUNCTION__);
+    }
+
+    /**
+     * Run a command against the Redis database.
+     *
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return mixed
+     */
+    public function command($method, array $parameters = [])
+    {
+        $start = microtime(true);
+
+        $result = $this->client->{$method}(...$parameters);
+
+        $time = round((microtime(true) - $start) * 1000, 2);
+
+        if (isset($this->events)) {
+            $this->event(new CommandExecuted($method, $parameters, $time, $this));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Fire the given event if possible.
+     *
+     * @param  mixed  $event
+     * @return void
+     */
+    protected function event($event)
+    {
+        if (isset($this->events)) {
+            $this->events->dispatch($event);
+        }
     }
 
     /**
@@ -183,40 +218,5 @@ abstract class Connection
         }
 
         return $this->command($method, $parameters);
-    }
-
-    /**
-     * Run a command against the Redis database.
-     *
-     * @param  string  $method
-     * @param  array  $parameters
-     * @return mixed
-     */
-    public function command($method, array $parameters = [])
-    {
-        $start = microtime(true);
-
-        $result = $this->client->{$method}(...$parameters);
-
-        $time = round((microtime(true) - $start) * 1000, 2);
-
-        if (isset($this->events)) {
-            $this->event(new CommandExecuted($method, $parameters, $time, $this));
-        }
-
-        return $result;
-    }
-
-    /**
-     * Fire the given event if possible.
-     *
-     * @param  mixed  $event
-     * @return void
-     */
-    protected function event($event)
-    {
-        if (isset($this->events)) {
-            $this->events->dispatch($event);
-        }
     }
 }

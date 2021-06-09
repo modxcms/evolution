@@ -21,6 +21,45 @@ class ServeFile
 {
 
     /**
+     * Process options.
+     *
+     * @throws \WebPConvert\Options\Exceptions\InvalidOptionTypeException   If the type of an option is invalid
+     * @throws \WebPConvert\Options\Exceptions\InvalidOptionValueException  If the value of an option is invalid
+     * @param array $options
+     */
+    private static function processOptions($options)
+    {
+        $options2 = new Options();
+        $options2->addOptions(
+            new ArrayOption('headers', []),
+            new StringOption('cache-control-header', 'public, max-age=31536000')
+        );
+        foreach ($options as $optionId => $optionValue) {
+            $options2->setOrCreateOption($optionId, $optionValue);
+        }
+        $options2->check();
+        $options = $options2->getOptions();
+
+        // headers option
+        // --------------
+
+        $headerOptions = new Options();
+        $headerOptions->addOptions(
+            new BooleanOption('cache-control', false),
+            new BooleanOption('content-length', true),
+            new BooleanOption('content-type', true),
+            new BooleanOption('expires', false),
+            new BooleanOption('last-modified', true),
+            new BooleanOption('vary-accept', false)
+        );
+        foreach ($options['headers'] as $optionId => $optionValue) {
+            $headerOptions->setOrCreateOption($optionId, $optionValue);
+        }
+        $options['headers'] = $headerOptions->getOptions();
+        return $options;
+    }
+
+    /**
      * Serve existing file.
      *
      * @param  string  $filename     File to serve (absolute path)
@@ -90,44 +129,5 @@ class ServeFile
             Header::addHeader('X-WebP-Convert-Error: Could not read file');
             throw new ServeFailedException('Could not read file');
         }
-    }
-
-    /**
-     * Process options.
-     *
-     * @throws \WebPConvert\Options\Exceptions\InvalidOptionTypeException   If the type of an option is invalid
-     * @throws \WebPConvert\Options\Exceptions\InvalidOptionValueException  If the value of an option is invalid
-     * @param array $options
-     */
-    private static function processOptions($options)
-    {
-        $options2 = new Options();
-        $options2->addOptions(
-            new ArrayOption('headers', []),
-            new StringOption('cache-control-header', 'public, max-age=31536000')
-        );
-        foreach ($options as $optionId => $optionValue) {
-            $options2->setOrCreateOption($optionId, $optionValue);
-        }
-        $options2->check();
-        $options = $options2->getOptions();
-
-        // headers option
-        // --------------
-
-        $headerOptions = new Options();
-        $headerOptions->addOptions(
-            new BooleanOption('cache-control', false),
-            new BooleanOption('content-length', true),
-            new BooleanOption('content-type', true),
-            new BooleanOption('expires', false),
-            new BooleanOption('last-modified', true),
-            new BooleanOption('vary-accept', false)
-        );
-        foreach ($options['headers'] as $optionId => $optionValue) {
-            $headerOptions->setOrCreateOption($optionId, $optionValue);
-        }
-        $options['headers'] = $headerOptions->getOptions();
-        return $options;
     }
 }

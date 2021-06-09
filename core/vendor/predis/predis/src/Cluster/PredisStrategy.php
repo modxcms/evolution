@@ -48,14 +48,6 @@ class PredisStrategy extends ClusterStrategy
     /**
      * {@inheritdoc}
      */
-    public function getDistributor()
-    {
-        return $this->distributor;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function checkSameSlotForKeys(array $keys)
     {
         if (!$count = count($keys)) {
@@ -75,5 +67,13 @@ class PredisStrategy extends ClusterStrategy
         }
 
         return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDistributor()
+    {
+        return $this->distributor;
     }
 }

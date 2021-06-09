@@ -17,6 +17,18 @@ trait Macroable
     protected static $macros = [];
 
     /**
+     * Register a custom macro.
+     *
+     * @param  string  $name
+     * @param  object|callable  $macro
+     * @return void
+     */
+    public static function macro($name, $macro)
+    {
+        static::$macros[$name] = $macro;
+    }
+
+    /**
      * Mix another object into the class.
      *
      * @param  object  $mixin
@@ -48,18 +60,6 @@ trait Macroable
     public static function hasMacro($name)
     {
         return isset(static::$macros[$name]);
-    }
-
-    /**
-     * Register a custom macro.
-     *
-     * @param  string  $name
-     * @param  object|callable  $macro
-     * @return void
-     */
-    public static function macro($name, $macro)
-    {
-        static::$macros[$name] = $macro;
     }
 
     /**

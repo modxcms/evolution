@@ -30,10 +30,22 @@ class Factory
      * @var UriRetriever
      */
     protected $uriRetriever;
+
+    /**
+     * @var int
+     */
+    private $checkMode = Constraint::CHECK_MODE_NORMAL;
+
+    /**
+     * @var TypeCheck\TypeCheckInterface[]
+     */
+    private $typeCheck = array();
+
     /**
      * @var int Validation context
      */
     protected $errorContext = Validator::ERROR_DOCUMENT_VALIDATION;
+
     /**
      * @var array
      */
@@ -50,14 +62,7 @@ class Factory
         'schema' => 'JsonSchema\Constraints\SchemaConstraint',
         'validator' => 'JsonSchema\Validator'
     );
-    /**
-     * @var int
-     */
-    private $checkMode = Constraint::CHECK_MODE_NORMAL;
-    /**
-     * @var TypeCheck\TypeCheckInterface[]
-     */
-    private $typeCheck = array();
+
     /**
      * @var array<ConstraintInterface>
      */

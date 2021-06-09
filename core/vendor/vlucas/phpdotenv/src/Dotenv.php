@@ -70,23 +70,6 @@ class Dotenv
     }
 
     /**
-     * Create a new mutable dotenv instance with default repository.
-     *
-     * @param string|string[]      $paths
-     * @param string|string[]|null $names
-     * @param bool                 $shortCircuit
-     * @param string|null          $fileEncoding
-     *
-     * @return \Dotenv\Dotenv
-     */
-    public static function createMutable($paths, $names = null, bool $shortCircuit = true, string $fileEncoding = null)
-    {
-        $repository = RepositoryBuilder::createWithDefaultAdapters()->make();
-
-        return self::create($repository, $paths, $names, $shortCircuit, $fileEncoding);
-    }
-
-    /**
      * Create a new dotenv instance.
      *
      * @param \Dotenv\Repository\RepositoryInterface $repository
@@ -114,6 +97,23 @@ class Dotenv
         }
 
         return new self($builder->fileEncoding($fileEncoding)->make(), new Parser(), new Loader(), $repository);
+    }
+
+    /**
+     * Create a new mutable dotenv instance with default repository.
+     *
+     * @param string|string[]      $paths
+     * @param string|string[]|null $names
+     * @param bool                 $shortCircuit
+     * @param string|null          $fileEncoding
+     *
+     * @return \Dotenv\Dotenv
+     */
+    public static function createMutable($paths, $names = null, bool $shortCircuit = true, string $fileEncoding = null)
+    {
+        $repository = RepositoryBuilder::createWithDefaultAdapters()->make();
+
+        return self::create($repository, $paths, $names, $shortCircuit, $fileEncoding);
     }
 
     /**

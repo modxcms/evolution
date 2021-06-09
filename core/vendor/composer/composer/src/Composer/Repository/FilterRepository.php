@@ -93,19 +93,6 @@ class FilterRepository implements RepositoryInterface
         return $this->repo->findPackage($name, $constraint);
     }
 
-    private function isAllowed($name)
-    {
-        if (!$this->only && !$this->exclude) {
-            return true;
-        }
-
-        if ($this->only) {
-            return (bool) preg_match($this->only, $name);
-        }
-
-        return !preg_match($this->exclude, $name);
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -160,6 +147,21 @@ class FilterRepository implements RepositoryInterface
     /**
      * {@inheritdoc}
      */
+    public function getPackages()
+    {
+        $result = array();
+        foreach ($this->repo->getPackages() as $package) {
+            if ($this->isAllowed($package->getName())) {
+                $result[] = $package;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getProviders($packageName)
     {
         $result = array();
@@ -192,18 +194,16 @@ class FilterRepository implements RepositoryInterface
         return 0;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getPackages()
+    private function isAllowed($name)
     {
-        $result = array();
-        foreach ($this->repo->getPackages() as $package) {
-            if ($this->isAllowed($package->getName())) {
-                $result[] = $package;
-            }
+        if (!$this->only && !$this->exclude) {
+            return true;
         }
 
-        return $result;
+        if ($this->only) {
+            return (bool) preg_match($this->only, $name);
+        }
+
+        return !preg_match($this->exclude, $name);
     }
 }

@@ -58,11 +58,6 @@ class ArrayStatement implements IteratorAggregate, ResultStatement, Result
         return true;
     }
 
-    public function free(): void
-    {
-        $this->data = [];
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -110,21 +105,6 @@ class ArrayStatement implements IteratorAggregate, ResultStatement, Result
     /**
      * {@inheritdoc}
      *
-     * @deprecated Use fetchAllNumeric(), fetchAllAssociative() or fetchFirstColumn() instead.
-     */
-    public function fetchAll($fetchMode = null, $fetchArgument = null, $ctorArgs = null)
-    {
-        $rows = [];
-        while ($row = $this->fetch($fetchMode)) {
-            $rows[] = $row;
-        }
-
-        return $rows;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
      * @deprecated Use fetchNumeric(), fetchAssociative() or fetchOne() instead.
      */
     public function fetch($fetchMode = null, $cursorOrientation = PDO::FETCH_ORI_NEXT, $cursorOffset = 0)
@@ -158,6 +138,21 @@ class ArrayStatement implements IteratorAggregate, ResultStatement, Result
     /**
      * {@inheritdoc}
      *
+     * @deprecated Use fetchAllNumeric(), fetchAllAssociative() or fetchFirstColumn() instead.
+     */
+    public function fetchAll($fetchMode = null, $fetchArgument = null, $ctorArgs = null)
+    {
+        $rows = [];
+        while ($row = $this->fetch($fetchMode)) {
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @deprecated Use fetchOne() instead.
      */
     public function fetchColumn($columnIndex = 0)
@@ -180,18 +175,6 @@ class ArrayStatement implements IteratorAggregate, ResultStatement, Result
         }
 
         return array_values($row);
-    }
-
-    /**
-     * @return mixed|false
-     */
-    private function doFetch()
-    {
-        if (! isset($this->data[$this->num])) {
-            return false;
-        }
-
-        return $this->data[$this->num++];
     }
 
     /**
@@ -238,5 +221,22 @@ class ArrayStatement implements IteratorAggregate, ResultStatement, Result
     public function fetchFirstColumn(): array
     {
         return FetchUtils::fetchFirstColumn($this);
+    }
+
+    public function free(): void
+    {
+        $this->data = [];
+    }
+
+    /**
+     * @return mixed|false
+     */
+    private function doFetch()
+    {
+        if (! isset($this->data[$this->num])) {
+            return false;
+        }
+
+        return $this->data[$this->num++];
     }
 }

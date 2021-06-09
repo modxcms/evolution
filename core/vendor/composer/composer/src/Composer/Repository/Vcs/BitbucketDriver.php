@@ -63,6 +63,53 @@ abstract class BitbucketDriver extends VcsDriver
     /**
      * {@inheritDoc}
      */
+    public function getUrl()
+    {
+        if ($this->fallbackDriver) {
+            return $this->fallbackDriver->getUrl();
+        }
+
+        return $this->cloneHttpsUrl;
+    }
+
+    /**
+     * Attempts to fetch the repository data via the BitBucket API and
+     * sets some parameters which are used in other methods
+     *
+     * @return bool
+     */
+    protected function getRepoData()
+    {
+        $resource = sprintf(
+            'https://api.bitbucket.org/2.0/repositories/%s/%s?%s',
+            $this->owner,
+            $this->repository,
+            http_build_query(
+                array('fields' => '-project,-owner'),
+                null,
+                '&'
+            )
+        );
+
+        $repoData = $this->fetchWithOAuthCredentials($resource, true)->decodeJson();
+        if ($this->fallbackDriver) {
+            return false;
+        }
+        $this->parseCloneUrls($repoData['links']['clone']);
+
+        $this->hasIssues = !empty($repoData['has_issues']);
+        $this->branchesUrl = $repoData['links']['branches']['href'];
+        $this->tagsUrl = $repoData['links']['tags']['href'];
+        $this->homeUrl = $repoData['links']['html']['href'];
+        $this->website = $repoData['website'];
+        $this->vcsType = $repoData['scm'];
+
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getComposerInformation($identifier)
     {
         if ($this->fallbackDriver) {
@@ -132,6 +179,91 @@ abstract class BitbucketDriver extends VcsDriver
         }
 
         return $this->infoCache[$identifier];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFileContent($file, $identifier)
+    {
+        if ($this->fallbackDriver) {
+            return $this->fallbackDriver->getFileContent($file, $identifier);
+        }
+
+        if (strpos($identifier, '/') !== false) {
+            $branches = $this->getBranches();
+            if (isset($branches[$identifier])) {
+                $identifier = $branches[$identifier];
+            }
+        }
+
+        $resource = sprintf(
+            'https://api.bitbucket.org/2.0/repositories/%s/%s/src/%s/%s',
+            $this->owner,
+            $this->repository,
+            $identifier,
+            $file
+        );
+
+        return $this->fetchWithOAuthCredentials($resource)->getBody();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChangeDate($identifier)
+    {
+        if ($this->fallbackDriver) {
+            return $this->fallbackDriver->getChangeDate($identifier);
+        }
+
+        if (strpos($identifier, '/') !== false) {
+            $branches = $this->getBranches();
+            if (isset($branches[$identifier])) {
+                $identifier = $branches[$identifier];
+            }
+        }
+
+        $resource = sprintf(
+            'https://api.bitbucket.org/2.0/repositories/%s/%s/commit/%s?fields=date',
+            $this->owner,
+            $this->repository,
+            $identifier
+        );
+        $commit = $this->fetchWithOAuthCredentials($resource)->decodeJson();
+
+        return new \DateTime($commit['date']);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSource($identifier)
+    {
+        if ($this->fallbackDriver) {
+            return $this->fallbackDriver->getSource($identifier);
+        }
+
+        return array('type' => $this->vcsType, 'url' => $this->getUrl(), 'reference' => $identifier);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDist($identifier)
+    {
+        if ($this->fallbackDriver) {
+            return $this->fallbackDriver->getDist($identifier);
+        }
+
+        $url = sprintf(
+            'https://bitbucket.org/%s/%s/get/%s.zip',
+            $this->owner,
+            $this->repository,
+            $identifier
+        );
+
+        return array('type' => 'zip', 'url' => $url, 'reference' => $identifier, 'shasum' => '');
     }
 
     /**
@@ -225,138 +357,6 @@ abstract class BitbucketDriver extends VcsDriver
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getFileContent($file, $identifier)
-    {
-        if ($this->fallbackDriver) {
-            return $this->fallbackDriver->getFileContent($file, $identifier);
-        }
-
-        if (strpos($identifier, '/') !== false) {
-            $branches = $this->getBranches();
-            if (isset($branches[$identifier])) {
-                $identifier = $branches[$identifier];
-            }
-        }
-
-        $resource = sprintf(
-            'https://api.bitbucket.org/2.0/repositories/%s/%s/src/%s/%s',
-            $this->owner,
-            $this->repository,
-            $identifier,
-            $file
-        );
-
-        return $this->fetchWithOAuthCredentials($resource)->getBody();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getChangeDate($identifier)
-    {
-        if ($this->fallbackDriver) {
-            return $this->fallbackDriver->getChangeDate($identifier);
-        }
-
-        if (strpos($identifier, '/') !== false) {
-            $branches = $this->getBranches();
-            if (isset($branches[$identifier])) {
-                $identifier = $branches[$identifier];
-            }
-        }
-
-        $resource = sprintf(
-            'https://api.bitbucket.org/2.0/repositories/%s/%s/commit/%s?fields=date',
-            $this->owner,
-            $this->repository,
-            $identifier
-        );
-        $commit = $this->fetchWithOAuthCredentials($resource)->decodeJson();
-
-        return new \DateTime($commit['date']);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getSource($identifier)
-    {
-        if ($this->fallbackDriver) {
-            return $this->fallbackDriver->getSource($identifier);
-        }
-
-        return array('type' => $this->vcsType, 'url' => $this->getUrl(), 'reference' => $identifier);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getUrl()
-    {
-        if ($this->fallbackDriver) {
-            return $this->fallbackDriver->getUrl();
-        }
-
-        return $this->cloneHttpsUrl;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getDist($identifier)
-    {
-        if ($this->fallbackDriver) {
-            return $this->fallbackDriver->getDist($identifier);
-        }
-
-        $url = sprintf(
-            'https://bitbucket.org/%s/%s/get/%s.zip',
-            $this->owner,
-            $this->repository,
-            $identifier
-        );
-
-        return array('type' => 'zip', 'url' => $url, 'reference' => $identifier, 'shasum' => '');
-    }
-
-    /**
-     * Attempts to fetch the repository data via the BitBucket API and
-     * sets some parameters which are used in other methods
-     *
-     * @return bool
-     */
-    protected function getRepoData()
-    {
-        $resource = sprintf(
-            'https://api.bitbucket.org/2.0/repositories/%s/%s?%s',
-            $this->owner,
-            $this->repository,
-            http_build_query(
-                array('fields' => '-project,-owner'),
-                null,
-                '&'
-            )
-        );
-
-        $repoData = $this->fetchWithOAuthCredentials($resource, true)->decodeJson();
-        if ($this->fallbackDriver) {
-            return false;
-        }
-        $this->parseCloneUrls($repoData['links']['clone']);
-
-        $this->hasIssues = !empty($repoData['has_issues']);
-        $this->branchesUrl = $repoData['links']['branches']['href'];
-        $this->tagsUrl = $repoData['links']['tags']['href'];
-        $this->homeUrl = $repoData['links']['html']['href'];
-        $this->website = $repoData['website'];
-        $this->vcsType = $repoData['scm'];
-
-        return true;
-    }
-
-    /**
      * Get the remote content.
      *
      * @param string $url              The URL of content
@@ -389,6 +389,13 @@ abstract class BitbucketDriver extends VcsDriver
         }
     }
 
+    /**
+     * Generate an SSH URL
+     *
+     * @return string
+     */
+    abstract protected function generateSshUrl();
+
     protected function attemptCloneFallback()
     {
         try {
@@ -411,13 +418,6 @@ abstract class BitbucketDriver extends VcsDriver
      * @return void
      */
     abstract protected function setupFallbackDriver($url);
-
-    /**
-     * Generate an SSH URL
-     *
-     * @return string
-     */
-    abstract protected function generateSshUrl();
 
     /**
      * @param  array $cloneLinks

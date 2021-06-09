@@ -51,16 +51,6 @@ class SQLiteBuilder extends Builder
     }
 
     /**
-     * Empty the database file.
-     *
-     * @return void
-     */
-    public function refreshDatabaseFile()
-    {
-        file_put_contents($this->connection->getDatabaseName(), '');
-    }
-
-    /**
      * Drop all views from the database.
      *
      * @return void
@@ -74,5 +64,15 @@ class SQLiteBuilder extends Builder
         $this->connection->select($this->grammar->compileDisableWriteableSchema());
 
         $this->connection->select($this->grammar->compileRebuild());
+    }
+
+    /**
+     * Empty the database file.
+     *
+     * @return void
+     */
+    public function refreshDatabaseFile()
+    {
+        file_put_contents($this->connection->getDatabaseName(), '');
     }
 }

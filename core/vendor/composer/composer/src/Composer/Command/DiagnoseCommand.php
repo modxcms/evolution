@@ -193,6 +193,225 @@ EOT
         return $this->exitCode;
     }
 
+    private function checkComposerSchema()
+    {
+        $validator = new ConfigValidator($this->getIO());
+        list($errors, , $warnings) = $validator->validate(Factory::getComposerFile());
+
+        if ($errors || $warnings) {
+            $messages = array(
+                'error' => $errors,
+                'warning' => $warnings,
+            );
+
+            $output = '';
+            foreach ($messages as $style => $msgs) {
+                foreach ($msgs as $msg) {
+                    $output .= '<' . $style . '>' . $msg . '</' . $style . '>' . PHP_EOL;
+                }
+            }
+
+            return rtrim($output);
+        }
+
+        return true;
+    }
+
+    private function checkGit()
+    {
+        $this->process->execute('git config color.ui', $output);
+        if (strtolower(trim($output)) === 'always') {
+            return '<comment>Your git color.ui setting is set to always, this is known to create issues. Use "git config --global color.ui true" to set it correctly.</comment>';
+        }
+
+        return true;
+    }
+
+    private function checkHttp($proto, Config $config)
+    {
+        $result = $this->checkConnectivity();
+        if ($result !== true) {
+            return $result;
+        }
+
+        $result = array();
+        if ($proto === 'https' && $config->get('disable-tls') === true) {
+            $tlsWarning = '<warning>Composer is configured to disable SSL/TLS protection. This will leave remote HTTPS requests vulnerable to Man-In-The-Middle attacks.</warning>';
+        }
+
+        try {
+            $this->httpDownloader->get($proto . '://repo.packagist.org/packages.json');
+        } catch (TransportException $e) {
+            if ($hints = HttpDownloader::getExceptionHints($e)) {
+                foreach ($hints as $hint) {
+                    $result[] = $hint;
+                }
+            }
+
+            $result[] = '<error>[' . get_class($e) . '] ' . $e->getMessage() . '</error>';
+        }
+
+        if (isset($tlsWarning)) {
+            $result[] = $tlsWarning;
+        }
+
+        if (count($result) > 0) {
+            return $result;
+        }
+
+        return true;
+    }
+
+    private function checkHttpProxy()
+    {
+        $result = $this->checkConnectivity();
+        if ($result !== true) {
+            return $result;
+        }
+
+        $protocol = extension_loaded('openssl') ? 'https' : 'http';
+        try {
+            $json = $this->httpDownloader->get($protocol . '://repo.packagist.org/packages.json')->decodeJson();
+            $hash = reset($json['provider-includes']);
+            $hash = $hash['sha256'];
+            $path = str_replace('%hash%', $hash, key($json['provider-includes']));
+            $provider = $this->httpDownloader->get($protocol . '://repo.packagist.org/'.$path)->getBody();
+
+            if (hash('sha256', $provider) !== $hash) {
+                return 'It seems that your proxy is modifying http traffic on the fly';
+            }
+        } catch (\Exception $e) {
+            return $e;
+        }
+
+        return true;
+    }
+
+    private function checkGithubOauth($domain, $token)
+    {
+        $result = $this->checkConnectivity();
+        if ($result !== true) {
+            return $result;
+        }
+
+        $this->getIO()->setAuthentication($domain, $token, 'x-oauth-basic');
+        try {
+            $url = $domain === 'github.com' ? 'https://api.'.$domain.'/' : 'https://'.$domain.'/api/v3/';
+
+            return $this->httpDownloader->get($url, array(
+                'retry-auth-failure' => false,
+            )) ? true : 'Unexpected error';
+        } catch (\Exception $e) {
+            if ($e instanceof TransportException && $e->getCode() === 401) {
+                return '<comment>The oauth token for '.$domain.' seems invalid, run "composer config --global --unset github-oauth.'.$domain.'" to remove it</comment>';
+            }
+
+            return $e;
+        }
+    }
+
+    /**
+     * @param  string             $domain
+     * @param  string             $token
+     * @throws TransportException
+     * @return array|string
+     */
+    private function getGithubRateLimit($domain, $token = null)
+    {
+        $result = $this->checkConnectivity();
+        if ($result !== true) {
+            return $result;
+        }
+
+        if ($token) {
+            $this->getIO()->setAuthentication($domain, $token, 'x-oauth-basic');
+        }
+
+        $url = $domain === 'github.com' ? 'https://api.'.$domain.'/rate_limit' : 'https://'.$domain.'/api/rate_limit';
+        $data = $this->httpDownloader->get($url, array('retry-auth-failure' => false))->decodeJson();
+
+        return $data['resources']['core'];
+    }
+
+    private function checkDiskSpace($config)
+    {
+        $minSpaceFree = 1024 * 1024;
+        if ((($df = @disk_free_space($dir = $config->get('home'))) !== false && $df < $minSpaceFree)
+            || (($df = @disk_free_space($dir = $config->get('vendor-dir'))) !== false && $df < $minSpaceFree)
+        ) {
+            return '<error>The disk hosting '.$dir.' is full</error>';
+        }
+
+        return true;
+    }
+
+    private function checkPubKeys($config)
+    {
+        $home = $config->get('home');
+        $errors = array();
+        $io = $this->getIO();
+
+        if (file_exists($home.'/keys.tags.pub') && file_exists($home.'/keys.dev.pub')) {
+            $io->write('');
+        }
+
+        if (file_exists($home.'/keys.tags.pub')) {
+            $io->write('Tags Public Key Fingerprint: ' . Keys::fingerprint($home.'/keys.tags.pub'));
+        } else {
+            $errors[] = '<error>Missing pubkey for tags verification</error>';
+        }
+
+        if (file_exists($home.'/keys.dev.pub')) {
+            $io->write('Dev Public Key Fingerprint: ' . Keys::fingerprint($home.'/keys.dev.pub'));
+        } else {
+            $errors[] = '<error>Missing pubkey for dev verification</error>';
+        }
+
+        if ($errors) {
+            $errors[] = '<error>Run composer self-update --update-keys to set them up</error>';
+        }
+
+        return $errors ?: true;
+    }
+
+    private function checkVersion($config)
+    {
+        $result = $this->checkConnectivity();
+        if ($result !== true) {
+            return $result;
+        }
+
+        $versionsUtil = new Versions($config, $this->httpDownloader);
+        try {
+            $latest = $versionsUtil->getLatest();
+        } catch (\Exception $e) {
+            return $e;
+        }
+
+        if (Composer::VERSION !== $latest['version'] && Composer::VERSION !== '@package_version@') {
+            return '<comment>You are not running the latest '.$versionsUtil->getChannel().' version, run `composer self-update` to update ('.Composer::VERSION.' => '.$latest['version'].')</comment>';
+        }
+
+        return true;
+    }
+
+    private function getCurlVersion()
+    {
+        if (extension_loaded('curl')) {
+            if (!HttpDownloader::isCurlEnabled()) {
+                return '<error>disabled via disable_functions, using php streams fallback, which reduces performance</error>';
+            }
+
+            $version = curl_version();
+
+            return '<comment>'.$version['version'].'</comment> '.
+                'libz <comment>'.(isset($version['libz_version']) ? $version['libz_version'] : 'missing').'</comment> '.
+                'ssl <comment>'.(isset($version['ssl_version']) ? $version['ssl_version'] : 'missing').'</comment>';
+        }
+
+        return '<error>missing, using php streams fallback, which reduces performance</error>';
+    }
+
     /**
      * @param bool|string|\Exception $result
      */
@@ -240,30 +459,6 @@ EOT
                 $io->write($message);
             }
         }
-    }
-
-    private function checkComposerSchema()
-    {
-        $validator = new ConfigValidator($this->getIO());
-        list($errors, , $warnings) = $validator->validate(Factory::getComposerFile());
-
-        if ($errors || $warnings) {
-            $messages = array(
-                'error' => $errors,
-                'warning' => $warnings,
-            );
-
-            $output = '';
-            foreach ($messages as $style => $msgs) {
-                foreach ($msgs as $msg) {
-                    $output .= '<' . $style . '>' . $msg . '</' . $style . '>' . PHP_EOL;
-                }
-            }
-
-            return rtrim($output);
-        }
-
-        return true;
     }
 
     private function checkPlatform()
@@ -493,51 +688,6 @@ EOT
         return !$warnings && !$errors ? true : $output;
     }
 
-    private function checkGit()
-    {
-        $this->process->execute('git config color.ui', $output);
-        if (strtolower(trim($output)) === 'always') {
-            return '<comment>Your git color.ui setting is set to always, this is known to create issues. Use "git config --global color.ui true" to set it correctly.</comment>';
-        }
-
-        return true;
-    }
-
-    private function checkHttp($proto, Config $config)
-    {
-        $result = $this->checkConnectivity();
-        if ($result !== true) {
-            return $result;
-        }
-
-        $result = array();
-        if ($proto === 'https' && $config->get('disable-tls') === true) {
-            $tlsWarning = '<warning>Composer is configured to disable SSL/TLS protection. This will leave remote HTTPS requests vulnerable to Man-In-The-Middle attacks.</warning>';
-        }
-
-        try {
-            $this->httpDownloader->get($proto . '://repo.packagist.org/packages.json');
-        } catch (TransportException $e) {
-            if ($hints = HttpDownloader::getExceptionHints($e)) {
-                foreach ($hints as $hint) {
-                    $result[] = $hint;
-                }
-            }
-
-            $result[] = '<error>[' . get_class($e) . '] ' . $e->getMessage() . '</error>';
-        }
-
-        if (isset($tlsWarning)) {
-            $result[] = $tlsWarning;
-        }
-
-        if (count($result) > 0) {
-            return $result;
-        }
-
-        return true;
-    }
-
     /**
      * Check if allow_url_fopen is ON
      *
@@ -550,155 +700,5 @@ EOT
         }
 
         return true;
-    }
-
-    private function checkHttpProxy()
-    {
-        $result = $this->checkConnectivity();
-        if ($result !== true) {
-            return $result;
-        }
-
-        $protocol = extension_loaded('openssl') ? 'https' : 'http';
-        try {
-            $json = $this->httpDownloader->get($protocol . '://repo.packagist.org/packages.json')->decodeJson();
-            $hash = reset($json['provider-includes']);
-            $hash = $hash['sha256'];
-            $path = str_replace('%hash%', $hash, key($json['provider-includes']));
-            $provider = $this->httpDownloader->get($protocol . '://repo.packagist.org/'.$path)->getBody();
-
-            if (hash('sha256', $provider) !== $hash) {
-                return 'It seems that your proxy is modifying http traffic on the fly';
-            }
-        } catch (\Exception $e) {
-            return $e;
-        }
-
-        return true;
-    }
-
-    private function checkGithubOauth($domain, $token)
-    {
-        $result = $this->checkConnectivity();
-        if ($result !== true) {
-            return $result;
-        }
-
-        $this->getIO()->setAuthentication($domain, $token, 'x-oauth-basic');
-        try {
-            $url = $domain === 'github.com' ? 'https://api.'.$domain.'/' : 'https://'.$domain.'/api/v3/';
-
-            return $this->httpDownloader->get($url, array(
-                'retry-auth-failure' => false,
-            )) ? true : 'Unexpected error';
-        } catch (\Exception $e) {
-            if ($e instanceof TransportException && $e->getCode() === 401) {
-                return '<comment>The oauth token for '.$domain.' seems invalid, run "composer config --global --unset github-oauth.'.$domain.'" to remove it</comment>';
-            }
-
-            return $e;
-        }
-    }
-
-    /**
-     * @param  string             $domain
-     * @param  string             $token
-     * @throws TransportException
-     * @return array|string
-     */
-    private function getGithubRateLimit($domain, $token = null)
-    {
-        $result = $this->checkConnectivity();
-        if ($result !== true) {
-            return $result;
-        }
-
-        if ($token) {
-            $this->getIO()->setAuthentication($domain, $token, 'x-oauth-basic');
-        }
-
-        $url = $domain === 'github.com' ? 'https://api.'.$domain.'/rate_limit' : 'https://'.$domain.'/api/rate_limit';
-        $data = $this->httpDownloader->get($url, array('retry-auth-failure' => false))->decodeJson();
-
-        return $data['resources']['core'];
-    }
-
-    private function checkDiskSpace($config)
-    {
-        $minSpaceFree = 1024 * 1024;
-        if ((($df = @disk_free_space($dir = $config->get('home'))) !== false && $df < $minSpaceFree)
-            || (($df = @disk_free_space($dir = $config->get('vendor-dir'))) !== false && $df < $minSpaceFree)
-        ) {
-            return '<error>The disk hosting '.$dir.' is full</error>';
-        }
-
-        return true;
-    }
-
-    private function checkPubKeys($config)
-    {
-        $home = $config->get('home');
-        $errors = array();
-        $io = $this->getIO();
-
-        if (file_exists($home.'/keys.tags.pub') && file_exists($home.'/keys.dev.pub')) {
-            $io->write('');
-        }
-
-        if (file_exists($home.'/keys.tags.pub')) {
-            $io->write('Tags Public Key Fingerprint: ' . Keys::fingerprint($home.'/keys.tags.pub'));
-        } else {
-            $errors[] = '<error>Missing pubkey for tags verification</error>';
-        }
-
-        if (file_exists($home.'/keys.dev.pub')) {
-            $io->write('Dev Public Key Fingerprint: ' . Keys::fingerprint($home.'/keys.dev.pub'));
-        } else {
-            $errors[] = '<error>Missing pubkey for dev verification</error>';
-        }
-
-        if ($errors) {
-            $errors[] = '<error>Run composer self-update --update-keys to set them up</error>';
-        }
-
-        return $errors ?: true;
-    }
-
-    private function checkVersion($config)
-    {
-        $result = $this->checkConnectivity();
-        if ($result !== true) {
-            return $result;
-        }
-
-        $versionsUtil = new Versions($config, $this->httpDownloader);
-        try {
-            $latest = $versionsUtil->getLatest();
-        } catch (\Exception $e) {
-            return $e;
-        }
-
-        if (Composer::VERSION !== $latest['version'] && Composer::VERSION !== '@package_version@') {
-            return '<comment>You are not running the latest '.$versionsUtil->getChannel().' version, run `composer self-update` to update ('.Composer::VERSION.' => '.$latest['version'].')</comment>';
-        }
-
-        return true;
-    }
-
-    private function getCurlVersion()
-    {
-        if (extension_loaded('curl')) {
-            if (!HttpDownloader::isCurlEnabled()) {
-                return '<error>disabled via disable_functions, using php streams fallback, which reduces performance</error>';
-            }
-
-            $version = curl_version();
-
-            return '<comment>'.$version['version'].'</comment> '.
-                'libz <comment>'.(isset($version['libz_version']) ? $version['libz_version'] : 'missing').'</comment> '.
-                'ssl <comment>'.(isset($version['ssl_version']) ? $version['ssl_version'] : 'missing').'</comment>';
-        }
-
-        return '<error>missing, using php streams fallback, which reduces performance</error>';
     }
 }

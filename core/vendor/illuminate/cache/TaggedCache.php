@@ -60,25 +60,6 @@ class TaggedCache extends Repository
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function itemKey($key)
-    {
-        return $this->taggedItemKey($key);
-    }
-
-    /**
-     * Get a fully qualified key for a tagged item.
-     *
-     * @param  string  $key
-     * @return string
-     */
-    public function taggedItemKey($key)
-    {
-        return sha1($this->tags->getNamespace()).':'.$key;
-    }
-
-    /**
      * Decrement the value of an item in the cache.
      *
      * @param  string  $key
@@ -103,13 +84,22 @@ class TaggedCache extends Repository
     }
 
     /**
-     * Get the tag set instance.
-     *
-     * @return \Illuminate\Cache\TagSet
+     * {@inheritdoc}
      */
-    public function getTags()
+    protected function itemKey($key)
     {
-        return $this->tags;
+        return $this->taggedItemKey($key);
+    }
+
+    /**
+     * Get a fully qualified key for a tagged item.
+     *
+     * @param  string  $key
+     * @return string
+     */
+    public function taggedItemKey($key)
+    {
+        return sha1($this->tags->getNamespace()).':'.$key;
     }
 
     /**
@@ -121,5 +111,15 @@ class TaggedCache extends Repository
     protected function event($event)
     {
         parent::event($event->setTags($this->tags->getNames()));
+    }
+
+    /**
+     * Get the tag set instance.
+     *
+     * @return \Illuminate\Cache\TagSet
+     */
+    public function getTags()
+    {
+        return $this->tags;
     }
 }

@@ -42,18 +42,6 @@ class StreamedResponse extends Response
     }
 
     /**
-     * Sets the PHP callback associated with this Response.
-     *
-     * @return $this
-     */
-    public function setCallback(callable $callback)
-    {
-        $this->callback = $callback;
-
-        return $this;
-    }
-
-    /**
      * Factory method for chainability.
      *
      * @param callable|null $callback A valid PHP callback or null to set it later
@@ -67,6 +55,18 @@ class StreamedResponse extends Response
         trigger_deprecation('symfony/http-foundation', '5.1', 'The "%s()" method is deprecated, use "new %s()" instead.', __METHOD__, static::class);
 
         return new static($callback, $status, $headers);
+    }
+
+    /**
+     * Sets the PHP callback associated with this Response.
+     *
+     * @return $this
+     */
+    public function setCallback(callable $callback)
+    {
+        $this->callback = $callback;
+
+        return $this;
     }
 
     /**

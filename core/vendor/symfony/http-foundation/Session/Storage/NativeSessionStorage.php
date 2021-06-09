@@ -126,50 +126,6 @@ class NativeSessionStorage implements SessionStorageInterface
     }
 
     /**
-     * Sets session.* ini variables.
-     *
-     * For convenience we omit 'session.' from the beginning of the keys.
-     * Explicitly ignores other ini keys.
-     *
-     * @param array $options Session ini directives [key => value]
-     *
-     * @see https://php.net/session.configuration
-     */
-    public function setOptions(array $options)
-    {
-        if (headers_sent() || \PHP_SESSION_ACTIVE === session_status()) {
-            return;
-        }
-
-        $validOptions = array_flip([
-            'cache_expire', 'cache_limiter', 'cookie_domain', 'cookie_httponly',
-            'cookie_lifetime', 'cookie_path', 'cookie_secure', 'cookie_samesite',
-            'gc_divisor', 'gc_maxlifetime', 'gc_probability',
-            'lazy_write', 'name', 'referer_check',
-            'serialize_handler', 'use_strict_mode', 'use_cookies',
-            'use_only_cookies', 'use_trans_sid', 'upload_progress.enabled',
-            'upload_progress.cleanup', 'upload_progress.prefix', 'upload_progress.name',
-            'upload_progress.freq', 'upload_progress.min_freq', 'url_rewriter.tags',
-            'sid_length', 'sid_bits_per_character', 'trans_sid_hosts', 'trans_sid_tags',
-        ]);
-
-        foreach ($options as $key => $value) {
-            if (isset($validOptions[$key])) {
-                if ('cookie_samesite' === $key && \PHP_VERSION_ID < 70300) {
-                    // PHP < 7.3 does not support same_site cookies. We will emulate it in
-                    // the start() method instead.
-                    $this->emulateSameSite = $value;
-                    continue;
-                }
-                if ('cookie_secure' === $key && 'auto' === $value) {
-                    continue;
-                }
-                ini_set('url_rewriter.tags' !== $key ? 'session.'.$key : $key, $value);
-            }
-        }
-    }
-
-    /**
      * Gets the save handler instance.
      *
      * @return AbstractProxy|\SessionHandlerInterface
@@ -180,48 +136,37 @@ class NativeSessionStorage implements SessionStorageInterface
     }
 
     /**
-     * Registers session save handler as a PHP session handler.
-     *
-     * To use internal PHP session save handlers, override this method using ini_set with
-     * session.save_handler and session.save_path e.g.
-     *
-     *     ini_set('session.save_handler', 'files');
-     *     ini_set('session.save_path', '/tmp');
-     *
-     * or pass in a \SessionHandler instance which configures session.save_handler in the
-     * constructor, for a template see NativeFileSessionHandler.
-     *
-     * @see https://php.net/session-set-save-handler
-     * @see https://php.net/sessionhandlerinterface
-     * @see https://php.net/sessionhandler
-     *
-     * @param AbstractProxy|\SessionHandlerInterface|null $saveHandler
-     *
-     * @throws \InvalidArgumentException
+     * {@inheritdoc}
      */
-    public function setSaveHandler($saveHandler = null)
+    public function start()
     {
-        if (!$saveHandler instanceof AbstractProxy &&
-            !$saveHandler instanceof \SessionHandlerInterface &&
-            null !== $saveHandler) {
-            throw new \InvalidArgumentException('Must be instance of AbstractProxy; implement \SessionHandlerInterface; or be null.');
+        if ($this->started) {
+            return true;
         }
 
-        // Wrap $saveHandler in proxy and prevent double wrapping of proxy
-        if (!$saveHandler instanceof AbstractProxy && $saveHandler instanceof \SessionHandlerInterface) {
-            $saveHandler = new SessionHandlerProxy($saveHandler);
-        } elseif (!$saveHandler instanceof AbstractProxy) {
-            $saveHandler = new SessionHandlerProxy(new StrictSessionHandler(new \SessionHandler()));
-        }
-        $this->saveHandler = $saveHandler;
-
-        if (headers_sent() || \PHP_SESSION_ACTIVE === session_status()) {
-            return;
+        if (\PHP_SESSION_ACTIVE === session_status()) {
+            throw new \RuntimeException('Failed to start the session: already started by PHP.');
         }
 
-        if ($this->saveHandler instanceof SessionHandlerProxy) {
-            session_set_save_handler($this->saveHandler, false);
+        if (filter_var(ini_get('session.use_cookies'), \FILTER_VALIDATE_BOOLEAN) && headers_sent($file, $line)) {
+            throw new \RuntimeException(sprintf('Failed to start the session because headers have already been sent by "%s" at line %d.', $file, $line));
         }
+
+        // ok to try and start the session
+        if (!session_start()) {
+            throw new \RuntimeException('Failed to start the session.');
+        }
+
+        if (null !== $this->emulateSameSite) {
+            $originalCookie = SessionUtils::popSessionCookie(session_name(), session_id());
+            if (null !== $originalCookie) {
+                header(sprintf('%s; SameSite=%s', $originalCookie, $this->emulateSameSite), false);
+            }
+        }
+
+        $this->loadSession();
+
+        return true;
     }
 
     /**
@@ -337,66 +282,6 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function start()
-    {
-        if ($this->started) {
-            return true;
-        }
-
-        if (\PHP_SESSION_ACTIVE === session_status()) {
-            throw new \RuntimeException('Failed to start the session: already started by PHP.');
-        }
-
-        if (filter_var(ini_get('session.use_cookies'), \FILTER_VALIDATE_BOOLEAN) && headers_sent($file, $line)) {
-            throw new \RuntimeException(sprintf('Failed to start the session because headers have already been sent by "%s" at line %d.', $file, $line));
-        }
-
-        // ok to try and start the session
-        if (!session_start()) {
-            throw new \RuntimeException('Failed to start the session.');
-        }
-
-        if (null !== $this->emulateSameSite) {
-            $originalCookie = SessionUtils::popSessionCookie(session_name(), session_id());
-            if (null !== $originalCookie) {
-                header(sprintf('%s; SameSite=%s', $originalCookie, $this->emulateSameSite), false);
-            }
-        }
-
-        $this->loadSession();
-
-        return true;
-    }
-
-    /**
-     * Load the session with attributes.
-     *
-     * After starting the session, PHP retrieves the session from whatever handlers
-     * are set to (either PHP's internal, or a custom save handler set with session_set_save_handler()).
-     * PHP takes the return value from the read() handler, unserializes it
-     * and populates $_SESSION with the result automatically.
-     */
-    protected function loadSession(array &$session = null)
-    {
-        if (null === $session) {
-            $session = &$_SESSION;
-        }
-
-        $bags = array_merge($this->bags, [$this->metadataBag]);
-
-        foreach ($bags as $bag) {
-            $key = $bag->getStorageKey();
-            $session[$key] = isset($session[$key]) && \is_array($session[$key]) ? $session[$key] : [];
-            $bag->initialize($session[$key]);
-        }
-
-        $this->started = true;
-        $this->closed = false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function clear()
     {
         // clear out the bags
@@ -441,16 +326,6 @@ class NativeSessionStorage implements SessionStorageInterface
         return $this->bags[$name];
     }
 
-    /**
-     * Gets the MetadataBag.
-     *
-     * @return MetadataBag
-     */
-    public function getMetadataBag()
-    {
-        return $this->metadataBag;
-    }
-
     public function setMetadataBag(MetadataBag $metaBag = null)
     {
         if (null === $metaBag) {
@@ -461,10 +336,135 @@ class NativeSessionStorage implements SessionStorageInterface
     }
 
     /**
+     * Gets the MetadataBag.
+     *
+     * @return MetadataBag
+     */
+    public function getMetadataBag()
+    {
+        return $this->metadataBag;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function isStarted()
     {
         return $this->started;
+    }
+
+    /**
+     * Sets session.* ini variables.
+     *
+     * For convenience we omit 'session.' from the beginning of the keys.
+     * Explicitly ignores other ini keys.
+     *
+     * @param array $options Session ini directives [key => value]
+     *
+     * @see https://php.net/session.configuration
+     */
+    public function setOptions(array $options)
+    {
+        if (headers_sent() || \PHP_SESSION_ACTIVE === session_status()) {
+            return;
+        }
+
+        $validOptions = array_flip([
+            'cache_expire', 'cache_limiter', 'cookie_domain', 'cookie_httponly',
+            'cookie_lifetime', 'cookie_path', 'cookie_secure', 'cookie_samesite',
+            'gc_divisor', 'gc_maxlifetime', 'gc_probability',
+            'lazy_write', 'name', 'referer_check',
+            'serialize_handler', 'use_strict_mode', 'use_cookies',
+            'use_only_cookies', 'use_trans_sid', 'upload_progress.enabled',
+            'upload_progress.cleanup', 'upload_progress.prefix', 'upload_progress.name',
+            'upload_progress.freq', 'upload_progress.min_freq', 'url_rewriter.tags',
+            'sid_length', 'sid_bits_per_character', 'trans_sid_hosts', 'trans_sid_tags',
+        ]);
+
+        foreach ($options as $key => $value) {
+            if (isset($validOptions[$key])) {
+                if ('cookie_samesite' === $key && \PHP_VERSION_ID < 70300) {
+                    // PHP < 7.3 does not support same_site cookies. We will emulate it in
+                    // the start() method instead.
+                    $this->emulateSameSite = $value;
+                    continue;
+                }
+                if ('cookie_secure' === $key && 'auto' === $value) {
+                    continue;
+                }
+                ini_set('url_rewriter.tags' !== $key ? 'session.'.$key : $key, $value);
+            }
+        }
+    }
+
+    /**
+     * Registers session save handler as a PHP session handler.
+     *
+     * To use internal PHP session save handlers, override this method using ini_set with
+     * session.save_handler and session.save_path e.g.
+     *
+     *     ini_set('session.save_handler', 'files');
+     *     ini_set('session.save_path', '/tmp');
+     *
+     * or pass in a \SessionHandler instance which configures session.save_handler in the
+     * constructor, for a template see NativeFileSessionHandler.
+     *
+     * @see https://php.net/session-set-save-handler
+     * @see https://php.net/sessionhandlerinterface
+     * @see https://php.net/sessionhandler
+     *
+     * @param AbstractProxy|\SessionHandlerInterface|null $saveHandler
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function setSaveHandler($saveHandler = null)
+    {
+        if (!$saveHandler instanceof AbstractProxy &&
+            !$saveHandler instanceof \SessionHandlerInterface &&
+            null !== $saveHandler) {
+            throw new \InvalidArgumentException('Must be instance of AbstractProxy; implement \SessionHandlerInterface; or be null.');
+        }
+
+        // Wrap $saveHandler in proxy and prevent double wrapping of proxy
+        if (!$saveHandler instanceof AbstractProxy && $saveHandler instanceof \SessionHandlerInterface) {
+            $saveHandler = new SessionHandlerProxy($saveHandler);
+        } elseif (!$saveHandler instanceof AbstractProxy) {
+            $saveHandler = new SessionHandlerProxy(new StrictSessionHandler(new \SessionHandler()));
+        }
+        $this->saveHandler = $saveHandler;
+
+        if (headers_sent() || \PHP_SESSION_ACTIVE === session_status()) {
+            return;
+        }
+
+        if ($this->saveHandler instanceof SessionHandlerProxy) {
+            session_set_save_handler($this->saveHandler, false);
+        }
+    }
+
+    /**
+     * Load the session with attributes.
+     *
+     * After starting the session, PHP retrieves the session from whatever handlers
+     * are set to (either PHP's internal, or a custom save handler set with session_set_save_handler()).
+     * PHP takes the return value from the read() handler, unserializes it
+     * and populates $_SESSION with the result automatically.
+     */
+    protected function loadSession(array &$session = null)
+    {
+        if (null === $session) {
+            $session = &$_SESSION;
+        }
+
+        $bags = array_merge($this->bags, [$this->metadataBag]);
+
+        foreach ($bags as $bag) {
+            $key = $bag->getStorageKey();
+            $session[$key] = isset($session[$key]) && \is_array($session[$key]) ? $session[$key] : [];
+            $bag->initialize($session[$key]);
+        }
+
+        $this->started = true;
+        $this->closed = false;
     }
 }

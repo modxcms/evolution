@@ -23,10 +23,11 @@ use Predis\Protocol\ProtocolException;
  */
 abstract class AbstractConnection implements NodeConnectionInterface
 {
-    protected $parameters;
-    protected $initCommands = array();
     private $resource;
     private $cachedId;
+
+    protected $parameters;
+    protected $initCommands = array();
 
     /**
      * @param ParametersInterface $parameters Initialization parameters for the connection.
@@ -34,6 +35,15 @@ abstract class AbstractConnection implements NodeConnectionInterface
     public function __construct(ParametersInterface $parameters)
     {
         $this->parameters = $this->assertParameters($parameters);
+    }
+
+    /**
+     * Disconnects from the server and destroys the underlying resource when
+     * PHP's garbage collector kicks in.
+     */
+    public function __destruct()
+    {
+        $this->disconnect();
     }
 
     /**
@@ -48,12 +58,32 @@ abstract class AbstractConnection implements NodeConnectionInterface
     abstract protected function assertParameters(ParametersInterface $parameters);
 
     /**
-     * Disconnects from the server and destroys the underlying resource when
-     * PHP's garbage collector kicks in.
+     * Creates the underlying resource used to communicate with Redis.
+     *
+     * @return mixed
      */
-    public function __destruct()
+    abstract protected function createResource();
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isConnected()
     {
-        $this->disconnect();
+        return isset($this->resource);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function connect()
+    {
+        if (!$this->isConnected()) {
+            $this->resource = $this->createResource();
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -91,104 +121,6 @@ abstract class AbstractConnection implements NodeConnectionInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getResource()
-    {
-        if (isset($this->resource)) {
-            return $this->resource;
-        }
-
-        $this->connect();
-
-        return $this->resource;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function connect()
-    {
-        if (!$this->isConnected()) {
-            $this->resource = $this->createResource();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isConnected()
-    {
-        return isset($this->resource);
-    }
-
-    /**
-     * Creates the underlying resource used to communicate with Redis.
-     *
-     * @return mixed
-     */
-    abstract protected function createResource();
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __toString()
-    {
-        if (!isset($this->cachedId)) {
-            $this->cachedId = $this->getIdentifier();
-        }
-
-        return $this->cachedId;
-    }
-
-    /**
-     * Gets an identifier for the connection.
-     *
-     * @return string
-     */
-    protected function getIdentifier()
-    {
-        if ($this->parameters->scheme === 'unix') {
-            return $this->parameters->path;
-        }
-
-        return "{$this->parameters->host}:{$this->parameters->port}";
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __sleep()
-    {
-        return array('parameters', 'initCommands');
-    }
-
-    /**
-     * Helper method to handle connection errors.
-     *
-     * @param string $message Error message.
-     * @param int    $code    Error code.
-     */
-    protected function onConnectionError($message, $code = null)
-    {
-        CommunicationException::handle(
-            new ConnectionException($this, static::createExceptionMessage($message), $code)
-        );
-    }
-
-    /**
      * Helper method that returns an exception message augmented with useful
      * details from the connection parameters.
      *
@@ -212,6 +144,19 @@ abstract class AbstractConnection implements NodeConnectionInterface
     }
 
     /**
+     * Helper method to handle connection errors.
+     *
+     * @param string $message Error message.
+     * @param int    $code    Error code.
+     */
+    protected function onConnectionError($message, $code = null)
+    {
+        CommunicationException::handle(
+            new ConnectionException($this, static::createExceptionMessage($message), $code)
+        );
+    }
+
+    /**
      * Helper method to handle protocol errors.
      *
      * @param string $message Error message.
@@ -221,5 +166,61 @@ abstract class AbstractConnection implements NodeConnectionInterface
         CommunicationException::handle(
             new ProtocolException($this, static::createExceptionMessage($message))
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getResource()
+    {
+        if (isset($this->resource)) {
+            return $this->resource;
+        }
+
+        $this->connect();
+
+        return $this->resource;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * Gets an identifier for the connection.
+     *
+     * @return string
+     */
+    protected function getIdentifier()
+    {
+        if ($this->parameters->scheme === 'unix') {
+            return $this->parameters->path;
+        }
+
+        return "{$this->parameters->host}:{$this->parameters->port}";
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __toString()
+    {
+        if (!isset($this->cachedId)) {
+            $this->cachedId = $this->getIdentifier();
+        }
+
+        return $this->cachedId;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __sleep()
+    {
+        return array('parameters', 'initCommands');
     }
 }

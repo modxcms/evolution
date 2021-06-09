@@ -70,17 +70,6 @@ class Connection implements ServerInfoAwareConnection
     }
 
     /**
-     * Create a new statement instance.
-     *
-     * @param  \PDOStatement
-     * @return \Doctrine\DBAL\Driver\PDO\Statement
-     */
-    protected function createStatement(PDOStatement $stmt): Statement
-    {
-        return new Statement($stmt);
-    }
-
-    /**
      * Execute a new query against the connection.
      *
      * @param  string  $sql
@@ -116,6 +105,17 @@ class Connection implements ServerInfoAwareConnection
         } catch (PDOException $exception) {
             throw Exception::new($exception);
         }
+    }
+
+    /**
+     * Create a new statement instance.
+     *
+     * @param  \PDOStatement
+     * @return \Doctrine\DBAL\Driver\PDO\Statement
+     */
+    protected function createStatement(PDOStatement $stmt): Statement
+    {
+        return new Statement($stmt);
     }
 
     /**

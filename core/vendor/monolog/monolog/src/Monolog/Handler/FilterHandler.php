@@ -95,6 +95,14 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     /**
      * {@inheritdoc}
      */
+    public function isHandling(array $record): bool
+    {
+        return isset($this->acceptedLevels[$record['level']]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function handle(array $record): bool
     {
         if (!$this->isHandling($record)) {
@@ -113,9 +121,18 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     /**
      * {@inheritdoc}
      */
-    public function isHandling(array $record): bool
+    public function handleBatch(array $records): void
     {
-        return isset($this->acceptedLevels[$record['level']]);
+        $filtered = [];
+        foreach ($records as $record) {
+            if ($this->isHandling($record)) {
+                $filtered[] = $record;
+            }
+        }
+
+        if (count($filtered) > 0) {
+            $this->getHandler($filtered[count($filtered) - 1])->handleBatch($filtered);
+        }
     }
 
     /**
@@ -135,23 +152,6 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
         }
 
         return $this->handler;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function handleBatch(array $records): void
-    {
-        $filtered = [];
-        foreach ($records as $record) {
-            if ($this->isHandling($record)) {
-                $filtered[] = $record;
-            }
-        }
-
-        if (count($filtered) > 0) {
-            $this->getHandler($filtered[count($filtered) - 1])->handleBatch($filtered);
-        }
     }
 
     /**

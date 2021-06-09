@@ -38,17 +38,6 @@ class Version
     }
 
     /**
-     * "" => 0, "a" => 1, "zg" => 33
-     *
-     * @param  string $alpha
-     * @return int
-     */
-    private static function convertAlphaVersionToIntVersion($alpha)
-    {
-        return strlen($alpha) * (-ord('a') + 1) + array_sum(array_map('ord', str_split($alpha)));
-    }
-
-    /**
      * @param  string      $libjpegVersion
      * @return string|null
      */
@@ -75,10 +64,30 @@ class Version
     }
 
     /**
+     * "" => 0, "a" => 1, "zg" => 33
+     *
+     * @param  string $alpha
+     * @return int
+     */
+    private static function convertAlphaVersionToIntVersion($alpha)
+    {
+        return strlen($alpha) * (-ord('a') + 1) + array_sum(array_map('ord', str_split($alpha)));
+    }
+
+    /**
      * @param  int    $versionId
      * @return string
      */
     public static function convertLibxpmVersionId($versionId)
+    {
+        return self::convertVersionId($versionId, 100);
+    }
+
+    /**
+     * @param  int    $versionId
+     * @return string
+     */
+    public static function convertOpenldapVersionId($versionId)
     {
         return self::convertVersionId($versionId, 100);
     }
@@ -91,14 +100,5 @@ class Version
             (int) ($versionId / $base) % $base,
             $versionId % $base
         );
-    }
-
-    /**
-     * @param  int    $versionId
-     * @return string
-     */
-    public static function convertOpenldapVersionId($versionId)
-    {
-        return self::convertVersionId($versionId, 100);
     }
 }

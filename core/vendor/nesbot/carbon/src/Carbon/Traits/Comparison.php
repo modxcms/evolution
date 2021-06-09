@@ -38,111 +38,43 @@ trait Comparison
     protected $startOfTime = false;
 
     /**
-     * Checks if the (date)time string is in a given format.
+     * Determines if the instance is equal to another
      *
      * @example
      * ```
-     * Carbon::hasFormat('11:12:45', 'h:i:s'); // true
-     * Carbon::hasFormat('13:12:45', 'h:i:s'); // false
+     * Carbon::parse('2018-07-25 12:45:16')->eq('2018-07-25 12:45:16'); // true
+     * Carbon::parse('2018-07-25 12:45:16')->eq(Carbon::parse('2018-07-25 12:45:16')); // true
+     * Carbon::parse('2018-07-25 12:45:16')->eq('2018-07-25 12:45:17'); // false
      * ```
      *
-     * @param string $date
-     * @param string $format
+     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date
+     *
+     * @see equalTo()
      *
      * @return bool
      */
-    public static function hasFormat($date, $format)
+    public function eq($date): bool
     {
-        // createFromFormat() is known to handle edge cases silently.
-        // E.g. "1975-5-1" (Y-n-j) will still be parsed correctly when "Y-m-d" is supplied as the format.
-        // To ensure we're really testing against our desired format, perform an additional regex validation.
-
-        return self::matchFormatPattern((string) $date, preg_quote((string) $format, '/'), static::$regexFormats);
+        return $this->equalTo($date);
     }
 
     /**
-     * Checks if the (date)time string is in a given format with
-     * given list of pattern replacements.
+     * Determines if the instance is equal to another
      *
      * @example
      * ```
-     * Carbon::hasFormat('11:12:45', 'h:i:s'); // true
-     * Carbon::hasFormat('13:12:45', 'h:i:s'); // false
+     * Carbon::parse('2018-07-25 12:45:16')->equalTo('2018-07-25 12:45:16'); // true
+     * Carbon::parse('2018-07-25 12:45:16')->equalTo(Carbon::parse('2018-07-25 12:45:16')); // true
+     * Carbon::parse('2018-07-25 12:45:16')->equalTo('2018-07-25 12:45:17'); // false
      * ```
      *
-     * @param string $date
-     * @param string $format
-     * @param array  $replacements
+     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date
      *
      * @return bool
      */
-    private static function matchFormatPattern(string $date, string $format, array $replacements): bool
+    public function equalTo($date): bool
     {
-        // Preg quote, but remove escaped backslashes since we'll deal with escaped characters in the format string.
-        $regex = str_replace('\\\\', '\\', $format);
-        // Replace not-escaped letters
-        $regex = preg_replace_callback(
-            '/(?<!\\\\)((?:\\\\{2})*)(['.implode('', array_keys($replacements)).'])/',
-            function ($match) use ($replacements) {
-                return $match[1].strtr($match[2], $replacements);
-            },
-            $regex
-        );
-        // Replace escaped letters by the letter itself
-        $regex = preg_replace('/(?<!\\\\)((?:\\\\{2})*)\\\\(\w)/', '$1$2', $regex);
-        // Escape not escaped slashes
-        $regex = preg_replace('#(?<!\\\\)((?:\\\\{2})*)/#', '$1\\/', $regex);
-
-        return (bool) @preg_match('/^'.$regex.'$/', $date);
-    }
-
-    /**
-     * Checks if the (date)time string is in a given format and valid to create a
-     * new instance.
-     *
-     * @example
-     * ```
-     * Carbon::canBeCreatedFromFormat('11:12:45', 'h:i:s'); // true
-     * Carbon::canBeCreatedFromFormat('13:12:45', 'h:i:s'); // false
-     * ```
-     *
-     * @param string $date
-     * @param string $format
-     *
-     * @return bool
-     */
-    public static function canBeCreatedFromFormat($date, $format)
-    {
-        try {
-            // Try to create a DateTime object. Throws an InvalidArgumentException if the provided time string
-            // doesn't match the format in any way.
-            if (!static::rawCreateFromFormat($format, $date)) {
-                return false;
-            }
-        } catch (InvalidArgumentException $e) {
-            return false;
-        }
-
-        return static::hasFormatWithModifiers($date, $format);
-    }
-
-    /**
-     * Checks if the (date)time string is in a given format.
-     *
-     * @example
-     * ```
-     * Carbon::hasFormatWithModifiers('31/08/2015', 'd#m#Y'); // true
-     * Carbon::hasFormatWithModifiers('31/08/2015', 'm#d#Y'); // false
-     * ```
-     *
-     * @param string $date
-     * @param string $format
-     *
-     * @return bool
-     */
-    public static function hasFormatWithModifiers($date, $format): bool
-    {
-        return self::matchFormatPattern((string) $date, (string) $format, array_merge(static::$regexFormats, static::$regexFormatModifiers));
+        return $this == $date;
     }
 
     /**
@@ -183,25 +115,6 @@ trait Comparison
     public function notEqualTo($date): bool
     {
         return !$this->equalTo($date);
-    }
-
-    /**
-     * Determines if the instance is equal to another
-     *
-     * @example
-     * ```
-     * Carbon::parse('2018-07-25 12:45:16')->equalTo('2018-07-25 12:45:16'); // true
-     * Carbon::parse('2018-07-25 12:45:16')->equalTo(Carbon::parse('2018-07-25 12:45:16')); // true
-     * Carbon::parse('2018-07-25 12:45:16')->equalTo('2018-07-25 12:45:17'); // false
-     * ```
-     *
-     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date
-     *
-     * @return bool
-     */
-    public function equalTo($date): bool
-    {
-        return $this == $date;
     }
 
     /**
@@ -407,26 +320,6 @@ trait Comparison
     }
 
     /**
-     * Determines if the instance is between two others, bounds included.
-     *
-     * @example
-     * ```
-     * Carbon::parse('2018-07-25')->betweenIncluded('2018-07-14', '2018-08-01'); // true
-     * Carbon::parse('2018-07-25')->betweenIncluded('2018-08-01', '2018-08-20'); // false
-     * Carbon::parse('2018-07-25')->betweenIncluded('2018-07-25', '2018-08-01'); // true
-     * ```
-     *
-     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date1
-     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date2
-     *
-     * @return bool
-     */
-    public function betweenIncluded($date1, $date2): bool
-    {
-        return $this->between($date1, $date2, true);
-    }
-
-    /**
      * Determines if the instance is between two others.
      *
      * The third argument allow you to specify if bounds are included or not (true by default)
@@ -461,6 +354,26 @@ trait Comparison
         }
 
         return $this->greaterThan($date1) && $this->lessThan($date2);
+    }
+
+    /**
+     * Determines if the instance is between two others, bounds included.
+     *
+     * @example
+     * ```
+     * Carbon::parse('2018-07-25')->betweenIncluded('2018-07-14', '2018-08-01'); // true
+     * Carbon::parse('2018-07-25')->betweenIncluded('2018-08-01', '2018-08-20'); // false
+     * Carbon::parse('2018-07-25')->betweenIncluded('2018-07-25', '2018-08-01'); // true
+     * ```
+     *
+     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date1
+     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date2
+     *
+     * @return bool
+     */
+    public function betweenIncluded($date1, $date2): bool
+    {
+        return $this->between($date1, $date2, true);
     }
 
     /**
@@ -652,6 +565,25 @@ trait Comparison
     }
 
     /**
+     * Compares the formatted values of the two dates.
+     *
+     * @example
+     * ```
+     * Carbon::parse('2019-06-13')->isSameAs('Y-d', Carbon::parse('2019-12-13')); // true
+     * Carbon::parse('2019-06-13')->isSameAs('Y-d', Carbon::parse('2019-06-14')); // false
+     * ```
+     *
+     * @param string                                        $format date formats to compare.
+     * @param \Carbon\Carbon|\DateTimeInterface|string|null $date   instance to compare with or null to use current day.
+     *
+     * @return bool
+     */
+    public function isSameAs($format, $date = null)
+    {
+        return $this->rawFormat($format) === $this->resolveCarbon($date)->rawFormat($format);
+    }
+
+    /**
      * Determines if the instance is in the current unit given.
      *
      * @example
@@ -704,25 +636,6 @@ trait Comparison
     }
 
     /**
-     * Compares the formatted values of the two dates.
-     *
-     * @example
-     * ```
-     * Carbon::parse('2019-06-13')->isSameAs('Y-d', Carbon::parse('2019-12-13')); // true
-     * Carbon::parse('2019-06-13')->isSameAs('Y-d', Carbon::parse('2019-06-14')); // false
-     * ```
-     *
-     * @param string                                        $format date formats to compare.
-     * @param \Carbon\Carbon|\DateTimeInterface|string|null $date   instance to compare with or null to use current day.
-     *
-     * @return bool
-     */
-    public function isSameAs($format, $date = null)
-    {
-        return $this->rawFormat($format) === $this->resolveCarbon($date)->rawFormat($format);
-    }
-
-    /**
      * Determines if the instance is in the current unit given.
      *
      * @example
@@ -763,6 +676,27 @@ trait Comparison
         $date = $this->resolveCarbon($date);
 
         return $this->quarter === $date->quarter && (!$ofSameYear || $this->isSameYear($date));
+    }
+
+    /**
+     * Checks if the passed in date is in the same month as the instance´s month.
+     *
+     * @example
+     * ```
+     * Carbon::parse('2019-01-12')->isSameMonth(Carbon::parse('2019-01-01')); // true
+     * Carbon::parse('2019-01-12')->isSameMonth(Carbon::parse('2019-02-01')); // false
+     * Carbon::parse('2019-01-12')->isSameMonth(Carbon::parse('2018-01-01')); // false
+     * Carbon::parse('2019-01-12')->isSameMonth(Carbon::parse('2018-01-01'), false); // true
+     * ```
+     *
+     * @param \Carbon\Carbon|\DateTimeInterface|null $date       The instance to compare with or null to use the current date.
+     * @param bool                                   $ofSameYear Check if it is the same month in the same year.
+     *
+     * @return bool
+     */
+    public function isSameMonth($date = null, $ofSameYear = true)
+    {
+        return $this->isSameAs($ofSameYear ? 'Y-m' : 'm', $date);
     }
 
     /**
@@ -829,6 +763,30 @@ trait Comparison
     }
 
     /**
+     * Check if the instance is start of day / midnight.
+     *
+     * @example
+     * ```
+     * Carbon::parse('2019-02-28 00:00:00')->isStartOfDay(); // true
+     * Carbon::parse('2019-02-28 00:00:00.999999')->isStartOfDay(); // true
+     * Carbon::parse('2019-02-28 00:00:01')->isStartOfDay(); // false
+     * Carbon::parse('2019-02-28 00:00:00.000000')->isStartOfDay(true); // true
+     * Carbon::parse('2019-02-28 00:00:00.000012')->isStartOfDay(true); // false
+     * ```
+     *
+     * @param bool $checkMicroseconds check time at microseconds precision
+     *
+     * @return bool
+     */
+    public function isStartOfDay($checkMicroseconds = false)
+    {
+        /* @var CarbonInterface $this */
+        return $checkMicroseconds
+            ? $this->rawFormat('H:i:s.u') === '00:00:00.000000'
+            : $this->rawFormat('H:i:s') === '00:00:00';
+    }
+
+    /**
      * Check if the instance is end of day.
      *
      * @example
@@ -872,30 +830,6 @@ trait Comparison
     }
 
     /**
-     * Check if the instance is start of day / midnight.
-     *
-     * @example
-     * ```
-     * Carbon::parse('2019-02-28 00:00:00')->isStartOfDay(); // true
-     * Carbon::parse('2019-02-28 00:00:00.999999')->isStartOfDay(); // true
-     * Carbon::parse('2019-02-28 00:00:01')->isStartOfDay(); // false
-     * Carbon::parse('2019-02-28 00:00:00.000000')->isStartOfDay(true); // true
-     * Carbon::parse('2019-02-28 00:00:00.000012')->isStartOfDay(true); // false
-     * ```
-     *
-     * @param bool $checkMicroseconds check time at microseconds precision
-     *
-     * @return bool
-     */
-    public function isStartOfDay($checkMicroseconds = false)
-    {
-        /* @var CarbonInterface $this */
-        return $checkMicroseconds
-            ? $this->rawFormat('H:i:s.u') === '00:00:00.000000'
-            : $this->rawFormat('H:i:s') === '00:00:00';
-    }
-
-    /**
      * Check if the instance is midday.
      *
      * @example
@@ -912,6 +846,78 @@ trait Comparison
     {
         /* @var CarbonInterface $this */
         return $this->rawFormat('G:i:s') === static::$midDayAt.':00:00';
+    }
+
+    /**
+     * Checks if the (date)time string is in a given format.
+     *
+     * @example
+     * ```
+     * Carbon::hasFormat('11:12:45', 'h:i:s'); // true
+     * Carbon::hasFormat('13:12:45', 'h:i:s'); // false
+     * ```
+     *
+     * @param string $date
+     * @param string $format
+     *
+     * @return bool
+     */
+    public static function hasFormat($date, $format)
+    {
+        // createFromFormat() is known to handle edge cases silently.
+        // E.g. "1975-5-1" (Y-n-j) will still be parsed correctly when "Y-m-d" is supplied as the format.
+        // To ensure we're really testing against our desired format, perform an additional regex validation.
+
+        return self::matchFormatPattern((string) $date, preg_quote((string) $format, '/'), static::$regexFormats);
+    }
+
+    /**
+     * Checks if the (date)time string is in a given format.
+     *
+     * @example
+     * ```
+     * Carbon::hasFormatWithModifiers('31/08/2015', 'd#m#Y'); // true
+     * Carbon::hasFormatWithModifiers('31/08/2015', 'm#d#Y'); // false
+     * ```
+     *
+     * @param string $date
+     * @param string $format
+     *
+     * @return bool
+     */
+    public static function hasFormatWithModifiers($date, $format): bool
+    {
+        return self::matchFormatPattern((string) $date, (string) $format, array_merge(static::$regexFormats, static::$regexFormatModifiers));
+    }
+
+    /**
+     * Checks if the (date)time string is in a given format and valid to create a
+     * new instance.
+     *
+     * @example
+     * ```
+     * Carbon::canBeCreatedFromFormat('11:12:45', 'h:i:s'); // true
+     * Carbon::canBeCreatedFromFormat('13:12:45', 'h:i:s'); // false
+     * ```
+     *
+     * @param string $date
+     * @param string $format
+     *
+     * @return bool
+     */
+    public static function canBeCreatedFromFormat($date, $format)
+    {
+        try {
+            // Try to create a DateTime object. Throws an InvalidArgumentException if the provided time string
+            // doesn't match the format in any way.
+            if (!static::rawCreateFromFormat($format, $date)) {
+                return false;
+            }
+        } catch (InvalidArgumentException $e) {
+            return false;
+        }
+
+        return static::hasFormatWithModifiers($date, $format);
     }
 
     /**
@@ -1006,45 +1012,39 @@ trait Comparison
     }
 
     /**
-     * Checks if the passed in date is in the same month as the instance´s month.
+     * Checks if the (date)time string is in a given format with
+     * given list of pattern replacements.
      *
      * @example
      * ```
-     * Carbon::parse('2019-01-12')->isSameMonth(Carbon::parse('2019-01-01')); // true
-     * Carbon::parse('2019-01-12')->isSameMonth(Carbon::parse('2019-02-01')); // false
-     * Carbon::parse('2019-01-12')->isSameMonth(Carbon::parse('2018-01-01')); // false
-     * Carbon::parse('2019-01-12')->isSameMonth(Carbon::parse('2018-01-01'), false); // true
+     * Carbon::hasFormat('11:12:45', 'h:i:s'); // true
+     * Carbon::hasFormat('13:12:45', 'h:i:s'); // false
      * ```
      *
-     * @param \Carbon\Carbon|\DateTimeInterface|null $date       The instance to compare with or null to use the current date.
-     * @param bool                                   $ofSameYear Check if it is the same month in the same year.
+     * @param string $date
+     * @param string $format
+     * @param array  $replacements
      *
      * @return bool
      */
-    public function isSameMonth($date = null, $ofSameYear = true)
+    private static function matchFormatPattern(string $date, string $format, array $replacements): bool
     {
-        return $this->isSameAs($ofSameYear ? 'Y-m' : 'm', $date);
-    }
+        // Preg quote, but remove escaped backslashes since we'll deal with escaped characters in the format string.
+        $regex = str_replace('\\\\', '\\', $format);
+        // Replace not-escaped letters
+        $regex = preg_replace_callback(
+            '/(?<!\\\\)((?:\\\\{2})*)(['.implode('', array_keys($replacements)).'])/',
+            function ($match) use ($replacements) {
+                return $match[1].strtr($match[2], $replacements);
+            },
+            $regex
+        );
+        // Replace escaped letters by the letter itself
+        $regex = preg_replace('/(?<!\\\\)((?:\\\\{2})*)\\\\(\w)/', '$1$2', $regex);
+        // Escape not escaped slashes
+        $regex = preg_replace('#(?<!\\\\)((?:\\\\{2})*)/#', '$1\\/', $regex);
 
-    /**
-     * Determines if the instance is equal to another
-     *
-     * @example
-     * ```
-     * Carbon::parse('2018-07-25 12:45:16')->eq('2018-07-25 12:45:16'); // true
-     * Carbon::parse('2018-07-25 12:45:16')->eq(Carbon::parse('2018-07-25 12:45:16')); // true
-     * Carbon::parse('2018-07-25 12:45:16')->eq('2018-07-25 12:45:17'); // false
-     * ```
-     *
-     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date
-     *
-     * @see equalTo()
-     *
-     * @return bool
-     */
-    public function eq($date): bool
-    {
-        return $this->equalTo($date);
+        return (bool) @preg_match('/^'.$regex.'$/', $date);
     }
 
     /**

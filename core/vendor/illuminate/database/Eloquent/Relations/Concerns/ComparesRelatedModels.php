@@ -8,17 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 trait ComparesRelatedModels
 {
     /**
-     * Determine if the model is not the related instance of the relationship.
-     *
-     * @param  \Illuminate\Database\Eloquent\Model|null  $model
-     * @return bool
-     */
-    public function isNot($model)
-    {
-        return ! $this->is($model);
-    }
-
-    /**
      * Determine if the model is the related instance of the relationship.
      *
      * @param  \Illuminate\Database\Eloquent\Model|null  $model
@@ -41,6 +30,32 @@ trait ComparesRelatedModels
     }
 
     /**
+     * Determine if the model is not the related instance of the relationship.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model|null  $model
+     * @return bool
+     */
+    public function isNot($model)
+    {
+        return ! $this->is($model);
+    }
+
+    /**
+     * Get the value of the parent model's key.
+     *
+     * @return mixed
+     */
+    abstract public function getParentKey();
+
+    /**
+     * Get the value of the model's related key.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @return mixed
+     */
+    abstract protected function getRelatedKeyFrom(Model $model);
+
+    /**
      * Compare the parent key with the related key.
      *
      * @param  mixed  $parentKey
@@ -59,19 +74,4 @@ trait ComparesRelatedModels
 
         return $parentKey === $relatedKey;
     }
-
-    /**
-     * Get the value of the parent model's key.
-     *
-     * @return mixed
-     */
-    abstract public function getParentKey();
-
-    /**
-     * Get the value of the model's related key.
-     *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @return mixed
-     */
-    abstract protected function getRelatedKeyFrom(Model $model);
 }

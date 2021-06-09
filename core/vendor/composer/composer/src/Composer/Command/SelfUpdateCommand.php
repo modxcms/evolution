@@ -394,28 +394,6 @@ TAGSPUBKEY
         return 0;
     }
 
-    protected function getLastBackupVersion($rollbackDir)
-    {
-        $finder = $this->getOldInstallationFinder($rollbackDir);
-        $finder->sortByName();
-        $files = iterator_to_array($finder);
-
-        if (count($files)) {
-            return basename(end($files), self::OLD_INSTALL_EXT);
-        }
-
-        return false;
-    }
-
-    protected function getOldInstallationFinder($rollbackDir)
-    {
-        return Finder::create()
-            ->depth(0)
-            ->files()
-            ->name('*' . self::OLD_INSTALL_EXT)
-            ->in($rollbackDir);
-    }
-
     /**
      * Checks if the downloaded/rollback phar is valid then moves it
      *
@@ -468,6 +446,44 @@ TAGSPUBKEY
             $action = 'Composer '.($backupTarget ? 'update' : 'rollback');
             throw new FilesystemException($action.' failed: "'.$localFilename.'" could not be written.'.PHP_EOL.$e->getMessage());
         }
+    }
+
+    protected function cleanBackups($rollbackDir, $except = null)
+    {
+        $finder = $this->getOldInstallationFinder($rollbackDir);
+        $io = $this->getIO();
+        $fs = new Filesystem;
+
+        foreach ($finder as $file) {
+            if ($except && $file->getBasename(self::OLD_INSTALL_EXT) === $except) {
+                continue;
+            }
+            $file = (string) $file;
+            $io->writeError('<info>Removing: '.$file.'</info>');
+            $fs->remove($file);
+        }
+    }
+
+    protected function getLastBackupVersion($rollbackDir)
+    {
+        $finder = $this->getOldInstallationFinder($rollbackDir);
+        $finder->sortByName();
+        $files = iterator_to_array($finder);
+
+        if (count($files)) {
+            return basename(end($files), self::OLD_INSTALL_EXT);
+        }
+
+        return false;
+    }
+
+    protected function getOldInstallationFinder($rollbackDir)
+    {
+        return Finder::create()
+            ->depth(0)
+            ->files()
+            ->name('*' . self::OLD_INSTALL_EXT)
+            ->in($rollbackDir);
     }
 
     /**
@@ -574,21 +590,5 @@ EOT;
         }
 
         return $result;
-    }
-
-    protected function cleanBackups($rollbackDir, $except = null)
-    {
-        $finder = $this->getOldInstallationFinder($rollbackDir);
-        $io = $this->getIO();
-        $fs = new Filesystem;
-
-        foreach ($finder as $file) {
-            if ($except && $file->getBasename(self::OLD_INSTALL_EXT) === $except) {
-                continue;
-            }
-            $file = (string) $file;
-            $io->writeError('<info>Removing: '.$file.'</info>');
-            $fs->remove($file);
-        }
     }
 }

@@ -58,15 +58,6 @@ class FleepHookHandler extends SocketHandler
     }
 
     /**
-     * Handles a log record
-     */
-    public function write(array $record): void
-    {
-        parent::write($record);
-        $this->closeSocket();
-    }
-
-    /**
      * Returns the default formatter to use with this handler
      *
      * Overloaded to remove empty context and extra arrays from the end of the log message.
@@ -79,6 +70,15 @@ class FleepHookHandler extends SocketHandler
     }
 
     /**
+     * Handles a log record
+     */
+    public function write(array $record): void
+    {
+        parent::write($record);
+        $this->closeSocket();
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function generateDataStream(array $record): string
@@ -86,18 +86,6 @@ class FleepHookHandler extends SocketHandler
         $content = $this->buildContent($record);
 
         return $this->buildHeader($content) . $content;
-    }
-
-    /**
-     * Builds the body of API call
-     */
-    private function buildContent(array $record): string
-    {
-        $dataArray = [
-            'message' => $record['formatted'],
-        ];
-
-        return http_build_query($dataArray);
     }
 
     /**
@@ -112,5 +100,17 @@ class FleepHookHandler extends SocketHandler
         $header .= "\r\n";
 
         return $header;
+    }
+
+    /**
+     * Builds the body of API call
+     */
+    private function buildContent(array $record): string
+    {
+        $dataArray = [
+            'message' => $record['formatted'],
+        ];
+
+        return http_build_query($dataArray);
     }
 }

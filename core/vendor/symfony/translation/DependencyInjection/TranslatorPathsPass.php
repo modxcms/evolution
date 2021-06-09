@@ -83,33 +83,6 @@ class TranslatorPathsPass extends AbstractRecursivePass
         }
     }
 
-    private function findControllerArguments(ContainerBuilder $container): array
-    {
-        if ($container->hasDefinition($this->resolverServiceId)) {
-            $argument = $container->getDefinition($this->resolverServiceId)->getArgument(0);
-            if ($argument instanceof Reference) {
-                $argument = $container->getDefinition($argument);
-            }
-
-            return $argument->getArgument(0);
-        }
-
-        if ($container->hasDefinition('debug.'.$this->resolverServiceId)) {
-            $argument = $container->getDefinition('debug.'.$this->resolverServiceId)->getArgument(0);
-            if ($argument instanceof Reference) {
-                $argument = $container->getDefinition($argument);
-            }
-            $argument = $argument->getArgument(0);
-            if ($argument instanceof Reference) {
-                $argument = $container->getDefinition($argument);
-            }
-
-            return $argument->getArgument(0);
-        }
-
-        return [];
-    }
-
     protected function processValue($value, bool $isRoot = false)
     {
         if ($value instanceof Reference) {
@@ -144,5 +117,32 @@ class TranslatorPathsPass extends AbstractRecursivePass
         }
 
         return parent::processValue($value, $isRoot);
+    }
+
+    private function findControllerArguments(ContainerBuilder $container): array
+    {
+        if ($container->hasDefinition($this->resolverServiceId)) {
+            $argument = $container->getDefinition($this->resolverServiceId)->getArgument(0);
+            if ($argument instanceof Reference) {
+                $argument = $container->getDefinition($argument);
+            }
+
+            return $argument->getArgument(0);
+        }
+
+        if ($container->hasDefinition('debug.'.$this->resolverServiceId)) {
+            $argument = $container->getDefinition('debug.'.$this->resolverServiceId)->getArgument(0);
+            if ($argument instanceof Reference) {
+                $argument = $container->getDefinition($argument);
+            }
+            $argument = $argument->getArgument(0);
+            if ($argument instanceof Reference) {
+                $argument = $container->getDefinition($argument);
+            }
+
+            return $argument->getArgument(0);
+        }
+
+        return [];
     }
 }

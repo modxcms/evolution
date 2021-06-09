@@ -94,6 +94,97 @@ class RemoteFilesystem
     }
 
     /**
+     * Get the content.
+     *
+     * @param string $originUrl The origin URL
+     * @param string $fileUrl   The file URL
+     * @param bool   $progress  Display the progression
+     * @param array  $options   Additional context options
+     *
+     * @return bool|string The content
+     */
+    public function getContents($originUrl, $fileUrl, $progress = true, $options = array())
+    {
+        return $this->get($originUrl, $fileUrl, $options, null, $progress);
+    }
+
+    /**
+     * Retrieve the options set in the constructor
+     *
+     * @return array Options
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * Merges new options
+     *
+     * @param array $options
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = array_replace_recursive($this->options, $options);
+    }
+
+    /**
+     * Check is disable TLS.
+     *
+     * @return bool
+     */
+    public function isTlsDisabled()
+    {
+        return $this->disableTls === true;
+    }
+
+    /**
+     * Returns the headers of the last request
+     *
+     * @return array
+     */
+    public function getLastHeaders()
+    {
+        return $this->lastHeaders;
+    }
+
+    /**
+     * @param  array    $headers array of returned headers like from getLastHeaders()
+     * @return int|null
+     */
+    public static function findStatusCode(array $headers)
+    {
+        $value = null;
+        foreach ($headers as $header) {
+            if (preg_match('{^HTTP/\S+ (\d+)}i', $header, $match)) {
+                // In case of redirects, http_response_headers contains the headers of all responses
+                // so we can not return directly and need to keep iterating
+                $value = (int) $match[1];
+            }
+        }
+
+        return $value;
+    }
+
+    /**
+     * @param  array       $headers array of returned headers like from getLastHeaders()
+     * @return string|null
+     */
+    public function findStatusMessage(array $headers)
+    {
+        $value = null;
+        foreach ($headers as $header) {
+            if (preg_match('{^HTTP/\S+ \d+}i', $header)) {
+                // In case of redirects, http_response_headers contains the headers of all responses
+                // so we can not return directly and need to keep iterating
+                $value = $header;
+            }
+        }
+
+        return $value;
+    }
+
+    /**
      * Get file content or copy action.
      *
      * @param string $originUrl         The origin URL
@@ -437,6 +528,100 @@ class RemoteFilesystem
         return $result;
     }
 
+    /**
+     * Get contents of remote URL.
+     *
+     * @param string   $originUrl   The origin URL
+     * @param string   $fileUrl     The file URL
+     * @param resource $context     The stream context
+     * @param int      $maxFileSize The maximum allowed file size
+     *
+     * @return string|false The response contents or false on failure
+     */
+    protected function getRemoteContents($originUrl, $fileUrl, $context, array &$responseHeaders = null, $maxFileSize = null)
+    {
+        $result = false;
+
+        try {
+            $e = null;
+            if ($maxFileSize !== null) {
+                $result = file_get_contents($fileUrl, false, $context, 0, $maxFileSize);
+            } else {
+                // passing `null` to file_get_contents will convert `null` to `0` and return 0 bytes
+                $result = file_get_contents($fileUrl, false, $context);
+            }
+        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+        }
+
+        if ($maxFileSize !== null && Platform::strlen($result) >= $maxFileSize) {
+            throw new MaxFileSizeExceededException('Maximum allowed download size reached. Downloaded ' . Platform::strlen($result) . ' of allowed ' .  $maxFileSize . ' bytes');
+        }
+
+        // https://www.php.net/manual/en/reserved.variables.httpresponseheader.php
+        $responseHeaders = isset($http_response_header) ? $http_response_header : array();
+
+        if (null !== $e) {
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get notification action.
+     *
+     * @param  int                $notificationCode The notification code
+     * @param  int                $severity         The severity level
+     * @param  string             $message          The message
+     * @param  int                $messageCode      The message code
+     * @param  int                $bytesTransferred The loaded size
+     * @param  int                $bytesMax         The total size
+     * @throws TransportException
+     */
+    protected function callbackGet($notificationCode, $severity, $message, $messageCode, $bytesTransferred, $bytesMax)
+    {
+        switch ($notificationCode) {
+            case STREAM_NOTIFY_FAILURE:
+                if (400 === $messageCode) {
+                    // This might happen if your host is secured by ssl client certificate authentication
+                    // but you do not send an appropriate certificate
+                    throw new TransportException("The '" . $this->fileUrl . "' URL could not be accessed: " . $message, $messageCode);
+                }
+                break;
+
+            case STREAM_NOTIFY_FILE_SIZE_IS:
+                $this->bytesMax = $bytesMax;
+                break;
+
+            case STREAM_NOTIFY_PROGRESS:
+                if ($this->bytesMax > 0 && $this->progress) {
+                    $progression = min(100, round($bytesTransferred / $this->bytesMax * 100));
+
+                    if ((0 === $progression % 5) && 100 !== $progression && $progression !== $this->lastProgress) {
+                        $this->lastProgress = $progression;
+                        $this->io->overwriteError("Downloading (<comment>$progression%</comment>)", false);
+                    }
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    protected function promptAuthAndRetry($httpStatus, $reason = null, $headers = array())
+    {
+        $result = $this->authHelper->promptAuthIfNeeded($this->fileUrl, $this->originUrl, $httpStatus, $reason, $headers);
+
+        $this->storeAuth = $result['storeAuth'];
+        $this->retry = $result['retry'];
+
+        if ($this->retry) {
+            throw new TransportException('RETRY');
+        }
+    }
+
     protected function getOptionsForUrl($originUrl, $additionalOptions)
     {
         $tlsOptions = array();
@@ -506,143 +691,6 @@ class RemoteFilesystem
         }
 
         return $options;
-    }
-
-    private function getUrlAuthority($url)
-    {
-        $defaultPorts = array(
-            'ftp' => 21,
-            'http' => 80,
-            'https' => 443,
-            'ssh2.sftp' => 22,
-            'ssh2.scp' => 22,
-        );
-
-        $scheme = parse_url($url, PHP_URL_SCHEME);
-
-        if (!isset($defaultPorts[$scheme])) {
-            throw new \InvalidArgumentException(sprintf(
-                'Could not get default port for unknown scheme: %s',
-                $scheme
-            ));
-        }
-
-        $defaultPort = $defaultPorts[$scheme];
-        $port = parse_url($url, PHP_URL_PORT) ?: $defaultPort;
-
-        return parse_url($url, PHP_URL_HOST).':'.$port;
-    }
-
-    /**
-     * Get contents of remote URL.
-     *
-     * @param string   $originUrl   The origin URL
-     * @param string   $fileUrl     The file URL
-     * @param resource $context     The stream context
-     * @param int      $maxFileSize The maximum allowed file size
-     *
-     * @return string|false The response contents or false on failure
-     */
-    protected function getRemoteContents($originUrl, $fileUrl, $context, array &$responseHeaders = null, $maxFileSize = null)
-    {
-        $result = false;
-
-        try {
-            $e = null;
-            if ($maxFileSize !== null) {
-                $result = file_get_contents($fileUrl, false, $context, 0, $maxFileSize);
-            } else {
-                // passing `null` to file_get_contents will convert `null` to `0` and return 0 bytes
-                $result = file_get_contents($fileUrl, false, $context);
-            }
-        } catch (\Exception $e) {
-        } catch (\Throwable $e) {
-        }
-
-        if ($maxFileSize !== null && Platform::strlen($result) >= $maxFileSize) {
-            throw new MaxFileSizeExceededException('Maximum allowed download size reached. Downloaded ' . Platform::strlen($result) . ' of allowed ' .  $maxFileSize . ' bytes');
-        }
-
-        // https://www.php.net/manual/en/reserved.variables.httpresponseheader.php
-        $responseHeaders = isset($http_response_header) ? $http_response_header : array();
-
-        if (null !== $e) {
-            throw $e;
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param  array    $headers array of returned headers like from getLastHeaders()
-     * @return int|null
-     */
-    public static function findStatusCode(array $headers)
-    {
-        $value = null;
-        foreach ($headers as $header) {
-            if (preg_match('{^HTTP/\S+ (\d+)}i', $header, $match)) {
-                // In case of redirects, http_response_headers contains the headers of all responses
-                // so we can not return directly and need to keep iterating
-                $value = (int) $match[1];
-            }
-        }
-
-        return $value;
-    }
-
-    protected function promptAuthAndRetry($httpStatus, $reason = null, $headers = array())
-    {
-        $result = $this->authHelper->promptAuthIfNeeded($this->fileUrl, $this->originUrl, $httpStatus, $reason, $headers);
-
-        $this->storeAuth = $result['storeAuth'];
-        $this->retry = $result['retry'];
-
-        if ($this->retry) {
-            throw new TransportException('RETRY');
-        }
-    }
-
-    /**
-     * @param  array       $headers array of returned headers like from getLastHeaders()
-     * @return string|null
-     */
-    public function findStatusMessage(array $headers)
-    {
-        $value = null;
-        foreach ($headers as $header) {
-            if (preg_match('{^HTTP/\S+ \d+}i', $header)) {
-                // In case of redirects, http_response_headers contains the headers of all responses
-                // so we can not return directly and need to keep iterating
-                $value = $header;
-            }
-        }
-
-        return $value;
-    }
-
-    private function decodeResult($result, $http_response_header)
-    {
-        // decode gzip
-        if ($result && extension_loaded('zlib')) {
-            $contentEncoding = Response::findHeaderValue($http_response_header, 'content-encoding');
-            $decode = $contentEncoding && 'gzip' === strtolower($contentEncoding);
-
-            if ($decode) {
-                if (PHP_VERSION_ID >= 50400) {
-                    $result = zlib_decode($result);
-                } else {
-                    // work around issue with gzuncompress & co that do not work with all gzip checksums
-                    $result = file_get_contents('compress.zlib://data:application/octet-stream;base64,'.base64_encode($result));
-                }
-
-                if ($result === false) {
-                    throw new TransportException('Failed to decode zlib stream');
-                }
-            }
-        }
-
-        return $result;
     }
 
     private function handleRedirect(array $http_response_header, array $additionalOptions, $result)
@@ -734,100 +782,52 @@ class RemoteFilesystem
         }
     }
 
-    /**
-     * Get the content.
-     *
-     * @param string $originUrl The origin URL
-     * @param string $fileUrl   The file URL
-     * @param bool   $progress  Display the progression
-     * @param array  $options   Additional context options
-     *
-     * @return bool|string The content
-     */
-    public function getContents($originUrl, $fileUrl, $progress = true, $options = array())
+    private function getUrlAuthority($url)
     {
-        return $this->get($originUrl, $fileUrl, $options, null, $progress);
-    }
+        $defaultPorts = array(
+            'ftp' => 21,
+            'http' => 80,
+            'https' => 443,
+            'ssh2.sftp' => 22,
+            'ssh2.scp' => 22,
+        );
 
-    /**
-     * Retrieve the options set in the constructor
-     *
-     * @return array Options
-     */
-    public function getOptions()
-    {
-        return $this->options;
-    }
+        $scheme = parse_url($url, PHP_URL_SCHEME);
 
-    /**
-     * Merges new options
-     *
-     * @param array $options
-     */
-    public function setOptions(array $options)
-    {
-        $this->options = array_replace_recursive($this->options, $options);
-    }
-
-    /**
-     * Check is disable TLS.
-     *
-     * @return bool
-     */
-    public function isTlsDisabled()
-    {
-        return $this->disableTls === true;
-    }
-
-    /**
-     * Returns the headers of the last request
-     *
-     * @return array
-     */
-    public function getLastHeaders()
-    {
-        return $this->lastHeaders;
-    }
-
-    /**
-     * Get notification action.
-     *
-     * @param  int                $notificationCode The notification code
-     * @param  int                $severity         The severity level
-     * @param  string             $message          The message
-     * @param  int                $messageCode      The message code
-     * @param  int                $bytesTransferred The loaded size
-     * @param  int                $bytesMax         The total size
-     * @throws TransportException
-     */
-    protected function callbackGet($notificationCode, $severity, $message, $messageCode, $bytesTransferred, $bytesMax)
-    {
-        switch ($notificationCode) {
-            case STREAM_NOTIFY_FAILURE:
-                if (400 === $messageCode) {
-                    // This might happen if your host is secured by ssl client certificate authentication
-                    // but you do not send an appropriate certificate
-                    throw new TransportException("The '" . $this->fileUrl . "' URL could not be accessed: " . $message, $messageCode);
-                }
-                break;
-
-            case STREAM_NOTIFY_FILE_SIZE_IS:
-                $this->bytesMax = $bytesMax;
-                break;
-
-            case STREAM_NOTIFY_PROGRESS:
-                if ($this->bytesMax > 0 && $this->progress) {
-                    $progression = min(100, round($bytesTransferred / $this->bytesMax * 100));
-
-                    if ((0 === $progression % 5) && 100 !== $progression && $progression !== $this->lastProgress) {
-                        $this->lastProgress = $progression;
-                        $this->io->overwriteError("Downloading (<comment>$progression%</comment>)", false);
-                    }
-                }
-                break;
-
-            default:
-                break;
+        if (!isset($defaultPorts[$scheme])) {
+            throw new \InvalidArgumentException(sprintf(
+                'Could not get default port for unknown scheme: %s',
+                $scheme
+            ));
         }
+
+        $defaultPort = $defaultPorts[$scheme];
+        $port = parse_url($url, PHP_URL_PORT) ?: $defaultPort;
+
+        return parse_url($url, PHP_URL_HOST).':'.$port;
+    }
+
+    private function decodeResult($result, $http_response_header)
+    {
+        // decode gzip
+        if ($result && extension_loaded('zlib')) {
+            $contentEncoding = Response::findHeaderValue($http_response_header, 'content-encoding');
+            $decode = $contentEncoding && 'gzip' === strtolower($contentEncoding);
+
+            if ($decode) {
+                if (PHP_VERSION_ID >= 50400) {
+                    $result = zlib_decode($result);
+                } else {
+                    // work around issue with gzuncompress & co that do not work with all gzip checksums
+                    $result = file_get_contents('compress.zlib://data:application/octet-stream;base64,'.base64_encode($result));
+                }
+
+                if ($result === false) {
+                    throw new TransportException('Failed to decode zlib stream');
+                }
+            }
+        }
+
+        return $result;
     }
 }

@@ -3,6 +3,7 @@
 namespace Illuminate\Support;
 
 use Closure;
+use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\Tappable;
 use JsonSerializable;
@@ -10,7 +11,7 @@ use Symfony\Component\VarDumper\VarDumper;
 
 class Stringable implements JsonSerializable
 {
-    use Macroable, Tappable;
+    use Conditionable, Macroable, Tappable;
 
     /**
      * The underlying string value.
@@ -258,6 +259,26 @@ class Stringable implements JsonSerializable
     }
 
     /**
+     * Determine if the given string is empty.
+     *
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return $this->value === '';
+    }
+
+    /**
+     * Determine if the given string is not empty.
+     *
+     * @return bool
+     */
+    public function isNotEmpty()
+    {
+        return ! $this->isEmpty();
+    }
+
+    /**
      * Convert a string to kebab case.
      *
      * @return static
@@ -315,6 +336,23 @@ class Stringable implements JsonSerializable
      * Get the string matching the given pattern.
      *
      * @param  string  $pattern
+     * @return static
+     */
+    public function match($pattern)
+    {
+        preg_match($pattern, $this->value, $matches);
+
+        if (! $matches) {
+            return new static;
+        }
+
+        return new static($matches[1] ?? $matches[0]);
+    }
+
+    /**
+     * Get the string matching the given pattern.
+     *
+     * @param  string  $pattern
      * @return \Illuminate\Support\Collection
      */
     public function matchAll($pattern)
@@ -337,43 +375,6 @@ class Stringable implements JsonSerializable
     public function test($pattern)
     {
         return $this->match($pattern)->isNotEmpty();
-    }
-
-    /**
-     * Determine if the given string is not empty.
-     *
-     * @return bool
-     */
-    public function isNotEmpty()
-    {
-        return ! $this->isEmpty();
-    }
-
-    /**
-     * Determine if the given string is empty.
-     *
-     * @return bool
-     */
-    public function isEmpty()
-    {
-        return $this->value === '';
-    }
-
-    /**
-     * Get the string matching the given pattern.
-     *
-     * @param  string  $pattern
-     * @return static
-     */
-    public function match($pattern)
-    {
-        preg_match($pattern, $this->value, $matches);
-
-        if (! $matches) {
-            return new static;
-        }
-
-        return new static($matches[1] ?? $matches[0]);
     }
 
     /**
@@ -709,38 +710,6 @@ class Stringable implements JsonSerializable
     }
 
     /**
-     * Apply the callback's string changes if the given "value" is false.
-     *
-     * @param  mixed  $value
-     * @param  callable  $callback
-     * @param  callable|null  $default
-     * @return mixed|$this
-     */
-    public function unless($value, $callback, $default = null)
-    {
-        return $this->when(! $value, $callback, $default);
-    }
-
-    /**
-     * Apply the callback's string changes if the given "value" is true.
-     *
-     * @param  mixed  $value
-     * @param  callable  $callback
-     * @param  callable|null  $default
-     * @return mixed|$this
-     */
-    public function when($value, $callback, $default = null)
-    {
-        if ($value) {
-            return $callback($this, $value) ?: $this;
-        } elseif ($default) {
-            return $default($this, $value) ?: $this;
-        }
-
-        return $this;
-    }
-
-    /**
      * Execute the given callback if the string is empty.
      *
      * @param  callable  $callback
@@ -797,18 +766,6 @@ class Stringable implements JsonSerializable
     }
 
     /**
-     * Dump the string and end the script.
-     *
-     * @return void
-     */
-    public function dd()
-    {
-        $this->dump();
-
-        exit(1);
-    }
-
-    /**
      * Dump the string.
      *
      * @return $this
@@ -818,6 +775,18 @@ class Stringable implements JsonSerializable
         VarDumper::dump($this->value);
 
         return $this;
+    }
+
+    /**
+     * Dump the string and end the script.
+     *
+     * @return void
+     */
+    public function dd()
+    {
+        $this->dump();
+
+        exit(1);
     }
 
     /**
@@ -831,16 +800,6 @@ class Stringable implements JsonSerializable
     }
 
     /**
-     * Get the raw string value.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return (string) $this->value;
-    }
-
-    /**
      * Proxy dynamic properties onto methods.
      *
      * @param  string  $key
@@ -849,5 +808,15 @@ class Stringable implements JsonSerializable
     public function __get($key)
     {
         return $this->{$key}();
+    }
+
+    /**
+     * Get the raw string value.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string) $this->value;
     }
 }

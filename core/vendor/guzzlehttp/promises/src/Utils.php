@@ -5,31 +5,6 @@ namespace GuzzleHttp\Promise;
 final class Utils
 {
     /**
-     * Adds a function to run in the task queue when it is next `run()` and
-     * returns a promise that is fulfilled or rejected with the result.
-     *
-     * @param callable $task Task function to run.
-     *
-     * @return PromiseInterface
-     */
-    public static function task(callable $task)
-    {
-        $queue = self::queue();
-        $promise = new Promise([$queue, 'run']);
-        $queue->add(function () use ($task, $promise) {
-            try {
-                $promise->resolve($task());
-            } catch (\Throwable $e) {
-                $promise->reject($e);
-            } catch (\Exception $e) {
-                $promise->reject($e);
-            }
-        });
-
-        return $promise;
-    }
-
-    /**
      * Get the global task queue used for promise resolution.
      *
      * This task queue MUST be run in an event loop in order for promises to be
@@ -57,6 +32,31 @@ final class Utils
         }
 
         return $queue;
+    }
+
+    /**
+     * Adds a function to run in the task queue when it is next `run()` and
+     * returns a promise that is fulfilled or rejected with the result.
+     *
+     * @param callable $task Task function to run.
+     *
+     * @return PromiseInterface
+     */
+    public static function task(callable $task)
+    {
+        $queue = self::queue();
+        $promise = new Promise([$queue, 'run']);
+        $queue->add(function () use ($task, $promise) {
+            try {
+                $promise->resolve($task());
+            } catch (\Throwable $e) {
+                $promise->reject($e);
+            } catch (\Exception $e) {
+                $promise->reject($e);
+            }
+        });
+
+        return $promise;
     }
 
     /**
@@ -179,21 +179,6 @@ final class Utils
     }
 
     /**
-     * Like some(), with 1 as count. However, if the promise fulfills, the
-     * fulfillment value is not an array of 1 but the value directly.
-     *
-     * @param mixed $promises Promises or values.
-     *
-     * @return PromiseInterface
-     */
-    public static function any($promises)
-    {
-        return self::some(1, $promises)->then(function ($values) {
-            return $values[0];
-        });
-    }
-
-    /**
      * Initiate a competitive race between multiple promises or values (values
      * will become immediately fulfilled promises).
      *
@@ -240,6 +225,21 @@ final class Utils
                 return array_values($results);
             }
         );
+    }
+
+    /**
+     * Like some(), with 1 as count. However, if the promise fulfills, the
+     * fulfillment value is not an array of 1 but the value directly.
+     *
+     * @param mixed $promises Promises or values.
+     *
+     * @return PromiseInterface
+     */
+    public static function any($promises)
+    {
+        return self::some(1, $promises)->then(function ($values) {
+            return $values[0];
+        });
     }
 
     /**

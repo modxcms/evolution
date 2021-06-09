@@ -35,6 +35,18 @@ final class LazyOption extends Option
     private $option;
 
     /**
+     * @template S
+     * @param callable(mixed...):(Option<S>) $callback
+     * @param array<int, mixed>              $arguments
+     *
+     * @return LazyOption<S>
+     */
+    public static function create($callback, array $arguments = [])
+    {
+        return new self($callback, $arguments);
+    }
+
+    /**
      * @param callable(mixed...):(Option<T>) $callback
      * @param array<int, mixed>              $arguments
      */
@@ -48,39 +60,9 @@ final class LazyOption extends Option
         $this->arguments = $arguments;
     }
 
-    /**
-     * @template S
-     * @param callable(mixed...):(Option<S>) $callback
-     * @param array<int, mixed>              $arguments
-     *
-     * @return LazyOption<S>
-     */
-    public static function create($callback, array $arguments = [])
-    {
-        return new self($callback, $arguments);
-    }
-
     public function isDefined()
     {
         return $this->option()->isDefined();
-    }
-
-    /**
-     * @return Option<T>
-     */
-    private function option()
-    {
-        if (null === $this->option) {
-            /** @var mixed */
-            $option = call_user_func_array($this->callback, $this->arguments);
-            if ($option instanceof Option) {
-                $this->option = $option;
-            } else {
-                throw new \RuntimeException(sprintf('Expected instance of %s', Option::class));
-            }
-        }
-
-        return $this->option;
     }
 
     public function isEmpty()
@@ -166,5 +148,23 @@ final class LazyOption extends Option
     public function foldRight($initialValue, $callable)
     {
         return $this->option()->foldRight($initialValue, $callable);
+    }
+
+    /**
+     * @return Option<T>
+     */
+    private function option()
+    {
+        if (null === $this->option) {
+            /** @var mixed */
+            $option = call_user_func_array($this->callback, $this->arguments);
+            if ($option instanceof Option) {
+                $this->option = $option;
+            } else {
+                throw new \RuntimeException(sprintf('Expected instance of %s', Option::class));
+            }
+        }
+
+        return $this->option;
     }
 }

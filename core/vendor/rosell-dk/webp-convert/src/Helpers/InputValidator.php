@@ -22,18 +22,6 @@ class InputValidator
         'image/png'
     ];
 
-    public static function checkSourceAndDestination($source, $destination)
-    {
-        self::checkSource($source);
-        self::checkDestination($destination);
-    }
-
-    public static function checkSource($source)
-    {
-        PathChecker::checkSourcePath($source);
-        self::checkMimeType($source);
-    }
-
     /**
      * Check mimetype and if file path is ok and exists
      */
@@ -54,8 +42,20 @@ class InputValidator
         }
     }
 
+    public static function checkSource($source)
+    {
+        PathChecker::checkSourcePath($source);
+        self::checkMimeType($source);
+    }
+
     public static function checkDestination($destination)
     {
         PathChecker::checkDestinationPath($destination);
+    }
+
+    public static function checkSourceAndDestination($source, $destination)
+    {
+        self::checkSource($source);
+        self::checkDestination($destination);
     }
 }

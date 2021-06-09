@@ -117,29 +117,37 @@ class CaBundle
     }
 
     /**
-     * @param  string $name
-     * @return string|false
+     * Returns the path to the bundled CA file
+     *
+     * In case you don't want to trust the user or the system, you can use this directly
+     *
+     * @return string path to a CA bundle file
      */
-    private static function getEnvVariable($name)
+    public static function getBundledCaBundlePath()
     {
-        if (isset($_SERVER[$name])) {
-            return (string) $_SERVER[$name];
+        $caBundleFile = __DIR__.'/../res/cacert.pem';
+
+        // cURL does not understand 'phar://' paths
+        // see https://github.com/composer/ca-bundle/issues/10
+        if (0 === strpos($caBundleFile, 'phar://')) {
+            $tempCaBundleFile = tempnam(sys_get_temp_dir(), 'openssl-ca-bundle-');
+            if (false === $tempCaBundleFile) {
+                throw new \RuntimeException('Could not create a temporary file to store the bundled CA file');
+            }
+
+            file_put_contents(
+                $tempCaBundleFile,
+                file_get_contents($caBundleFile)
+            );
+
+            register_shutdown_function(function() use ($tempCaBundleFile) {
+                @unlink($tempCaBundleFile);
+            });
+
+            $caBundleFile = $tempCaBundleFile;
         }
 
-        if (PHP_SAPI === 'cli' && ($value = getenv($name)) !== false && $value !== null) {
-            return (string) $value;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param  string|false $certFile
-     * @return bool
-     */
-    private static function caFileUsable($certFile, LoggerInterface $logger = null)
-    {
-        return $certFile && @is_file($certFile) && @is_readable($certFile) && static::validateCaFile($certFile, $logger);
+        return $caBundleFile;
     }
 
     /**
@@ -298,49 +306,6 @@ EOT;
     }
 
     /**
-     * @param  string|false $certDir
-     * @return bool
-     */
-    private static function caDirUsable($certDir)
-    {
-        return $certDir && @is_dir($certDir) && @is_readable($certDir) && glob($certDir . '/*');
-    }
-
-    /**
-     * Returns the path to the bundled CA file
-     *
-     * In case you don't want to trust the user or the system, you can use this directly
-     *
-     * @return string path to a CA bundle file
-     */
-    public static function getBundledCaBundlePath()
-    {
-        $caBundleFile = __DIR__.'/../res/cacert.pem';
-
-        // cURL does not understand 'phar://' paths
-        // see https://github.com/composer/ca-bundle/issues/10
-        if (0 === strpos($caBundleFile, 'phar://')) {
-            $tempCaBundleFile = tempnam(sys_get_temp_dir(), 'openssl-ca-bundle-');
-            if (false === $tempCaBundleFile) {
-                throw new \RuntimeException('Could not create a temporary file to store the bundled CA file');
-            }
-
-            file_put_contents(
-                $tempCaBundleFile,
-                file_get_contents($caBundleFile)
-            );
-
-            register_shutdown_function(function() use ($tempCaBundleFile) {
-                @unlink($tempCaBundleFile);
-            });
-
-            $caBundleFile = $tempCaBundleFile;
-        }
-
-        return $caBundleFile;
-    }
-
-    /**
      * Resets the static caches
      * @return void
      */
@@ -349,5 +314,40 @@ EOT;
         self::$caFileValidity = array();
         self::$caPath = null;
         self::$useOpensslParse = null;
+    }
+
+    /**
+     * @param  string $name
+     * @return string|false
+     */
+    private static function getEnvVariable($name)
+    {
+        if (isset($_SERVER[$name])) {
+            return (string) $_SERVER[$name];
+        }
+
+        if (PHP_SAPI === 'cli' && ($value = getenv($name)) !== false && $value !== null) {
+            return (string) $value;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param  string|false $certFile
+     * @return bool
+     */
+    private static function caFileUsable($certFile, LoggerInterface $logger = null)
+    {
+        return $certFile && @is_file($certFile) && @is_readable($certFile) && static::validateCaFile($certFile, $logger);
+    }
+
+    /**
+     * @param  string|false $certDir
+     * @return bool
+     */
+    private static function caDirUsable($certDir)
+    {
+        return $certDir && @is_dir($certDir) && @is_readable($certDir) && glob($certDir . '/*');
     }
 }

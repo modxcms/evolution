@@ -62,9 +62,12 @@ class Cache
         }
     }
 
-    public static function isUsable($path)
+    /**
+     * @param bool $readOnly
+     */
+    public function setReadOnly($readOnly)
     {
-        return !preg_match('{(^|[\\\\/])(\$null|nul|NUL|/dev/null)([\\\\/]|$)}', $path);
+        $this->readOnly = (bool) $readOnly;
     }
 
     /**
@@ -75,12 +78,9 @@ class Cache
         return $this->readOnly;
     }
 
-    /**
-     * @param bool $readOnly
-     */
-    public function setReadOnly($readOnly)
+    public static function isUsable($path)
     {
-        $this->readOnly = (bool) $readOnly;
+        return !preg_match('{(^|[\\\\/])(\$null|nul|NUL|/dev/null)([\\\\/]|$)}', $path);
     }
 
     public function isEnabled()
@@ -260,11 +260,6 @@ class Cache
         return false;
     }
 
-    protected function getFinder()
-    {
-        return Finder::create()->in($this->root)->files();
-    }
-
     public function sha1($file)
     {
         if ($this->enabled) {
@@ -287,5 +282,10 @@ class Cache
         }
 
         return false;
+    }
+
+    protected function getFinder()
+    {
+        return Finder::create()->in($this->root)->files();
     }
 }

@@ -50,16 +50,205 @@ use Seld\JsonLint\JsonParser;
 class Factory
 {
     /**
-     * Creates a ConsoleOutput instance
-     *
-     * @return ConsoleOutput
+     * @throws \RuntimeException
+     * @return string
      */
-    public static function createOutput()
+    protected static function getHomeDir()
     {
-        $styles = self::createAdditionalStyles();
-        $formatter = new OutputFormatter(false, $styles);
+        $home = getenv('COMPOSER_HOME');
+        if ($home) {
+            return $home;
+        }
 
-        return new ConsoleOutput(ConsoleOutput::VERBOSITY_NORMAL, null, $formatter);
+        if (Platform::isWindows()) {
+            if (!getenv('APPDATA')) {
+                throw new \RuntimeException('The APPDATA or COMPOSER_HOME environment variable must be set for composer to run correctly');
+            }
+
+            return rtrim(strtr(getenv('APPDATA'), '\\', '/'), '/') . '/Composer';
+        }
+
+        $userDir = self::getUserDir();
+        $dirs = array();
+
+        if (self::useXdg()) {
+            // XDG Base Directory Specifications
+            $xdgConfig = getenv('XDG_CONFIG_HOME');
+            if (!$xdgConfig) {
+                $xdgConfig = $userDir . '/.config';
+            }
+
+            $dirs[] = $xdgConfig . '/composer';
+        }
+
+        $dirs[] = $userDir . '/.composer';
+
+        // select first dir which exists of: $XDG_CONFIG_HOME/composer or ~/.composer
+        foreach ($dirs as $dir) {
+            if (Silencer::call('is_dir', $dir)) {
+                return $dir;
+            }
+        }
+
+        // if none exists, we default to first defined one (XDG one if system uses it, or ~/.composer otherwise)
+        return $dirs[0];
+    }
+
+    /**
+     * @param  string $home
+     * @return string
+     */
+    protected static function getCacheDir($home)
+    {
+        $cacheDir = getenv('COMPOSER_CACHE_DIR');
+        if ($cacheDir) {
+            return $cacheDir;
+        }
+
+        $homeEnv = getenv('COMPOSER_HOME');
+        if ($homeEnv) {
+            return $homeEnv . '/cache';
+        }
+
+        if (Platform::isWindows()) {
+            if ($cacheDir = getenv('LOCALAPPDATA')) {
+                $cacheDir .= '/Composer';
+            } else {
+                $cacheDir = $home . '/cache';
+            }
+
+            return rtrim(strtr($cacheDir, '\\', '/'), '/');
+        }
+
+        $userDir = self::getUserDir();
+        if (PHP_OS === 'Darwin') {
+            // Migrate existing cache dir in old location if present
+            if (is_dir($home . '/cache') && !is_dir($userDir . '/Library/Caches/composer')) {
+                Silencer::call('rename', $home . '/cache', $userDir . '/Library/Caches/composer');
+            }
+
+            return $userDir . '/Library/Caches/composer';
+        }
+
+        if ($home === $userDir . '/.composer' && is_dir($home . '/cache')) {
+            return $home . '/cache';
+        }
+
+        if (self::useXdg()) {
+            $xdgCache = getenv('XDG_CACHE_HOME') ?: $userDir . '/.cache';
+
+            return $xdgCache . '/composer';
+        }
+
+        return $home . '/cache';
+    }
+
+    /**
+     * @param  string $home
+     * @return string
+     */
+    protected static function getDataDir($home)
+    {
+        $homeEnv = getenv('COMPOSER_HOME');
+        if ($homeEnv) {
+            return $homeEnv;
+        }
+
+        if (Platform::isWindows()) {
+            return strtr($home, '\\', '/');
+        }
+
+        $userDir = self::getUserDir();
+        if ($home !== $userDir . '/.composer' && self::useXdg()) {
+            $xdgData = getenv('XDG_DATA_HOME') ?: $userDir . '/.local/share';
+
+            return $xdgData . '/composer';
+        }
+
+        return $home;
+    }
+
+    /**
+     * @param  IOInterface|null $io
+     * @return Config
+     */
+    public static function createConfig(IOInterface $io = null, $cwd = null)
+    {
+        $cwd = $cwd ?: getcwd();
+
+        $config = new Config(true, $cwd);
+
+        // determine and add main dirs to the config
+        $home = self::getHomeDir();
+        $config->merge(array('config' => array(
+            'home' => $home,
+            'cache-dir' => self::getCacheDir($home),
+            'data-dir' => self::getDataDir($home),
+        )));
+
+        // load global config
+        $file = new JsonFile($config->get('home').'/config.json');
+        if ($file->exists()) {
+            if ($io && $io->isDebug()) {
+                $io->writeError('Loading config file ' . $file->getPath());
+            }
+            $config->merge($file->read());
+        }
+        $config->setConfigSource(new JsonConfigSource($file));
+
+        $htaccessProtect = (bool) $config->get('htaccess-protect');
+        if ($htaccessProtect) {
+            // Protect directory against web access. Since HOME could be
+            // the www-data's user home and be web-accessible it is a
+            // potential security risk
+            $dirs = array($config->get('home'), $config->get('cache-dir'), $config->get('data-dir'));
+            foreach ($dirs as $dir) {
+                if (!file_exists($dir . '/.htaccess')) {
+                    if (!is_dir($dir)) {
+                        Silencer::call('mkdir', $dir, 0777, true);
+                    }
+                    Silencer::call('file_put_contents', $dir . '/.htaccess', 'Deny from all');
+                }
+            }
+        }
+
+        // load global auth file
+        $file = new JsonFile($config->get('home').'/auth.json');
+        if ($file->exists()) {
+            if ($io && $io->isDebug()) {
+                $io->writeError('Loading config file ' . $file->getPath());
+            }
+            $config->merge(array('config' => $file->read()));
+        }
+        $config->setAuthConfigSource(new JsonConfigSource($file, true));
+
+        // load COMPOSER_AUTH environment variable if set
+        if ($composerAuthEnv = getenv('COMPOSER_AUTH')) {
+            $authData = json_decode($composerAuthEnv, true);
+
+            if (null === $authData) {
+                throw new \UnexpectedValueException('COMPOSER_AUTH environment variable is malformed, should be a valid JSON object');
+            }
+
+            if ($io && $io->isDebug()) {
+                $io->writeError('Loading auth config from COMPOSER_AUTH');
+            }
+            $config->merge(array('config' => $authData));
+        }
+
+        return $config;
+    }
+
+    public static function getComposerFile()
+    {
+        return trim(getenv('COMPOSER')) ?: './composer.json';
+    }
+
+    public static function getLockFile($composerFile)
+    {
+        return "json" === pathinfo($composerFile, PATHINFO_EXTENSION)
+                ? substr($composerFile, 0, -4).'lock'
+                : $composerFile . '.lock';
     }
 
     public static function createAdditionalStyles()
@@ -71,31 +260,16 @@ class Factory
     }
 
     /**
-     * @param  IOInterface   $io             IO instance
-     * @param  bool          $disablePlugins Whether plugins should not be loaded
-     * @return Composer|null
+     * Creates a ConsoleOutput instance
+     *
+     * @return ConsoleOutput
      */
-    public static function createGlobal(IOInterface $io, $disablePlugins = false)
+    public static function createOutput()
     {
-        $factory = new static();
+        $styles = self::createAdditionalStyles();
+        $formatter = new OutputFormatter(false, $styles);
 
-        return $factory->createGlobalComposer($io, static::createConfig($io), $disablePlugins, true);
-    }
-
-    /**
-     * @param  Config        $config
-     * @return Composer|null
-     */
-    protected function createGlobalComposer(IOInterface $io, Config $config, $disablePlugins, $fullLoad = false)
-    {
-        $composer = null;
-        try {
-            $composer = $this->createComposer($io, $config->get('home') . '/composer.json', $disablePlugins, $config->get('home'), $fullLoad);
-        } catch (\Exception $e) {
-            $io->writeError('Failed to initialize global composer: '.$e->getMessage(), true, IOInterface::DEBUG);
-        }
-
-        return $composer;
+        return new ConsoleOutput(ConsoleOutput::VERBOSITY_NORMAL, null, $formatter);
     }
 
     /**
@@ -261,289 +435,16 @@ class Factory
         return $composer;
     }
 
-    public static function getComposerFile()
-    {
-        return trim(getenv('COMPOSER')) ?: './composer.json';
-    }
-
     /**
-     * @param  IOInterface|null $io
-     * @return Config
+     * @param  IOInterface   $io             IO instance
+     * @param  bool          $disablePlugins Whether plugins should not be loaded
+     * @return Composer|null
      */
-    public static function createConfig(IOInterface $io = null, $cwd = null)
+    public static function createGlobal(IOInterface $io, $disablePlugins = false)
     {
-        $cwd = $cwd ?: getcwd();
+        $factory = new static();
 
-        $config = new Config(true, $cwd);
-
-        // determine and add main dirs to the config
-        $home = self::getHomeDir();
-        $config->merge(array('config' => array(
-            'home' => $home,
-            'cache-dir' => self::getCacheDir($home),
-            'data-dir' => self::getDataDir($home),
-        )));
-
-        // load global config
-        $file = new JsonFile($config->get('home').'/config.json');
-        if ($file->exists()) {
-            if ($io && $io->isDebug()) {
-                $io->writeError('Loading config file ' . $file->getPath());
-            }
-            $config->merge($file->read());
-        }
-        $config->setConfigSource(new JsonConfigSource($file));
-
-        $htaccessProtect = (bool) $config->get('htaccess-protect');
-        if ($htaccessProtect) {
-            // Protect directory against web access. Since HOME could be
-            // the www-data's user home and be web-accessible it is a
-            // potential security risk
-            $dirs = array($config->get('home'), $config->get('cache-dir'), $config->get('data-dir'));
-            foreach ($dirs as $dir) {
-                if (!file_exists($dir . '/.htaccess')) {
-                    if (!is_dir($dir)) {
-                        Silencer::call('mkdir', $dir, 0777, true);
-                    }
-                    Silencer::call('file_put_contents', $dir . '/.htaccess', 'Deny from all');
-                }
-            }
-        }
-
-        // load global auth file
-        $file = new JsonFile($config->get('home').'/auth.json');
-        if ($file->exists()) {
-            if ($io && $io->isDebug()) {
-                $io->writeError('Loading config file ' . $file->getPath());
-            }
-            $config->merge(array('config' => $file->read()));
-        }
-        $config->setAuthConfigSource(new JsonConfigSource($file, true));
-
-        // load COMPOSER_AUTH environment variable if set
-        if ($composerAuthEnv = getenv('COMPOSER_AUTH')) {
-            $authData = json_decode($composerAuthEnv, true);
-
-            if (null === $authData) {
-                throw new \UnexpectedValueException('COMPOSER_AUTH environment variable is malformed, should be a valid JSON object');
-            }
-
-            if ($io && $io->isDebug()) {
-                $io->writeError('Loading auth config from COMPOSER_AUTH');
-            }
-            $config->merge(array('config' => $authData));
-        }
-
-        return $config;
-    }
-
-    /**
-     * @throws \RuntimeException
-     * @return string
-     */
-    protected static function getHomeDir()
-    {
-        $home = getenv('COMPOSER_HOME');
-        if ($home) {
-            return $home;
-        }
-
-        if (Platform::isWindows()) {
-            if (!getenv('APPDATA')) {
-                throw new \RuntimeException('The APPDATA or COMPOSER_HOME environment variable must be set for composer to run correctly');
-            }
-
-            return rtrim(strtr(getenv('APPDATA'), '\\', '/'), '/') . '/Composer';
-        }
-
-        $userDir = self::getUserDir();
-        $dirs = array();
-
-        if (self::useXdg()) {
-            // XDG Base Directory Specifications
-            $xdgConfig = getenv('XDG_CONFIG_HOME');
-            if (!$xdgConfig) {
-                $xdgConfig = $userDir . '/.config';
-            }
-
-            $dirs[] = $xdgConfig . '/composer';
-        }
-
-        $dirs[] = $userDir . '/.composer';
-
-        // select first dir which exists of: $XDG_CONFIG_HOME/composer or ~/.composer
-        foreach ($dirs as $dir) {
-            if (Silencer::call('is_dir', $dir)) {
-                return $dir;
-            }
-        }
-
-        // if none exists, we default to first defined one (XDG one if system uses it, or ~/.composer otherwise)
-        return $dirs[0];
-    }
-
-    /**
-     * @throws \RuntimeException
-     * @return string
-     */
-    private static function getUserDir()
-    {
-        $home = getenv('HOME');
-        if (!$home) {
-            throw new \RuntimeException('The HOME or COMPOSER_HOME environment variable must be set for composer to run correctly');
-        }
-
-        return rtrim(strtr($home, '\\', '/'), '/');
-    }
-
-    /**
-     * @return bool
-     */
-    private static function useXdg()
-    {
-        foreach (array_keys($_SERVER) as $key) {
-            if (strpos($key, 'XDG_') === 0) {
-                return true;
-            }
-        }
-
-        if (Silencer::call('is_dir', '/etc/xdg')) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param  string $home
-     * @return string
-     */
-    protected static function getCacheDir($home)
-    {
-        $cacheDir = getenv('COMPOSER_CACHE_DIR');
-        if ($cacheDir) {
-            return $cacheDir;
-        }
-
-        $homeEnv = getenv('COMPOSER_HOME');
-        if ($homeEnv) {
-            return $homeEnv . '/cache';
-        }
-
-        if (Platform::isWindows()) {
-            if ($cacheDir = getenv('LOCALAPPDATA')) {
-                $cacheDir .= '/Composer';
-            } else {
-                $cacheDir = $home . '/cache';
-            }
-
-            return rtrim(strtr($cacheDir, '\\', '/'), '/');
-        }
-
-        $userDir = self::getUserDir();
-        if (PHP_OS === 'Darwin') {
-            // Migrate existing cache dir in old location if present
-            if (is_dir($home . '/cache') && !is_dir($userDir . '/Library/Caches/composer')) {
-                Silencer::call('rename', $home . '/cache', $userDir . '/Library/Caches/composer');
-            }
-
-            return $userDir . '/Library/Caches/composer';
-        }
-
-        if ($home === $userDir . '/.composer' && is_dir($home . '/cache')) {
-            return $home . '/cache';
-        }
-
-        if (self::useXdg()) {
-            $xdgCache = getenv('XDG_CACHE_HOME') ?: $userDir . '/.cache';
-
-            return $xdgCache . '/composer';
-        }
-
-        return $home . '/cache';
-    }
-
-    /**
-     * @param  string $home
-     * @return string
-     */
-    protected static function getDataDir($home)
-    {
-        $homeEnv = getenv('COMPOSER_HOME');
-        if ($homeEnv) {
-            return $homeEnv;
-        }
-
-        if (Platform::isWindows()) {
-            return strtr($home, '\\', '/');
-        }
-
-        $userDir = self::getUserDir();
-        if ($home !== $userDir . '/.composer' && self::useXdg()) {
-            $xdgData = getenv('XDG_DATA_HOME') ?: $userDir . '/.local/share';
-
-            return $xdgData . '/composer';
-        }
-
-        return $home;
-    }
-
-    /**
-     * If you are calling this in a plugin, you probably should instead use $composer->getLoop()->getHttpDownloader()
-     *
-     * @param  IOInterface    $io      IO instance
-     * @param  Config         $config  Config instance
-     * @param  array          $options Array of options passed directly to HttpDownloader constructor
-     * @return HttpDownloader
-     */
-    public static function createHttpDownloader(IOInterface $io, Config $config, $options = array())
-    {
-        static $warned = false;
-        $disableTls = false;
-        // allow running the config command if disable-tls is in the arg list, even if openssl is missing, to allow disabling it via the config command
-        if (isset($_SERVER['argv']) && in_array('disable-tls', $_SERVER['argv']) && (in_array('conf', $_SERVER['argv']) || in_array('config', $_SERVER['argv']))) {
-            $warned = true;
-            $disableTls = !extension_loaded('openssl');
-        } elseif ($config && $config->get('disable-tls') === true) {
-            if (!$warned) {
-                $io->writeError('<warning>You are running Composer with SSL/TLS protection disabled.</warning>');
-            }
-            $warned = true;
-            $disableTls = true;
-        } elseif (!extension_loaded('openssl')) {
-            throw new Exception\NoSslException('The openssl extension is required for SSL/TLS protection but is not available. '
-                . 'If you can not enable the openssl extension, you can disable this error, at your own risk, by setting the \'disable-tls\' option to true.');
-        }
-        $httpDownloaderOptions = array();
-        if ($disableTls === false) {
-            if ($config && $config->get('cafile')) {
-                $httpDownloaderOptions['ssl']['cafile'] = $config->get('cafile');
-            }
-            if ($config && $config->get('capath')) {
-                $httpDownloaderOptions['ssl']['capath'] = $config->get('capath');
-            }
-            $httpDownloaderOptions = array_replace_recursive($httpDownloaderOptions, $options);
-        }
-        try {
-            $httpDownloader = new HttpDownloader($io, $config, $httpDownloaderOptions, $disableTls);
-        } catch (TransportException $e) {
-            if (false !== strpos($e->getMessage(), 'cafile')) {
-                $io->write('<error>Unable to locate a valid CA certificate file. You must set a valid \'cafile\' option.</error>');
-                $io->write('<error>A valid CA certificate file is required for SSL/TLS protection.</error>');
-                if (PHP_VERSION_ID < 50600) {
-                    $io->write('<error>It is recommended you upgrade to PHP 5.6+ which can detect your system CA file automatically.</error>');
-                }
-                $io->write('<error>You can disable this error, at your own risk, by setting the \'disable-tls\' option to true.</error>');
-            }
-            throw $e;
-        }
-
-        return $httpDownloader;
-    }
-
-    protected function loadRootPackage(RepositoryManager $rm, Config $config, VersionParser $parser, VersionGuesser $guesser, IOInterface $io)
-    {
-        return new Package\Loader\RootPackageLoader($rm, $config, $parser, $guesser, $io);
+        return $factory->createGlobalComposer($io, static::createConfig($io), $disablePlugins, true);
     }
 
     /**
@@ -556,11 +457,19 @@ class Factory
     }
 
     /**
-     * @return Installer\InstallationManager
+     * @param  Config        $config
+     * @return Composer|null
      */
-    public function createInstallationManager(Loop $loop, IOInterface $io, EventDispatcher $eventDispatcher = null)
+    protected function createGlobalComposer(IOInterface $io, Config $config, $disablePlugins, $fullLoad = false)
     {
-        return new Installer\InstallationManager($loop, $io, $eventDispatcher);
+        $composer = null;
+        try {
+            $composer = $this->createComposer($io, $config->get('home') . '/composer.json', $disablePlugins, $config->get('home'), $fullLoad);
+        } catch (\Exception $e) {
+            $io->writeError('Failed to initialize global composer: '.$e->getMessage(), true, IOInterface::DEBUG);
+        }
+
+        return $composer;
     }
 
     /**
@@ -629,6 +538,26 @@ class Factory
     }
 
     /**
+     * @param  IOInterface          $io
+     * @param  Composer             $composer
+     * @param  Composer             $globalComposer
+     * @param  bool                 $disablePlugins
+     * @return Plugin\PluginManager
+     */
+    protected function createPluginManager(IOInterface $io, Composer $composer, Composer $globalComposer = null, $disablePlugins = false)
+    {
+        return new Plugin\PluginManager($io, $composer, $globalComposer, $disablePlugins);
+    }
+
+    /**
+     * @return Installer\InstallationManager
+     */
+    public function createInstallationManager(Loop $loop, IOInterface $io, EventDispatcher $eventDispatcher = null)
+    {
+        return new Installer\InstallationManager($loop, $io, $eventDispatcher);
+    }
+
+    /**
      * @param Installer\InstallationManager $im
      * @param Composer                      $composer
      * @param IO\IOInterface                $io
@@ -644,25 +573,6 @@ class Factory
     }
 
     /**
-     * @param  IOInterface          $io
-     * @param  Composer             $composer
-     * @param  Composer             $globalComposer
-     * @param  bool                 $disablePlugins
-     * @return Plugin\PluginManager
-     */
-    protected function createPluginManager(IOInterface $io, Composer $composer, Composer $globalComposer = null, $disablePlugins = false)
-    {
-        return new Plugin\PluginManager($io, $composer, $globalComposer, $disablePlugins);
-    }
-
-    public static function getLockFile($composerFile)
-    {
-        return "json" === pathinfo($composerFile, PATHINFO_EXTENSION)
-                ? substr($composerFile, 0, -4).'lock'
-                : $composerFile . '.lock';
-    }
-
-    /**
      * @param WritableRepositoryInterface   $repo repository to purge packages from
      * @param Installer\InstallationManager $im   manager to check whether packages are still installed
      */
@@ -673,6 +583,11 @@ class Factory
                 $repo->removePackage($package);
             }
         }
+    }
+
+    protected function loadRootPackage(RepositoryManager $rm, Config $config, VersionParser $parser, VersionGuesser $guesser, IOInterface $io)
+    {
+        return new Package\Loader\RootPackageLoader($rm, $config, $parser, $guesser, $io);
     }
 
     /**
@@ -687,5 +602,90 @@ class Factory
         $factory = new static();
 
         return $factory->createComposer($io, $config, $disablePlugins);
+    }
+
+    /**
+     * If you are calling this in a plugin, you probably should instead use $composer->getLoop()->getHttpDownloader()
+     *
+     * @param  IOInterface    $io      IO instance
+     * @param  Config         $config  Config instance
+     * @param  array          $options Array of options passed directly to HttpDownloader constructor
+     * @return HttpDownloader
+     */
+    public static function createHttpDownloader(IOInterface $io, Config $config, $options = array())
+    {
+        static $warned = false;
+        $disableTls = false;
+        // allow running the config command if disable-tls is in the arg list, even if openssl is missing, to allow disabling it via the config command
+        if (isset($_SERVER['argv']) && in_array('disable-tls', $_SERVER['argv']) && (in_array('conf', $_SERVER['argv']) || in_array('config', $_SERVER['argv']))) {
+            $warned = true;
+            $disableTls = !extension_loaded('openssl');
+        } elseif ($config && $config->get('disable-tls') === true) {
+            if (!$warned) {
+                $io->writeError('<warning>You are running Composer with SSL/TLS protection disabled.</warning>');
+            }
+            $warned = true;
+            $disableTls = true;
+        } elseif (!extension_loaded('openssl')) {
+            throw new Exception\NoSslException('The openssl extension is required for SSL/TLS protection but is not available. '
+                . 'If you can not enable the openssl extension, you can disable this error, at your own risk, by setting the \'disable-tls\' option to true.');
+        }
+        $httpDownloaderOptions = array();
+        if ($disableTls === false) {
+            if ($config && $config->get('cafile')) {
+                $httpDownloaderOptions['ssl']['cafile'] = $config->get('cafile');
+            }
+            if ($config && $config->get('capath')) {
+                $httpDownloaderOptions['ssl']['capath'] = $config->get('capath');
+            }
+            $httpDownloaderOptions = array_replace_recursive($httpDownloaderOptions, $options);
+        }
+        try {
+            $httpDownloader = new HttpDownloader($io, $config, $httpDownloaderOptions, $disableTls);
+        } catch (TransportException $e) {
+            if (false !== strpos($e->getMessage(), 'cafile')) {
+                $io->write('<error>Unable to locate a valid CA certificate file. You must set a valid \'cafile\' option.</error>');
+                $io->write('<error>A valid CA certificate file is required for SSL/TLS protection.</error>');
+                if (PHP_VERSION_ID < 50600) {
+                    $io->write('<error>It is recommended you upgrade to PHP 5.6+ which can detect your system CA file automatically.</error>');
+                }
+                $io->write('<error>You can disable this error, at your own risk, by setting the \'disable-tls\' option to true.</error>');
+            }
+            throw $e;
+        }
+
+        return $httpDownloader;
+    }
+
+    /**
+     * @return bool
+     */
+    private static function useXdg()
+    {
+        foreach (array_keys($_SERVER) as $key) {
+            if (strpos($key, 'XDG_') === 0) {
+                return true;
+            }
+        }
+
+        if (Silencer::call('is_dir', '/etc/xdg')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @throws \RuntimeException
+     * @return string
+     */
+    private static function getUserDir()
+    {
+        $home = getenv('HOME');
+        if (!$home) {
+            throw new \RuntimeException('The HOME or COMPOSER_HOME environment variable must be set for composer to run correctly');
+        }
+
+        return rtrim(strtr($home, '\\', '/'), '/');
     }
 }

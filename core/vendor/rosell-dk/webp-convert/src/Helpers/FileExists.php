@@ -36,26 +36,6 @@ class FileExists
     }
 
     /**
-     * A fileExist doing the best it can.
-     *
-     * @throws \Exception  If it cannot be determined if the file exists
-     * @return boolean|null  True if file exists. False if it doesn't.
-     */
-    public static function fileExistsTryHarder($path)
-    {
-        try {
-            $result = self::honestFileExists($path);
-        } catch (\Exception $e) {
-            try {
-                $result = self::fileExistsUsingExec($path);
-            } catch (\Exception $e) {
-                throw new \Exception('Cannot determine if file exists or not');
-            }
-        }
-        return $result;
-    }
-
-    /**
      * A well behaved replacement for file_exist that throws upon failure rather than emmitting a warning.
      *
      * @throws \Exception If file_exists threw a warning
@@ -114,5 +94,25 @@ class FileExists
         // We assume that "ls" command is general available!
         // As that failed, we can conclude the file does not exist.
         return false;
+    }
+
+    /**
+     * A fileExist doing the best it can.
+     *
+     * @throws \Exception  If it cannot be determined if the file exists
+     * @return boolean|null  True if file exists. False if it doesn't.
+     */
+    public static function fileExistsTryHarder($path)
+    {
+        try {
+            $result = self::honestFileExists($path);
+        } catch (\Exception $e) {
+            try {
+                $result = self::fileExistsUsingExec($path);
+            } catch (\Exception $e) {
+                throw new \Exception('Cannot determine if file exists or not');
+            }
+        }
+        return $result;
     }
 }

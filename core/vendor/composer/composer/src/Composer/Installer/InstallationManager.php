@@ -59,6 +59,11 @@ class InstallationManager
         $this->eventDispatcher = $eventDispatcher;
     }
 
+    public function reset()
+    {
+        $this->notifiablePackages = array();
+    }
+
     /**
      * Adds installer
      *
@@ -102,23 +107,6 @@ class InstallationManager
     }
 
     /**
-     * Checks whether provided package is installed in one of the registered installers.
-     *
-     * @param InstalledRepositoryInterface $repo    repository in which to check
-     * @param PackageInterface             $package package instance
-     *
-     * @return bool
-     */
-    public function isPackageInstalled(InstalledRepositoryInterface $repo, PackageInterface $package)
-    {
-        if ($package instanceof AliasPackage) {
-            return $repo->hasPackage($package) && $this->isPackageInstalled($repo, $package->getAliasOf());
-        }
-
-        return $this->getInstaller($package->getType())->isInstalled($repo, $package);
-    }
-
-    /**
      * Returns installer for a specific package type.
      *
      * @param string $type package type
@@ -141,6 +129,23 @@ class InstallationManager
         }
 
         throw new \InvalidArgumentException('Unknown installer type: '.$type);
+    }
+
+    /**
+     * Checks whether provided package is installed in one of the registered installers.
+     *
+     * @param InstalledRepositoryInterface $repo    repository in which to check
+     * @param PackageInterface             $package package instance
+     *
+     * @return bool
+     */
+    public function isPackageInstalled(InstalledRepositoryInterface $repo, PackageInterface $package)
+    {
+        if ($package instanceof AliasPackage) {
+            return $repo->hasPackage($package) && $this->isPackageInstalled($repo, $package->getAliasOf());
+        }
+
+        return $this->getInstaller($package->getType())->isInstalled($repo, $package);
     }
 
     /**
@@ -363,28 +368,6 @@ class InstallationManager
         }
     }
 
-    private function waitOnPromises(array $promises)
-    {
-        $progress = null;
-        if (
-            $this->outputProgress
-            && $this->io instanceof ConsoleIO
-            && !getenv('CI')
-            && !$this->io->isDebug()
-            && count($promises) > 1
-        ) {
-            $progress = $this->io->getProgressBar();
-        }
-        $this->loop->wait($promises, $progress);
-        if ($progress) {
-            $progress->clear();
-            // ProgressBar in non-decorated output does not output a final line-break and clear() does nothing
-            if (!$this->io->isDecorated()) {
-                $this->io->writeError('');
-            }
-        }
-    }
-
     /**
      * @param array $operations    List of operations to execute in this batch
      * @param array $allOperations Complete list of operations to be executed in the install job, used for event listeners
@@ -464,6 +447,28 @@ class InstallationManager
         }
     }
 
+    private function waitOnPromises(array $promises)
+    {
+        $progress = null;
+        if (
+            $this->outputProgress
+            && $this->io instanceof ConsoleIO
+            && !getenv('CI')
+            && !$this->io->isDebug()
+            && count($promises) > 1
+        ) {
+            $progress = $this->io->getProgressBar();
+        }
+        $this->loop->wait($promises, $progress);
+        if ($progress) {
+            $progress->clear();
+            // ProgressBar in non-decorated output does not output a final line-break and clear() does nothing
+            if (!$this->io->isDecorated()) {
+                $this->io->writeError('');
+            }
+        }
+    }
+
     /**
      * Executes install operation.
      *
@@ -478,13 +483,6 @@ class InstallationManager
         $this->markForNotification($package);
 
         return $promise;
-    }
-
-    private function markForNotification(PackageInterface $package)
-    {
-        if ($package->getNotificationUrl()) {
-            $this->notifiablePackages[$package->getNotificationUrl()][$package->getName()] = $package;
-        }
     }
 
     /**
@@ -639,8 +637,10 @@ class InstallationManager
         $this->reset();
     }
 
-    public function reset()
+    private function markForNotification(PackageInterface $package)
     {
-        $this->notifiablePackages = array();
+        if ($package->getNotificationUrl()) {
+            $this->notifiablePackages[$package->getNotificationUrl()][$package->getName()] = $package;
+        }
     }
 }

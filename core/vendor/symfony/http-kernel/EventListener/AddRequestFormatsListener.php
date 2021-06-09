@@ -32,14 +32,6 @@ class AddRequestFormatsListener implements EventSubscriberInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public static function getSubscribedEvents(): array
-    {
-        return [KernelEvents::REQUEST => ['onKernelRequest', 100]];
-    }
-
-    /**
      * Adds request formats.
      */
     public function onKernelRequest(RequestEvent $event)
@@ -48,5 +40,13 @@ class AddRequestFormatsListener implements EventSubscriberInterface
         foreach ($this->formats as $format => $mimeTypes) {
             $request->setFormat($format, $mimeTypes);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedEvents(): array
+    {
+        return [KernelEvents::REQUEST => ['onKernelRequest', 100]];
     }
 }

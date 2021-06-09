@@ -61,6 +61,23 @@ final class ReplacingWriter implements WriterInterface
     }
 
     /**
+     * Delete an environment variable, if possible.
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function delete(string $name)
+    {
+        if ($this->exists($name)) {
+            return $this->writer->delete($name);
+        }
+
+        // succeed if nothing to do
+        return true;
+    }
+
+    /**
      * Does the given environment variable exist.
      *
      * Returns true if it currently exists, or existed at any point in the past
@@ -83,22 +100,5 @@ final class ReplacingWriter implements WriterInterface
         }
 
         return false;
-    }
-
-    /**
-     * Delete an environment variable, if possible.
-     *
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function delete(string $name)
-    {
-        if ($this->exists($name)) {
-            return $this->writer->delete($name);
-        }
-
-        // succeed if nothing to do
-        return true;
     }
 }

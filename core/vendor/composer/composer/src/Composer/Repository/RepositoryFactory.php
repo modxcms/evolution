@@ -26,20 +26,6 @@ use Composer\Json\JsonFile;
 class RepositoryFactory
 {
     /**
-     * @param  IOInterface         $io
-     * @param  Config              $config
-     * @param  string              $repository
-     * @param  bool                $allowFilesystem
-     * @return RepositoryInterface
-     */
-    public static function fromString(IOInterface $io, Config $config, $repository, $allowFilesystem = false, RepositoryManager $rm = null)
-    {
-        $repoConfig = static::configFromString($io, $config, $repository, $allowFilesystem);
-
-        return static::createRepo($io, $config, $repoConfig, $rm);
-    }
-
-    /**
      * @param  IOInterface $io
      * @param  Config      $config
      * @param  string      $repository
@@ -73,6 +59,20 @@ class RepositoryFactory
     /**
      * @param  IOInterface         $io
      * @param  Config              $config
+     * @param  string              $repository
+     * @param  bool                $allowFilesystem
+     * @return RepositoryInterface
+     */
+    public static function fromString(IOInterface $io, Config $config, $repository, $allowFilesystem = false, RepositoryManager $rm = null)
+    {
+        $repoConfig = static::configFromString($io, $config, $repository, $allowFilesystem);
+
+        return static::createRepo($io, $config, $repoConfig, $rm);
+    }
+
+    /**
+     * @param  IOInterface         $io
+     * @param  Config              $config
      * @param  array               $repoConfig
      * @return RepositoryInterface
      */
@@ -84,6 +84,30 @@ class RepositoryFactory
         $repos = static::createRepos($rm, array($repoConfig));
 
         return reset($repos);
+    }
+
+    /**
+     * @param  IOInterface|null       $io
+     * @param  Config|null            $config
+     * @param  RepositoryManager|null $rm
+     * @return RepositoryInterface[]
+     */
+    public static function defaultRepos(IOInterface $io = null, Config $config = null, RepositoryManager $rm = null)
+    {
+        if (!$config) {
+            $config = Factory::createConfig($io);
+        }
+        if ($io) {
+            $io->loadConfiguration($config);
+        }
+        if (!$rm) {
+            if (!$io) {
+                throw new \InvalidArgumentException('This function requires either an IOInterface or a RepositoryManager');
+            }
+            $rm = static::manager($io, $config, Factory::createHttpDownloader($io, $config));
+        }
+
+        return static::createRepos($rm, $config->getRepositories());
     }
 
     /**
@@ -152,29 +176,5 @@ class RepositoryFactory
         }
 
         return $name;
-    }
-
-    /**
-     * @param  IOInterface|null       $io
-     * @param  Config|null            $config
-     * @param  RepositoryManager|null $rm
-     * @return RepositoryInterface[]
-     */
-    public static function defaultRepos(IOInterface $io = null, Config $config = null, RepositoryManager $rm = null)
-    {
-        if (!$config) {
-            $config = Factory::createConfig($io);
-        }
-        if ($io) {
-            $io->loadConfiguration($config);
-        }
-        if (!$rm) {
-            if (!$io) {
-                throw new \InvalidArgumentException('This function requires either an IOInterface or a RepositoryManager');
-            }
-            $rm = static::manager($io, $config, Factory::createHttpDownloader($io, $config));
-        }
-
-        return static::createRepos($rm, $config->getRepositories());
     }
 }

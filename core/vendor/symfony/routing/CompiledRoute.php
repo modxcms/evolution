@@ -49,14 +49,6 @@ class CompiledRoute implements \Serializable
         $this->variables = $variables;
     }
 
-    /**
-     * @internal
-     */
-    final public function serialize(): string
-    {
-        return serialize($this->__serialize());
-    }
-
     public function __serialize(): array
     {
         return [
@@ -74,9 +66,9 @@ class CompiledRoute implements \Serializable
     /**
      * @internal
      */
-    final public function unserialize($serialized)
+    final public function serialize(): string
     {
-        $this->__unserialize(unserialize($serialized, ['allowed_classes' => false]));
+        return serialize($this->__serialize());
     }
 
     public function __unserialize(array $data): void
@@ -89,6 +81,14 @@ class CompiledRoute implements \Serializable
         $this->hostRegex = $data['host_regex'];
         $this->hostTokens = $data['host_tokens'];
         $this->hostVariables = $data['host_vars'];
+    }
+
+    /**
+     * @internal
+     */
+    final public function unserialize($serialized)
+    {
+        $this->__unserialize(unserialize($serialized, ['allowed_classes' => false]));
     }
 
     /**

@@ -49,11 +49,40 @@ use const SQLSRV_PARAM_IN;
 class SQLSrvStatement implements IteratorAggregate, StatementInterface, Result
 {
     /**
-     * Append to any INSERT query to retrieve the last insert id.
+     * The SQLSRV Resource.
      *
-     * @deprecated This constant has been deprecated and will be made private in 3.0
+     * @var resource
      */
-    public const LAST_INSERT_ID_SQL = ';SELECT SCOPE_IDENTITY() AS LastInsertId;';
+    private $conn;
+
+    /**
+     * The SQL statement to execute.
+     *
+     * @var string
+     */
+    private $sql;
+
+    /**
+     * The SQLSRV statement resource.
+     *
+     * @var resource|null
+     */
+    private $stmt;
+
+    /**
+     * References to the variables bound as statement parameters.
+     *
+     * @var mixed
+     */
+    private $variables = [];
+
+    /**
+     * Bound parameter types.
+     *
+     * @var int[]
+     */
+    private $types = [];
+
     /**
      * Translations.
      *
@@ -64,66 +93,48 @@ class SQLSrvStatement implements IteratorAggregate, StatementInterface, Result
         FetchMode::ASSOCIATIVE => SQLSRV_FETCH_ASSOC,
         FetchMode::NUMERIC     => SQLSRV_FETCH_NUMERIC,
     ];
-    /**
-     * The SQLSRV Resource.
-     *
-     * @var resource
-     */
-    private $conn;
-    /**
-     * The SQL statement to execute.
-     *
-     * @var string
-     */
-    private $sql;
-    /**
-     * The SQLSRV statement resource.
-     *
-     * @var resource|null
-     */
-    private $stmt;
-    /**
-     * References to the variables bound as statement parameters.
-     *
-     * @var mixed
-     */
-    private $variables = [];
-    /**
-     * Bound parameter types.
-     *
-     * @var int[]
-     */
-    private $types = [];
+
     /**
      * The name of the default class to instantiate when fetching class instances.
      *
      * @var string
      */
     private $defaultFetchClass = '\stdClass';
+
     /**
      * The constructor arguments for the default class to instantiate when fetching class instances.
      *
      * @var mixed[]
      */
     private $defaultFetchClassCtorArgs = [];
+
     /**
      * The fetch style.
      *
      * @var int
      */
     private $defaultFetchMode = FetchMode::MIXED;
+
     /**
      * The last insert ID.
      *
      * @var LastInsertId|null
      */
     private $lastInsertId;
+
     /**
      * Indicates whether the statement is in the state when fetching results is possible
      *
      * @var bool
      */
     private $result = false;
+
+    /**
+     * Append to any INSERT query to retrieve the last insert id.
+     *
+     * @deprecated This constant has been deprecated and will be made private in 3.0
+     */
+    public const LAST_INSERT_ID_SQL = ';SELECT SCOPE_IDENTITY() AS LastInsertId;';
 
     /**
      * @internal The statement can be only instantiated by its driver connection.
@@ -142,6 +153,23 @@ class SQLSrvStatement implements IteratorAggregate, StatementInterface, Result
 
         $this->sql         .= self::LAST_INSERT_ID_SQL;
         $this->lastInsertId = $lastInsertId;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function bindValue($param, $value, $type = ParameterType::STRING)
+    {
+        if (! is_numeric($param)) {
+            throw new SQLSrvException(
+                'sqlsrv does not support named parameters to queries, use question mark (?) placeholders instead.'
+            );
+        }
+
+        $this->variables[$param] = $value;
+        $this->types[$param]     = $type;
+
+        return true;
     }
 
     /**
@@ -174,23 +202,6 @@ class SQLSrvStatement implements IteratorAggregate, StatementInterface, Result
         $this->free();
 
         return true;
-    }
-
-    public function free(): void
-    {
-        // not having the result means there's nothing to close
-        if ($this->stmt === null || ! $this->result) {
-            return;
-        }
-
-        // emulate it by fetching and discarding rows, similarly to what PDO does in this case
-        // @link http://php.net/manual/en/pdostatement.closecursor.php
-        // @link https://github.com/php/php-src/blob/php-7.0.11/ext/pdo/pdo_stmt.c#L2075
-        // deliberately do not consider multiple result sets, since doctrine/dbal doesn't support them
-        while (sqlsrv_fetch($this->stmt)) {
-        }
-
-        $this->result = false;
     }
 
     /**
@@ -262,23 +273,6 @@ class SQLSrvStatement implements IteratorAggregate, StatementInterface, Result
         }
 
         $this->result = true;
-
-        return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function bindValue($param, $value, $type = ParameterType::STRING)
-    {
-        if (! is_numeric($param)) {
-            throw new SQLSrvException(
-                'sqlsrv does not support named parameters to queries, use question mark (?) placeholders instead.'
-            );
-        }
-
-        $this->variables[$param] = $value;
-        $this->types[$param]     = $type;
 
         return true;
     }
@@ -363,39 +357,6 @@ class SQLSrvStatement implements IteratorAggregate, StatementInterface, Result
     /**
      * {@inheritdoc}
      *
-     * @deprecated Use fetchAllNumeric(), fetchAllAssociative() or fetchFirstColumn() instead.
-     */
-    public function fetchAll($fetchMode = null, $fetchArgument = null, $ctorArgs = null)
-    {
-        $rows = [];
-
-        switch ($fetchMode) {
-            case FetchMode::CUSTOM_OBJECT:
-                while (($row = $this->fetch(...func_get_args())) !== false) {
-                    $rows[] = $row;
-                }
-
-                break;
-
-            case FetchMode::COLUMN:
-                while (($row = $this->fetchColumn()) !== false) {
-                    $rows[] = $row;
-                }
-
-                break;
-
-            default:
-                while (($row = $this->fetch($fetchMode)) !== false) {
-                    $rows[] = $row;
-                }
-        }
-
-        return $rows;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
      * @deprecated Use fetchNumeric(), fetchAssociative() or fetchOne() instead.
      *
      * @throws SQLSrvException
@@ -437,6 +398,39 @@ class SQLSrvStatement implements IteratorAggregate, StatementInterface, Result
     /**
      * {@inheritdoc}
      *
+     * @deprecated Use fetchAllNumeric(), fetchAllAssociative() or fetchFirstColumn() instead.
+     */
+    public function fetchAll($fetchMode = null, $fetchArgument = null, $ctorArgs = null)
+    {
+        $rows = [];
+
+        switch ($fetchMode) {
+            case FetchMode::CUSTOM_OBJECT:
+                while (($row = $this->fetch(...func_get_args())) !== false) {
+                    $rows[] = $row;
+                }
+
+                break;
+
+            case FetchMode::COLUMN:
+                while (($row = $this->fetchColumn()) !== false) {
+                    $rows[] = $row;
+                }
+
+                break;
+
+            default:
+                while (($row = $this->fetch($fetchMode)) !== false) {
+                    $rows[] = $row;
+                }
+        }
+
+        return $rows;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @deprecated Use fetchOne() instead.
      */
     public function fetchColumn($columnIndex = 0)
@@ -456,20 +450,6 @@ class SQLSrvStatement implements IteratorAggregate, StatementInterface, Result
     public function fetchNumeric()
     {
         return $this->doFetch(SQLSRV_FETCH_NUMERIC);
-    }
-
-    /**
-     * @return mixed|false
-     */
-    private function doFetch(int $fetchType)
-    {
-        // do not try fetching from the statement if it's not expected to contain the result
-        // in order to prevent exceptional situation
-        if ($this->stmt === null || ! $this->result) {
-            return false;
-        }
-
-        return sqlsrv_fetch_array($this->stmt, $fetchType) ?? false;
     }
 
     /**
@@ -522,5 +502,36 @@ class SQLSrvStatement implements IteratorAggregate, StatementInterface, Result
         }
 
         return sqlsrv_rows_affected($this->stmt) ?: 0;
+    }
+
+    public function free(): void
+    {
+        // not having the result means there's nothing to close
+        if ($this->stmt === null || ! $this->result) {
+            return;
+        }
+
+        // emulate it by fetching and discarding rows, similarly to what PDO does in this case
+        // @link http://php.net/manual/en/pdostatement.closecursor.php
+        // @link https://github.com/php/php-src/blob/php-7.0.11/ext/pdo/pdo_stmt.c#L2075
+        // deliberately do not consider multiple result sets, since doctrine/dbal doesn't support them
+        while (sqlsrv_fetch($this->stmt)) {
+        }
+
+        $this->result = false;
+    }
+
+    /**
+     * @return mixed|false
+     */
+    private function doFetch(int $fetchType)
+    {
+        // do not try fetching from the statement if it's not expected to contain the result
+        // in order to prevent exceptional situation
+        if ($this->stmt === null || ! $this->result) {
+            return false;
+        }
+
+        return sqlsrv_fetch_array($this->stmt, $fetchType) ?? false;
     }
 }

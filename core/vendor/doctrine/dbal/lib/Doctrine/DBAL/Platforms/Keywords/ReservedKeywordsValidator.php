@@ -38,32 +38,6 @@ class ReservedKeywordsValidator implements Visitor
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function acceptColumn(Table $table, Column $column)
-    {
-        $this->addViolation(
-            'Table ' . $table->getName() . ' column ' . $column->getName(),
-            $this->isReservedWord($column->getName())
-        );
-    }
-
-    /**
-     * @param string   $asset
-     * @param string[] $violatedPlatforms
-     *
-     * @return void
-     */
-    private function addViolation($asset, $violatedPlatforms)
-    {
-        if (! $violatedPlatforms) {
-            return;
-        }
-
-        $this->violations[] = $asset . ' keyword violations: ' . implode(', ', $violatedPlatforms);
-    }
-
-    /**
      * @param string $word
      *
      * @return string[]
@@ -84,6 +58,32 @@ class ReservedKeywordsValidator implements Visitor
         }
 
         return $keywordLists;
+    }
+
+    /**
+     * @param string   $asset
+     * @param string[] $violatedPlatforms
+     *
+     * @return void
+     */
+    private function addViolation($asset, $violatedPlatforms)
+    {
+        if (! $violatedPlatforms) {
+            return;
+        }
+
+        $this->violations[] = $asset . ' keyword violations: ' . implode(', ', $violatedPlatforms);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function acceptColumn(Table $table, Column $column)
+    {
+        $this->addViolation(
+            'Table ' . $table->getName() . ' column ' . $column->getName(),
+            $this->isReservedWord($column->getName())
+        );
     }
 
     /**

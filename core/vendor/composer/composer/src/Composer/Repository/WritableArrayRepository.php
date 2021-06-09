@@ -30,17 +30,17 @@ class WritableArrayRepository extends ArrayRepository implements WritableReposit
     /**
      * {@inheritDoc}
      */
-    public function getDevPackageNames()
+    public function setDevPackageNames(array $devPackageNames)
     {
-        return $this->devPackageNames;
+        $this->devPackageNames = $devPackageNames;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function setDevPackageNames(array $devPackageNames)
+    public function getDevPackageNames()
     {
-        $this->devPackageNames = $devPackageNames;
+        return $this->devPackageNames;
     }
 
     /**

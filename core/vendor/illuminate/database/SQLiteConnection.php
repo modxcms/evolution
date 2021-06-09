@@ -39,13 +39,13 @@ class SQLiteConnection extends Connection
     }
 
     /**
-     * Get the database connection foreign key constraints configuration option.
+     * Get the default query grammar instance.
      *
-     * @return bool|null
+     * @return \Illuminate\Database\Query\Grammars\SQLiteGrammar
      */
-    protected function getForeignKeyConstraintsConfigurationValue()
+    protected function getDefaultQueryGrammar()
     {
-        return $this->getConfig('foreign_key_constraints');
+        return $this->withTablePrefix(new QueryGrammar);
     }
 
     /**
@@ -63,6 +63,16 @@ class SQLiteConnection extends Connection
     }
 
     /**
+     * Get the default schema grammar instance.
+     *
+     * @return \Illuminate\Database\Schema\Grammars\SQLiteGrammar
+     */
+    protected function getDefaultSchemaGrammar()
+    {
+        return $this->withTablePrefix(new SchemaGrammar);
+    }
+
+    /**
      * Get the schema state for the connection.
      *
      * @param  \Illuminate\Filesystem\Filesystem|null  $files
@@ -73,26 +83,6 @@ class SQLiteConnection extends Connection
     public function getSchemaState(Filesystem $files = null, callable $processFactory = null)
     {
         return new SqliteSchemaState($this, $files, $processFactory);
-    }
-
-    /**
-     * Get the default query grammar instance.
-     *
-     * @return \Illuminate\Database\Query\Grammars\SQLiteGrammar
-     */
-    protected function getDefaultQueryGrammar()
-    {
-        return $this->withTablePrefix(new QueryGrammar);
-    }
-
-    /**
-     * Get the default schema grammar instance.
-     *
-     * @return \Illuminate\Database\Schema\Grammars\SQLiteGrammar
-     */
-    protected function getDefaultSchemaGrammar()
-    {
-        return $this->withTablePrefix(new SchemaGrammar);
     }
 
     /**
@@ -113,5 +103,15 @@ class SQLiteConnection extends Connection
     protected function getDoctrineDriver()
     {
         return class_exists(Version::class) ? new DoctrineDriver : new SQLiteDriver;
+    }
+
+    /**
+     * Get the database connection foreign key constraints configuration option.
+     *
+     * @return bool|null
+     */
+    protected function getForeignKeyConstraintsConfigurationValue()
+    {
+        return $this->getConfig('foreign_key_constraints');
     }
 }

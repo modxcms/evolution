@@ -84,17 +84,9 @@ class SolverProblemsException extends \RuntimeException
         return $text;
     }
 
-    private function hasExtensionProblems(array $reasonSets)
+    public function getProblems()
     {
-        foreach ($reasonSets as $reasonSet) {
-            foreach ($reasonSet as $rule) {
-                if (0 === strpos($rule->getRequiredPackage(), 'ext-')) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return $this->problems;
     }
 
     private function createExtensionHint()
@@ -112,8 +104,16 @@ class SolverProblemsException extends \RuntimeException
         return $text;
     }
 
-    public function getProblems()
+    private function hasExtensionProblems(array $reasonSets)
     {
-        return $this->problems;
+        foreach ($reasonSets as $reasonSet) {
+            foreach ($reasonSet as $rule) {
+                if (0 === strpos($rule->getRequiredPackage(), 'ext-')) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

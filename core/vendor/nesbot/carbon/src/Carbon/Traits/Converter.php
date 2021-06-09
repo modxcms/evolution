@@ -19,6 +19,7 @@ use Carbon\Exceptions\UnitException;
 use Closure;
 use DateTime;
 use DateTimeImmutable;
+use ReturnTypeWillChange;
 
 /**
  * Trait Converter.
@@ -75,6 +76,7 @@ trait Converter
      *
      * @return string
      */
+    #[ReturnTypeWillChange]
     public function format($format)
     {
         $function = $this->localFormatFunction ?: static::$formatFunction;
@@ -173,6 +175,23 @@ trait Converter
     }
 
     /**
+     * Format the instance as date and time
+     *
+     * @example
+     * ```
+     * echo Carbon::now()->toDateTimeString();
+     * ```
+     *
+     * @param string $unitPrecision
+     *
+     * @return string
+     */
+    public function toDateTimeString($unitPrecision = 'second')
+    {
+        return $this->rawFormat('Y-m-d '.static::getTimeFormatByPrecision($unitPrecision));
+    }
+
+    /**
      * Return a format from H:i to H:i:s.u according to given unit precision.
      *
      * @param string $unitPrecision "minute", "second", "millisecond" or "microsecond"
@@ -195,23 +214,6 @@ trait Converter
         }
 
         throw new UnitException('Precision unit expected among: minute, second, millisecond and microsecond.');
-    }
-
-    /**
-     * Format the instance as date and time
-     *
-     * @example
-     * ```
-     * echo Carbon::now()->toDateTimeString();
-     * ```
-     *
-     * @param string $unitPrecision
-     *
-     * @return string
-     */
-    public function toDateTimeString($unitPrecision = 'second')
-    {
-        return $this->rawFormat('Y-m-d '.static::getTimeFormatByPrecision($unitPrecision));
     }
 
     /**
@@ -249,6 +251,21 @@ trait Converter
     }
 
     /**
+     * Format the instance as ATOM
+     *
+     * @example
+     * ```
+     * echo Carbon::now()->toAtomString();
+     * ```
+     *
+     * @return string
+     */
+    public function toAtomString()
+    {
+        return $this->rawFormat(DateTime::ATOM);
+    }
+
+    /**
      * Format the instance as COOKIE
      *
      * @example
@@ -276,21 +293,6 @@ trait Converter
     public function toIso8601String()
     {
         return $this->toAtomString();
-    }
-
-    /**
-     * Format the instance as ATOM
-     *
-     * @example
-     * ```
-     * echo Carbon::now()->toAtomString();
-     * ```
-     *
-     * @return string
-     */
-    public function toAtomString()
-    {
-        return $this->rawFormat(DateTime::ATOM);
     }
 
     /**
@@ -456,21 +458,6 @@ trait Converter
     }
 
     /**
-     * Get default object representation.
-     *
-     * @example
-     * ```
-     * var_dump(Carbon::now()->toObject());
-     * ```
-     *
-     * @return object
-     */
-    public function toObject()
-    {
-        return (object) $this->toArray();
-    }
-
-    /**
      * Get default array representation.
      *
      * @example
@@ -499,6 +486,21 @@ trait Converter
     }
 
     /**
+     * Get default object representation.
+     *
+     * @example
+     * ```
+     * var_dump(Carbon::now()->toObject());
+     * ```
+     *
+     * @return object
+     */
+    public function toObject()
+    {
+        return (object) $this->toArray();
+    }
+
+    /**
      * Returns english human readable complete date string.
      *
      * @example
@@ -511,21 +513,6 @@ trait Converter
     public function toString()
     {
         return $this->copy()->locale('en')->isoFormat('ddd MMM DD YYYY HH:mm:ss [GMT]ZZ');
-    }
-
-    /**
-     * Return the ISO-8601 string (ex: 1977-04-22T06:00:00Z) with UTC timezone.
-     *
-     * @example
-     * ```
-     * echo Carbon::now('America/Toronto')->toJSON();
-     * ```
-     *
-     * @return null|string
-     */
-    public function toJSON()
-    {
-        return $this->toISOString();
     }
 
     /**
@@ -553,6 +540,36 @@ trait Converter
         $date = $keepOffset ? $this : $this->copy()->utc();
 
         return $date->isoFormat("$yearFormat-MM-DD[T]HH:mm:ss.SSSSSS$tzFormat");
+    }
+
+    /**
+     * Return the ISO-8601 string (ex: 1977-04-22T06:00:00Z) with UTC timezone.
+     *
+     * @example
+     * ```
+     * echo Carbon::now('America/Toronto')->toJSON();
+     * ```
+     *
+     * @return null|string
+     */
+    public function toJSON()
+    {
+        return $this->toISOString();
+    }
+
+    /**
+     * Return native DateTime PHP object matching the current instance.
+     *
+     * @example
+     * ```
+     * var_dump(Carbon::now()->toDateTime());
+     * ```
+     *
+     * @return DateTime
+     */
+    public function toDateTime()
+    {
+        return new DateTime($this->rawFormat('Y-m-d H:i:s.u'), $this->getTimezone());
     }
 
     /**
@@ -588,35 +605,6 @@ trait Converter
     }
 
     /**
-     * Return native DateTime PHP object matching the current instance.
-     *
-     * @example
-     * ```
-     * var_dump(Carbon::now()->toDateTime());
-     * ```
-     *
-     * @return DateTime
-     */
-    public function toDateTime()
-    {
-        return new DateTime($this->rawFormat('Y-m-d H:i:s.u'), $this->getTimezone());
-    }
-
-    /**
-     * Create a iterable CarbonPeriod object from current date to a given end date (and optional interval).
-     *
-     * @param \DateTimeInterface|Carbon|CarbonImmutable|null $end      period end date
-     * @param int|\DateInterval|string|null                  $interval period default interval or number of the given $unit
-     * @param string|null                                    $unit     if specified, $interval must be an integer
-     *
-     * @return CarbonPeriod
-     */
-    public function range($end = null, $interval = null, $unit = null)
-    {
-        return $this->toPeriod($end, $interval, $unit);
-    }
-
-    /**
      * Create a iterable CarbonPeriod object from current date to a given end date (and optional interval).
      *
      * @param \DateTimeInterface|Carbon|CarbonImmutable|int|null $end      period end date or recurrences count if int
@@ -644,5 +632,19 @@ trait Converter
         }
 
         return $period;
+    }
+
+    /**
+     * Create a iterable CarbonPeriod object from current date to a given end date (and optional interval).
+     *
+     * @param \DateTimeInterface|Carbon|CarbonImmutable|null $end      period end date
+     * @param int|\DateInterval|string|null                  $interval period default interval or number of the given $unit
+     * @param string|null                                    $unit     if specified, $interval must be an integer
+     *
+     * @return CarbonPeriod
+     */
+    public function range($end = null, $interval = null, $unit = null)
+    {
+        return $this->toPeriod($end, $interval, $unit);
     }
 }

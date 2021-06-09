@@ -92,6 +92,19 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     }
 
     /**
+     * Manually activate this logger regardless of the activation strategy
+     */
+    public function activate(): void
+    {
+        if ($this->stopBuffering) {
+            $this->buffering = false;
+        }
+
+        $this->getHandler(end($this->buffer) ?: null)->handleBatch($this->buffer);
+        $this->buffer = [];
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(array $record): bool
@@ -116,38 +129,6 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     }
 
     /**
-     * Manually activate this logger regardless of the activation strategy
-     */
-    public function activate(): void
-    {
-        if ($this->stopBuffering) {
-            $this->buffering = false;
-        }
-
-        $this->getHandler(end($this->buffer) ?: null)->handleBatch($this->buffer);
-        $this->buffer = [];
-    }
-
-    /**
-     * Return the nested handler
-     *
-     * If the handler was provided as a factory callable, this will trigger the handler's instantiation.
-     *
-     * @return HandlerInterface
-     */
-    public function getHandler(array $record = null)
-    {
-        if (!$this->handler instanceof HandlerInterface) {
-            $this->handler = ($this->handler)($record, $this);
-            if (!$this->handler instanceof HandlerInterface) {
-                throw new \RuntimeException("The factory callable should return a HandlerInterface");
-            }
-        }
-
-        return $this->handler;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function close(): void
@@ -155,6 +136,28 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
         $this->flushBuffer();
 
         $this->handler->close();
+    }
+
+    public function reset()
+    {
+        $this->flushBuffer();
+
+        $this->resetProcessors();
+
+        if ($this->getHandler() instanceof ResettableInterface) {
+            $this->getHandler()->reset();
+        }
+    }
+
+    /**
+     * Clears the buffer without flushing any messages down to the wrapped handler.
+     *
+     * It also resets the handler to its initial buffering state.
+     */
+    public function clear(): void
+    {
+        $this->buffer = [];
+        $this->reset();
     }
 
     /**
@@ -177,25 +180,22 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     }
 
     /**
-     * Clears the buffer without flushing any messages down to the wrapped handler.
+     * Return the nested handler
      *
-     * It also resets the handler to its initial buffering state.
+     * If the handler was provided as a factory callable, this will trigger the handler's instantiation.
+     *
+     * @return HandlerInterface
      */
-    public function clear(): void
+    public function getHandler(array $record = null)
     {
-        $this->buffer = [];
-        $this->reset();
-    }
-
-    public function reset()
-    {
-        $this->flushBuffer();
-
-        $this->resetProcessors();
-
-        if ($this->getHandler() instanceof ResettableInterface) {
-            $this->getHandler()->reset();
+        if (!$this->handler instanceof HandlerInterface) {
+            $this->handler = ($this->handler)($record, $this);
+            if (!$this->handler instanceof HandlerInterface) {
+                throw new \RuntimeException("The factory callable should return a HandlerInterface");
+            }
         }
+
+        return $this->handler;
     }
 
     /**

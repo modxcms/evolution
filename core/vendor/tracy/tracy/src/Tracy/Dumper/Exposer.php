@@ -16,42 +16,6 @@ namespace Tracy\Dumper;
  */
 final class Exposer
 {
-	public static function exposeClosure(\Closure $obj, Value $value, Describer $describer): void
-	{
-		$rc = new \ReflectionFunction($obj);
-		if ($describer->location) {
-			$describer->addPropertyTo($value, 'file', $rc->getFileName() . ':' . $rc->getStartLine());
-		}
-
-		$params = [];
-		foreach ($rc->getParameters() as $param) {
-			$params[] = '$' . $param->getName();
-		}
-		$value->value .= '(' . implode(', ', $params) . ')';
-
-		$uses = [];
-		$useValue = new Value(Value::TYPE_OBJECT);
-		$useValue->depth = $value->depth + 1;
-		foreach ($rc->getStaticVariables() as $name => $v) {
-			$uses[] = '$' . $name;
-			$describer->addPropertyTo($useValue, '$' . $name, $v);
-		}
-		if ($uses) {
-			$useValue->value = implode(', ', $uses);
-			$useValue->collapsed = true;
-			$value->items[] = ['use', $useValue];
-		}
-	}
-
-	public static function exposeArrayObject(\ArrayObject $obj, Value $value, Describer $describer): void
-	{
-		$flags = $obj->getFlags();
-		$obj->setFlags(\ArrayObject::STD_PROP_LIST);
-		self::exposeObject($obj, $value, $describer);
-		$obj->setFlags($flags);
-		$describer->addPropertyTo($value, 'storage', $obj->getArrayCopy(), Value::PROP_PRIVATE, null, \ArrayObject::class);
-	}
-
 	public static function exposeObject(object $obj, Value $value, Describer $describer): void
 	{
 		$tmp = (array) $obj;
@@ -88,6 +52,7 @@ final class Exposer
 		}
 	}
 
+
 	private static function getProperties($class): array
 	{
 		static $cache;
@@ -114,6 +79,45 @@ final class Exposer
 
 		return $cache[$class] = $props + $parentProps;
 	}
+
+
+	public static function exposeClosure(\Closure $obj, Value $value, Describer $describer): void
+	{
+		$rc = new \ReflectionFunction($obj);
+		if ($describer->location) {
+			$describer->addPropertyTo($value, 'file', $rc->getFileName() . ':' . $rc->getStartLine());
+		}
+
+		$params = [];
+		foreach ($rc->getParameters() as $param) {
+			$params[] = '$' . $param->getName();
+		}
+		$value->value .= '(' . implode(', ', $params) . ')';
+
+		$uses = [];
+		$useValue = new Value(Value::TYPE_OBJECT);
+		$useValue->depth = $value->depth + 1;
+		foreach ($rc->getStaticVariables() as $name => $v) {
+			$uses[] = '$' . $name;
+			$describer->addPropertyTo($useValue, '$' . $name, $v);
+		}
+		if ($uses) {
+			$useValue->value = implode(', ', $uses);
+			$useValue->collapsed = true;
+			$value->items[] = ['use', $useValue];
+		}
+	}
+
+
+	public static function exposeArrayObject(\ArrayObject $obj, Value $value, Describer $describer): void
+	{
+		$flags = $obj->getFlags();
+		$obj->setFlags(\ArrayObject::STD_PROP_LIST);
+		self::exposeObject($obj, $value, $describer);
+		$obj->setFlags($flags);
+		$describer->addPropertyTo($value, 'storage', $obj->getArrayCopy(), Value::PROP_PRIVATE, null, \ArrayObject::class);
+	}
+
 
 	public static function exposeDOMNode(\DOMNode $obj, Value $value, Describer $describer): void
 	{

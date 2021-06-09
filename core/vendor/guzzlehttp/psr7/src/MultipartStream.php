@@ -35,6 +35,34 @@ class MultipartStream implements StreamInterface
     }
 
     /**
+     * Get the boundary
+     *
+     * @return string
+     */
+    public function getBoundary()
+    {
+        return $this->boundary;
+    }
+
+    public function isWritable()
+    {
+        return false;
+    }
+
+    /**
+     * Get the headers needed before transferring the content of a POST file
+     */
+    private function getHeaders(array $headers)
+    {
+        $str = '';
+        foreach ($headers as $key => $value) {
+            $str .= "{$key}: {$value}\r\n";
+        }
+
+        return "--{$this->boundary}\r\n" . trim($str) . "\r\n\r\n";
+    }
+
+    /**
      * Create the aggregate stream that will be used to upload the POST data
      */
     protected function createStream(array $elements)
@@ -126,33 +154,5 @@ class MultipartStream implements StreamInterface
         }
 
         return null;
-    }
-
-    /**
-     * Get the headers needed before transferring the content of a POST file
-     */
-    private function getHeaders(array $headers)
-    {
-        $str = '';
-        foreach ($headers as $key => $value) {
-            $str .= "{$key}: {$value}\r\n";
-        }
-
-        return "--{$this->boundary}\r\n" . trim($str) . "\r\n\r\n";
-    }
-
-    /**
-     * Get the boundary
-     *
-     * @return string
-     */
-    public function getBoundary()
-    {
-        return $this->boundary;
-    }
-
-    public function isWritable()
-    {
-        return false;
     }
 }

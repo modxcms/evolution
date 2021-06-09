@@ -218,16 +218,6 @@ class BelongsTo extends Relation
     }
 
     /**
-     * Alias of "dissociate" method.
-     *
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function disassociate()
-    {
-        return $this->dissociate();
-    }
-
-    /**
      * Dissociate previously associated model from the given parent.
      *
      * @return \Illuminate\Database\Eloquent\Model
@@ -237,6 +227,16 @@ class BelongsTo extends Relation
         $this->child->setAttribute($this->foreignKey, null);
 
         return $this->child->setRelation($this->relationName, null);
+    }
+
+    /**
+     * Alias of "dissociate" method.
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function disassociate()
+    {
+        return $this->dissociate();
     }
 
     /**
@@ -280,13 +280,25 @@ class BelongsTo extends Relation
     }
 
     /**
-     * Get the fully qualified foreign key of the relationship.
+     * Determine if the related model has an auto-incrementing ID.
      *
-     * @return string
+     * @return bool
      */
-    public function getQualifiedForeignKeyName()
+    protected function relationHasIncrementingId()
     {
-        return $this->child->qualifyColumn($this->foreignKey);
+        return $this->related->getIncrementing() &&
+            in_array($this->related->getKeyType(), ['int', 'integer']);
+    }
+
+    /**
+     * Make a new related instance for the given model.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $parent
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    protected function newRelatedInstanceFor(Model $parent)
+    {
+        return $this->related->newInstance();
     }
 
     /**
@@ -307,6 +319,16 @@ class BelongsTo extends Relation
     public function getForeignKeyName()
     {
         return $this->foreignKey;
+    }
+
+    /**
+     * Get the fully qualified foreign key of the relationship.
+     *
+     * @return string
+     */
+    public function getQualifiedForeignKeyName()
+    {
+        return $this->child->qualifyColumn($this->foreignKey);
     }
 
     /**
@@ -340,38 +362,6 @@ class BelongsTo extends Relation
     }
 
     /**
-     * Get the name of the relationship.
-     *
-     * @return string
-     */
-    public function getRelationName()
-    {
-        return $this->relationName;
-    }
-
-    /**
-     * Determine if the related model has an auto-incrementing ID.
-     *
-     * @return bool
-     */
-    protected function relationHasIncrementingId()
-    {
-        return $this->related->getIncrementing() &&
-            in_array($this->related->getKeyType(), ['int', 'integer']);
-    }
-
-    /**
-     * Make a new related instance for the given model.
-     *
-     * @param  \Illuminate\Database\Eloquent\Model  $parent
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    protected function newRelatedInstanceFor(Model $parent)
-    {
-        return $this->related->newInstance();
-    }
-
-    /**
      * Get the value of the model's associated key.
      *
      * @param  \Illuminate\Database\Eloquent\Model  $model
@@ -380,5 +370,15 @@ class BelongsTo extends Relation
     protected function getRelatedKeyFrom(Model $model)
     {
         return $model->{$this->ownerKey};
+    }
+
+    /**
+     * Get the name of the relationship.
+     *
+     * @return string
+     */
+    public function getRelationName()
+    {
+        return $this->relationName;
     }
 }

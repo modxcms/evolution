@@ -11,6 +11,7 @@
 namespace Carbon\Traits;
 
 use Carbon\Exceptions\InvalidFormatException;
+use ReturnTypeWillChange;
 
 /**
  * Trait Serialization.
@@ -55,6 +56,16 @@ trait Serialization
     protected $dumpLocale = null;
 
     /**
+     * Return a serialized string of the instance.
+     *
+     * @return string
+     */
+    public function serialize()
+    {
+        return serialize($this);
+    }
+
+    /**
      * Create an instance from a serialized string.
      *
      * @param string $value
@@ -81,6 +92,7 @@ trait Serialization
      *
      * @return static
      */
+    #[ReturnTypeWillChange]
     public static function __set_state($dump)
     {
         if (\is_string($dump)) {
@@ -93,31 +105,6 @@ trait Serialization
             : (object) $dump;
 
         return static::instance($date);
-    }
-
-    /**
-     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
-     *             You should rather transform Carbon object before the serialization.
-     *
-     * JSON serialize all Carbon instances using the given callback.
-     *
-     * @param callable $callback
-     *
-     * @return void
-     */
-    public static function serializeUsing($callback)
-    {
-        static::$serializer = $callback;
-    }
-
-    /**
-     * Return a serialized string of the instance.
-     *
-     * @return string
-     */
-    public function serialize()
-    {
-        return serialize($this);
     }
 
     /**
@@ -140,6 +127,7 @@ trait Serialization
     /**
      * Set locale if specified on unserialize() called.
      */
+    #[ReturnTypeWillChange]
     public function __wakeup()
     {
         if (get_parent_class() && method_exists(parent::class, '__wakeup')) {
@@ -154,24 +142,6 @@ trait Serialization
         }
 
         $this->cleanupDumpProperties();
-    }
-
-    /**
-     * Cleanup properties attached to the public scope of DateTime when a dump of the date is requested.
-     * foreach ($date as $_) {}
-     * serializer($date)
-     * var_export($date)
-     * get_object_vars($date)
-     */
-    public function cleanupDumpProperties()
-    {
-        foreach ($this->dumpProperties as $property) {
-            if (isset($this->$property)) {
-                unset($this->$property);
-            }
-        }
-
-        return $this;
     }
 
     /**
@@ -190,5 +160,38 @@ trait Serialization
         }
 
         return $this->toJSON();
+    }
+
+    /**
+     * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
+     *             You should rather transform Carbon object before the serialization.
+     *
+     * JSON serialize all Carbon instances using the given callback.
+     *
+     * @param callable $callback
+     *
+     * @return void
+     */
+    public static function serializeUsing($callback)
+    {
+        static::$serializer = $callback;
+    }
+
+    /**
+     * Cleanup properties attached to the public scope of DateTime when a dump of the date is requested.
+     * foreach ($date as $_) {}
+     * serializer($date)
+     * var_export($date)
+     * get_object_vars($date)
+     */
+    public function cleanupDumpProperties()
+    {
+        foreach ($this->dumpProperties as $property) {
+            if (isset($this->$property)) {
+                unset($this->$property);
+            }
+        }
+
+        return $this;
     }
 }

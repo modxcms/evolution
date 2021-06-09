@@ -19,16 +19,6 @@ class MemcacheCache extends CacheProvider
     private $memcache;
 
     /**
-     * Gets the memcache instance used by the cache.
-     *
-     * @return Memcache|null
-     */
-    public function getMemcache()
-    {
-        return $this->memcache;
-    }
-
-    /**
      * Sets the memcache instance to use.
      *
      * @return void
@@ -39,11 +29,33 @@ class MemcacheCache extends CacheProvider
     }
 
     /**
+     * Gets the memcache instance used by the cache.
+     *
+     * @return Memcache|null
+     */
+    public function getMemcache()
+    {
+        return $this->memcache;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function doFetch($id)
     {
         return $this->memcache->get($id);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function doContains($id)
+    {
+        $flags = null;
+        $this->memcache->get($id, $flags);
+
+        //if memcache has changed the value of "flags", it means the value exists
+        return $flags !== null;
     }
 
     /**
@@ -65,18 +77,6 @@ class MemcacheCache extends CacheProvider
     {
         // Memcache::delete() returns false if entry does not exist
         return $this->memcache->delete($id) || ! $this->doContains($id);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function doContains($id)
-    {
-        $flags = null;
-        $this->memcache->get($id, $flags);
-
-        //if memcache has changed the value of "flags", it means the value exists
-        return $flags !== null;
     }
 
     /**

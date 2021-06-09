@@ -74,21 +74,6 @@ class ZipDownloader extends ArchiveDownloader
     }
 
     /**
-     * extract $file to $path
-     *
-     * @param  string                $file File to extract
-     * @param  string                $path Path where to extract file
-     * @return PromiseInterface|null
-     *
-     * TODO v3 should make this private once we can drop PHP 5.3 support
-     * @protected
-     */
-    public function extract(PackageInterface $package, $file, $path)
-    {
-        return $this->extractWithSystemUnzip($package, $file, $path);
-    }
-
-    /**
      * extract $file to $path with "unzip" command
      *
      * @param  string           $file File to extract
@@ -186,6 +171,21 @@ class ZipDownloader extends ArchiveDownloader
         }
 
         throw $processError;
+    }
+
+    /**
+     * extract $file to $path
+     *
+     * @param  string                $file File to extract
+     * @param  string                $path Path where to extract file
+     * @return PromiseInterface|null
+     *
+     * TODO v3 should make this private once we can drop PHP 5.3 support
+     * @protected
+     */
+    public function extract(PackageInterface $package, $file, $path)
+    {
+        return $this->extractWithSystemUnzip($package, $file, $path);
     }
 
     /**

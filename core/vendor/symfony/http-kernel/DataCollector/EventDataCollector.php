@@ -83,28 +83,6 @@ class EventDataCollector extends DataCollector implements LateDataCollectorInter
     }
 
     /**
-     * Sets the not called listeners.
-     *
-     * @see TraceableEventDispatcher
-     */
-    public function setNotCalledListeners(array $listeners)
-    {
-        $this->data['not_called_listeners'] = $listeners;
-    }
-
-    /**
-     * Sets the orphaned events.
-     *
-     * @param array $events An array of orphaned events
-     *
-     * @see TraceableEventDispatcher
-     */
-    public function setOrphanedEvents(array $events)
-    {
-        $this->data['orphaned_events'] = $events;
-    }
-
-    /**
      * Gets the called listeners.
      *
      * @return array An array of called listeners
@@ -117,6 +95,16 @@ class EventDataCollector extends DataCollector implements LateDataCollectorInter
     }
 
     /**
+     * Sets the not called listeners.
+     *
+     * @see TraceableEventDispatcher
+     */
+    public function setNotCalledListeners(array $listeners)
+    {
+        $this->data['not_called_listeners'] = $listeners;
+    }
+
+    /**
      * Gets the not called listeners.
      *
      * @return array
@@ -126,6 +114,18 @@ class EventDataCollector extends DataCollector implements LateDataCollectorInter
     public function getNotCalledListeners()
     {
         return $this->data['not_called_listeners'];
+    }
+
+    /**
+     * Sets the orphaned events.
+     *
+     * @param array $events An array of orphaned events
+     *
+     * @see TraceableEventDispatcher
+     */
+    public function setOrphanedEvents(array $events)
+    {
+        $this->data['orphaned_events'] = $events;
     }
 
     /**

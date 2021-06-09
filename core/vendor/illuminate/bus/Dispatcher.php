@@ -79,6 +79,121 @@ class Dispatcher implements QueueingDispatcher
     }
 
     /**
+     * Dispatch a command to its appropriate handler in the current process.
+     *
+     * Queueable jobs will be dispatched to the "sync" queue.
+     *
+     * @param  mixed  $command
+     * @param  mixed  $handler
+     * @return mixed
+     */
+    public function dispatchSync($command, $handler = null)
+    {
+        if ($this->queueResolver &&
+            $this->commandShouldBeQueued($command) &&
+            method_exists($command, 'onConnection')) {
+            return $this->dispatchToQueue($command->onConnection('sync'));
+        }
+
+        return $this->dispatchNow($command, $handler);
+    }
+
+    /**
+     * Dispatch a command to its appropriate handler in the current process without using the synchronous queue.
+     *
+     * @param  mixed  $command
+     * @param  mixed  $handler
+     * @return mixed
+     */
+    public function dispatchNow($command, $handler = null)
+    {
+        $uses = class_uses_recursive($command);
+
+        if (in_array(InteractsWithQueue::class, $uses) &&
+            in_array(Queueable::class, $uses) &&
+            ! $command->job) {
+            $command->setJob(new SyncJob($this->container, json_encode([]), 'sync', 'sync'));
+        }
+
+        if ($handler || $handler = $this->getCommandHandler($command)) {
+            $callback = function ($command) use ($handler) {
+                $method = method_exists($handler, 'handle') ? 'handle' : '__invoke';
+
+                return $handler->{$method}($command);
+            };
+        } else {
+            $callback = function ($command) {
+                $method = method_exists($command, 'handle') ? 'handle' : '__invoke';
+
+                return $this->container->call([$command, $method]);
+            };
+        }
+
+        return $this->pipeline->send($command)->through($this->pipes)->then($callback);
+    }
+
+    /**
+     * Attempt to find the batch with the given ID.
+     *
+     * @param  string  $batchId
+     * @return \Illuminate\Bus\Batch|null
+     */
+    public function findBatch(string $batchId)
+    {
+        return $this->container->make(BatchRepository::class)->find($batchId);
+    }
+
+    /**
+     * Create a new batch of queueable jobs.
+     *
+     * @param  \Illuminate\Support\Collection|array|mixed  $jobs
+     * @return \Illuminate\Bus\PendingBatch
+     */
+    public function batch($jobs)
+    {
+        return new PendingBatch($this->container, Collection::wrap($jobs));
+    }
+
+    /**
+     * Create a new chain of queueable jobs.
+     *
+     * @param  \Illuminate\Support\Collection|array  $jobs
+     * @return \Illuminate\Foundation\Bus\PendingChain
+     */
+    public function chain($jobs)
+    {
+        $jobs = Collection::wrap($jobs);
+
+        return new PendingChain($jobs->shift(), $jobs->toArray());
+    }
+
+    /**
+     * Determine if the given command has a handler.
+     *
+     * @param  mixed  $command
+     * @return bool
+     */
+    public function hasCommandHandler($command)
+    {
+        return array_key_exists(get_class($command), $this->handlers);
+    }
+
+    /**
+     * Retrieve the handler for a command.
+     *
+     * @param  mixed  $command
+     * @return bool|mixed
+     */
+    public function getCommandHandler($command)
+    {
+        if ($this->hasCommandHandler($command)) {
+            return $this->container->make($this->handlers[get_class($command)]);
+        }
+
+        return false;
+    }
+
+    /**
      * Determine if the given command should be queued.
      *
      * @param  mixed  $command
@@ -136,121 +251,6 @@ class Dispatcher implements QueueingDispatcher
         }
 
         return $queue->push($command);
-    }
-
-    /**
-     * Dispatch a command to its appropriate handler in the current process without using the synchronous queue.
-     *
-     * @param  mixed  $command
-     * @param  mixed  $handler
-     * @return mixed
-     */
-    public function dispatchNow($command, $handler = null)
-    {
-        $uses = class_uses_recursive($command);
-
-        if (in_array(InteractsWithQueue::class, $uses) &&
-            in_array(Queueable::class, $uses) &&
-            ! $command->job) {
-            $command->setJob(new SyncJob($this->container, json_encode([]), 'sync', 'sync'));
-        }
-
-        if ($handler || $handler = $this->getCommandHandler($command)) {
-            $callback = function ($command) use ($handler) {
-                $method = method_exists($handler, 'handle') ? 'handle' : '__invoke';
-
-                return $handler->{$method}($command);
-            };
-        } else {
-            $callback = function ($command) {
-                $method = method_exists($command, 'handle') ? 'handle' : '__invoke';
-
-                return $this->container->call([$command, $method]);
-            };
-        }
-
-        return $this->pipeline->send($command)->through($this->pipes)->then($callback);
-    }
-
-    /**
-     * Retrieve the handler for a command.
-     *
-     * @param  mixed  $command
-     * @return bool|mixed
-     */
-    public function getCommandHandler($command)
-    {
-        if ($this->hasCommandHandler($command)) {
-            return $this->container->make($this->handlers[get_class($command)]);
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine if the given command has a handler.
-     *
-     * @param  mixed  $command
-     * @return bool
-     */
-    public function hasCommandHandler($command)
-    {
-        return array_key_exists(get_class($command), $this->handlers);
-    }
-
-    /**
-     * Dispatch a command to its appropriate handler in the current process.
-     *
-     * Queueable jobs will be dispatched to the "sync" queue.
-     *
-     * @param  mixed  $command
-     * @param  mixed  $handler
-     * @return mixed
-     */
-    public function dispatchSync($command, $handler = null)
-    {
-        if ($this->queueResolver &&
-            $this->commandShouldBeQueued($command) &&
-            method_exists($command, 'onConnection')) {
-            return $this->dispatchToQueue($command->onConnection('sync'));
-        }
-
-        return $this->dispatchNow($command, $handler);
-    }
-
-    /**
-     * Attempt to find the batch with the given ID.
-     *
-     * @param  string  $batchId
-     * @return \Illuminate\Bus\Batch|null
-     */
-    public function findBatch(string $batchId)
-    {
-        return $this->container->make(BatchRepository::class)->find($batchId);
-    }
-
-    /**
-     * Create a new batch of queueable jobs.
-     *
-     * @param  \Illuminate\Support\Collection|array|mixed  $jobs
-     * @return \Illuminate\Bus\PendingBatch
-     */
-    public function batch($jobs)
-    {
-        return new PendingBatch($this->container, Collection::wrap($jobs));
-    }
-
-    /**
-     * Create a new chain of queueable jobs.
-     *
-     * @param  \Illuminate\Support\Collection|array  $jobs
-     * @return \Illuminate\Foundation\Bus\PendingChain
-     */
-    public function chain($jobs)
-    {
-        $jobs = Collection::wrap($jobs);
-
-        return new PendingChain($jobs->shift(), $jobs->toArray());
     }
 
     /**

@@ -23,16 +23,6 @@ trait Mutability
     use Cast;
 
     /**
-     * Returns true if the current class/instance is immutable.
-     *
-     * @return bool
-     */
-    public static function isImmutable()
-    {
-        return !static::isMutable();
-    }
-
-    /**
      * Returns true if the current class/instance is mutable.
      *
      * @return bool
@@ -40,6 +30,16 @@ trait Mutability
     public static function isMutable()
     {
         return false;
+    }
+
+    /**
+     * Returns true if the current class/instance is immutable.
+     *
+     * @return bool
+     */
+    public static function isImmutable()
+    {
+        return !static::isMutable();
     }
 
     /**

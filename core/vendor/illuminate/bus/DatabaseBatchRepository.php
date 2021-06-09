@@ -70,42 +70,20 @@ class DatabaseBatchRepository implements PrunableBatchRepository
     }
 
     /**
-     * Convert the given raw batch to a Batch object.
+     * Retrieve information about an existing batch.
      *
-     * @param  object  $batch
-     * @return \Illuminate\Bus\Batch
+     * @param  string  $batchId
+     * @return \Illuminate\Bus\Batch|null
      */
-    protected function toBatch($batch)
+    public function find(string $batchId)
     {
-        return $this->factory->make(
-            $this,
-            $batch->id,
-            $batch->name,
-            (int) $batch->total_jobs,
-            (int) $batch->pending_jobs,
-            (int) $batch->failed_jobs,
-            json_decode($batch->failed_job_ids, true),
-            $this->unserialize($batch->options),
-            CarbonImmutable::createFromTimestamp($batch->created_at),
-            $batch->cancelled_at ? CarbonImmutable::createFromTimestamp($batch->cancelled_at) : $batch->cancelled_at,
-            $batch->finished_at ? CarbonImmutable::createFromTimestamp($batch->finished_at) : $batch->finished_at
-        );
-    }
+        $batch = $this->connection->table($this->table)
+                            ->where('id', $batchId)
+                            ->first();
 
-    /**
-     * Unserialize the given value.
-     *
-     * @param  string  $serialized
-     * @return mixed
-     */
-    protected function unserialize($serialized)
-    {
-        if ($this->connection instanceof PostgresConnection &&
-            ! Str::contains($serialized, [':', ';'])) {
-            $serialized = base64_decode($serialized);
+        if ($batch) {
+            return $this->toBatch($batch);
         }
-
-        return unserialize($serialized);
     }
 
     /**
@@ -132,38 +110,6 @@ class DatabaseBatchRepository implements PrunableBatchRepository
         ]);
 
         return $this->find($id);
-    }
-
-    /**
-     * Serialize the given value.
-     *
-     * @param  mixed  $value
-     * @return string
-     */
-    protected function serialize($value)
-    {
-        $serialized = serialize($value);
-
-        return $this->connection instanceof PostgresConnection
-            ? base64_encode($serialized)
-            : $serialized;
-    }
-
-    /**
-     * Retrieve information about an existing batch.
-     *
-     * @param  string  $batchId
-     * @return \Illuminate\Bus\Batch|null
-     */
-    public function find(string $batchId)
-    {
-        $batch = $this->connection->table($this->table)
-                            ->where('id', $batchId)
-                            ->first();
-
-        if ($batch) {
-            return $this->toBatch($batch);
-        }
     }
 
     /**
@@ -206,26 +152,6 @@ class DatabaseBatchRepository implements PrunableBatchRepository
     }
 
     /**
-     * Update an atomic value within the batch.
-     *
-     * @param  string  $batchId
-     * @param  \Closure  $callback
-     * @return int|null
-     */
-    protected function updateAtomicValues(string $batchId, Closure $callback)
-    {
-        return $this->connection->transaction(function () use ($batchId, $callback) {
-            $batch = $this->connection->table($this->table)->where('id', $batchId)
-                        ->lockForUpdate()
-                        ->first();
-
-            return is_null($batch) ? [] : tap($callback($batch), function ($values) use ($batchId) {
-                $this->connection->table($this->table)->where('id', $batchId)->update($values);
-            });
-        });
-    }
-
-    /**
      * Increment the total number of failed jobs for the batch.
      *
      * @param  string  $batchId
@@ -246,6 +172,26 @@ class DatabaseBatchRepository implements PrunableBatchRepository
             $values['pending_jobs'],
             $values['failed_jobs']
         );
+    }
+
+    /**
+     * Update an atomic value within the batch.
+     *
+     * @param  string  $batchId
+     * @param  \Closure  $callback
+     * @return int|null
+     */
+    protected function updateAtomicValues(string $batchId, Closure $callback)
+    {
+        return $this->connection->transaction(function () use ($batchId, $callback) {
+            $batch = $this->connection->table($this->table)->where('id', $batchId)
+                        ->lockForUpdate()
+                        ->first();
+
+            return is_null($batch) ? [] : tap($callback($batch), function ($values) use ($batchId) {
+                $this->connection->table($this->table)->where('id', $batchId)->update($values);
+            });
+        });
     }
 
     /**
@@ -343,5 +289,59 @@ class DatabaseBatchRepository implements PrunableBatchRepository
         return $this->connection->transaction(function () use ($callback) {
             return $callback();
         });
+    }
+
+    /**
+     * Serialize the given value.
+     *
+     * @param  mixed  $value
+     * @return string
+     */
+    protected function serialize($value)
+    {
+        $serialized = serialize($value);
+
+        return $this->connection instanceof PostgresConnection
+            ? base64_encode($serialized)
+            : $serialized;
+    }
+
+    /**
+     * Unserialize the given value.
+     *
+     * @param  string  $serialized
+     * @return mixed
+     */
+    protected function unserialize($serialized)
+    {
+        if ($this->connection instanceof PostgresConnection &&
+            ! Str::contains($serialized, [':', ';'])) {
+            $serialized = base64_decode($serialized);
+        }
+
+        return unserialize($serialized);
+    }
+
+    /**
+     * Convert the given raw batch to a Batch object.
+     *
+     * @param  object  $batch
+     * @return \Illuminate\Bus\Batch
+     */
+    protected function toBatch($batch)
+    {
+        return $this->factory->make(
+            $this,
+            $batch->id,
+            $batch->name,
+            (int) $batch->total_jobs,
+            (int) $batch->pending_jobs,
+            (int) $batch->failed_jobs,
+            json_decode($batch->failed_job_ids, true),
+            $this->unserialize($batch->options),
+            CarbonImmutable::createFromTimestamp($batch->created_at),
+            $batch->cancelled_at ? CarbonImmutable::createFromTimestamp($batch->cancelled_at) : $batch->cancelled_at,
+            $batch->finished_at ? CarbonImmutable::createFromTimestamp($batch->finished_at) : $batch->finished_at
+        );
     }
 }

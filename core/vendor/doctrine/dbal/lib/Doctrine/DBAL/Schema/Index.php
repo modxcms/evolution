@@ -95,19 +95,11 @@ class Index extends AbstractAsset implements Constraint
     }
 
     /**
-     * Adds Flag for an index that translates to platform specific handling.
-     *
-     * @param string $flag
-     *
-     * @return Index
-     *
-     * @example $index->addFlag('CLUSTERED')
+     * {@inheritdoc}
      */
-    public function addFlag($flag)
+    public function getColumns()
     {
-        $this->_flags[strtolower($flag)] = true;
-
-        return $this;
+        return array_keys($this->_columns);
     }
 
     /**
@@ -136,23 +128,37 @@ class Index extends AbstractAsset implements Constraint
     }
 
     /**
-     * @param string $name
-     *
-     * @return bool
+     * @return string[]
      */
-    public function hasOption($name)
+    public function getUnquotedColumns()
     {
-        return isset($this->options[strtolower($name)]);
+        return array_map([$this, 'trimQuotes'], $this->getColumns());
     }
 
     /**
-     * @param string $name
+     * Is the index neither unique nor primary key?
      *
-     * @return mixed
+     * @return bool
      */
-    public function getOption($name)
+    public function isSimpleIndex()
     {
-        return $this->options[strtolower($name)];
+        return ! $this->_isPrimary && ! $this->_isUnique;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUnique()
+    {
+        return $this->_isUnique;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPrimary()
+    {
+        return $this->_isPrimary;
     }
 
     /**
@@ -170,19 +176,30 @@ class Index extends AbstractAsset implements Constraint
     }
 
     /**
-     * @return string[]
+     * Checks if this index exactly spans the given column names in the correct order.
+     *
+     * @param string[] $columnNames
+     *
+     * @return bool
      */
-    public function getUnquotedColumns()
+    public function spansColumns(array $columnNames)
     {
-        return array_map([$this, 'trimQuotes'], $this->getColumns());
-    }
+        $columns         = $this->getColumns();
+        $numberOfColumns = count($columns);
+        $sameColumns     = true;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getColumns()
-    {
-        return array_keys($this->_columns);
+        for ($i = 0; $i < $numberOfColumns; $i++) {
+            if (
+                isset($columnNames[$i])
+                && $this->trimQuotes(strtolower($columns[$i])) === $this->trimQuotes(strtolower($columnNames[$i]))
+            ) {
+                continue;
+            }
+
+            $sameColumns = false;
+        }
+
+        return $sameColumns;
     }
 
     /**
@@ -229,30 +246,101 @@ class Index extends AbstractAsset implements Constraint
     }
 
     /**
-     * Checks if this index exactly spans the given column names in the correct order.
-     *
-     * @param string[] $columnNames
+     * Detects if the other index is a non-unique, non primary index that can be overwritten by this one.
      *
      * @return bool
      */
-    public function spansColumns(array $columnNames)
+    public function overrules(Index $other)
     {
-        $columns         = $this->getColumns();
-        $numberOfColumns = count($columns);
-        $sameColumns     = true;
-
-        for ($i = 0; $i < $numberOfColumns; $i++) {
-            if (
-                isset($columnNames[$i])
-                && $this->trimQuotes(strtolower($columns[$i])) === $this->trimQuotes(strtolower($columnNames[$i]))
-            ) {
-                continue;
-            }
-
-            $sameColumns = false;
+        if ($other->isPrimary()) {
+            return false;
         }
 
-        return $sameColumns;
+        if ($this->isSimpleIndex() && $other->isUnique()) {
+            return false;
+        }
+
+        return $this->spansColumns($other->getColumns())
+            && ($this->isPrimary() || $this->isUnique())
+            && $this->samePartialIndex($other);
+    }
+
+    /**
+     * Returns platform specific flags for indexes.
+     *
+     * @return string[]
+     */
+    public function getFlags()
+    {
+        return array_keys($this->_flags);
+    }
+
+    /**
+     * Adds Flag for an index that translates to platform specific handling.
+     *
+     * @param string $flag
+     *
+     * @return Index
+     *
+     * @example $index->addFlag('CLUSTERED')
+     */
+    public function addFlag($flag)
+    {
+        $this->_flags[strtolower($flag)] = true;
+
+        return $this;
+    }
+
+    /**
+     * Does this index have a specific flag?
+     *
+     * @param string $flag
+     *
+     * @return bool
+     */
+    public function hasFlag($flag)
+    {
+        return isset($this->_flags[strtolower($flag)]);
+    }
+
+    /**
+     * Removes a flag.
+     *
+     * @param string $flag
+     *
+     * @return void
+     */
+    public function removeFlag($flag)
+    {
+        unset($this->_flags[strtolower($flag)]);
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function hasOption($name)
+    {
+        return isset($this->options[strtolower($name)]);
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return mixed
+     */
+    public function getOption($name)
+    {
+        return $this->options[strtolower($name)];
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 
     /**
@@ -284,93 +372,5 @@ class Index extends AbstractAsset implements Constraint
 
         return array_filter($this->options['lengths'] ?? [], $filter)
             === array_filter($other->options['lengths'] ?? [], $filter);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isUnique()
-    {
-        return $this->_isUnique;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isPrimary()
-    {
-        return $this->_isPrimary;
-    }
-
-    /**
-     * Detects if the other index is a non-unique, non primary index that can be overwritten by this one.
-     *
-     * @return bool
-     */
-    public function overrules(Index $other)
-    {
-        if ($other->isPrimary()) {
-            return false;
-        }
-
-        if ($this->isSimpleIndex() && $other->isUnique()) {
-            return false;
-        }
-
-        return $this->spansColumns($other->getColumns())
-            && ($this->isPrimary() || $this->isUnique())
-            && $this->samePartialIndex($other);
-    }
-
-    /**
-     * Is the index neither unique nor primary key?
-     *
-     * @return bool
-     */
-    public function isSimpleIndex()
-    {
-        return ! $this->_isPrimary && ! $this->_isUnique;
-    }
-
-    /**
-     * Returns platform specific flags for indexes.
-     *
-     * @return string[]
-     */
-    public function getFlags()
-    {
-        return array_keys($this->_flags);
-    }
-
-    /**
-     * Does this index have a specific flag?
-     *
-     * @param string $flag
-     *
-     * @return bool
-     */
-    public function hasFlag($flag)
-    {
-        return isset($this->_flags[strtolower($flag)]);
-    }
-
-    /**
-     * Removes a flag.
-     *
-     * @param string $flag
-     *
-     * @return void
-     */
-    public function removeFlag($flag)
-    {
-        unset($this->_flags[strtolower($flag)]);
-    }
-
-    /**
-     * @return mixed[]
-     */
-    public function getOptions()
-    {
-        return $this->options;
     }
 }

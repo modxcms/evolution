@@ -23,20 +23,6 @@ class FossilDownloader extends VcsDownloader
     /**
      * {@inheritDoc}
      */
-    public function getLocalChanges(PackageInterface $package, $path)
-    {
-        if (!$this->hasMetadataRepository($path)) {
-            return null;
-        }
-
-        $this->process->execute('fossil changes', $output, realpath($path));
-
-        return trim($output) ?: null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     protected function doDownload(PackageInterface $package, $path, $url, PackageInterface $prevPackage = null)
     {
         return \React\Promise\resolve();
@@ -96,9 +82,15 @@ class FossilDownloader extends VcsDownloader
     /**
      * {@inheritDoc}
      */
-    protected function hasMetadataRepository($path)
+    public function getLocalChanges(PackageInterface $package, $path)
     {
-        return is_file($path . '/.fslckout') || is_file($path . '/_FOSSIL_');
+        if (!$this->hasMetadataRepository($path)) {
+            return null;
+        }
+
+        $this->process->execute('fossil changes', $output, realpath($path));
+
+        return trim($output) ?: null;
     }
 
     /**
@@ -123,5 +115,13 @@ class FossilDownloader extends VcsDownloader
         }
 
         return $log;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function hasMetadataRepository($path)
+    {
+        return is_file($path . '/.fslckout') || is_file($path . '/_FOSSIL_');
     }
 }

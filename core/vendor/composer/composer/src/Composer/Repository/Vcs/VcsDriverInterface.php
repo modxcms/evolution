@@ -21,17 +21,6 @@ use Composer\IO\IOInterface;
 interface VcsDriverInterface
 {
     /**
-     * Checks if this driver can handle a given url
-     *
-     * @param  IOInterface $io     IO instance
-     * @param  Config      $config current $config
-     * @param  string      $url    URL to validate/check
-     * @param  bool        $deep   unless true, only shallow checks (url matching typically) should be done
-     * @return bool
-     */
-    public static function supports(IOInterface $io, Config $config, $url, $deep = false);
-
-    /**
      * Initializes the driver (git clone, svn checkout, fetch info etc)
      */
     public function initialize();
@@ -114,4 +103,15 @@ interface VcsDriverInterface
      * Performs any cleanup necessary as the driver is not longer needed
      */
     public function cleanup();
+
+    /**
+     * Checks if this driver can handle a given url
+     *
+     * @param  IOInterface $io     IO instance
+     * @param  Config      $config current $config
+     * @param  string      $url    URL to validate/check
+     * @param  bool        $deep   unless true, only shallow checks (url matching typically) should be done
+     * @return bool
+     */
+    public static function supports(IOInterface $io, Config $config, $url, $deep = false);
 }

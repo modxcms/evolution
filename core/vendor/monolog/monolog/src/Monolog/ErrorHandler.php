@@ -25,17 +25,20 @@ use Psr\Log\LogLevel;
  */
 class ErrorHandler
 {
-    private static $fatalErrors = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR];
     private $logger;
+
     private $previousExceptionHandler;
     private $uncaughtExceptionLevelMap;
+
     private $previousErrorHandler;
     private $errorLevelMap;
     private $handleOnlyReportedErrors;
+
     private $hasFatalErrorHandler;
     private $fatalLevel;
     private $reservedMemory;
     private $lastFatalTrace;
+    private static $fatalErrors = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR];
 
     public function __construct(LoggerInterface $logger)
     {
@@ -70,6 +73,24 @@ class ErrorHandler
         return $handler;
     }
 
+    public function registerExceptionHandler($levelMap = [], $callPrevious = true): self
+    {
+        $prev = set_exception_handler(function (\Throwable $e): void {
+            $this->handleException($e);
+        });
+        $this->uncaughtExceptionLevelMap = $levelMap;
+        foreach ($this->defaultExceptionLevelMap() as $class => $level) {
+            if (!isset($this->uncaughtExceptionLevelMap[$class])) {
+                $this->uncaughtExceptionLevelMap[$class] = $level;
+            }
+        }
+        if ($callPrevious && $prev) {
+            $this->previousExceptionHandler = $prev;
+        }
+
+        return $this;
+    }
+
     public function registerErrorHandler(array $levelMap = [], $callPrevious = true, $errorTypes = -1, $handleOnlyReportedErrors = true): self
     {
         $prev = set_error_handler([$this, 'handleError'], $errorTypes);
@@ -81,6 +102,29 @@ class ErrorHandler
         $this->handleOnlyReportedErrors = $handleOnlyReportedErrors;
 
         return $this;
+    }
+
+    /**
+     * @param string|null $level              a LogLevel::* constant, null to use the default LogLevel::ALERT or false to disable fatal error handling
+     * @param int         $reservedMemorySize Amount of KBs to reserve in memory so that it can be freed when handling fatal errors giving Monolog some room in memory to get its job done
+     */
+    public function registerFatalHandler($level = null, int $reservedMemorySize = 20): self
+    {
+        register_shutdown_function([$this, 'handleFatalError']);
+
+        $this->reservedMemory = str_repeat(' ', 1024 * $reservedMemorySize);
+        $this->fatalLevel = $level;
+        $this->hasFatalErrorHandler = true;
+
+        return $this;
+    }
+
+    protected function defaultExceptionLevelMap(): array
+    {
+        return [
+            'ParseError' => LogLevel::CRITICAL,
+            'Throwable' => LogLevel::ERROR,
+        ];
     }
 
     protected function defaultErrorLevelMap(): array
@@ -102,24 +146,6 @@ class ErrorHandler
             E_DEPRECATED        => LogLevel::NOTICE,
             E_USER_DEPRECATED   => LogLevel::NOTICE,
         ];
-    }
-
-    public function registerExceptionHandler($levelMap = [], $callPrevious = true): self
-    {
-        $prev = set_exception_handler(function (\Throwable $e): void {
-            $this->handleException($e);
-        });
-        $this->uncaughtExceptionLevelMap = $levelMap;
-        foreach ($this->defaultExceptionLevelMap() as $class => $level) {
-            if (!isset($this->uncaughtExceptionLevelMap[$class])) {
-                $this->uncaughtExceptionLevelMap[$class] = $level;
-            }
-        }
-        if ($callPrevious && $prev) {
-            $this->previousExceptionHandler = $prev;
-        }
-
-        return $this;
     }
 
     private function handleException(\Throwable $e)
@@ -149,29 +175,6 @@ class ErrorHandler
         exit(255);
     }
 
-    protected function defaultExceptionLevelMap(): array
-    {
-        return [
-            'ParseError' => LogLevel::CRITICAL,
-            'Throwable' => LogLevel::ERROR,
-        ];
-    }
-
-    /**
-     * @param string|null $level              a LogLevel::* constant, null to use the default LogLevel::ALERT or false to disable fatal error handling
-     * @param int         $reservedMemorySize Amount of KBs to reserve in memory so that it can be freed when handling fatal errors giving Monolog some room in memory to get its job done
-     */
-    public function registerFatalHandler($level = null, int $reservedMemorySize = 20): self
-    {
-        register_shutdown_function([$this, 'handleFatalError']);
-
-        $this->reservedMemory = str_repeat(' ', 1024 * $reservedMemorySize);
-        $this->fatalLevel = $level;
-        $this->hasFatalErrorHandler = true;
-
-        return $this;
-    }
-
     /**
      * @private
      */
@@ -198,6 +201,29 @@ class ErrorHandler
         }
 
         return true;
+    }
+
+    /**
+     * @private
+     */
+    public function handleFatalError()
+    {
+        $this->reservedMemory = '';
+
+        $lastError = error_get_last();
+        if ($lastError && in_array($lastError['type'], self::$fatalErrors, true)) {
+            $this->logger->log(
+                $this->fatalLevel === null ? LogLevel::ALERT : $this->fatalLevel,
+                'Fatal Error ('.self::codeToString($lastError['type']).'): '.$lastError['message'],
+                ['code' => $lastError['type'], 'message' => $lastError['message'], 'file' => $lastError['file'], 'line' => $lastError['line'], 'trace' => $this->lastFatalTrace]
+            );
+
+            if ($this->logger instanceof Logger) {
+                foreach ($this->logger->getHandlers() as $handler) {
+                    $handler->close();
+                }
+            }
+        }
     }
 
     private static function codeToString($code): string
@@ -236,28 +262,5 @@ class ErrorHandler
         }
 
         return 'Unknown PHP error';
-    }
-
-    /**
-     * @private
-     */
-    public function handleFatalError()
-    {
-        $this->reservedMemory = '';
-
-        $lastError = error_get_last();
-        if ($lastError && in_array($lastError['type'], self::$fatalErrors, true)) {
-            $this->logger->log(
-                $this->fatalLevel === null ? LogLevel::ALERT : $this->fatalLevel,
-                'Fatal Error ('.self::codeToString($lastError['type']).'): '.$lastError['message'],
-                ['code' => $lastError['type'], 'message' => $lastError['message'], 'file' => $lastError['file'], 'line' => $lastError['line'], 'trace' => $this->lastFatalTrace]
-            );
-
-            if ($this->logger instanceof Logger) {
-                foreach ($this->logger->getHandlers() as $handler) {
-                    $handler->close();
-                }
-            }
-        }
     }
 }

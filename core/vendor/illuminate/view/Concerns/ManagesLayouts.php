@@ -8,17 +8,12 @@ use InvalidArgumentException;
 trait ManagesLayouts
 {
     /**
-     * The parent placeholder for the request.
-     *
-     * @var mixed
-     */
-    protected static $parentPlaceholder = [];
-    /**
      * All of the finished, captured sections.
      *
      * @var array
      */
     protected $sections = [];
+
     /**
      * The stack of in-progress sections.
      *
@@ -27,16 +22,11 @@ trait ManagesLayouts
     protected $sectionStack = [];
 
     /**
-     * Inject inline content into a section.
+     * The parent placeholder for the request.
      *
-     * @param  string  $section
-     * @param  string  $content
-     * @return void
+     * @var mixed
      */
-    public function inject($section, $content)
-    {
-        $this->startSection($section, $content);
-    }
+    protected static $parentPlaceholder = [];
 
     /**
      * Start injecting content into a section.
@@ -57,34 +47,15 @@ trait ManagesLayouts
     }
 
     /**
-     * Append content to a given section.
+     * Inject inline content into a section.
      *
      * @param  string  $section
      * @param  string  $content
      * @return void
      */
-    protected function extendSection($section, $content)
+    public function inject($section, $content)
     {
-        if (isset($this->sections[$section])) {
-            $content = str_replace(static::parentPlaceholder($section), $content, $this->sections[$section]);
-        }
-
-        $this->sections[$section] = $content;
-    }
-
-    /**
-     * Get the parent placeholder for the current request.
-     *
-     * @param  string  $section
-     * @return string
-     */
-    public static function parentPlaceholder($section = '')
-    {
-        if (! isset(static::$parentPlaceholder[$section])) {
-            static::$parentPlaceholder[$section] = '##parent-placeholder-'.sha1($section).'##';
-        }
-
-        return static::$parentPlaceholder[$section];
+        $this->startSection($section, $content);
     }
 
     /**
@@ -99,28 +70,6 @@ trait ManagesLayouts
         }
 
         return $this->yieldContent($this->stopSection());
-    }
-
-    /**
-     * Get the string contents of a section.
-     *
-     * @param  string  $section
-     * @param  string  $default
-     * @return string
-     */
-    public function yieldContent($section, $default = '')
-    {
-        $sectionContent = $default instanceof View ? $default : e($default);
-
-        if (isset($this->sections[$section])) {
-            $sectionContent = $this->sections[$section];
-        }
-
-        $sectionContent = str_replace('@@parent', '--parent--holder--', $sectionContent);
-
-        return str_replace(
-            '--parent--holder--', '@parent', str_replace(static::parentPlaceholder($section), '', $sectionContent)
-        );
     }
 
     /**
@@ -173,14 +122,56 @@ trait ManagesLayouts
     }
 
     /**
-     * Check if section does not exist.
+     * Append content to a given section.
      *
-     * @param  string  $name
-     * @return bool
+     * @param  string  $section
+     * @param  string  $content
+     * @return void
      */
-    public function sectionMissing($name)
+    protected function extendSection($section, $content)
     {
-        return ! $this->hasSection($name);
+        if (isset($this->sections[$section])) {
+            $content = str_replace(static::parentPlaceholder($section), $content, $this->sections[$section]);
+        }
+
+        $this->sections[$section] = $content;
+    }
+
+    /**
+     * Get the string contents of a section.
+     *
+     * @param  string  $section
+     * @param  string  $default
+     * @return string
+     */
+    public function yieldContent($section, $default = '')
+    {
+        $sectionContent = $default instanceof View ? $default : e($default);
+
+        if (isset($this->sections[$section])) {
+            $sectionContent = $this->sections[$section];
+        }
+
+        $sectionContent = str_replace('@@parent', '--parent--holder--', $sectionContent);
+
+        return str_replace(
+            '--parent--holder--', '@parent', str_replace(static::parentPlaceholder($section), '', $sectionContent)
+        );
+    }
+
+    /**
+     * Get the parent placeholder for the current request.
+     *
+     * @param  string  $section
+     * @return string
+     */
+    public static function parentPlaceholder($section = '')
+    {
+        if (! isset(static::$parentPlaceholder[$section])) {
+            static::$parentPlaceholder[$section] = '##parent-placeholder-'.sha1($section).'##';
+        }
+
+        return static::$parentPlaceholder[$section];
     }
 
     /**
@@ -192,6 +183,17 @@ trait ManagesLayouts
     public function hasSection($name)
     {
         return array_key_exists($name, $this->sections);
+    }
+
+    /**
+     * Check if section does not exist.
+     *
+     * @param  string  $name
+     * @return bool
+     */
+    public function sectionMissing($name)
+    {
+        return ! $this->hasSection($name);
     }
 
     /**

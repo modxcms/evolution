@@ -36,6 +36,46 @@ class Terminal
         return self::$width ?: 80;
     }
 
+    /**
+     * Gets the terminal height.
+     *
+     * @return int
+     */
+    public function getHeight()
+    {
+        $height = getenv('LINES');
+        if (false !== $height) {
+            return (int) trim($height);
+        }
+
+        if (null === self::$height) {
+            self::initDimensions();
+        }
+
+        return self::$height ?: 50;
+    }
+
+    /**
+     * @internal
+     *
+     * @return bool
+     */
+    public static function hasSttyAvailable()
+    {
+        if (null !== self::$stty) {
+            return self::$stty;
+        }
+
+        // skip check if exec function is disabled
+        if (!\function_exists('exec')) {
+            return false;
+        }
+
+        exec('stty 2>&1', $output, $exitcode);
+
+        return self::$stty = 0 === $exitcode;
+    }
+
     private static function initDimensions()
     {
         if ('\\' === \DIRECTORY_SEPARATOR) {
@@ -67,27 +107,6 @@ class Terminal
     }
 
     /**
-     * @internal
-     *
-     * @return bool
-     */
-    public static function hasSttyAvailable()
-    {
-        if (null !== self::$stty) {
-            return self::$stty;
-        }
-
-        // skip check if exec function is disabled
-        if (!\function_exists('exec')) {
-            return false;
-        }
-
-        exec('stty 2>&1', $output, $exitcode);
-
-        return self::$stty = 0 === $exitcode;
-    }
-
-    /**
      * Initializes dimensions using the output of an stty columns line.
      */
     private static function initDimensionsUsingStty()
@@ -103,6 +122,22 @@ class Terminal
                 self::$height = (int) $matches[1];
             }
         }
+    }
+
+    /**
+     * Runs and parses mode CON if it's available, suppressing any error output.
+     *
+     * @return int[]|null An array composed of the width and the height or null if it could not be parsed
+     */
+    private static function getConsoleMode(): ?array
+    {
+        $info = self::readFromProcess('mode CON');
+
+        if (null === $info || !preg_match('/--------+\r?\n.+?(\d+)\r?\n.+?(\d+)\r?\n/', $info, $matches)) {
+            return null;
+        }
+
+        return [(int) $matches[2], (int) $matches[1]];
     }
 
     /**
@@ -135,40 +170,5 @@ class Terminal
         proc_close($process);
 
         return $info;
-    }
-
-    /**
-     * Runs and parses mode CON if it's available, suppressing any error output.
-     *
-     * @return int[]|null An array composed of the width and the height or null if it could not be parsed
-     */
-    private static function getConsoleMode(): ?array
-    {
-        $info = self::readFromProcess('mode CON');
-
-        if (null === $info || !preg_match('/--------+\r?\n.+?(\d+)\r?\n.+?(\d+)\r?\n/', $info, $matches)) {
-            return null;
-        }
-
-        return [(int) $matches[2], (int) $matches[1]];
-    }
-
-    /**
-     * Gets the terminal height.
-     *
-     * @return int
-     */
-    public function getHeight()
-    {
-        $height = getenv('LINES');
-        if (false !== $height) {
-            return (int) trim($height);
-        }
-
-        if (null === self::$height) {
-            self::initDimensions();
-        }
-
-        return self::$height ?: 50;
     }
 }

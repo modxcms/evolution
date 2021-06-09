@@ -43,22 +43,10 @@ abstract class AbstractFileExtractor
         return $files;
     }
 
-    /**
-     * @return bool
-     */
-    abstract protected function canBeExtracted(string $file);
-
     private function toSplFileInfo(string $file): \SplFileInfo
     {
         return new \SplFileInfo($file);
     }
-
-    /**
-     * @param string|array $resource Files, a file or a directory
-     *
-     * @return iterable files to be extracted
-     */
-    abstract protected function extractFromDirectory($resource);
 
     /**
      * @return bool
@@ -73,4 +61,16 @@ abstract class AbstractFileExtractor
 
         return true;
     }
+
+    /**
+     * @return bool
+     */
+    abstract protected function canBeExtracted(string $file);
+
+    /**
+     * @param string|array $resource Files, a file or a directory
+     *
+     * @return iterable files to be extracted
+     */
+    abstract protected function extractFromDirectory($resource);
 }

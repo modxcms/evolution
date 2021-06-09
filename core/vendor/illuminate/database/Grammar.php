@@ -43,17 +43,6 @@ abstract class Grammar
     }
 
     /**
-     * Determine if the given value is a raw expression.
-     *
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function isExpression($value)
-    {
-        return $value instanceof Expression;
-    }
-
-    /**
      * Wrap a value in keyword identifiers.
      *
      * @param  \Illuminate\Database\Query\Expression|string  $value
@@ -74,17 +63,6 @@ abstract class Grammar
         }
 
         return $this->wrapSegments(explode('.', $value));
-    }
-
-    /**
-     * Get the value of a raw expression.
-     *
-     * @param  \Illuminate\Database\Query\Expression  $expression
-     * @return string
-     */
-    public function getValue($expression)
-    {
-        return $expression->getValue();
     }
 
     /**
@@ -109,21 +87,6 @@ abstract class Grammar
     }
 
     /**
-     * Wrap a single string in keyword identifiers.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    protected function wrapValue($value)
-    {
-        if ($value !== '*') {
-            return '"'.str_replace('"', '""', $value).'"';
-        }
-
-        return $value;
-    }
-
-    /**
      * Wrap the given value segments.
      *
      * @param  array  $segments
@@ -136,6 +99,21 @@ abstract class Grammar
                             ? $this->wrapTable($segment)
                             : $this->wrapValue($segment);
         })->implode('.');
+    }
+
+    /**
+     * Wrap a single string in keyword identifiers.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    protected function wrapValue($value)
+    {
+        if ($value !== '*') {
+            return '"'.str_replace('"', '""', $value).'"';
+        }
+
+        return $value;
     }
 
     /**
@@ -184,6 +162,28 @@ abstract class Grammar
         }
 
         return "'$value'";
+    }
+
+    /**
+     * Determine if the given value is a raw expression.
+     *
+     * @param  mixed  $value
+     * @return bool
+     */
+    public function isExpression($value)
+    {
+        return $value instanceof Expression;
+    }
+
+    /**
+     * Get the value of a raw expression.
+     *
+     * @param  \Illuminate\Database\Query\Expression  $expression
+     * @return string
+     */
+    public function getValue($expression)
+    {
+        return $expression->getValue();
     }
 
     /**

@@ -84,16 +84,6 @@ class InputArgument
     }
 
     /**
-     * Returns the default value.
-     *
-     * @return string|string[]|null The default value
-     */
-    public function getDefault()
-    {
-        return $this->default;
-    }
-
-    /**
      * Sets the default value.
      *
      * @param string|string[]|null $default The default value
@@ -115,6 +105,16 @@ class InputArgument
         }
 
         $this->default = $default;
+    }
+
+    /**
+     * Returns the default value.
+     *
+     * @return string|string[]|null The default value
+     */
+    public function getDefault()
+    {
+        return $this->default;
     }
 
     /**

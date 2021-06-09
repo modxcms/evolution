@@ -104,19 +104,6 @@ class Registry
     }
 
     /**
-     * Gets Logger instance from the registry via static method call
-     *
-     * @param  string                    $name      Name of the requested Logger instance
-     * @param  array                     $arguments Arguments passed to static method call
-     * @throws \InvalidArgumentException If named Logger instance is not in the registry
-     * @return Logger                    Requested instance of Logger
-     */
-    public static function __callStatic($name, $arguments)
-    {
-        return self::getInstance($name);
-    }
-
-    /**
      * Gets Logger instance from the registry
      *
      * @param  string                    $name Name of the requested Logger instance
@@ -129,5 +116,18 @@ class Registry
         }
 
         return self::$loggers[$name];
+    }
+
+    /**
+     * Gets Logger instance from the registry via static method call
+     *
+     * @param  string                    $name      Name of the requested Logger instance
+     * @param  array                     $arguments Arguments passed to static method call
+     * @throws \InvalidArgumentException If named Logger instance is not in the registry
+     * @return Logger                    Requested instance of Logger
+     */
+    public static function __callStatic($name, $arguments)
+    {
+        return self::getInstance($name);
     }
 }

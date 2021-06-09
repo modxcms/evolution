@@ -49,20 +49,6 @@ class ContentListingFormatter
         return $this->sortListing(array_values($listing));
     }
 
-    /**
-     * @param array $listing
-     *
-     * @return array
-     */
-    private function sortListing(array $listing)
-    {
-        usort($listing, function ($a, $b) {
-            return strcasecmp($a['path'], $b['path']);
-        });
-
-        return $listing;
-    }
-
     private function addPathInfo(array $entry)
     {
         return $entry + Util::pathinfo($entry['path']);
@@ -118,5 +104,19 @@ class ContentListingFormatter
         return $this->caseSensitive
             ? $entry['dirname'] === $this->directory
             : strcasecmp($this->directory, $entry['dirname']) === 0;
+    }
+
+    /**
+     * @param array $listing
+     *
+     * @return array
+     */
+    private function sortListing(array $listing)
+    {
+        usort($listing, function ($a, $b) {
+            return strcasecmp($a['path'], $b['path']);
+        });
+
+        return $listing;
     }
 }

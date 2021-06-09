@@ -31,10 +31,72 @@ abstract class AbstractConverter
     use DestinationPreparationTrait;
     use LoggerTrait;
 
+    /**
+     * The actual conversion is be done by a concrete converter extending this class.
+     *
+     * At the stage this method is called, the abstract converter has taken preparational steps.
+     * - It has created the destination folder (if neccesary)
+     * - It has checked the input (valid mime type)
+     * - It has set up an error handler, mostly in order to catch and log warnings during the doConvert fase
+     *
+     * Note: This method is not meant to be called from the outside. Use the static *convert* method for converting
+     *       or, if you wish, create an instance with ::createInstance() and then call ::doConvert()
+     *
+     * @throws ConversionFailedException in case conversion failed in an antipiciated way (or subclass)
+     * @throws \Exception in case conversion failed in an unantipiciated way
+     */
+    abstract protected function doActualConvert();
+
+    /**
+     * Whether or not the converter supports lossless encoding (even for jpegs)
+     *
+     * PS: Converters that supports lossless encoding all use the EncodingAutoTrait, which
+     * overrides this function.
+     *
+     * @return  boolean  Whether the converter supports lossless encoding (even for jpegs).
+     */
+    public function supportsLossless()
+    {
+        return false;
+    }
+
     /** @var string  The filename of the image to convert (complete path) */
     protected $source;
+
     /** @var string  Where to save the webp (complete path) */
     protected $destination;
+
+    /**
+     * Check basis operationality
+     *
+     * Converters may override this method for the purpose of performing basic operationaly checks. It is for
+     * running general operation checks for a conversion method.
+     * If some requirement is not met, it should throw a ConverterNotOperationalException (or subtype)
+     *
+     * The method is called internally right before calling doActualConvert() method.
+     * - It SHOULD take options into account when relevant. For example, a missing api key for a
+     *   cloud converter should be detected here
+     * - It should NOT take the actual filename into consideration, as the purpose is *general*
+     *   For that pupose, converters should override checkConvertability
+     *   Also note that doConvert method is allowed to throw ConverterNotOperationalException too.
+     *
+     * @return  void
+     */
+    public function checkOperationality()
+    {
+    }
+
+    /**
+     * Converters may override this for the purpose of performing checks on the concrete file.
+     *
+     * This can for example be used for rejecting big uploads in cloud converters or rejecting unsupported
+     * image types.
+     *
+     * @return  void
+     */
+    public function checkConvertability()
+    {
+    }
 
     /**
      * Constructor.
@@ -70,6 +132,38 @@ abstract class AbstractConverter
     }
 
     /**
+     * Get source.
+     *
+     * @return string  The source.
+     */
+    public function getSource()
+    {
+        return $this->source;
+    }
+
+    /**
+     * Get destination.
+     *
+     * @return string  The destination.
+     */
+    public function getDestination()
+    {
+        return $this->destination;
+    }
+
+    /**
+     * Set destination.
+     *
+     * @param   string  $destination         path to destination
+     * @return  void
+     */
+    public function setDestination($destination)
+    {
+        $this->destination = $destination;
+    }
+
+
+    /**
      *  Get converter name for display (defaults to the class name (short)).
      *
      *  Converters can override this.
@@ -82,24 +176,19 @@ abstract class AbstractConverter
         return substr(strrchr('\\' . static::class, '\\'), 1);
     }
 
+
     /**
-     * Convert an image to webp.
+     *  Get converter id (defaults to the class name lowercased)
      *
-     * @param   string  $source              path to source file
-     * @param   string  $destination         path to destination
-     * @param   array   $options (optional)  options for conversion
-     * @param   BaseLogger $logger (optional)
+     *  Converters can override this.
      *
-     * @throws  ConversionFailedException   in case conversion fails in an antipiciated way
-     * @throws  \Exception   in case conversion fails in an unantipiciated way
-     * @return  void
+     * @return string  A display name, ie "Gd"
      */
-    public static function convert($source, $destination, $options = [], $logger = null)
+    protected static function getConverterId()
     {
-        $c = self::createInstance($source, $destination, $options, $logger);
-        $c->doConvert();
-        //echo $instance->id;
+        return strtolower(self::getConverterDisplayName());
     }
+
 
     /**
      * Create an instance of this class
@@ -116,55 +205,16 @@ abstract class AbstractConverter
         return new static($source, $destination, $options, $logger);
     }
 
-    /**
-     * Start conversion.
-     *
-     * Usually you would rather call the static convert method, but alternatively you can call
-     * call ::createInstance to get an instance and then ::doConvert().
-     *
-     * @return void
-     */
-    public function doConvert()
+    protected function logReduction($source, $destination)
     {
-        try {
-            //trigger_error('hello', E_USER_ERROR);
-            $this->doConvertImplementation();
-        } catch (WebPConvertException $e) {
-            $this->logLn('');
-            /*
-            if (isset($e->description) && ($e->description != '')) {
-                $this->log('Error: ' . $e->description . '. ', 'bold');
-            } else {
-                $this->log('Error: ', 'bold');
-            }
-            */
-            $this->log('Error: ', 'bold');
-            $this->logLn($e->getMessage(), 'bold');
-            throw $e;
-        } catch (\Exception $e) {
-            $className = get_class($e);
-
-            $classNameParts = explode("\\", $className);
-            $shortClassName = array_pop($classNameParts);
-
-            $this->logLn('');
-            $this->logLn($shortClassName . ' thrown in ' . $e->getFile() . ':' . $e->getLine(), 'bold');
-            $this->logLn('Message: "' . $e->getMessage() . '"', 'bold');
-            //$this->logLn('Exception class: ' . $className);
-
-            $this->logLn('Trace:');
-            foreach ($e->getTrace() as $trace) {
-                //$this->logLn(print_r($trace, true));
-                if (isset($trace['file']) && isset($trace['line'])) {
-                    $this->logLn(
-                        $trace['file'] . ':' . $trace['line']
-                    );
-                }
-            }
-            throw $e;
-        } /*catch (\Error $e) {
-            $this->logLn('ERROR');
-        }*/
+        $sourceSize = filesize($source);
+        $destSize = filesize($destination);
+        $this->log(round(($sourceSize - $destSize) / $sourceSize * 100) . '% ');
+        if ($sourceSize < 10000) {
+            $this->logLn('(went from ' . strval($sourceSize) . ' bytes to ' . strval($destSize) . ' bytes)');
+        } else {
+            $this->logLn('(went from ' . round($sourceSize / 1024) . ' kb to ' . round($destSize / 1024) . ' kb)');
+        }
     }
 
     /**
@@ -223,36 +273,56 @@ abstract class AbstractConverter
         $this->deactivateWarningLogger();
     }
 
+    //private function logEx
     /**
-     * Check basis operationality
+     * Start conversion.
      *
-     * Converters may override this method for the purpose of performing basic operationaly checks. It is for
-     * running general operation checks for a conversion method.
-     * If some requirement is not met, it should throw a ConverterNotOperationalException (or subtype)
+     * Usually you would rather call the static convert method, but alternatively you can call
+     * call ::createInstance to get an instance and then ::doConvert().
      *
-     * The method is called internally right before calling doActualConvert() method.
-     * - It SHOULD take options into account when relevant. For example, a missing api key for a
-     *   cloud converter should be detected here
-     * - It should NOT take the actual filename into consideration, as the purpose is *general*
-     *   For that pupose, converters should override checkConvertability
-     *   Also note that doConvert method is allowed to throw ConverterNotOperationalException too.
-     *
-     * @return  void
+     * @return void
      */
-    public function checkOperationality()
+    public function doConvert()
     {
-    }
+        try {
+            //trigger_error('hello', E_USER_ERROR);
+            $this->doConvertImplementation();
+        } catch (WebPConvertException $e) {
+            $this->logLn('');
+            /*
+            if (isset($e->description) && ($e->description != '')) {
+                $this->log('Error: ' . $e->description . '. ', 'bold');
+            } else {
+                $this->log('Error: ', 'bold');
+            }
+            */
+            $this->log('Error: ', 'bold');
+            $this->logLn($e->getMessage(), 'bold');
+            throw $e;
+        } catch (\Exception $e) {
+            $className = get_class($e);
 
-    /**
-     * Converters may override this for the purpose of performing checks on the concrete file.
-     *
-     * This can for example be used for rejecting big uploads in cloud converters or rejecting unsupported
-     * image types.
-     *
-     * @return  void
-     */
-    public function checkConvertability()
-    {
+            $classNameParts = explode("\\", $className);
+            $shortClassName = array_pop($classNameParts);
+
+            $this->logLn('');
+            $this->logLn($shortClassName . ' thrown in ' . $e->getFile() . ':' . $e->getLine(), 'bold');
+            $this->logLn('Message: "' . $e->getMessage() . '"', 'bold');
+            //$this->logLn('Exception class: ' . $className);
+
+            $this->logLn('Trace:');
+            foreach ($e->getTrace() as $trace) {
+                //$this->logLn(print_r($trace, true));
+                if (isset($trace['file']) && isset($trace['line'])) {
+                    $this->logLn(
+                        $trace['file'] . ':' . $trace['line']
+                    );
+                }
+            }
+            throw $e;
+        } /*catch (\Error $e) {
+            $this->logLn('ERROR');
+        }*/
     }
 
     /**
@@ -269,89 +339,22 @@ abstract class AbstractConverter
     }
 
     /**
-     * The actual conversion is be done by a concrete converter extending this class.
+     * Convert an image to webp.
      *
-     * At the stage this method is called, the abstract converter has taken preparational steps.
-     * - It has created the destination folder (if neccesary)
-     * - It has checked the input (valid mime type)
-     * - It has set up an error handler, mostly in order to catch and log warnings during the doConvert fase
-     *
-     * Note: This method is not meant to be called from the outside. Use the static *convert* method for converting
-     *       or, if you wish, create an instance with ::createInstance() and then call ::doConvert()
-     *
-     * @throws ConversionFailedException in case conversion failed in an antipiciated way (or subclass)
-     * @throws \Exception in case conversion failed in an unantipiciated way
-     */
-    abstract protected function doActualConvert();
-
-    protected function logReduction($source, $destination)
-    {
-        $sourceSize = filesize($source);
-        $destSize = filesize($destination);
-        $this->log(round(($sourceSize - $destSize) / $sourceSize * 100) . '% ');
-        if ($sourceSize < 10000) {
-            $this->logLn('(went from ' . strval($sourceSize) . ' bytes to ' . strval($destSize) . ' bytes)');
-        } else {
-            $this->logLn('(went from ' . round($sourceSize / 1024) . ' kb to ' . round($destSize / 1024) . ' kb)');
-        }
-    }
-
-    /**
-     *  Get converter id (defaults to the class name lowercased)
-     *
-     *  Converters can override this.
-     *
-     * @return string  A display name, ie "Gd"
-     */
-    protected static function getConverterId()
-    {
-        return strtolower(self::getConverterDisplayName());
-    }
-
-    /**
-     * Whether or not the converter supports lossless encoding (even for jpegs)
-     *
-     * PS: Converters that supports lossless encoding all use the EncodingAutoTrait, which
-     * overrides this function.
-     *
-     * @return  boolean  Whether the converter supports lossless encoding (even for jpegs).
-     */
-    public function supportsLossless()
-    {
-        return false;
-    }
-
-    //private function logEx
-
-    /**
-     * Get source.
-     *
-     * @return string  The source.
-     */
-    public function getSource()
-    {
-        return $this->source;
-    }
-
-    /**
-     * Get destination.
-     *
-     * @return string  The destination.
-     */
-    public function getDestination()
-    {
-        return $this->destination;
-    }
-
-    /**
-     * Set destination.
-     *
+     * @param   string  $source              path to source file
      * @param   string  $destination         path to destination
+     * @param   array   $options (optional)  options for conversion
+     * @param   BaseLogger $logger (optional)
+     *
+     * @throws  ConversionFailedException   in case conversion fails in an antipiciated way
+     * @throws  \Exception   in case conversion fails in an unantipiciated way
      * @return  void
      */
-    public function setDestination($destination)
+    public static function convert($source, $destination, $options = [], $logger = null)
     {
-        $this->destination = $destination;
+        $c = self::createInstance($source, $destination, $options, $logger);
+        $c->doConvert();
+        //echo $instance->id;
     }
 
     /**

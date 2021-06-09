@@ -155,16 +155,6 @@ class Logger implements LoggerInterface, ResettableInterface
         $this->timezone = $timezone ?: new DateTimeZone(date_default_timezone_get() ?: 'UTC');
     }
 
-    /**
-     * Gets all supported logging levels.
-     *
-     * @return array<string, int> Assoc array with human-readable level names => level codes.
-     */
-    public static function getLevels(): array
-    {
-        return array_flip(static::$levels);
-    }
-
     public function getName(): string
     {
         return $this->name;
@@ -206,14 +196,6 @@ class Logger implements LoggerInterface, ResettableInterface
     }
 
     /**
-     * @return HandlerInterface[]
-     */
-    public function getHandlers(): array
-    {
-        return $this->handlers;
-    }
-
-    /**
      * Set handlers, replacing all existing ones.
      *
      * If a map is passed, keys will be ignored.
@@ -228,6 +210,14 @@ class Logger implements LoggerInterface, ResettableInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return HandlerInterface[]
+     */
+    public function getHandlers(): array
+    {
+        return $this->handlers;
     }
 
     /**
@@ -277,129 +267,6 @@ class Logger implements LoggerInterface, ResettableInterface
     public function useMicrosecondTimestamps(bool $micro): void
     {
         $this->microsecondTimestamps = $micro;
-    }
-
-    /**
-     * Ends a log cycle and frees all resources used by handlers.
-     *
-     * Closing a Handler means flushing all buffers and freeing any open resources/handles.
-     * Handlers that have been closed should be able to accept log records again and re-open
-     * themselves on demand, but this may not always be possible depending on implementation.
-     *
-     * This is useful at the end of a request and will be called automatically on every handler
-     * when they get destructed.
-     */
-    public function close(): void
-    {
-        foreach ($this->handlers as $handler) {
-            $handler->close();
-        }
-    }
-
-    /**
-     * Ends a log cycle and resets all handlers and processors to their initial state.
-     *
-     * Resetting a Handler or a Processor means flushing/cleaning all buffers, resetting internal
-     * state, and getting it back to a state in which it can receive log records again.
-     *
-     * This is useful in case you want to avoid logs leaking between two requests or jobs when you
-     * have a long running process like a worker or an application server serving multiple requests
-     * in one process.
-     */
-    public function reset(): void
-    {
-        foreach ($this->handlers as $handler) {
-            if ($handler instanceof ResettableInterface) {
-                $handler->reset();
-            }
-        }
-
-        foreach ($this->processors as $processor) {
-            if ($processor instanceof ResettableInterface) {
-                $processor->reset();
-            }
-        }
-    }
-
-    /**
-     * Checks whether the Logger has a handler that listens on the given level
-     */
-    public function isHandling(int $level): bool
-    {
-        $record = [
-            'level' => $level,
-        ];
-
-        foreach ($this->handlers as $handler) {
-            if ($handler->isHandling($record)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function getExceptionHandler(): ?callable
-    {
-        return $this->exceptionHandler;
-    }
-
-    /**
-     * Set a custom exception handler that will be called if adding a new record fails
-     *
-     * The callable will receive an exception object and the record that failed to be logged
-     */
-    public function setExceptionHandler(?callable $callback): self
-    {
-        $this->exceptionHandler = $callback;
-
-        return $this;
-    }
-
-    /**
-     * Adds a log record at an arbitrary level.
-     *
-     * This method allows for compatibility with common interfaces.
-     *
-     * @param mixed   $level   The log level
-     * @param string  $message The log message
-     * @param mixed[] $context The log context
-     */
-    public function log($level, $message, array $context = []): void
-    {
-        $level = static::toMonologLevel($level);
-
-        $this->addRecord($level, (string) $message, $context);
-    }
-
-    /**
-     * Converts PSR-3 levels to Monolog ones if necessary
-     *
-     * @param  string|int                        $level Level number (monolog) or name (PSR-3)
-     * @throws \Psr\Log\InvalidArgumentException If level is not defined
-     */
-    public static function toMonologLevel($level): int
-    {
-        if (is_string($level)) {
-            if (is_numeric($level)) {
-                return intval($level);
-            }
-
-            // Contains chars of all log levels and avoids using strtoupper() which may have
-            // strange results depending on locale (for example, "i" will become "İ" in Turkish locale)
-            $upper = strtr($level, 'abcdefgilmnortuwy', 'ABCDEFGILMNORTUWY');
-            if (defined(__CLASS__.'::'.$upper)) {
-                return constant(__CLASS__ . '::' . $upper);
-            }
-
-            throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', array_keys(static::$levels)));
-        }
-
-        if (!is_int($level)) {
-            throw new InvalidArgumentException('Level "'.var_export($level, true).'" is not defined, use one of: '.implode(', ', array_keys(static::$levels)));
-        }
-
-        return $level;
     }
 
     /**
@@ -461,6 +328,58 @@ class Logger implements LoggerInterface, ResettableInterface
     }
 
     /**
+     * Ends a log cycle and frees all resources used by handlers.
+     *
+     * Closing a Handler means flushing all buffers and freeing any open resources/handles.
+     * Handlers that have been closed should be able to accept log records again and re-open
+     * themselves on demand, but this may not always be possible depending on implementation.
+     *
+     * This is useful at the end of a request and will be called automatically on every handler
+     * when they get destructed.
+     */
+    public function close(): void
+    {
+        foreach ($this->handlers as $handler) {
+            $handler->close();
+        }
+    }
+
+    /**
+     * Ends a log cycle and resets all handlers and processors to their initial state.
+     *
+     * Resetting a Handler or a Processor means flushing/cleaning all buffers, resetting internal
+     * state, and getting it back to a state in which it can receive log records again.
+     *
+     * This is useful in case you want to avoid logs leaking between two requests or jobs when you
+     * have a long running process like a worker or an application server serving multiple requests
+     * in one process.
+     */
+    public function reset(): void
+    {
+        foreach ($this->handlers as $handler) {
+            if ($handler instanceof ResettableInterface) {
+                $handler->reset();
+            }
+        }
+
+        foreach ($this->processors as $processor) {
+            if ($processor instanceof ResettableInterface) {
+                $processor->reset();
+            }
+        }
+    }
+
+    /**
+     * Gets all supported logging levels.
+     *
+     * @return array<string, int> Assoc array with human-readable level names => level codes.
+     */
+    public static function getLevels(): array
+    {
+        return array_flip(static::$levels);
+    }
+
+    /**
      * Gets the name of the logging level.
      *
      * @throws \Psr\Log\InvalidArgumentException If level is not defined
@@ -475,16 +394,84 @@ class Logger implements LoggerInterface, ResettableInterface
     }
 
     /**
-     * Delegates exception management to the custom exception handler,
-     * or throws the exception if no custom handler is set.
+     * Converts PSR-3 levels to Monolog ones if necessary
+     *
+     * @param  string|int                        $level Level number (monolog) or name (PSR-3)
+     * @throws \Psr\Log\InvalidArgumentException If level is not defined
      */
-    protected function handleException(Throwable $e, array $record): void
+    public static function toMonologLevel($level): int
     {
-        if (!$this->exceptionHandler) {
-            throw $e;
+        if (is_string($level)) {
+            if (is_numeric($level)) {
+                return intval($level);
+            }
+
+            // Contains chars of all log levels and avoids using strtoupper() which may have
+            // strange results depending on locale (for example, "i" will become "İ" in Turkish locale)
+            $upper = strtr($level, 'abcdefgilmnortuwy', 'ABCDEFGILMNORTUWY');
+            if (defined(__CLASS__.'::'.$upper)) {
+                return constant(__CLASS__ . '::' . $upper);
+            }
+
+            throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', array_keys(static::$levels)));
         }
 
-        ($this->exceptionHandler)($e, $record);
+        if (!is_int($level)) {
+            throw new InvalidArgumentException('Level "'.var_export($level, true).'" is not defined, use one of: '.implode(', ', array_keys(static::$levels)));
+        }
+
+        return $level;
+    }
+
+    /**
+     * Checks whether the Logger has a handler that listens on the given level
+     */
+    public function isHandling(int $level): bool
+    {
+        $record = [
+            'level' => $level,
+        ];
+
+        foreach ($this->handlers as $handler) {
+            if ($handler->isHandling($record)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Set a custom exception handler that will be called if adding a new record fails
+     *
+     * The callable will receive an exception object and the record that failed to be logged
+     */
+    public function setExceptionHandler(?callable $callback): self
+    {
+        $this->exceptionHandler = $callback;
+
+        return $this;
+    }
+
+    public function getExceptionHandler(): ?callable
+    {
+        return $this->exceptionHandler;
+    }
+
+    /**
+     * Adds a log record at an arbitrary level.
+     *
+     * This method allows for compatibility with common interfaces.
+     *
+     * @param mixed   $level   The log level
+     * @param string  $message The log message
+     * @param mixed[] $context The log context
+     */
+    public function log($level, $message, array $context = []): void
+    {
+        $level = static::toMonologLevel($level);
+
+        $this->addRecord($level, (string) $message, $context);
     }
 
     /**
@@ -592,6 +579,16 @@ class Logger implements LoggerInterface, ResettableInterface
     }
 
     /**
+     * Sets the timezone to be used for the timestamp of log records.
+     */
+    public function setTimezone(DateTimeZone $tz): self
+    {
+        $this->timezone = $tz;
+
+        return $this;
+    }
+
+    /**
      * Returns the timezone to be used for the timestamp of log records.
      */
     public function getTimezone(): DateTimeZone
@@ -600,12 +597,15 @@ class Logger implements LoggerInterface, ResettableInterface
     }
 
     /**
-     * Sets the timezone to be used for the timestamp of log records.
+     * Delegates exception management to the custom exception handler,
+     * or throws the exception if no custom handler is set.
      */
-    public function setTimezone(DateTimeZone $tz): self
+    protected function handleException(Throwable $e, array $record): void
     {
-        $this->timezone = $tz;
+        if (!$this->exceptionHandler) {
+            throw $e;
+        }
 
-        return $this;
+        ($this->exceptionHandler)($e, $record);
     }
 }

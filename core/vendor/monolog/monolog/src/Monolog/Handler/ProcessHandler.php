@@ -27,6 +27,28 @@ use Monolog\Logger;
 class ProcessHandler extends AbstractProcessingHandler
 {
     /**
+     * Holds the process to receive data on its STDIN.
+     *
+     * @var resource|bool|null
+     */
+    private $process;
+
+    /**
+     * @var string
+     */
+    private $command;
+
+    /**
+     * @var string|null
+     */
+    private $cwd;
+
+    /**
+     * @var array
+     */
+    private $pipes = [];
+
+    /**
      * @var array
      */
     protected const DESCRIPTOR_SPEC = [
@@ -34,24 +56,6 @@ class ProcessHandler extends AbstractProcessingHandler
         1 => ['pipe', 'w'],  // STDOUT is a pipe that the child will write to
         2 => ['pipe', 'w'],  // STDERR is a pipe to catch the any errors
     ];
-    /**
-     * Holds the process to receive data on its STDIN.
-     *
-     * @var resource|bool|null
-     */
-    private $process;
-    /**
-     * @var string
-     */
-    private $command;
-    /**
-     * @var string|null
-     */
-    private $cwd;
-    /**
-     * @var array
-     */
-    private $pipes = [];
 
     /**
      * @param  string                    $command Command for the process to start. Absolute paths are recommended,
@@ -74,20 +78,6 @@ class ProcessHandler extends AbstractProcessingHandler
 
         $this->command = $command;
         $this->cwd = $cwd;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function close(): void
-    {
-        if (is_resource($this->process)) {
-            foreach ($this->pipes as $pipe) {
-                fclose($pipe);
-            }
-            proc_close($this->process);
-            $this->process = null;
-        }
     }
 
     /**
@@ -185,5 +175,19 @@ class ProcessHandler extends AbstractProcessingHandler
     protected function writeProcessInput(string $string): void
     {
         fwrite($this->pipes[0], $string);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function close(): void
+    {
+        if (is_resource($this->process)) {
+            foreach ($this->pipes as $pipe) {
+                fclose($pipe);
+            }
+            proc_close($this->process);
+            $this->process = null;
+        }
     }
 }

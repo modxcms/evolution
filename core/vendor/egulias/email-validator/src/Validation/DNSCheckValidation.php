@@ -80,6 +80,16 @@ class DNSCheckValidation implements EmailValidation
         return $this->checkDns($host);
     }
 
+    public function getError()
+    {
+        return $this->error;
+    }
+
+    public function getWarnings()
+    {
+        return $this->warnings;
+    }
+
     /**
      * @param string $host
      *
@@ -93,6 +103,7 @@ class DNSCheckValidation implements EmailValidation
 
         return $this->validateDnsRecords($host);
     }
+
 
     /**
      * Validate the DNS records for given host.
@@ -151,15 +162,5 @@ class DNSCheckValidation implements EmailValidation
         $this->mxRecords[] = $dnsRecord;
 
         return true;
-    }
-
-    public function getError()
-    {
-        return $this->error;
-    }
-
-    public function getWarnings()
-    {
-        return $this->warnings;
     }
 }

@@ -28,6 +28,14 @@ final class EmailAddressContains extends Constraint
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function toString(): string
+    {
+        return sprintf('contains address "%s" with value "%s"', $this->headerName, $this->expectedValue);
+    }
+
+    /**
      * @param RawMessage $message
      *
      * {@inheritdoc}
@@ -62,13 +70,5 @@ final class EmailAddressContains extends Constraint
     protected function failureDescription($message): string
     {
         return sprintf('the Email %s (value is %s)', $this->toString(), $message->getHeaders()->get($this->headerName)->getBodyAsString());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function toString(): string
-    {
-        return sprintf('contains address "%s" with value "%s"', $this->headerName, $this->expectedValue);
     }
 }

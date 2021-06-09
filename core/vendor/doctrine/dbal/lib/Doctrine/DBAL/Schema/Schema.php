@@ -38,18 +38,21 @@ use function strtolower;
  */
 class Schema extends AbstractAsset
 {
-    /** @var Table[] */
-    protected $_tables = [];
-    /** @var Sequence[] */
-    protected $_sequences = [];
-    /** @var SchemaConfig */
-    protected $_schemaConfig;
     /**
      * The namespaces in this schema.
      *
      * @var string[]
      */
     private $namespaces = [];
+
+    /** @var Table[] */
+    protected $_tables = [];
+
+    /** @var Sequence[] */
+    protected $_sequences = [];
+
+    /** @var SchemaConfig */
+    protected $_schemaConfig;
 
     /**
      * @param Table[]    $tables
@@ -83,41 +86,11 @@ class Schema extends AbstractAsset
     }
 
     /**
-     * Creates a new namespace.
-     *
-     * @param string $name The name of the namespace to create.
-     *
-     * @return Schema This schema instance.
-     *
-     * @throws SchemaException
+     * @return bool
      */
-    public function createNamespace($name)
+    public function hasExplicitForeignKeyIndexes()
     {
-        $unquotedName = strtolower($this->getUnquotedAssetName($name));
-
-        if (isset($this->namespaces[$unquotedName])) {
-            throw SchemaException::namespaceAlreadyExists($unquotedName);
-        }
-
-        $this->namespaces[$unquotedName] = $name;
-
-        return $this;
-    }
-
-    /**
-     * Returns the unquoted representation of a given asset name.
-     *
-     * @param string $assetName Quoted or unquoted representation of an asset name.
-     *
-     * @return string
-     */
-    private function getUnquotedAssetName($assetName)
-    {
-        if ($this->isIdentifierQuoted($assetName)) {
-            return $this->trimQuotes($assetName);
-        }
-
-        return $assetName;
+        return $this->_schemaConfig->hasExplicitForeignKeyIndexes();
     }
 
     /**
@@ -147,20 +120,6 @@ class Schema extends AbstractAsset
     }
 
     /**
-     * Does this schema have a namespace with the given name?
-     *
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function hasNamespace($name)
-    {
-        $name = strtolower($this->getUnquotedAssetName($name));
-
-        return isset($this->namespaces[$name]);
-    }
-
-    /**
      * @return void
      *
      * @throws SchemaException
@@ -186,14 +145,6 @@ class Schema extends AbstractAsset
     }
 
     /**
-     * @return bool
-     */
-    public function hasExplicitForeignKeyIndexes()
-    {
-        return $this->_schemaConfig->hasExplicitForeignKeyIndexes();
-    }
-
-    /**
      * Returns the namespaces of this schema.
      *
      * @return string[] A list of namespace names.
@@ -214,17 +165,20 @@ class Schema extends AbstractAsset
     }
 
     /**
-     * Does this schema have a table with the given name?
-     *
      * @param string $name
      *
-     * @return bool
+     * @return Table
+     *
+     * @throws SchemaException
      */
-    public function hasTable($name)
+    public function getTable($name)
     {
         $name = $this->getFullQualifiedAssetName($name);
+        if (! isset($this->_tables[$name])) {
+            throw SchemaException::tableDoesNotExist($name);
+        }
 
-        return isset($this->_tables[$name]);
+        return $this->_tables[$name];
     }
 
     /**
@@ -244,6 +198,50 @@ class Schema extends AbstractAsset
     }
 
     /**
+     * Returns the unquoted representation of a given asset name.
+     *
+     * @param string $assetName Quoted or unquoted representation of an asset name.
+     *
+     * @return string
+     */
+    private function getUnquotedAssetName($assetName)
+    {
+        if ($this->isIdentifierQuoted($assetName)) {
+            return $this->trimQuotes($assetName);
+        }
+
+        return $assetName;
+    }
+
+    /**
+     * Does this schema have a namespace with the given name?
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function hasNamespace($name)
+    {
+        $name = strtolower($this->getUnquotedAssetName($name));
+
+        return isset($this->namespaces[$name]);
+    }
+
+    /**
+     * Does this schema have a table with the given name?
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function hasTable($name)
+    {
+        $name = $this->getFullQualifiedAssetName($name);
+
+        return isset($this->_tables[$name]);
+    }
+
+    /**
      * Gets all table names, prefixed with a schema name, even the default one if present.
      *
      * @return string[]
@@ -251,6 +249,18 @@ class Schema extends AbstractAsset
     public function getTableNames()
     {
         return array_keys($this->_tables);
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function hasSequence($name)
+    {
+        $name = $this->getFullQualifiedAssetName($name);
+
+        return isset($this->_sequences[$name]);
     }
 
     /**
@@ -271,23 +281,33 @@ class Schema extends AbstractAsset
     }
 
     /**
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function hasSequence($name)
-    {
-        $name = $this->getFullQualifiedAssetName($name);
-
-        return isset($this->_sequences[$name]);
-    }
-
-    /**
      * @return Sequence[]
      */
     public function getSequences()
     {
         return $this->_sequences;
+    }
+
+    /**
+     * Creates a new namespace.
+     *
+     * @param string $name The name of the namespace to create.
+     *
+     * @return Schema This schema instance.
+     *
+     * @throws SchemaException
+     */
+    public function createNamespace($name)
+    {
+        $unquotedName = strtolower($this->getUnquotedAssetName($name));
+
+        if (isset($this->namespaces[$unquotedName])) {
+            throw SchemaException::namespaceAlreadyExists($unquotedName);
+        }
+
+        $this->namespaces[$unquotedName] = $name;
+
+        return $this;
     }
 
     /**
@@ -326,23 +346,6 @@ class Schema extends AbstractAsset
         $this->_addTable($table);
 
         return $this;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return Table
-     *
-     * @throws SchemaException
-     */
-    public function getTable($name)
-    {
-        $name = $this->getFullQualifiedAssetName($name);
-        if (! isset($this->_tables[$name])) {
-            throw SchemaException::tableDoesNotExist($name);
-        }
-
-        return $this->_tables[$name];
     }
 
     /**
@@ -405,28 +408,6 @@ class Schema extends AbstractAsset
     }
 
     /**
-     * @return void
-     */
-    public function visit(Visitor $visitor)
-    {
-        $visitor->acceptSchema($this);
-
-        if ($visitor instanceof NamespaceVisitor) {
-            foreach ($this->namespaces as $namespace) {
-                $visitor->acceptNamespace($namespace);
-            }
-        }
-
-        foreach ($this->_tables as $table) {
-            $table->visit($visitor);
-        }
-
-        foreach ($this->_sequences as $sequence) {
-            $sequence->visit($visitor);
-        }
-    }
-
-    /**
      * Return an array of necessary SQL queries to drop the schema on the given platform.
      *
      * @return string[]
@@ -459,6 +440,28 @@ class Schema extends AbstractAsset
         $schemaDiff = $comparator->compare($fromSchema, $this);
 
         return $schemaDiff->toSql($platform);
+    }
+
+    /**
+     * @return void
+     */
+    public function visit(Visitor $visitor)
+    {
+        $visitor->acceptSchema($this);
+
+        if ($visitor instanceof NamespaceVisitor) {
+            foreach ($this->namespaces as $namespace) {
+                $visitor->acceptNamespace($namespace);
+            }
+        }
+
+        foreach ($this->_tables as $table) {
+            $table->visit($visitor);
+        }
+
+        foreach ($this->_sequences as $sequence) {
+            $sequence->visit($visitor);
+        }
     }
 
     /**

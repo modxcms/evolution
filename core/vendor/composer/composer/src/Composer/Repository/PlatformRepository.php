@@ -65,20 +65,6 @@ class PlatformRepository extends ArrayRepository
         parent::__construct($packages);
     }
 
-    /**
-     * Returns the last seen config.platform.php version if defined
-     *
-     * This is a best effort attempt for internal purposes, retrieve the real
-     * packages from a PlatformRepository instance if you need a version guaranteed to
-     * be correct.
-     *
-     * @internal
-     */
-    public static function getPlatformPhpVersion()
-    {
-        return self::$lastSeenPlatformPhp;
-    }
-
     public function getRepoName()
     {
         return 'platform repo';
@@ -499,41 +485,6 @@ class PlatformRepository extends ArrayRepository
     }
 
     /**
-     * Check if a package name is a platform package.
-     *
-     * @param  string $name
-     * @return bool
-     */
-    public static function isPlatformPackage($name)
-    {
-        static $cache = array();
-
-        if (isset($cache[$name])) {
-            return $cache[$name];
-        }
-
-        return $cache[$name] = (bool) preg_match(PlatformRepository::PLATFORM_PACKAGE_REGEX, $name);
-    }
-
-    /**
-     * @return CompletePackage
-     */
-    private function addOverriddenPackage(array $override, $name = null)
-    {
-        $version = $this->versionParser->normalize($override['version']);
-        $package = new CompletePackage($name ?: $override['name'], $version, $override['version']);
-        $package->setDescription('Package overridden via config.platform');
-        $package->setExtra(array('config.platform' => true));
-        parent::addPackage($package);
-
-        if ($package->getName() === 'php') {
-            self::$lastSeenPlatformPhp = implode('.', array_slice(explode('.', $package->getVersion()), 0, 3));
-        }
-
-        return $package;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function addPackage(PackageInterface $package)
@@ -567,6 +518,24 @@ class PlatformRepository extends ArrayRepository
         }
 
         parent::addPackage($package);
+    }
+
+    /**
+     * @return CompletePackage
+     */
+    private function addOverriddenPackage(array $override, $name = null)
+    {
+        $version = $this->versionParser->normalize($override['version']);
+        $package = new CompletePackage($name ?: $override['name'], $version, $override['version']);
+        $package->setDescription('Package overridden via config.platform');
+        $package->setExtra(array('config.platform' => true));
+        parent::addPackage($package);
+
+        if ($package->getName() === 'php') {
+            self::$lastSeenPlatformPhp = implode('.', array_slice(explode('.', $package->getVersion()), 0, 3));
+        }
+
+        return $package;
     }
 
     /**
@@ -642,5 +611,36 @@ class PlatformRepository extends ArrayRepository
         $lib->setProvides(array_map($links, $provides));
 
         $this->addPackage($lib);
+    }
+
+    /**
+     * Check if a package name is a platform package.
+     *
+     * @param  string $name
+     * @return bool
+     */
+    public static function isPlatformPackage($name)
+    {
+        static $cache = array();
+
+        if (isset($cache[$name])) {
+            return $cache[$name];
+        }
+
+        return $cache[$name] = (bool) preg_match(PlatformRepository::PLATFORM_PACKAGE_REGEX, $name);
+    }
+
+    /**
+     * Returns the last seen config.platform.php version if defined
+     *
+     * This is a best effort attempt for internal purposes, retrieve the real
+     * packages from a PlatformRepository instance if you need a version guaranteed to
+     * be correct.
+     *
+     * @internal
+     */
+    public static function getPlatformPhpVersion()
+    {
+        return self::$lastSeenPlatformPhp;
     }
 }

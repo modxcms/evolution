@@ -222,18 +222,6 @@ class PendingResourceRegistration
     }
 
     /**
-     * Handle the object's destruction.
-     *
-     * @return void
-     */
-    public function __destruct()
-    {
-        if (! $this->registered) {
-            $this->register();
-        }
-    }
-
-    /**
      * Register the resource route.
      *
      * @return \Illuminate\Routing\RouteCollection
@@ -245,5 +233,17 @@ class PendingResourceRegistration
         return $this->registrar->register(
             $this->name, $this->controller, $this->options
         );
+    }
+
+    /**
+     * Handle the object's destruction.
+     *
+     * @return void
+     */
+    public function __destruct()
+    {
+        if (! $this->registered) {
+            $this->register();
+        }
     }
 }

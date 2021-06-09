@@ -18,17 +18,18 @@ class NotificationFake implements NotificationDispatcher, NotificationFactory
     use Macroable, ReflectsClosures;
 
     /**
-     * Locale used when sending notifications.
-     *
-     * @var string|null
-     */
-    public $locale;
-    /**
      * All of the notifications that have been sent.
      *
      * @var array
      */
     protected $notifications = [];
+
+    /**
+     * Locale used when sending notifications.
+     *
+     * @var string|null
+     */
+    public $locale;
 
     /**
      * Assert if a notification was sent based on a truth-test callback.
@@ -84,55 +85,6 @@ class NotificationFake implements NotificationDispatcher, NotificationFactory
             $times, $count,
             "Expected [{$notification}] to be sent {$times} times, but was sent {$count} times."
         );
-    }
-
-    /**
-     * Get all of the notifications matching a truth-test callback.
-     *
-     * @param  mixed  $notifiable
-     * @param  string  $notification
-     * @param  callable|null  $callback
-     * @return \Illuminate\Support\Collection
-     */
-    public function sent($notifiable, $notification, $callback = null)
-    {
-        if (! $this->hasSent($notifiable, $notification)) {
-            return collect();
-        }
-
-        $callback = $callback ?: function () {
-            return true;
-        };
-
-        $notifications = collect($this->notificationsFor($notifiable, $notification));
-
-        return $notifications->filter(function ($arguments) use ($callback) {
-            return $callback(...array_values($arguments));
-        })->pluck('notification');
-    }
-
-    /**
-     * Determine if there are more notifications left to inspect.
-     *
-     * @param  mixed  $notifiable
-     * @param  string  $notification
-     * @return bool
-     */
-    public function hasSent($notifiable, $notification)
-    {
-        return ! empty($this->notificationsFor($notifiable, $notification));
-    }
-
-    /**
-     * Get all of the notifications for a notifiable entity by type.
-     *
-     * @param  mixed  $notifiable
-     * @param  string  $notification
-     * @return array
-     */
-    protected function notificationsFor($notifiable, $notification)
-    {
-        return $this->notifications[get_class($notifiable)][$notifiable->getKey()][$notification] ?? [];
     }
 
     /**
@@ -198,6 +150,55 @@ class NotificationFake implements NotificationDispatcher, NotificationFactory
             $expectedCount, $actualCount,
             "Expected [{$notification}] to be sent {$expectedCount} times, but was sent {$actualCount} times."
         );
+    }
+
+    /**
+     * Get all of the notifications matching a truth-test callback.
+     *
+     * @param  mixed  $notifiable
+     * @param  string  $notification
+     * @param  callable|null  $callback
+     * @return \Illuminate\Support\Collection
+     */
+    public function sent($notifiable, $notification, $callback = null)
+    {
+        if (! $this->hasSent($notifiable, $notification)) {
+            return collect();
+        }
+
+        $callback = $callback ?: function () {
+            return true;
+        };
+
+        $notifications = collect($this->notificationsFor($notifiable, $notification));
+
+        return $notifications->filter(function ($arguments) use ($callback) {
+            return $callback(...array_values($arguments));
+        })->pluck('notification');
+    }
+
+    /**
+     * Determine if there are more notifications left to inspect.
+     *
+     * @param  mixed  $notifiable
+     * @param  string  $notification
+     * @return bool
+     */
+    public function hasSent($notifiable, $notification)
+    {
+        return ! empty($this->notificationsFor($notifiable, $notification));
+    }
+
+    /**
+     * Get all of the notifications for a notifiable entity by type.
+     *
+     * @param  mixed  $notifiable
+     * @param  string  $notification
+     * @return array
+     */
+    protected function notificationsFor($notifiable, $notification)
+    {
+        return $this->notifications[get_class($notifiable)][$notifiable->getKey()][$notification] ?? [];
     }
 
     /**

@@ -55,27 +55,6 @@ class Request implements ArrayAccess
     }
 
     /**
-     * Determine if the request has the given headers.
-     *
-     * @param  array|string  $headers
-     * @return bool
-     */
-    public function hasHeaders($headers)
-    {
-        if (is_string($headers)) {
-            $headers = [$headers => null];
-        }
-
-        foreach ($headers as $key => $value) {
-            if (! $this->hasHeader($key, $value)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * Determine if the request has a given header.
      *
      * @param  string  $key
@@ -100,6 +79,38 @@ class Request implements ArrayAccess
     }
 
     /**
+     * Determine if the request has the given headers.
+     *
+     * @param  array|string  $headers
+     * @return bool
+     */
+    public function hasHeaders($headers)
+    {
+        if (is_string($headers)) {
+            $headers = [$headers => null];
+        }
+
+        foreach ($headers as $key => $value) {
+            if (! $this->hasHeader($key, $value)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Get the values for the header with the given name.
+     *
+     * @param  string  $key
+     * @return array
+     */
+    public function header($key)
+    {
+        return Arr::get($this->headers(), $key, []);
+    }
+
+    /**
      * Get the request headers.
      *
      * @return array
@@ -109,6 +120,16 @@ class Request implements ArrayAccess
         return collect($this->request->getHeaders())->mapWithKeys(function ($values, $header) {
             return [$header => $values];
         })->all();
+    }
+
+    /**
+     * Get the body of the request.
+     *
+     * @return string
+     */
+    public function body()
+    {
+        return (string) $this->request->getBody();
     }
 
     /**
@@ -133,6 +154,73 @@ class Request implements ArrayAccess
     }
 
     /**
+     * Get the request's data (form parameters or JSON).
+     *
+     * @return array
+     */
+    public function data()
+    {
+        if ($this->isForm()) {
+            return $this->parameters();
+        } elseif ($this->isJson()) {
+            return $this->json();
+        }
+
+        return $this->data ?? [];
+    }
+
+    /**
+     * Get the request's form parameters.
+     *
+     * @return array
+     */
+    protected function parameters()
+    {
+        if (! $this->data) {
+            parse_str($this->body(), $parameters);
+
+            $this->data = $parameters;
+        }
+
+        return $this->data;
+    }
+
+    /**
+     * Get the JSON decoded body of the request.
+     *
+     * @return array
+     */
+    protected function json()
+    {
+        if (! $this->data) {
+            $this->data = json_decode($this->body(), true);
+        }
+
+        return $this->data;
+    }
+
+    /**
+     * Determine if the request is simple form data.
+     *
+     * @return bool
+     */
+    public function isForm()
+    {
+        return $this->hasHeader('Content-Type', 'application/x-www-form-urlencoded');
+    }
+
+    /**
+     * Determine if the request is JSON.
+     *
+     * @return bool
+     */
+    public function isJson()
+    {
+        return $this->hasHeader('Content-Type') &&
+               Str::contains($this->header('Content-Type')[0], 'json');
+    }
+
+    /**
      * Determine if the request is multipart.
      *
      * @return bool
@@ -141,17 +229,6 @@ class Request implements ArrayAccess
     {
         return $this->hasHeader('Content-Type') &&
                Str::contains($this->header('Content-Type')[0], 'multipart');
-    }
-
-    /**
-     * Get the values for the header with the given name.
-     *
-     * @param  string  $key
-     * @return array
-     */
-    public function header($key)
-    {
-        return Arr::get($this->headers(), $key, []);
     }
 
     /**
@@ -186,83 +263,6 @@ class Request implements ArrayAccess
     public function offsetExists($offset)
     {
         return isset($this->data()[$offset]);
-    }
-
-    /**
-     * Get the request's data (form parameters or JSON).
-     *
-     * @return array
-     */
-    public function data()
-    {
-        if ($this->isForm()) {
-            return $this->parameters();
-        } elseif ($this->isJson()) {
-            return $this->json();
-        }
-
-        return $this->data ?? [];
-    }
-
-    /**
-     * Determine if the request is simple form data.
-     *
-     * @return bool
-     */
-    public function isForm()
-    {
-        return $this->hasHeader('Content-Type', 'application/x-www-form-urlencoded');
-    }
-
-    /**
-     * Get the request's form parameters.
-     *
-     * @return array
-     */
-    protected function parameters()
-    {
-        if (! $this->data) {
-            parse_str($this->body(), $parameters);
-
-            $this->data = $parameters;
-        }
-
-        return $this->data;
-    }
-
-    /**
-     * Get the body of the request.
-     *
-     * @return string
-     */
-    public function body()
-    {
-        return (string) $this->request->getBody();
-    }
-
-    /**
-     * Determine if the request is JSON.
-     *
-     * @return bool
-     */
-    public function isJson()
-    {
-        return $this->hasHeader('Content-Type') &&
-               Str::contains($this->header('Content-Type')[0], 'json');
-    }
-
-    /**
-     * Get the JSON decoded body of the request.
-     *
-     * @return array
-     */
-    protected function json()
-    {
-        if (! $this->data) {
-            $this->data = json_decode($this->body(), true);
-        }
-
-        return $this->data;
     }
 
     /**

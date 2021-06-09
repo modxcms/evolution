@@ -97,28 +97,6 @@ EOT
         return $return;
     }
 
-    /**
-     * Initializes repositories
-     *
-     * Returns an array of repos in order they should be checked in
-     *
-     * @return RepositoryInterface[]
-     */
-    private function initializeRepos()
-    {
-        $composer = $this->getComposer(false);
-
-        if ($composer) {
-            return array_merge(
-                array(new RootPackageRepository($composer->getPackage())), // root package
-                array($composer->getRepositoryManager()->getLocalRepository()), // installed packages
-                $composer->getRepositoryManager()->getRepositories() // remotes
-            );
-        }
-
-        return RepositoryFactory::defaultRepos($this->getIO());
-    }
-
     private function handlePackage(CompletePackageInterface $package, $showHomepage, $showOnly)
     {
         $support = $package->getSupport();
@@ -164,5 +142,27 @@ EOT
         } else {
             $this->getIO()->writeError('No suitable browser opening command found, open yourself: ' . $url);
         }
+    }
+
+    /**
+     * Initializes repositories
+     *
+     * Returns an array of repos in order they should be checked in
+     *
+     * @return RepositoryInterface[]
+     */
+    private function initializeRepos()
+    {
+        $composer = $this->getComposer(false);
+
+        if ($composer) {
+            return array_merge(
+                array(new RootPackageRepository($composer->getPackage())), // root package
+                array($composer->getRepositoryManager()->getLocalRepository()), // installed packages
+                $composer->getRepositoryManager()->getRepositories() // remotes
+            );
+        }
+
+        return RepositoryFactory::defaultRepos($this->getIO());
     }
 }

@@ -145,19 +145,23 @@ class AutoloadGenerator
             // Force scanPsrPackages when classmap is authoritative
             $scanPsrPackages = true;
         }
-        if ($this->runScripts) {
+
+        // auto-set devMode based on whether dev dependencies are installed or not
+        if (null === $this->devMode) {
+            // we assume no-dev mode if no vendor dir is present or it is too old to contain dev information
+            $this->devMode = false;
+
             $installedJson = new JsonFile($config->get('vendor-dir').'/composer/installed.json');
-            $isDevInstall = null;
             if ($installedJson->exists()) {
                 $installedJson = $installedJson->read();
-                $isDevInstall = isset($installedJson['dev']) ? $installedJson['dev'] : null;
+                if (isset($installedJson['dev'])) {
+                    $this->devMode = $installedJson['dev'];
+                }
             }
-            // auto-set devMode based on whether dev dependencies are installed or not
-            if (null !== $isDevInstall && null === $this->devMode) {
-                $this->devMode = $isDevInstall;
-            }
+        }
 
-            // set COMPOSER_DEV_MODE in case not set yet so it is available in the dump-autoload autoload
+        if ($this->runScripts) {
+            // set COMPOSER_DEV_MODE in case not set yet so it is available in the dump-autoload event listeners
             if (!isset($_SERVER['COMPOSER_DEV_MODE'])) {
                 Platform::putEnv('COMPOSER_DEV_MODE', $this->devMode ? '1' : '0');
             }
@@ -402,6 +406,48 @@ EOF;
         return count($classMap);
     }
 
+    private function addClassMapCode($filesystem, $basePath, $vendorPath, $dir, $excluded, $namespaceFilter, $autoloadType, array $classMap, array &$ambiguousClasses, array &$scannedFiles)
+    {
+        foreach ($this->generateClassMap($dir, $excluded, $namespaceFilter, $autoloadType, true, $scannedFiles) as $class => $path) {
+            $pathCode = $this->getPathCode($filesystem, $basePath, $vendorPath, $path).",\n";
+            if (!isset($classMap[$class])) {
+                $classMap[$class] = $pathCode;
+            } elseif ($this->io && $classMap[$class] !== $pathCode && !preg_match('{/(test|fixture|example|stub)s?/}i', strtr($classMap[$class].' '.$path, '\\', '/'))) {
+                $ambiguousClasses[$class][] = $path;
+            }
+        }
+
+        return $classMap;
+    }
+
+    /**
+     * @param ?array $excluded
+     */
+    private function generateClassMap($dir, $excluded, $namespaceFilter, $autoloadType, $showAmbiguousWarning, array &$scannedFiles)
+    {
+        if ($excluded) {
+            // filter excluded patterns here to only use those matching $dir
+            // exclude-from-classmap patterns are all realpath'd so we can only filter them if $dir exists so that realpath($dir) will work
+            // if $dir does not exist, it should anyway not find anything there so no trouble
+            if (file_exists($dir)) {
+                // transform $dir in the same way that exclude-from-classmap patterns are transformed so we can match them against each other
+                $dirMatch = preg_quote(strtr(realpath($dir), '\\', '/'));
+                foreach ($excluded as $index => $pattern) {
+                    // extract the constant string prefix of the pattern here, until we reach a non-escaped regex special character
+                    $pattern = preg_replace('{^(([^.+*?\[^\]$(){}=!<>|:\\\\#-]+|\\\\[.+*?\[^\]$(){}=!<>|:#-])*).*}', '$1', $pattern);
+                    // if the pattern is not a subset or superset of $dir, it is unrelated and we skip it
+                    if (0 !== strpos($pattern, $dirMatch) && 0 !== strpos($dirMatch, $pattern)) {
+                        unset($excluded[$index]);
+                    }
+                }
+            }
+
+            $excluded = $excluded ? '{(' . implode('|', $excluded) . ')}' : null;
+        }
+
+        return ClassMapGenerator::createMap($dir, $excluded, $showAmbiguousWarning ? $this->io : null, $namespaceFilter, $autoloadType, $scannedFiles);
+    }
+
     /**
      * @param RootPackageInterface $rootPackage
      */
@@ -488,247 +534,44 @@ EOF;
     }
 
     /**
-     * Filters out dev-dependencies
+     * Registers an autoloader based on an autoload map returned by parseAutoloads
      *
-     * @param  array                $packageMap
-     * @param  RootPackageInterface $rootPackage
-     * @return array
+     * @param  array       $autoloads see parseAutoloads return value
+     * @return ClassLoader
      */
-    protected function filterPackageMap(array $packageMap, RootPackageInterface $rootPackage)
+    public function createLoader(array $autoloads, $vendorDir = null)
     {
-        $packages = array();
-        $include = array();
-        $replacedBy = array();
+        $loader = new ClassLoader($vendorDir);
 
-        foreach ($packageMap as $item) {
-            $package = $item[0];
-            $name = $package->getName();
-            $packages[$name] = $package;
-            foreach ($package->getReplaces() as $replace) {
-                $replacedBy[$replace->getTarget()] = $name;
+        if (isset($autoloads['psr-0'])) {
+            foreach ($autoloads['psr-0'] as $namespace => $path) {
+                $loader->add($namespace, $path);
             }
         }
 
-        $add = function (PackageInterface $package) use (&$add, $packages, &$include, $replacedBy) {
-            foreach ($package->getRequires() as $link) {
-                $target = $link->getTarget();
-                if (isset($replacedBy[$target])) {
-                    $target = $replacedBy[$target];
-                }
-                if (!isset($include[$target])) {
-                    $include[$target] = true;
-                    if (isset($packages[$target])) {
-                        $add($packages[$target]);
-                    }
-                }
+        if (isset($autoloads['psr-4'])) {
+            foreach ($autoloads['psr-4'] as $namespace => $path) {
+                $loader->addPsr4($namespace, $path);
             }
-        };
-        $add($rootPackage);
-
-        return array_filter(
-            $packageMap,
-            function ($item) use ($include) {
-                $package = $item[0];
-                foreach ($package->getNames() as $name) {
-                    if (isset($include[$name])) {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-        );
-    }
-
-    /**
-     * Sorts packages by dependency weight
-     *
-     * Packages of equal weight retain the original order
-     *
-     * @param  array $packageMap
-     * @return array
-     */
-    protected function sortPackageMap(array $packageMap)
-    {
-        $packages = array();
-        $paths = array();
-
-        foreach ($packageMap as $item) {
-            list($package, $path) = $item;
-            $name = $package->getName();
-            $packages[$name] = $package;
-            $paths[$name] = $path;
         }
 
-        $sortedPackages = PackageSorter::sortPackages($packages);
-
-        $sortedPackageMap = array();
-
-        foreach ($sortedPackages as $package) {
-            $name = $package->getName();
-            $sortedPackageMap[] = array($packages[$name], $paths[$name]);
-        }
-
-        return $sortedPackageMap;
-    }
-
-    protected function parseAutoloadsType(array $packageMap, $type, RootPackageInterface $rootPackage)
-    {
-        $autoloads = array();
-
-        foreach ($packageMap as $item) {
-            list($package, $installPath) = $item;
-
-            $autoload = $package->getAutoload();
-            if ($this->devMode && $package === $rootPackage) {
-                $autoload = array_merge_recursive($autoload, $package->getDevAutoload());
+        if (isset($autoloads['classmap'])) {
+            $excluded = null;
+            if (!empty($autoloads['exclude-from-classmap'])) {
+                $excluded = $autoloads['exclude-from-classmap'];
             }
 
-            // skip misconfigured packages
-            if (!isset($autoload[$type]) || !is_array($autoload[$type])) {
-                continue;
-            }
-            if (null !== $package->getTargetDir() && $package !== $rootPackage) {
-                $installPath = substr($installPath, 0, -strlen('/'.$package->getTargetDir()));
-            }
-
-            foreach ($autoload[$type] as $namespace => $paths) {
-                foreach ((array) $paths as $path) {
-                    if (($type === 'files' || $type === 'classmap' || $type === 'exclude-from-classmap') && $package->getTargetDir() && !Filesystem::isReadable($installPath.'/'.$path)) {
-                        // remove target-dir from file paths of the root package
-                        if ($package === $rootPackage) {
-                            $targetDir = str_replace('\\<dirsep\\>', '[\\\\/]', preg_quote(str_replace(array('/', '\\'), '<dirsep>', $package->getTargetDir())));
-                            $path = ltrim(preg_replace('{^'.$targetDir.'}', '', ltrim($path, '\\/')), '\\/');
-                        } else {
-                            // add target-dir from file paths that don't have it
-                            $path = $package->getTargetDir() . '/' . $path;
-                        }
-                    }
-
-                    if ($type === 'exclude-from-classmap') {
-                        // first escape user input
-                        $path = preg_replace('{/+}', '/', preg_quote(trim(strtr($path, '\\', '/'), '/')));
-
-                        // add support for wildcards * and **
-                        $path = strtr($path, array('\\*\\*' => '.+?', '\\*' => '[^/]+?'));
-
-                        // add support for up-level relative paths
-                        $updir = null;
-                        $path = preg_replace_callback(
-                            '{^((?:(?:\\\\\\.){1,2}+/)+)}',
-                            function ($matches) use (&$updir) {
-                                if (isset($matches[1])) {
-                                    // undo preg_quote for the matched string
-                                    $updir = str_replace('\\.', '.', $matches[1]);
-                                }
-
-                                return '';
-                            },
-                            $path
-                        );
-                        if (empty($installPath)) {
-                            $installPath = strtr(getcwd(), '\\', '/');
-                        }
-
-                        $resolvedPath = realpath($installPath . '/' . $updir);
-                        $autoloads[] = preg_quote(strtr($resolvedPath, '\\', '/')) . '/' . $path . '($|/)';
-                        continue;
-                    }
-
-                    $relativePath = empty($installPath) ? (empty($path) ? '.' : $path) : $installPath.'/'.$path;
-
-                    if ($type === 'files') {
-                        $autoloads[$this->getFileIdentifier($package, $path)] = $relativePath;
-                        continue;
-                    }
-                    if ($type === 'classmap') {
-                        $autoloads[] = $relativePath;
-                        continue;
-                    }
-
-                    $autoloads[$namespace][] = $relativePath;
+            $scannedFiles = array();
+            foreach ($autoloads['classmap'] as $dir) {
+                try {
+                    $loader->addClassMap($this->generateClassMap($dir, $excluded, null, null, false, $scannedFiles));
+                } catch (\RuntimeException $e) {
+                    $this->io->writeError('<warning>'.$e->getMessage().'</warning>');
                 }
             }
         }
 
-        return $autoloads;
-    }
-
-    protected function getFileIdentifier(PackageInterface $package, $path)
-    {
-        return md5($package->getName() . ':' . $path);
-    }
-
-    protected function getPathCode(Filesystem $filesystem, $basePath, $vendorPath, $path)
-    {
-        if (!$filesystem->isAbsolutePath($path)) {
-            $path = $basePath . '/' . $path;
-        }
-        $path = $filesystem->normalizePath($path);
-
-        $baseDir = '';
-        if (strpos($path.'/', $vendorPath.'/') === 0) {
-            $path = substr($path, strlen($vendorPath));
-            $baseDir = '$vendorDir';
-
-            if ($path !== false) {
-                $baseDir .= " . ";
-            }
-        } else {
-            $path = $filesystem->normalizePath($filesystem->findShortestPath($basePath, $path, true));
-            if (!$filesystem->isAbsolutePath($path)) {
-                $baseDir = '$baseDir . ';
-                $path = '/' . $path;
-            }
-        }
-
-        if (strpos($path, '.phar') !== false) {
-            $baseDir = "'phar://' . " . $baseDir;
-        }
-
-        return $baseDir . (($path !== false) ? var_export($path, true) : "");
-    }
-
-    private function addClassMapCode($filesystem, $basePath, $vendorPath, $dir, $excluded, $namespaceFilter, $autoloadType, array $classMap, array &$ambiguousClasses, array &$scannedFiles)
-    {
-        foreach ($this->generateClassMap($dir, $excluded, $namespaceFilter, $autoloadType, true, $scannedFiles) as $class => $path) {
-            $pathCode = $this->getPathCode($filesystem, $basePath, $vendorPath, $path).",\n";
-            if (!isset($classMap[$class])) {
-                $classMap[$class] = $pathCode;
-            } elseif ($this->io && $classMap[$class] !== $pathCode && !preg_match('{/(test|fixture|example|stub)s?/}i', strtr($classMap[$class].' '.$path, '\\', '/'))) {
-                $ambiguousClasses[$class][] = $path;
-            }
-        }
-
-        return $classMap;
-    }
-
-    /**
-     * @param ?array $excluded
-     */
-    private function generateClassMap($dir, $excluded, $namespaceFilter, $autoloadType, $showAmbiguousWarning, array &$scannedFiles)
-    {
-        if ($excluded) {
-            // filter excluded patterns here to only use those matching $dir
-            // exclude-from-classmap patterns are all realpath'd so we can only filter them if $dir exists so that realpath($dir) will work
-            // if $dir does not exist, it should anyway not find anything there so no trouble
-            if (file_exists($dir)) {
-                // transform $dir in the same way that exclude-from-classmap patterns are transformed so we can match them against each other
-                $dirMatch = preg_quote(strtr(realpath($dir), '\\', '/'));
-                foreach ($excluded as $index => $pattern) {
-                    // extract the constant string prefix of the pattern here, until we reach a non-escaped regex special character
-                    $pattern = preg_replace('{^(([^.+*?\[^\]$(){}=!<>|:\\\\#-]+|\\\\[.+*?\[^\]$(){}=!<>|:#-])*).*}', '$1', $pattern);
-                    // if the pattern is not a subset or superset of $dir, it is unrelated and we skip it
-                    if (0 !== strpos($pattern, $dirMatch) && 0 !== strpos($dirMatch, $pattern)) {
-                        unset($excluded[$index]);
-                    }
-                }
-            }
-
-            $excluded = $excluded ? '{(' . implode('|', $excluded) . ')}' : null;
-        }
-
-        return ClassMapGenerator::createMap($dir, $excluded, $showAmbiguousWarning ? $this->io : null, $namespaceFilter, $autoloadType, $scannedFiles);
+        return $loader;
     }
 
     protected function getIncludePathsFile(array $packageMap, Filesystem $filesystem, $basePath, $vendorPath, $vendorPathCode, $appBaseDirCode)
@@ -797,99 +640,34 @@ $filesCode);
 EOF;
     }
 
-    protected function getStaticFile($suffix, $targetDir, $vendorPath, $basePath, &$staticPhpVersion)
+    protected function getPathCode(Filesystem $filesystem, $basePath, $vendorPath, $path)
     {
-        $staticPhpVersion = 50600;
-
-        $file = <<<HEADER
-<?php
-
-// autoload_static.php @generated by Composer
-
-namespace Composer\Autoload;
-
-class ComposerStaticInit$suffix
-{
-
-HEADER;
-
-        $loader = new ClassLoader();
-
-        $map = require $targetDir . '/autoload_namespaces.php';
-        foreach ($map as $namespace => $path) {
-            $loader->set($namespace, $path);
+        if (!$filesystem->isAbsolutePath($path)) {
+            $path = $basePath . '/' . $path;
         }
+        $path = $filesystem->normalizePath($path);
 
-        $map = require $targetDir . '/autoload_psr4.php';
-        foreach ($map as $namespace => $path) {
-            $loader->setPsr4($namespace, $path);
-        }
+        $baseDir = '';
+        if (strpos($path.'/', $vendorPath.'/') === 0) {
+            $path = substr($path, strlen($vendorPath));
+            $baseDir = '$vendorDir';
 
-        $classMap = require $targetDir . '/autoload_classmap.php';
-        if ($classMap) {
-            $loader->addClassMap($classMap);
-        }
-
-        $filesystem = new Filesystem();
-
-        $vendorPathCode = ' => ' . $filesystem->findShortestPathCode(realpath($targetDir), $vendorPath, true, true) . " . '/";
-        $vendorPharPathCode = ' => \'phar://\' . ' . $filesystem->findShortestPathCode(realpath($targetDir), $vendorPath, true, true) . " . '/";
-        $appBaseDirCode = ' => ' . $filesystem->findShortestPathCode(realpath($targetDir), $basePath, true, true) . " . '/";
-        $appBaseDirPharCode = ' => \'phar://\' . ' . $filesystem->findShortestPathCode(realpath($targetDir), $basePath, true, true) . " . '/";
-
-        $absoluteVendorPathCode = ' => ' . substr(var_export(rtrim($vendorDir, '\\/') . '/', true), 0, -1);
-        $absoluteVendorPharPathCode = ' => ' . substr(var_export(rtrim('phar://' . $vendorDir, '\\/') . '/', true), 0, -1);
-        $absoluteAppBaseDirCode = ' => ' . substr(var_export(rtrim($baseDir, '\\/') . '/', true), 0, -1);
-        $absoluteAppBaseDirPharCode = ' => ' . substr(var_export(rtrim('phar://' . $baseDir, '\\/') . '/', true), 0, -1);
-
-        $initializer = '';
-        $prefix = "\0Composer\Autoload\ClassLoader\0";
-        $prefixLen = strlen($prefix);
-        if (file_exists($targetDir . '/autoload_files.php')) {
-            $maps = array('files' => require $targetDir . '/autoload_files.php');
+            if ($path !== false) {
+                $baseDir .= " . ";
+            }
         } else {
-            $maps = array();
-        }
-
-        foreach ((array) $loader as $prop => $value) {
-            if ($value && 0 === strpos($prop, $prefix)) {
-                $maps[substr($prop, $prefixLen)] = $value;
+            $path = $filesystem->normalizePath($filesystem->findShortestPath($basePath, $path, true));
+            if (!$filesystem->isAbsolutePath($path)) {
+                $baseDir = '$baseDir . ';
+                $path = '/' . $path;
             }
         }
 
-        foreach ($maps as $prop => $value) {
-            if (count($value) > 32767) {
-                // Static arrays are limited to 32767 values on PHP 5.6
-                // See https://bugs.php.net/68057
-                $staticPhpVersion = 70000;
-            }
-            $value = strtr(
-                var_export($value, true),
-                array(
-                    $absoluteVendorPathCode => $vendorPathCode,
-                    $absoluteVendorPharPathCode => $vendorPharPathCode,
-                    $absoluteAppBaseDirCode => $appBaseDirCode,
-                    $absoluteAppBaseDirPharCode => $appBaseDirPharCode,
-                )
-            );
-            $value = ltrim(preg_replace('/^ */m', '    $0$0', $value));
-
-            $file .= sprintf("    public static $%s = %s;\n\n", $prop, $value);
-            if ('files' !== $prop) {
-                $initializer .= "            \$loader->$prop = ComposerStaticInit$suffix::\$$prop;\n";
-            }
+        if (strpos($path, '.phar') !== false) {
+            $baseDir = "'phar://' . " . $baseDir;
         }
 
-        return $file . <<<INITIALIZER
-    public static function getInitializer(ClassLoader \$loader)
-    {
-        return \Closure::bind(function () use (\$loader) {
-$initializer
-        }, null, ClassLoader::class);
-    }
-}
-
-INITIALIZER;
+        return $baseDir . (($path !== false) ? var_export($path, true) : "");
     }
 
     protected function getPlatformCheck(array $packageMap, array $ignorePlatformReqs, $checkPlatform, array $devPackageNames)
@@ -1240,44 +1018,270 @@ FOOTER;
 FOOTER;
     }
 
-    /**
-     * Registers an autoloader based on an autoload map returned by parseAutoloads
-     *
-     * @param  array       $autoloads see parseAutoloads return value
-     * @return ClassLoader
-     */
-    public function createLoader(array $autoloads, $vendorDir = null)
+    protected function getStaticFile($suffix, $targetDir, $vendorPath, $basePath, &$staticPhpVersion)
     {
-        $loader = new ClassLoader($vendorDir);
+        $staticPhpVersion = 50600;
 
-        if (isset($autoloads['psr-0'])) {
-            foreach ($autoloads['psr-0'] as $namespace => $path) {
-                $loader->add($namespace, $path);
+        $file = <<<HEADER
+<?php
+
+// autoload_static.php @generated by Composer
+
+namespace Composer\Autoload;
+
+class ComposerStaticInit$suffix
+{
+
+HEADER;
+
+        $loader = new ClassLoader();
+
+        $map = require $targetDir . '/autoload_namespaces.php';
+        foreach ($map as $namespace => $path) {
+            $loader->set($namespace, $path);
+        }
+
+        $map = require $targetDir . '/autoload_psr4.php';
+        foreach ($map as $namespace => $path) {
+            $loader->setPsr4($namespace, $path);
+        }
+
+        $classMap = require $targetDir . '/autoload_classmap.php';
+        if ($classMap) {
+            $loader->addClassMap($classMap);
+        }
+
+        $filesystem = new Filesystem();
+
+        $vendorPathCode = ' => ' . $filesystem->findShortestPathCode(realpath($targetDir), $vendorPath, true, true) . " . '/";
+        $vendorPharPathCode = ' => \'phar://\' . ' . $filesystem->findShortestPathCode(realpath($targetDir), $vendorPath, true, true) . " . '/";
+        $appBaseDirCode = ' => ' . $filesystem->findShortestPathCode(realpath($targetDir), $basePath, true, true) . " . '/";
+        $appBaseDirPharCode = ' => \'phar://\' . ' . $filesystem->findShortestPathCode(realpath($targetDir), $basePath, true, true) . " . '/";
+
+        $absoluteVendorPathCode = ' => ' . substr(var_export(rtrim($vendorDir, '\\/') . '/', true), 0, -1);
+        $absoluteVendorPharPathCode = ' => ' . substr(var_export(rtrim('phar://' . $vendorDir, '\\/') . '/', true), 0, -1);
+        $absoluteAppBaseDirCode = ' => ' . substr(var_export(rtrim($baseDir, '\\/') . '/', true), 0, -1);
+        $absoluteAppBaseDirPharCode = ' => ' . substr(var_export(rtrim('phar://' . $baseDir, '\\/') . '/', true), 0, -1);
+
+        $initializer = '';
+        $prefix = "\0Composer\Autoload\ClassLoader\0";
+        $prefixLen = strlen($prefix);
+        if (file_exists($targetDir . '/autoload_files.php')) {
+            $maps = array('files' => require $targetDir . '/autoload_files.php');
+        } else {
+            $maps = array();
+        }
+
+        foreach ((array) $loader as $prop => $value) {
+            if ($value && 0 === strpos($prop, $prefix)) {
+                $maps[substr($prop, $prefixLen)] = $value;
             }
         }
 
-        if (isset($autoloads['psr-4'])) {
-            foreach ($autoloads['psr-4'] as $namespace => $path) {
-                $loader->addPsr4($namespace, $path);
+        foreach ($maps as $prop => $value) {
+            if (count($value) > 32767) {
+                // Static arrays are limited to 32767 values on PHP 5.6
+                // See https://bugs.php.net/68057
+                $staticPhpVersion = 70000;
+            }
+            $value = strtr(
+                var_export($value, true),
+                array(
+                    $absoluteVendorPathCode => $vendorPathCode,
+                    $absoluteVendorPharPathCode => $vendorPharPathCode,
+                    $absoluteAppBaseDirCode => $appBaseDirCode,
+                    $absoluteAppBaseDirPharCode => $appBaseDirPharCode,
+                )
+            );
+            $value = ltrim(preg_replace('/^ */m', '    $0$0', $value));
+
+            $file .= sprintf("    public static $%s = %s;\n\n", $prop, $value);
+            if ('files' !== $prop) {
+                $initializer .= "            \$loader->$prop = ComposerStaticInit$suffix::\$$prop;\n";
             }
         }
 
-        if (isset($autoloads['classmap'])) {
-            $excluded = null;
-            if (!empty($autoloads['exclude-from-classmap'])) {
-                $excluded = $autoloads['exclude-from-classmap'];
+        return $file . <<<INITIALIZER
+    public static function getInitializer(ClassLoader \$loader)
+    {
+        return \Closure::bind(function () use (\$loader) {
+$initializer
+        }, null, ClassLoader::class);
+    }
+}
+
+INITIALIZER;
+    }
+
+    protected function parseAutoloadsType(array $packageMap, $type, RootPackageInterface $rootPackage)
+    {
+        $autoloads = array();
+
+        foreach ($packageMap as $item) {
+            list($package, $installPath) = $item;
+
+            $autoload = $package->getAutoload();
+            if ($this->devMode && $package === $rootPackage) {
+                $autoload = array_merge_recursive($autoload, $package->getDevAutoload());
             }
 
-            $scannedFiles = array();
-            foreach ($autoloads['classmap'] as $dir) {
-                try {
-                    $loader->addClassMap($this->generateClassMap($dir, $excluded, null, null, false, $scannedFiles));
-                } catch (\RuntimeException $e) {
-                    $this->io->writeError('<warning>'.$e->getMessage().'</warning>');
+            // skip misconfigured packages
+            if (!isset($autoload[$type]) || !is_array($autoload[$type])) {
+                continue;
+            }
+            if (null !== $package->getTargetDir() && $package !== $rootPackage) {
+                $installPath = substr($installPath, 0, -strlen('/'.$package->getTargetDir()));
+            }
+
+            foreach ($autoload[$type] as $namespace => $paths) {
+                foreach ((array) $paths as $path) {
+                    if (($type === 'files' || $type === 'classmap' || $type === 'exclude-from-classmap') && $package->getTargetDir() && !Filesystem::isReadable($installPath.'/'.$path)) {
+                        // remove target-dir from file paths of the root package
+                        if ($package === $rootPackage) {
+                            $targetDir = str_replace('\\<dirsep\\>', '[\\\\/]', preg_quote(str_replace(array('/', '\\'), '<dirsep>', $package->getTargetDir())));
+                            $path = ltrim(preg_replace('{^'.$targetDir.'}', '', ltrim($path, '\\/')), '\\/');
+                        } else {
+                            // add target-dir from file paths that don't have it
+                            $path = $package->getTargetDir() . '/' . $path;
+                        }
+                    }
+
+                    if ($type === 'exclude-from-classmap') {
+                        // first escape user input
+                        $path = preg_replace('{/+}', '/', preg_quote(trim(strtr($path, '\\', '/'), '/')));
+
+                        // add support for wildcards * and **
+                        $path = strtr($path, array('\\*\\*' => '.+?', '\\*' => '[^/]+?'));
+
+                        // add support for up-level relative paths
+                        $updir = null;
+                        $path = preg_replace_callback(
+                            '{^((?:(?:\\\\\\.){1,2}+/)+)}',
+                            function ($matches) use (&$updir) {
+                                if (isset($matches[1])) {
+                                    // undo preg_quote for the matched string
+                                    $updir = str_replace('\\.', '.', $matches[1]);
+                                }
+
+                                return '';
+                            },
+                            $path
+                        );
+                        if (empty($installPath)) {
+                            $installPath = strtr(getcwd(), '\\', '/');
+                        }
+
+                        $resolvedPath = realpath($installPath . '/' . $updir);
+                        $autoloads[] = preg_quote(strtr($resolvedPath, '\\', '/')) . '/' . $path . '($|/)';
+                        continue;
+                    }
+
+                    $relativePath = empty($installPath) ? (empty($path) ? '.' : $path) : $installPath.'/'.$path;
+
+                    if ($type === 'files') {
+                        $autoloads[$this->getFileIdentifier($package, $path)] = $relativePath;
+                        continue;
+                    }
+                    if ($type === 'classmap') {
+                        $autoloads[] = $relativePath;
+                        continue;
+                    }
+
+                    $autoloads[$namespace][] = $relativePath;
                 }
             }
         }
 
-        return $loader;
+        return $autoloads;
+    }
+
+    protected function getFileIdentifier(PackageInterface $package, $path)
+    {
+        return md5($package->getName() . ':' . $path);
+    }
+
+    /**
+     * Filters out dev-dependencies
+     *
+     * @param  array                $packageMap
+     * @param  RootPackageInterface $rootPackage
+     * @return array
+     */
+    protected function filterPackageMap(array $packageMap, RootPackageInterface $rootPackage)
+    {
+        $packages = array();
+        $include = array();
+        $replacedBy = array();
+
+        foreach ($packageMap as $item) {
+            $package = $item[0];
+            $name = $package->getName();
+            $packages[$name] = $package;
+            foreach ($package->getReplaces() as $replace) {
+                $replacedBy[$replace->getTarget()] = $name;
+            }
+        }
+
+        $add = function (PackageInterface $package) use (&$add, $packages, &$include, $replacedBy) {
+            foreach ($package->getRequires() as $link) {
+                $target = $link->getTarget();
+                if (isset($replacedBy[$target])) {
+                    $target = $replacedBy[$target];
+                }
+                if (!isset($include[$target])) {
+                    $include[$target] = true;
+                    if (isset($packages[$target])) {
+                        $add($packages[$target]);
+                    }
+                }
+            }
+        };
+        $add($rootPackage);
+
+        return array_filter(
+            $packageMap,
+            function ($item) use ($include) {
+                $package = $item[0];
+                foreach ($package->getNames() as $name) {
+                    if (isset($include[$name])) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        );
+    }
+
+    /**
+     * Sorts packages by dependency weight
+     *
+     * Packages of equal weight retain the original order
+     *
+     * @param  array $packageMap
+     * @return array
+     */
+    protected function sortPackageMap(array $packageMap)
+    {
+        $packages = array();
+        $paths = array();
+
+        foreach ($packageMap as $item) {
+            list($package, $path) = $item;
+            $name = $package->getName();
+            $packages[$name] = $package;
+            $paths[$name] = $path;
+        }
+
+        $sortedPackages = PackageSorter::sortPackages($packages);
+
+        $sortedPackageMap = array();
+
+        foreach ($sortedPackages as $package) {
+            $name = $package->getName();
+            $sortedPackageMap[] = array($packages[$name], $paths[$name]);
+        }
+
+        return $sortedPackageMap;
     }
 }

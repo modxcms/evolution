@@ -20,6 +20,58 @@ use JsonSchema\UriResolverInterface;
 class UriResolver implements UriResolverInterface
 {
     /**
+     * Parses a URI into five main components
+     *
+     * @param string $uri
+     *
+     * @return array
+     */
+    public function parse($uri)
+    {
+        preg_match('|^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?|', $uri, $match);
+
+        $components = array();
+        if (5 < count($match)) {
+            $components =  array(
+                'scheme'    => $match[2],
+                'authority' => $match[4],
+                'path'      => $match[5]
+            );
+        }
+        if (7 < count($match)) {
+            $components['query'] = $match[7];
+        }
+        if (9 < count($match)) {
+            $components['fragment'] = $match[9];
+        }
+
+        return $components;
+    }
+
+    /**
+     * Builds a URI based on n array with the main components
+     *
+     * @param array $components
+     *
+     * @return string
+     */
+    public function generate(array $components)
+    {
+        $uri = $components['scheme'] . '://'
+             . $components['authority']
+             . $components['path'];
+
+        if (array_key_exists('query', $components) && strlen($components['query'])) {
+            $uri .= '?' . $components['query'];
+        }
+        if (array_key_exists('fragment', $components)) {
+            $uri .= '#' . $components['fragment'];
+        }
+
+        return $uri;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function resolve($uri, $baseUri = null)
@@ -58,35 +110,6 @@ class UriResolver implements UriResolverInterface
         }
 
         return $this->generate($baseComponents);
-    }
-
-    /**
-     * Parses a URI into five main components
-     *
-     * @param string $uri
-     *
-     * @return array
-     */
-    public function parse($uri)
-    {
-        preg_match('|^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?|', $uri, $match);
-
-        $components = array();
-        if (5 < count($match)) {
-            $components =  array(
-                'scheme'    => $match[2],
-                'authority' => $match[4],
-                'path'      => $match[5]
-            );
-        }
-        if (7 < count($match)) {
-            $components['query'] = $match[7];
-        }
-        if (9 < count($match)) {
-            $components['fragment'] = $match[9];
-        }
-
-        return $components;
     }
 
     /**
@@ -136,29 +159,6 @@ class UriResolver implements UriResolverInterface
         $path = preg_replace('|//|', '/', $path);
 
         return $path;
-    }
-
-    /**
-     * Builds a URI based on n array with the main components
-     *
-     * @param array $components
-     *
-     * @return string
-     */
-    public function generate(array $components)
-    {
-        $uri = $components['scheme'] . '://'
-             . $components['authority']
-             . $components['path'];
-
-        if (array_key_exists('query', $components) && strlen($components['query'])) {
-            $uri .= '?' . $components['query'];
-        }
-        if (array_key_exists('fragment', $components)) {
-            $uri .= '#' . $components['fragment'];
-        }
-
-        return $uri;
     }
 
     /**

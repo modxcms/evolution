@@ -9,7 +9,17 @@ namespace Doctrine\DBAL;
  */
 final class Events
 {
+    /**
+     * Private constructor. This class cannot be instantiated.
+     *
+     * @codeCoverageIgnore
+     */
+    private function __construct()
+    {
+    }
+
     public const postConnect = 'postConnect';
+
     public const onSchemaCreateTable            = 'onSchemaCreateTable';
     public const onSchemaCreateTableColumn      = 'onSchemaCreateTableColumn';
     public const onSchemaDropTable              = 'onSchemaDropTable';
@@ -20,13 +30,4 @@ final class Events
     public const onSchemaAlterTableRenameColumn = 'onSchemaAlterTableRenameColumn';
     public const onSchemaColumnDefinition       = 'onSchemaColumnDefinition';
     public const onSchemaIndexDefinition        = 'onSchemaIndexDefinition';
-
-    /**
-     * Private constructor. This class cannot be instantiated.
-     *
-     * @codeCoverageIgnore
-     */
-    private function __construct()
-    {
-    }
 }

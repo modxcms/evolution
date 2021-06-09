@@ -26,14 +26,16 @@ class SyslogUdpHandler extends AbstractSyslogHandler
     const RFC3164 = 0;
     const RFC5424 = 1;
     const RFC5424e = 2;
-    protected $socket;
-    protected $ident;
-    protected $rfc;
+
     private $dateFormats = array(
         self::RFC3164 => 'M d H:i:s',
         self::RFC5424 => \DateTime::RFC3339,
         self::RFC5424e => \DateTime::RFC3339_EXTENDED,
     );
+
+    protected $socket;
+    protected $ident;
+    protected $rfc;
 
     /**
      * @param string     $host     Either IP/hostname or a path to a unix socket (port must be 0 then)
@@ -54,21 +56,6 @@ class SyslogUdpHandler extends AbstractSyslogHandler
         $this->socket = new UdpSocket($host, $port);
     }
 
-    public function close(): void
-    {
-        $this->socket->close();
-    }
-
-    /**
-     * Inject your own socket, mainly used for testing
-     */
-    public function setSocket(UdpSocket $socket): self
-    {
-        $this->socket = $socket;
-
-        return $this;
-    }
-
     protected function write(array $record): void
     {
         $lines = $this->splitMessageIntoLines($record['formatted']);
@@ -78,6 +65,11 @@ class SyslogUdpHandler extends AbstractSyslogHandler
         foreach ($lines as $line) {
             $this->socket->write($line, $header);
         }
+    }
+
+    public function close(): void
+    {
+        $this->socket->close();
     }
 
     private function splitMessageIntoLines($message): array
@@ -121,5 +113,15 @@ class SyslogUdpHandler extends AbstractSyslogHandler
                 $this->ident . " " .
                 $pid . " - - ";
         }
+    }
+
+    /**
+     * Inject your own socket, mainly used for testing
+     */
+    public function setSocket(UdpSocket $socket): self
+    {
+        $this->socket = $socket;
+
+        return $this;
     }
 }

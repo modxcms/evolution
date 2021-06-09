@@ -27,22 +27,6 @@ trait TesterTrait
     private $captureStreamsIndependently = false;
 
     /**
-     * @return resource
-     */
-    private static function createStream(array $inputs)
-    {
-        $stream = fopen('php://memory', 'r+', false);
-
-        foreach ($inputs as $input) {
-            fwrite($stream, $input.\PHP_EOL);
-        }
-
-        rewind($stream);
-
-        return $stream;
-    }
-
-    /**
      * Gets the display returned by the last execution of the command or application.
      *
      * @throws \RuntimeException If it's called before the execute method
@@ -182,5 +166,21 @@ trait TesterTrait
             $streamProperty->setAccessible(true);
             $streamProperty->setValue($this->output, fopen('php://memory', 'w', false));
         }
+    }
+
+    /**
+     * @return resource
+     */
+    private static function createStream(array $inputs)
+    {
+        $stream = fopen('php://memory', 'r+', false);
+
+        foreach ($inputs as $input) {
+            fwrite($stream, $input.\PHP_EOL);
+        }
+
+        rewind($stream);
+
+        return $stream;
     }
 }

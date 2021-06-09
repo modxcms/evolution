@@ -17,6 +17,14 @@ use Symfony\Component\HttpFoundation\Response;
 final class ResponseIsRedirected extends Constraint
 {
     /**
+     * {@inheritdoc}
+     */
+    public function toString(): string
+    {
+        return 'is redirected';
+    }
+
+    /**
      * @param Response $response
      *
      * {@inheritdoc}
@@ -34,14 +42,6 @@ final class ResponseIsRedirected extends Constraint
     protected function failureDescription($response): string
     {
         return 'the Response '.$this->toString();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function toString(): string
-    {
-        return 'is redirected';
     }
 
     /**

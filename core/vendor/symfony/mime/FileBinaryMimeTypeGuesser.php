@@ -39,6 +39,28 @@ class FileBinaryMimeTypeGuesser implements MimeTypeGuesserInterface
     /**
      * {@inheritdoc}
      */
+    public function isGuesserSupported(): bool
+    {
+        static $supported = null;
+
+        if (null !== $supported) {
+            return $supported;
+        }
+
+        if ('\\' === \DIRECTORY_SEPARATOR || !\function_exists('passthru') || !\function_exists('escapeshellarg')) {
+            return $supported = false;
+        }
+
+        ob_start();
+        passthru('command -v file', $exitStatus);
+        $binPath = trim(ob_get_clean());
+
+        return $supported = 0 === $exitStatus && '' !== $binPath;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function guessMimeType(string $path): ?string
     {
         if (!is_file($path) || !is_readable($path)) {
@@ -67,27 +89,5 @@ class FileBinaryMimeTypeGuesser implements MimeTypeGuesserInterface
         }
 
         return $match[1];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isGuesserSupported(): bool
-    {
-        static $supported = null;
-
-        if (null !== $supported) {
-            return $supported;
-        }
-
-        if ('\\' === \DIRECTORY_SEPARATOR || !\function_exists('passthru') || !\function_exists('escapeshellarg')) {
-            return $supported = false;
-        }
-
-        ob_start();
-        passthru('command -v file', $exitStatus);
-        $binPath = trim(ob_get_clean());
-
-        return $supported = 0 === $exitStatus && '' !== $binPath;
     }
 }

@@ -43,53 +43,6 @@ class SchemaStorage implements SchemaStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function resolveRef($ref)
-    {
-        $jsonPointer = new JsonPointer($ref);
-
-        // resolve filename for pointer
-        $fileName = $jsonPointer->getFilename();
-        if (!strlen($fileName)) {
-            throw new UnresolvableJsonPointerException(sprintf(
-                "Could not resolve fragment '%s': no file is defined",
-                $jsonPointer->getPropertyPathAsString()
-            ));
-        }
-
-        // get & process the schema
-        $refSchema = $this->getSchema($fileName);
-        foreach ($jsonPointer->getPropertyPaths() as $path) {
-            if (is_object($refSchema) && property_exists($refSchema, $path)) {
-                $refSchema = $this->resolveRefSchema($refSchema->{$path});
-            } elseif (is_array($refSchema) && array_key_exists($path, $refSchema)) {
-                $refSchema = $this->resolveRefSchema($refSchema[$path]);
-            } else {
-                throw new UnresolvableJsonPointerException(sprintf(
-                    'File: %s is found, but could not resolve fragment: %s',
-                    $jsonPointer->getFilename(),
-                    $jsonPointer->getPropertyPathAsString()
-                ));
-            }
-        }
-
-        return $refSchema;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSchema($id)
-    {
-        if (!array_key_exists($id, $this->schemas)) {
-            $this->addSchema($id);
-        }
-
-        return $this->schemas[$id];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function addSchema($id, $schema = null)
     {
         if (is_null($schema) && $id !== self::INTERNAL_PROVIDED_SCHEMA_URI) {
@@ -151,6 +104,53 @@ class SchemaStorage implements SchemaStorageInterface
         foreach ($schema as &$member) {
             $this->expandRefs($member, $base);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSchema($id)
+    {
+        if (!array_key_exists($id, $this->schemas)) {
+            $this->addSchema($id);
+        }
+
+        return $this->schemas[$id];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function resolveRef($ref)
+    {
+        $jsonPointer = new JsonPointer($ref);
+
+        // resolve filename for pointer
+        $fileName = $jsonPointer->getFilename();
+        if (!strlen($fileName)) {
+            throw new UnresolvableJsonPointerException(sprintf(
+                "Could not resolve fragment '%s': no file is defined",
+                $jsonPointer->getPropertyPathAsString()
+            ));
+        }
+
+        // get & process the schema
+        $refSchema = $this->getSchema($fileName);
+        foreach ($jsonPointer->getPropertyPaths() as $path) {
+            if (is_object($refSchema) && property_exists($refSchema, $path)) {
+                $refSchema = $this->resolveRefSchema($refSchema->{$path});
+            } elseif (is_array($refSchema) && array_key_exists($path, $refSchema)) {
+                $refSchema = $this->resolveRefSchema($refSchema[$path]);
+            } else {
+                throw new UnresolvableJsonPointerException(sprintf(
+                    'File: %s is found, but could not resolve fragment: %s',
+                    $jsonPointer->getFilename(),
+                    $jsonPointer->getPropertyPathAsString()
+                ));
+            }
+        }
+
+        return $refSchema;
     }
 
     /**

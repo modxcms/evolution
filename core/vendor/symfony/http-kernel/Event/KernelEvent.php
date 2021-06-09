@@ -69,6 +69,14 @@ class KernelEvent extends Event
     }
 
     /**
+     * Checks if this is the main request.
+     */
+    public function isMainRequest(): bool
+    {
+        return HttpKernelInterface::MAIN_REQUEST === $this->requestType;
+    }
+
+    /**
      * Checks if this is a master request.
      *
      * @return bool True if the request is a master request
@@ -80,13 +88,5 @@ class KernelEvent extends Event
         trigger_deprecation('symfony/http-kernel', '5.3', '"%s()" is deprecated, use "isMainRequest()" instead.', __METHOD__);
 
         return $this->isMainRequest();
-    }
-
-    /**
-     * Checks if this is the main request.
-     */
-    public function isMainRequest(): bool
-    {
-        return HttpKernelInterface::MAIN_REQUEST === $this->requestType;
     }
 }

@@ -32,22 +32,6 @@ class AcceptHeaderItem
     }
 
     /**
-     * Set an attribute.
-     *
-     * @return $this
-     */
-    public function setAttribute(string $name, string $value)
-    {
-        if ('q' === $name) {
-            $this->quality = (float) $value;
-        } else {
-            $this->attributes[$name] = $value;
-        }
-
-        return $this;
-    }
-
-    /**
      * Builds an AcceptHeaderInstance instance from a string.
      *
      * @return self
@@ -78,16 +62,6 @@ class AcceptHeaderItem
     }
 
     /**
-     * Returns the item value.
-     *
-     * @return string
-     */
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    /**
      * Set the item value.
      *
      * @return $this
@@ -100,13 +74,13 @@ class AcceptHeaderItem
     }
 
     /**
-     * Returns the item quality.
+     * Returns the item value.
      *
-     * @return float
+     * @return string
      */
-    public function getQuality()
+    public function getValue()
     {
-        return $this->quality;
+        return $this->value;
     }
 
     /**
@@ -122,13 +96,13 @@ class AcceptHeaderItem
     }
 
     /**
-     * Returns the item index.
+     * Returns the item quality.
      *
-     * @return int
+     * @return float
      */
-    public function getIndex()
+    public function getQuality()
     {
-        return $this->index;
+        return $this->quality;
     }
 
     /**
@@ -141,6 +115,16 @@ class AcceptHeaderItem
         $this->index = $index;
 
         return $this;
+    }
+
+    /**
+     * Returns the item index.
+     *
+     * @return int
+     */
+    public function getIndex()
+    {
+        return $this->index;
     }
 
     /**
@@ -173,5 +157,21 @@ class AcceptHeaderItem
     public function getAttributes()
     {
         return $this->attributes;
+    }
+
+    /**
+     * Set an attribute.
+     *
+     * @return $this
+     */
+    public function setAttribute(string $name, string $value)
+    {
+        if ('q' === $name) {
+            $this->quality = (float) $value;
+        } else {
+            $this->attributes[$name] = $value;
+        }
+
+        return $this;
     }
 }

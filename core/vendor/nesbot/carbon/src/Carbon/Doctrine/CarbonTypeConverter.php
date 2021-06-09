@@ -13,8 +13,19 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\ConversionException;
 use Exception;
 
+/**
+ * @template T of CarbonInterface
+ */
 trait CarbonTypeConverter
 {
+    /**
+     * @return class-string<T>
+     */
+    protected function getCarbonClassName(): string
+    {
+        return Carbon::class;
+    }
+
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         $precision = ($fieldDeclaration['precision'] ?: 10) === 10
@@ -37,6 +48,8 @@ trait CarbonTypeConverter
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @return T|null
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
@@ -71,13 +84,10 @@ trait CarbonTypeConverter
         return $date;
     }
 
-    protected function getCarbonClassName(): string
-    {
-        return Carbon::class;
-    }
-
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @return string|null
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {

@@ -15,14 +15,6 @@ class Statement extends PDO\Statement
     /**
      * {@inheritdoc}
      */
-    public function bindValue($param, $value, $type = ParameterType::STRING)
-    {
-        return $this->bindParam($param, $value, $type);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function bindParam($param, &$variable, $type = ParameterType::STRING, $length = null, $driverOptions = null)
     {
         switch ($type) {
@@ -42,5 +34,13 @@ class Statement extends PDO\Statement
         }
 
         return parent::bindParam($param, $variable, $type, $length, $driverOptions);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function bindValue($param, $value, $type = ParameterType::STRING)
+    {
+        return $this->bindParam($param, $value, $type);
     }
 }

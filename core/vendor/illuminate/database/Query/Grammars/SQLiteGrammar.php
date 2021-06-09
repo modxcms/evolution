@@ -20,6 +20,119 @@ class SQLiteGrammar extends Grammar
     ];
 
     /**
+     * Compile the lock into SQL.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  bool|string  $value
+     * @return string
+     */
+    protected function compileLock(Builder $query, $value)
+    {
+        return '';
+    }
+
+    /**
+     * Wrap a union subquery in parentheses.
+     *
+     * @param  string  $sql
+     * @return string
+     */
+    protected function wrapUnion($sql)
+    {
+        return 'select * from ('.$sql.')';
+    }
+
+    /**
+     * Compile a "where date" clause.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function whereDate(Builder $query, $where)
+    {
+        return $this->dateBasedWhere('%Y-%m-%d', $query, $where);
+    }
+
+    /**
+     * Compile a "where day" clause.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function whereDay(Builder $query, $where)
+    {
+        return $this->dateBasedWhere('%d', $query, $where);
+    }
+
+    /**
+     * Compile a "where month" clause.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function whereMonth(Builder $query, $where)
+    {
+        return $this->dateBasedWhere('%m', $query, $where);
+    }
+
+    /**
+     * Compile a "where year" clause.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function whereYear(Builder $query, $where)
+    {
+        return $this->dateBasedWhere('%Y', $query, $where);
+    }
+
+    /**
+     * Compile a "where time" clause.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function whereTime(Builder $query, $where)
+    {
+        return $this->dateBasedWhere('%H:%M:%S', $query, $where);
+    }
+
+    /**
+     * Compile a date based where clause.
+     *
+     * @param  string  $type
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function dateBasedWhere($type, Builder $query, $where)
+    {
+        $value = $this->parameter($where['value']);
+
+        return "strftime('{$type}', {$this->wrap($where['column'])}) {$where['operator']} cast({$value} as text)";
+    }
+
+    /**
+     * Compile a "JSON length" statement into SQL.
+     *
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  string  $value
+     * @return string
+     */
+    protected function compileJsonLength($column, $operator, $value)
+    {
+        [$field, $path] = $this->wrapJsonFieldAndPath($column);
+
+        return 'json_array_length('.$field.$path.') '.$operator.' '.$value;
+    }
+
+    /**
      * Compile an update statement into SQL.
      *
      * @param  \Illuminate\Database\Query\Builder  $query
@@ -36,23 +149,15 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Compile an update statement with joins or limit into SQL.
+     * Compile an insert ignore statement into SQL.
      *
      * @param  \Illuminate\Database\Query\Builder  $query
      * @param  array  $values
      * @return string
      */
-    protected function compileUpdateWithJoinsOrLimit(Builder $query, array $values)
+    public function compileInsertOrIgnore(Builder $query, array $values)
     {
-        $table = $this->wrapTable($query->from);
-
-        $columns = $this->compileUpdateColumns($query, $values);
-
-        $alias = last(preg_split('/\s+as\s+/i', $query->from));
-
-        $selectSql = $this->compileSelect($query->select($alias.'.rowid'));
-
-        return "update {$table} set {$columns} where {$this->wrap('rowid')} in ({$selectSql})";
+        return Str::replaceFirst('insert', 'insert or ignore', $this->compileInsert($query, $values));
     }
 
     /**
@@ -75,6 +180,30 @@ class SQLiteGrammar extends Grammar
 
             return $this->wrap($column).' = '.$value;
         })->implode(', ');
+    }
+
+    /**
+     * Compile an "upsert" statement into SQL.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $values
+     * @param  array  $uniqueBy
+     * @param  array  $update
+     * @return string
+     */
+    public function compileUpsert(Builder $query, array $values, array $uniqueBy, array $update)
+    {
+        $sql = $this->compileInsert($query, $values);
+
+        $sql .= ' on conflict ('.$this->columnize($uniqueBy).') do update set ';
+
+        $columns = collect($update)->map(function ($value, $key) {
+            return is_numeric($key)
+                ? $this->wrap($value).' = '.$this->wrapValue('excluded').'.'.$this->wrap($value)
+                : $this->wrap($key).' = '.$this->parameter($value);
+        })->implode(', ');
+
+        return $sql.$columns;
     }
 
     /**
@@ -109,39 +238,23 @@ class SQLiteGrammar extends Grammar
     }
 
     /**
-     * Compile an insert ignore statement into SQL.
+     * Compile an update statement with joins or limit into SQL.
      *
      * @param  \Illuminate\Database\Query\Builder  $query
      * @param  array  $values
      * @return string
      */
-    public function compileInsertOrIgnore(Builder $query, array $values)
+    protected function compileUpdateWithJoinsOrLimit(Builder $query, array $values)
     {
-        return Str::replaceFirst('insert', 'insert or ignore', $this->compileInsert($query, $values));
-    }
+        $table = $this->wrapTable($query->from);
 
-    /**
-     * Compile an "upsert" statement into SQL.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  array  $values
-     * @param  array  $uniqueBy
-     * @param  array  $update
-     * @return string
-     */
-    public function compileUpsert(Builder $query, array $values, array $uniqueBy, array $update)
-    {
-        $sql = $this->compileInsert($query, $values);
+        $columns = $this->compileUpdateColumns($query, $values);
 
-        $sql .= ' on conflict ('.$this->columnize($uniqueBy).') do update set ';
+        $alias = last(preg_split('/\s+as\s+/i', $query->from));
 
-        $columns = collect($update)->map(function ($value, $key) {
-            return is_numeric($key)
-                ? $this->wrap($value).' = '.$this->wrapValue('excluded').'.'.$this->wrap($value)
-                : $this->wrap($key).' = '.$this->parameter($value);
-        })->implode(', ');
+        $selectSql = $this->compileSelect($query->select($alias.'.rowid'));
 
-        return $sql.$columns;
+        return "update {$table} set {$columns} where {$this->wrap('rowid')} in ({$selectSql})";
     }
 
     /**
@@ -212,119 +325,6 @@ class SQLiteGrammar extends Grammar
             'delete from sqlite_sequence where name = ?' => [$query->from],
             'delete from '.$this->wrapTable($query->from) => [],
         ];
-    }
-
-    /**
-     * Compile the lock into SQL.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  bool|string  $value
-     * @return string
-     */
-    protected function compileLock(Builder $query, $value)
-    {
-        return '';
-    }
-
-    /**
-     * Wrap a union subquery in parentheses.
-     *
-     * @param  string  $sql
-     * @return string
-     */
-    protected function wrapUnion($sql)
-    {
-        return 'select * from ('.$sql.')';
-    }
-
-    /**
-     * Compile a "where date" clause.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  array  $where
-     * @return string
-     */
-    protected function whereDate(Builder $query, $where)
-    {
-        return $this->dateBasedWhere('%Y-%m-%d', $query, $where);
-    }
-
-    /**
-     * Compile a date based where clause.
-     *
-     * @param  string  $type
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  array  $where
-     * @return string
-     */
-    protected function dateBasedWhere($type, Builder $query, $where)
-    {
-        $value = $this->parameter($where['value']);
-
-        return "strftime('{$type}', {$this->wrap($where['column'])}) {$where['operator']} cast({$value} as text)";
-    }
-
-    /**
-     * Compile a "where day" clause.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  array  $where
-     * @return string
-     */
-    protected function whereDay(Builder $query, $where)
-    {
-        return $this->dateBasedWhere('%d', $query, $where);
-    }
-
-    /**
-     * Compile a "where month" clause.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  array  $where
-     * @return string
-     */
-    protected function whereMonth(Builder $query, $where)
-    {
-        return $this->dateBasedWhere('%m', $query, $where);
-    }
-
-    /**
-     * Compile a "where year" clause.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  array  $where
-     * @return string
-     */
-    protected function whereYear(Builder $query, $where)
-    {
-        return $this->dateBasedWhere('%Y', $query, $where);
-    }
-
-    /**
-     * Compile a "where time" clause.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  array  $where
-     * @return string
-     */
-    protected function whereTime(Builder $query, $where)
-    {
-        return $this->dateBasedWhere('%H:%M:%S', $query, $where);
-    }
-
-    /**
-     * Compile a "JSON length" statement into SQL.
-     *
-     * @param  string  $column
-     * @param  string  $operator
-     * @param  string  $value
-     * @return string
-     */
-    protected function compileJsonLength($column, $operator, $value)
-    {
-        [$field, $path] = $this->wrapJsonFieldAndPath($column);
-
-        return 'json_array_length('.$field.$path.') '.$operator.' '.$value;
     }
 
     /**

@@ -25,23 +25,26 @@ use Symfony\Component\Process\PhpExecutableFinder;
 class Application extends SymfonyApplication implements ApplicationContract
 {
     /**
-     * The console application bootstrappers.
-     *
-     * @var array
-     */
-    protected static $bootstrappers = [];
-    /**
      * The Laravel application instance.
      *
      * @var \Illuminate\Contracts\Container\Container
      */
     protected $laravel;
+
     /**
      * The output from the previous command.
      *
      * @var \Symfony\Component\Console\Output\BufferedOutput
      */
     protected $lastOutput;
+
+    /**
+     * The console application bootstrappers.
+     *
+     * @var array
+     */
+    protected static $bootstrappers = [];
+
     /**
      * The Event Dispatcher.
      *
@@ -72,26 +75,27 @@ class Application extends SymfonyApplication implements ApplicationContract
     }
 
     /**
-     * Bootstrap the console application.
-     *
-     * @return void
+     * {@inheritdoc}
      */
-    protected function bootstrap()
+    public function run(InputInterface $input = null, OutputInterface $output = null)
     {
-        foreach (static::$bootstrappers as $bootstrapper) {
-            $bootstrapper($this);
-        }
-    }
+        $commandName = $this->getCommandName(
+            $input = $input ?: new ArgvInput
+        );
 
-    /**
-     * Format the given command as a fully-qualified executable command.
-     *
-     * @param  string  $string
-     * @return string
-     */
-    public static function formatCommandString($string)
-    {
-        return sprintf('%s %s %s', static::phpBinary(), static::artisanBinary(), $string);
+        $this->events->dispatch(
+            new CommandStarting(
+                $commandName, $input, $output = $output ?: new BufferedConsoleOutput
+            )
+        );
+
+        $exitCode = parent::run($input, $output);
+
+        $this->events->dispatch(
+            new CommandFinished($commandName, $input, $output, $exitCode)
+        );
+
+        return $exitCode;
     }
 
     /**
@@ -115,6 +119,17 @@ class Application extends SymfonyApplication implements ApplicationContract
     }
 
     /**
+     * Format the given command as a fully-qualified executable command.
+     *
+     * @param  string  $string
+     * @return string
+     */
+    public static function formatCommandString($string)
+    {
+        return sprintf('%s %s %s', static::phpBinary(), static::artisanBinary(), $string);
+    }
+
+    /**
      * Register a console "starting" bootstrapper.
      *
      * @param  \Closure  $callback
@@ -123,6 +138,18 @@ class Application extends SymfonyApplication implements ApplicationContract
     public static function starting(Closure $callback)
     {
         static::$bootstrappers[] = $callback;
+    }
+
+    /**
+     * Bootstrap the console application.
+     *
+     * @return void
+     */
+    protected function bootstrap()
+    {
+        foreach (static::$bootstrappers as $bootstrapper) {
+            $bootstrapper($this);
+        }
     }
 
     /**
@@ -185,30 +212,6 @@ class Application extends SymfonyApplication implements ApplicationContract
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function run(InputInterface $input = null, OutputInterface $output = null)
-    {
-        $commandName = $this->getCommandName(
-            $input = $input ?: new ArgvInput
-        );
-
-        $this->events->dispatch(
-            new CommandStarting(
-                $commandName, $input, $output = $output ?: new BufferedConsoleOutput
-            )
-        );
-
-        $exitCode = parent::run($input, $output);
-
-        $this->events->dispatch(
-            new CommandFinished($commandName, $input, $output, $exitCode)
-        );
-
-        return $exitCode;
-    }
-
-    /**
      * Get the output for the last run command.
      *
      * @return string
@@ -218,34 +221,6 @@ class Application extends SymfonyApplication implements ApplicationContract
         return $this->lastOutput && method_exists($this->lastOutput, 'fetch')
                         ? $this->lastOutput->fetch()
                         : '';
-    }
-
-    /**
-     * Resolve an array of commands through the application.
-     *
-     * @param  array|mixed  $commands
-     * @return $this
-     */
-    public function resolveCommands($commands)
-    {
-        $commands = is_array($commands) ? $commands : func_get_args();
-
-        foreach ($commands as $command) {
-            $this->resolve($command);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Add a command, resolving through the application.
-     *
-     * @param  string  $command
-     * @return \Symfony\Component\Console\Command\Command
-     */
-    public function resolve($command)
-    {
-        return $this->add($this->laravel->make($command));
     }
 
     /**
@@ -275,13 +250,31 @@ class Application extends SymfonyApplication implements ApplicationContract
     }
 
     /**
-     * Get the Laravel application instance.
+     * Add a command, resolving through the application.
      *
-     * @return \Illuminate\Contracts\Foundation\Application
+     * @param  string  $command
+     * @return \Symfony\Component\Console\Command\Command
      */
-    public function getLaravel()
+    public function resolve($command)
     {
-        return $this->laravel;
+        return $this->add($this->laravel->make($command));
+    }
+
+    /**
+     * Resolve an array of commands through the application.
+     *
+     * @param  array|mixed  $commands
+     * @return $this
+     */
+    public function resolveCommands($commands)
+    {
+        $commands = is_array($commands) ? $commands : func_get_args();
+
+        foreach ($commands as $command) {
+            $this->resolve($command);
+        }
+
+        return $this;
     }
 
     /**
@@ -308,5 +301,15 @@ class Application extends SymfonyApplication implements ApplicationContract
         $message = 'The environment the command should run under';
 
         return new InputOption('--env', null, InputOption::VALUE_OPTIONAL, $message);
+    }
+
+    /**
+     * Get the Laravel application instance.
+     *
+     * @return \Illuminate\Contracts\Foundation\Application
+     */
+    public function getLaravel()
+    {
+        return $this->laravel;
     }
 }

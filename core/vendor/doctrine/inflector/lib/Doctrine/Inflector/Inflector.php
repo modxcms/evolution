@@ -243,19 +243,19 @@ class Inflector
     }
 
     /**
-     * Camelizes a word. This uses the classify() method and turns the first character to lowercase.
-     */
-    public function camelize(string $word) : string
-    {
-        return lcfirst($this->classify($word));
-    }
-
-    /**
      * Converts a word into the format for a Doctrine class name. Converts 'table_name' to 'TableName'.
      */
     public function classify(string $word) : string
     {
         return str_replace([' ', '_', '-'], '', ucwords($word, ' _-'));
+    }
+
+    /**
+     * Camelizes a word. This uses the classify() method and turns the first character to lowercase.
+     */
+    public function camelize(string $word) : string
+    {
+        return lcfirst($this->classify($word));
     }
 
     /**
@@ -289,47 +289,39 @@ class Inflector
     }
 
     /**
-     * Convert any passed string to a url friendly string.
-     * Converts 'My first blog post' to 'my-first-blog-post'
+     * Checks if the given string seems like it has utf8 characters in it.
      *
-     * @param  string $string String to urlize.
-     *
-     * @return string Urlized string.
+     * @param string $string The string to check for utf8 characters in.
      */
-    public function urlize(string $string) : string
+    public function seemsUtf8(string $string) : bool
     {
-        // Remove all non url friendly characters with the unaccent function
-        $unaccented = $this->unaccent($string);
-
-        if (function_exists('mb_strtolower')) {
-            $lowered = mb_strtolower($unaccented);
-        } else {
-            $lowered = strtolower($unaccented);
-        }
-
-        $replacements = [
-            '/\W/' => ' ',
-            '/([A-Z]+)([A-Z][a-z])/' => '\1_\2',
-            '/([a-z\d])([A-Z])/' => '\1_\2',
-            '/[^A-Z^a-z^0-9^\/]+/' => '-',
-        ];
-
-        $urlized = $lowered;
-
-        foreach ($replacements as $pattern => $replacement) {
-            $replaced = preg_replace($pattern, $replacement, $urlized);
-
-            if ($replaced === null) {
-                throw new RuntimeException(sprintf(
-                    'preg_replace returned null for value "%s"',
-                    $urlized
-                ));
+        for ($i = 0; $i < strlen($string); $i++) {
+            if (ord($string[$i]) < 0x80) {
+                continue; // 0bbbbbbb
             }
 
-            $urlized = $replaced;
+            if ((ord($string[$i]) & 0xE0) === 0xC0) {
+                $n = 1; // 110bbbbb
+            } elseif ((ord($string[$i]) & 0xF0) === 0xE0) {
+                $n = 2; // 1110bbbb
+            } elseif ((ord($string[$i]) & 0xF8) === 0xF0) {
+                $n = 3; // 11110bbb
+            } elseif ((ord($string[$i]) & 0xFC) === 0xF8) {
+                $n = 4; // 111110bb
+            } elseif ((ord($string[$i]) & 0xFE) === 0xFC) {
+                $n = 5; // 1111110b
+            } else {
+                return false; // Does not match any model
+            }
+
+            for ($j = 0; $j < $n; $j++) { // n bytes matching 10bbbbbb follow ?
+                if (++$i === strlen($string) || ((ord($string[$i]) & 0xC0) !== 0x80)) {
+                    return false;
+                }
+            }
         }
 
-        return trim($urlized, '-');
+        return true;
     }
 
     /**
@@ -445,39 +437,47 @@ class Inflector
     }
 
     /**
-     * Checks if the given string seems like it has utf8 characters in it.
+     * Convert any passed string to a url friendly string.
+     * Converts 'My first blog post' to 'my-first-blog-post'
      *
-     * @param string $string The string to check for utf8 characters in.
+     * @param  string $string String to urlize.
+     *
+     * @return string Urlized string.
      */
-    public function seemsUtf8(string $string) : bool
+    public function urlize(string $string) : string
     {
-        for ($i = 0; $i < strlen($string); $i++) {
-            if (ord($string[$i]) < 0x80) {
-                continue; // 0bbbbbbb
-            }
+        // Remove all non url friendly characters with the unaccent function
+        $unaccented = $this->unaccent($string);
 
-            if ((ord($string[$i]) & 0xE0) === 0xC0) {
-                $n = 1; // 110bbbbb
-            } elseif ((ord($string[$i]) & 0xF0) === 0xE0) {
-                $n = 2; // 1110bbbb
-            } elseif ((ord($string[$i]) & 0xF8) === 0xF0) {
-                $n = 3; // 11110bbb
-            } elseif ((ord($string[$i]) & 0xFC) === 0xF8) {
-                $n = 4; // 111110bb
-            } elseif ((ord($string[$i]) & 0xFE) === 0xFC) {
-                $n = 5; // 1111110b
-            } else {
-                return false; // Does not match any model
-            }
-
-            for ($j = 0; $j < $n; $j++) { // n bytes matching 10bbbbbb follow ?
-                if (++$i === strlen($string) || ((ord($string[$i]) & 0xC0) !== 0x80)) {
-                    return false;
-                }
-            }
+        if (function_exists('mb_strtolower')) {
+            $lowered = mb_strtolower($unaccented);
+        } else {
+            $lowered = strtolower($unaccented);
         }
 
-        return true;
+        $replacements = [
+            '/\W/' => ' ',
+            '/([A-Z]+)([A-Z][a-z])/' => '\1_\2',
+            '/([a-z\d])([A-Z])/' => '\1_\2',
+            '/[^A-Z^a-z^0-9^\/]+/' => '-',
+        ];
+
+        $urlized = $lowered;
+
+        foreach ($replacements as $pattern => $replacement) {
+            $replaced = preg_replace($pattern, $replacement, $urlized);
+
+            if ($replaced === null) {
+                throw new RuntimeException(sprintf(
+                    'preg_replace returned null for value "%s"',
+                    $urlized
+                ));
+            }
+
+            $urlized = $replaced;
+        }
+
+        return trim($urlized, '-');
     }
 
     /**

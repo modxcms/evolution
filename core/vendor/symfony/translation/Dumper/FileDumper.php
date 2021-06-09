@@ -85,6 +85,20 @@ abstract class FileDumper implements DumperInterface
     }
 
     /**
+     * Transforms a domain of a message catalogue to its string representation.
+     *
+     * @return string representation
+     */
+    abstract public function formatCatalogue(MessageCatalogue $messages, string $domain, array $options = []);
+
+    /**
+     * Gets the file extension of the dumper.
+     *
+     * @return string file extension
+     */
+    abstract protected function getExtension();
+
+    /**
      * Gets the relative file path using the template.
      */
     private function getRelativePath(string $domain, string $locale): string
@@ -95,18 +109,4 @@ abstract class FileDumper implements DumperInterface
             '%extension%' => $this->getExtension(),
         ]);
     }
-
-    /**
-     * Gets the file extension of the dumper.
-     *
-     * @return string file extension
-     */
-    abstract protected function getExtension();
-
-    /**
-     * Transforms a domain of a message catalogue to its string representation.
-     *
-     * @return string representation
-     */
-    abstract public function formatCatalogue(MessageCatalogue $messages, string $domain, array $options = []);
 }

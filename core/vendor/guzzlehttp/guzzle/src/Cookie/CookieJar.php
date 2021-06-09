@@ -40,120 +40,6 @@ class CookieJar implements CookieJarInterface
     }
 
     /**
-     * @inheritDoc
-     */
-    public function setCookie(SetCookie $cookie): bool
-    {
-        // If the name string is empty (but not 0), ignore the set-cookie
-        // string entirely.
-        $name = $cookie->getName();
-        if (!$name && $name !== '0') {
-            return false;
-        }
-
-        // Only allow cookies with set and valid domain, name, value
-        $result = $cookie->validate();
-        if ($result !== true) {
-            if ($this->strictMode) {
-                throw new \RuntimeException('Invalid cookie: ' . $result);
-            }
-            $this->removeCookieIfEmpty($cookie);
-            return false;
-        }
-
-        // Resolve conflicts with previously set cookies
-        foreach ($this->cookies as $i => $c) {
-
-            // Two cookies are identical, when their path, and domain are
-            // identical.
-            if ($c->getPath() != $cookie->getPath() ||
-                $c->getDomain() != $cookie->getDomain() ||
-                $c->getName() != $cookie->getName()
-            ) {
-                continue;
-            }
-
-            // The previously set cookie is a discard cookie and this one is
-            // not so allow the new cookie to be set
-            if (!$cookie->getDiscard() && $c->getDiscard()) {
-                unset($this->cookies[$i]);
-                continue;
-            }
-
-            // If the new cookie's expiration is further into the future, then
-            // replace the old cookie
-            if ($cookie->getExpires() > $c->getExpires()) {
-                unset($this->cookies[$i]);
-                continue;
-            }
-
-            // If the value has changed, we better change it
-            if ($cookie->getValue() !== $c->getValue()) {
-                unset($this->cookies[$i]);
-                continue;
-            }
-
-            // The cookie exists, so no need to continue
-            return false;
-        }
-
-        $this->cookies[] = $cookie;
-
-        return true;
-    }
-
-    /**
-     * If a cookie already exists and the server asks to set it again with a
-     * null value, the cookie must be deleted.
-     */
-    private function removeCookieIfEmpty(SetCookie $cookie): void
-    {
-        $cookieValue = $cookie->getValue();
-        if ($cookieValue === null || $cookieValue === '') {
-            $this->clear(
-                $cookie->getDomain(),
-                $cookie->getPath(),
-                $cookie->getName()
-            );
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function clear(?string $domain = null, ?string $path = null, ?string $name = null): void
-    {
-        if (!$domain) {
-            $this->cookies = [];
-            return;
-        } elseif (!$path) {
-            $this->cookies = \array_filter(
-                $this->cookies,
-                static function (SetCookie $cookie) use ($domain): bool {
-                    return !$cookie->matchesDomain($domain);
-                }
-            );
-        } elseif (!$name) {
-            $this->cookies = \array_filter(
-                $this->cookies,
-                static function (SetCookie $cookie) use ($path, $domain): bool {
-                    return !($cookie->matchesPath($path) &&
-                        $cookie->matchesDomain($domain));
-                }
-            );
-        } else {
-            $this->cookies = \array_filter(
-                $this->cookies,
-                static function (SetCookie $cookie) use ($path, $domain, $name) {
-                    return !($cookie->getName() == $name &&
-                        $cookie->matchesPath($path) &&
-                        $cookie->matchesDomain($domain));
-                }
-            );
-        }
-    }
-
-    /**
      * Create a new Cookie jar from an associative array and domain.
      *
      * @param array  $cookies Cookies to create the jar from
@@ -221,11 +107,38 @@ class CookieJar implements CookieJarInterface
     }
 
     /**
-     * @return \ArrayIterator<int, SetCookie>
+     * @inheritDoc
      */
-    public function getIterator(): \ArrayIterator
+    public function clear(?string $domain = null, ?string $path = null, ?string $name = null): void
     {
-        return new \ArrayIterator(\array_values($this->cookies));
+        if (!$domain) {
+            $this->cookies = [];
+            return;
+        } elseif (!$path) {
+            $this->cookies = \array_filter(
+                $this->cookies,
+                static function (SetCookie $cookie) use ($domain): bool {
+                    return !$cookie->matchesDomain($domain);
+                }
+            );
+        } elseif (!$name) {
+            $this->cookies = \array_filter(
+                $this->cookies,
+                static function (SetCookie $cookie) use ($path, $domain): bool {
+                    return !($cookie->matchesPath($path) &&
+                        $cookie->matchesDomain($domain));
+                }
+            );
+        } else {
+            $this->cookies = \array_filter(
+                $this->cookies,
+                static function (SetCookie $cookie) use ($path, $domain, $name) {
+                    return !($cookie->getName() == $name &&
+                        $cookie->matchesPath($path) &&
+                        $cookie->matchesDomain($domain));
+                }
+            );
+        }
     }
 
     /**
@@ -241,9 +154,80 @@ class CookieJar implements CookieJarInterface
         );
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function setCookie(SetCookie $cookie): bool
+    {
+        // If the name string is empty (but not 0), ignore the set-cookie
+        // string entirely.
+        $name = $cookie->getName();
+        if (!$name && $name !== '0') {
+            return false;
+        }
+
+        // Only allow cookies with set and valid domain, name, value
+        $result = $cookie->validate();
+        if ($result !== true) {
+            if ($this->strictMode) {
+                throw new \RuntimeException('Invalid cookie: ' . $result);
+            }
+            $this->removeCookieIfEmpty($cookie);
+            return false;
+        }
+
+        // Resolve conflicts with previously set cookies
+        foreach ($this->cookies as $i => $c) {
+
+            // Two cookies are identical, when their path, and domain are
+            // identical.
+            if ($c->getPath() != $cookie->getPath() ||
+                $c->getDomain() != $cookie->getDomain() ||
+                $c->getName() != $cookie->getName()
+            ) {
+                continue;
+            }
+
+            // The previously set cookie is a discard cookie and this one is
+            // not so allow the new cookie to be set
+            if (!$cookie->getDiscard() && $c->getDiscard()) {
+                unset($this->cookies[$i]);
+                continue;
+            }
+
+            // If the new cookie's expiration is further into the future, then
+            // replace the old cookie
+            if ($cookie->getExpires() > $c->getExpires()) {
+                unset($this->cookies[$i]);
+                continue;
+            }
+
+            // If the value has changed, we better change it
+            if ($cookie->getValue() !== $c->getValue()) {
+                unset($this->cookies[$i]);
+                continue;
+            }
+
+            // The cookie exists, so no need to continue
+            return false;
+        }
+
+        $this->cookies[] = $cookie;
+
+        return true;
+    }
+
     public function count(): int
     {
         return \count($this->cookies);
+    }
+
+    /**
+     * @return \ArrayIterator<int, SetCookie>
+     */
+    public function getIterator(): \ArrayIterator
+    {
+        return new \ArrayIterator(\array_values($this->cookies));
     }
 
     public function extractCookies(RequestInterface $request, ResponseInterface $response): void
@@ -309,5 +293,21 @@ class CookieJar implements CookieJarInterface
         return $values
             ? $request->withHeader('Cookie', \implode('; ', $values))
             : $request;
+    }
+
+    /**
+     * If a cookie already exists and the server asks to set it again with a
+     * null value, the cookie must be deleted.
+     */
+    private function removeCookieIfEmpty(SetCookie $cookie): void
+    {
+        $cookieValue = $cookie->getValue();
+        if ($cookieValue === null || $cookieValue === '') {
+            $this->clear(
+                $cookie->getDomain(),
+                $cookie->getPath(),
+                $cookie->getName()
+            );
+        }
     }
 }

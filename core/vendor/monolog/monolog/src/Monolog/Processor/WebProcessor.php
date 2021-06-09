@@ -82,6 +82,13 @@ class WebProcessor implements ProcessorInterface
         return $record;
     }
 
+    public function addExtraField(string $extraName, string $serverName): self
+    {
+        $this->extraFields[$extraName] = $serverName;
+
+        return $this;
+    }
+
     private function appendExtraFields(array $extra): array
     {
         foreach ($this->extraFields as $extraName => $serverName) {
@@ -89,12 +96,5 @@ class WebProcessor implements ProcessorInterface
         }
 
         return $extra;
-    }
-
-    public function addExtraField(string $extraName, string $serverName): self
-    {
-        $this->extraFields[$extraName] = $serverName;
-
-        return $this;
     }
 }

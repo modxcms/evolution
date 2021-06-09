@@ -54,6 +54,17 @@ class DeprecationTest extends TestCase
         }
     }
 
+    public function expectErrorHandler(string $expectedMessage, string $identifier, int $times = 1): void
+    {
+        set_error_handler(function ($type, $message) use ($expectedMessage, $identifier, $times): void {
+            $this->assertStringMatchesFormat(
+                $expectedMessage,
+                $message
+            );
+            $this->assertEquals([$identifier => $times], Deprecation::getTriggeredDeprecations());
+        });
+    }
+
     public function testDeprecation(): void
     {
         Deprecation::enableWithTriggerError();
@@ -84,17 +95,6 @@ class DeprecationTest extends TestCase
         );
 
         $this->assertEquals(2, Deprecation::getUniqueTriggeredDeprecationsCount());
-    }
-
-    public function expectErrorHandler(string $expectedMessage, string $identifier, int $times = 1): void
-    {
-        set_error_handler(function ($type, $message) use ($expectedMessage, $identifier, $times): void {
-            $this->assertStringMatchesFormat(
-                $expectedMessage,
-                $message
-            );
-            $this->assertEquals([$identifier => $times], Deprecation::getTriggeredDeprecations());
-        });
     }
 
     public function testDeprecationWithoutDeduplication(): void
@@ -152,6 +152,19 @@ class DeprecationTest extends TestCase
         }
     }
 
+    public function expectDeprecationMock(string $message, string $identifier, string $package): MockObject
+    {
+        $mock = $this->createMock(LoggerInterface::class);
+        $mock->method('notice')->with($message, $this->callback(function ($context) use ($identifier, $package) {
+            $this->assertEquals($package, $context['package']);
+            $this->assertEquals($identifier, $context['link']);
+
+            return true;
+        }));
+
+        return $mock;
+    }
+
     public function testDeprecationWithPsrLogger(): void
     {
         $this->expectDeprecationWithIdentifier('https://github.com/doctrine/deprecations/2222');
@@ -170,19 +183,6 @@ class DeprecationTest extends TestCase
             'foo',
             1234
         );
-    }
-
-    public function expectDeprecationMock(string $message, string $identifier, string $package): MockObject
-    {
-        $mock = $this->createMock(LoggerInterface::class);
-        $mock->method('notice')->with($message, $this->callback(function ($context) use ($identifier, $package) {
-            $this->assertEquals($package, $context['package']);
-            $this->assertEquals($identifier, $context['link']);
-
-            return true;
-        }));
-
-        return $mock;
     }
 
     public function testDeprecationWithIgnoredPackage(): void

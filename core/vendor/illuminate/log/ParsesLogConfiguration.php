@@ -24,6 +24,13 @@ trait ParsesLogConfiguration
     ];
 
     /**
+     * Get fallback log channel name.
+     *
+     * @return string
+     */
+    abstract protected function getFallbackChannelName();
+
+    /**
      * Parse the string level into a Monolog constant.
      *
      * @param  array  $config
@@ -52,11 +59,4 @@ trait ParsesLogConfiguration
     {
         return $config['name'] ?? $this->getFallbackChannelName();
     }
-
-    /**
-     * Get fallback log channel name.
-     *
-     * @return string
-     */
-    abstract protected function getFallbackChannelName();
 }

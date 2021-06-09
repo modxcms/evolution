@@ -126,29 +126,6 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
-    {
-        return array(
-            PluginEvents::INIT =>
-                array('onInit', self::CALLBACK_PRIORITY),
-            PackageEvents::POST_PACKAGE_INSTALL =>
-                array('onPostPackageInstall', self::CALLBACK_PRIORITY),
-            ScriptEvents::POST_INSTALL_CMD =>
-                array('onPostInstallOrUpdate', self::CALLBACK_PRIORITY),
-            ScriptEvents::POST_UPDATE_CMD =>
-                array('onPostInstallOrUpdate', self::CALLBACK_PRIORITY),
-            ScriptEvents::PRE_AUTOLOAD_DUMP =>
-                array('onInstallUpdateOrDump', self::CALLBACK_PRIORITY),
-            ScriptEvents::PRE_INSTALL_CMD =>
-                array('onInstallUpdateOrDump', self::CALLBACK_PRIORITY),
-            ScriptEvents::PRE_UPDATE_CMD =>
-                array('onInstallUpdateOrDump', self::CALLBACK_PRIORITY),
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function activate(Composer $composer, IOInterface $io)
     {
         $this->composer = $composer;
@@ -171,6 +148,40 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedEvents()
+    {
+        return array(
+            PluginEvents::INIT =>
+                array('onInit', self::CALLBACK_PRIORITY),
+            PackageEvents::POST_PACKAGE_INSTALL =>
+                array('onPostPackageInstall', self::CALLBACK_PRIORITY),
+            ScriptEvents::POST_INSTALL_CMD =>
+                array('onPostInstallOrUpdate', self::CALLBACK_PRIORITY),
+            ScriptEvents::POST_UPDATE_CMD =>
+                array('onPostInstallOrUpdate', self::CALLBACK_PRIORITY),
+            ScriptEvents::PRE_AUTOLOAD_DUMP =>
+                array('onInstallUpdateOrDump', self::CALLBACK_PRIORITY),
+            ScriptEvents::PRE_INSTALL_CMD =>
+                array('onInstallUpdateOrDump', self::CALLBACK_PRIORITY),
+            ScriptEvents::PRE_UPDATE_CMD =>
+                array('onInstallUpdateOrDump', self::CALLBACK_PRIORITY),
+        );
+    }
+
+    /**
+     * Get list of packages to restrict update operations.
+     *
+     * @return string[]
+     * @see \Composer\Installer::setUpdateAllowList()
+     */
+    public function getUpdateAllowList()
+    {
+        return array_keys($this->updateAllowList);
+    }
+
+    /**
      * Handle an event callback for initialization.
      *
      * @param \Composer\EventDispatcher\Event $event
@@ -184,6 +195,29 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
         $this->state->setDevMode(false);
         $this->mergeFiles($this->state->getIncludes(), false);
         $this->mergeFiles($this->state->getRequires(), true);
+    }
+
+    /**
+     * Handle an event callback for an install, update or dump command by
+     * checking for "merge-plugin" in the "extra" data and merging package
+     * contents if found.
+     *
+     * @param ScriptEvent $event
+     */
+    public function onInstallUpdateOrDump(ScriptEvent $event)
+    {
+        $this->state->loadSettings();
+        $this->state->setDevMode($event->isDevMode());
+        $this->mergeFiles($this->state->getIncludes(), false);
+        $this->mergeFiles($this->state->getRequires(), true);
+
+        if ($event->getName() === ScriptEvents::PRE_AUTOLOAD_DUMP) {
+            $this->state->setDumpAutoloader(true);
+            $flags = $event->getFlags();
+            if (isset($flags['optimize'])) {
+                $this->state->setOptimizeAutoloader($flags['optimize']);
+            }
+        }
     }
 
     /**
@@ -263,29 +297,6 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
         if ($this->state->recurseIncludes()) {
             $this->mergeFiles($package->getIncludes(), false);
             $this->mergeFiles($package->getRequires(), true);
-        }
-    }
-
-    /**
-     * Handle an event callback for an install, update or dump command by
-     * checking for "merge-plugin" in the "extra" data and merging package
-     * contents if found.
-     *
-     * @param ScriptEvent $event
-     */
-    public function onInstallUpdateOrDump(ScriptEvent $event)
-    {
-        $this->state->loadSettings();
-        $this->state->setDevMode($event->isDevMode());
-        $this->mergeFiles($this->state->getIncludes(), false);
-        $this->mergeFiles($this->state->getRequires(), true);
-
-        if ($event->getName() === ScriptEvents::PRE_AUTOLOAD_DUMP) {
-            $this->state->setDumpAutoloader(true);
-            $flags = $event->getFlags();
-            if (isset($flags['optimize'])) {
-                $this->state->setOptimizeAutoloader($flags['optimize']);
-            }
         }
     }
 
@@ -376,17 +387,6 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
             }
         }
         // @codeCoverageIgnoreEnd
-    }
-
-    /**
-     * Get list of packages to restrict update operations.
-     *
-     * @return string[]
-     * @see \Composer\Installer::setUpdateAllowList()
-     */
-    public function getUpdateAllowList()
-    {
-        return array_keys($this->updateAllowList);
     }
 }
 // vim:sw=4:ts=4:sts=4:et:

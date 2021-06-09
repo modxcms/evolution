@@ -37,6 +37,29 @@ abstract class AbstractAsset
     protected $_quoted = false;
 
     /**
+     * Sets the name of this asset.
+     *
+     * @param string $name
+     *
+     * @return void
+     */
+    protected function _setName($name)
+    {
+        if ($this->isIdentifierQuoted($name)) {
+            $this->_quoted = true;
+            $name          = $this->trimQuotes($name);
+        }
+
+        if (strpos($name, '.') !== false) {
+            $parts            = explode('.', $name);
+            $this->_namespace = $parts[0];
+            $name             = $parts[1];
+        }
+
+        $this->_name = $name;
+    }
+
+    /**
      * Is this asset in the default namespace?
      *
      * @param string $defaultNamespaceName
@@ -79,67 +102,6 @@ abstract class AbstractAsset
     }
 
     /**
-     * Returns the name of this schema asset.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        if ($this->_namespace) {
-            return $this->_namespace . '.' . $this->_name;
-        }
-
-        return $this->_name;
-    }
-
-    /**
-     * Sets the name of this asset.
-     *
-     * @param string $name
-     *
-     * @return void
-     */
-    protected function _setName($name)
-    {
-        if ($this->isIdentifierQuoted($name)) {
-            $this->_quoted = true;
-            $name          = $this->trimQuotes($name);
-        }
-
-        if (strpos($name, '.') !== false) {
-            $parts            = explode('.', $name);
-            $this->_namespace = $parts[0];
-            $name             = $parts[1];
-        }
-
-        $this->_name = $name;
-    }
-
-    /**
-     * Checks if this identifier is quoted.
-     *
-     * @param string $identifier
-     *
-     * @return bool
-     */
-    protected function isIdentifierQuoted($identifier)
-    {
-        return isset($identifier[0]) && ($identifier[0] === '`' || $identifier[0] === '"' || $identifier[0] === '[');
-    }
-
-    /**
-     * Trim quotes from the identifier.
-     *
-     * @param string $identifier
-     *
-     * @return string
-     */
-    protected function trimQuotes($identifier)
-    {
-        return str_replace(['`', '"', '[', ']'], '', $identifier);
-    }
-
-    /**
      * The normalized name is full-qualified and lowerspaced. Lowerspacing is
      * actually wrong, but we have to do it to keep our sanity. If you are
      * using database objects that only differentiate in the casing (FOO vs
@@ -170,6 +132,44 @@ abstract class AbstractAsset
     public function isQuoted()
     {
         return $this->_quoted;
+    }
+
+    /**
+     * Checks if this identifier is quoted.
+     *
+     * @param string $identifier
+     *
+     * @return bool
+     */
+    protected function isIdentifierQuoted($identifier)
+    {
+        return isset($identifier[0]) && ($identifier[0] === '`' || $identifier[0] === '"' || $identifier[0] === '[');
+    }
+
+    /**
+     * Trim quotes from the identifier.
+     *
+     * @param string $identifier
+     *
+     * @return string
+     */
+    protected function trimQuotes($identifier)
+    {
+        return str_replace(['`', '"', '[', ']'], '', $identifier);
+    }
+
+    /**
+     * Returns the name of this schema asset.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        if ($this->_namespace) {
+            return $this->_namespace . '.' . $this->_name;
+        }
+
+        return $this->_name;
     }
 
     /**

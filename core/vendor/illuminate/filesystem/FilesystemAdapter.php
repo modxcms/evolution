@@ -81,34 +81,6 @@ class FilesystemAdapter implements CloudFilesystemContract
     }
 
     /**
-     * Determine if a file exists.
-     *
-     * @param  string  $path
-     * @return bool
-     */
-    public function exists($path)
-    {
-        return $this->driver->has($path);
-    }
-
-    /**
-     * Get the contents of a file.
-     *
-     * @param  string  $path
-     * @return string
-     *
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     */
-    public function get($path)
-    {
-        try {
-            return $this->driver->read($path);
-        } catch (FileNotFoundException $e) {
-            throw new ContractFileNotFoundException($e->getMessage(), $e->getCode(), $e);
-        }
-    }
-
-    /**
      * Assert that the given file does not exist.
      *
      * @param  string|array  $path
@@ -125,6 +97,17 @@ class FilesystemAdapter implements CloudFilesystemContract
         }
 
         return $this;
+    }
+
+    /**
+     * Determine if a file exists.
+     *
+     * @param  string  $path
+     * @return bool
+     */
+    public function exists($path)
+    {
+        return $this->driver->has($path);
     }
 
     /**
@@ -156,16 +139,20 @@ class FilesystemAdapter implements CloudFilesystemContract
     }
 
     /**
-     * Create a streamed download response for a given file.
+     * Get the contents of a file.
      *
      * @param  string  $path
-     * @param  string|null  $name
-     * @param  array|null  $headers
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     * @return string
+     *
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    public function download($path, $name = null, array $headers = [])
+    public function get($path)
     {
-        return $this->response($path, $name, $headers, 'attachment');
+        try {
+            return $this->driver->read($path);
+        } catch (FileNotFoundException $e) {
+            throw new ContractFileNotFoundException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     /**
@@ -203,6 +190,19 @@ class FilesystemAdapter implements CloudFilesystemContract
     }
 
     /**
+     * Create a streamed download response for a given file.
+     *
+     * @param  string  $path
+     * @param  string|null  $name
+     * @param  array|null  $headers
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    public function download($path, $name = null, array $headers = [])
+    {
+        return $this->response($path, $name, $headers, 'attachment');
+    }
+
+    /**
      * Convert the string to ASCII characters that are equivalent to the given name.
      *
      * @param  string  $name
@@ -211,108 +211,6 @@ class FilesystemAdapter implements CloudFilesystemContract
     protected function fallbackName($name)
     {
         return str_replace('%', '', Str::ascii($name));
-    }
-
-    /**
-     * Get the mime-type of a given file.
-     *
-     * @param  string  $path
-     * @return string|false
-     */
-    public function mimeType($path)
-    {
-        return $this->driver->getMimetype($path);
-    }
-
-    /**
-     * Get the file size of a given file.
-     *
-     * @param  string  $path
-     * @return int
-     */
-    public function size($path)
-    {
-        return $this->driver->getSize($path);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function readStream($path)
-    {
-        try {
-            return $this->driver->readStream($path) ?: null;
-        } catch (FileNotFoundException $e) {
-            throw new ContractFileNotFoundException($e->getMessage(), $e->getCode(), $e);
-        }
-    }
-
-    /**
-     * Get the visibility for the given path.
-     *
-     * @param  string  $path
-     * @return string
-     */
-    public function getVisibility($path)
-    {
-        if ($this->driver->getVisibility($path) == AdapterInterface::VISIBILITY_PUBLIC) {
-            return FilesystemContract::VISIBILITY_PUBLIC;
-        }
-
-        return FilesystemContract::VISIBILITY_PRIVATE;
-    }
-
-    /**
-     * Set the visibility for the given path.
-     *
-     * @param  string  $path
-     * @param  string  $visibility
-     * @return bool
-     */
-    public function setVisibility($path, $visibility)
-    {
-        return $this->driver->setVisibility($path, $this->parseVisibility($visibility));
-    }
-
-    /**
-     * Parse the given visibility value.
-     *
-     * @param  string|null  $visibility
-     * @return string|null
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected function parseVisibility($visibility)
-    {
-        if (is_null($visibility)) {
-            return;
-        }
-
-        switch ($visibility) {
-            case FilesystemContract::VISIBILITY_PUBLIC:
-                return AdapterInterface::VISIBILITY_PUBLIC;
-            case FilesystemContract::VISIBILITY_PRIVATE:
-                return AdapterInterface::VISIBILITY_PRIVATE;
-        }
-
-        throw new InvalidArgumentException("Unknown visibility: {$visibility}.");
-    }
-
-    /**
-     * Prepend to a file.
-     *
-     * @param  string  $path
-     * @param  string  $data
-     * @param  string  $separator
-     * @return bool
-     */
-    public function prepend($path, $data, $separator = PHP_EOL)
-    {
-        if ($this->exists($path)) {
-            return $this->put($path, $data.$separator.$this->get($path));
-        }
-
-        return $this->put($path, $data);
     }
 
     /**
@@ -389,6 +287,50 @@ class FilesystemAdapter implements CloudFilesystemContract
     }
 
     /**
+     * Get the visibility for the given path.
+     *
+     * @param  string  $path
+     * @return string
+     */
+    public function getVisibility($path)
+    {
+        if ($this->driver->getVisibility($path) == AdapterInterface::VISIBILITY_PUBLIC) {
+            return FilesystemContract::VISIBILITY_PUBLIC;
+        }
+
+        return FilesystemContract::VISIBILITY_PRIVATE;
+    }
+
+    /**
+     * Set the visibility for the given path.
+     *
+     * @param  string  $path
+     * @param  string  $visibility
+     * @return bool
+     */
+    public function setVisibility($path, $visibility)
+    {
+        return $this->driver->setVisibility($path, $this->parseVisibility($visibility));
+    }
+
+    /**
+     * Prepend to a file.
+     *
+     * @param  string  $path
+     * @param  string  $data
+     * @param  string  $separator
+     * @return bool
+     */
+    public function prepend($path, $data, $separator = PHP_EOL)
+    {
+        if ($this->exists($path)) {
+            return $this->put($path, $data.$separator.$this->get($path));
+        }
+
+        return $this->put($path, $data);
+    }
+
+    /**
      * Append to a file.
      *
      * @param  string  $path
@@ -455,6 +397,28 @@ class FilesystemAdapter implements CloudFilesystemContract
     }
 
     /**
+     * Get the file size of a given file.
+     *
+     * @param  string  $path
+     * @return int
+     */
+    public function size($path)
+    {
+        return $this->driver->getSize($path);
+    }
+
+    /**
+     * Get the mime-type of a given file.
+     *
+     * @param  string  $path
+     * @return string|false
+     */
+    public function mimeType($path)
+    {
+        return $this->driver->getMimetype($path);
+    }
+
+    /**
      * Get the file's last modification time.
      *
      * @param  string  $path
@@ -497,6 +461,30 @@ class FilesystemAdapter implements CloudFilesystemContract
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function readStream($path)
+    {
+        try {
+            return $this->driver->readStream($path) ?: null;
+        } catch (FileNotFoundException $e) {
+            throw new ContractFileNotFoundException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function writeStream($path, $resource, array $options = [])
+    {
+        try {
+            return $this->driver->writeStream($path, $resource, $options);
+        } catch (FileExistsException $e) {
+            throw new ContractFileExistsException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    /**
      * Get the URL for the file at the given path.
      *
      * @param  \League\Flysystem\AwsS3v3\AwsS3Adapter  $adapter
@@ -515,18 +503,6 @@ class FilesystemAdapter implements CloudFilesystemContract
         return $adapter->getClient()->getObjectUrl(
             $adapter->getBucket(), $adapter->getPathPrefix().$path
         );
-    }
-
-    /**
-     * Concatenate a path to a URL.
-     *
-     * @param  string  $url
-     * @param  string  $path
-     * @return string
-     */
-    protected function concatPathToUrl($url, $path)
-    {
-        return rtrim($url, '/').'/'.ltrim($path, '/');
     }
 
     /**
@@ -571,18 +547,6 @@ class FilesystemAdapter implements CloudFilesystemContract
         }
 
         return $path;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function writeStream($path, $resource, array $options = [])
-    {
-        try {
-            return $this->driver->writeStream($path, $resource, $options);
-        } catch (FileExistsException $e) {
-            throw new ContractFileExistsException($e->getMessage(), $e->getCode(), $e);
-        }
     }
 
     /**
@@ -645,6 +609,18 @@ class FilesystemAdapter implements CloudFilesystemContract
     }
 
     /**
+     * Concatenate a path to a URL.
+     *
+     * @param  string  $url
+     * @param  string  $path
+     * @return string
+     */
+    protected function concatPathToUrl($url, $path)
+    {
+        return rtrim($url, '/').'/'.ltrim($path, '/');
+    }
+
+    /**
      * Replace the scheme, host and port of the given UriInterface with values from the given URL.
      *
      * @param  \Psr\Http\Message\UriInterface  $uri
@@ -662,17 +638,6 @@ class FilesystemAdapter implements CloudFilesystemContract
     }
 
     /**
-     * Get all of the files from the given directory (recursive).
-     *
-     * @param  string|null  $directory
-     * @return array
-     */
-    public function allFiles($directory = null)
-    {
-        return $this->files($directory, true);
-    }
-
-    /**
      * Get an array of all files in a directory.
      *
      * @param  string|null  $directory
@@ -687,30 +652,14 @@ class FilesystemAdapter implements CloudFilesystemContract
     }
 
     /**
-     * Filter directory contents by type.
-     *
-     * @param  array  $contents
-     * @param  string  $type
-     * @return array
-     */
-    protected function filterContentsByType($contents, $type)
-    {
-        return Collection::make($contents)
-            ->where('type', $type)
-            ->pluck('path')
-            ->values()
-            ->all();
-    }
-
-    /**
-     * Get all (recursive) of the directories within a given directory.
+     * Get all of the files from the given directory (recursive).
      *
      * @param  string|null  $directory
      * @return array
      */
-    public function allDirectories($directory = null)
+    public function allFiles($directory = null)
     {
-        return $this->directories($directory, true);
+        return $this->files($directory, true);
     }
 
     /**
@@ -725,6 +674,17 @@ class FilesystemAdapter implements CloudFilesystemContract
         $contents = $this->driver->listContents($directory, $recursive);
 
         return $this->filterContentsByType($contents, 'dir');
+    }
+
+    /**
+     * Get all (recursive) of the directories within a given directory.
+     *
+     * @param  string|null  $directory
+     * @return array
+     */
+    public function allDirectories($directory = null)
+    {
+        return $this->directories($directory, true);
     }
 
     /**
@@ -771,6 +731,46 @@ class FilesystemAdapter implements CloudFilesystemContract
     public function getDriver()
     {
         return $this->driver;
+    }
+
+    /**
+     * Filter directory contents by type.
+     *
+     * @param  array  $contents
+     * @param  string  $type
+     * @return array
+     */
+    protected function filterContentsByType($contents, $type)
+    {
+        return Collection::make($contents)
+            ->where('type', $type)
+            ->pluck('path')
+            ->values()
+            ->all();
+    }
+
+    /**
+     * Parse the given visibility value.
+     *
+     * @param  string|null  $visibility
+     * @return string|null
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function parseVisibility($visibility)
+    {
+        if (is_null($visibility)) {
+            return;
+        }
+
+        switch ($visibility) {
+            case FilesystemContract::VISIBILITY_PUBLIC:
+                return AdapterInterface::VISIBILITY_PUBLIC;
+            case FilesystemContract::VISIBILITY_PRIVATE:
+                return AdapterInterface::VISIBILITY_PRIVATE;
+        }
+
+        throw new InvalidArgumentException("Unknown visibility: {$visibility}.");
     }
 
     /**

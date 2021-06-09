@@ -57,19 +57,37 @@ final class Address
         }
     }
 
-    /**
-     * @param array<Address|string> $addresses
-     *
-     * @return Address[]
-     */
-    public static function createArray(array $addresses): array
+    public function getAddress(): string
     {
-        $addrs = [];
-        foreach ($addresses as $address) {
-            $addrs[] = self::create($address);
+        return $this->address;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getEncodedAddress(): string
+    {
+        if (null === self::$encoder) {
+            self::$encoder = new IdnAddressEncoder();
         }
 
-        return $addrs;
+        return self::$encoder->encodeString($this->address);
+    }
+
+    public function toString(): string
+    {
+        return ($n = $this->getEncodedName()) ? $n.' <'.$this->getEncodedAddress().'>' : $this->getEncodedAddress();
+    }
+
+    public function getEncodedName(): string
+    {
+        if ('' === $this->getName()) {
+            return '';
+        }
+
+        return sprintf('"%s"', preg_replace('/"/u', '\"', $this->getName()));
     }
 
     /**
@@ -96,6 +114,21 @@ final class Address
     }
 
     /**
+     * @param array<Address|string> $addresses
+     *
+     * @return Address[]
+     */
+    public static function createArray(array $addresses): array
+    {
+        $addrs = [];
+        foreach ($addresses as $address) {
+            $addrs[] = self::create($address);
+        }
+
+        return $addrs;
+    }
+
+    /**
      * @deprecated since Symfony 5.2, use "create()" instead.
      */
     public static function fromString(string $string): self
@@ -111,38 +144,5 @@ final class Address
         }
 
         return new self($matches['addrSpec'], trim($matches['displayName'], ' \'"'));
-    }
-
-    public function getAddress(): string
-    {
-        return $this->address;
-    }
-
-    public function toString(): string
-    {
-        return ($n = $this->getEncodedName()) ? $n.' <'.$this->getEncodedAddress().'>' : $this->getEncodedAddress();
-    }
-
-    public function getEncodedName(): string
-    {
-        if ('' === $this->getName()) {
-            return '';
-        }
-
-        return sprintf('"%s"', preg_replace('/"/u', '\"', $this->getName()));
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function getEncodedAddress(): string
-    {
-        if (null === self::$encoder) {
-            self::$encoder = new IdnAddressEncoder();
-        }
-
-        return self::$encoder->encodeString($this->address);
     }
 }

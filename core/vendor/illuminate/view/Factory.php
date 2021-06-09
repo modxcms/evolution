@@ -108,24 +108,6 @@ class Factory implements FactoryContract
     }
 
     /**
-     * Add a piece of shared data to the environment.
-     *
-     * @param  array|string  $key
-     * @param  mixed|null  $value
-     * @return mixed
-     */
-    public function share($key, $value = null)
-    {
-        $keys = is_array($key) ? $key : [$key => $value];
-
-        foreach ($keys as $key => $value) {
-            $this->shared[$key] = $value;
-        }
-
-        return $value;
-    }
-
-    /**
      * Get the evaluated view contents for the given view.
      *
      * @param  string  $path
@@ -140,104 +122,6 @@ class Factory implements FactoryContract
         return tap($this->viewInstance($path, $path, $data), function ($view) {
             $this->callCreator($view);
         });
-    }
-
-    /**
-     * Parse the given data into a raw array.
-     *
-     * @param  mixed  $data
-     * @return array
-     */
-    protected function parseData($data)
-    {
-        return $data instanceof Arrayable ? $data->toArray() : $data;
-    }
-
-    /**
-     * Create a new view instance from the given arguments.
-     *
-     * @param  string  $view
-     * @param  string  $path
-     * @param  \Illuminate\Contracts\Support\Arrayable|array  $data
-     * @return \Illuminate\Contracts\View\View
-     */
-    protected function viewInstance($view, $path, $data)
-    {
-        return new View($this, $this->getEngineFromPath($path), $view, $path, $data);
-    }
-
-    /**
-     * Get the appropriate view engine for the given path.
-     *
-     * @param  string  $path
-     * @return \Illuminate\Contracts\View\Engine
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function getEngineFromPath($path)
-    {
-        if (! $extension = $this->getExtension($path)) {
-            throw new InvalidArgumentException("Unrecognized extension in file: {$path}.");
-        }
-
-        $engine = $this->extensions[$extension];
-
-        return $this->engines->resolve($engine);
-    }
-
-    /**
-     * Get the extension used by the view file.
-     *
-     * @param  string  $path
-     * @return string|null
-     */
-    protected function getExtension($path)
-    {
-        $extensions = array_keys($this->extensions);
-
-        return Arr::first($extensions, function ($value) use ($path) {
-            return Str::endsWith($path, '.'.$value);
-        });
-    }
-
-    /**
-     * Get the first view that actually exists from the given list.
-     *
-     * @param  array  $views
-     * @param  \Illuminate\Contracts\Support\Arrayable|array  $data
-     * @param  array  $mergeData
-     * @return \Illuminate\Contracts\View\View
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function first(array $views, $data = [], $mergeData = [])
-    {
-        $view = Arr::first($views, function ($view) {
-            return $this->exists($view);
-        });
-
-        if (! $view) {
-            throw new InvalidArgumentException('None of the views in the given array exist.');
-        }
-
-        return $this->make($view, $data, $mergeData);
-    }
-
-    /**
-     * Determine if a given view exists.
-     *
-     * @param  string  $view
-     * @return bool
-     */
-    public function exists($view)
-    {
-        try {
-            $this->finder->find($view);
-        } catch (InvalidArgumentException $e) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -265,14 +149,26 @@ class Factory implements FactoryContract
     }
 
     /**
-     * Normalize a view name.
+     * Get the first view that actually exists from the given list.
      *
-     * @param  string  $name
-     * @return string
+     * @param  array  $views
+     * @param  \Illuminate\Contracts\Support\Arrayable|array  $data
+     * @param  array  $mergeData
+     * @return \Illuminate\Contracts\View\View
+     *
+     * @throws \InvalidArgumentException
      */
-    protected function normalizeName($name)
+    public function first(array $views, $data = [], $mergeData = [])
     {
-        return ViewName::normalize($name);
+        $view = Arr::first($views, function ($view) {
+            return $this->exists($view);
+        });
+
+        if (! $view) {
+            throw new InvalidArgumentException('None of the views in the given array exist.');
+        }
+
+        return $this->make($view, $data, $mergeData);
     }
 
     /**
@@ -330,6 +226,110 @@ class Factory implements FactoryContract
     }
 
     /**
+     * Normalize a view name.
+     *
+     * @param  string  $name
+     * @return string
+     */
+    protected function normalizeName($name)
+    {
+        return ViewName::normalize($name);
+    }
+
+    /**
+     * Parse the given data into a raw array.
+     *
+     * @param  mixed  $data
+     * @return array
+     */
+    protected function parseData($data)
+    {
+        return $data instanceof Arrayable ? $data->toArray() : $data;
+    }
+
+    /**
+     * Create a new view instance from the given arguments.
+     *
+     * @param  string  $view
+     * @param  string  $path
+     * @param  \Illuminate\Contracts\Support\Arrayable|array  $data
+     * @return \Illuminate\Contracts\View\View
+     */
+    protected function viewInstance($view, $path, $data)
+    {
+        return new View($this, $this->getEngineFromPath($path), $view, $path, $data);
+    }
+
+    /**
+     * Determine if a given view exists.
+     *
+     * @param  string  $view
+     * @return bool
+     */
+    public function exists($view)
+    {
+        try {
+            $this->finder->find($view);
+        } catch (InvalidArgumentException $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get the appropriate view engine for the given path.
+     *
+     * @param  string  $path
+     * @return \Illuminate\Contracts\View\Engine
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function getEngineFromPath($path)
+    {
+        if (! $extension = $this->getExtension($path)) {
+            throw new InvalidArgumentException("Unrecognized extension in file: {$path}.");
+        }
+
+        $engine = $this->extensions[$extension];
+
+        return $this->engines->resolve($engine);
+    }
+
+    /**
+     * Get the extension used by the view file.
+     *
+     * @param  string  $path
+     * @return string|null
+     */
+    protected function getExtension($path)
+    {
+        $extensions = array_keys($this->extensions);
+
+        return Arr::first($extensions, function ($value) use ($path) {
+            return Str::endsWith($path, '.'.$value);
+        });
+    }
+
+    /**
+     * Add a piece of shared data to the environment.
+     *
+     * @param  array|string  $key
+     * @param  mixed|null  $value
+     * @return mixed
+     */
+    public function share($key, $value = null)
+    {
+        $keys = is_array($key) ? $key : [$key => $value];
+
+        foreach ($keys as $key => $value) {
+            $this->shared[$key] = $value;
+        }
+
+        return $value;
+    }
+
+    /**
      * Increment the rendering counter.
      *
      * @return void
@@ -347,6 +347,16 @@ class Factory implements FactoryContract
     public function decrementRender()
     {
         $this->renderCount--;
+    }
+
+    /**
+     * Check if there are no active render operations.
+     *
+     * @return bool
+     */
+    public function doneRendering()
+    {
+        return $this->renderCount == 0;
     }
 
     /**
@@ -446,28 +456,6 @@ class Factory implements FactoryContract
     }
 
     /**
-     * Flush all of the section contents if done rendering.
-     *
-     * @return void
-     */
-    public function flushStateIfDoneRendering()
-    {
-        if ($this->doneRendering()) {
-            $this->flushState();
-        }
-    }
-
-    /**
-     * Check if there are no active render operations.
-     *
-     * @return bool
-     */
-    public function doneRendering()
-    {
-        return $this->renderCount == 0;
-    }
-
-    /**
      * Flush all of the factory state like sections and stacks.
      *
      * @return void
@@ -479,6 +467,18 @@ class Factory implements FactoryContract
 
         $this->flushSections();
         $this->flushStacks();
+    }
+
+    /**
+     * Flush all of the section contents if done rendering.
+     *
+     * @return void
+     */
+    public function flushStateIfDoneRendering()
+    {
+        if ($this->doneRendering()) {
+            $this->flushState();
+        }
     }
 
     /**
@@ -502,16 +502,6 @@ class Factory implements FactoryContract
     }
 
     /**
-     * Flush the cache of views located by the finder.
-     *
-     * @return void
-     */
-    public function flushFinderCache()
-    {
-        $this->getFinder()->flush();
-    }
-
-    /**
      * Get the view finder instance.
      *
      * @return \Illuminate\View\ViewFinderInterface
@@ -530,6 +520,16 @@ class Factory implements FactoryContract
     public function setFinder(ViewFinderInterface $finder)
     {
         $this->finder = $finder;
+    }
+
+    /**
+     * Flush the cache of views located by the finder.
+     *
+     * @return void
+     */
+    public function flushFinderCache()
+    {
+        $this->getFinder()->flush();
     }
 
     /**

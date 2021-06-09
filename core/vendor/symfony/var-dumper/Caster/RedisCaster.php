@@ -72,6 +72,36 @@ class RedisCaster
         ];
     }
 
+    public static function castRedisArray(\RedisArray $c, array $a, Stub $stub, bool $isNested)
+    {
+        $prefix = Caster::PREFIX_VIRTUAL;
+
+        return $a + [
+            $prefix.'hosts' => $c->_hosts(),
+            $prefix.'function' => ClassStub::wrapCallable($c->_function()),
+            $prefix.'lastError' => $c->getLastError(),
+            $prefix.'options' => self::getRedisOptions($c),
+        ];
+    }
+
+    public static function castRedisCluster(\RedisCluster $c, array $a, Stub $stub, bool $isNested)
+    {
+        $prefix = Caster::PREFIX_VIRTUAL;
+        $failover = $c->getOption(\RedisCluster::OPT_SLAVE_FAILOVER);
+
+        $a += [
+            $prefix.'_masters' => $c->_masters(),
+            $prefix.'_redir' => $c->_redir(),
+            $prefix.'mode' => new ConstStub($c->getMode() ? 'MULTI' : 'ATOMIC', $c->getMode()),
+            $prefix.'lastError' => $c->getLastError(),
+            $prefix.'options' => self::getRedisOptions($c, [
+                'SLAVE_FAILOVER' => isset(self::FAILOVER_OPTIONS[$failover]) ? new ConstStub(self::FAILOVER_OPTIONS[$failover], $failover) : $failover,
+            ]),
+        ];
+
+        return $a;
+    }
+
     /**
      * @param \Redis|\RedisArray|\RedisCluster $redis
      */
@@ -118,35 +148,5 @@ class RedisCaster
         ];
 
         return new EnumStub($options);
-    }
-
-    public static function castRedisArray(\RedisArray $c, array $a, Stub $stub, bool $isNested)
-    {
-        $prefix = Caster::PREFIX_VIRTUAL;
-
-        return $a + [
-            $prefix.'hosts' => $c->_hosts(),
-            $prefix.'function' => ClassStub::wrapCallable($c->_function()),
-            $prefix.'lastError' => $c->getLastError(),
-            $prefix.'options' => self::getRedisOptions($c),
-        ];
-    }
-
-    public static function castRedisCluster(\RedisCluster $c, array $a, Stub $stub, bool $isNested)
-    {
-        $prefix = Caster::PREFIX_VIRTUAL;
-        $failover = $c->getOption(\RedisCluster::OPT_SLAVE_FAILOVER);
-
-        $a += [
-            $prefix.'_masters' => $c->_masters(),
-            $prefix.'_redir' => $c->_redir(),
-            $prefix.'mode' => new ConstStub($c->getMode() ? 'MULTI' : 'ATOMIC', $c->getMode()),
-            $prefix.'lastError' => $c->getLastError(),
-            $prefix.'options' => self::getRedisOptions($c, [
-                'SLAVE_FAILOVER' => isset(self::FAILOVER_OPTIONS[$failover]) ? new ConstStub(self::FAILOVER_OPTIONS[$failover], $failover) : $failover,
-            ]),
-        ];
-
-        return $a;
     }
 }

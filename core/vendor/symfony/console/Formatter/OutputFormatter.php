@@ -25,33 +25,12 @@ class OutputFormatter implements WrappableOutputFormatterInterface
     private $styles = [];
     private $styleStack;
 
-    /**
-     * Initializes console output formatter.
-     *
-     * @param OutputFormatterStyleInterface[] $styles Array of "name => FormatterStyle" instances
-     */
-    public function __construct(bool $decorated = false, array $styles = [])
+    public function __clone()
     {
-        $this->decorated = $decorated;
-
-        $this->setStyle('error', new OutputFormatterStyle('white', 'red'));
-        $this->setStyle('info', new OutputFormatterStyle('green'));
-        $this->setStyle('comment', new OutputFormatterStyle('yellow'));
-        $this->setStyle('question', new OutputFormatterStyle('black', 'cyan'));
-
-        foreach ($styles as $name => $style) {
-            $this->setStyle($name, $style);
+        $this->styleStack = clone $this->styleStack;
+        foreach ($this->styles as $key => $value) {
+            $this->styles[$key] = clone $value;
         }
-
-        $this->styleStack = new OutputFormatterStyleStack();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setStyle(string $name, OutputFormatterStyleInterface $style)
-    {
-        $this->styles[strtolower($name)] = $style;
     }
 
     /**
@@ -83,12 +62,57 @@ class OutputFormatter implements WrappableOutputFormatterInterface
         return $text;
     }
 
-    public function __clone()
+    /**
+     * Initializes console output formatter.
+     *
+     * @param OutputFormatterStyleInterface[] $styles Array of "name => FormatterStyle" instances
+     */
+    public function __construct(bool $decorated = false, array $styles = [])
     {
-        $this->styleStack = clone $this->styleStack;
-        foreach ($this->styles as $key => $value) {
-            $this->styles[$key] = clone $value;
+        $this->decorated = $decorated;
+
+        $this->setStyle('error', new OutputFormatterStyle('white', 'red'));
+        $this->setStyle('info', new OutputFormatterStyle('green'));
+        $this->setStyle('comment', new OutputFormatterStyle('yellow'));
+        $this->setStyle('question', new OutputFormatterStyle('black', 'cyan'));
+
+        foreach ($styles as $name => $style) {
+            $this->setStyle($name, $style);
         }
+
+        $this->styleStack = new OutputFormatterStyleStack();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDecorated(bool $decorated)
+    {
+        $this->decorated = $decorated;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isDecorated()
+    {
+        return $this->decorated;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setStyle(string $name, OutputFormatterStyleInterface $style)
+    {
+        $this->styles[strtolower($name)] = $style;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasStyle(string $name)
+    {
+        return isset($this->styles[strtolower($name)]);
     }
 
     /**
@@ -101,14 +125,6 @@ class OutputFormatter implements WrappableOutputFormatterInterface
         }
 
         return $this->styles[strtolower($name)];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasStyle(string $name)
-    {
-        return isset($this->styles[strtolower($name)]);
     }
 
     /**
@@ -170,6 +186,52 @@ class OutputFormatter implements WrappableOutputFormatterInterface
     }
 
     /**
+     * @return OutputFormatterStyleStack
+     */
+    public function getStyleStack()
+    {
+        return $this->styleStack;
+    }
+
+    /**
+     * Tries to create new style instance from string.
+     */
+    private function createStyleFromString(string $string): ?OutputFormatterStyleInterface
+    {
+        if (isset($this->styles[$string])) {
+            return $this->styles[$string];
+        }
+
+        if (!preg_match_all('/([^=]+)=([^;]+)(;|$)/', $string, $matches, \PREG_SET_ORDER)) {
+            return null;
+        }
+
+        $style = new OutputFormatterStyle();
+        foreach ($matches as $match) {
+            array_shift($match);
+            $match[0] = strtolower($match[0]);
+
+            if ('fg' == $match[0]) {
+                $style->setForeground(strtolower($match[1]));
+            } elseif ('bg' == $match[0]) {
+                $style->setBackground(strtolower($match[1]));
+            } elseif ('href' === $match[0]) {
+                $style->setHref($match[1]);
+            } elseif ('options' === $match[0]) {
+                preg_match_all('([^,;]+)', strtolower($match[1]), $options);
+                $options = array_shift($options);
+                foreach ($options as $option) {
+                    $style->setOption($option);
+                }
+            } else {
+                return null;
+            }
+        }
+
+        return $style;
+    }
+
+    /**
      * Applies current style from stack to text, if must be applied.
      */
     private function applyCurrentStyle(string $text, string $current, int $width, int &$currentLineLength): string
@@ -217,67 +279,5 @@ class OutputFormatter implements WrappableOutputFormatterInterface
         }
 
         return implode("\n", $lines);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isDecorated()
-    {
-        return $this->decorated;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setDecorated(bool $decorated)
-    {
-        $this->decorated = $decorated;
-    }
-
-    /**
-     * Tries to create new style instance from string.
-     */
-    private function createStyleFromString(string $string): ?OutputFormatterStyleInterface
-    {
-        if (isset($this->styles[$string])) {
-            return $this->styles[$string];
-        }
-
-        if (!preg_match_all('/([^=]+)=([^;]+)(;|$)/', $string, $matches, \PREG_SET_ORDER)) {
-            return null;
-        }
-
-        $style = new OutputFormatterStyle();
-        foreach ($matches as $match) {
-            array_shift($match);
-            $match[0] = strtolower($match[0]);
-
-            if ('fg' == $match[0]) {
-                $style->setForeground(strtolower($match[1]));
-            } elseif ('bg' == $match[0]) {
-                $style->setBackground(strtolower($match[1]));
-            } elseif ('href' === $match[0]) {
-                $style->setHref($match[1]);
-            } elseif ('options' === $match[0]) {
-                preg_match_all('([^,;]+)', strtolower($match[1]), $options);
-                $options = array_shift($options);
-                foreach ($options as $option) {
-                    $style->setOption($option);
-                }
-            } else {
-                return null;
-            }
-        }
-
-        return $style;
-    }
-
-    /**
-     * @return OutputFormatterStyleStack
-     */
-    public function getStyleStack()
-    {
-        return $this->styleStack;
     }
 }

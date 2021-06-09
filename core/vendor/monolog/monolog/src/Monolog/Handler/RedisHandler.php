@@ -28,9 +28,9 @@ use Monolog\Logger;
  */
 class RedisHandler extends AbstractProcessingHandler
 {
-    protected $capSize;
     private $redisClient;
     private $redisKey;
+    protected $capSize;
 
     /**
      * @param \Predis\Client|\Redis $redis   The redis instance

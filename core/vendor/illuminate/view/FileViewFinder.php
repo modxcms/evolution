@@ -80,17 +80,6 @@ class FileViewFinder implements ViewFinderInterface
     }
 
     /**
-     * Returns whether or not the view name has any hint information.
-     *
-     * @param  string  $name
-     * @return bool
-     */
-    public function hasHintInformation($name)
-    {
-        return strpos($name, static::HINT_PATH_DELIMITER) > 0;
-    }
-
-    /**
      * Get the path to a template with a named path.
      *
      * @param  string  $name
@@ -173,17 +162,6 @@ class FileViewFinder implements ViewFinderInterface
     }
 
     /**
-     * Resolve the path.
-     *
-     * @param  string  $path
-     * @return string
-     */
-    protected function resolvePath($path)
-    {
-        return realpath($path) ?: $path;
-    }
-
-    /**
      * Prepend a location to the finder.
      *
      * @param  string  $location
@@ -192,6 +170,17 @@ class FileViewFinder implements ViewFinderInterface
     public function prependLocation($location)
     {
         array_unshift($this->paths, $this->resolvePath($location));
+    }
+
+    /**
+     * Resolve the path.
+     *
+     * @param  string  $path
+     * @return string
+     */
+    protected function resolvePath($path)
+    {
+        return realpath($path) ?: $path;
     }
 
     /**
@@ -258,6 +247,17 @@ class FileViewFinder implements ViewFinderInterface
     }
 
     /**
+     * Returns whether or not the view name has any hint information.
+     *
+     * @param  string  $name
+     * @return bool
+     */
+    public function hasHintInformation($name)
+    {
+        return strpos($name, static::HINT_PATH_DELIMITER) > 0;
+    }
+
+    /**
      * Flush the cache of located views.
      *
      * @return void
@@ -278,16 +278,6 @@ class FileViewFinder implements ViewFinderInterface
     }
 
     /**
-     * Get the active view paths.
-     *
-     * @return array
-     */
-    public function getPaths()
-    {
-        return $this->paths;
-    }
-
-    /**
      * Set the active view paths.
      *
      * @param  array  $paths
@@ -298,6 +288,16 @@ class FileViewFinder implements ViewFinderInterface
         $this->paths = $paths;
 
         return $this;
+    }
+
+    /**
+     * Get the active view paths.
+     *
+     * @return array
+     */
+    public function getPaths()
+    {
+        return $this->paths;
     }
 
     /**

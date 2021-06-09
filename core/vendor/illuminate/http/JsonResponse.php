@@ -52,13 +52,15 @@ class JsonResponse extends BaseJsonResponse
     }
 
     /**
-     * {@inheritdoc}
+     * Get the json_decoded data from the response.
+     *
+     * @param  bool  $assoc
+     * @param  int  $depth
+     * @return mixed
      */
-    public function setEncodingOptions($options)
+    public function getData($assoc = false, $depth = 512)
     {
-        $this->encodingOptions = (int) $options;
-
-        return $this->setData($this->getData());
+        return json_decode($this->data, $assoc, $depth);
     }
 
     /**
@@ -106,6 +108,16 @@ class JsonResponse extends BaseJsonResponse
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function setEncodingOptions($options)
+    {
+        $this->encodingOptions = (int) $options;
+
+        return $this->setData($this->getData());
+    }
+
+    /**
      * Determine if a JSON encoding option is set.
      *
      * @param  int  $option
@@ -114,17 +126,5 @@ class JsonResponse extends BaseJsonResponse
     public function hasEncodingOption($option)
     {
         return (bool) ($this->encodingOptions & $option);
-    }
-
-    /**
-     * Get the json_decoded data from the response.
-     *
-     * @param  bool  $assoc
-     * @param  int  $depth
-     * @return mixed
-     */
-    public function getData($assoc = false, $depth = 512)
-    {
-        return json_decode($this->data, $assoc, $depth);
     }
 }

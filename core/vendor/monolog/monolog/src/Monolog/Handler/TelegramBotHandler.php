@@ -145,6 +145,14 @@ class TelegramBotHandler extends AbstractProcessingHandler
     }
 
     /**
+     * @inheritDoc
+     */
+    protected function write(array $record): void
+    {
+        $this->send($record['formatted']);
+    }
+
+    /**
      * Send request to @link https://api.telegram.org/bot on SendMessage action.
      * @param string $message
      */
@@ -169,13 +177,5 @@ class TelegramBotHandler extends AbstractProcessingHandler
         if ($result['ok'] === false) {
             throw new RuntimeException('Telegram API error. Description: ' . $result['description']);
         }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function write(array $record): void
-    {
-        $this->send($record['formatted']);
     }
 }

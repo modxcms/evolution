@@ -8,70 +8,82 @@ use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Contracts\Validation\UncompromisedVerifier;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Traits\Conditionable;
 use InvalidArgumentException;
 
 class Password implements Rule, DataAwareRule
 {
-    /**
-     * The callback that will generate the "default" version of the password rule.
-     *
-     * @var string|array|callable|null
-     */
-    public static $defaultCallback;
+    use Conditionable;
+
     /**
      * The data under validation.
      *
      * @var array
      */
     protected $data;
+
     /**
      * The minimum size of the password.
      *
      * @var int
      */
     protected $min = 8;
+
     /**
      * If the password requires at least one uppercase and one lowercase letter.
      *
      * @var bool
      */
     protected $mixedCase = false;
+
     /**
      * If the password requires at least one letter.
      *
      * @var bool
      */
     protected $letters = false;
+
     /**
      * If the password requires at least one number.
      *
      * @var bool
      */
     protected $numbers = false;
+
     /**
      * If the password requires at least one symbol.
      *
      * @var bool
      */
     protected $symbols = false;
+
     /**
      * If the password should has not been compromised in data leaks.
      *
      * @var bool
      */
     protected $uncompromised = false;
+
     /**
      * The number of times a password can appear in data leaks before being consider compromised.
      *
      * @var int
      */
     protected $compromisedThreshold = 0;
+
     /**
      * The failure messages, if any.
      *
      * @var array
      */
     protected $messages = [];
+
+    /**
+     * The callback that will generate the "default" version of the password rule.
+     *
+     * @var string|array|callable|null
+     */
+    public static $defaultCallback;
 
     /**
      * Create a new rule instance.
@@ -118,17 +130,6 @@ class Password implements Rule, DataAwareRule
     }
 
     /**
-     * Sets the minimum size of the password.
-     *
-     * @param  int $size
-     * @return $this
-     */
-    public static function min($size)
-    {
-        return new static($size);
-    }
-
-    /**
      * Get the default configuration of the password rule and mark the field as required.
      *
      * @return array
@@ -159,6 +160,17 @@ class Password implements Rule, DataAwareRule
         $this->data = $data;
 
         return $this;
+    }
+
+    /**
+     * Sets the minimum size of the password.
+     *
+     * @param  int $size
+     * @return $this
+     */
+    public static function min($size)
+    {
+        return new static($size);
     }
 
     /**
@@ -276,6 +288,16 @@ class Password implements Rule, DataAwareRule
     }
 
     /**
+     * Get the validation error message.
+     *
+     * @return array
+     */
+    public function message()
+    {
+        return $this->messages;
+    }
+
+    /**
      * Adds the given failures, and return false.
      *
      * @param  array|string  $messages
@@ -290,15 +312,5 @@ class Password implements Rule, DataAwareRule
         $this->messages = array_merge($this->messages, $messages);
 
         return false;
-    }
-
-    /**
-     * Get the validation error message.
-     *
-     * @return array
-     */
-    public function message()
-    {
-        return $this->messages;
     }
 }

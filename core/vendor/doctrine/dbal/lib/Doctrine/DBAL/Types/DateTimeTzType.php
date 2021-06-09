@@ -27,6 +27,14 @@ class DateTimeTzType extends Type implements PhpDateTimeMappingType
     /**
      * {@inheritdoc}
      */
+    public function getName()
+    {
+        return Types::DATETIMETZ_MUTABLE;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getSQLDeclaration(array $column, AbstractPlatform $platform)
     {
         return $platform->getDateTimeTzTypeDeclarationSQL($column);
@@ -46,14 +54,6 @@ class DateTimeTzType extends Type implements PhpDateTimeMappingType
         }
 
         throw ConversionException::conversionFailedInvalidType($value, $this->getName(), ['null', 'DateTime']);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return Types::DATETIMETZ_MUTABLE;
     }
 
     /**

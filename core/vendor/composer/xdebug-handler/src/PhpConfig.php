@@ -28,32 +28,6 @@ class PhpConfig
     }
 
     /**
-     * Returns restart data if available and resets the environment
-     *
-     * @return array|null
-     */
-    private function getDataAndReset()
-    {
-        if ($data = XdebugHandler::getRestartSettings()) {
-            $this->updateEnv('PHPRC', $data['phprc']);
-            $this->updateEnv('PHP_INI_SCAN_DIR', $data['scanDir']);
-        }
-
-        return $data;
-    }
-
-    /**
-     * Updates a restart settings value in the environment
-     *
-     * @param string $name
-     * @param string|false $value
-     */
-    private function updateEnv($name, $value)
-    {
-        Process::setEnv($name, false !== $value ? $value : null);
-    }
-
-    /**
      * Use standard restart settings
      *
      * @return array PHP cli options
@@ -80,5 +54,31 @@ class PhpConfig
         }
 
         return array();
+    }
+
+    /**
+     * Returns restart data if available and resets the environment
+     *
+     * @return array|null
+     */
+    private function getDataAndReset()
+    {
+        if ($data = XdebugHandler::getRestartSettings()) {
+            $this->updateEnv('PHPRC', $data['phprc']);
+            $this->updateEnv('PHP_INI_SCAN_DIR', $data['scanDir']);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Updates a restart settings value in the environment
+     *
+     * @param string $name
+     * @param string|false $value
+     */
+    private function updateEnv($name, $value)
+    {
+        Process::setEnv($name, false !== $value ? $value : null);
     }
 }

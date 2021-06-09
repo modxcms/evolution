@@ -45,6 +45,19 @@ class MockHandler implements \Countable
     private $onRejected;
 
     /**
+     * Creates a new MockHandler that uses the default handler stack list of
+     * middlewares.
+     *
+     * @param array|null    $queue       Array of responses, callables, or exceptions.
+     * @param callable|null $onFulfilled Callback to invoke when the return value is fulfilled.
+     * @param callable|null $onRejected  Callback to invoke when the return value is rejected.
+     */
+    public static function createWithMiddleware(array $queue = null, callable $onFulfilled = null, callable $onRejected = null): HandlerStack
+    {
+        return HandlerStack::create(new self($queue, $onFulfilled, $onRejected));
+    }
+
+    /**
      * The passed in value must be an array of
      * {@see \Psr\Http\Message\ResponseInterface} objects, Exceptions,
      * callables, or Promises.
@@ -62,40 +75,6 @@ class MockHandler implements \Countable
             // array_values included for BC
             $this->append(...array_values($queue));
         }
-    }
-
-    /**
-     * Adds one or more variadic requests, exceptions, callables, or promises
-     * to the queue.
-     *
-     * @param mixed ...$values
-     */
-    public function append(...$values): void
-    {
-        foreach ($values as $value) {
-            if ($value instanceof ResponseInterface
-                || $value instanceof \Throwable
-                || $value instanceof PromiseInterface
-                || \is_callable($value)
-            ) {
-                $this->queue[] = $value;
-            } else {
-                throw new \TypeError('Expected a Response, Promise, Throwable or callable. Found ' . Utils::describeType($value));
-            }
-        }
-    }
-
-    /**
-     * Creates a new MockHandler that uses the default handler stack list of
-     * middlewares.
-     *
-     * @param array|null    $queue       Array of responses, callables, or exceptions.
-     * @param callable|null $onFulfilled Callback to invoke when the return value is fulfilled.
-     * @param callable|null $onRejected  Callback to invoke when the return value is rejected.
-     */
-    public static function createWithMiddleware(array $queue = null, callable $onFulfilled = null, callable $onRejected = null): HandlerStack
-    {
-        return HandlerStack::create(new self($queue, $onFulfilled, $onRejected));
     }
 
     public function __invoke(RequestInterface $request, array $options): PromiseInterface
@@ -165,18 +144,23 @@ class MockHandler implements \Countable
     }
 
     /**
-     * @param mixed $reason Promise or reason.
+     * Adds one or more variadic requests, exceptions, callables, or promises
+     * to the queue.
+     *
+     * @param mixed ...$values
      */
-    private function invokeStats(
-        RequestInterface $request,
-        array $options,
-        ResponseInterface $response = null,
-        $reason = null
-    ): void {
-        if (isset($options['on_stats'])) {
-            $transferTime = $options['transfer_time'] ?? 0;
-            $stats = new TransferStats($request, $response, $transferTime, $reason);
-            ($options['on_stats'])($stats);
+    public function append(...$values): void
+    {
+        foreach ($values as $value) {
+            if ($value instanceof ResponseInterface
+                || $value instanceof \Throwable
+                || $value instanceof PromiseInterface
+                || \is_callable($value)
+            ) {
+                $this->queue[] = $value;
+            } else {
+                throw new \TypeError('Expected a Response, Promise, Throwable or callable. Found ' . Utils::describeType($value));
+            }
         }
     }
 
@@ -207,5 +191,21 @@ class MockHandler implements \Countable
     public function reset(): void
     {
         $this->queue = [];
+    }
+
+    /**
+     * @param mixed $reason Promise or reason.
+     */
+    private function invokeStats(
+        RequestInterface $request,
+        array $options,
+        ResponseInterface $response = null,
+        $reason = null
+    ): void {
+        if (isset($options['on_stats'])) {
+            $transferTime = $options['transfer_time'] ?? 0;
+            $stats = new TransferStats($request, $response, $transferTime, $reason);
+            ($options['on_stats'])($stats);
+        }
     }
 }

@@ -18,6 +18,17 @@ class Filesystem
     use Macroable;
 
     /**
+     * Determine if a file or directory exists.
+     *
+     * @param  string  $path
+     * @return bool
+     */
+    public function exists($path)
+    {
+        return file_exists($path);
+    }
+
+    /**
      * Determine if a file or directory is missing.
      *
      * @param  string  $path
@@ -29,14 +40,50 @@ class Filesystem
     }
 
     /**
-     * Determine if a file or directory exists.
+     * Get the contents of a file.
      *
      * @param  string  $path
-     * @return bool
+     * @param  bool  $lock
+     * @return string
+     *
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    public function exists($path)
+    public function get($path, $lock = false)
     {
-        return file_exists($path);
+        if ($this->isFile($path)) {
+            return $lock ? $this->sharedGet($path) : file_get_contents($path);
+        }
+
+        throw new FileNotFoundException("File does not exist at path {$path}.");
+    }
+
+    /**
+     * Get contents of a file with shared access.
+     *
+     * @param  string  $path
+     * @return string
+     */
+    public function sharedGet($path)
+    {
+        $contents = '';
+
+        $handle = fopen($path, 'rb');
+
+        if ($handle) {
+            try {
+                if (flock($handle, LOCK_SH)) {
+                    clearstatcache(true, $path);
+
+                    $contents = fread($handle, $this->size($path) ?: 1);
+
+                    flock($handle, LOCK_UN);
+                }
+            } finally {
+                fclose($handle);
+            }
+        }
+
+        return $contents;
     }
 
     /**
@@ -62,17 +109,6 @@ class Filesystem
         }
 
         throw new FileNotFoundException("File does not exist at path {$path}.");
-    }
-
-    /**
-     * Determine if the given path is a file.
-     *
-     * @param  string  $file
-     * @return bool
-     */
-    public function isFile($file)
-    {
-        return is_file($file);
     }
 
     /**
@@ -139,6 +175,19 @@ class Filesystem
     }
 
     /**
+     * Write the contents of a file.
+     *
+     * @param  string  $path
+     * @param  string  $contents
+     * @param  bool  $lock
+     * @return int|bool
+     */
+    public function put($path, $contents, $lock = false)
+    {
+        return file_put_contents($path, $contents, $lock ? LOCK_EX : 0);
+    }
+
+    /**
      * Write the contents of a file, replacing it atomically if it already exists.
      *
      * @param  string  $path
@@ -179,77 +228,6 @@ class Filesystem
     }
 
     /**
-     * Write the contents of a file.
-     *
-     * @param  string  $path
-     * @param  string  $contents
-     * @param  bool  $lock
-     * @return int|bool
-     */
-    public function put($path, $contents, $lock = false)
-    {
-        return file_put_contents($path, $contents, $lock ? LOCK_EX : 0);
-    }
-
-    /**
-     * Get the contents of a file.
-     *
-     * @param  string  $path
-     * @param  bool  $lock
-     * @return string
-     *
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     */
-    public function get($path, $lock = false)
-    {
-        if ($this->isFile($path)) {
-            return $lock ? $this->sharedGet($path) : file_get_contents($path);
-        }
-
-        throw new FileNotFoundException("File does not exist at path {$path}.");
-    }
-
-    /**
-     * Get contents of a file with shared access.
-     *
-     * @param  string  $path
-     * @return string
-     */
-    public function sharedGet($path)
-    {
-        $contents = '';
-
-        $handle = fopen($path, 'rb');
-
-        if ($handle) {
-            try {
-                if (flock($handle, LOCK_SH)) {
-                    clearstatcache(true, $path);
-
-                    $contents = fread($handle, $this->size($path) ?: 1);
-
-                    flock($handle, LOCK_UN);
-                }
-            } finally {
-                fclose($handle);
-            }
-        }
-
-        return $contents;
-    }
-
-    /**
-     * Get the file size of a given file.
-     *
-     * @param  string  $path
-     * @return int
-     */
-    public function size($path)
-    {
-        return filesize($path);
-    }
-
-    /**
      * Append to a file.
      *
      * @param  string  $path
@@ -278,6 +256,31 @@ class Filesystem
     }
 
     /**
+     * Delete the file at a given path.
+     *
+     * @param  string|array  $paths
+     * @return bool
+     */
+    public function delete($paths)
+    {
+        $paths = is_array($paths) ? $paths : func_get_args();
+
+        $success = true;
+
+        foreach ($paths as $path) {
+            try {
+                if (! @unlink($path)) {
+                    $success = false;
+                }
+            } catch (ErrorException $e) {
+                $success = false;
+            }
+        }
+
+        return $success;
+    }
+
+    /**
      * Move a file to a new location.
      *
      * @param  string  $path
@@ -287,6 +290,36 @@ class Filesystem
     public function move($path, $target)
     {
         return rename($path, $target);
+    }
+
+    /**
+     * Copy a file to a new location.
+     *
+     * @param  string  $path
+     * @param  string  $target
+     * @return bool
+     */
+    public function copy($path, $target)
+    {
+        return copy($path, $target);
+    }
+
+    /**
+     * Create a symlink to the target file or directory. On Windows, a hard link is created if the target is a file.
+     *
+     * @param  string  $target
+     * @param  string  $link
+     * @return void
+     */
+    public function link($target, $link)
+    {
+        if (! windows_os()) {
+            return symlink($target, $link);
+        }
+
+        $mode = $this->isDirectory($target) ? 'J' : 'H';
+
+        exec("mklink /{$mode} ".escapeshellarg($link).' '.escapeshellarg($target));
     }
 
     /**
@@ -309,35 +342,6 @@ class Filesystem
         $relativeTarget = (new SymfonyFilesystem)->makePathRelative($target, dirname($link));
 
         $this->link($relativeTarget, $link);
-    }
-
-    /**
-     * Create a symlink to the target file or directory. On Windows, a hard link is created if the target is a file.
-     *
-     * @param  string  $target
-     * @param  string  $link
-     * @return void
-     */
-    public function link($target, $link)
-    {
-        if (! windows_os()) {
-            return symlink($target, $link);
-        }
-
-        $mode = $this->isDirectory($target) ? 'J' : 'H';
-
-        exec("mklink /{$mode} ".escapeshellarg($link).' '.escapeshellarg($target));
-    }
-
-    /**
-     * Determine if the given path is a directory.
-     *
-     * @param  string  $directory
-     * @return bool
-     */
-    public function isDirectory($directory)
-    {
-        return is_dir($directory);
     }
 
     /**
@@ -404,17 +408,6 @@ class Filesystem
     }
 
     /**
-     * Get the mime-type of a given file.
-     *
-     * @param  string  $path
-     * @return string|false
-     */
-    public function mimeType($path)
-    {
-        return finfo_file(finfo_open(FILEINFO_MIME_TYPE), $path);
-    }
-
-    /**
      * Get the file type of a given file.
      *
      * @param  string  $path
@@ -426,6 +419,28 @@ class Filesystem
     }
 
     /**
+     * Get the mime-type of a given file.
+     *
+     * @param  string  $path
+     * @return string|false
+     */
+    public function mimeType($path)
+    {
+        return finfo_file(finfo_open(FILEINFO_MIME_TYPE), $path);
+    }
+
+    /**
+     * Get the file size of a given file.
+     *
+     * @param  string  $path
+     * @return int
+     */
+    public function size($path)
+    {
+        return filesize($path);
+    }
+
+    /**
      * Get the file's last modification time.
      *
      * @param  string  $path
@@ -434,6 +449,17 @@ class Filesystem
     public function lastModified($path)
     {
         return filemtime($path);
+    }
+
+    /**
+     * Determine if the given path is a directory.
+     *
+     * @param  string  $directory
+     * @return bool
+     */
+    public function isDirectory($directory)
+    {
+        return is_dir($directory);
     }
 
     /**
@@ -456,6 +482,17 @@ class Filesystem
     public function isWritable($path)
     {
         return is_writable($path);
+    }
+
+    /**
+     * Determine if the given path is a file.
+     *
+     * @param  string  $file
+     * @return bool
+     */
+    public function isFile($file)
+    {
+        return is_file($file);
     }
 
     /**
@@ -501,6 +538,56 @@ class Filesystem
     }
 
     /**
+     * Get all of the directories within a given directory.
+     *
+     * @param  string  $directory
+     * @return array
+     */
+    public function directories($directory)
+    {
+        $directories = [];
+
+        foreach (Finder::create()->in($directory)->directories()->depth(0)->sortByName() as $dir) {
+            $directories[] = $dir->getPathname();
+        }
+
+        return $directories;
+    }
+
+    /**
+     * Ensure a directory exists.
+     *
+     * @param  string  $path
+     * @param  int  $mode
+     * @param  bool  $recursive
+     * @return void
+     */
+    public function ensureDirectoryExists($path, $mode = 0755, $recursive = true)
+    {
+        if (! $this->isDirectory($path)) {
+            $this->makeDirectory($path, $mode, $recursive);
+        }
+    }
+
+    /**
+     * Create a directory.
+     *
+     * @param  string  $path
+     * @param  int  $mode
+     * @param  bool  $recursive
+     * @param  bool  $force
+     * @return bool
+     */
+    public function makeDirectory($path, $mode = 0755, $recursive = false, $force = false)
+    {
+        if ($force) {
+            return @mkdir($path, $mode, $recursive);
+        }
+
+        return mkdir($path, $mode, $recursive);
+    }
+
+    /**
      * Move a directory.
      *
      * @param  string  $from
@@ -515,71 +602,6 @@ class Filesystem
         }
 
         return @rename($from, $to) === true;
-    }
-
-    /**
-     * Recursively delete a directory.
-     *
-     * The directory itself may be optionally preserved.
-     *
-     * @param  string  $directory
-     * @param  bool  $preserve
-     * @return bool
-     */
-    public function deleteDirectory($directory, $preserve = false)
-    {
-        if (! $this->isDirectory($directory)) {
-            return false;
-        }
-
-        $items = new FilesystemIterator($directory);
-
-        foreach ($items as $item) {
-            // If the item is a directory, we can just recurse into the function and
-            // delete that sub-directory otherwise we'll just delete the file and
-            // keep iterating through each file until the directory is cleaned.
-            if ($item->isDir() && ! $item->isLink()) {
-                $this->deleteDirectory($item->getPathname());
-            }
-
-            // If the item is just a file, we can go ahead and delete it since we're
-            // just looping through and waxing all of the files in this directory
-            // and calling directories recursively, so we delete the real path.
-            else {
-                $this->delete($item->getPathname());
-            }
-        }
-
-        if (! $preserve) {
-            @rmdir($directory);
-        }
-
-        return true;
-    }
-
-    /**
-     * Delete the file at a given path.
-     *
-     * @param  string|array  $paths
-     * @return bool
-     */
-    public function delete($paths)
-    {
-        $paths = is_array($paths) ? $paths : func_get_args();
-
-        $success = true;
-
-        foreach ($paths as $path) {
-            try {
-                if (! @unlink($path)) {
-                    $success = false;
-                }
-            } catch (ErrorException $e) {
-                $success = false;
-            }
-        }
-
-        return $success;
     }
 
     /**
@@ -633,48 +655,43 @@ class Filesystem
     }
 
     /**
-     * Ensure a directory exists.
+     * Recursively delete a directory.
      *
-     * @param  string  $path
-     * @param  int  $mode
-     * @param  bool  $recursive
-     * @return void
-     */
-    public function ensureDirectoryExists($path, $mode = 0755, $recursive = true)
-    {
-        if (! $this->isDirectory($path)) {
-            $this->makeDirectory($path, $mode, $recursive);
-        }
-    }
-
-    /**
-     * Create a directory.
+     * The directory itself may be optionally preserved.
      *
-     * @param  string  $path
-     * @param  int  $mode
-     * @param  bool  $recursive
-     * @param  bool  $force
+     * @param  string  $directory
+     * @param  bool  $preserve
      * @return bool
      */
-    public function makeDirectory($path, $mode = 0755, $recursive = false, $force = false)
+    public function deleteDirectory($directory, $preserve = false)
     {
-        if ($force) {
-            return @mkdir($path, $mode, $recursive);
+        if (! $this->isDirectory($directory)) {
+            return false;
         }
 
-        return mkdir($path, $mode, $recursive);
-    }
+        $items = new FilesystemIterator($directory);
 
-    /**
-     * Copy a file to a new location.
-     *
-     * @param  string  $path
-     * @param  string  $target
-     * @return bool
-     */
-    public function copy($path, $target)
-    {
-        return copy($path, $target);
+        foreach ($items as $item) {
+            // If the item is a directory, we can just recurse into the function and
+            // delete that sub-directory otherwise we'll just delete the file and
+            // keep iterating through each file until the directory is cleaned.
+            if ($item->isDir() && ! $item->isLink()) {
+                $this->deleteDirectory($item->getPathname());
+            }
+
+            // If the item is just a file, we can go ahead and delete it since we're
+            // just looping through and waxing all of the files in this directory
+            // and calling directories recursively, so we delete the real path.
+            else {
+                $this->delete($item->getPathname());
+            }
+        }
+
+        if (! $preserve) {
+            @rmdir($directory);
+        }
+
+        return true;
     }
 
     /**
@@ -696,23 +713,6 @@ class Filesystem
         }
 
         return false;
-    }
-
-    /**
-     * Get all of the directories within a given directory.
-     *
-     * @param  string  $directory
-     * @return array
-     */
-    public function directories($directory)
-    {
-        $directories = [];
-
-        foreach (Finder::create()->in($directory)->directories()->depth(0)->sortByName() as $dir) {
-            $directories[] = $dir->getPathname();
-        }
-
-        return $directories;
     }
 
     /**

@@ -68,11 +68,6 @@ abstract class MultiBulkIterator implements \Iterator, \Countable, ResponseInter
     /**
      * {@inheritdoc}
      */
-    abstract protected function getValue();
-
-    /**
-     * {@inheritdoc}
-     */
     public function valid()
     {
         return $this->position < $this->size;
@@ -101,4 +96,9 @@ abstract class MultiBulkIterator implements \Iterator, \Countable, ResponseInter
     {
         return $this->position;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    abstract protected function getValue();
 }

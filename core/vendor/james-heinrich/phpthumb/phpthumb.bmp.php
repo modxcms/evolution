@@ -20,6 +20,15 @@
 
 class phpthumb_bmp {
 
+	public function phpthumb_bmp2gd(&$BMPdata, $truecolor=true) {
+		$ThisFileInfo = array();
+		if ($this->getid3_bmp($BMPdata, $ThisFileInfo, true, true)) {
+			$gd = $this->PlotPixelsGD($ThisFileInfo['bmp'], $truecolor);
+			return $gd;
+		}
+		return false;
+	}
+
 	public function phpthumb_bmpfile2gd($filename, $truecolor=true) {
 		if ($fp = @fopen($filename, 'rb')) {
 			$BMPdata = fread($fp, filesize($filename));
@@ -29,13 +38,45 @@ class phpthumb_bmp {
 		return false;
 	}
 
-	public function phpthumb_bmp2gd(&$BMPdata, $truecolor=true) {
-		$ThisFileInfo = array();
-		if ($this->getid3_bmp($BMPdata, $ThisFileInfo, true, true)) {
-			$gd = $this->PlotPixelsGD($ThisFileInfo['bmp'], $truecolor);
-			return $gd;
+	public function GD2BMPstring(&$gd_image) {
+		$imageX = imagesx($gd_image);
+		$imageY = imagesy($gd_image);
+
+		$BMP = '';
+		for ($y = ($imageY - 1); $y >= 0; $y--) {
+			$thisline = '';
+			for ($x = 0; $x < $imageX; $x++) {
+				$argb = phpthumb_functions::GetPixelColor($gd_image, $x, $y);
+				$thisline .= chr($argb['blue']).chr($argb['green']).chr($argb['red']);
+			}
+			while (strlen($thisline) % 4) {
+				$thisline .= "\x00";
+			}
+			$BMP .= $thisline;
 		}
-		return false;
+
+		$bmpSize = strlen($BMP) + 14 + 40;
+		// BITMAPFILEHEADER [14 bytes] - http://msdn.microsoft.com/library/en-us/gdi/bitmaps_62uq.asp
+		$BITMAPFILEHEADER  = 'BM';                                                           // WORD    bfType;
+		$BITMAPFILEHEADER .= phpthumb_functions::LittleEndian2String($bmpSize, 4); // DWORD   bfSize;
+		$BITMAPFILEHEADER .= phpthumb_functions::LittleEndian2String(       0, 2); // WORD    bfReserved1;
+		$BITMAPFILEHEADER .= phpthumb_functions::LittleEndian2String(       0, 2); // WORD    bfReserved2;
+		$BITMAPFILEHEADER .= phpthumb_functions::LittleEndian2String(      54, 4); // DWORD   bfOffBits;
+
+		// BITMAPINFOHEADER - [40 bytes] http://msdn.microsoft.com/library/en-us/gdi/bitmaps_1rw2.asp
+		$BITMAPINFOHEADER  = phpthumb_functions::LittleEndian2String(      40, 4); // DWORD  biSize;
+		$BITMAPINFOHEADER .= phpthumb_functions::LittleEndian2String( $imageX, 4); // LONG   biWidth;
+		$BITMAPINFOHEADER .= phpthumb_functions::LittleEndian2String( $imageY, 4); // LONG   biHeight;
+		$BITMAPINFOHEADER .= phpthumb_functions::LittleEndian2String(       1, 2); // WORD   biPlanes;
+		$BITMAPINFOHEADER .= phpthumb_functions::LittleEndian2String(      24, 2); // WORD   biBitCount;
+		$BITMAPINFOHEADER .= phpthumb_functions::LittleEndian2String(       0, 4); // DWORD  biCompression;
+		$BITMAPINFOHEADER .= phpthumb_functions::LittleEndian2String(       0, 4); // DWORD  biSizeImage;
+		$BITMAPINFOHEADER .= phpthumb_functions::LittleEndian2String(    2835, 4); // LONG   biXPelsPerMeter;
+		$BITMAPINFOHEADER .= phpthumb_functions::LittleEndian2String(    2835, 4); // LONG   biYPelsPerMeter;
+		$BITMAPINFOHEADER .= phpthumb_functions::LittleEndian2String(       0, 4); // DWORD  biClrUsed;
+		$BITMAPINFOHEADER .= phpthumb_functions::LittleEndian2String(       0, 4); // DWORD  biClrImportant;
+
+		return $BITMAPFILEHEADER.$BITMAPINFOHEADER.$BMP;
 	}
 
 	public function getid3_bmp(&$BMPdata, &$ThisFileInfo, $ExtractPalette=false, $ExtractData=false) {
@@ -648,100 +689,11 @@ class phpthumb_bmp {
 		return true;
 	}
 
-	public function LittleEndian2Int($byteword) {
-		$intvalue = 0;
-		$byteword = strrev($byteword);
-		$bytewordlen = strlen($byteword);
-		for ($i = 0; $i < $bytewordlen; $i++) {
-			$intvalue += ord($byteword[$i]) * pow(256, $bytewordlen - 1 - $i);
-		}
-		return $intvalue;
-	}
-
-	public function BMPcompressionOS2Lookup($compressionid) {
-		static $BMPcompressionOS2Lookup = array(
-			0 => 'BI_RGB',
-			1 => 'BI_RLE8',
-			2 => 'BI_RLE4',
-			3 => 'Huffman 1D',
-			4 => 'BI_RLE24',
-		);
-		return (isset($BMPcompressionOS2Lookup[$compressionid]) ? $BMPcompressionOS2Lookup[$compressionid] : 'invalid');
-	}
-
-	public function BMPcompressionWindowsLookup($compressionid) {
-		static $BMPcompressionWindowsLookup = array(
-			0 => 'BI_RGB',
-			1 => 'BI_RLE8',
-			2 => 'BI_RLE4',
-			3 => 'BI_BITFIELDS',
-			4 => 'BI_JPEG',
-			5 => 'BI_PNG'
-		);
-		return (isset($BMPcompressionWindowsLookup[$compressionid]) ? $BMPcompressionWindowsLookup[$compressionid] : 'invalid');
-	}
-
-	public function FixedPoint2_30($rawdata) {
-		$binarystring = $this->BigEndian2Bin($rawdata);
-		return $this->Bin2Dec(substr($binarystring, 0, 2)) + (float) ($this->Bin2Dec(substr($binarystring, 2, 30)) / 1073741824);
-	}
-
-	public function BigEndian2Bin($byteword) {
-		$binvalue = '';
-		$bytewordlen = strlen($byteword);
-		for ($i = 0; $i < $bytewordlen; $i++) {
-			$binvalue .= str_pad(decbin(ord($byteword[$i])), 8, '0', STR_PAD_LEFT);
-		}
-		return $binvalue;
-	}
-
-	public function Bin2Dec($binstring, $signed=false) {
-		$signmult = 1;
-		if ($signed) {
-			if ($binstring[0] == '1') {
-				$signmult = -1;
-			}
-			$binstring = substr($binstring, 1);
-		}
-		$decvalue = 0;
-		for ($i = 0, $iMax = strlen($binstring); $i < $iMax; $i++) {
-			$decvalue += ((int) $binstring[ strlen($binstring) - $i - 1 ]) * pow(2, $i);
-		}
-		return $this->CastAsInt($decvalue * $signmult);
-	}
-
-
-	// from getid3.lib.php
-
-	public function CastAsInt($floatnum) {
-		// convert to float if not already
-		$floatnum = (float) $floatnum;
-
-		// convert a float to type int, only if possible
-		if ($this->trunc($floatnum) == $floatnum) {
-			// it's not floating point
-			if ($floatnum <= 1073741824) { // 2^30
-				// it's within int range
-				$floatnum = (int) $floatnum;
-			}
-		}
-		return $floatnum;
-	}
-
-	public function trunc($floatnumber) {
-		// truncates a floating-point number at the decimal point
-		// returns int (if possible, otherwise float)
-		if ($floatnumber >= 1) {
-			$truncatednumber = floor($floatnumber);
-		} elseif ($floatnumber <= -1) {
-			$truncatednumber = ceil($floatnumber);
-		} else {
-			$truncatednumber = 0;
-		}
-		if ($truncatednumber <= 1073741824) { // 2^30
-			$truncatednumber = (int) $truncatednumber;
-		}
-		return $truncatednumber;
+	public function IntColor2RGB($color) {
+		$red   = ($color & 0x00FF0000) >> 16;
+		$green = ($color & 0x0000FF00) >> 8;
+		$blue  = ($color & 0x000000FF);
+		return array($red, $green, $blue);
 	}
 
 	public function PlotPixelsGD(&$BMPdata, $truecolor=true) {
@@ -794,54 +746,6 @@ class phpthumb_bmp {
 		return $gd;
 	}
 
-	public function IntColor2RGB($color) {
-		$red   = ($color & 0x00FF0000) >> 16;
-		$green = ($color & 0x0000FF00) >> 8;
-		$blue  = ($color & 0x000000FF);
-		return array($red, $green, $blue);
-	}
-
-	public function GD2BMPstring(&$gd_image) {
-		$imageX = imagesx($gd_image);
-		$imageY = imagesy($gd_image);
-
-		$BMP = '';
-		for ($y = ($imageY - 1); $y >= 0; $y--) {
-			$thisline = '';
-			for ($x = 0; $x < $imageX; $x++) {
-				$argb = phpthumb_functions::GetPixelColor($gd_image, $x, $y);
-				$thisline .= chr($argb['blue']).chr($argb['green']).chr($argb['red']);
-			}
-			while (strlen($thisline) % 4) {
-				$thisline .= "\x00";
-			}
-			$BMP .= $thisline;
-		}
-
-		$bmpSize = strlen($BMP) + 14 + 40;
-		// BITMAPFILEHEADER [14 bytes] - http://msdn.microsoft.com/library/en-us/gdi/bitmaps_62uq.asp
-		$BITMAPFILEHEADER  = 'BM';                                                           // WORD    bfType;
-		$BITMAPFILEHEADER .= phpthumb_functions::LittleEndian2String($bmpSize, 4); // DWORD   bfSize;
-		$BITMAPFILEHEADER .= phpthumb_functions::LittleEndian2String(       0, 2); // WORD    bfReserved1;
-		$BITMAPFILEHEADER .= phpthumb_functions::LittleEndian2String(       0, 2); // WORD    bfReserved2;
-		$BITMAPFILEHEADER .= phpthumb_functions::LittleEndian2String(      54, 4); // DWORD   bfOffBits;
-
-		// BITMAPINFOHEADER - [40 bytes] http://msdn.microsoft.com/library/en-us/gdi/bitmaps_1rw2.asp
-		$BITMAPINFOHEADER  = phpthumb_functions::LittleEndian2String(      40, 4); // DWORD  biSize;
-		$BITMAPINFOHEADER .= phpthumb_functions::LittleEndian2String( $imageX, 4); // LONG   biWidth;
-		$BITMAPINFOHEADER .= phpthumb_functions::LittleEndian2String( $imageY, 4); // LONG   biHeight;
-		$BITMAPINFOHEADER .= phpthumb_functions::LittleEndian2String(       1, 2); // WORD   biPlanes;
-		$BITMAPINFOHEADER .= phpthumb_functions::LittleEndian2String(      24, 2); // WORD   biBitCount;
-		$BITMAPINFOHEADER .= phpthumb_functions::LittleEndian2String(       0, 4); // DWORD  biCompression;
-		$BITMAPINFOHEADER .= phpthumb_functions::LittleEndian2String(       0, 4); // DWORD  biSizeImage;
-		$BITMAPINFOHEADER .= phpthumb_functions::LittleEndian2String(    2835, 4); // LONG   biXPelsPerMeter;
-		$BITMAPINFOHEADER .= phpthumb_functions::LittleEndian2String(    2835, 4); // LONG   biYPelsPerMeter;
-		$BITMAPINFOHEADER .= phpthumb_functions::LittleEndian2String(       0, 4); // DWORD  biClrUsed;
-		$BITMAPINFOHEADER .= phpthumb_functions::LittleEndian2String(       0, 4); // DWORD  biClrImportant;
-
-		return $BITMAPFILEHEADER.$BITMAPINFOHEADER.$BMP;
-	}
-
 	public function PlotBMP(&$BMPinfo) {
 		$starttime = time();
 		if (!isset($BMPinfo['bmp']['data']) || !is_array($BMPinfo['bmp']['data'])) {
@@ -863,8 +767,104 @@ class phpthumb_bmp {
 		return true;
 	}
 
+	public function BMPcompressionWindowsLookup($compressionid) {
+		static $BMPcompressionWindowsLookup = array(
+			0 => 'BI_RGB',
+			1 => 'BI_RLE8',
+			2 => 'BI_RLE4',
+			3 => 'BI_BITFIELDS',
+			4 => 'BI_JPEG',
+			5 => 'BI_PNG'
+		);
+		return (isset($BMPcompressionWindowsLookup[$compressionid]) ? $BMPcompressionWindowsLookup[$compressionid] : 'invalid');
+	}
+
+	public function BMPcompressionOS2Lookup($compressionid) {
+		static $BMPcompressionOS2Lookup = array(
+			0 => 'BI_RGB',
+			1 => 'BI_RLE8',
+			2 => 'BI_RLE4',
+			3 => 'Huffman 1D',
+			4 => 'BI_RLE24',
+		);
+		return (isset($BMPcompressionOS2Lookup[$compressionid]) ? $BMPcompressionOS2Lookup[$compressionid] : 'invalid');
+	}
+
+
+	// from getid3.lib.php
+
+	public function trunc($floatnumber) {
+		// truncates a floating-point number at the decimal point
+		// returns int (if possible, otherwise float)
+		if ($floatnumber >= 1) {
+			$truncatednumber = floor($floatnumber);
+		} elseif ($floatnumber <= -1) {
+			$truncatednumber = ceil($floatnumber);
+		} else {
+			$truncatednumber = 0;
+		}
+		if ($truncatednumber <= 1073741824) { // 2^30
+			$truncatednumber = (int) $truncatednumber;
+		}
+		return $truncatednumber;
+	}
+
+	public function LittleEndian2Int($byteword) {
+		$intvalue = 0;
+		$byteword = strrev($byteword);
+		$bytewordlen = strlen($byteword);
+		for ($i = 0; $i < $bytewordlen; $i++) {
+			$intvalue += ord($byteword[$i]) * pow(256, $bytewordlen - 1 - $i);
+		}
+		return $intvalue;
+	}
+
 	public function BigEndian2Int($byteword) {
 		return $this->LittleEndian2Int(strrev($byteword));
+	}
+
+	public function BigEndian2Bin($byteword) {
+		$binvalue = '';
+		$bytewordlen = strlen($byteword);
+		for ($i = 0; $i < $bytewordlen; $i++) {
+			$binvalue .= str_pad(decbin(ord($byteword[$i])), 8, '0', STR_PAD_LEFT);
+		}
+		return $binvalue;
+	}
+
+	public function FixedPoint2_30($rawdata) {
+		$binarystring = $this->BigEndian2Bin($rawdata);
+		return $this->Bin2Dec(substr($binarystring, 0, 2)) + (float) ($this->Bin2Dec(substr($binarystring, 2, 30)) / 1073741824);
+	}
+
+	public function Bin2Dec($binstring, $signed=false) {
+		$signmult = 1;
+		if ($signed) {
+			if ($binstring[0] == '1') {
+				$signmult = -1;
+			}
+			$binstring = substr($binstring, 1);
+		}
+		$decvalue = 0;
+		for ($i = 0, $iMax = strlen($binstring); $i < $iMax; $i++) {
+			$decvalue += ((int) $binstring[ strlen($binstring) - $i - 1 ]) * pow(2, $i);
+		}
+		return $this->CastAsInt($decvalue * $signmult);
+	}
+
+	public function CastAsInt($floatnum) {
+		// convert to float if not already
+		$floatnum = (float) $floatnum;
+
+		// convert a float to type int, only if possible
+		if ($this->trunc($floatnum) == $floatnum) {
+			// it's not floating point
+			if ($floatnum <= 1073741824) { // 2^30
+				// it's within int range
+				$floatnum = (int) $floatnum;
+			}
+		}
+		return $floatnum;
 	}
 
 }

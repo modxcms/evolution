@@ -36,11 +36,6 @@ class ComposerMirror
         return str_replace($from, $to, $mirrorUrl);
     }
 
-    public static function processHgUrl($mirrorUrl, $packageName, $url, $type)
-    {
-        return self::processGitUrl($mirrorUrl, $packageName, $url, $type);
-    }
-
     public static function processGitUrl($mirrorUrl, $packageName, $url, $type)
     {
         if (preg_match('#^(?:(?:https?|git)://github\.com/|git@github\.com:)([^/]+)/(.+?)(?:\.git)?$#', $url, $match)) {
@@ -56,5 +51,10 @@ class ComposerMirror
             array($packageName, $url, $type),
             $mirrorUrl
         );
+    }
+
+    public static function processHgUrl($mirrorUrl, $packageName, $url, $type)
+    {
+        return self::processGitUrl($mirrorUrl, $packageName, $url, $type);
     }
 }

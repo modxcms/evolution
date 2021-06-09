@@ -67,13 +67,17 @@ class SqlServerConnector extends Connector implements ConnectorInterface
     }
 
     /**
-     * Get the available PDO drivers.
+     * Get the DSN string for a DbLib connection.
      *
-     * @return array
+     * @param  array  $config
+     * @return string
      */
-    protected function getAvailableDrivers()
+    protected function getDblibDsn(array $config)
     {
-        return PDO::getAvailableDrivers();
+        return $this->buildConnectString('dblib', array_merge([
+            'host' => $this->buildHostString($config, ':'),
+            'dbname' => $config['database'],
+        ], Arr::only($config, ['appname', 'charset', 'version'])));
     }
 
     /**
@@ -160,6 +164,20 @@ class SqlServerConnector extends Connector implements ConnectorInterface
     }
 
     /**
+     * Build a connection string from the given arguments.
+     *
+     * @param  string  $driver
+     * @param  array  $arguments
+     * @return string
+     */
+    protected function buildConnectString($driver, array $arguments)
+    {
+        return $driver.':'.implode(';', array_map(function ($key) use ($arguments) {
+            return sprintf('%s=%s', $key, $arguments[$key]);
+        }, array_keys($arguments)));
+    }
+
+    /**
      * Build a host string from the given configuration.
      *
      * @param  array  $config
@@ -176,30 +194,12 @@ class SqlServerConnector extends Connector implements ConnectorInterface
     }
 
     /**
-     * Build a connection string from the given arguments.
+     * Get the available PDO drivers.
      *
-     * @param  string  $driver
-     * @param  array  $arguments
-     * @return string
+     * @return array
      */
-    protected function buildConnectString($driver, array $arguments)
+    protected function getAvailableDrivers()
     {
-        return $driver.':'.implode(';', array_map(function ($key) use ($arguments) {
-            return sprintf('%s=%s', $key, $arguments[$key]);
-        }, array_keys($arguments)));
-    }
-
-    /**
-     * Get the DSN string for a DbLib connection.
-     *
-     * @param  array  $config
-     * @return string
-     */
-    protected function getDblibDsn(array $config)
-    {
-        return $this->buildConnectString('dblib', array_merge([
-            'host' => $this->buildHostString($config, ':'),
-            'dbname' => $config['database'],
-        ], Arr::only($config, ['appname', 'charset', 'version'])));
+        return PDO::getAvailableDrivers();
     }
 }

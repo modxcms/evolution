@@ -54,20 +54,6 @@ class ElasticsearchFormatter extends NormalizerFormatter
     }
 
     /**
-     * Convert a log message into an Elasticsearch record
-     *
-     * @param  array $record Log message
-     * @return array
-     */
-    protected function getDocument(array $record): array
-    {
-        $record['_index'] = $this->index;
-        $record['_type'] = $this->type;
-
-        return $record;
-    }
-
-    /**
      * Getter index
      *
      * @return string
@@ -85,5 +71,19 @@ class ElasticsearchFormatter extends NormalizerFormatter
     public function getType(): string
     {
         return $this->type;
+    }
+
+    /**
+     * Convert a log message into an Elasticsearch record
+     *
+     * @param  array $record Log message
+     * @return array
+     */
+    protected function getDocument(array $record): array
+    {
+        $record['_index'] = $this->index;
+        $record['_type'] = $this->type;
+
+        return $record;
     }
 }

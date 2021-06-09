@@ -56,18 +56,6 @@ class FileLinkFormatter
         $this->urlFormat = $urlFormat;
     }
 
-    /**
-     * @internal
-     */
-    public static function generateUrlFormat(UrlGeneratorInterface $router, string $routeName, string $queryString): ?string
-    {
-        try {
-            return $router->generate($routeName).$queryString;
-        } catch (\Throwable $e) {
-            return null;
-        }
-    }
-
     public function format(string $file, int $line)
     {
         if ($fmt = $this->getFileLinkFormat()) {
@@ -82,6 +70,28 @@ class FileLinkFormatter
         }
 
         return false;
+    }
+
+    /**
+     * @internal
+     */
+    public function __sleep(): array
+    {
+        $this->fileLinkFormat = $this->getFileLinkFormat();
+
+        return ['fileLinkFormat'];
+    }
+
+    /**
+     * @internal
+     */
+    public static function generateUrlFormat(UrlGeneratorInterface $router, string $routeName, string $queryString): ?string
+    {
+        try {
+            return $router->generate($routeName).$queryString;
+        } catch (\Throwable $e) {
+            return null;
+        }
     }
 
     private function getFileLinkFormat()
@@ -102,15 +112,5 @@ class FileLinkFormatter
         }
 
         return null;
-    }
-
-    /**
-     * @internal
-     */
-    public function __sleep(): array
-    {
-        $this->fileLinkFormat = $this->getFileLinkFormat();
-
-        return ['fileLinkFormat'];
     }
 }

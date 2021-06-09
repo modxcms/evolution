@@ -79,68 +79,6 @@ class HttpDownloader
     }
 
     /**
-     * @internal
-     */
-    public static function isCurlEnabled()
-    {
-        return \extension_loaded('curl') && \function_exists('curl_multi_exec') && \function_exists('curl_multi_init');
-    }
-
-    /**
-     * @internal
-     */
-    public static function outputWarnings(IOInterface $io, $url, $data)
-    {
-        foreach (array('warning', 'info') as $type) {
-            if (empty($data[$type])) {
-                continue;
-            }
-
-            if (!empty($data[$type . '-versions'])) {
-                $versionParser = new VersionParser();
-                $constraint = $versionParser->parseConstraints($data[$type . '-versions']);
-                $composer = new Constraint('==', $versionParser->normalize(Composer::getVersion()));
-                if (!$constraint->matches($composer)) {
-                    continue;
-                }
-            }
-
-            $io->writeError('<'.$type.'>'.ucfirst($type).' from '.Url::sanitize($url).': '.$data[$type].'</'.$type.'>');
-        }
-    }
-
-    /**
-     * @internal
-     */
-    public static function getExceptionHints(\Exception $e)
-    {
-        if (!$e instanceof TransportException) {
-            return;
-        }
-
-        if (
-            false !== strpos($e->getMessage(), 'Resolving timed out')
-            || false !== strpos($e->getMessage(), 'Could not resolve host')
-        ) {
-            Silencer::suppress();
-            $testConnectivity = file_get_contents('https://8.8.8.8', false, stream_context_create(array(
-                'ssl' => array('verify_peer' => false),
-                'http' => array('follow_location' => false, 'ignore_errors' => true),
-            )));
-            Silencer::restore();
-            if (false !== $testConnectivity) {
-                return array(
-                    '<error>The following exception probably indicates you have misconfigured DNS resolver(s)</error>',
-                );
-            }
-
-            return array(
-                '<error>The following exception probably indicates you are offline or have misconfigured DNS resolver(s)</error>',
-            );
-        }
-    }
-
-    /**
      * Download a file synchronously
      *
      * @param  string             $url     URL to download
@@ -175,6 +113,77 @@ class HttpDownloader
         }
 
         return $response;
+    }
+
+    /**
+     * Create an async download operation
+     *
+     * @param  string             $url     URL to download
+     * @param  array              $options Stream context options e.g. https://www.php.net/manual/en/context.http.php
+     *                                     although not all options are supported when using the default curl downloader
+     * @throws TransportException
+     * @return Promise
+     */
+    public function add($url, $options = array())
+    {
+        list(, $promise) = $this->addJob(array('url' => $url, 'options' => $options, 'copyTo' => false));
+
+        return $promise;
+    }
+
+    /**
+     * Copy a file synchronously
+     *
+     * @param  string             $url     URL to download
+     * @param  string             $to      Path to copy to
+     * @param  array              $options Stream context options e.g. https://www.php.net/manual/en/context.http.php
+     *                                     although not all options are supported when using the default curl downloader
+     * @throws TransportException
+     * @return Response
+     */
+    public function copy($url, $to, $options = array())
+    {
+        list($job) = $this->addJob(array('url' => $url, 'options' => $options, 'copyTo' => $to), true);
+        $this->wait($job['id']);
+
+        return $this->getResponse($job['id']);
+    }
+
+    /**
+     * Create an async copy operation
+     *
+     * @param  string             $url     URL to download
+     * @param  string             $to      Path to copy to
+     * @param  array              $options Stream context options e.g. https://www.php.net/manual/en/context.http.php
+     *                                     although not all options are supported when using the default curl downloader
+     * @throws TransportException
+     * @return Promise
+     */
+    public function addCopy($url, $to, $options = array())
+    {
+        list(, $promise) = $this->addJob(array('url' => $url, 'options' => $options, 'copyTo' => $to));
+
+        return $promise;
+    }
+
+    /**
+     * Retrieve the options set in the constructor
+     *
+     * @return array Options
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * Merges new options
+     *
+     * @return void
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = array_replace_recursive($this->options, $options);
     }
 
     private function addJob($request, $sync = false)
@@ -274,31 +283,6 @@ class HttpDownloader
         return array($job, $promise);
     }
 
-    private function canUseCurl(array $job)
-    {
-        if (!$this->curl) {
-            return false;
-        }
-
-        if (!preg_match('{^https?://}i', $job['request']['url'])) {
-            return false;
-        }
-
-        if (!empty($job['request']['options']['ssl']['allow_self_signed'])) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @private
-     */
-    public function markJobDone()
-    {
-        $this->runningJobs--;
-    }
-
     private function startJob($id)
     {
         $job = &$this->jobs[$id];
@@ -340,6 +324,14 @@ class HttpDownloader
     }
 
     /**
+     * @private
+     */
+    public function markJobDone()
+    {
+        $this->runningJobs--;
+    }
+
+    /**
      * Wait for current async download jobs to complete
      *
      * @param int|null $index For internal use only, the job id
@@ -349,6 +341,14 @@ class HttpDownloader
         do {
             $jobCount = $this->countActiveJobs($index);
         } while ($jobCount);
+    }
+
+    /**
+     * @internal
+     */
+    public function enableAsync()
+    {
+        $this->allowAsync = true;
     }
 
     /**
@@ -409,81 +409,81 @@ class HttpDownloader
     }
 
     /**
-     * Create an async download operation
-     *
-     * @param  string             $url     URL to download
-     * @param  array              $options Stream context options e.g. https://www.php.net/manual/en/context.http.php
-     *                                     although not all options are supported when using the default curl downloader
-     * @throws TransportException
-     * @return Promise
+     * @internal
      */
-    public function add($url, $options = array())
+    public static function outputWarnings(IOInterface $io, $url, $data)
     {
-        list(, $promise) = $this->addJob(array('url' => $url, 'options' => $options, 'copyTo' => false));
+        foreach (array('warning', 'info') as $type) {
+            if (empty($data[$type])) {
+                continue;
+            }
 
-        return $promise;
-    }
+            if (!empty($data[$type . '-versions'])) {
+                $versionParser = new VersionParser();
+                $constraint = $versionParser->parseConstraints($data[$type . '-versions']);
+                $composer = new Constraint('==', $versionParser->normalize(Composer::getVersion()));
+                if (!$constraint->matches($composer)) {
+                    continue;
+                }
+            }
 
-    /**
-     * Copy a file synchronously
-     *
-     * @param  string             $url     URL to download
-     * @param  string             $to      Path to copy to
-     * @param  array              $options Stream context options e.g. https://www.php.net/manual/en/context.http.php
-     *                                     although not all options are supported when using the default curl downloader
-     * @throws TransportException
-     * @return Response
-     */
-    public function copy($url, $to, $options = array())
-    {
-        list($job) = $this->addJob(array('url' => $url, 'options' => $options, 'copyTo' => $to), true);
-        $this->wait($job['id']);
-
-        return $this->getResponse($job['id']);
-    }
-
-    /**
-     * Create an async copy operation
-     *
-     * @param  string             $url     URL to download
-     * @param  string             $to      Path to copy to
-     * @param  array              $options Stream context options e.g. https://www.php.net/manual/en/context.http.php
-     *                                     although not all options are supported when using the default curl downloader
-     * @throws TransportException
-     * @return Promise
-     */
-    public function addCopy($url, $to, $options = array())
-    {
-        list(, $promise) = $this->addJob(array('url' => $url, 'options' => $options, 'copyTo' => $to));
-
-        return $promise;
-    }
-
-    /**
-     * Retrieve the options set in the constructor
-     *
-     * @return array Options
-     */
-    public function getOptions()
-    {
-        return $this->options;
-    }
-
-    /**
-     * Merges new options
-     *
-     * @return void
-     */
-    public function setOptions(array $options)
-    {
-        $this->options = array_replace_recursive($this->options, $options);
+            $io->writeError('<'.$type.'>'.ucfirst($type).' from '.Url::sanitize($url).': '.$data[$type].'</'.$type.'>');
+        }
     }
 
     /**
      * @internal
      */
-    public function enableAsync()
+    public static function getExceptionHints(\Exception $e)
     {
-        $this->allowAsync = true;
+        if (!$e instanceof TransportException) {
+            return;
+        }
+
+        if (
+            false !== strpos($e->getMessage(), 'Resolving timed out')
+            || false !== strpos($e->getMessage(), 'Could not resolve host')
+        ) {
+            Silencer::suppress();
+            $testConnectivity = file_get_contents('https://8.8.8.8', false, stream_context_create(array(
+                'ssl' => array('verify_peer' => false),
+                'http' => array('follow_location' => false, 'ignore_errors' => true),
+            )));
+            Silencer::restore();
+            if (false !== $testConnectivity) {
+                return array(
+                    '<error>The following exception probably indicates you have misconfigured DNS resolver(s)</error>',
+                );
+            }
+
+            return array(
+                '<error>The following exception probably indicates you are offline or have misconfigured DNS resolver(s)</error>',
+            );
+        }
+    }
+
+    private function canUseCurl(array $job)
+    {
+        if (!$this->curl) {
+            return false;
+        }
+
+        if (!preg_match('{^https?://}i', $job['request']['url'])) {
+            return false;
+        }
+
+        if (!empty($job['request']['options']['ssl']['allow_self_signed'])) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @internal
+     */
+    public static function isCurlEnabled()
+    {
+        return \extension_loaded('curl') && \function_exists('curl_multi_exec') && \function_exists('curl_multi_init');
     }
 }

@@ -23,6 +23,21 @@ final class EasyConnectString
         $this->string = $string;
     }
 
+    public function __toString(): string
+    {
+        return $this->string;
+    }
+
+    /**
+     * Creates the object from an array representation
+     *
+     * @param mixed[] $params
+     */
+    public static function fromArray(array $params): self
+    {
+        return new self(self::renderParams($params));
+    }
+
     /**
      * Creates the object from the given DBAL connection parameters.
      *
@@ -73,16 +88,6 @@ final class EasyConnectString
     }
 
     /**
-     * Creates the object from an array representation
-     *
-     * @param mixed[] $params
-     */
-    public static function fromArray(array $params): self
-    {
-        return new self(self::renderParams($params));
-    }
-
-    /**
      * @param mixed[] $params
      */
     private static function renderParams(array $params): string
@@ -112,10 +117,5 @@ final class EasyConnectString
         }
 
         return (string) $value;
-    }
-
-    public function __toString(): string
-    {
-        return $this->string;
     }
 }

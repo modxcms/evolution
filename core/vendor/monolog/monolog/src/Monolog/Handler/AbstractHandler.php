@@ -43,16 +43,6 @@ abstract class AbstractHandler extends Handler implements ResettableInterface
     }
 
     /**
-     * Gets minimum logging level at which this handler will be triggered.
-     *
-     * @return int
-     */
-    public function getLevel(): int
-    {
-        return $this->level;
-    }
-
-    /**
      * Sets minimum logging level at which this handler will be triggered.
      *
      * @param  int|string $level Level or level name
@@ -66,14 +56,13 @@ abstract class AbstractHandler extends Handler implements ResettableInterface
     }
 
     /**
-     * Gets the bubbling behavior.
+     * Gets minimum logging level at which this handler will be triggered.
      *
-     * @return bool true means that this handler allows bubbling.
-     *              false means that bubbling is not permitted.
+     * @return int
      */
-    public function getBubble(): bool
+    public function getLevel(): int
     {
-        return $this->bubble;
+        return $this->level;
     }
 
     /**
@@ -88,6 +77,17 @@ abstract class AbstractHandler extends Handler implements ResettableInterface
         $this->bubble = $bubble;
 
         return $this;
+    }
+
+    /**
+     * Gets the bubbling behavior.
+     *
+     * @return bool true means that this handler allows bubbling.
+     *              false means that bubbling is not permitted.
+     */
+    public function getBubble(): bool
+    {
+        return $this->bubble;
     }
 
     public function reset()

@@ -58,6 +58,19 @@ final class UrlHelper
         return $request->getSchemeAndHttpHost().$path;
     }
 
+    public function getRelativePath(string $path): string
+    {
+        if (false !== strpos($path, '://') || '//' === substr($path, 0, 2)) {
+            return $path;
+        }
+
+        if (null === $request = $this->requestStack->getMainRequest()) {
+            return $path;
+        }
+
+        return $request->getRelativeUriForPath($path);
+    }
+
     private function getAbsoluteUrlFromContext(string $path): string
     {
         if (null === $this->requestContext || '' === $host = $this->requestContext->getHost()) {
@@ -85,18 +98,5 @@ final class UrlHelper
         }
 
         return $scheme.'://'.$host.$port.$path;
-    }
-
-    public function getRelativePath(string $path): string
-    {
-        if (false !== strpos($path, '://') || '//' === substr($path, 0, 2)) {
-            return $path;
-        }
-
-        if (null === $request = $this->requestStack->getMainRequest()) {
-            return $path;
-        }
-
-        return $request->getRelativeUriForPath($path);
     }
 }

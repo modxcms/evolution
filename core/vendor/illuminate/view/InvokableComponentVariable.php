@@ -39,16 +39,6 @@ class InvokableComponentVariable implements DeferringDisplayableValue, IteratorA
     }
 
     /**
-     * Resolve the variable.
-     *
-     * @return mixed
-     */
-    public function __invoke()
-    {
-        return call_user_func($this->callable);
-    }
-
-    /**
      * Get an interator instance for the variable.
      *
      * @return \ArrayIterator
@@ -81,6 +71,16 @@ class InvokableComponentVariable implements DeferringDisplayableValue, IteratorA
     public function __call($method, $parameters)
     {
         return $this->__invoke()->{$method}(...$parameters);
+    }
+
+    /**
+     * Resolve the variable.
+     *
+     * @return mixed
+     */
+    public function __invoke()
+    {
+        return call_user_func($this->callable);
     }
 
     /**

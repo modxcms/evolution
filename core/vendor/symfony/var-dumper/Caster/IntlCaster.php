@@ -31,18 +31,6 @@ class IntlCaster
         return self::castError($c, $a);
     }
 
-    private static function castError(object $c, array $a): array
-    {
-        if ($errorCode = $c->getErrorCode()) {
-            $a += [
-                Caster::PREFIX_VIRTUAL.'error_code' => $errorCode,
-                Caster::PREFIX_VIRTUAL.'error_message' => $c->getErrorMessage(),
-            ];
-        }
-
-        return $a;
-    }
-
     public static function castNumberFormatter(\NumberFormatter $c, array $a, Stub $stub, bool $isNested, int $filter = 0)
     {
         $a += [
@@ -168,5 +156,17 @@ class IntlCaster
         ];
 
         return self::castError($c, $a);
+    }
+
+    private static function castError(object $c, array $a): array
+    {
+        if ($errorCode = $c->getErrorCode()) {
+            $a += [
+                Caster::PREFIX_VIRTUAL.'error_code' => $errorCode,
+                Caster::PREFIX_VIRTUAL.'error_message' => $c->getErrorMessage(),
+            ];
+        }
+
+        return $a;
     }
 }

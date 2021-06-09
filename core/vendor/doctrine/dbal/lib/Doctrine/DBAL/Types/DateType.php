@@ -14,6 +14,14 @@ class DateType extends Type
     /**
      * {@inheritdoc}
      */
+    public function getName()
+    {
+        return Types::DATE_MUTABLE;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getSQLDeclaration(array $column, AbstractPlatform $platform)
     {
         return $platform->getDateTypeDeclarationSQL($column);
@@ -33,14 +41,6 @@ class DateType extends Type
         }
 
         throw ConversionException::conversionFailedInvalidType($value, $this->getName(), ['null', 'DateTime']);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return Types::DATE_MUTABLE;
     }
 
     /**

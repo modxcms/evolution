@@ -62,24 +62,6 @@ class RouteCollection implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Returns all routes in this collection.
-     *
-     * @return Route[] An array of routes
-     */
-    public function all()
-    {
-        if ($this->priorities) {
-            $priorities = $this->priorities;
-            $keysOrder = array_flip(array_keys($this->routes));
-            uksort($this->routes, static function ($n1, $n2) use ($priorities, $keysOrder) {
-                return (($priorities[$n2] ?? 0) <=> ($priorities[$n1] ?? 0)) ?: ($keysOrder[$n1] <=> $keysOrder[$n2]);
-            });
-        }
-
-        return $this->routes;
-    }
-
-    /**
      * Gets the number of Routes in this collection.
      *
      * @return int The number of routes
@@ -105,6 +87,24 @@ class RouteCollection implements \IteratorAggregate, \Countable
         if ($priority = 3 <= \func_num_args() ? func_get_arg(2) : 0) {
             $this->priorities[$name] = $priority;
         }
+    }
+
+    /**
+     * Returns all routes in this collection.
+     *
+     * @return Route[] An array of routes
+     */
+    public function all()
+    {
+        if ($this->priorities) {
+            $priorities = $this->priorities;
+            $keysOrder = array_flip(array_keys($this->routes));
+            uksort($this->routes, static function ($n1, $n2) use ($priorities, $keysOrder) {
+                return (($priorities[$n2] ?? 0) <=> ($priorities[$n1] ?? 0)) ?: ($keysOrder[$n1] <=> $keysOrder[$n2]);
+            });
+        }
+
+        return $this->routes;
     }
 
     /**
@@ -148,29 +148,6 @@ class RouteCollection implements \IteratorAggregate, \Countable
 
         foreach ($collection->getResources() as $resource) {
             $this->addResource($resource);
-        }
-    }
-
-    /**
-     * Returns an array of resources loaded to build this collection.
-     *
-     * @return ResourceInterface[] An array of resources
-     */
-    public function getResources()
-    {
-        return array_values($this->resources);
-    }
-
-    /**
-     * Adds a resource for this collection. If the resource already exists
-     * it is not added.
-     */
-    public function addResource(ResourceInterface $resource)
-    {
-        $key = (string) $resource;
-
-        if (!isset($this->resources[$key])) {
-            $this->resources[$key] = $resource;
         }
     }
 
@@ -301,6 +278,29 @@ class RouteCollection implements \IteratorAggregate, \Countable
     {
         foreach ($this->routes as $route) {
             $route->setMethods($methods);
+        }
+    }
+
+    /**
+     * Returns an array of resources loaded to build this collection.
+     *
+     * @return ResourceInterface[] An array of resources
+     */
+    public function getResources()
+    {
+        return array_values($this->resources);
+    }
+
+    /**
+     * Adds a resource for this collection. If the resource already exists
+     * it is not added.
+     */
+    public function addResource(ResourceInterface $resource)
+    {
+        $key = (string) $resource;
+
+        if (!isset($this->resources[$key])) {
+            $this->resources[$key] = $resource;
         }
     }
 }

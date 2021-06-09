@@ -76,17 +76,17 @@ class TestHandler extends AbstractProcessingHandler
         return $this->records;
     }
 
+    public function clear()
+    {
+        $this->records = [];
+        $this->recordsByLevel = [];
+    }
+
     public function reset()
     {
         if (!$this->skipReset) {
             $this->clear();
         }
-    }
-
-    public function clear()
-    {
-        $this->records = [];
-        $this->recordsByLevel = [];
     }
 
     public function setSkipReset(bool $skipReset)
@@ -125,6 +125,26 @@ class TestHandler extends AbstractProcessingHandler
     }
 
     /**
+     * @param string|int $level Logging level value or name
+     */
+    public function hasRecordThatContains(string $message, $level): bool
+    {
+        return $this->hasRecordThatPasses(function ($rec) use ($message) {
+            return strpos($rec['message'], $message) !== false;
+        }, $level);
+    }
+
+    /**
+     * @param string|int $level Logging level value or name
+     */
+    public function hasRecordThatMatches(string $regex, $level): bool
+    {
+        return $this->hasRecordThatPasses(function (array $rec) use ($regex): bool {
+            return preg_match($regex, $rec['message']) > 0;
+        }, $level);
+    }
+
+    /**
      * @psalm-param callable(array, int): mixed $predicate
      *
      * @param string|int $level Logging level value or name
@@ -148,23 +168,12 @@ class TestHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param string|int $level Logging level value or name
+     * {@inheritdoc}
      */
-    public function hasRecordThatContains(string $message, $level): bool
+    protected function write(array $record): void
     {
-        return $this->hasRecordThatPasses(function ($rec) use ($message) {
-            return strpos($rec['message'], $message) !== false;
-        }, $level);
-    }
-
-    /**
-     * @param string|int $level Logging level value or name
-     */
-    public function hasRecordThatMatches(string $regex, $level): bool
-    {
-        return $this->hasRecordThatPasses(function (array $rec) use ($regex): bool {
-            return preg_match($regex, $rec['message']) > 0;
-        }, $level);
+        $this->recordsByLevel[$record['level']][] = $record;
+        $this->records[] = $record;
     }
 
     public function __call($method, $args)
@@ -180,14 +189,5 @@ class TestHandler extends AbstractProcessingHandler
         }
 
         throw new \BadMethodCallException('Call to undefined method ' . get_class($this) . '::' . $method . '()');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function write(array $record): void
-    {
-        $this->recordsByLevel[$record['level']][] = $record;
-        $this->records[] = $record;
     }
 }

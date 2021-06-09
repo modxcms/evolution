@@ -90,6 +90,27 @@ class SQLSrvConnection implements ConnectionInterface, ServerInfoAwareConnection
     /**
      * {@inheritDoc}
      */
+    public function prepare($sql)
+    {
+        return new Statement($this->conn, $sql, $this->lastInsertId);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function query()
+    {
+        $args = func_get_args();
+        $sql  = $args[0];
+        $stmt = $this->prepare($sql);
+        $stmt->execute();
+
+        return $stmt;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function quote($value, $type = ParameterType::STRING)
     {
         if (is_int($value)) {
@@ -140,27 +161,6 @@ class SQLSrvConnection implements ConnectionInterface, ServerInfoAwareConnection
         }
 
         return $stmt->fetchColumn();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function prepare($sql)
-    {
-        return new Statement($this->conn, $sql, $this->lastInsertId);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function query()
-    {
-        $args = func_get_args();
-        $sql  = $args[0];
-        $stmt = $this->prepare($sql);
-        $stmt->execute();
-
-        return $stmt;
     }
 
     /**

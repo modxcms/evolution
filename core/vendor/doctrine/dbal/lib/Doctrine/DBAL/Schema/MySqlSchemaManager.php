@@ -48,59 +48,6 @@ class MySqlSchemaManager extends AbstractSchemaManager
     /**
      * {@inheritdoc}
      */
-    public function listTableDetails($name)
-    {
-        $table = parent::listTableDetails($name);
-
-        $platform = $this->_platform;
-        assert($platform instanceof MySqlPlatform);
-        $sql = $platform->getListTableMetadataSQL($name);
-
-        $tableOptions = $this->_conn->fetchAssociative($sql);
-
-        if ($tableOptions === false) {
-            return $table;
-        }
-
-        $table->addOption('engine', $tableOptions['ENGINE']);
-
-        if ($tableOptions['TABLE_COLLATION'] !== null) {
-            $table->addOption('collation', $tableOptions['TABLE_COLLATION']);
-        }
-
-        if ($tableOptions['AUTO_INCREMENT'] !== null) {
-            $table->addOption('autoincrement', $tableOptions['AUTO_INCREMENT']);
-        }
-
-        $table->addOption('comment', $tableOptions['TABLE_COMMENT']);
-        $table->addOption('create_options', $this->parseCreateOptions($tableOptions['CREATE_OPTIONS']));
-
-        return $table;
-    }
-
-    /**
-     * @return string[]|true[]
-     */
-    private function parseCreateOptions(?string $string): array
-    {
-        $options = [];
-
-        if ($string === null || $string === '') {
-            return $options;
-        }
-
-        foreach (explode(' ', $string) as $pair) {
-            $parts = explode('=', $pair, 2);
-
-            $options[$parts[0]] = $parts[1] ?? true;
-        }
-
-        return $options;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function _getPortableViewDefinition($view)
     {
         return new View($view['TABLE_NAME'], $view['VIEW_DEFINITION']);
@@ -371,5 +318,58 @@ class MySqlSchemaManager extends AbstractSchemaManager
         }
 
         return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function listTableDetails($name)
+    {
+        $table = parent::listTableDetails($name);
+
+        $platform = $this->_platform;
+        assert($platform instanceof MySqlPlatform);
+        $sql = $platform->getListTableMetadataSQL($name);
+
+        $tableOptions = $this->_conn->fetchAssociative($sql);
+
+        if ($tableOptions === false) {
+            return $table;
+        }
+
+        $table->addOption('engine', $tableOptions['ENGINE']);
+
+        if ($tableOptions['TABLE_COLLATION'] !== null) {
+            $table->addOption('collation', $tableOptions['TABLE_COLLATION']);
+        }
+
+        if ($tableOptions['AUTO_INCREMENT'] !== null) {
+            $table->addOption('autoincrement', $tableOptions['AUTO_INCREMENT']);
+        }
+
+        $table->addOption('comment', $tableOptions['TABLE_COMMENT']);
+        $table->addOption('create_options', $this->parseCreateOptions($tableOptions['CREATE_OPTIONS']));
+
+        return $table;
+    }
+
+    /**
+     * @return string[]|true[]
+     */
+    private function parseCreateOptions(?string $string): array
+    {
+        $options = [];
+
+        if ($string === null || $string === '') {
+            return $options;
+        }
+
+        foreach (explode(' ', $string) as $pair) {
+            $parts = explode('=', $pair, 2);
+
+            $options[$parts[0]] = $parts[1] ?? true;
+        }
+
+        return $options;
     }
 }

@@ -57,6 +57,52 @@ class ProxyHelper
     }
 
     /**
+     * Returns http context options for the proxy url
+     *
+     * @param  string $proxyUrl
+     * @return array
+     */
+    public static function getContextOptions($proxyUrl)
+    {
+        $proxy = parse_url($proxyUrl);
+
+        // Remove any authorization
+        $proxyUrl = self::formatParsedUrl($proxy, false);
+        $proxyUrl = str_replace(array('http://', 'https://'), array('tcp://', 'ssl://'), $proxyUrl);
+
+        $options['http']['proxy'] = $proxyUrl;
+
+        // Handle any authorization
+        if (isset($proxy['user'])) {
+            $auth = rawurldecode($proxy['user']);
+
+            if (isset($proxy['pass'])) {
+                $auth .= ':' . rawurldecode($proxy['pass']);
+            }
+            $auth = base64_encode($auth);
+            // Set header as a string
+            $options['http']['header'] = "Proxy-Authorization: Basic {$auth}";
+        }
+
+        return $options;
+    }
+
+    /**
+     * Sets/unsets request_fulluri value in http context options array
+     *
+     * @param string $requestUrl
+     * @param array  $options    Set by method
+     */
+    public static function setRequestFullUri($requestUrl, array &$options)
+    {
+        if ('http' === parse_url($requestUrl, PHP_URL_SCHEME)) {
+            $options['http']['request_fulluri'] = true;
+        } else {
+            unset($options['http']['request_fulluri']);
+        }
+    }
+
+    /**
      * Searches $_SERVER for case-sensitive values
      *
      * @param  array       $names Names to search for
@@ -133,51 +179,5 @@ class ProxyHelper
         }
 
         return $proxyUrl;
-    }
-
-    /**
-     * Returns http context options for the proxy url
-     *
-     * @param  string $proxyUrl
-     * @return array
-     */
-    public static function getContextOptions($proxyUrl)
-    {
-        $proxy = parse_url($proxyUrl);
-
-        // Remove any authorization
-        $proxyUrl = self::formatParsedUrl($proxy, false);
-        $proxyUrl = str_replace(array('http://', 'https://'), array('tcp://', 'ssl://'), $proxyUrl);
-
-        $options['http']['proxy'] = $proxyUrl;
-
-        // Handle any authorization
-        if (isset($proxy['user'])) {
-            $auth = rawurldecode($proxy['user']);
-
-            if (isset($proxy['pass'])) {
-                $auth .= ':' . rawurldecode($proxy['pass']);
-            }
-            $auth = base64_encode($auth);
-            // Set header as a string
-            $options['http']['header'] = "Proxy-Authorization: Basic {$auth}";
-        }
-
-        return $options;
-    }
-
-    /**
-     * Sets/unsets request_fulluri value in http context options array
-     *
-     * @param string $requestUrl
-     * @param array  $options    Set by method
-     */
-    public static function setRequestFullUri($requestUrl, array &$options)
-    {
-        if ('http' === parse_url($requestUrl, PHP_URL_SCHEME)) {
-            $options['http']['request_fulluri'] = true;
-        } else {
-            unset($options['http']['request_fulluri']);
-        }
     }
 }

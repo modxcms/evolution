@@ -26,12 +26,148 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class XmlDescriptor extends Descriptor
 {
+    public function getInputDefinitionDocument(InputDefinition $definition): \DOMDocument
+    {
+        $dom = new \DOMDocument('1.0', 'UTF-8');
+        $dom->appendChild($definitionXML = $dom->createElement('definition'));
+
+        $definitionXML->appendChild($argumentsXML = $dom->createElement('arguments'));
+        foreach ($definition->getArguments() as $argument) {
+            $this->appendDocument($argumentsXML, $this->getInputArgumentDocument($argument));
+        }
+
+        $definitionXML->appendChild($optionsXML = $dom->createElement('options'));
+        foreach ($definition->getOptions() as $option) {
+            $this->appendDocument($optionsXML, $this->getInputOptionDocument($option));
+        }
+
+        return $dom;
+    }
+
+    public function getCommandDocument(Command $command, bool $short = false): \DOMDocument
+    {
+        $dom = new \DOMDocument('1.0', 'UTF-8');
+        $dom->appendChild($commandXML = $dom->createElement('command'));
+
+        $commandXML->setAttribute('id', $command->getName());
+        $commandXML->setAttribute('name', $command->getName());
+        $commandXML->setAttribute('hidden', $command->isHidden() ? 1 : 0);
+
+        $commandXML->appendChild($usagesXML = $dom->createElement('usages'));
+
+        $commandXML->appendChild($descriptionXML = $dom->createElement('description'));
+        $descriptionXML->appendChild($dom->createTextNode(str_replace("\n", "\n ", $command->getDescription())));
+
+        if ($short) {
+            foreach ($command->getAliases() as $usage) {
+                $usagesXML->appendChild($dom->createElement('usage', $usage));
+            }
+        } else {
+            $command->mergeApplicationDefinition(false);
+
+            foreach (array_merge([$command->getSynopsis()], $command->getAliases(), $command->getUsages()) as $usage) {
+                $usagesXML->appendChild($dom->createElement('usage', $usage));
+            }
+
+            $commandXML->appendChild($helpXML = $dom->createElement('help'));
+            $helpXML->appendChild($dom->createTextNode(str_replace("\n", "\n ", $command->getProcessedHelp())));
+
+            $definitionXML = $this->getInputDefinitionDocument($command->getDefinition());
+            $this->appendDocument($commandXML, $definitionXML->getElementsByTagName('definition')->item(0));
+        }
+
+        return $dom;
+    }
+
+    public function getApplicationDocument(Application $application, string $namespace = null, bool $short = false): \DOMDocument
+    {
+        $dom = new \DOMDocument('1.0', 'UTF-8');
+        $dom->appendChild($rootXml = $dom->createElement('symfony'));
+
+        if ('UNKNOWN' !== $application->getName()) {
+            $rootXml->setAttribute('name', $application->getName());
+            if ('UNKNOWN' !== $application->getVersion()) {
+                $rootXml->setAttribute('version', $application->getVersion());
+            }
+        }
+
+        $rootXml->appendChild($commandsXML = $dom->createElement('commands'));
+
+        $description = new ApplicationDescription($application, $namespace, true);
+
+        if ($namespace) {
+            $commandsXML->setAttribute('namespace', $namespace);
+        }
+
+        foreach ($description->getCommands() as $command) {
+            $this->appendDocument($commandsXML, $this->getCommandDocument($command, $short));
+        }
+
+        if (!$namespace) {
+            $rootXml->appendChild($namespacesXML = $dom->createElement('namespaces'));
+
+            foreach ($description->getNamespaces() as $namespaceDescription) {
+                $namespacesXML->appendChild($namespaceArrayXML = $dom->createElement('namespace'));
+                $namespaceArrayXML->setAttribute('id', $namespaceDescription['id']);
+
+                foreach ($namespaceDescription['commands'] as $name) {
+                    $namespaceArrayXML->appendChild($commandXML = $dom->createElement('command'));
+                    $commandXML->appendChild($dom->createTextNode($name));
+                }
+            }
+        }
+
+        return $dom;
+    }
+
     /**
      * {@inheritdoc}
      */
     protected function describeInputArgument(InputArgument $argument, array $options = [])
     {
         $this->writeDocument($this->getInputArgumentDocument($argument));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function describeInputOption(InputOption $option, array $options = [])
+    {
+        $this->writeDocument($this->getInputOptionDocument($option));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function describeInputDefinition(InputDefinition $definition, array $options = [])
+    {
+        $this->writeDocument($this->getInputDefinitionDocument($definition));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function describeCommand(Command $command, array $options = [])
+    {
+        $this->writeDocument($this->getCommandDocument($command, $options['short'] ?? false));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function describeApplication(Application $application, array $options = [])
+    {
+        $this->writeDocument($this->getApplicationDocument($application, $options['namespace'] ?? null, $options['short'] ?? false));
+    }
+
+    /**
+     * Appends document children to parent node.
+     */
+    private function appendDocument(\DOMNode $parentNode, \DOMNode $importedParent)
+    {
+        foreach ($importedParent->childNodes as $childNode) {
+            $parentNode->appendChild($parentNode->ownerDocument->importNode($childNode, true));
+        }
     }
 
     /**
@@ -62,14 +198,6 @@ class XmlDescriptor extends Descriptor
         }
 
         return $dom;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function describeInputOption(InputOption $option, array $options = [])
-    {
-        $this->writeDocument($this->getInputOptionDocument($option));
     }
 
     private function getInputOptionDocument(InputOption $option): \DOMDocument
@@ -112,134 +240,6 @@ class XmlDescriptor extends Descriptor
             $objectXML->setAttribute('is_multiple', 0);
             $objectXML->appendChild($descriptionXML = $dom->createElement('description'));
             $descriptionXML->appendChild($dom->createTextNode('Negate the "--'.$option->getName().'" option'));
-        }
-
-        return $dom;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function describeInputDefinition(InputDefinition $definition, array $options = [])
-    {
-        $this->writeDocument($this->getInputDefinitionDocument($definition));
-    }
-
-    public function getInputDefinitionDocument(InputDefinition $definition): \DOMDocument
-    {
-        $dom = new \DOMDocument('1.0', 'UTF-8');
-        $dom->appendChild($definitionXML = $dom->createElement('definition'));
-
-        $definitionXML->appendChild($argumentsXML = $dom->createElement('arguments'));
-        foreach ($definition->getArguments() as $argument) {
-            $this->appendDocument($argumentsXML, $this->getInputArgumentDocument($argument));
-        }
-
-        $definitionXML->appendChild($optionsXML = $dom->createElement('options'));
-        foreach ($definition->getOptions() as $option) {
-            $this->appendDocument($optionsXML, $this->getInputOptionDocument($option));
-        }
-
-        return $dom;
-    }
-
-    /**
-     * Appends document children to parent node.
-     */
-    private function appendDocument(\DOMNode $parentNode, \DOMNode $importedParent)
-    {
-        foreach ($importedParent->childNodes as $childNode) {
-            $parentNode->appendChild($parentNode->ownerDocument->importNode($childNode, true));
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function describeCommand(Command $command, array $options = [])
-    {
-        $this->writeDocument($this->getCommandDocument($command, $options['short'] ?? false));
-    }
-
-    public function getCommandDocument(Command $command, bool $short = false): \DOMDocument
-    {
-        $dom = new \DOMDocument('1.0', 'UTF-8');
-        $dom->appendChild($commandXML = $dom->createElement('command'));
-
-        $commandXML->setAttribute('id', $command->getName());
-        $commandXML->setAttribute('name', $command->getName());
-        $commandXML->setAttribute('hidden', $command->isHidden() ? 1 : 0);
-
-        $commandXML->appendChild($usagesXML = $dom->createElement('usages'));
-
-        $commandXML->appendChild($descriptionXML = $dom->createElement('description'));
-        $descriptionXML->appendChild($dom->createTextNode(str_replace("\n", "\n ", $command->getDescription())));
-
-        if ($short) {
-            foreach ($command->getAliases() as $usage) {
-                $usagesXML->appendChild($dom->createElement('usage', $usage));
-            }
-        } else {
-            $command->mergeApplicationDefinition(false);
-
-            foreach (array_merge([$command->getSynopsis()], $command->getAliases(), $command->getUsages()) as $usage) {
-                $usagesXML->appendChild($dom->createElement('usage', $usage));
-            }
-
-            $commandXML->appendChild($helpXML = $dom->createElement('help'));
-            $helpXML->appendChild($dom->createTextNode(str_replace("\n", "\n ", $command->getProcessedHelp())));
-
-            $definitionXML = $this->getInputDefinitionDocument($command->getDefinition());
-            $this->appendDocument($commandXML, $definitionXML->getElementsByTagName('definition')->item(0));
-        }
-
-        return $dom;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function describeApplication(Application $application, array $options = [])
-    {
-        $this->writeDocument($this->getApplicationDocument($application, $options['namespace'] ?? null, $options['short'] ?? false));
-    }
-
-    public function getApplicationDocument(Application $application, string $namespace = null, bool $short = false): \DOMDocument
-    {
-        $dom = new \DOMDocument('1.0', 'UTF-8');
-        $dom->appendChild($rootXml = $dom->createElement('symfony'));
-
-        if ('UNKNOWN' !== $application->getName()) {
-            $rootXml->setAttribute('name', $application->getName());
-            if ('UNKNOWN' !== $application->getVersion()) {
-                $rootXml->setAttribute('version', $application->getVersion());
-            }
-        }
-
-        $rootXml->appendChild($commandsXML = $dom->createElement('commands'));
-
-        $description = new ApplicationDescription($application, $namespace, true);
-
-        if ($namespace) {
-            $commandsXML->setAttribute('namespace', $namespace);
-        }
-
-        foreach ($description->getCommands() as $command) {
-            $this->appendDocument($commandsXML, $this->getCommandDocument($command, $short));
-        }
-
-        if (!$namespace) {
-            $rootXml->appendChild($namespacesXML = $dom->createElement('namespaces'));
-
-            foreach ($description->getNamespaces() as $namespaceDescription) {
-                $namespacesXML->appendChild($namespaceArrayXML = $dom->createElement('namespace'));
-                $namespaceArrayXML->setAttribute('id', $namespaceDescription['id']);
-
-                foreach ($namespaceDescription['commands'] as $name) {
-                    $namespaceArrayXML->appendChild($commandXML = $dom->createElement('command'));
-                    $commandXML->appendChild($dom->createTextNode($name));
-                }
-            }
         }
 
         return $dom;

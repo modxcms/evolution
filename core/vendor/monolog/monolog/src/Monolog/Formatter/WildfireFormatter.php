@@ -108,6 +108,14 @@ class WildfireFormatter extends NormalizerFormatter
 
     /**
      * {@inheritdoc}
+     */
+    public function formatBatch(array $records)
+    {
+        throw new \BadMethodCallException('Batch formatting does not make sense for the WildfireFormatter');
+    }
+
+    /**
+     * {@inheritdoc}
      * @return int|bool|string|null|array|object
      */
     protected function normalize($data, int $depth = 0)
@@ -117,13 +125,5 @@ class WildfireFormatter extends NormalizerFormatter
         }
 
         return parent::normalize($data, $depth);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function formatBatch(array $records)
-    {
-        throw new \BadMethodCallException('Batch formatting does not make sense for the WildfireFormatter');
     }
 }

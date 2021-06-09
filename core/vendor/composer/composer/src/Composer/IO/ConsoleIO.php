@@ -123,6 +123,30 @@ class ConsoleIO extends BaseIO
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function writeError($messages, $newline = true, $verbosity = self::NORMAL)
+    {
+        $this->doWrite($messages, $newline, true, $verbosity);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function writeRaw($messages, $newline = true, $verbosity = self::NORMAL)
+    {
+        $this->doWrite($messages, $newline, false, $verbosity, true);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function writeErrorRaw($messages, $newline = true, $verbosity = self::NORMAL)
+    {
+        $this->doWrite($messages, $newline, true, $verbosity, true);
+    }
+
+    /**
      * @param array|string $messages
      * @param bool         $newline
      * @param bool         $stderr
@@ -172,33 +196,17 @@ class ConsoleIO extends BaseIO
     /**
      * {@inheritDoc}
      */
-    public function writeError($messages, $newline = true, $verbosity = self::NORMAL)
-    {
-        $this->doWrite($messages, $newline, true, $verbosity);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function writeRaw($messages, $newline = true, $verbosity = self::NORMAL)
-    {
-        $this->doWrite($messages, $newline, false, $verbosity, true);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function writeErrorRaw($messages, $newline = true, $verbosity = self::NORMAL)
-    {
-        $this->doWrite($messages, $newline, true, $verbosity, true);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function overwrite($messages, $newline = true, $size = null, $verbosity = self::NORMAL)
     {
         $this->doOverwrite($messages, $newline, $size, false, $verbosity);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function overwriteError($messages, $newline = true, $size = null, $verbosity = self::NORMAL)
+    {
+        $this->doOverwrite($messages, $newline, $size, true, $verbosity);
     }
 
     /**
@@ -247,32 +255,12 @@ class ConsoleIO extends BaseIO
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function overwriteError($messages, $newline = true, $size = null, $verbosity = self::NORMAL)
-    {
-        $this->doOverwrite($messages, $newline, $size, true, $verbosity);
-    }
-
-    /**
      * @param  int         $max
      * @return ProgressBar
      */
     public function getProgressBar($max = 0)
     {
         return new ProgressBar($this->getErrorOutput(), $max);
-    }
-
-    /**
-     * @return OutputInterface
-     */
-    private function getErrorOutput()
-    {
-        if ($this->output instanceof ConsoleOutputInterface) {
-            return $this->output->getErrorOutput();
-        }
-
-        return $this->output;
     }
 
     /**
@@ -352,5 +340,17 @@ class ConsoleIO extends BaseIO
         }
 
         return $results;
+    }
+
+    /**
+     * @return OutputInterface
+     */
+    private function getErrorOutput()
+    {
+        if ($this->output instanceof ConsoleOutputInterface) {
+            return $this->output->getErrorOutput();
+        }
+
+        return $this->output;
     }
 }

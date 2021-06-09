@@ -43,18 +43,6 @@ class ResponseFactory implements FactoryContract
     }
 
     /**
-     * Create a new "no content" response.
-     *
-     * @param  int  $status
-     * @param  array  $headers
-     * @return \Illuminate\Http\Response
-     */
-    public function noContent($status = 204, array $headers = [])
-    {
-        return $this->make('', $status, $headers);
-    }
-
-    /**
      * Create a new response instance.
      *
      * @param  string  $content
@@ -65,6 +53,18 @@ class ResponseFactory implements FactoryContract
     public function make($content = '', $status = 200, array $headers = [])
     {
         return new Response($content, $status, $headers);
+    }
+
+    /**
+     * Create a new "no content" response.
+     *
+     * @param  int  $status
+     * @param  array  $headers
+     * @return \Illuminate\Http\Response
+     */
+    public function noContent($status = 204, array $headers = [])
+    {
+        return $this->make('', $status, $headers);
     }
 
     /**
@@ -86,6 +86,20 @@ class ResponseFactory implements FactoryContract
     }
 
     /**
+     * Create a new JSON response instance.
+     *
+     * @param  mixed  $data
+     * @param  int  $status
+     * @param  array  $headers
+     * @param  int  $options
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function json($data = [], $status = 200, array $headers = [], $options = 0)
+    {
+        return new JsonResponse($data, $status, $headers, $options);
+    }
+
+    /**
      * Create a new JSONP response instance.
      *
      * @param  string  $callback
@@ -98,20 +112,6 @@ class ResponseFactory implements FactoryContract
     public function jsonp($callback, $data = [], $status = 200, array $headers = [], $options = 0)
     {
         return $this->json($data, $status, $headers, $options)->setCallback($callback);
-    }
-
-    /**
-     * Create a new JSON response instance.
-     *
-     * @param  mixed  $data
-     * @param  int  $status
-     * @param  array  $headers
-     * @param  int  $options
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function json($data = [], $status = 200, array $headers = [], $options = 0)
-    {
-        return new JsonResponse($data, $status, $headers, $options);
     }
 
     /**
@@ -152,17 +152,6 @@ class ResponseFactory implements FactoryContract
     }
 
     /**
-     * Convert the string to ASCII characters that are equivalent to the given name.
-     *
-     * @param  string  $name
-     * @return string
-     */
-    protected function fallbackName($name)
-    {
-        return str_replace('%', '', Str::ascii($name));
-    }
-
-    /**
      * Create a new file download response.
      *
      * @param  \SplFileInfo|string  $file
@@ -180,6 +169,17 @@ class ResponseFactory implements FactoryContract
         }
 
         return $response;
+    }
+
+    /**
+     * Convert the string to ASCII characters that are equivalent to the given name.
+     *
+     * @param  string  $name
+     * @return string
+     */
+    protected function fallbackName($name)
+    {
+        return str_replace('%', '', Str::ascii($name));
     }
 
     /**

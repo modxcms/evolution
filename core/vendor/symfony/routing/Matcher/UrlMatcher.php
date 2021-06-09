@@ -65,14 +65,6 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function getContext()
-    {
-        return $this->context;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function setContext(RequestContext $context)
     {
         $this->context = $context;
@@ -81,15 +73,9 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function matchRequest(Request $request)
+    public function getContext()
     {
-        $this->request = $request;
-
-        $ret = $this->match($request->getPathInfo());
-
-        $this->request = null;
-
-        return $ret;
+        return $this->context;
     }
 
     /**
@@ -108,6 +94,25 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
         }
 
         throw 0 < \count($this->allow) ? new MethodNotAllowedException(array_unique($this->allow)) : new ResourceNotFoundException(sprintf('No routes found for "%s".', $pathinfo));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function matchRequest(Request $request)
+    {
+        $this->request = $request;
+
+        $ret = $this->match($request->getPathInfo());
+
+        $this->request = null;
+
+        return $ret;
+    }
+
+    public function addExpressionLanguageProvider(ExpressionFunctionProviderInterface $provider)
+    {
+        $this->expressionLanguageProviders[] = $provider;
     }
 
     /**
@@ -194,6 +199,27 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
     }
 
     /**
+     * Returns an array of values to use as request attributes.
+     *
+     * As this method requires the Route object, it is not available
+     * in matchers that do not have access to the matched Route instance
+     * (like the PHP and Apache matcher dumpers).
+     *
+     * @return array An array of parameters
+     */
+    protected function getAttributes(Route $route, string $name, array $attributes)
+    {
+        $defaults = $route->getDefaults();
+        if (isset($defaults['_canonical_route'])) {
+            $name = $defaults['_canonical_route'];
+            unset($defaults['_canonical_route']);
+        }
+        $attributes['_route'] = $name;
+
+        return $this->mergeDefaults($attributes, $defaults);
+    }
+
+    /**
      * Handles specific route requirements.
      *
      * @return array The first element represents the status, the second contains additional information
@@ -206,6 +232,22 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
         }
 
         return [self::REQUIREMENT_MATCH, null];
+    }
+
+    /**
+     * Get merged default parameters.
+     *
+     * @return array Merged default parameters
+     */
+    protected function mergeDefaults(array $params, array $defaults)
+    {
+        foreach ($params as $key => $value) {
+            if (!\is_int($key) && null !== $value) {
+                $defaults[$key] = $value;
+            }
+        }
+
+        return $defaults;
     }
 
     protected function getExpressionLanguage()
@@ -233,47 +275,5 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
             'SCRIPT_FILENAME' => $this->context->getBaseUrl(),
             'SCRIPT_NAME' => $this->context->getBaseUrl(),
         ]);
-    }
-
-    /**
-     * Returns an array of values to use as request attributes.
-     *
-     * As this method requires the Route object, it is not available
-     * in matchers that do not have access to the matched Route instance
-     * (like the PHP and Apache matcher dumpers).
-     *
-     * @return array An array of parameters
-     */
-    protected function getAttributes(Route $route, string $name, array $attributes)
-    {
-        $defaults = $route->getDefaults();
-        if (isset($defaults['_canonical_route'])) {
-            $name = $defaults['_canonical_route'];
-            unset($defaults['_canonical_route']);
-        }
-        $attributes['_route'] = $name;
-
-        return $this->mergeDefaults($attributes, $defaults);
-    }
-
-    /**
-     * Get merged default parameters.
-     *
-     * @return array Merged default parameters
-     */
-    protected function mergeDefaults(array $params, array $defaults)
-    {
-        foreach ($params as $key => $value) {
-            if (!\is_int($key) && null !== $value) {
-                $defaults[$key] = $value;
-            }
-        }
-
-        return $defaults;
-    }
-
-    public function addExpressionLanguageProvider(ExpressionFunctionProviderInterface $provider)
-    {
-        $this->expressionLanguageProviders[] = $provider;
     }
 }

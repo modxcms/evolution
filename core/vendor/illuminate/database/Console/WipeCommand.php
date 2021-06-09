@@ -57,19 +57,6 @@ class WipeCommand extends Command
     }
 
     /**
-     * Drop all of the database views.
-     *
-     * @param  string  $database
-     * @return void
-     */
-    protected function dropAllViews($database)
-    {
-        $this->laravel['db']->connection($database)
-                    ->getSchemaBuilder()
-                    ->dropAllViews();
-    }
-
-    /**
      * Drop all of the database tables.
      *
      * @param  string  $database
@@ -80,6 +67,19 @@ class WipeCommand extends Command
         $this->laravel['db']->connection($database)
                     ->getSchemaBuilder()
                     ->dropAllTables();
+    }
+
+    /**
+     * Drop all of the database views.
+     *
+     * @param  string  $database
+     * @return void
+     */
+    protected function dropAllViews($database)
+    {
+        $this->laravel['db']->connection($database)
+                    ->getSchemaBuilder()
+                    ->dropAllViews();
     }
 
     /**

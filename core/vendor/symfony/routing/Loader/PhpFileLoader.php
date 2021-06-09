@@ -59,6 +59,14 @@ class PhpFileLoader extends FileLoader
         return $collection;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function supports($resource, string $type = null)
+    {
+        return \is_string($resource) && 'php' === pathinfo($resource, \PATHINFO_EXTENSION) && (!$type || 'php' === $type);
+    }
+
     protected function callConfigurator(callable $result, string $path, string $file): RouteCollection
     {
         $collection = new RouteCollection();
@@ -66,14 +74,6 @@ class PhpFileLoader extends FileLoader
         $result(new RoutingConfigurator($collection, $this, $path, $file, $this->env));
 
         return $collection;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supports($resource, string $type = null)
-    {
-        return \is_string($resource) && 'php' === pathinfo($resource, \PATHINFO_EXTENSION) && (!$type || 'php' === $type);
     }
 }
 

@@ -178,6 +178,21 @@ class Compiler
         Linter::lint($pharFile);
     }
 
+    /**
+     * @param  \SplFileInfo $file
+     * @return string
+     */
+    private function getRelativeFilePath($file)
+    {
+        $realPath = $file->getRealPath();
+        $pathPrefix = dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR;
+
+        $pos = strpos($realPath, $pathPrefix);
+        $relativePath = ($pos !== false) ? substr_replace($realPath, '', $pos, strlen($pathPrefix)) : $realPath;
+
+        return strtr($relativePath, '\\', '/');
+    }
+
     private function addFile($phar, $file, $strip = true)
     {
         $path = $this->getRelativeFilePath($file);
@@ -203,19 +218,11 @@ class Compiler
         $phar->addFromString($path, $content);
     }
 
-    /**
-     * @param  \SplFileInfo $file
-     * @return string
-     */
-    private function getRelativeFilePath($file)
+    private function addComposerBin($phar)
     {
-        $realPath = $file->getRealPath();
-        $pathPrefix = dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR;
-
-        $pos = strpos($realPath, $pathPrefix);
-        $relativePath = ($pos !== false) ? substr_replace($realPath, '', $pos, strlen($pathPrefix)) : $realPath;
-
-        return strtr($relativePath, '\\', '/');
+        $content = file_get_contents(__DIR__.'/../../bin/composer');
+        $content = preg_replace('{^#!/usr/bin/env php\s*}', '', $content);
+        $phar->addFromString('bin/composer', $content);
     }
 
     /**
@@ -250,13 +257,6 @@ class Compiler
         }
 
         return $output;
-    }
-
-    private function addComposerBin($phar)
-    {
-        $content = file_get_contents(__DIR__.'/../../bin/composer');
-        $content = preg_replace('{^#!/usr/bin/env php\s*}', '', $content);
-        $phar->addFromString('bin/composer', $content);
     }
 
     private function getStub()

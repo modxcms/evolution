@@ -64,39 +64,6 @@ class JsonFormatter extends NormalizerFormatter
     /**
      * {@inheritdoc}
      */
-    public function formatBatch(array $records): string
-    {
-        switch ($this->batchMode) {
-            case static::BATCH_MODE_NEWLINES:
-                return $this->formatBatchNewlines($records);
-
-            case static::BATCH_MODE_JSON:
-            default:
-                return $this->formatBatchJson($records);
-        }
-    }
-
-    /**
-     * Use new lines to separate records instead of a
-     * JSON-encoded array.
-     */
-    protected function formatBatchNewlines(array $records): string
-    {
-        $instance = $this;
-
-        $oldNewline = $this->appendNewline;
-        $this->appendNewline = false;
-        array_walk($records, function (&$value, $key) use ($instance) {
-            $value = $instance->format($value);
-        });
-        $this->appendNewline = $oldNewline;
-
-        return implode("\n", $records);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function format(array $record): string
     {
         $normalized = $this->normalize($record);
@@ -117,6 +84,52 @@ class JsonFormatter extends NormalizerFormatter
         }
 
         return $this->toJson($normalized, true) . ($this->appendNewline ? "\n" : '');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function formatBatch(array $records): string
+    {
+        switch ($this->batchMode) {
+            case static::BATCH_MODE_NEWLINES:
+                return $this->formatBatchNewlines($records);
+
+            case static::BATCH_MODE_JSON:
+            default:
+                return $this->formatBatchJson($records);
+        }
+    }
+
+    public function includeStacktraces(bool $include = true)
+    {
+        $this->includeStacktraces = $include;
+    }
+
+    /**
+     * Return a JSON-encoded array of records.
+     */
+    protected function formatBatchJson(array $records): string
+    {
+        return $this->toJson($this->normalize($records), true);
+    }
+
+    /**
+     * Use new lines to separate records instead of a
+     * JSON-encoded array.
+     */
+    protected function formatBatchNewlines(array $records): string
+    {
+        $instance = $this;
+
+        $oldNewline = $this->appendNewline;
+        $this->appendNewline = false;
+        array_walk($records, function (&$value, $key) use ($instance) {
+            $value = $instance->format($value);
+        });
+        $this->appendNewline = $oldNewline;
+
+        return implode("\n", $records);
     }
 
     /**
@@ -171,18 +184,5 @@ class JsonFormatter extends NormalizerFormatter
         }
 
         return $data;
-    }
-
-    /**
-     * Return a JSON-encoded array of records.
-     */
-    protected function formatBatchJson(array $records): string
-    {
-        return $this->toJson($this->normalize($records), true);
-    }
-
-    public function includeStacktraces(bool $include = true)
-    {
-        $this->includeStacktraces = $include;
     }
 }

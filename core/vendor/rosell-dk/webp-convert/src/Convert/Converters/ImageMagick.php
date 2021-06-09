@@ -22,33 +22,16 @@ class ImageMagick extends AbstractConverter
     use ExecTrait;
     use EncodingAutoTrait;
 
-    /**
-     * Check (general) operationality of imagack converter executable
-     *
-     * @throws SystemRequirementsNotMetException  if system requirements are not met
-     */
-    public function checkOperationality()
+    protected function getUnsupportedDefaultOptions()
     {
-        $this->checkOperationalityExecTrait();
-
-        if (!$this->isInstalled()) {
-            throw new SystemRequirementsNotMetException(
-                'imagemagick is not installed (cannot execute: "' . $this->getPath() . '")'
-            );
-        }
-        if (!$this->isWebPDelegateInstalled()) {
-            throw new SystemRequirementsNotMetException('webp delegate missing');
-        }
+        return [
+            'near-lossless',
+            'size-in-percentage',
+        ];
     }
 
     // To futher improve this converter, I could check out:
     // https://github.com/Orbitale/ImageMagickPHP
-
-    public function isInstalled()
-    {
-        exec($this->getPath() . ' -version 2>&1', $output, $returnCode);
-        return ($returnCode == 0);
-    }
 
     private function getPath()
     {
@@ -61,6 +44,23 @@ class ImageMagick extends AbstractConverter
         return 'convert';
     }
 
+    private function getVersion()
+    {
+        exec($this->getPath() . ' -version 2>&1', $output, $returnCode);
+        if (($returnCode == 0) && isset($output[0])) {
+            return $output[0];
+        } else {
+            return 'unknown';
+        }
+    }
+
+    public function isInstalled()
+    {
+        exec($this->getPath() . ' -version 2>&1', $output, $returnCode);
+        return ($returnCode == 0);
+    }
+
+    // Check if webp delegate is installed
     public function isWebPDelegateInstalled()
     {
         exec($this->getPath() . ' -list delegate 2>&1', $output, $returnCode);
@@ -83,52 +83,22 @@ class ImageMagick extends AbstractConverter
         // PS, convert -version does not output delegates on travis, so it is not reliable
     }
 
-    // Check if webp delegate is installed
-
-    protected function getUnsupportedDefaultOptions()
+    /**
+     * Check (general) operationality of imagack converter executable
+     *
+     * @throws SystemRequirementsNotMetException  if system requirements are not met
+     */
+    public function checkOperationality()
     {
-        return [
-            'near-lossless',
-            'size-in-percentage',
-        ];
-    }
+        $this->checkOperationalityExecTrait();
 
-    protected function doActualConvert()
-    {
-        $this->logLn($this->getVersion());
-
-        $command = $this->getPath() . ' ' . $this->createCommandLineOptions() . ' 2>&1';
-
-        $useNice = (($this->options['use-nice']) && self::hasNiceSupport()) ? true : false;
-        if ($useNice) {
-            $this->logLn('using nice');
-            $command = 'nice ' . $command;
+        if (!$this->isInstalled()) {
+            throw new SystemRequirementsNotMetException(
+                'imagemagick is not installed (cannot execute: "' . $this->getPath() . '")'
+            );
         }
-        $this->logLn('Executing command: ' . $command);
-        exec($command, $output, $returnCode);
-
-        $this->logExecOutput($output);
-        if ($returnCode == 0) {
-            $this->logLn('success');
-        } else {
-            $this->logLn('return code: ' . $returnCode);
-        }
-
-        if ($returnCode == 127) {
-            throw new SystemRequirementsNotMetException('imagemagick is not installed');
-        }
-        if ($returnCode != 0) {
-            throw new SystemRequirementsNotMetException('The exec call failed');
-        }
-    }
-
-    private function getVersion()
-    {
-        exec($this->getPath() . ' -version 2>&1', $output, $returnCode);
-        if (($returnCode == 0) && isset($output[0])) {
-            return $output[0];
-        } else {
-            return 'unknown';
+        if (!$this->isWebPDelegateInstalled()) {
+            throw new SystemRequirementsNotMetException('webp delegate missing');
         }
     }
 
@@ -200,5 +170,34 @@ class ImageMagick extends AbstractConverter
         $commandArguments[] = escapeshellarg('webp:' . $this->destination);
 
         return implode(' ', $commandArguments);
+    }
+
+    protected function doActualConvert()
+    {
+        $this->logLn($this->getVersion());
+
+        $command = $this->getPath() . ' ' . $this->createCommandLineOptions() . ' 2>&1';
+
+        $useNice = (($this->options['use-nice']) && self::hasNiceSupport()) ? true : false;
+        if ($useNice) {
+            $this->logLn('using nice');
+            $command = 'nice ' . $command;
+        }
+        $this->logLn('Executing command: ' . $command);
+        exec($command, $output, $returnCode);
+
+        $this->logExecOutput($output);
+        if ($returnCode == 0) {
+            $this->logLn('success');
+        } else {
+            $this->logLn('return code: ' . $returnCode);
+        }
+
+        if ($returnCode == 127) {
+            throw new SystemRequirementsNotMetException('imagemagick is not installed');
+        }
+        if ($returnCode != 0) {
+            throw new SystemRequirementsNotMetException('The exec call failed');
+        }
     }
 }

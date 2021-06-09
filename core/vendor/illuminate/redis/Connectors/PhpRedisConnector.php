@@ -33,6 +33,36 @@ class PhpRedisConnector implements Connector
     }
 
     /**
+     * Create a new clustered PhpRedis connection.
+     *
+     * @param  array  $config
+     * @param  array  $clusterOptions
+     * @param  array  $options
+     * @return \Illuminate\Redis\Connections\PhpRedisClusterConnection
+     */
+    public function connectToCluster(array $config, array $clusterOptions, array $options)
+    {
+        $options = array_merge($options, $clusterOptions, Arr::pull($config, 'options', []));
+
+        return new PhpRedisClusterConnection($this->createRedisClusterInstance(
+            array_map([$this, 'buildClusterConnectionString'], $config), $options
+        ));
+    }
+
+    /**
+     * Build a single cluster seed string from an array.
+     *
+     * @param  array  $server
+     * @return string
+     */
+    protected function buildClusterConnectionString(array $server)
+    {
+        return $this->formatHost($server).':'.$server['port'].'?'.Arr::query(Arr::only($server, [
+            'database', 'password', 'prefix', 'read_timeout',
+        ]));
+    }
+
+    /**
      * Create the Redis client instance.
      *
      * @param  array  $config
@@ -112,38 +142,6 @@ class PhpRedisConnector implements Connector
     }
 
     /**
-     * Format the host using the scheme if available.
-     *
-     * @param  array  $options
-     * @return string
-     */
-    protected function formatHost(array $options)
-    {
-        if (isset($options['scheme'])) {
-            return Str::start($options['host'], "{$options['scheme']}://");
-        }
-
-        return $options['host'];
-    }
-
-    /**
-     * Create a new clustered PhpRedis connection.
-     *
-     * @param  array  $config
-     * @param  array  $clusterOptions
-     * @param  array  $options
-     * @return \Illuminate\Redis\Connections\PhpRedisClusterConnection
-     */
-    public function connectToCluster(array $config, array $clusterOptions, array $options)
-    {
-        $options = array_merge($options, $clusterOptions, Arr::pull($config, 'options', []));
-
-        return new PhpRedisClusterConnection($this->createRedisClusterInstance(
-            array_map([$this, 'buildClusterConnectionString'], $config), $options
-        ));
-    }
-
-    /**
      * Create a new redis cluster instance.
      *
      * @param  array  $servers
@@ -190,15 +188,17 @@ class PhpRedisConnector implements Connector
     }
 
     /**
-     * Build a single cluster seed string from an array.
+     * Format the host using the scheme if available.
      *
-     * @param  array  $server
+     * @param  array  $options
      * @return string
      */
-    protected function buildClusterConnectionString(array $server)
+    protected function formatHost(array $options)
     {
-        return $this->formatHost($server).':'.$server['port'].'?'.Arr::query(Arr::only($server, [
-            'database', 'password', 'prefix', 'read_timeout',
-        ]));
+        if (isset($options['scheme'])) {
+            return Str::start($options['host'], "{$options['scheme']}://");
+        }
+
+        return $options['host'];
     }
 }

@@ -42,12 +42,28 @@ class StrictSessionHandler extends AbstractSessionHandler
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function doRead(string $sessionId)
+    {
+        return $this->handler->read($sessionId);
+    }
+
+    /**
      * @return bool
      */
     #[\ReturnTypeWillChange]
     public function updateTimestamp($sessionId, $data)
     {
         return $this->write($sessionId, $data);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function doWrite(string $sessionId, string $data)
+    {
+        return $this->handler->write($sessionId, $data);
     }
 
     /**
@@ -88,21 +104,5 @@ class StrictSessionHandler extends AbstractSessionHandler
     public function gc($maxlifetime)
     {
         return $this->handler->gc($maxlifetime);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function doRead(string $sessionId)
-    {
-        return $this->handler->read($sessionId);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function doWrite(string $sessionId, string $data)
-    {
-        return $this->handler->write($sessionId, $data);
     }
 }

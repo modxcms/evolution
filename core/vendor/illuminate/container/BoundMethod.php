@@ -38,17 +38,6 @@ class BoundMethod
     }
 
     /**
-     * Determine if the given string is in Class@method syntax.
-     *
-     * @param  mixed  $callback
-     * @return bool
-     */
-    protected static function isCallableWithAtSign($callback)
-    {
-        return is_string($callback) && strpos($callback, '@') !== false;
-    }
-
-    /**
      * Call a string reference to a class using Class@method syntax.
      *
      * @param  \Illuminate\Container\Container  $container
@@ -192,5 +181,16 @@ class BoundMethod
 
             throw new BindingResolutionException($message);
         }
+    }
+
+    /**
+     * Determine if the given string is in Class@method syntax.
+     *
+     * @param  mixed  $callback
+     * @return bool
+     */
+    protected static function isCallableWithAtSign($callback)
+    {
+        return is_string($callback) && strpos($callback, '@') !== false;
     }
 }

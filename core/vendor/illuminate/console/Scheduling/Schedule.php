@@ -92,6 +92,22 @@ class Schedule
     }
 
     /**
+     * Add a new callback event to the schedule.
+     *
+     * @param  string|callable  $callback
+     * @param  array  $parameters
+     * @return \Illuminate\Console\Scheduling\CallbackEvent
+     */
+    public function call($callback, array $parameters = [])
+    {
+        $this->events[] = $event = new CallbackEvent(
+            $this->eventMutex, $callback, $parameters, $this->timezone
+        );
+
+        return $event;
+    }
+
+    /**
      * Add a new Artisan command event to the schedule.
      *
      * @param  string  $command
@@ -107,6 +123,65 @@ class Schedule
         return $this->exec(
             Application::formatCommandString($command), $parameters
         );
+    }
+
+    /**
+     * Add a new job callback event to the schedule.
+     *
+     * @param  object|string  $job
+     * @param  string|null  $queue
+     * @param  string|null  $connection
+     * @return \Illuminate\Console\Scheduling\CallbackEvent
+     */
+    public function job($job, $queue = null, $connection = null)
+    {
+        return $this->call(function () use ($job, $queue, $connection) {
+            $job = is_string($job) ? Container::getInstance()->make($job) : $job;
+
+            if ($job instanceof ShouldQueue) {
+                $this->dispatchToQueue($job, $queue ?? $job->queue, $connection ?? $job->connection);
+            } else {
+                $this->dispatchNow($job);
+            }
+        })->name(is_string($job) ? $job : get_class($job));
+    }
+
+    /**
+     * Dispatch the given job to the queue.
+     *
+     * @param  object  $job
+     * @param  string|null  $queue
+     * @param  string|null  $connection
+     * @return void
+     *
+     * @throws \RuntimeException
+     */
+    protected function dispatchToQueue($job, $queue, $connection)
+    {
+        if ($job instanceof Closure) {
+            if (! class_exists(CallQueuedClosure::class)) {
+                throw new RuntimeException(
+                    'To enable support for closure jobs, please install the illuminate/queue package.'
+                );
+            }
+
+            $job = CallQueuedClosure::create($job);
+        }
+
+        $this->getDispatcher()->dispatch(
+            $job->onConnection($connection)->onQueue($queue)
+        );
+    }
+
+    /**
+     * Dispatch the given job right now.
+     *
+     * @param  object  $job
+     * @return void
+     */
+    protected function dispatchNow($job)
+    {
+        $this->getDispatcher()->dispatchNow($job);
     }
 
     /**
@@ -175,104 +250,6 @@ class Schedule
     }
 
     /**
-     * Add a new job callback event to the schedule.
-     *
-     * @param  object|string  $job
-     * @param  string|null  $queue
-     * @param  string|null  $connection
-     * @return \Illuminate\Console\Scheduling\CallbackEvent
-     */
-    public function job($job, $queue = null, $connection = null)
-    {
-        return $this->call(function () use ($job, $queue, $connection) {
-            $job = is_string($job) ? Container::getInstance()->make($job) : $job;
-
-            if ($job instanceof ShouldQueue) {
-                $this->dispatchToQueue($job, $queue ?? $job->queue, $connection ?? $job->connection);
-            } else {
-                $this->dispatchNow($job);
-            }
-        })->name(is_string($job) ? $job : get_class($job));
-    }
-
-    /**
-     * Add a new callback event to the schedule.
-     *
-     * @param  string|callable  $callback
-     * @param  array  $parameters
-     * @return \Illuminate\Console\Scheduling\CallbackEvent
-     */
-    public function call($callback, array $parameters = [])
-    {
-        $this->events[] = $event = new CallbackEvent(
-            $this->eventMutex, $callback, $parameters, $this->timezone
-        );
-
-        return $event;
-    }
-
-    /**
-     * Dispatch the given job to the queue.
-     *
-     * @param  object  $job
-     * @param  string|null  $queue
-     * @param  string|null  $connection
-     * @return void
-     *
-     * @throws \RuntimeException
-     */
-    protected function dispatchToQueue($job, $queue, $connection)
-    {
-        if ($job instanceof Closure) {
-            if (! class_exists(CallQueuedClosure::class)) {
-                throw new RuntimeException(
-                    'To enable support for closure jobs, please install the illuminate/queue package.'
-                );
-            }
-
-            $job = CallQueuedClosure::create($job);
-        }
-
-        $this->getDispatcher()->dispatch(
-            $job->onConnection($connection)->onQueue($queue)
-        );
-    }
-
-    /**
-     * Get the job dispatcher, if available.
-     *
-     * @return \Illuminate\Contracts\Bus\Dispatcher
-     *
-     * @throws \RuntimeException
-     */
-    protected function getDispatcher()
-    {
-        if ($this->dispatcher === null) {
-            try {
-                $this->dispatcher = Container::getInstance()->make(Dispatcher::class);
-            } catch (BindingResolutionException $e) {
-                throw new RuntimeException(
-                    'Unable to resolve the dispatcher from the service container. Please bind it or install the illuminate/bus package.',
-                    $e->getCode(), $e
-                );
-            }
-        }
-
-        return $this->dispatcher;
-    }
-
-    /**
-     * Dispatch the given job right now.
-     *
-     * @param  object  $job
-     * @return void
-     */
-    protected function dispatchNow($job)
-    {
-        $this->getDispatcher()->dispatchNow($job);
-    }
-
-    /**
      * Determine if the server is allowed to run this event.
      *
      * @param  \Illuminate\Console\Scheduling\Event  $event
@@ -322,5 +299,28 @@ class Schedule
         }
 
         return $this;
+    }
+
+    /**
+     * Get the job dispatcher, if available.
+     *
+     * @return \Illuminate\Contracts\Bus\Dispatcher
+     *
+     * @throws \RuntimeException
+     */
+    protected function getDispatcher()
+    {
+        if ($this->dispatcher === null) {
+            try {
+                $this->dispatcher = Container::getInstance()->make(Dispatcher::class);
+            } catch (BindingResolutionException $e) {
+                throw new RuntimeException(
+                    'Unable to resolve the dispatcher from the service container. Please bind it or install the illuminate/bus package.',
+                    $e->getCode(), $e
+                );
+            }
+        }
+
+        return $this->dispatcher;
     }
 }

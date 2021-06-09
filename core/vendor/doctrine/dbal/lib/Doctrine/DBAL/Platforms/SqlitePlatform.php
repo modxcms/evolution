@@ -35,55 +35,6 @@ use function trim;
 class SqlitePlatform extends AbstractPlatform
 {
     /**
-     * User-defined function for Sqlite that is used with PDO::sqliteCreateFunction().
-     *
-     * @param int|float $value
-     *
-     * @return float
-     */
-    public static function udfSqrt($value)
-    {
-        return sqrt($value);
-    }
-
-    /**
-     * User-defined function for Sqlite that implements MOD(a, b).
-     *
-     * @param int $a
-     * @param int $b
-     *
-     * @return int
-     */
-    public static function udfMod($a, $b)
-    {
-        return $a % $b;
-    }
-
-    /**
-     * @param string $str
-     * @param string $substr
-     * @param int    $offset
-     *
-     * @return int
-     */
-    public static function udfLocate($str, $substr, $offset = 0)
-    {
-        // SQL's LOCATE function works on 1-based positions, while PHP's strpos works on 0-based positions.
-        // So we have to make them compatible if an offset is given.
-        if ($offset > 0) {
-            $offset -= 1;
-        }
-
-        $pos = strpos($str, $substr, $offset);
-
-        if ($pos !== false) {
-            return $pos + 1;
-        }
-
-        return 0;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getRegexpExpression()
@@ -174,19 +125,42 @@ class SqlitePlatform extends AbstractPlatform
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function getDateDiffExpression($date1, $date2)
+    protected function getDateArithmeticIntervalExpression($date, $operator, $interval, $unit)
     {
-        return sprintf("JULIANDAY(%s, 'start of day') - JULIANDAY(%s, 'start of day')", $date1, $date2);
+        switch ($unit) {
+            case DateIntervalUnit::SECOND:
+            case DateIntervalUnit::MINUTE:
+            case DateIntervalUnit::HOUR:
+                return 'DATETIME(' . $date . ",'" . $operator . $interval . ' ' . $unit . "')";
+        }
+
+        switch ($unit) {
+            case DateIntervalUnit::WEEK:
+                $interval *= 7;
+                $unit      = DateIntervalUnit::DAY;
+                break;
+
+            case DateIntervalUnit::QUARTER:
+                $interval *= 3;
+                $unit      = DateIntervalUnit::MONTH;
+                break;
+        }
+
+        if (! is_numeric($interval)) {
+            $interval = "' || " . $interval . " || '";
+        }
+
+        return 'DATE(' . $date . ",'" . $operator . $interval . ' ' . $unit . "')";
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getSetTransactionIsolationSQL($level)
+    public function getDateDiffExpression($date1, $date2)
     {
-        return 'PRAGMA read_uncommitted = ' . $this->_getTransactionIsolationLevelSQL($level);
+        return sprintf("JULIANDAY(%s, 'start of day') - JULIANDAY(%s, 'start of day')", $date1, $date2);
     }
 
     /**
@@ -211,6 +185,14 @@ class SqlitePlatform extends AbstractPlatform
     /**
      * {@inheritDoc}
      */
+    public function getSetTransactionIsolationSQL($level)
+    {
+        return 'PRAGMA read_uncommitted = ' . $this->_getTransactionIsolationLevelSQL($level);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function prefersIdentityColumns()
     {
         return true;
@@ -227,19 +209,6 @@ class SqlitePlatform extends AbstractPlatform
     /**
      * {@inheritDoc}
      */
-    public function getBigIntTypeDeclarationSQL(array $column)
-    {
-        // SQLite autoincrement is implicit for INTEGER PKs, but not for BIGINT columns
-        if (! empty($column['autoincrement'])) {
-            return $this->getIntegerTypeDeclarationSQL($column);
-        }
-
-        return 'BIGINT' . $this->_getCommonIntegerTypeDeclarationSQL($column);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function getIntegerTypeDeclarationSQL(array $column)
     {
         return 'INTEGER' . $this->_getCommonIntegerTypeDeclarationSQL($column);
@@ -248,14 +217,14 @@ class SqlitePlatform extends AbstractPlatform
     /**
      * {@inheritDoc}
      */
-    protected function _getCommonIntegerTypeDeclarationSQL(array $column)
+    public function getBigIntTypeDeclarationSQL(array $column)
     {
-        // sqlite autoincrement is only possible for the primary key
+        // SQLite autoincrement is implicit for INTEGER PKs, but not for BIGINT columns
         if (! empty($column['autoincrement'])) {
-            return ' PRIMARY KEY AUTOINCREMENT';
+            return $this->getIntegerTypeDeclarationSQL($column);
         }
 
-        return ! empty($column['unsigned']) ? ' UNSIGNED' : '';
+        return 'BIGINT' . $this->_getCommonIntegerTypeDeclarationSQL($column);
     }
 
     /**
@@ -323,6 +292,123 @@ class SqlitePlatform extends AbstractPlatform
     public function getTimeTypeDeclarationSQL(array $column)
     {
         return 'TIME';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function _getCommonIntegerTypeDeclarationSQL(array $column)
+    {
+        // sqlite autoincrement is only possible for the primary key
+        if (! empty($column['autoincrement'])) {
+            return ' PRIMARY KEY AUTOINCREMENT';
+        }
+
+        return ! empty($column['unsigned']) ? ' UNSIGNED' : '';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getForeignKeyDeclarationSQL(ForeignKeyConstraint $foreignKey)
+    {
+        return parent::getForeignKeyDeclarationSQL(new ForeignKeyConstraint(
+            $foreignKey->getQuotedLocalColumns($this),
+            str_replace('.', '__', $foreignKey->getQuotedForeignTableName($this)),
+            $foreignKey->getQuotedForeignColumns($this),
+            $foreignKey->getName(),
+            $foreignKey->getOptions()
+        ));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function _getCreateTableSQL($name, array $columns, array $options = [])
+    {
+        $name        = str_replace('.', '__', $name);
+        $queryFields = $this->getColumnDeclarationListSQL($columns);
+
+        if (isset($options['uniqueConstraints']) && ! empty($options['uniqueConstraints'])) {
+            foreach ($options['uniqueConstraints'] as $name => $definition) {
+                $queryFields .= ', ' . $this->getUniqueConstraintDeclarationSQL($name, $definition);
+            }
+        }
+
+        $queryFields .= $this->getNonAutoincrementPrimaryKeyDefinition($columns, $options);
+
+        if (isset($options['foreignKeys'])) {
+            foreach ($options['foreignKeys'] as $foreignKey) {
+                $queryFields .= ', ' . $this->getForeignKeyDeclarationSQL($foreignKey);
+            }
+        }
+
+        $tableComment = '';
+        if (isset($options['comment'])) {
+            $comment = trim($options['comment'], " '");
+
+            $tableComment = $this->getInlineTableCommentSQL($comment);
+        }
+
+        $query = ['CREATE TABLE ' . $name . ' ' . $tableComment . '(' . $queryFields . ')'];
+
+        if (isset($options['alter']) && $options['alter'] === true) {
+            return $query;
+        }
+
+        if (isset($options['indexes']) && ! empty($options['indexes'])) {
+            foreach ($options['indexes'] as $indexDef) {
+                $query[] = $this->getCreateIndexSQL($indexDef, $name);
+            }
+        }
+
+        if (isset($options['unique']) && ! empty($options['unique'])) {
+            foreach ($options['unique'] as $indexDef) {
+                $query[] = $this->getCreateIndexSQL($indexDef, $name);
+            }
+        }
+
+        return $query;
+    }
+
+    /**
+     * Generate a PRIMARY KEY definition if no autoincrement value is used
+     *
+     * @param mixed[][] $columns
+     * @param mixed[]   $options
+     */
+    private function getNonAutoincrementPrimaryKeyDefinition(array $columns, array $options): string
+    {
+        if (empty($options['primary'])) {
+            return '';
+        }
+
+        $keyColumns = array_unique(array_values($options['primary']));
+
+        foreach ($keyColumns as $keyColumn) {
+            if (! empty($columns[$keyColumn]['autoincrement'])) {
+                return '';
+            }
+        }
+
+        return ', PRIMARY KEY(' . implode(', ', $keyColumns) . ')';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getVarcharTypeDeclarationSQLSnippet($length, $fixed)
+    {
+        return $fixed ? ($length ? 'CHAR(' . $length . ')' : 'CHAR(255)')
+                : ($length ? 'VARCHAR(' . $length . ')' : 'TEXT');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBinaryTypeDeclarationSQLSnippet($length, $fixed)
+    {
+        return 'BLOB';
     }
 
     /**
@@ -487,11 +573,188 @@ class SqlitePlatform extends AbstractPlatform
     }
 
     /**
+     * User-defined function for Sqlite that is used with PDO::sqliteCreateFunction().
+     *
+     * @param int|float $value
+     *
+     * @return float
+     */
+    public static function udfSqrt($value)
+    {
+        return sqrt($value);
+    }
+
+    /**
+     * User-defined function for Sqlite that implements MOD(a, b).
+     *
+     * @param int $a
+     * @param int $b
+     *
+     * @return int
+     */
+    public static function udfMod($a, $b)
+    {
+        return $a % $b;
+    }
+
+    /**
+     * @param string $str
+     * @param string $substr
+     * @param int    $offset
+     *
+     * @return int
+     */
+    public static function udfLocate($str, $substr, $offset = 0)
+    {
+        // SQL's LOCATE function works on 1-based positions, while PHP's strpos works on 0-based positions.
+        // So we have to make them compatible if an offset is given.
+        if ($offset > 0) {
+            $offset -= 1;
+        }
+
+        $pos = strpos($str, $substr, $offset);
+
+        if ($pos !== false) {
+            return $pos + 1;
+        }
+
+        return 0;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function getForUpdateSQL()
     {
         return '';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getInlineColumnCommentSQL($comment)
+    {
+        return '--' . str_replace("\n", "\n--", $comment) . "\n";
+    }
+
+    private function getInlineTableCommentSQL(string $comment): string
+    {
+        return $this->getInlineColumnCommentSQL($comment);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function initializeDoctrineTypeMappings()
+    {
+        $this->doctrineTypeMapping = [
+            'boolean'          => 'boolean',
+            'tinyint'          => 'boolean',
+            'smallint'         => 'smallint',
+            'mediumint'        => 'integer',
+            'int'              => 'integer',
+            'integer'          => 'integer',
+            'serial'           => 'integer',
+            'bigint'           => 'bigint',
+            'bigserial'        => 'bigint',
+            'clob'             => 'text',
+            'tinytext'         => 'text',
+            'mediumtext'       => 'text',
+            'longtext'         => 'text',
+            'text'             => 'text',
+            'varchar'          => 'string',
+            'longvarchar'      => 'string',
+            'varchar2'         => 'string',
+            'nvarchar'         => 'string',
+            'image'            => 'string',
+            'ntext'            => 'string',
+            'char'             => 'string',
+            'date'             => 'date',
+            'datetime'         => 'datetime',
+            'timestamp'        => 'datetime',
+            'time'             => 'time',
+            'float'            => 'float',
+            'double'           => 'float',
+            'double precision' => 'float',
+            'real'             => 'float',
+            'decimal'          => 'decimal',
+            'numeric'          => 'decimal',
+            'blob'             => 'blob',
+        ];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getReservedKeywordsClass()
+    {
+        return Keywords\SQLiteKeywords::class;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getPreAlterTableIndexForeignKeySQL(TableDiff $diff)
+    {
+        if (! $diff->fromTable instanceof Table) {
+            throw new Exception(
+                'Sqlite platform requires for alter table the table diff with reference to original table schema'
+            );
+        }
+
+        $sql = [];
+        foreach ($diff->fromTable->getIndexes() as $index) {
+            if ($index->isPrimary()) {
+                continue;
+            }
+
+            $sql[] = $this->getDropIndexSQL($index, $diff->name);
+        }
+
+        return $sql;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getPostAlterTableIndexForeignKeySQL(TableDiff $diff)
+    {
+        $fromTable = $diff->fromTable;
+
+        if (! $fromTable instanceof Table) {
+            throw new Exception(
+                'Sqlite platform requires for alter table the table diff with reference to original table schema'
+            );
+        }
+
+        $sql       = [];
+        $tableName = $diff->getNewName();
+
+        if ($tableName === false) {
+            $tableName = $diff->getName($this);
+        }
+
+        foreach ($this->getIndexesInAlteredTable($diff, $fromTable) as $index) {
+            if ($index->isPrimary()) {
+                continue;
+            }
+
+            $sql[] = $this->getCreateIndexSQL($index, $tableName->getQuotedName($this));
+        }
+
+        return $sql;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function doModifyLimitQuery($query, $limit, $offset)
+    {
+        if ($limit === null && $offset > 0) {
+            return $query . ' LIMIT -1 OFFSET ' . $offset;
+        }
+
+        return parent::doModifyLimitQuery($query, $limit, $offset);
     }
 
     /**
@@ -564,6 +827,18 @@ class SqlitePlatform extends AbstractPlatform
     public function getCreateConstraintSQL(Constraint $constraint, $table)
     {
         throw new Exception('Sqlite platform does not support alter constraint.');
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param int|null $createFlags
+     */
+    public function getCreateTableSQL(Table $table, $createFlags = null)
+    {
+        $createFlags = $createFlags ?? self::CREATE_INDEXES | self::CREATE_FOREIGNKEYS;
+
+        return parent::getCreateTableSQL($table, $createFlags);
     }
 
     /**
@@ -817,21 +1092,43 @@ class SqlitePlatform extends AbstractPlatform
     }
 
     /**
-     * @return Index[]
+     * @return string[]
      */
-    private function getPrimaryIndexInAlteredTable(TableDiff $diff, Table $fromTable)
+    private function getColumnNamesInAlteredTable(TableDiff $diff, Table $fromTable)
     {
-        $primaryIndex = [];
+        $columns = [];
 
-        foreach ($this->getIndexesInAlteredTable($diff, $fromTable) as $index) {
-            if (! $index->isPrimary()) {
+        foreach ($fromTable->getColumns() as $columnName => $column) {
+            $columns[strtolower($columnName)] = $column->getName();
+        }
+
+        foreach ($diff->removedColumns as $columnName => $column) {
+            $columnName = strtolower($columnName);
+            if (! isset($columns[$columnName])) {
                 continue;
             }
 
-            $primaryIndex = [$index->getName() => $index];
+            unset($columns[$columnName]);
         }
 
-        return $primaryIndex;
+        foreach ($diff->renamedColumns as $oldColumnName => $column) {
+            $columnName                          = $column->getName();
+            $columns[strtolower($oldColumnName)] = $columnName;
+            $columns[strtolower($columnName)]    = $columnName;
+        }
+
+        foreach ($diff->changedColumns as $oldColumnName => $columnDiff) {
+            $columnName                          = $columnDiff->column->getName();
+            $columns[strtolower($oldColumnName)] = $columnName;
+            $columns[strtolower($columnName)]    = $columnName;
+        }
+
+        foreach ($diff->addedColumns as $column) {
+            $columnName                       = $column->getName();
+            $columns[strtolower($columnName)] = $columnName;
+        }
+
+        return $columns;
     }
 
     /**
@@ -903,46 +1200,6 @@ class SqlitePlatform extends AbstractPlatform
     }
 
     /**
-     * @return string[]
-     */
-    private function getColumnNamesInAlteredTable(TableDiff $diff, Table $fromTable)
-    {
-        $columns = [];
-
-        foreach ($fromTable->getColumns() as $columnName => $column) {
-            $columns[strtolower($columnName)] = $column->getName();
-        }
-
-        foreach ($diff->removedColumns as $columnName => $column) {
-            $columnName = strtolower($columnName);
-            if (! isset($columns[$columnName])) {
-                continue;
-            }
-
-            unset($columns[$columnName]);
-        }
-
-        foreach ($diff->renamedColumns as $oldColumnName => $column) {
-            $columnName                          = $column->getName();
-            $columns[strtolower($oldColumnName)] = $columnName;
-            $columns[strtolower($columnName)]    = $columnName;
-        }
-
-        foreach ($diff->changedColumns as $oldColumnName => $columnDiff) {
-            $columnName                          = $columnDiff->column->getName();
-            $columns[strtolower($oldColumnName)] = $columnName;
-            $columns[strtolower($columnName)]    = $columnName;
-        }
-
-        foreach ($diff->addedColumns as $column) {
-            $columnName                       = $column->getName();
-            $columns[strtolower($columnName)] = $columnName;
-        }
-
-        return $columns;
-    }
-
-    /**
      * @return ForeignKeyConstraint[]
      */
     private function getForeignKeysInAlteredTable(TableDiff $diff, Table $fromTable)
@@ -1007,277 +1264,20 @@ class SqlitePlatform extends AbstractPlatform
     }
 
     /**
-     * {@inheritDoc}
+     * @return Index[]
      */
-    protected function getPreAlterTableIndexForeignKeySQL(TableDiff $diff)
+    private function getPrimaryIndexInAlteredTable(TableDiff $diff, Table $fromTable)
     {
-        if (! $diff->fromTable instanceof Table) {
-            throw new Exception(
-                'Sqlite platform requires for alter table the table diff with reference to original table schema'
-            );
-        }
-
-        $sql = [];
-        foreach ($diff->fromTable->getIndexes() as $index) {
-            if ($index->isPrimary()) {
-                continue;
-            }
-
-            $sql[] = $this->getDropIndexSQL($index, $diff->name);
-        }
-
-        return $sql;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param int|null $createFlags
-     */
-    public function getCreateTableSQL(Table $table, $createFlags = null)
-    {
-        $createFlags = $createFlags ?? self::CREATE_INDEXES | self::CREATE_FOREIGNKEYS;
-
-        return parent::getCreateTableSQL($table, $createFlags);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function getPostAlterTableIndexForeignKeySQL(TableDiff $diff)
-    {
-        $fromTable = $diff->fromTable;
-
-        if (! $fromTable instanceof Table) {
-            throw new Exception(
-                'Sqlite platform requires for alter table the table diff with reference to original table schema'
-            );
-        }
-
-        $sql       = [];
-        $tableName = $diff->getNewName();
-
-        if ($tableName === false) {
-            $tableName = $diff->getName($this);
-        }
+        $primaryIndex = [];
 
         foreach ($this->getIndexesInAlteredTable($diff, $fromTable) as $index) {
-            if ($index->isPrimary()) {
+            if (! $index->isPrimary()) {
                 continue;
             }
 
-            $sql[] = $this->getCreateIndexSQL($index, $tableName->getQuotedName($this));
+            $primaryIndex = [$index->getName() => $index];
         }
 
-        return $sql;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getDateArithmeticIntervalExpression($date, $operator, $interval, $unit)
-    {
-        switch ($unit) {
-            case DateIntervalUnit::SECOND:
-            case DateIntervalUnit::MINUTE:
-            case DateIntervalUnit::HOUR:
-                return 'DATETIME(' . $date . ",'" . $operator . $interval . ' ' . $unit . "')";
-        }
-
-        switch ($unit) {
-            case DateIntervalUnit::WEEK:
-                $interval *= 7;
-                $unit      = DateIntervalUnit::DAY;
-                break;
-
-            case DateIntervalUnit::QUARTER:
-                $interval *= 3;
-                $unit      = DateIntervalUnit::MONTH;
-                break;
-        }
-
-        if (! is_numeric($interval)) {
-            $interval = "' || " . $interval . " || '";
-        }
-
-        return 'DATE(' . $date . ",'" . $operator . $interval . ' ' . $unit . "')";
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function _getCreateTableSQL($name, array $columns, array $options = [])
-    {
-        $name        = str_replace('.', '__', $name);
-        $queryFields = $this->getColumnDeclarationListSQL($columns);
-
-        if (isset($options['uniqueConstraints']) && ! empty($options['uniqueConstraints'])) {
-            foreach ($options['uniqueConstraints'] as $name => $definition) {
-                $queryFields .= ', ' . $this->getUniqueConstraintDeclarationSQL($name, $definition);
-            }
-        }
-
-        $queryFields .= $this->getNonAutoincrementPrimaryKeyDefinition($columns, $options);
-
-        if (isset($options['foreignKeys'])) {
-            foreach ($options['foreignKeys'] as $foreignKey) {
-                $queryFields .= ', ' . $this->getForeignKeyDeclarationSQL($foreignKey);
-            }
-        }
-
-        $tableComment = '';
-        if (isset($options['comment'])) {
-            $comment = trim($options['comment'], " '");
-
-            $tableComment = $this->getInlineTableCommentSQL($comment);
-        }
-
-        $query = ['CREATE TABLE ' . $name . ' ' . $tableComment . '(' . $queryFields . ')'];
-
-        if (isset($options['alter']) && $options['alter'] === true) {
-            return $query;
-        }
-
-        if (isset($options['indexes']) && ! empty($options['indexes'])) {
-            foreach ($options['indexes'] as $indexDef) {
-                $query[] = $this->getCreateIndexSQL($indexDef, $name);
-            }
-        }
-
-        if (isset($options['unique']) && ! empty($options['unique'])) {
-            foreach ($options['unique'] as $indexDef) {
-                $query[] = $this->getCreateIndexSQL($indexDef, $name);
-            }
-        }
-
-        return $query;
-    }
-
-    /**
-     * Generate a PRIMARY KEY definition if no autoincrement value is used
-     *
-     * @param mixed[][] $columns
-     * @param mixed[]   $options
-     */
-    private function getNonAutoincrementPrimaryKeyDefinition(array $columns, array $options): string
-    {
-        if (empty($options['primary'])) {
-            return '';
-        }
-
-        $keyColumns = array_unique(array_values($options['primary']));
-
-        foreach ($keyColumns as $keyColumn) {
-            if (! empty($columns[$keyColumn]['autoincrement'])) {
-                return '';
-            }
-        }
-
-        return ', PRIMARY KEY(' . implode(', ', $keyColumns) . ')';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getForeignKeyDeclarationSQL(ForeignKeyConstraint $foreignKey)
-    {
-        return parent::getForeignKeyDeclarationSQL(new ForeignKeyConstraint(
-            $foreignKey->getQuotedLocalColumns($this),
-            str_replace('.', '__', $foreignKey->getQuotedForeignTableName($this)),
-            $foreignKey->getQuotedForeignColumns($this),
-            $foreignKey->getName(),
-            $foreignKey->getOptions()
-        ));
-    }
-
-    private function getInlineTableCommentSQL(string $comment): string
-    {
-        return $this->getInlineColumnCommentSQL($comment);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getInlineColumnCommentSQL($comment)
-    {
-        return '--' . str_replace("\n", "\n--", $comment) . "\n";
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function getVarcharTypeDeclarationSQLSnippet($length, $fixed)
-    {
-        return $fixed ? ($length ? 'CHAR(' . $length . ')' : 'CHAR(255)')
-                : ($length ? 'VARCHAR(' . $length . ')' : 'TEXT');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getBinaryTypeDeclarationSQLSnippet($length, $fixed)
-    {
-        return 'BLOB';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function initializeDoctrineTypeMappings()
-    {
-        $this->doctrineTypeMapping = [
-            'boolean'          => 'boolean',
-            'tinyint'          => 'boolean',
-            'smallint'         => 'smallint',
-            'mediumint'        => 'integer',
-            'int'              => 'integer',
-            'integer'          => 'integer',
-            'serial'           => 'integer',
-            'bigint'           => 'bigint',
-            'bigserial'        => 'bigint',
-            'clob'             => 'text',
-            'tinytext'         => 'text',
-            'mediumtext'       => 'text',
-            'longtext'         => 'text',
-            'text'             => 'text',
-            'varchar'          => 'string',
-            'longvarchar'      => 'string',
-            'varchar2'         => 'string',
-            'nvarchar'         => 'string',
-            'image'            => 'string',
-            'ntext'            => 'string',
-            'char'             => 'string',
-            'date'             => 'date',
-            'datetime'         => 'datetime',
-            'timestamp'        => 'datetime',
-            'time'             => 'time',
-            'float'            => 'float',
-            'double'           => 'float',
-            'double precision' => 'float',
-            'real'             => 'float',
-            'decimal'          => 'decimal',
-            'numeric'          => 'decimal',
-            'blob'             => 'blob',
-        ];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function getReservedKeywordsClass()
-    {
-        return Keywords\SQLiteKeywords::class;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function doModifyLimitQuery($query, $limit, $offset)
-    {
-        if ($limit === null && $offset > 0) {
-            return $query . ' LIMIT -1 OFFSET ' . $offset;
-        }
-
-        return parent::doModifyLimitQuery($query, $limit, $offset);
+        return $primaryIndex;
     }
 }

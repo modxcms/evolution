@@ -39,9 +39,19 @@ class Message extends RawMessage
         }
     }
 
-    public function getHeaders(): Headers
+    /**
+     * @return $this
+     */
+    public function setBody(AbstractPart $body = null)
     {
-        return $this->headers;
+        $this->body = $body;
+
+        return $this;
+    }
+
+    public function getBody(): ?AbstractPart
+    {
+        return $this->body;
     }
 
     /**
@@ -54,28 +64,9 @@ class Message extends RawMessage
         return $this;
     }
 
-    public function toString(): string
+    public function getHeaders(): Headers
     {
-        if (null === $body = $this->getBody()) {
-            $body = new TextPart('');
-        }
-
-        return $this->getPreparedHeaders()->toString().$body->toString();
-    }
-
-    public function getBody(): ?AbstractPart
-    {
-        return $this->body;
-    }
-
-    /**
-     * @return $this
-     */
-    public function setBody(AbstractPart $body = null)
-    {
-        $this->body = $body;
-
-        return $this;
+        return $this->headers;
     }
 
     public function getPreparedHeaders(): Headers
@@ -112,17 +103,13 @@ class Message extends RawMessage
         return $headers;
     }
 
-    public function generateMessageId(): string
+    public function toString(): string
     {
-        if ($this->headers->has('Sender')) {
-            $sender = $this->headers->get('Sender')->getAddress();
-        } elseif ($this->headers->has('From')) {
-            $sender = $this->headers->get('From')->getAddresses()[0];
-        } else {
-            throw new LogicException('An email must have a "From" or a "Sender" header.');
+        if (null === $body = $this->getBody()) {
+            $body = new TextPart('');
         }
 
-        return bin2hex(random_bytes(16)).strstr($sender->getAddress(), '@');
+        return $this->getPreparedHeaders()->toString().$body->toString();
     }
 
     public function toIterable(): iterable
@@ -146,6 +133,19 @@ class Message extends RawMessage
         }
 
         parent::ensureValidity();
+    }
+
+    public function generateMessageId(): string
+    {
+        if ($this->headers->has('Sender')) {
+            $sender = $this->headers->get('Sender')->getAddress();
+        } elseif ($this->headers->has('From')) {
+            $sender = $this->headers->get('From')->getAddresses()[0];
+        } else {
+            throw new LogicException('An email must have a "From" or a "Sender" header.');
+        }
+
+        return bin2hex(random_bytes(16)).strstr($sender->getAddress(), '@');
     }
 
     public function __serialize(): array

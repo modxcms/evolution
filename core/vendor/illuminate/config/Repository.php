@@ -27,19 +27,14 @@ class Repository implements ArrayAccess, ConfigContract
     }
 
     /**
-     * Prepend a value onto an array configuration value.
+     * Determine if the given configuration value exists.
      *
      * @param  string  $key
-     * @param  mixed  $value
-     * @return void
+     * @return bool
      */
-    public function prepend($key, $value)
+    public function has($key)
     {
-        $array = $this->get($key);
-
-        array_unshift($array, $value);
-
-        $this->set($key, $array);
+        return Arr::has($this->items, $key);
     }
 
     /**
@@ -96,6 +91,22 @@ class Repository implements ArrayAccess, ConfigContract
     }
 
     /**
+     * Prepend a value onto an array configuration value.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return void
+     */
+    public function prepend($key, $value)
+    {
+        $array = $this->get($key);
+
+        array_unshift($array, $value);
+
+        $this->set($key, $array);
+    }
+
+    /**
      * Push a value onto an array configuration value.
      *
      * @param  string  $key
@@ -130,17 +141,6 @@ class Repository implements ArrayAccess, ConfigContract
     public function offsetExists($key)
     {
         return $this->has($key);
-    }
-
-    /**
-     * Determine if the given configuration value exists.
-     *
-     * @param  string  $key
-     * @return bool
-     */
-    public function has($key)
-    {
-        return Arr::has($this->items, $key);
     }
 
     /**

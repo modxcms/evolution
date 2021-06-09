@@ -51,51 +51,6 @@ class ExceptionCaster
         return self::filterExceptionArray($stub->class, $a, "\0Error\0", $filter);
     }
 
-    private static function filterExceptionArray(string $xClass, array $a, string $xPrefix, int $filter): array
-    {
-        if (isset($a[$xPrefix.'trace'])) {
-            $trace = $a[$xPrefix.'trace'];
-            unset($a[$xPrefix.'trace']); // Ensures the trace is always last
-        } else {
-            $trace = [];
-        }
-
-        if (!($filter & Caster::EXCLUDE_VERBOSE) && $trace) {
-            if (isset($a[Caster::PREFIX_PROTECTED.'file'], $a[Caster::PREFIX_PROTECTED.'line'])) {
-                self::traceUnshift($trace, $xClass, $a[Caster::PREFIX_PROTECTED.'file'], $a[Caster::PREFIX_PROTECTED.'line']);
-            }
-            $a[Caster::PREFIX_VIRTUAL.'trace'] = new TraceStub($trace, self::$traceArgs);
-        }
-        if (empty($a[$xPrefix.'previous'])) {
-            unset($a[$xPrefix.'previous']);
-        }
-        unset($a[$xPrefix.'string'], $a[Caster::PREFIX_DYNAMIC.'xdebug_message'], $a[Caster::PREFIX_DYNAMIC.'__destructorException']);
-
-        if (isset($a[Caster::PREFIX_PROTECTED.'message']) && false !== strpos($a[Caster::PREFIX_PROTECTED.'message'], "@anonymous\0")) {
-            $a[Caster::PREFIX_PROTECTED.'message'] = preg_replace_callback('/[a-zA-Z_\x7f-\xff][\\\\a-zA-Z0-9_\x7f-\xff]*+@anonymous\x00.*?\.php(?:0x?|:[0-9]++\$)[0-9a-fA-F]++/', function ($m) {
-                return class_exists($m[0], false) ? (get_parent_class($m[0]) ?: key(class_implements($m[0])) ?: 'class').'@anonymous' : $m[0];
-            }, $a[Caster::PREFIX_PROTECTED.'message']);
-        }
-
-        if (isset($a[Caster::PREFIX_PROTECTED.'file'], $a[Caster::PREFIX_PROTECTED.'line'])) {
-            $a[Caster::PREFIX_PROTECTED.'file'] = new LinkStub($a[Caster::PREFIX_PROTECTED.'file'], $a[Caster::PREFIX_PROTECTED.'line']);
-        }
-
-        return $a;
-    }
-
-    private static function traceUnshift(array &$trace, ?string $class, string $file, int $line): void
-    {
-        if (isset($trace[0]['file'], $trace[0]['line']) && $trace[0]['file'] === $file && $trace[0]['line'] === $line) {
-            return;
-        }
-        array_unshift($trace, [
-            'function' => $class ? 'new '.$class : null,
-            'file' => $file,
-            'line' => $line,
-        ]);
-    }
-
     public static function castException(\Exception $e, array $a, Stub $stub, bool $isNested, int $filter = 0)
     {
         return self::filterExceptionArray($stub->class, $a, "\0Exception\0", $filter);
@@ -304,6 +259,51 @@ class ExceptionCaster
         }
 
         return $a;
+    }
+
+    private static function filterExceptionArray(string $xClass, array $a, string $xPrefix, int $filter): array
+    {
+        if (isset($a[$xPrefix.'trace'])) {
+            $trace = $a[$xPrefix.'trace'];
+            unset($a[$xPrefix.'trace']); // Ensures the trace is always last
+        } else {
+            $trace = [];
+        }
+
+        if (!($filter & Caster::EXCLUDE_VERBOSE) && $trace) {
+            if (isset($a[Caster::PREFIX_PROTECTED.'file'], $a[Caster::PREFIX_PROTECTED.'line'])) {
+                self::traceUnshift($trace, $xClass, $a[Caster::PREFIX_PROTECTED.'file'], $a[Caster::PREFIX_PROTECTED.'line']);
+            }
+            $a[Caster::PREFIX_VIRTUAL.'trace'] = new TraceStub($trace, self::$traceArgs);
+        }
+        if (empty($a[$xPrefix.'previous'])) {
+            unset($a[$xPrefix.'previous']);
+        }
+        unset($a[$xPrefix.'string'], $a[Caster::PREFIX_DYNAMIC.'xdebug_message'], $a[Caster::PREFIX_DYNAMIC.'__destructorException']);
+
+        if (isset($a[Caster::PREFIX_PROTECTED.'message']) && false !== strpos($a[Caster::PREFIX_PROTECTED.'message'], "@anonymous\0")) {
+            $a[Caster::PREFIX_PROTECTED.'message'] = preg_replace_callback('/[a-zA-Z_\x7f-\xff][\\\\a-zA-Z0-9_\x7f-\xff]*+@anonymous\x00.*?\.php(?:0x?|:[0-9]++\$)[0-9a-fA-F]++/', function ($m) {
+                return class_exists($m[0], false) ? (get_parent_class($m[0]) ?: key(class_implements($m[0])) ?: 'class').'@anonymous' : $m[0];
+            }, $a[Caster::PREFIX_PROTECTED.'message']);
+        }
+
+        if (isset($a[Caster::PREFIX_PROTECTED.'file'], $a[Caster::PREFIX_PROTECTED.'line'])) {
+            $a[Caster::PREFIX_PROTECTED.'file'] = new LinkStub($a[Caster::PREFIX_PROTECTED.'file'], $a[Caster::PREFIX_PROTECTED.'line']);
+        }
+
+        return $a;
+    }
+
+    private static function traceUnshift(array &$trace, ?string $class, string $file, int $line): void
+    {
+        if (isset($trace[0]['file'], $trace[0]['line']) && $trace[0]['file'] === $file && $trace[0]['line'] === $line) {
+            return;
+        }
+        array_unshift($trace, [
+            'function' => $class ? 'new '.$class : null,
+            'file' => $file,
+            'line' => $line,
+        ]);
     }
 
     private static function extractSource(string $srcLines, int $line, int $srcContext, string $lang, ?string $file, array $frame): EnumStub

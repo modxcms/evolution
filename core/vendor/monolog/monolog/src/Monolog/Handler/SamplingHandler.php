@@ -58,6 +58,11 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
         }
     }
 
+    public function isHandling(array $record): bool
+    {
+        return $this->getHandler($record)->isHandling($record);
+    }
+
     public function handle(array $record): bool
     {
         if ($this->isHandling($record) && mt_rand(1, $this->factor) === 1) {
@@ -69,11 +74,6 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
         }
 
         return false === $this->bubble;
-    }
-
-    public function isHandling(array $record): bool
-    {
-        return $this->getHandler($record)->isHandling($record);
     }
 
     /**

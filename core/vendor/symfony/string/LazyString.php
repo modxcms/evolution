@@ -20,8 +20,33 @@ class LazyString implements \Stringable, \JsonSerializable
 {
     private $value;
 
-    private function __construct()
+    /**
+     * @param callable|array $callback A callable or a [Closure, method] lazy-callable
+     *
+     * @return static
+     */
+    public static function fromCallable($callback, ...$arguments): self
     {
+        if (!\is_callable($callback) && !(\is_array($callback) && isset($callback[0]) && $callback[0] instanceof \Closure && 2 >= \count($callback))) {
+            throw new \TypeError(sprintf('Argument 1 passed to "%s()" must be a callable or a [Closure, method] lazy-callable, "%s" given.', __METHOD__, get_debug_type($callback)));
+        }
+
+        $lazyString = new static();
+        $lazyString->value = static function () use (&$callback, &$arguments, &$value): string {
+            if (null !== $arguments) {
+                if (!\is_callable($callback)) {
+                    $callback[0] = $callback[0]();
+                    $callback[1] = $callback[1] ?? '__invoke';
+                }
+                $value = $callback(...$arguments);
+                $callback = self::getPrettyName($callback);
+                $arguments = null;
+            }
+
+            return $value ?? '';
+        };
+
+        return $lazyString;
     }
 
     /**
@@ -54,61 +79,6 @@ class LazyString implements \Stringable, \JsonSerializable
     }
 
     /**
-     * @param callable|array $callback A callable or a [Closure, method] lazy-callable
-     *
-     * @return static
-     */
-    public static function fromCallable($callback, ...$arguments): self
-    {
-        if (!\is_callable($callback) && !(\is_array($callback) && isset($callback[0]) && $callback[0] instanceof \Closure && 2 >= \count($callback))) {
-            throw new \TypeError(sprintf('Argument 1 passed to "%s()" must be a callable or a [Closure, method] lazy-callable, "%s" given.', __METHOD__, get_debug_type($callback)));
-        }
-
-        $lazyString = new static();
-        $lazyString->value = static function () use (&$callback, &$arguments, &$value): string {
-            if (null !== $arguments) {
-                if (!\is_callable($callback)) {
-                    $callback[0] = $callback[0]();
-                    $callback[1] = $callback[1] ?? '__invoke';
-                }
-                $value = $callback(...$arguments);
-                $callback = self::getPrettyName($callback);
-                $arguments = null;
-            }
-
-            return $value ?? '';
-        };
-
-        return $lazyString;
-    }
-
-    private static function getPrettyName(callable $callback): string
-    {
-        if (\is_string($callback)) {
-            return $callback;
-        }
-
-        if (\is_array($callback)) {
-            $class = \is_object($callback[0]) ? get_debug_type($callback[0]) : $callback[0];
-            $method = $callback[1];
-        } elseif ($callback instanceof \Closure) {
-            $r = new \ReflectionFunction($callback);
-
-            if (false !== strpos($r->name, '{closure}') || !$class = $r->getClosureScopeClass()) {
-                return $r->name;
-            }
-
-            $class = $class->name;
-            $method = $r->name;
-        } else {
-            $class = get_debug_type($callback);
-            $method = '__invoke';
-        }
-
-        return $class.'::'.$method;
-    }
-
-    /**
      * Casts scalars and stringable objects to strings.
      *
      * @param object|string|int|float|bool $value
@@ -118,13 +88,6 @@ class LazyString implements \Stringable, \JsonSerializable
     final public static function resolve($value): string
     {
         return $value;
-    }
-
-    public function __sleep(): array
-    {
-        $this->__toString();
-
-        return ['value'];
     }
 
     /**
@@ -157,8 +120,45 @@ class LazyString implements \Stringable, \JsonSerializable
         }
     }
 
+    public function __sleep(): array
+    {
+        $this->__toString();
+
+        return ['value'];
+    }
+
     public function jsonSerialize(): string
     {
         return $this->__toString();
+    }
+
+    private function __construct()
+    {
+    }
+
+    private static function getPrettyName(callable $callback): string
+    {
+        if (\is_string($callback)) {
+            return $callback;
+        }
+
+        if (\is_array($callback)) {
+            $class = \is_object($callback[0]) ? get_debug_type($callback[0]) : $callback[0];
+            $method = $callback[1];
+        } elseif ($callback instanceof \Closure) {
+            $r = new \ReflectionFunction($callback);
+
+            if (false !== strpos($r->name, '{closure}') || !$class = $r->getClosureScopeClass()) {
+                return $r->name;
+            }
+
+            $class = $class->name;
+            $method = $r->name;
+        } else {
+            $class = get_debug_type($callback);
+            $method = '__invoke';
+        }
+
+        return $class.'::'.$method;
     }
 }

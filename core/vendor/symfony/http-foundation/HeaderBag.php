@@ -32,49 +32,6 @@ class HeaderBag implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Sets a header by name.
-     *
-     * @param string|string[] $values  The value or an array of values
-     * @param bool            $replace Whether to replace the actual value or not (true by default)
-     */
-    public function set(string $key, $values, bool $replace = true)
-    {
-        $key = strtr($key, self::UPPER, self::LOWER);
-
-        if (\is_array($values)) {
-            $values = array_values($values);
-
-            if (true === $replace || !isset($this->headers[$key])) {
-                $this->headers[$key] = $values;
-            } else {
-                $this->headers[$key] = array_merge($this->headers[$key], $values);
-            }
-        } else {
-            if (true === $replace || !isset($this->headers[$key])) {
-                $this->headers[$key] = [$values];
-            } else {
-                $this->headers[$key][] = $values;
-            }
-        }
-
-        if ('cache-control' === $key) {
-            $this->cacheControl = $this->parseCacheControl(implode(', ', $this->headers[$key]));
-        }
-    }
-
-    /**
-     * Parses a Cache-Control HTTP header.
-     *
-     * @return array An array representing the attribute values
-     */
-    protected function parseCacheControl(string $header)
-    {
-        $parts = HeaderUtils::split($header, ',=');
-
-        return HeaderUtils::combine($parts);
-    }
-
-    /**
      * Returns the headers as a string.
      *
      * @return string The headers
@@ -144,6 +101,57 @@ class HeaderBag implements \IteratorAggregate, \Countable
     }
 
     /**
+     * Returns a header value by name.
+     *
+     * @return string|null The first header value or default value
+     */
+    public function get(string $key, string $default = null)
+    {
+        $headers = $this->all($key);
+
+        if (!$headers) {
+            return $default;
+        }
+
+        if (null === $headers[0]) {
+            return null;
+        }
+
+        return (string) $headers[0];
+    }
+
+    /**
+     * Sets a header by name.
+     *
+     * @param string|string[] $values  The value or an array of values
+     * @param bool            $replace Whether to replace the actual value or not (true by default)
+     */
+    public function set(string $key, $values, bool $replace = true)
+    {
+        $key = strtr($key, self::UPPER, self::LOWER);
+
+        if (\is_array($values)) {
+            $values = array_values($values);
+
+            if (true === $replace || !isset($this->headers[$key])) {
+                $this->headers[$key] = $values;
+            } else {
+                $this->headers[$key] = array_merge($this->headers[$key], $values);
+            }
+        } else {
+            if (true === $replace || !isset($this->headers[$key])) {
+                $this->headers[$key] = [$values];
+            } else {
+                $this->headers[$key][] = $values;
+            }
+        }
+
+        if ('cache-control' === $key) {
+            $this->cacheControl = $this->parseCacheControl(implode(', ', $this->headers[$key]));
+        }
+    }
+
+    /**
      * Returns true if the HTTP header is defined.
      *
      * @return bool true if the parameter exists, false otherwise
@@ -198,26 +206,6 @@ class HeaderBag implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Returns a header value by name.
-     *
-     * @return string|null The first header value or default value
-     */
-    public function get(string $key, string $default = null)
-    {
-        $headers = $this->all($key);
-
-        if (!$headers) {
-            return $default;
-        }
-
-        if (null === $headers[0]) {
-            return null;
-        }
-
-        return (string) $headers[0];
-    }
-
-    /**
      * Adds a custom Cache-Control directive.
      *
      * @param mixed $value The Cache-Control directive value
@@ -227,13 +215,6 @@ class HeaderBag implements \IteratorAggregate, \Countable
         $this->cacheControl[$key] = $value;
 
         $this->set('Cache-Control', $this->getCacheControlHeader());
-    }
-
-    protected function getCacheControlHeader()
-    {
-        ksort($this->cacheControl);
-
-        return HeaderUtils::toString($this->cacheControl, ',');
     }
 
     /**
@@ -284,5 +265,24 @@ class HeaderBag implements \IteratorAggregate, \Countable
     public function count()
     {
         return \count($this->headers);
+    }
+
+    protected function getCacheControlHeader()
+    {
+        ksort($this->cacheControl);
+
+        return HeaderUtils::toString($this->cacheControl, ',');
+    }
+
+    /**
+     * Parses a Cache-Control HTTP header.
+     *
+     * @return array An array representing the attribute values
+     */
+    protected function parseCacheControl(string $header)
+    {
+        $parts = HeaderUtils::split($header, ',=');
+
+        return HeaderUtils::combine($parts);
     }
 }

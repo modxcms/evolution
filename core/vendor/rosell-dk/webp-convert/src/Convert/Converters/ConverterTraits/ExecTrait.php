@@ -14,6 +14,8 @@ use WebPConvert\Convert\Exceptions\ConversionFailed\ConverterNotOperational\Syst
 trait ExecTrait
 {
 
+    abstract protected function logLn($msg, $style = '');
+
     /**
      * Helper function for examining if "nice" command is available
      *
@@ -39,19 +41,6 @@ trait ExecTrait
     }
 
     /**
-     * Check basic operationality of exec converters (that the "exec" function is available)
-     *
-     * @throws  WebPConvert\Convert\Exceptions\ConversionFailed\ConverterNotOperational\SystemRequirementsNotMetException
-     * @return  void
-     */
-    public function checkOperationalityExecTrait()
-    {
-        if (!function_exists('exec')) {
-            throw new SystemRequirementsNotMetException('exec() is not enabled.');
-        }
-    }
-
-    /**
      * Logs output from the exec call.
      *
      * @param  array  $output
@@ -70,5 +59,16 @@ trait ExecTrait
         }
     }
 
-    abstract protected function logLn($msg, $style = '');
+    /**
+     * Check basic operationality of exec converters (that the "exec" function is available)
+     *
+     * @throws  WebPConvert\Convert\Exceptions\ConversionFailed\ConverterNotOperational\SystemRequirementsNotMetException
+     * @return  void
+     */
+    public function checkOperationalityExecTrait()
+    {
+        if (!function_exists('exec')) {
+            throw new SystemRequirementsNotMetException('exec() is not enabled.');
+        }
+    }
 }

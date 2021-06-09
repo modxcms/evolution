@@ -102,19 +102,6 @@ class PostgresGrammar extends Grammar
     }
 
     /**
-     * Compile the auto-incrementing column starting values.
-     *
-     * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
-     * @return array
-     */
-    public function compileAutoIncrementStartingValues(Blueprint $blueprint)
-    {
-        return collect($blueprint->autoIncrementingStartingValues())->map(function ($value, $column) use ($blueprint) {
-            return 'alter sequence '.$blueprint->getTable().'_'.$column.'_seq restart with '.$value;
-        })->all();
-    }
-
-    /**
      * Compile a column addition command.
      *
      * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
@@ -127,6 +114,19 @@ class PostgresGrammar extends Grammar
             $this->wrapTable($blueprint),
             implode(', ', $this->prefixArray('add column', $this->getColumns($blueprint)))
         )], $this->compileAutoIncrementStartingValues($blueprint))));
+    }
+
+    /**
+     * Compile the auto-incrementing column starting values.
+     *
+     * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
+     * @return array
+     */
+    public function compileAutoIncrementStartingValues(Blueprint $blueprint)
+    {
+        return collect($blueprint->autoIncrementingStartingValues())->map(function ($value, $column) use ($blueprint) {
+            return 'alter sequence '.$blueprint->getTable().'_'.$column.'_seq restart with '.$value;
+        })->all();
     }
 
     /**
@@ -160,20 +160,6 @@ class PostgresGrammar extends Grammar
     }
 
     /**
-     * Compile a spatial index key command.
-     *
-     * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
-     * @param  \Illuminate\Support\Fluent  $command
-     * @return string
-     */
-    public function compileSpatialIndex(Blueprint $blueprint, Fluent $command)
-    {
-        $command->algorithm = 'gist';
-
-        return $this->compileIndex($blueprint, $command);
-    }
-
-    /**
      * Compile a plain index key command.
      *
      * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
@@ -188,6 +174,20 @@ class PostgresGrammar extends Grammar
             $command->algorithm ? ' using '.$command->algorithm : '',
             $this->columnize($command->columns)
         );
+    }
+
+    /**
+     * Compile a spatial index key command.
+     *
+     * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
+     * @param  \Illuminate\Support\Fluent  $command
+     * @return string
+     */
+    public function compileSpatialIndex(Blueprint $blueprint, Fluent $command)
+    {
+        $command->algorithm = 'gist';
+
+        return $this->compileIndex($blueprint, $command);
     }
 
     /**
@@ -348,18 +348,6 @@ class PostgresGrammar extends Grammar
     }
 
     /**
-     * Compile a drop spatial index command.
-     *
-     * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
-     * @param  \Illuminate\Support\Fluent  $command
-     * @return string
-     */
-    public function compileDropSpatialIndex(Blueprint $blueprint, Fluent $command)
-    {
-        return $this->compileDropIndex($blueprint, $command);
-    }
-
-    /**
      * Compile a drop index command.
      *
      * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
@@ -369,6 +357,18 @@ class PostgresGrammar extends Grammar
     public function compileDropIndex(Blueprint $blueprint, Fluent $command)
     {
         return "drop index {$this->wrap($command->index)}";
+    }
+
+    /**
+     * Compile a drop spatial index command.
+     *
+     * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
+     * @param  \Illuminate\Support\Fluent  $command
+     * @return string
+     */
+    public function compileDropSpatialIndex(Blueprint $blueprint, Fluent $command)
+    {
+        return $this->compileDropIndex($blueprint, $command);
     }
 
     /**
@@ -451,17 +451,6 @@ class PostgresGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a spatial MultiLineString type.
-     *
-     * @param  \Illuminate\Support\Fluent  $column
-     * @return string
-     */
-    public function typeMultiLineString(Fluent $column)
-    {
-        return $this->formatPostGisType('multilinestring', $column);
-    }
-
-    /**
      * Create the column definition for a char type.
      *
      * @param  \Illuminate\Support\Fluent  $column
@@ -528,6 +517,17 @@ class PostgresGrammar extends Grammar
     }
 
     /**
+     * Create the column definition for an integer type.
+     *
+     * @param  \Illuminate\Support\Fluent  $column
+     * @return string
+     */
+    protected function typeInteger(Fluent $column)
+    {
+        return $this->generatableColumn('integer', $column);
+    }
+
+    /**
      * Create the column definition for a big integer type.
      *
      * @param  \Illuminate\Support\Fluent  $column
@@ -536,6 +536,39 @@ class PostgresGrammar extends Grammar
     protected function typeBigInteger(Fluent $column)
     {
         return $this->generatableColumn('bigint', $column);
+    }
+
+    /**
+     * Create the column definition for a medium integer type.
+     *
+     * @param  \Illuminate\Support\Fluent  $column
+     * @return string
+     */
+    protected function typeMediumInteger(Fluent $column)
+    {
+        return $this->generatableColumn('integer', $column);
+    }
+
+    /**
+     * Create the column definition for a tiny integer type.
+     *
+     * @param  \Illuminate\Support\Fluent  $column
+     * @return string
+     */
+    protected function typeTinyInteger(Fluent $column)
+    {
+        return $this->generatableColumn('smallint', $column);
+    }
+
+    /**
+     * Create the column definition for a small integer type.
+     *
+     * @param  \Illuminate\Support\Fluent  $column
+     * @return string
+     */
+    protected function typeSmallInteger(Fluent $column)
+    {
+        return $this->generatableColumn('smallint', $column);
     }
 
     /**
@@ -571,39 +604,6 @@ class PostgresGrammar extends Grammar
             $column->always ? 'always' : 'by default',
             $options
         );
-    }
-
-    /**
-     * Create the column definition for a medium integer type.
-     *
-     * @param  \Illuminate\Support\Fluent  $column
-     * @return string
-     */
-    protected function typeMediumInteger(Fluent $column)
-    {
-        return $this->generatableColumn('integer', $column);
-    }
-
-    /**
-     * Create the column definition for a tiny integer type.
-     *
-     * @param  \Illuminate\Support\Fluent  $column
-     * @return string
-     */
-    protected function typeTinyInteger(Fluent $column)
-    {
-        return $this->generatableColumn('smallint', $column);
-    }
-
-    /**
-     * Create the column definition for a small integer type.
-     *
-     * @param  \Illuminate\Support\Fluent  $column
-     * @return string
-     */
-    protected function typeSmallInteger(Fluent $column)
-    {
-        return $this->generatableColumn('smallint', $column);
     }
 
     /**
@@ -721,19 +721,6 @@ class PostgresGrammar extends Grammar
     }
 
     /**
-     * Create the column definition for a timestamp type.
-     *
-     * @param  \Illuminate\Support\Fluent  $column
-     * @return string
-     */
-    protected function typeTimestamp(Fluent $column)
-    {
-        $columnType = 'timestamp'.(is_null($column->precision) ? '' : "($column->precision)").' without time zone';
-
-        return $column->useCurrent ? "$columnType default CURRENT_TIMESTAMP" : $columnType;
-    }
-
-    /**
      * Create the column definition for a date-time (with time zone) type.
      *
      * @param  \Illuminate\Support\Fluent  $column
@@ -742,19 +729,6 @@ class PostgresGrammar extends Grammar
     protected function typeDateTimeTz(Fluent $column)
     {
         return $this->typeTimestampTz($column);
-    }
-
-    /**
-     * Create the column definition for a timestamp (with time zone) type.
-     *
-     * @param  \Illuminate\Support\Fluent  $column
-     * @return string
-     */
-    protected function typeTimestampTz(Fluent $column)
-    {
-        $columnType = 'timestamp'.(is_null($column->precision) ? '' : "($column->precision)").' with time zone';
-
-        return $column->useCurrent ? "$columnType default CURRENT_TIMESTAMP" : $columnType;
     }
 
     /**
@@ -780,6 +754,32 @@ class PostgresGrammar extends Grammar
     }
 
     /**
+     * Create the column definition for a timestamp type.
+     *
+     * @param  \Illuminate\Support\Fluent  $column
+     * @return string
+     */
+    protected function typeTimestamp(Fluent $column)
+    {
+        $columnType = 'timestamp'.(is_null($column->precision) ? '' : "($column->precision)").' without time zone';
+
+        return $column->useCurrent ? "$columnType default CURRENT_TIMESTAMP" : $columnType;
+    }
+
+    /**
+     * Create the column definition for a timestamp (with time zone) type.
+     *
+     * @param  \Illuminate\Support\Fluent  $column
+     * @return string
+     */
+    protected function typeTimestampTz(Fluent $column)
+    {
+        $columnType = 'timestamp'.(is_null($column->precision) ? '' : "($column->precision)").' with time zone';
+
+        return $column->useCurrent ? "$columnType default CURRENT_TIMESTAMP" : $columnType;
+    }
+
+    /**
      * Create the column definition for a year type.
      *
      * @param  \Illuminate\Support\Fluent  $column
@@ -788,17 +788,6 @@ class PostgresGrammar extends Grammar
     protected function typeYear(Fluent $column)
     {
         return $this->typeInteger($column);
-    }
-
-    /**
-     * Create the column definition for an integer type.
-     *
-     * @param  \Illuminate\Support\Fluent  $column
-     * @return string
-     */
-    protected function typeInteger(Fluent $column)
-    {
-        return $this->generatableColumn('integer', $column);
     }
 
     /**
@@ -857,26 +846,6 @@ class PostgresGrammar extends Grammar
     }
 
     /**
-     * Format the column definition for a PostGIS spatial type.
-     *
-     * @param  string  $type
-     * @param  \Illuminate\Support\Fluent  $column
-     * @return string
-     */
-    private function formatPostGisType($type, Fluent $column)
-    {
-        if ($column->isGeometry === null) {
-            return sprintf('geography(%s, %s)', $type, $column->projection ?? '4326');
-        }
-
-        if ($column->projection !== null) {
-            return sprintf('geometry(%s, %s)', $type, $column->projection);
-        }
-
-        return "geometry({$type})";
-    }
-
-    /**
      * Create the column definition for a spatial Point type.
      *
      * @param  \Illuminate\Support\Fluent  $column
@@ -932,6 +901,17 @@ class PostgresGrammar extends Grammar
     }
 
     /**
+     * Create the column definition for a spatial MultiLineString type.
+     *
+     * @param  \Illuminate\Support\Fluent  $column
+     * @return string
+     */
+    public function typeMultiLineString(Fluent $column)
+    {
+        return $this->formatPostGisType('multilinestring', $column);
+    }
+
+    /**
      * Create the column definition for a spatial MultiPolygon type.
      *
      * @param  \Illuminate\Support\Fluent  $column
@@ -951,6 +931,26 @@ class PostgresGrammar extends Grammar
     protected function typeMultiPolygonZ(Fluent $column)
     {
         return $this->formatPostGisType('multipolygonz', $column);
+    }
+
+    /**
+     * Format the column definition for a PostGIS spatial type.
+     *
+     * @param  string  $type
+     * @param  \Illuminate\Support\Fluent  $column
+     * @return string
+     */
+    private function formatPostGisType($type, Fluent $column)
+    {
+        if ($column->isGeometry === null) {
+            return sprintf('geography(%s, %s)', $type, $column->projection ?? '4326');
+        }
+
+        if ($column->projection !== null) {
+            return sprintf('geometry(%s, %s)', $type, $column->projection);
+        }
+
+        return "geometry({$type})";
     }
 
     /**

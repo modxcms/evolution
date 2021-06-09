@@ -20,6 +20,15 @@ class Gmagick extends AbstractConverter
 {
     use EncodingAutoTrait;
 
+    protected function getUnsupportedDefaultOptions()
+    {
+        return [
+            'near-lossless',
+            'size-in-percentage',
+            'use-nice'
+        ];
+    }
+
     /**
      * Check (general) operationality of Gmagick converter.
      *
@@ -75,19 +84,9 @@ class Gmagick extends AbstractConverter
         }
     }
 
-    protected function getUnsupportedDefaultOptions()
-    {
-        return [
-            'near-lossless',
-            'size-in-percentage',
-            'use-nice'
-        ];
-    }
-
     // Although this method is public, do not call directly.
     // You should rather call the static convert() function, defined in AbstractConverter, which
     // takes care of preparing stuff before calling doConvert, and validating after.
-
     protected function doActualConvert()
     {
 

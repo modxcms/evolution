@@ -13,6 +13,14 @@ class DateImmutableType extends DateType
     /**
      * {@inheritdoc}
      */
+    public function getName()
+    {
+        return Types::DATE_IMMUTABLE;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
         if ($value === null) {
@@ -28,14 +36,6 @@ class DateImmutableType extends DateType
             $this->getName(),
             ['null', DateTimeImmutable::class]
         );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return Types::DATE_IMMUTABLE;
     }
 
     /**

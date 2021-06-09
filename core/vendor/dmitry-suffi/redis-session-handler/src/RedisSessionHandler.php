@@ -86,21 +86,6 @@ class RedisSessionHandler implements \SessionHandlerInterface
     }
 
     /**
-     * @inheritdoc
-     */
-    public function read($sessionId)
-    {
-
-        if (!$this->locked) {
-            if (!$this->lockSession($sessionId)) {
-                return false;
-            }
-        }
-
-        return $this->redis->get($this->getRedisKey($sessionId)) ?: '';
-    }
-
-    /**
      * Попытка разблокировать сессию
      */
     protected function lockSession($sessionId)
@@ -127,16 +112,50 @@ class RedisSessionHandler implements \SessionHandlerInterface
     }
 
     /**
-     * Preparation key
-     * @param string $key key
-     * @return string prefixed key
+     * Unlock Session
      */
-    protected function getRedisKey($key)
+    private function unlockSession()
     {
-        if (empty($this->prefix)) {
-            return $key;
+        $script = <<<LUA
+if redis.call("GET", KEYS[1]) == ARGV[1] then
+    return redis.call("DEL", KEYS[1])
+else
+    return 0
+end
+LUA;
+
+        $this->redis->eval($script, array($this->getRedisKey($this->lockKey), $this->redis->_serialize($this->token)), 1);
+
+        $this->locked = false;
+        $this->token = null;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function close()
+    {
+
+        if ($this->locked) {
+            $this->unlockSession();
         }
-        return $this->prefix . $key;
+
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function read($sessionId)
+    {
+
+        if (!$this->locked) {
+            if (!$this->lockSession($sessionId)) {
+                return false;
+            }
+        }
+
+        return $this->redis->get($this->getRedisKey($sessionId)) ?: '';
     }
 
     /**
@@ -160,38 +179,6 @@ class RedisSessionHandler implements \SessionHandlerInterface
         $this->redis->del($this->getRedisKey($sessionId));
         $this->close();
         return true;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function close()
-    {
-
-        if ($this->locked) {
-            $this->unlockSession();
-        }
-
-        return true;
-    }
-
-    /**
-     * Unlock Session
-     */
-    private function unlockSession()
-    {
-        $script = <<<LUA
-if redis.call("GET", KEYS[1]) == ARGV[1] then
-    return redis.call("DEL", KEYS[1])
-else
-    return 0
-end
-LUA;
-
-        $this->redis->eval($script, array($this->getRedisKey($this->lockKey), $this->redis->_serialize($this->token)), 1);
-
-        $this->locked = false;
-        $this->token = null;
     }
 
     /**
@@ -227,6 +214,19 @@ LUA;
     public function setLockMaxWait($lockMaxWait)
     {
         $this->lockMaxWait = $lockMaxWait;
+    }
+
+    /**
+     * Preparation key
+     * @param string $key key
+     * @return string prefixed key
+     */
+    protected function getRedisKey($key)
+    {
+        if (empty($this->prefix)) {
+            return $key;
+        }
+        return $this->prefix . $key;
     }
     
     public function __destruct()

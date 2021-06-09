@@ -61,6 +61,27 @@ abstract class Lock implements LockContract
     /**
      * Attempt to acquire the lock.
      *
+     * @return bool
+     */
+    abstract public function acquire();
+
+    /**
+     * Release the lock.
+     *
+     * @return bool
+     */
+    abstract public function release();
+
+    /**
+     * Returns the owner value written into the driver for this lock.
+     *
+     * @return string
+     */
+    abstract protected function getCurrentOwner();
+
+    /**
+     * Attempt to acquire the lock.
+     *
      * @param  callable|null  $callback
      * @return mixed
      */
@@ -78,20 +99,6 @@ abstract class Lock implements LockContract
 
         return $result;
     }
-
-    /**
-     * Attempt to acquire the lock.
-     *
-     * @return bool
-     */
-    abstract public function acquire();
-
-    /**
-     * Release the lock.
-     *
-     * @return bool
-     */
-    abstract public function release();
 
     /**
      * Attempt to acquire the lock for the given number of seconds.
@@ -136,6 +143,16 @@ abstract class Lock implements LockContract
     }
 
     /**
+     * Determines whether this lock is allowed to release the lock in the driver.
+     *
+     * @return bool
+     */
+    protected function isOwnedByCurrentProcess()
+    {
+        return $this->getCurrentOwner() === $this->owner;
+    }
+
+    /**
      * Specify the number of milliseconds to sleep in between blocked lock acquisition attempts.
      *
      * @param  int  $milliseconds
@@ -147,21 +164,4 @@ abstract class Lock implements LockContract
 
         return $this;
     }
-
-    /**
-     * Determines whether this lock is allowed to release the lock in the driver.
-     *
-     * @return bool
-     */
-    protected function isOwnedByCurrentProcess()
-    {
-        return $this->getCurrentOwner() === $this->owner;
-    }
-
-    /**
-     * Returns the owner value written into the driver for this lock.
-     *
-     * @return string
-     */
-    abstract protected function getCurrentOwner();
 }

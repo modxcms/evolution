@@ -71,49 +71,6 @@ class FileLoader implements Loader
     }
 
     /**
-     * Load a locale from the given JSON file path.
-     *
-     * @param  string  $locale
-     * @return array
-     *
-     * @throws \RuntimeException
-     */
-    protected function loadJsonPaths($locale)
-    {
-        return collect(array_merge($this->jsonPaths, [$this->path]))
-            ->reduce(function ($output, $path) use ($locale) {
-                if ($this->files->exists($full = "{$path}/{$locale}.json")) {
-                    $decoded = json_decode($this->files->get($full), true);
-
-                    if (is_null($decoded) || json_last_error() !== JSON_ERROR_NONE) {
-                        throw new RuntimeException("Translation file [{$full}] contains an invalid JSON structure.");
-                    }
-
-                    $output = array_merge($output, $decoded);
-                }
-
-                return $output;
-            }, []);
-    }
-
-    /**
-     * Load a locale from a given path.
-     *
-     * @param  string  $path
-     * @param  string  $locale
-     * @param  string  $group
-     * @return array
-     */
-    protected function loadPath($path, $locale, $group)
-    {
-        if ($this->files->exists($full = "{$path}/{$locale}/{$group}.php")) {
-            return $this->files->getRequire($full);
-        }
-
-        return [];
-    }
-
-    /**
      * Load a namespaced translation group.
      *
      * @param  string  $locale
@@ -150,6 +107,49 @@ class FileLoader implements Loader
         }
 
         return $lines;
+    }
+
+    /**
+     * Load a locale from a given path.
+     *
+     * @param  string  $path
+     * @param  string  $locale
+     * @param  string  $group
+     * @return array
+     */
+    protected function loadPath($path, $locale, $group)
+    {
+        if ($this->files->exists($full = "{$path}/{$locale}/{$group}.php")) {
+            return $this->files->getRequire($full);
+        }
+
+        return [];
+    }
+
+    /**
+     * Load a locale from the given JSON file path.
+     *
+     * @param  string  $locale
+     * @return array
+     *
+     * @throws \RuntimeException
+     */
+    protected function loadJsonPaths($locale)
+    {
+        return collect(array_merge($this->jsonPaths, [$this->path]))
+            ->reduce(function ($output, $path) use ($locale) {
+                if ($this->files->exists($full = "{$path}/{$locale}.json")) {
+                    $decoded = json_decode($this->files->get($full), true);
+
+                    if (is_null($decoded) || json_last_error() !== JSON_ERROR_NONE) {
+                        throw new RuntimeException("Translation file [{$full}] contains an invalid JSON structure.");
+                    }
+
+                    $output = array_merge($output, $decoded);
+                }
+
+                return $output;
+            }, []);
     }
 
     /**

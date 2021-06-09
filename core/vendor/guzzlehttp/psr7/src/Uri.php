@@ -118,165 +118,67 @@ class Uri implements UriInterface
         return array_map('urldecode', $result);
     }
 
-    /**
-     * Apply parse_url parts to a URI.
-     *
-     * @param array $parts Array of parse_url parts to apply.
-     */
-    private function applyParts(array $parts)
+    public function __toString()
     {
-        $this->scheme = isset($parts['scheme'])
-            ? $this->filterScheme($parts['scheme'])
-            : '';
-        $this->userInfo = isset($parts['user'])
-            ? $this->filterUserInfoComponent($parts['user'])
-            : '';
-        $this->host = isset($parts['host'])
-            ? $this->filterHost($parts['host'])
-            : '';
-        $this->port = isset($parts['port'])
-            ? $this->filterPort($parts['port'])
-            : null;
-        $this->path = isset($parts['path'])
-            ? $this->filterPath($parts['path'])
-            : '';
-        $this->query = isset($parts['query'])
-            ? $this->filterQueryAndFragment($parts['query'])
-            : '';
-        $this->fragment = isset($parts['fragment'])
-            ? $this->filterQueryAndFragment($parts['fragment'])
-            : '';
-        if (isset($parts['pass'])) {
-            $this->userInfo .= ':' . $this->filterUserInfoComponent($parts['pass']);
-        }
-
-        $this->removeDefaultPort();
+        return self::composeComponents(
+            $this->scheme,
+            $this->getAuthority(),
+            $this->path,
+            $this->query,
+            $this->fragment
+        );
     }
 
     /**
+     * Composes a URI reference string from its various components.
+     *
+     * Usually this method does not need to be called manually but instead is used indirectly via
+     * `Psr\Http\Message\UriInterface::__toString`.
+     *
+     * PSR-7 UriInterface treats an empty component the same as a missing component as
+     * getQuery(), getFragment() etc. always return a string. This explains the slight
+     * difference to RFC 3986 Section 5.3.
+     *
+     * Another adjustment is that the authority separator is added even when the authority is missing/empty
+     * for the "file" scheme. This is because PHP stream functions like `file_get_contents` only work with
+     * `file:///myfile` but not with `file:/myfile` although they are equivalent according to RFC 3986. But
+     * `file:///` is the more common syntax for the file scheme anyway (Chrome for example redirects to
+     * that format).
+     *
      * @param string $scheme
-     *
-     * @return string
-     *
-     * @throws \InvalidArgumentException If the scheme is invalid.
-     */
-    private function filterScheme($scheme)
-    {
-        if (!is_string($scheme)) {
-            throw new \InvalidArgumentException('Scheme must be a string');
-        }
-
-        return \strtr($scheme, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
-    }
-
-    /**
-     * @param string $component
-     *
-     * @return string
-     *
-     * @throws \InvalidArgumentException If the user info is invalid.
-     */
-    private function filterUserInfoComponent($component)
-    {
-        if (!is_string($component)) {
-            throw new \InvalidArgumentException('User info must be a string');
-        }
-
-        return preg_replace_callback(
-            '/(?:[^%' . self::$charUnreserved . self::$charSubDelims . ']+|%(?![A-Fa-f0-9]{2}))/',
-            [$this, 'rawurlencodeMatchZero'],
-            $component
-        );
-    }
-
-    /**
-     * @param string $host
-     *
-     * @return string
-     *
-     * @throws \InvalidArgumentException If the host is invalid.
-     */
-    private function filterHost($host)
-    {
-        if (!is_string($host)) {
-            throw new \InvalidArgumentException('Host must be a string');
-        }
-
-        return \strtr($host, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
-    }
-
-    /**
-     * @param int|null $port
-     *
-     * @return int|null
-     *
-     * @throws \InvalidArgumentException If the port is invalid.
-     */
-    private function filterPort($port)
-    {
-        if ($port === null) {
-            return null;
-        }
-
-        $port = (int) $port;
-        if (0 > $port || 0xffff < $port) {
-            throw new \InvalidArgumentException(
-                sprintf('Invalid port: %d. Must be between 0 and 65535', $port)
-            );
-        }
-
-        return $port;
-    }
-
-    /**
-     * Filters the path of a URI
-     *
+     * @param string $authority
      * @param string $path
+     * @param string $query
+     * @param string $fragment
      *
      * @return string
      *
-     * @throws \InvalidArgumentException If the path is invalid.
+     * @link https://tools.ietf.org/html/rfc3986#section-5.3
      */
-    private function filterPath($path)
+    public static function composeComponents($scheme, $authority, $path, $query, $fragment)
     {
-        if (!is_string($path)) {
-            throw new \InvalidArgumentException('Path must be a string');
+        $uri = '';
+
+        // weak type checks to also accept null until we can add scalar type hints
+        if ($scheme != '') {
+            $uri .= $scheme . ':';
         }
 
-        return preg_replace_callback(
-            '/(?:[^' . self::$charUnreserved . self::$charSubDelims . '%:@\/]++|%(?![A-Fa-f0-9]{2}))/',
-            [$this, 'rawurlencodeMatchZero'],
-            $path
-        );
-    }
-
-    /**
-     * Filters the query string or fragment of a URI.
-     *
-     * @param string $str
-     *
-     * @return string
-     *
-     * @throws \InvalidArgumentException If the query or fragment is invalid.
-     */
-    private function filterQueryAndFragment($str)
-    {
-        if (!is_string($str)) {
-            throw new \InvalidArgumentException('Query and fragment must be a string');
+        if ($authority != ''|| $scheme === 'file') {
+            $uri .= '//' . $authority;
         }
 
-        return preg_replace_callback(
-            '/(?:[^' . self::$charUnreserved . self::$charSubDelims . '%:@\/\?]++|%(?![A-Fa-f0-9]{2}))/',
-            [$this, 'rawurlencodeMatchZero'],
-            $str
-        );
-    }
+        $uri .= $path;
 
-    private function removeDefaultPort()
-    {
-        if ($this->port !== null && self::isDefaultPort($this)) {
-            $this->port = null;
+        if ($query != '') {
+            $uri .= '?' . $query;
         }
+
+        if ($fragment != '') {
+            $uri .= '#' . $fragment;
+        }
+
+        return $uri;
     }
 
     /**
@@ -454,27 +356,6 @@ class Uri implements UriInterface
     }
 
     /**
-     * @param UriInterface $uri
-     * @param array        $keys
-     *
-     * @return array
-     */
-    private static function getFilteredQueryString(UriInterface $uri, array $keys)
-    {
-        $current = $uri->getQuery();
-
-        if ($current === '') {
-            return [];
-        }
-
-        $decodedKeys = array_map('rawurldecode', $keys);
-
-        return array_filter(explode('&', $current), function ($part) use ($decodedKeys) {
-            return !in_array(rawurldecode(explode('=', $part)[0]), $decodedKeys, true);
-        });
-    }
-
-    /**
      * Creates a new URI with a specific query string value.
      *
      * Any existing query string values that exactly match the provided key are
@@ -496,26 +377,6 @@ class Uri implements UriInterface
         $result[] = self::generateQueryString($key, $value);
 
         return $uri->withQuery(implode('&', $result));
-    }
-
-    /**
-     * @param string      $key
-     * @param string|null $value
-     *
-     * @return string
-     */
-    private static function generateQueryString($key, $value)
-    {
-        // Query string separators ("=", "&") within the key or value need to be encoded
-        // (while preventing double-encoding) before setting the query string. All other
-        // chars that need percent-encoding will be encoded by withQuery().
-        $queryString = strtr($key, self::$replaceQuery);
-
-        if ($value !== null) {
-            $queryString .= '=' . strtr($value, self::$replaceQuery);
-        }
-
-        return $queryString;
     }
 
     /**
@@ -559,91 +420,9 @@ class Uri implements UriInterface
         return $uri;
     }
 
-    private function validateState()
+    public function getScheme()
     {
-        if ($this->host === '' && ($this->scheme === 'http' || $this->scheme === 'https')) {
-            $this->host = self::HTTP_DEFAULT_HOST;
-        }
-
-        if ($this->getAuthority() === '') {
-            if (0 === strpos($this->path, '//')) {
-                throw new \InvalidArgumentException('The path of a URI without an authority must not start with two slashes "//"');
-            }
-            if ($this->scheme === '' && false !== strpos(explode('/', $this->path, 2)[0], ':')) {
-                throw new \InvalidArgumentException('A relative URI must not have a path beginning with a segment containing a colon');
-            }
-        } elseif (isset($this->path[0]) && $this->path[0] !== '/') {
-            @trigger_error(
-                'The path of a URI with an authority must start with a slash "/" or be empty. Automagically fixing the URI ' .
-                'by adding a leading slash to the path is deprecated since version 1.4 and will throw an exception instead.',
-                E_USER_DEPRECATED
-            );
-            $this->path = '/' . $this->path;
-            //throw new \InvalidArgumentException('The path of a URI with an authority must start with a slash "/" or be empty');
-        }
-    }
-
-    public function __toString()
-    {
-        return self::composeComponents(
-            $this->scheme,
-            $this->getAuthority(),
-            $this->path,
-            $this->query,
-            $this->fragment
-        );
-    }
-
-    /**
-     * Composes a URI reference string from its various components.
-     *
-     * Usually this method does not need to be called manually but instead is used indirectly via
-     * `Psr\Http\Message\UriInterface::__toString`.
-     *
-     * PSR-7 UriInterface treats an empty component the same as a missing component as
-     * getQuery(), getFragment() etc. always return a string. This explains the slight
-     * difference to RFC 3986 Section 5.3.
-     *
-     * Another adjustment is that the authority separator is added even when the authority is missing/empty
-     * for the "file" scheme. This is because PHP stream functions like `file_get_contents` only work with
-     * `file:///myfile` but not with `file:/myfile` although they are equivalent according to RFC 3986. But
-     * `file:///` is the more common syntax for the file scheme anyway (Chrome for example redirects to
-     * that format).
-     *
-     * @param string $scheme
-     * @param string $authority
-     * @param string $path
-     * @param string $query
-     * @param string $fragment
-     *
-     * @return string
-     *
-     * @link https://tools.ietf.org/html/rfc3986#section-5.3
-     */
-    public static function composeComponents($scheme, $authority, $path, $query, $fragment)
-    {
-        $uri = '';
-
-        // weak type checks to also accept null until we can add scalar type hints
-        if ($scheme != '') {
-            $uri .= $scheme . ':';
-        }
-
-        if ($authority != ''|| $scheme === 'file') {
-            $uri .= '//' . $authority;
-        }
-
-        $uri .= $path;
-
-        if ($query != '') {
-            $uri .= '?' . $query;
-        }
-
-        if ($fragment != '') {
-            $uri .= '#' . $fragment;
-        }
-
-        return $uri;
+        return $this->scheme;
     }
 
     public function getAuthority()
@@ -658,11 +437,6 @@ class Uri implements UriInterface
         }
 
         return $authority;
-    }
-
-    public function getScheme()
-    {
-        return $this->scheme;
     }
 
     public function getUserInfo()
@@ -803,8 +577,234 @@ class Uri implements UriInterface
         return $new;
     }
 
+    /**
+     * Apply parse_url parts to a URI.
+     *
+     * @param array $parts Array of parse_url parts to apply.
+     */
+    private function applyParts(array $parts)
+    {
+        $this->scheme = isset($parts['scheme'])
+            ? $this->filterScheme($parts['scheme'])
+            : '';
+        $this->userInfo = isset($parts['user'])
+            ? $this->filterUserInfoComponent($parts['user'])
+            : '';
+        $this->host = isset($parts['host'])
+            ? $this->filterHost($parts['host'])
+            : '';
+        $this->port = isset($parts['port'])
+            ? $this->filterPort($parts['port'])
+            : null;
+        $this->path = isset($parts['path'])
+            ? $this->filterPath($parts['path'])
+            : '';
+        $this->query = isset($parts['query'])
+            ? $this->filterQueryAndFragment($parts['query'])
+            : '';
+        $this->fragment = isset($parts['fragment'])
+            ? $this->filterQueryAndFragment($parts['fragment'])
+            : '';
+        if (isset($parts['pass'])) {
+            $this->userInfo .= ':' . $this->filterUserInfoComponent($parts['pass']);
+        }
+
+        $this->removeDefaultPort();
+    }
+
+    /**
+     * @param string $scheme
+     *
+     * @return string
+     *
+     * @throws \InvalidArgumentException If the scheme is invalid.
+     */
+    private function filterScheme($scheme)
+    {
+        if (!is_string($scheme)) {
+            throw new \InvalidArgumentException('Scheme must be a string');
+        }
+
+        return \strtr($scheme, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
+    }
+
+    /**
+     * @param string $component
+     *
+     * @return string
+     *
+     * @throws \InvalidArgumentException If the user info is invalid.
+     */
+    private function filterUserInfoComponent($component)
+    {
+        if (!is_string($component)) {
+            throw new \InvalidArgumentException('User info must be a string');
+        }
+
+        return preg_replace_callback(
+            '/(?:[^%' . self::$charUnreserved . self::$charSubDelims . ']+|%(?![A-Fa-f0-9]{2}))/',
+            [$this, 'rawurlencodeMatchZero'],
+            $component
+        );
+    }
+
+    /**
+     * @param string $host
+     *
+     * @return string
+     *
+     * @throws \InvalidArgumentException If the host is invalid.
+     */
+    private function filterHost($host)
+    {
+        if (!is_string($host)) {
+            throw new \InvalidArgumentException('Host must be a string');
+        }
+
+        return \strtr($host, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
+    }
+
+    /**
+     * @param int|null $port
+     *
+     * @return int|null
+     *
+     * @throws \InvalidArgumentException If the port is invalid.
+     */
+    private function filterPort($port)
+    {
+        if ($port === null) {
+            return null;
+        }
+
+        $port = (int) $port;
+        if (0 > $port || 0xffff < $port) {
+            throw new \InvalidArgumentException(
+                sprintf('Invalid port: %d. Must be between 0 and 65535', $port)
+            );
+        }
+
+        return $port;
+    }
+
+    /**
+     * @param UriInterface $uri
+     * @param array        $keys
+     *
+     * @return array
+     */
+    private static function getFilteredQueryString(UriInterface $uri, array $keys)
+    {
+        $current = $uri->getQuery();
+
+        if ($current === '') {
+            return [];
+        }
+
+        $decodedKeys = array_map('rawurldecode', $keys);
+
+        return array_filter(explode('&', $current), function ($part) use ($decodedKeys) {
+            return !in_array(rawurldecode(explode('=', $part)[0]), $decodedKeys, true);
+        });
+    }
+
+    /**
+     * @param string      $key
+     * @param string|null $value
+     *
+     * @return string
+     */
+    private static function generateQueryString($key, $value)
+    {
+        // Query string separators ("=", "&") within the key or value need to be encoded
+        // (while preventing double-encoding) before setting the query string. All other
+        // chars that need percent-encoding will be encoded by withQuery().
+        $queryString = strtr($key, self::$replaceQuery);
+
+        if ($value !== null) {
+            $queryString .= '=' . strtr($value, self::$replaceQuery);
+        }
+
+        return $queryString;
+    }
+
+    private function removeDefaultPort()
+    {
+        if ($this->port !== null && self::isDefaultPort($this)) {
+            $this->port = null;
+        }
+    }
+
+    /**
+     * Filters the path of a URI
+     *
+     * @param string $path
+     *
+     * @return string
+     *
+     * @throws \InvalidArgumentException If the path is invalid.
+     */
+    private function filterPath($path)
+    {
+        if (!is_string($path)) {
+            throw new \InvalidArgumentException('Path must be a string');
+        }
+
+        return preg_replace_callback(
+            '/(?:[^' . self::$charUnreserved . self::$charSubDelims . '%:@\/]++|%(?![A-Fa-f0-9]{2}))/',
+            [$this, 'rawurlencodeMatchZero'],
+            $path
+        );
+    }
+
+    /**
+     * Filters the query string or fragment of a URI.
+     *
+     * @param string $str
+     *
+     * @return string
+     *
+     * @throws \InvalidArgumentException If the query or fragment is invalid.
+     */
+    private function filterQueryAndFragment($str)
+    {
+        if (!is_string($str)) {
+            throw new \InvalidArgumentException('Query and fragment must be a string');
+        }
+
+        return preg_replace_callback(
+            '/(?:[^' . self::$charUnreserved . self::$charSubDelims . '%:@\/\?]++|%(?![A-Fa-f0-9]{2}))/',
+            [$this, 'rawurlencodeMatchZero'],
+            $str
+        );
+    }
+
     private function rawurlencodeMatchZero(array $match)
     {
         return rawurlencode($match[0]);
+    }
+
+    private function validateState()
+    {
+        if ($this->host === '' && ($this->scheme === 'http' || $this->scheme === 'https')) {
+            $this->host = self::HTTP_DEFAULT_HOST;
+        }
+
+        if ($this->getAuthority() === '') {
+            if (0 === strpos($this->path, '//')) {
+                throw new \InvalidArgumentException('The path of a URI without an authority must not start with two slashes "//"');
+            }
+            if ($this->scheme === '' && false !== strpos(explode('/', $this->path, 2)[0], ':')) {
+                throw new \InvalidArgumentException('A relative URI must not have a path beginning with a segment containing a colon');
+            }
+        } elseif (isset($this->path[0]) && $this->path[0] !== '/') {
+            @trigger_error(
+                'The path of a URI with an authority must start with a slash "/" or be empty. Automagically fixing the URI ' .
+                'by adding a leading slash to the path is deprecated since version 1.4 and will throw an exception instead.',
+                E_USER_DEPRECATED
+            );
+            $this->path = '/' . $this->path;
+            //throw new \InvalidArgumentException('The path of a URI with an authority must start with a slash "/" or be empty');
+        }
     }
 }

@@ -25,6 +25,17 @@ class RuleWatchChain extends \SplDoublyLinkedList
     protected $offset = 0;
 
     /**
+     * Moves the internal iterator to the specified offset
+     *
+     * @param int $offset The offset to seek to.
+     */
+    public function seek($offset)
+    {
+        $this->rewind();
+        for ($i = 0; $i < $offset; $i++, $this->next());
+    }
+
+    /**
      * Removes the current element from the list
      *
      * As SplDoublyLinkedList only allows deleting a particular offset and
@@ -37,16 +48,5 @@ class RuleWatchChain extends \SplDoublyLinkedList
         $offset = $this->key();
         $this->offsetUnset($offset);
         $this->seek($offset);
-    }
-
-    /**
-     * Moves the internal iterator to the specified offset
-     *
-     * @param int $offset The offset to seek to.
-     */
-    public function seek($offset)
-    {
-        $this->rewind();
-        for ($i = 0; $i < $offset; $i++, $this->next());
     }
 }

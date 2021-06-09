@@ -31,18 +31,6 @@ class PerforceDriver extends VcsDriver
     /**
      * {@inheritDoc}
      */
-    public static function supports(IOInterface $io, Config $config, $url, $deep = false)
-    {
-        if ($deep || preg_match('#\b(perforce|p4)\b#i', $url)) {
-            return Perforce::checkServerExists($url, new ProcessExecutor($io));
-        }
-
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function initialize()
     {
         $this->depot = $this->repoConfig['depot'];
@@ -73,14 +61,6 @@ class PerforceDriver extends VcsDriver
 
         $repoDir = $this->config->get('cache-vcs-dir') . '/' . $this->depot;
         $this->perforce = Perforce::create($repoConfig, $this->getUrl(), $repoDir, $this->process, $this->io);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getUrl()
-    {
-        return $this->url;
     }
 
     /**
@@ -147,6 +127,14 @@ class PerforceDriver extends VcsDriver
     /**
      * {@inheritDoc}
      */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function hasComposerFile($identifier)
     {
         $composerInfo = $this->perforce->getComposerInformation('//' . $this->depot . '/' . $identifier);
@@ -160,6 +148,18 @@ class PerforceDriver extends VcsDriver
     public function getContents($url)
     {
         throw new \BadMethodCallException('Not implemented/used in PerforceDriver');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function supports(IOInterface $io, Config $config, $url, $deep = false)
+    {
+        if ($deep || preg_match('#\b(perforce|p4)\b#i', $url)) {
+            return Perforce::checkServerExists($url, new ProcessExecutor($io));
+        }
+
+        return false;
     }
 
     /**

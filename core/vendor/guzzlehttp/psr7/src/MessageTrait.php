@@ -47,11 +47,6 @@ trait MessageTrait
         return isset($this->headerNames[strtolower($header)]);
     }
 
-    public function getHeaderLine($header)
-    {
-        return implode(', ', $this->getHeader($header));
-    }
-
     public function getHeader($header)
     {
         $header = strtolower($header);
@@ -63,6 +58,11 @@ trait MessageTrait
         $header = $this->headerNames[$header];
 
         return $this->headers[$header];
+    }
+
+    public function getHeaderLine($header)
+    {
+        return implode(', ', $this->getHeader($header));
     }
 
     public function withHeader($header, $value)
@@ -79,61 +79,6 @@ trait MessageTrait
         $new->headers[$header] = $value;
 
         return $new;
-    }
-
-    private function assertHeader($header)
-    {
-        if (!is_string($header)) {
-            throw new \InvalidArgumentException(sprintf(
-                'Header name must be a string but %s provided.',
-                is_object($header) ? get_class($header) : gettype($header)
-            ));
-        }
-
-        if ($header === '') {
-            throw new \InvalidArgumentException('Header name can not be empty.');
-        }
-    }
-
-    private function normalizeHeaderValue($value)
-    {
-        if (!is_array($value)) {
-            return $this->trimHeaderValues([$value]);
-        }
-
-        if (count($value) === 0) {
-            throw new \InvalidArgumentException('Header value can not be an empty array.');
-        }
-
-        return $this->trimHeaderValues($value);
-    }
-
-    /**
-     * Trims whitespace from the header values.
-     *
-     * Spaces and tabs ought to be excluded by parsers when extracting the field value from a header field.
-     *
-     * header-field = field-name ":" OWS field-value OWS
-     * OWS          = *( SP / HTAB )
-     *
-     * @param string[] $values Header values
-     *
-     * @return string[] Trimmed header values
-     *
-     * @see https://tools.ietf.org/html/rfc7230#section-3.2.4
-     */
-    private function trimHeaderValues(array $values)
-    {
-        return array_map(function ($value) {
-            if (!is_scalar($value) && null !== $value) {
-                throw new \InvalidArgumentException(sprintf(
-                    'Header value must be scalar or null but %s provided.',
-                    is_object($value) ? get_class($value) : gettype($value)
-                ));
-            }
-
-            return trim((string) $value, " \t");
-        }, array_values($values));
     }
 
     public function withAddedHeader($header, $value)
@@ -209,6 +154,61 @@ trait MessageTrait
                 $this->headerNames[$normalized] = $header;
                 $this->headers[$header] = $value;
             }
+        }
+    }
+
+    private function normalizeHeaderValue($value)
+    {
+        if (!is_array($value)) {
+            return $this->trimHeaderValues([$value]);
+        }
+
+        if (count($value) === 0) {
+            throw new \InvalidArgumentException('Header value can not be an empty array.');
+        }
+
+        return $this->trimHeaderValues($value);
+    }
+
+    /**
+     * Trims whitespace from the header values.
+     *
+     * Spaces and tabs ought to be excluded by parsers when extracting the field value from a header field.
+     *
+     * header-field = field-name ":" OWS field-value OWS
+     * OWS          = *( SP / HTAB )
+     *
+     * @param string[] $values Header values
+     *
+     * @return string[] Trimmed header values
+     *
+     * @see https://tools.ietf.org/html/rfc7230#section-3.2.4
+     */
+    private function trimHeaderValues(array $values)
+    {
+        return array_map(function ($value) {
+            if (!is_scalar($value) && null !== $value) {
+                throw new \InvalidArgumentException(sprintf(
+                    'Header value must be scalar or null but %s provided.',
+                    is_object($value) ? get_class($value) : gettype($value)
+                ));
+            }
+
+            return trim((string) $value, " \t");
+        }, array_values($values));
+    }
+
+    private function assertHeader($header)
+    {
+        if (!is_string($header)) {
+            throw new \InvalidArgumentException(sprintf(
+                'Header name must be a string but %s provided.',
+                is_object($header) ? get_class($header) : gettype($header)
+            ));
+        }
+
+        if ($header === '') {
+            throw new \InvalidArgumentException('Header name can not be empty.');
         }
     }
 }

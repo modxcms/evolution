@@ -37,20 +37,6 @@ class FlowdockFormatter implements FormatterInterface
     /**
      * {@inheritdoc}
      */
-    public function formatBatch(array $records): array
-    {
-        $formatted = [];
-
-        foreach ($records as $record) {
-            $formatted[] = $this->format($record);
-        }
-
-        return $formatted;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function format(array $record): array
     {
         $tags = [
@@ -80,6 +66,20 @@ class FlowdockFormatter implements FormatterInterface
         ];
 
         return $record;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function formatBatch(array $records): array
+    {
+        $formatted = [];
+
+        foreach ($records as $record) {
+            $formatted[] = $this->format($record);
+        }
+
+        return $formatted;
     }
 
     public function getShortMessage(string $message): string

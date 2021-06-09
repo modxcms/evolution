@@ -62,18 +62,6 @@ class HashRing implements DistributorInterface, HashGeneratorInterface
     }
 
     /**
-     * Resets the distributor.
-     */
-    private function reset()
-    {
-        unset(
-            $this->ring,
-            $this->ringKeys,
-            $this->ringKeysCount
-        );
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function remove($node)
@@ -93,15 +81,41 @@ class HashRing implements DistributorInterface, HashGeneratorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Resets the distributor.
      */
-    public function getBySlot($slot)
+    private function reset()
     {
-        $this->initialize();
+        unset(
+            $this->ring,
+            $this->ringKeys,
+            $this->ringKeysCount
+        );
+    }
 
-        if (isset($this->ring[$slot])) {
-            return $this->ring[$slot];
+    /**
+     * Returns the initialization status of the distributor.
+     *
+     * @return bool
+     */
+    private function isInitialized()
+    {
+        return isset($this->ringKeys);
+    }
+
+    /**
+     * Calculates the total weight of all the nodes in the distributor.
+     *
+     * @return int
+     */
+    private function computeTotalWeight()
+    {
+        $totalWeight = 0;
+
+        foreach ($this->nodes as $node) {
+            $totalWeight += $node['weight'];
         }
+
+        return $totalWeight;
     }
 
     /**
@@ -129,32 +143,6 @@ class HashRing implements DistributorInterface, HashGeneratorInterface
         ksort($this->ring, SORT_NUMERIC);
         $this->ringKeys = array_keys($this->ring);
         $this->ringKeysCount = count($this->ringKeys);
-    }
-
-    /**
-     * Returns the initialization status of the distributor.
-     *
-     * @return bool
-     */
-    private function isInitialized()
-    {
-        return isset($this->ringKeys);
-    }
-
-    /**
-     * Calculates the total weight of all the nodes in the distributor.
-     *
-     * @return int
-     */
-    private function computeTotalWeight()
-    {
-        $totalWeight = 0;
-
-        foreach ($this->nodes as $node) {
-            $totalWeight += $node['weight'];
-        }
-
-        return $totalWeight;
     }
 
     /**
@@ -201,20 +189,21 @@ class HashRing implements DistributorInterface, HashGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function get($value)
+    public function getByHash($hash)
     {
-        $hash = $this->hash($value);
-        $node = $this->getByHash($hash);
-
-        return $node;
+        return $this->ring[$this->getSlot($hash)];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getByHash($hash)
+    public function getBySlot($slot)
     {
-        return $this->ring[$this->getSlot($hash)];
+        $this->initialize();
+
+        if (isset($this->ring[$slot])) {
+            return $this->ring[$slot];
+        }
     }
 
     /**
@@ -242,6 +231,17 @@ class HashRing implements DistributorInterface, HashGeneratorInterface
         }
 
         return $ringKeys[$this->wrapAroundStrategy($upper, $lower, $this->ringKeysCount)];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function get($value)
+    {
+        $hash = $this->hash($value);
+        $node = $this->getByHash($hash);
+
+        return $node;
     }
 
     /**

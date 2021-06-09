@@ -56,118 +56,6 @@ class OracleSchemaManager extends AbstractSchemaManager
     }
 
     /**
-     * Kills sessions connected with the given user.
-     *
-     * This is useful to force DROP USER operations which could fail because of active user sessions.
-     *
-     * @param string $user The name of the user to kill sessions for.
-     *
-     * @return void
-     */
-    private function killUserSessions($user)
-    {
-        $sql = <<<SQL
-SELECT
-    s.sid,
-    s.serial#
-FROM
-    gv\$session s,
-    gv\$process p
-WHERE
-    s.username = ?
-    AND p.addr(+) = s.paddr
-SQL;
-
-        $activeUserSessions = $this->_conn->fetchAllAssociative($sql, [strtoupper($user)]);
-
-        foreach ($activeUserSessions as $activeUserSession) {
-            $activeUserSession = array_change_key_case($activeUserSession, CASE_LOWER);
-
-            $this->_execSql(
-                sprintf(
-                    "ALTER SYSTEM KILL SESSION '%s, %s' IMMEDIATE",
-                    $activeUserSession['sid'],
-                    $activeUserSession['serial#']
-                )
-            );
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string|null $database
-     *
-     * Calling this method without an argument or by passing NULL is deprecated.
-     */
-    public function createDatabase($database = null)
-    {
-        if ($database === null) {
-            $database = $this->_conn->getDatabase();
-        }
-
-        $statement = 'CREATE USER ' . $database;
-
-        $params = $this->_conn->getParams();
-
-        if (isset($params['password'])) {
-            $statement .= ' IDENTIFIED BY ' . $params['password'];
-        }
-
-        $this->_conn->executeStatement($statement);
-
-        $statement = 'GRANT DBA TO ' . $database;
-        $this->_conn->executeStatement($statement);
-    }
-
-    /**
-     * @param string $table
-     *
-     * @return bool
-     */
-    public function dropAutoincrement($table)
-    {
-        assert($this->_platform instanceof OraclePlatform);
-
-        $sql = $this->_platform->getDropAutoincrementSql($table);
-        foreach ($sql as $query) {
-            $this->_conn->executeStatement($query);
-        }
-
-        return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function dropTable($name)
-    {
-        $this->tryMethod('dropAutoincrement', $name);
-
-        parent::dropTable($name);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function listTableDetails($name): Table
-    {
-        $table = parent::listTableDetails($name);
-
-        $platform = $this->_platform;
-        assert($platform instanceof OraclePlatform);
-        $sql = $platform->getListTableCommentsSQL($name);
-
-        $tableOptions = $this->_conn->fetchAssociative($sql);
-
-        if ($tableOptions !== false) {
-            $table->addOption('comment', $tableOptions['COMMENTS']);
-        }
-
-        return $table;
-    }
-
-    /**
      * {@inheritdoc}
      */
     protected function _getPortableViewDefinition($view)
@@ -175,25 +63,6 @@ SQL;
         $view = array_change_key_case($view, CASE_LOWER);
 
         return new View($this->getQuotedIdentifierName($view['view_name']), $view['text']);
-    }
-
-    /**
-     * Returns the quoted representation of the given identifier name.
-     *
-     * Quotes non-uppercase identifiers explicitly to preserve case
-     * and thus make references to the particular identifier work.
-     *
-     * @param string $identifier The identifier to quote.
-     *
-     * @return string The quoted identifier.
-     */
-    private function getQuotedIdentifierName($identifier)
-    {
-        if (preg_match('/[a-z]/', $identifier)) {
-            return $this->_platform->quoteIdentifier($identifier);
-        }
-
-        return $identifier;
     }
 
     /**
@@ -418,5 +287,136 @@ SQL;
         $database = array_change_key_case($database, CASE_LOWER);
 
         return $database['username'];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param string|null $database
+     *
+     * Calling this method without an argument or by passing NULL is deprecated.
+     */
+    public function createDatabase($database = null)
+    {
+        if ($database === null) {
+            $database = $this->_conn->getDatabase();
+        }
+
+        $statement = 'CREATE USER ' . $database;
+
+        $params = $this->_conn->getParams();
+
+        if (isset($params['password'])) {
+            $statement .= ' IDENTIFIED BY ' . $params['password'];
+        }
+
+        $this->_conn->executeStatement($statement);
+
+        $statement = 'GRANT DBA TO ' . $database;
+        $this->_conn->executeStatement($statement);
+    }
+
+    /**
+     * @param string $table
+     *
+     * @return bool
+     */
+    public function dropAutoincrement($table)
+    {
+        assert($this->_platform instanceof OraclePlatform);
+
+        $sql = $this->_platform->getDropAutoincrementSql($table);
+        foreach ($sql as $query) {
+            $this->_conn->executeStatement($query);
+        }
+
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function dropTable($name)
+    {
+        $this->tryMethod('dropAutoincrement', $name);
+
+        parent::dropTable($name);
+    }
+
+    /**
+     * Returns the quoted representation of the given identifier name.
+     *
+     * Quotes non-uppercase identifiers explicitly to preserve case
+     * and thus make references to the particular identifier work.
+     *
+     * @param string $identifier The identifier to quote.
+     *
+     * @return string The quoted identifier.
+     */
+    private function getQuotedIdentifierName($identifier)
+    {
+        if (preg_match('/[a-z]/', $identifier)) {
+            return $this->_platform->quoteIdentifier($identifier);
+        }
+
+        return $identifier;
+    }
+
+    /**
+     * Kills sessions connected with the given user.
+     *
+     * This is useful to force DROP USER operations which could fail because of active user sessions.
+     *
+     * @param string $user The name of the user to kill sessions for.
+     *
+     * @return void
+     */
+    private function killUserSessions($user)
+    {
+        $sql = <<<SQL
+SELECT
+    s.sid,
+    s.serial#
+FROM
+    gv\$session s,
+    gv\$process p
+WHERE
+    s.username = ?
+    AND p.addr(+) = s.paddr
+SQL;
+
+        $activeUserSessions = $this->_conn->fetchAllAssociative($sql, [strtoupper($user)]);
+
+        foreach ($activeUserSessions as $activeUserSession) {
+            $activeUserSession = array_change_key_case($activeUserSession, CASE_LOWER);
+
+            $this->_execSql(
+                sprintf(
+                    "ALTER SYSTEM KILL SESSION '%s, %s' IMMEDIATE",
+                    $activeUserSession['sid'],
+                    $activeUserSession['serial#']
+                )
+            );
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function listTableDetails($name): Table
+    {
+        $table = parent::listTableDetails($name);
+
+        $platform = $this->_platform;
+        assert($platform instanceof OraclePlatform);
+        $sql = $platform->getListTableCommentsSQL($name);
+
+        $tableOptions = $this->_conn->fetchAssociative($sql);
+
+        if ($tableOptions !== false) {
+            $table->addOption('comment', $tableOptions['COMMENTS']);
+        }
+
+        return $table;
     }
 }

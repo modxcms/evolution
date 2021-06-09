@@ -65,37 +65,24 @@ final class CouchbaseBucketCache extends CacheProvider
         return false;
     }
 
-    private function normalizeKey(string $id): string
-    {
-        $normalized = substr($id, 0, self::MAX_KEY_LENGTH);
-
-        if ($normalized === false) {
-            return $id;
-        }
-
-        return $normalized;
-    }
-
     /**
      * {@inheritdoc}
      */
-    protected function doFlush()
+    protected function doContains($id)
     {
-        $manager = $this->bucket->manager();
+        $id = $this->normalizeKey($id);
 
-        // Flush does not return with success or failure, and must be enabled per bucket on the server.
-        // Store a marker item so that we will know if it was successful.
-        $this->doSave(__METHOD__, true, 60);
-
-        $manager->flush();
-
-        if ($this->doContains(__METHOD__)) {
-            $this->doDelete(__METHOD__);
-
+        try {
+            $document = $this->bucket->get($id);
+        } catch (Exception $e) {
             return false;
         }
 
-        return true;
+        if ($document instanceof Document) {
+            return ! $document->error;
+        }
+
+        return false;
     }
 
     /**
@@ -113,40 +100,6 @@ final class CouchbaseBucketCache extends CacheProvider
             $document = $this->bucket->upsert($id, $encoded, [
                 'expiry' => (int) $lifeTime,
             ]);
-        } catch (Exception $e) {
-            return false;
-        }
-
-        if ($document instanceof Document) {
-            return ! $document->error;
-        }
-
-        return false;
-    }
-
-    /**
-     * Expiry treated as a unix timestamp instead of an offset if expiry is greater than 30 days.
-     *
-     * @src https://developer.couchbase.com/documentation/server/4.1/developer-guide/expiry.html
-     */
-    private function normalizeExpiry(int $expiry): int
-    {
-        if ($expiry > self::THIRTY_DAYS_IN_SECONDS) {
-            return time() + $expiry;
-        }
-
-        return $expiry;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function doContains($id)
-    {
-        $id = $this->normalizeKey($id);
-
-        try {
-            $document = $this->bucket->get($id);
         } catch (Exception $e) {
             return false;
         }
@@ -181,6 +134,28 @@ final class CouchbaseBucketCache extends CacheProvider
     /**
      * {@inheritdoc}
      */
+    protected function doFlush()
+    {
+        $manager = $this->bucket->manager();
+
+        // Flush does not return with success or failure, and must be enabled per bucket on the server.
+        // Store a marker item so that we will know if it was successful.
+        $this->doSave(__METHOD__, true, 60);
+
+        $manager->flush();
+
+        if ($this->doContains(__METHOD__)) {
+            $this->doDelete(__METHOD__);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function doGetStats()
     {
         $manager          = $this->bucket->manager();
@@ -196,5 +171,30 @@ final class CouchbaseBucketCache extends CacheProvider
             Cache::STATS_MEMORY_USAGE     => $interestingStats['mem_used'],
             Cache::STATS_MEMORY_AVAILABLE => $node['memoryFree'],
         ];
+    }
+
+    private function normalizeKey(string $id): string
+    {
+        $normalized = substr($id, 0, self::MAX_KEY_LENGTH);
+
+        if ($normalized === false) {
+            return $id;
+        }
+
+        return $normalized;
+    }
+
+    /**
+     * Expiry treated as a unix timestamp instead of an offset if expiry is greater than 30 days.
+     *
+     * @src https://developer.couchbase.com/documentation/server/4.1/developer-guide/expiry.html
+     */
+    private function normalizeExpiry(int $expiry): int
+    {
+        if ($expiry > self::THIRTY_DAYS_IN_SECONDS) {
+            return time() + $expiry;
+        }
+
+        return $expiry;
     }
 }

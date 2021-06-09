@@ -89,18 +89,6 @@ class Pipeline implements PipelineContract
     }
 
     /**
-     * Run the pipeline and return the result.
-     *
-     * @return mixed
-     */
-    public function thenReturn()
-    {
-        return $this->then(function ($passable) {
-            return $passable;
-        });
-    }
-
-    /**
      * Run the pipeline with a final destination callback.
      *
      * @param  \Closure  $destination
@@ -116,13 +104,32 @@ class Pipeline implements PipelineContract
     }
 
     /**
-     * Get the array of configured pipes.
+     * Run the pipeline and return the result.
      *
-     * @return array
+     * @return mixed
      */
-    protected function pipes()
+    public function thenReturn()
     {
-        return $this->pipes;
+        return $this->then(function ($passable) {
+            return $passable;
+        });
+    }
+
+    /**
+     * Get the final piece of the Closure onion.
+     *
+     * @param  \Closure  $destination
+     * @return \Closure
+     */
+    protected function prepareDestination(Closure $destination)
+    {
+        return function ($passable) use ($destination) {
+            try {
+                return $destination($passable);
+            } catch (Throwable $e) {
+                return $this->handleException($passable, $e);
+            }
+        };
     }
 
     /**
@@ -186,6 +193,16 @@ class Pipeline implements PipelineContract
     }
 
     /**
+     * Get the array of configured pipes.
+     *
+     * @return array
+     */
+    protected function pipes()
+    {
+        return $this->pipes;
+    }
+
+    /**
      * Get the container instance.
      *
      * @return \Illuminate\Contracts\Container\Container
@@ -237,22 +254,5 @@ class Pipeline implements PipelineContract
     protected function handleException($passable, Throwable $e)
     {
         throw $e;
-    }
-
-    /**
-     * Get the final piece of the Closure onion.
-     *
-     * @param  \Closure  $destination
-     * @return \Closure
-     */
-    protected function prepareDestination(Closure $destination)
-    {
-        return function ($passable) use ($destination) {
-            try {
-                return $destination($passable);
-            } catch (Throwable $e) {
-                return $this->handleException($passable, $e);
-            }
-        };
     }
 }

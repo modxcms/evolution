@@ -4,6 +4,7 @@ namespace Illuminate\Http\Client;
 
 use Closure;
 use GuzzleHttp\Psr7\Response as Psr7Response;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use PHPUnit\Framework\Assert as PHPUnit;
@@ -55,6 +56,13 @@ class Factory
     }
 
     /**
+     * The event dispatcher implementation.
+     *
+     * @var \Illuminate\Contracts\Events\Dispatcher|null
+     */
+    protected $dispatcher;
+
+    /**
      * The stub callables that will handle requests.
      *
      * @var \Illuminate\Support\Collection
@@ -85,24 +93,37 @@ class Factory
     /**
      * Create a new factory instance.
      *
+     * @param  \Illuminate\Contracts\Events\Dispatcher|null  $dispatcher
      * @return void
      */
-    public function __construct()
+    public function __construct(Dispatcher $dispatcher = null)
     {
+        $this->dispatcher = $dispatcher;
+
         $this->stubCallbacks = collect();
     }
 
     /**
-     * Register a response sequence for the given URL pattern.
+     * Create a new response instance for use during stubbing.
      *
-     * @param  string  $url
-     * @return \Illuminate\Http\Client\ResponseSequence
+     * @param  array|string  $body
+     * @param  int  $status
+     * @param  array  $headers
+     * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function fakeSequence($url = '*')
+    public static function response($body = null, $status = 200, $headers = [])
     {
-        return tap($this->sequence(), function ($sequence) use ($url) {
-            $this->fake([$url => $sequence]);
-        });
+        if (is_array($body)) {
+            $body = json_encode($body);
+
+            $headers['Content-Type'] = 'application/json';
+        }
+
+        $response = new Psr7Response($status, $headers, $body);
+
+        return class_exists(GuzzleHttp\Promise\Create::class)
+            ? \GuzzleHttp\Promise\Create::promiseFor($response)
+            : \GuzzleHttp\Promise\promise_for($response);
     }
 
     /**
@@ -152,38 +173,16 @@ class Factory
     }
 
     /**
-     * Begin recording request / response pairs.
+     * Register a response sequence for the given URL pattern.
      *
-     * @return $this
+     * @param  string  $url
+     * @return \Illuminate\Http\Client\ResponseSequence
      */
-    protected function record()
+    public function fakeSequence($url = '*')
     {
-        $this->recording = true;
-
-        return $this;
-    }
-
-    /**
-     * Create a new response instance for use during stubbing.
-     *
-     * @param  array|string  $body
-     * @param  int  $status
-     * @param  array  $headers
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public static function response($body = null, $status = 200, $headers = [])
-    {
-        if (is_array($body)) {
-            $body = json_encode($body);
-
-            $headers['Content-Type'] = 'application/json';
-        }
-
-        $response = new Psr7Response($status, $headers, $body);
-
-        return class_exists(GuzzleHttp\Promise\Create::class)
-            ? \GuzzleHttp\Promise\Create::promiseFor($response)
-            : \GuzzleHttp\Promise\promise_for($response);
+        return tap($this->sequence(), function ($sequence) use ($url) {
+            $this->fake([$url => $sequence]);
+        });
     }
 
     /**
@@ -204,6 +203,18 @@ class Factory
                         ? $callback($request, $options)
                         : $callback;
         });
+    }
+
+    /**
+     * Begin recording request / response pairs.
+     *
+     * @return $this
+     */
+    protected function record()
+    {
+        $this->recording = true;
+
+        return $this;
     }
 
     /**
@@ -235,27 +246,6 @@ class Factory
     }
 
     /**
-     * Get a collection of the request / response pairs matching the given truth test.
-     *
-     * @param  callable  $callback
-     * @return \Illuminate\Support\Collection
-     */
-    public function recorded($callback = null)
-    {
-        if (empty($this->recorded)) {
-            return collect();
-        }
-
-        $callback = $callback ?: function () {
-            return true;
-        };
-
-        return collect($this->recorded)->filter(function ($pair) use ($callback) {
-            return $callback($pair[0], $pair[1]);
-        });
-    }
-
-    /**
      * Assert that the given request was sent in the given order.
      *
      * @param  array  $callbacks
@@ -275,17 +265,6 @@ class Factory
                 $this->recorded[$index][1]
             ), 'An expected request (#'.($index + 1).') was not recorded.');
         }
-    }
-
-    /**
-     * Assert how many requests have been recorded.
-     *
-     * @param  int  $count
-     * @return void
-     */
-    public function assertSentCount($count)
-    {
-        PHPUnit::assertCount($count, $this->recorded);
     }
 
     /**
@@ -316,6 +295,17 @@ class Factory
     }
 
     /**
+     * Assert how many requests have been recorded.
+     *
+     * @param  int  $count
+     * @return void
+     */
+    public function assertSentCount($count)
+    {
+        PHPUnit::assertCount($count, $this->recorded);
+    }
+
+    /**
      * Assert that every created response sequence is empty.
      *
      * @return void
@@ -328,6 +318,47 @@ class Factory
                 'Not all response sequences are empty.'
             );
         }
+    }
+
+    /**
+     * Get a collection of the request / response pairs matching the given truth test.
+     *
+     * @param  callable  $callback
+     * @return \Illuminate\Support\Collection
+     */
+    public function recorded($callback = null)
+    {
+        if (empty($this->recorded)) {
+            return collect();
+        }
+
+        $callback = $callback ?: function () {
+            return true;
+        };
+
+        return collect($this->recorded)->filter(function ($pair) use ($callback) {
+            return $callback($pair[0], $pair[1]);
+        });
+    }
+
+    /**
+     * Create a new pending request instance for this factory.
+     *
+     * @return \Illuminate\Http\Client\PendingRequest
+     */
+    protected function newPendingRequest()
+    {
+        return new PendingRequest($this);
+    }
+
+    /**
+     * Get the current event dispatcher implementation.
+     *
+     * @return \Illuminate\Contracts\Events\Dispatcher|null
+     */
+    public function getDispatcher()
+    {
+        return $this->dispatcher;
     }
 
     /**
@@ -346,15 +377,5 @@ class Factory
         return tap($this->newPendingRequest(), function ($request) {
             $request->stub($this->stubCallbacks);
         })->{$method}(...$parameters);
-    }
-
-    /**
-     * Create a new pending request instance for this factory.
-     *
-     * @return \Illuminate\Http\Client\PendingRequest
-     */
-    protected function newPendingRequest()
-    {
-        return new PendingRequest($this);
     }
 }

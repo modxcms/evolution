@@ -68,6 +68,14 @@ class Pool implements PromisorInterface
     }
 
     /**
+     * Get promise
+     */
+    public function promise(): PromiseInterface
+    {
+        return $this->each->promise();
+    }
+
+    /**
      * Sends multiple requests concurrently and returns an array of responses
      * and exceptions that uses the same ordering as the provided requests.
      *
@@ -113,13 +121,5 @@ class Pool implements PromisorInterface
                 $results[$k] = $v;
             };
         }
-    }
-
-    /**
-     * Get promise
-     */
-    public function promise(): PromiseInterface
-    {
-        return $this->each->promise();
     }
 }

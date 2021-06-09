@@ -88,14 +88,6 @@ class Package extends BasePackage
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getType()
-    {
-        return $this->type ?: 'library';
-    }
-
-    /**
      * @param string $type
      */
     public function setType($type)
@@ -106,9 +98,25 @@ class Package extends BasePackage
     /**
      * {@inheritDoc}
      */
+    public function getType()
+    {
+        return $this->type ?: 'library';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getStability()
     {
         return $this->stability;
+    }
+
+    /**
+     * @param string $targetDir
+     */
+    public function setTargetDir($targetDir)
+    {
+        $this->targetDir = $targetDir;
     }
 
     /**
@@ -124,22 +132,6 @@ class Package extends BasePackage
     }
 
     /**
-     * @param string $targetDir
-     */
-    public function setTargetDir($targetDir)
-    {
-        $this->targetDir = $targetDir;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getExtra()
-    {
-        return $this->extra;
-    }
-
-    /**
      * @param array $extra
      */
     public function setExtra(array $extra)
@@ -150,9 +142,9 @@ class Package extends BasePackage
     /**
      * {@inheritDoc}
      */
-    public function getBinaries()
+    public function getExtra()
     {
-        return $this->binaries;
+        return $this->extra;
     }
 
     /**
@@ -166,9 +158,9 @@ class Package extends BasePackage
     /**
      * {@inheritDoc}
      */
-    public function getInstallationSource()
+    public function getBinaries()
     {
-        return $this->installationSource;
+        return $this->binaries;
     }
 
     /**
@@ -182,9 +174,9 @@ class Package extends BasePackage
     /**
      * {@inheritDoc}
      */
-    public function getSourceType()
+    public function getInstallationSource()
     {
-        return $this->sourceType;
+        return $this->installationSource;
     }
 
     /**
@@ -198,9 +190,9 @@ class Package extends BasePackage
     /**
      * {@inheritDoc}
      */
-    public function getSourceUrl()
+    public function getSourceType()
     {
-        return $this->sourceUrl;
+        return $this->sourceType;
     }
 
     /**
@@ -214,9 +206,9 @@ class Package extends BasePackage
     /**
      * {@inheritDoc}
      */
-    public function getSourceReference()
+    public function getSourceUrl()
     {
-        return $this->sourceReference;
+        return $this->sourceUrl;
     }
 
     /**
@@ -230,9 +222,9 @@ class Package extends BasePackage
     /**
      * {@inheritDoc}
      */
-    public function getSourceMirrors()
+    public function getSourceReference()
     {
-        return $this->sourceMirrors;
+        return $this->sourceReference;
     }
 
     /**
@@ -246,49 +238,17 @@ class Package extends BasePackage
     /**
      * {@inheritDoc}
      */
-    public function getSourceUrls()
+    public function getSourceMirrors()
     {
-        return $this->getUrls($this->sourceUrl, $this->sourceMirrors, $this->sourceReference, $this->sourceType, 'source');
-    }
-
-    protected function getUrls($url, $mirrors, $ref, $type, $urlType)
-    {
-        if (!$url) {
-            return array();
-        }
-
-        if ($urlType === 'dist' && false !== strpos($url, '%')) {
-            $url = ComposerMirror::processUrl($url, $this->name, $this->version, $ref, $type, $this->prettyVersion);
-        }
-
-        $urls = array($url);
-        if ($mirrors) {
-            foreach ($mirrors as $mirror) {
-                if ($urlType === 'dist') {
-                    $mirrorUrl = ComposerMirror::processUrl($mirror['url'], $this->name, $this->version, $ref, $type, $this->prettyVersion);
-                } elseif ($urlType === 'source' && $type === 'git') {
-                    $mirrorUrl = ComposerMirror::processGitUrl($mirror['url'], $this->name, $url, $type);
-                } elseif ($urlType === 'source' && $type === 'hg') {
-                    $mirrorUrl = ComposerMirror::processHgUrl($mirror['url'], $this->name, $url, $type);
-                } else {
-                    continue;
-                }
-                if (!\in_array($mirrorUrl, $urls)) {
-                    $func = $mirror['preferred'] ? 'array_unshift' : 'array_push';
-                    $func($urls, $mirrorUrl);
-                }
-            }
-        }
-
-        return $urls;
+        return $this->sourceMirrors;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getDistType()
+    public function getSourceUrls()
     {
-        return $this->distType;
+        return $this->getUrls($this->sourceUrl, $this->sourceMirrors, $this->sourceReference, $this->sourceType, 'source');
     }
 
     /**
@@ -302,9 +262,41 @@ class Package extends BasePackage
     /**
      * {@inheritDoc}
      */
-    public function getDistSha1Checksum()
+    public function getDistType()
     {
-        return $this->distSha1Checksum;
+        return $this->distType;
+    }
+
+    /**
+     * @param string $url
+     */
+    public function setDistUrl($url)
+    {
+        $this->distUrl = $url;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDistUrl()
+    {
+        return $this->distUrl;
+    }
+
+    /**
+     * @param string $reference
+     */
+    public function setDistReference($reference)
+    {
+        $this->distReference = $reference;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDistReference()
+    {
+        return $this->distReference;
     }
 
     /**
@@ -318,9 +310,9 @@ class Package extends BasePackage
     /**
      * {@inheritDoc}
      */
-    public function getDistMirrors()
+    public function getDistSha1Checksum()
     {
-        return $this->distMirrors;
+        return $this->distSha1Checksum;
     }
 
     /**
@@ -329,6 +321,14 @@ class Package extends BasePackage
     public function setDistMirrors($mirrors)
     {
         $this->distMirrors = $mirrors;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDistMirrors()
+    {
+        return $this->distMirrors;
     }
 
     /**
@@ -372,14 +372,6 @@ class Package extends BasePackage
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getReleaseDate()
-    {
-        return $this->releaseDate;
-    }
-
-    /**
      * Set the releaseDate
      *
      * @param \DateTime $releaseDate
@@ -392,9 +384,9 @@ class Package extends BasePackage
     /**
      * {@inheritDoc}
      */
-    public function getRequires()
+    public function getReleaseDate()
     {
-        return $this->requires;
+        return $this->releaseDate;
     }
 
     /**
@@ -410,9 +402,9 @@ class Package extends BasePackage
     /**
      * {@inheritDoc}
      */
-    public function getConflicts()
+    public function getRequires()
     {
-        return $this->conflicts;
+        return $this->requires;
     }
 
     /**
@@ -428,9 +420,9 @@ class Package extends BasePackage
     /**
      * {@inheritDoc}
      */
-    public function getProvides()
+    public function getConflicts()
     {
-        return $this->provides;
+        return $this->conflicts;
     }
 
     /**
@@ -446,9 +438,9 @@ class Package extends BasePackage
     /**
      * {@inheritDoc}
      */
-    public function getReplaces()
+    public function getProvides()
     {
-        return $this->replaces;
+        return $this->provides;
     }
 
     /**
@@ -464,9 +456,9 @@ class Package extends BasePackage
     /**
      * {@inheritDoc}
      */
-    public function getDevRequires()
+    public function getReplaces()
     {
-        return $this->devRequires;
+        return $this->replaces;
     }
 
     /**
@@ -482,9 +474,9 @@ class Package extends BasePackage
     /**
      * {@inheritDoc}
      */
-    public function getSuggests()
+    public function getDevRequires()
     {
-        return $this->suggests;
+        return $this->devRequires;
     }
 
     /**
@@ -500,9 +492,9 @@ class Package extends BasePackage
     /**
      * {@inheritDoc}
      */
-    public function getAutoload()
+    public function getSuggests()
     {
-        return $this->autoload;
+        return $this->suggests;
     }
 
     /**
@@ -518,9 +510,9 @@ class Package extends BasePackage
     /**
      * {@inheritDoc}
      */
-    public function getDevAutoload()
+    public function getAutoload()
     {
-        return $this->devAutoload;
+        return $this->autoload;
     }
 
     /**
@@ -536,9 +528,9 @@ class Package extends BasePackage
     /**
      * {@inheritDoc}
      */
-    public function getIncludePaths()
+    public function getDevAutoload()
     {
-        return $this->includePaths;
+        return $this->devAutoload;
     }
 
     /**
@@ -554,9 +546,9 @@ class Package extends BasePackage
     /**
      * {@inheritDoc}
      */
-    public function getNotificationUrl()
+    public function getIncludePaths()
     {
-        return $this->notificationUrl;
+        return $this->includePaths;
     }
 
     /**
@@ -572,9 +564,9 @@ class Package extends BasePackage
     /**
      * {@inheritDoc}
      */
-    public function isDefaultBranch()
+    public function getNotificationUrl()
     {
-        return $this->isDefaultBranch;
+        return $this->notificationUrl;
     }
 
     /**
@@ -583,6 +575,14 @@ class Package extends BasePackage
     public function setIsDefaultBranch($defaultBranch)
     {
         $this->isDefaultBranch = $defaultBranch;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isDefaultBranch()
+    {
+        return $this->isDefaultBranch;
     }
 
     /**
@@ -603,38 +603,6 @@ class Package extends BasePackage
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getDistUrl()
-    {
-        return $this->distUrl;
-    }
-
-    /**
-     * @param string $url
-     */
-    public function setDistUrl($url)
-    {
-        $this->distUrl = $url;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getDistReference()
-    {
-        return $this->distReference;
-    }
-
-    /**
-     * @param string $reference
-     */
-    public function setDistReference($reference)
-    {
-        $this->distReference = $reference;
-    }
-
-    /**
      * Replaces current version and pretty version with passed values.
      * It also sets stability.
      *
@@ -648,5 +616,37 @@ class Package extends BasePackage
 
         $this->stability = VersionParser::parseStability($version);
         $this->dev = $this->stability === 'dev';
+    }
+
+    protected function getUrls($url, $mirrors, $ref, $type, $urlType)
+    {
+        if (!$url) {
+            return array();
+        }
+
+        if ($urlType === 'dist' && false !== strpos($url, '%')) {
+            $url = ComposerMirror::processUrl($url, $this->name, $this->version, $ref, $type, $this->prettyVersion);
+        }
+
+        $urls = array($url);
+        if ($mirrors) {
+            foreach ($mirrors as $mirror) {
+                if ($urlType === 'dist') {
+                    $mirrorUrl = ComposerMirror::processUrl($mirror['url'], $this->name, $this->version, $ref, $type, $this->prettyVersion);
+                } elseif ($urlType === 'source' && $type === 'git') {
+                    $mirrorUrl = ComposerMirror::processGitUrl($mirror['url'], $this->name, $url, $type);
+                } elseif ($urlType === 'source' && $type === 'hg') {
+                    $mirrorUrl = ComposerMirror::processHgUrl($mirror['url'], $this->name, $url, $type);
+                } else {
+                    continue;
+                }
+                if (!\in_array($mirrorUrl, $urls)) {
+                    $func = $mirror['preferred'] ? 'array_unshift' : 'array_push';
+                    $func($urls, $mirrorUrl);
+                }
+            }
+        }
+
+        return $urls;
     }
 }

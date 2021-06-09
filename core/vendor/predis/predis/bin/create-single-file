@@ -110,6 +110,19 @@ class PredisFile
         return $predisFile;
     }
 
+    public function addNamespace(PhpNamespace $namespace)
+    {
+        if (isset($this->namespaces[(string)$namespace])) {
+            throw new InvalidArgumentException("Duplicated namespace");
+        }
+        $this->namespaces[(string)$namespace] = $namespace;
+    }
+
+    public function getNamespaces()
+    {
+        return $this->namespaces;
+    }
+
     public function getNamespace($namespace)
     {
         if (!isset($this->namespaces[$namespace])) {
@@ -119,21 +132,83 @@ class PredisFile
         return $this->namespaces[$namespace];
     }
 
-    public function addNamespace(PhpNamespace $namespace)
+    public function getClassByFQN($classFqn)
     {
-        if (isset($this->namespaces[(string)$namespace])) {
-            throw new InvalidArgumentException("Duplicated namespace");
+        if (($nsLastPos = strrpos($classFqn, '\\')) !== false) {
+            $namespace = $this->getNamespace(substr($classFqn, 0, $nsLastPos));
+            if ($namespace === false) {
+                return null;
+            }
+            $className = substr($classFqn, $nsLastPos + 1);
+
+            return $namespace->getClass($className);
         }
-        $this->namespaces[(string)$namespace] = $namespace;
+
+        return null;
     }
 
-    public function saveTo($outputFile)
+    private function calculateDependencyScores(&$classes, $fqn)
     {
-        // TODO: add more sanity checks
-        if ($outputFile === null || $outputFile === '') {
-            throw new InvalidArgumentException('You must specify a valid output file');
+        if (!isset($classes[$fqn])) {
+            $classes[$fqn] = 0;
         }
-        file_put_contents($outputFile, $this->getPhpCode());
+
+        $classes[$fqn] += 1;
+
+        if (($phpClass = $this->getClassByFQN($fqn)) === null) {
+            throw new RuntimeException(
+                "Cannot found the class $fqn which is required by other subclasses. Are you missing a file?"
+            );
+        }
+
+        foreach ($phpClass->getDependencies() as $fqn) {
+            $this->calculateDependencyScores($classes, $fqn);
+        }
+    }
+
+    private function getDependencyScores()
+    {
+        $classes = array();
+
+        foreach ($this->getNamespaces() as $phpNamespace) {
+            foreach ($phpNamespace->getClasses() as $phpClass) {
+                $this->calculateDependencyScores($classes, $phpClass->getFQN());
+            }
+        }
+
+        return $classes;
+    }
+
+    private function getOrderedNamespaces($dependencyScores)
+    {
+        $namespaces = array_fill_keys(array_unique(
+            array_map(
+                function ($fqn) { return PhpNamespace::extractName($fqn); },
+                array_keys($dependencyScores)
+            )
+        ), 0);
+
+        foreach ($dependencyScores as $classFqn => $score) {
+            $namespaces[PhpNamespace::extractName($classFqn)] += $score;
+        }
+
+        arsort($namespaces);
+
+        return array_keys($namespaces);
+    }
+
+    private function getOrderedClasses(PhpNamespace $phpNamespace, $classes)
+    {
+        $nsClassesFQNs = array_map(function ($cl) { return $cl->getFQN(); }, $phpNamespace->getClasses());
+        $nsOrderedClasses = array();
+
+        foreach ($nsClassesFQNs as $nsClassFQN) {
+            $nsOrderedClasses[$nsClassFQN] = $classes[$nsClassFQN];
+        }
+
+        arsort($nsOrderedClasses);
+
+        return array_keys($nsOrderedClasses);
     }
 
     public function getPhpCode()
@@ -170,88 +245,13 @@ class PredisFile
         return implode($buffer);
     }
 
-    private function getDependencyScores()
+    public function saveTo($outputFile)
     {
-        $classes = array();
-
-        foreach ($this->getNamespaces() as $phpNamespace) {
-            foreach ($phpNamespace->getClasses() as $phpClass) {
-                $this->calculateDependencyScores($classes, $phpClass->getFQN());
-            }
+        // TODO: add more sanity checks
+        if ($outputFile === null || $outputFile === '') {
+            throw new InvalidArgumentException('You must specify a valid output file');
         }
-
-        return $classes;
-    }
-
-    public function getNamespaces()
-    {
-        return $this->namespaces;
-    }
-
-    private function calculateDependencyScores(&$classes, $fqn)
-    {
-        if (!isset($classes[$fqn])) {
-            $classes[$fqn] = 0;
-        }
-
-        $classes[$fqn] += 1;
-
-        if (($phpClass = $this->getClassByFQN($fqn)) === null) {
-            throw new RuntimeException(
-                "Cannot found the class $fqn which is required by other subclasses. Are you missing a file?"
-            );
-        }
-
-        foreach ($phpClass->getDependencies() as $fqn) {
-            $this->calculateDependencyScores($classes, $fqn);
-        }
-    }
-
-    public function getClassByFQN($classFqn)
-    {
-        if (($nsLastPos = strrpos($classFqn, '\\')) !== false) {
-            $namespace = $this->getNamespace(substr($classFqn, 0, $nsLastPos));
-            if ($namespace === false) {
-                return null;
-            }
-            $className = substr($classFqn, $nsLastPos + 1);
-
-            return $namespace->getClass($className);
-        }
-
-        return null;
-    }
-
-    private function getOrderedNamespaces($dependencyScores)
-    {
-        $namespaces = array_fill_keys(array_unique(
-            array_map(
-                function ($fqn) { return PhpNamespace::extractName($fqn); },
-                array_keys($dependencyScores)
-            )
-        ), 0);
-
-        foreach ($dependencyScores as $classFqn => $score) {
-            $namespaces[PhpNamespace::extractName($classFqn)] += $score;
-        }
-
-        arsort($namespaces);
-
-        return array_keys($namespaces);
-    }
-
-    private function getOrderedClasses(PhpNamespace $phpNamespace, $classes)
-    {
-        $nsClassesFQNs = array_map(function ($cl) { return $cl->getFQN(); }, $phpNamespace->getClasses());
-        $nsOrderedClasses = array();
-
-        foreach ($nsClassesFQNs as $nsClassFQN) {
-            $nsOrderedClasses[$nsClassFQN] = $classes[$nsClassFQN];
-        }
-
-        arsort($nsOrderedClasses);
-
-        return array_keys($nsOrderedClasses);
+        file_put_contents($outputFile, $this->getPhpCode());
     }
 }
 
@@ -290,14 +290,14 @@ class PhpNamespace implements IteratorAggregate
         }
     }
 
-    public function getIterator()
-    {
-        return new \ArrayIterator($this->getClasses());
-    }
-
     public function getClasses()
     {
         return array_values($this->classes);
+    }
+
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->getClasses());
     }
 
     public function getUseDirectives()
@@ -368,23 +368,14 @@ class PhpUseDirectives implements Countable, IteratorAggregate
         return $rename;
     }
 
-    public function getParentNamespace()
+    public function getList()
     {
-        if (false !== $pos = strrpos($this->namespace, '\\')) {
-            return substr($this->namespace, 0, $pos);
-        }
-
-        return '';
+        return $this->use;
     }
 
     public function getIterator()
     {
         return new \ArrayIterator($this->getList());
-    }
-
-    public function getList()
-    {
-        return $this->use;
     }
 
     public function getPhpCode()
@@ -402,6 +393,20 @@ class PhpUseDirectives implements Countable, IteratorAggregate
         return array_reduce($this->getList(), $reducer, '');
     }
 
+    public function getNamespace()
+    {
+        return $this->namespace;
+    }
+
+    public function getParentNamespace()
+    {
+        if (false !== $pos = strrpos($this->namespace, '\\')) {
+            return substr($this->namespace, 0, $pos);
+        }
+
+        return '';
+    }
+
     public function getFQN($className)
     {
         if (($nsSepFirst = strpos($className, '\\')) === false) {
@@ -417,11 +422,6 @@ class PhpUseDirectives implements Countable, IteratorAggregate
         }
 
         return $className;
-    }
-
-    public function getNamespace()
-    {
-        return $this->namespace;
     }
 
     public function count()
@@ -461,6 +461,16 @@ LICENSE;
         $namespace->addClass($this);
     }
 
+    public static function extractName($fqn)
+    {
+        $nsSepLast = strrpos($fqn, '\\');
+        if ($nsSepLast === false) {
+            return $fqn;
+        }
+
+        return substr($fqn, $nsSepLast + 1);
+    }
+
     private function extractData()
     {
         $renames = array();
@@ -494,16 +504,6 @@ LICENSE;
         $this->body = trim($classBuffer);
 
         $this->extractHierarchy();
-    }
-
-    public function getNamespace()
-    {
-        return $this->namespace;
-    }
-
-    public function getFile()
-    {
-        return $this->file;
     }
 
     private function extractHierarchy()
@@ -586,33 +586,10 @@ LICENSE;
         $this->extends = $this->guessFQN($extends);
     }
 
-    public function getPhpCode()
-    {
-        return $this->body;
-    }
-
     public function guessFQN($classes)
     {
         $useDirectives = $this->getNamespace()->getUseDirectives();
         return array_map(array($useDirectives, 'getFQN'), $classes);
-    }
-
-    public static function extractName($fqn)
-    {
-        $nsSepLast = strrpos($fqn, '\\');
-        if ($nsSepLast === false) {
-            return $fqn;
-        }
-
-        return substr($fqn, $nsSepLast + 1);
-    }
-
-    public function getDependencies($all = false)
-    {
-        return array_merge(
-            $this->getImplementedInterfaces($all),
-            $this->getExtendedClasses($all)
-        );
     }
 
     public function getImplementedInterfaces($all = false)
@@ -639,19 +616,42 @@ LICENSE;
         );
     }
 
-    public function getFQN()
+    public function getDependencies($all = false)
     {
-        return (string)$this->getNamespace() . '\\' . $this->name;
+        return array_merge(
+            $this->getImplementedInterfaces($all),
+            $this->getExtendedClasses($all)
+        );
     }
 
-    public function __toString()
+    public function getNamespace()
     {
-        return "class " . $this->getName() . '{ ... }';
+        return $this->namespace;
+    }
+
+    public function getFile()
+    {
+        return $this->file;
     }
 
     public function getName()
     {
         return $this->name;
+    }
+
+    public function getFQN()
+    {
+        return (string)$this->getNamespace() . '\\' . $this->name;
+    }
+
+    public function getPhpCode()
+    {
+        return $this->body;
+    }
+
+    public function __toString()
+    {
+        return "class " . $this->getName() . '{ ... }';
     }
 }
 

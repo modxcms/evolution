@@ -10,6 +10,30 @@ use Psr\Http\Message\UriInterface;
 final class Utils
 {
     /**
+     * Remove the items given by the keys, case insensitively from the data.
+     *
+     * @param iterable<string> $keys
+     *
+     * @return array
+     */
+    public static function caselessRemove($keys, array $data)
+    {
+        $result = [];
+
+        foreach ($keys as &$key) {
+            $key = strtolower($key);
+        }
+
+        foreach ($data as $k => $v) {
+            if (!in_array(strtolower($k), $keys)) {
+                $result[$k] = $v;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Copy the contents of a stream into another stream until the given number
      * of bytes have been read.
      *
@@ -210,30 +234,6 @@ final class Utils
                 ? $changes['version']
                 : $request->getProtocolVersion()
         );
-    }
-
-    /**
-     * Remove the items given by the keys, case insensitively from the data.
-     *
-     * @param iterable<string> $keys
-     *
-     * @return array
-     */
-    public static function caselessRemove($keys, array $data)
-    {
-        $result = [];
-
-        foreach ($keys as &$key) {
-            $key = strtolower($key);
-        }
-
-        foreach ($data as $k => $v) {
-            if (!in_array(strtolower($k), $keys)) {
-                $result[$k] = $v;
-            }
-        }
-
-        return $result;
     }
 
     /**

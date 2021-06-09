@@ -967,19 +967,6 @@ class CGIF
 
 	///////////////////////////////////////////////////////////////////////////
 
-	public function dword($val)
-	{
-		$val = (int) $val;
-		return chr($val & 0xFF).chr(($val & 0xFF00) >> 8).chr(($val & 0xFF0000) >> 16).chr(($val & 0xFF000000) >> 24);
-	}
-
-	///////////////////////////////////////////////////////////////////////////
-
-	// Added by James Heinrich <info@silisoftware.com> - January 5, 2003
-
-	// Takes raw image data and plots it pixel-by-pixel on a new GD image and returns that
-	// It's extremely slow, but the only solution when imagecreatefromstring() fails
-
 	public function getPng($bgColor)
 	{
 		$out = '';
@@ -1081,14 +1068,10 @@ class CGIF
 
 	///////////////////////////////////////////////////////////////////////////
 
-	public function ndword($val)
-	{
-		$val = (int) $val;
-		return chr(($val & 0xFF000000) >> 24).chr(($val & 0xFF0000) >> 16).chr(($val & 0xFF00) >> 8).chr($val & 0xFF);
-	}
+	// Added by James Heinrich <info@silisoftware.com> - January 5, 2003
 
-	///////////////////////////////////////////////////////////////////////////
-
+	// Takes raw image data and plots it pixel-by-pixel on a new GD image and returns that
+	// It's extremely slow, but the only solution when imagecreatefromstring() fails
 	public function getGD_PixelPlotterVersion()
 	{
 		if (!$this->m_bLoaded) {
@@ -1144,6 +1127,22 @@ class CGIF
 		}
 
 		return $PlottingIMG;
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+
+	public function dword($val)
+	{
+		$val = (int) $val;
+		return chr($val & 0xFF).chr(($val & 0xFF00) >> 8).chr(($val & 0xFF0000) >> 16).chr(($val & 0xFF000000) >> 24);
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+
+	public function ndword($val)
+	{
+		$val = (int) $val;
+		return chr(($val & 0xFF000000) >> 24).chr(($val & 0xFF0000) >> 16).chr(($val & 0xFF00) >> 8).chr($val & 0xFF);
 	}
 
 	///////////////////////////////////////////////////////////////////////////

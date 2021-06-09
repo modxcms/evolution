@@ -32,16 +32,6 @@ class EncryptedStore extends Store
     }
 
     /**
-     * Get the encrypter instance.
-     *
-     * @return \Illuminate\Contracts\Encryption\Encrypter
-     */
-    public function getEncrypter()
-    {
-        return $this->encrypter;
-    }
-
-    /**
      * Prepare the raw string data from the session for unserialization.
      *
      * @param  string  $data
@@ -65,5 +55,15 @@ class EncryptedStore extends Store
     protected function prepareForStorage($data)
     {
         return $this->encrypter->encrypt($data);
+    }
+
+    /**
+     * Get the encrypter instance.
+     *
+     * @return \Illuminate\Contracts\Encryption\Encrypter
+     */
+    public function getEncrypter()
+    {
+        return $this->encrypter;
     }
 }

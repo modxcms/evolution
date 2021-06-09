@@ -74,6 +74,14 @@ class ElasticsearchHandler extends AbstractProcessingHandler
     }
 
     /**
+     * {@inheritDoc}
+     */
+    protected function write(array $record): void
+    {
+        $this->bulkSend([$record['formatted']]);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
@@ -96,20 +104,20 @@ class ElasticsearchHandler extends AbstractProcessingHandler
     }
 
     /**
+     * {@inheritDoc}
+     */
+    protected function getDefaultFormatter(): FormatterInterface
+    {
+        return new ElasticsearchFormatter($this->options['index'], $this->options['type']);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handleBatch(array $records): void
     {
         $documents = $this->getFormatter()->formatBatch($records);
         $this->bulkSend($documents);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function write(array $record): void
-    {
-        $this->bulkSend([$record['formatted']]);
     }
 
     /**
@@ -177,13 +185,5 @@ class ElasticsearchHandler extends AbstractProcessingHandler
         $previous = isset($error['caused_by']) ? $this->createExceptionFromError($error['caused_by']) : null;
 
         return new ElasticsearchRuntimeException($error['type'] . ': ' . $error['reason'], 0, $previous);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function getDefaultFormatter(): FormatterInterface
-    {
-        return new ElasticsearchFormatter($this->options['index'], $this->options['type']);
     }
 }

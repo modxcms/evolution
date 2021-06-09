@@ -25,30 +25,6 @@ class Silencer
     private static $stack = array();
 
     /**
-     * Calls a specified function while silencing warnings and below.
-     *
-     * Future improvement: when PHP requirements are raised add Callable type hint (5.4) and variadic parameters (5.6)
-     *
-     * @param  callable   $callable Function to execute.
-     * @throws \Exception Any exceptions from the callback are rethrown.
-     * @return mixed      Return value of the callback.
-     */
-    public static function call($callable /*, ...$parameters */)
-    {
-        try {
-            self::suppress();
-            $result = call_user_func_array($callable, array_slice(func_get_args(), 1));
-            self::restore();
-
-            return $result;
-        } catch (\Exception $e) {
-            // Use a finally block for this when requirements are raised to PHP 5.5
-            self::restore();
-            throw $e;
-        }
-    }
-
-    /**
      * Suppresses given mask or errors.
      *
      * @param  int|null $mask Error levels to suppress, default value NULL indicates all warnings and below.
@@ -73,6 +49,30 @@ class Silencer
     {
         if (!empty(self::$stack)) {
             error_reporting(array_pop(self::$stack));
+        }
+    }
+
+    /**
+     * Calls a specified function while silencing warnings and below.
+     *
+     * Future improvement: when PHP requirements are raised add Callable type hint (5.4) and variadic parameters (5.6)
+     *
+     * @param  callable   $callable Function to execute.
+     * @throws \Exception Any exceptions from the callback are rethrown.
+     * @return mixed      Return value of the callback.
+     */
+    public static function call($callable /*, ...$parameters */)
+    {
+        try {
+            self::suppress();
+            $result = call_user_func_array($callable, array_slice(func_get_args(), 1));
+            self::restore();
+
+            return $result;
+        } catch (\Exception $e) {
+            // Use a finally block for this when requirements are raised to PHP 5.5
+            self::restore();
+            throw $e;
         }
     }
 }

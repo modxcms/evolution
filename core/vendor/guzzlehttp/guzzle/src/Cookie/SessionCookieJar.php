@@ -34,24 +34,6 @@ class SessionCookieJar extends CookieJar
     }
 
     /**
-     * Load the contents of the client session into the data array
-     */
-    protected function load(): void
-    {
-        if (!isset($_SESSION[$this->sessionKey])) {
-            return;
-        }
-        $data = \json_decode($_SESSION[$this->sessionKey], true);
-        if (\is_array($data)) {
-            foreach ($data as $cookie) {
-                $this->setCookie(new SetCookie($cookie));
-            }
-        } elseif (\strlen($data)) {
-            throw new \RuntimeException("Invalid cookie data");
-        }
-    }
-
-    /**
      * Saves cookies to session when shutting down
      */
     public function __destruct()
@@ -73,5 +55,23 @@ class SessionCookieJar extends CookieJar
         }
 
         $_SESSION[$this->sessionKey] = \json_encode($json);
+    }
+
+    /**
+     * Load the contents of the client session into the data array
+     */
+    protected function load(): void
+    {
+        if (!isset($_SESSION[$this->sessionKey])) {
+            return;
+        }
+        $data = \json_decode($_SESSION[$this->sessionKey], true);
+        if (\is_array($data)) {
+            foreach ($data as $cookie) {
+                $this->setCookie(new SetCookie($cookie));
+            }
+        } elseif (\strlen($data)) {
+            throw new \RuntimeException("Invalid cookie data");
+        }
     }
 }

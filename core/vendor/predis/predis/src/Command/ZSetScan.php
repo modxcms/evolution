@@ -29,25 +29,6 @@ class ZSetScan extends Command
     /**
      * {@inheritdoc}
      */
-    public function parseResponse($data)
-    {
-        if (is_array($data)) {
-            $members = $data[1];
-            $result = array();
-
-            for ($i = 0; $i < count($members); ++$i) {
-                $result[$members[$i]] = (float) $members[++$i];
-            }
-
-            $data[1] = $result;
-        }
-
-        return $data;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function filterArguments(array $arguments)
     {
         if (count($arguments) === 3 && is_array($arguments[2])) {
@@ -81,5 +62,24 @@ class ZSetScan extends Command
         }
 
         return $normalized;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function parseResponse($data)
+    {
+        if (is_array($data)) {
+            $members = $data[1];
+            $result = array();
+
+            for ($i = 0; $i < count($members); ++$i) {
+                $result[$members[$i]] = (float) $members[++$i];
+            }
+
+            $data[1] = $result;
+        }
+
+        return $data;
     }
 }

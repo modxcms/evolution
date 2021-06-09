@@ -90,6 +90,76 @@ class SlackHandler extends SocketHandler
         return $this->token;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    protected function generateDataStream(array $record): string
+    {
+        $content = $this->buildContent($record);
+
+        return $this->buildHeader($content) . $content;
+    }
+
+    /**
+     * Builds the body of API call
+     */
+    private function buildContent(array $record): string
+    {
+        $dataArray = $this->prepareContentData($record);
+
+        return http_build_query($dataArray);
+    }
+
+    protected function prepareContentData(array $record): array
+    {
+        $dataArray = $this->slackRecord->getSlackData($record);
+        $dataArray['token'] = $this->token;
+
+        if (!empty($dataArray['attachments'])) {
+            $dataArray['attachments'] = Utils::jsonEncode($dataArray['attachments']);
+        }
+
+        return $dataArray;
+    }
+
+    /**
+     * Builds the header of the API Call
+     */
+    private function buildHeader(string $content): string
+    {
+        $header = "POST /api/chat.postMessage HTTP/1.1\r\n";
+        $header .= "Host: slack.com\r\n";
+        $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
+        $header .= "Content-Length: " . strlen($content) . "\r\n";
+        $header .= "\r\n";
+
+        return $header;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function write(array $record): void
+    {
+        parent::write($record);
+        $this->finalizeWrite();
+    }
+
+    /**
+     * Finalizes the request by reading some bytes and then closing the socket
+     *
+     * If we do not read some but close the socket too early, slack sometimes
+     * drops the request entirely.
+     */
+    protected function finalizeWrite(): void
+    {
+        $res = $this->getResource();
+        if (is_resource($res)) {
+            @fread($res, 2048);
+        }
+        $this->closeSocket();
+    }
+
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
         parent::setFormatter($formatter);
@@ -159,75 +229,5 @@ class SlackHandler extends SocketHandler
         $this->slackRecord->excludeFields($excludeFields);
 
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function generateDataStream(array $record): string
-    {
-        $content = $this->buildContent($record);
-
-        return $this->buildHeader($content) . $content;
-    }
-
-    /**
-     * Builds the body of API call
-     */
-    private function buildContent(array $record): string
-    {
-        $dataArray = $this->prepareContentData($record);
-
-        return http_build_query($dataArray);
-    }
-
-    protected function prepareContentData(array $record): array
-    {
-        $dataArray = $this->slackRecord->getSlackData($record);
-        $dataArray['token'] = $this->token;
-
-        if (!empty($dataArray['attachments'])) {
-            $dataArray['attachments'] = Utils::jsonEncode($dataArray['attachments']);
-        }
-
-        return $dataArray;
-    }
-
-    /**
-     * Builds the header of the API Call
-     */
-    private function buildHeader(string $content): string
-    {
-        $header = "POST /api/chat.postMessage HTTP/1.1\r\n";
-        $header .= "Host: slack.com\r\n";
-        $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-        $header .= "Content-Length: " . strlen($content) . "\r\n";
-        $header .= "\r\n";
-
-        return $header;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function write(array $record): void
-    {
-        parent::write($record);
-        $this->finalizeWrite();
-    }
-
-    /**
-     * Finalizes the request by reading some bytes and then closing the socket
-     *
-     * If we do not read some but close the socket too early, slack sometimes
-     * drops the request entirely.
-     */
-    protected function finalizeWrite(): void
-    {
-        $res = $this->getResource();
-        if (is_resource($res)) {
-            @fread($res, 2048);
-        }
-        $this->closeSocket();
     }
 }

@@ -30,6 +30,19 @@ class SqlServerConnection implements ServerInfoAwareConnection
     }
 
     /**
+     * Prepare a new SQL statement.
+     *
+     * @param  string  $sql
+     * @return \Doctrine\DBAL\Driver\Statement
+     */
+    public function prepare(string $sql): StatementInterface
+    {
+        return new Statement(
+            $this->connection->prepare($sql)
+        );
+    }
+
+    /**
      * Execute a new query against the connection.
      *
      * @param  string  $sql
@@ -66,19 +79,6 @@ class SqlServerConnection implements ServerInfoAwareConnection
         return $this->prepare('SELECT CONVERT(VARCHAR(MAX), current_value) FROM sys.sequences WHERE name = ?')
             ->execute([$name])
             ->fetchOne();
-    }
-
-    /**
-     * Prepare a new SQL statement.
-     *
-     * @param  string  $sql
-     * @return \Doctrine\DBAL\Driver\Statement
-     */
-    public function prepare(string $sql): StatementInterface
-    {
-        return new Statement(
-            $this->connection->prepare($sql)
-        );
     }
 
     /**

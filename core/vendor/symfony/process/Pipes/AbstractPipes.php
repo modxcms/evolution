@@ -53,14 +53,6 @@ abstract class AbstractPipes implements PipesInterface
     }
 
     /**
-     * @internal
-     */
-    public function handleError($type, $msg)
-    {
-        $this->lastError = $msg;
-    }
-
-    /**
      * Returns true if a system call has been interrupted.
      */
     protected function hasSystemCallBeenInterrupted(): bool
@@ -174,5 +166,13 @@ abstract class AbstractPipes implements PipesInterface
         }
 
         return null;
+    }
+
+    /**
+     * @internal
+     */
+    public function handleError($type, $msg)
+    {
+        $this->lastError = $msg;
     }
 }

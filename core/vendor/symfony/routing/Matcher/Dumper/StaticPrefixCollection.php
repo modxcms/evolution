@@ -45,11 +45,6 @@ class StaticPrefixCollection
         $this->prefix = $prefix;
     }
 
-    public static function handleError($type, $msg)
-    {
-        return false !== strpos($msg, 'Compilation failed: lookbehind assertion is not fixed length');
-    }
-
     public function getPrefix(): string
     {
         return $this->prefix;
@@ -129,6 +124,22 @@ class StaticPrefixCollection
     }
 
     /**
+     * Linearizes back a set of nested routes into a collection.
+     */
+    public function populateCollection(RouteCollection $routes): RouteCollection
+    {
+        foreach ($this->items as $route) {
+            if ($route instanceof self) {
+                $route->populateCollection($routes);
+            } else {
+                $routes->add(...$route);
+            }
+        }
+
+        return $routes;
+    }
+
+    /**
      * Gets the full and static common prefixes between two route patterns.
      *
      * The static prefix stops at last at the first opening bracket.
@@ -184,19 +195,8 @@ class StaticPrefixCollection
         return [substr($prefix, 0, $i), substr($prefix, 0, $staticLength ?? $i)];
     }
 
-    /**
-     * Linearizes back a set of nested routes into a collection.
-     */
-    public function populateCollection(RouteCollection $routes): RouteCollection
+    public static function handleError($type, $msg)
     {
-        foreach ($this->items as $route) {
-            if ($route instanceof self) {
-                $route->populateCollection($routes);
-            } else {
-                $routes->add(...$route);
-            }
-        }
-
-        return $routes;
+        return false !== strpos($msg, 'Compilation failed: lookbehind assertion is not fixed length');
     }
 }

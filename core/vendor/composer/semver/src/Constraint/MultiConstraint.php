@@ -58,6 +58,156 @@ class MultiConstraint implements ConstraintInterface
     }
 
     /**
+     * @return ConstraintInterface[]
+     */
+    public function getConstraints()
+    {
+        return $this->constraints;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConjunctive()
+    {
+        return $this->conjunctive;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDisjunctive()
+    {
+        return !$this->conjunctive;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function compile($otherOperator)
+    {
+        $parts = array();
+        foreach ($this->constraints as $constraint) {
+            $code = $constraint->compile($otherOperator);
+            if ($code === 'true') {
+                if (!$this->conjunctive) {
+                    return 'true';
+                }
+            } elseif ($code === 'false') {
+                if ($this->conjunctive) {
+                    return 'false';
+                }
+            } else {
+                $parts[] = '('.$code.')';
+            }
+        }
+
+        if (!$parts) {
+            return $this->conjunctive ? 'true' : 'false';
+        }
+
+        return $this->conjunctive ? implode('&&', $parts) : implode('||', $parts);
+    }
+
+    /**
+     * @param ConstraintInterface $provider
+     *
+     * @return bool
+     */
+    public function matches(ConstraintInterface $provider)
+    {
+        if (false === $this->conjunctive) {
+            foreach ($this->constraints as $constraint) {
+                if ($provider->matches($constraint)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // when matching a conjunctive and a disjunctive multi constraint we have to iterate over the disjunctive one
+        // otherwise we'd return true if different parts of the disjunctive constraint match the conjunctive one
+        // which would lead to incorrect results, e.g. [>1 and <2] would match [<1 or >2] although they do not intersect
+        if ($provider instanceof MultiConstraint && $provider->isDisjunctive()) {
+            return $provider->matches($this);
+        }
+
+        foreach ($this->constraints as $constraint) {
+            if (!$provider->matches($constraint)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setPrettyString($prettyString)
+    {
+        $this->prettyString = $prettyString;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPrettyString()
+    {
+        if ($this->prettyString) {
+            return $this->prettyString;
+        }
+
+        return (string) $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __toString()
+    {
+        if ($this->string !== null) {
+            return $this->string;
+        }
+
+        $constraints = array();
+        foreach ($this->constraints as $constraint) {
+            $constraints[] = (string) $constraint;
+        }
+
+        return $this->string = '[' . implode($this->conjunctive ? ' ' : ' || ', $constraints) . ']';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getLowerBound()
+    {
+        $this->extractBounds();
+
+        if (null === $this->lowerBound) {
+            throw new \LogicException('extractBounds should have populated the lowerBound property');
+        }
+
+        return $this->lowerBound;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUpperBound()
+    {
+        $this->extractBounds();
+
+        if (null === $this->upperBound) {
+            throw new \LogicException('extractBounds should have populated the upperBound property');
+        }
+
+        return $this->upperBound;
+    }
+
+    /**
      * Tries to optimize the constraints as much as possible, meaning
      * reducing/collapsing congruent constraints etc.
      * Does not necessarily return a MultiConstraint instance if
@@ -148,134 +298,6 @@ class MultiConstraint implements ConstraintInterface
     }
 
     /**
-     * @return ConstraintInterface[]
-     */
-    public function getConstraints()
-    {
-        return $this->constraints;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function compile($otherOperator)
-    {
-        $parts = array();
-        foreach ($this->constraints as $constraint) {
-            $code = $constraint->compile($otherOperator);
-            if ($code === 'true') {
-                if (!$this->conjunctive) {
-                    return 'true';
-                }
-            } elseif ($code === 'false') {
-                if ($this->conjunctive) {
-                    return 'false';
-                }
-            } else {
-                $parts[] = '('.$code.')';
-            }
-        }
-
-        if (!$parts) {
-            return $this->conjunctive ? 'true' : 'false';
-        }
-
-        return $this->conjunctive ? implode('&&', $parts) : implode('||', $parts);
-    }
-
-    /**
-     * @param ConstraintInterface $provider
-     *
-     * @return bool
-     */
-    public function matches(ConstraintInterface $provider)
-    {
-        if (false === $this->conjunctive) {
-            foreach ($this->constraints as $constraint) {
-                if ($provider->matches($constraint)) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        // when matching a conjunctive and a disjunctive multi constraint we have to iterate over the disjunctive one
-        // otherwise we'd return true if different parts of the disjunctive constraint match the conjunctive one
-        // which would lead to incorrect results, e.g. [>1 and <2] would match [<1 or >2] although they do not intersect
-        if ($provider instanceof MultiConstraint && $provider->isDisjunctive()) {
-            return $provider->matches($this);
-        }
-
-        foreach ($this->constraints as $constraint) {
-            if (!$provider->matches($constraint)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDisjunctive()
-    {
-        return !$this->conjunctive;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getPrettyString()
-    {
-        if ($this->prettyString) {
-            return $this->prettyString;
-        }
-
-        return (string) $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setPrettyString($prettyString)
-    {
-        $this->prettyString = $prettyString;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function __toString()
-    {
-        if ($this->string !== null) {
-            return $this->string;
-        }
-
-        $constraints = array();
-        foreach ($this->constraints as $constraint) {
-            $constraints[] = (string) $constraint;
-        }
-
-        return $this->string = '[' . implode($this->conjunctive ? ' ' : ' || ', $constraints) . ']';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getLowerBound()
-    {
-        $this->extractBounds();
-
-        if (null === $this->lowerBound) {
-            throw new \LogicException('extractBounds should have populated the lowerBound property');
-        }
-
-        return $this->lowerBound;
-    }
-
-    /**
      * @return void
      */
     private function extractBounds()
@@ -299,27 +321,5 @@ class MultiConstraint implements ConstraintInterface
                 $this->upperBound = $constraint->getUpperBound();
             }
         }
-    }
-
-    /**
-     * @return bool
-     */
-    public function isConjunctive()
-    {
-        return $this->conjunctive;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getUpperBound()
-    {
-        $this->extractBounds();
-
-        if (null === $this->upperBound) {
-            throw new \LogicException('extractBounds should have populated the upperBound property');
-        }
-
-        return $this->upperBound;
     }
 }

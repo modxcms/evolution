@@ -22,6 +22,25 @@ use Symfony\Component\Routing\Matcher\Dumper\CompiledUrlMatcherDumper;
  */
 class CompiledUrlGeneratorDumper extends GeneratorDumper
 {
+    public function getCompiledRoutes(): array
+    {
+        $compiledRoutes = [];
+        foreach ($this->getRoutes()->all() as $name => $route) {
+            $compiledRoute = $route->compile();
+
+            $compiledRoutes[$name] = [
+                $compiledRoute->getVariables(),
+                $route->getDefaults(),
+                $route->getRequirements(),
+                $compiledRoute->getTokens(),
+                $compiledRoute->getHostTokens(),
+                $route->getSchemes(),
+            ];
+        }
+
+        return $compiledRoutes;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -50,24 +69,5 @@ EOF;
         }
 
         return $routes;
-    }
-
-    public function getCompiledRoutes(): array
-    {
-        $compiledRoutes = [];
-        foreach ($this->getRoutes()->all() as $name => $route) {
-            $compiledRoute = $route->compile();
-
-            $compiledRoutes[$name] = [
-                $compiledRoute->getVariables(),
-                $route->getDefaults(),
-                $route->getRequirements(),
-                $compiledRoute->getTokens(),
-                $compiledRoute->getHostTokens(),
-                $route->getSchemes(),
-            ];
-        }
-
-        return $compiledRoutes;
     }
 }

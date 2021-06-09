@@ -37,18 +37,6 @@ trait StreamDecoratorTrait
         throw new \UnexpectedValueException("$name not found on class");
     }
 
-    /**
-     * Implement in subclasses to dynamically create streams when requested.
-     *
-     * @return StreamInterface
-     *
-     * @throws \BadMethodCallException
-     */
-    protected function createStream()
-    {
-        throw new \BadMethodCallException('Not implemented');
-    }
-
     public function __toString()
     {
         try {
@@ -62,16 +50,6 @@ trait StreamDecoratorTrait
                 . (string) $e, E_USER_ERROR);
             return '';
         }
-    }
-
-    public function isSeekable()
-    {
-        return $this->stream->isSeekable();
-    }
-
-    public function seek($offset, $whence = SEEK_SET)
-    {
-        $this->stream->seek($offset, $whence);
     }
 
     public function getContents()
@@ -135,9 +113,19 @@ trait StreamDecoratorTrait
         return $this->stream->isWritable();
     }
 
+    public function isSeekable()
+    {
+        return $this->stream->isSeekable();
+    }
+
     public function rewind()
     {
         $this->seek(0);
+    }
+
+    public function seek($offset, $whence = SEEK_SET)
+    {
+        $this->stream->seek($offset, $whence);
     }
 
     public function read($length)
@@ -148,5 +136,17 @@ trait StreamDecoratorTrait
     public function write($string)
     {
         return $this->stream->write($string);
+    }
+
+    /**
+     * Implement in subclasses to dynamically create streams when requested.
+     *
+     * @return StreamInterface
+     *
+     * @throws \BadMethodCallException
+     */
+    protected function createStream()
+    {
+        throw new \BadMethodCallException('Not implemented');
     }
 }

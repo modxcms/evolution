@@ -91,50 +91,6 @@ abstract class VcsDownloader implements DownloaderInterface, ChangeReportInterfa
     }
 
     /**
-     * @return string[]
-     */
-    private function prepareUrls(array $urls)
-    {
-        foreach ($urls as $index => $url) {
-            if (Filesystem::isLocalPath($url)) {
-                // realpath() below will not understand
-                // url that starts with "file://"
-                $fileProtocol = 'file://';
-                $isFileProtocol = false;
-                if (0 === strpos($url, $fileProtocol)) {
-                    $url = substr($url, strlen($fileProtocol));
-                    $isFileProtocol = true;
-                }
-
-                // realpath() below will not understand %20 spaces etc.
-                if (false !== strpos($url, '%')) {
-                    $url = rawurldecode($url);
-                }
-
-                $urls[$index] = realpath($url);
-
-                if ($isFileProtocol) {
-                    $urls[$index] = $fileProtocol . $urls[$index];
-                }
-            }
-        }
-
-        return $urls;
-    }
-
-    /**
-     * Downloads data needed to run an install/update later
-     *
-     * @param PackageInterface      $package     package instance
-     * @param string                $path        download path
-     * @param string                $url         package url
-     * @param PackageInterface|null $prevPackage previous package (in case of an update)
-     *
-     * @return PromiseInterface|null
-     */
-    abstract protected function doDownload(PackageInterface $package, $path, $url, PackageInterface $prevPackage = null);
-
-    /**
      * {@inheritDoc}
      */
     public function prepare($type, PackageInterface $package, $path, PackageInterface $prevPackage = null)
@@ -152,25 +108,6 @@ abstract class VcsDownloader implements DownloaderInterface, ChangeReportInterfa
     }
 
     /**
-     * Prompt the user to check if changes should be stashed/removed or the operation aborted
-     *
-     * @param  PackageInterface  $package
-     * @param  string            $path
-     * @param  bool              $update  if true (update) the changes can be stashed and reapplied after an update,
-     *                                    if false (remove) the changes should be assumed to be lost if the operation is not aborted
-     * @throws \RuntimeException in case the operation must be aborted
-     */
-    protected function cleanChanges(PackageInterface $package, $path, $update)
-    {
-        // the default implementation just fails if there are any changes, override in child classes to provide stash-ability
-        if (null !== $this->getLocalChanges($package, $path)) {
-            throw new \RuntimeException('Source directory ' . $path . ' has uncommitted changes.');
-        }
-
-        return \React\Promise\resolve();
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function cleanup($type, PackageInterface $package, $path, PackageInterface $prevPackage = null)
@@ -181,16 +118,6 @@ abstract class VcsDownloader implements DownloaderInterface, ChangeReportInterfa
         }
 
         return \React\Promise\resolve();
-    }
-
-    /**
-     * Reapply previously stashes changes if applicable, only called after an update (regardless if successful or not)
-     *
-     * @param  string            $path
-     * @throws \RuntimeException in case the operation must be aborted or the patch does not apply cleanly
-     */
-    protected function reapplyChanges($path)
-    {
     }
 
     /**
@@ -227,17 +154,6 @@ abstract class VcsDownloader implements DownloaderInterface, ChangeReportInterfa
 
         return \React\Promise\resolve();
     }
-
-    /**
-     * Downloads specific package into specific folder.
-     *
-     * @param PackageInterface $package package instance
-     * @param string           $path    download path
-     * @param string           $url     package url
-     *
-     * @return PromiseInterface|null
-     */
-    abstract protected function doInstall(PackageInterface $package, $path, $url);
 
     /**
      * {@inheritDoc}
@@ -304,37 +220,6 @@ abstract class VcsDownloader implements DownloaderInterface, ChangeReportInterfa
     }
 
     /**
-     * Updates specific package in specific folder from initial to target version.
-     *
-     * @param PackageInterface $initial initial package
-     * @param PackageInterface $target  updated package
-     * @param string           $path    download path
-     * @param string           $url     package url
-     *
-     * @return PromiseInterface|null
-     */
-    abstract protected function doUpdate(PackageInterface $initial, PackageInterface $target, $path, $url);
-
-    /**
-     * Checks if VCS metadata repository has been initialized
-     * repository example: .git|.svn|.hg
-     *
-     * @param  string $path
-     * @return bool
-     */
-    abstract protected function hasMetadataRepository($path);
-
-    /**
-     * Fetches the commit logs between two commits
-     *
-     * @param  string $fromReference the source reference
-     * @param  string $toReference   the target reference
-     * @param  string $path          the package path
-     * @return string
-     */
-    abstract protected function getCommitLogs($fromReference, $toReference, $path);
-
-    /**
      * {@inheritDoc}
      */
     public function remove(PackageInterface $package, $path)
@@ -365,5 +250,120 @@ abstract class VcsDownloader implements DownloaderInterface, ChangeReportInterfa
         }
 
         return null;
+    }
+
+    /**
+     * Prompt the user to check if changes should be stashed/removed or the operation aborted
+     *
+     * @param  PackageInterface  $package
+     * @param  string            $path
+     * @param  bool              $update  if true (update) the changes can be stashed and reapplied after an update,
+     *                                    if false (remove) the changes should be assumed to be lost if the operation is not aborted
+     * @throws \RuntimeException in case the operation must be aborted
+     */
+    protected function cleanChanges(PackageInterface $package, $path, $update)
+    {
+        // the default implementation just fails if there are any changes, override in child classes to provide stash-ability
+        if (null !== $this->getLocalChanges($package, $path)) {
+            throw new \RuntimeException('Source directory ' . $path . ' has uncommitted changes.');
+        }
+
+        return \React\Promise\resolve();
+    }
+
+    /**
+     * Reapply previously stashes changes if applicable, only called after an update (regardless if successful or not)
+     *
+     * @param  string            $path
+     * @throws \RuntimeException in case the operation must be aborted or the patch does not apply cleanly
+     */
+    protected function reapplyChanges($path)
+    {
+    }
+
+    /**
+     * Downloads data needed to run an install/update later
+     *
+     * @param PackageInterface      $package     package instance
+     * @param string                $path        download path
+     * @param string                $url         package url
+     * @param PackageInterface|null $prevPackage previous package (in case of an update)
+     *
+     * @return PromiseInterface|null
+     */
+    abstract protected function doDownload(PackageInterface $package, $path, $url, PackageInterface $prevPackage = null);
+
+    /**
+     * Downloads specific package into specific folder.
+     *
+     * @param PackageInterface $package package instance
+     * @param string           $path    download path
+     * @param string           $url     package url
+     *
+     * @return PromiseInterface|null
+     */
+    abstract protected function doInstall(PackageInterface $package, $path, $url);
+
+    /**
+     * Updates specific package in specific folder from initial to target version.
+     *
+     * @param PackageInterface $initial initial package
+     * @param PackageInterface $target  updated package
+     * @param string           $path    download path
+     * @param string           $url     package url
+     *
+     * @return PromiseInterface|null
+     */
+    abstract protected function doUpdate(PackageInterface $initial, PackageInterface $target, $path, $url);
+
+    /**
+     * Fetches the commit logs between two commits
+     *
+     * @param  string $fromReference the source reference
+     * @param  string $toReference   the target reference
+     * @param  string $path          the package path
+     * @return string
+     */
+    abstract protected function getCommitLogs($fromReference, $toReference, $path);
+
+    /**
+     * Checks if VCS metadata repository has been initialized
+     * repository example: .git|.svn|.hg
+     *
+     * @param  string $path
+     * @return bool
+     */
+    abstract protected function hasMetadataRepository($path);
+
+    /**
+     * @return string[]
+     */
+    private function prepareUrls(array $urls)
+    {
+        foreach ($urls as $index => $url) {
+            if (Filesystem::isLocalPath($url)) {
+                // realpath() below will not understand
+                // url that starts with "file://"
+                $fileProtocol = 'file://';
+                $isFileProtocol = false;
+                if (0 === strpos($url, $fileProtocol)) {
+                    $url = substr($url, strlen($fileProtocol));
+                    $isFileProtocol = true;
+                }
+
+                // realpath() below will not understand %20 spaces etc.
+                if (false !== strpos($url, '%')) {
+                    $url = rawurldecode($url);
+                }
+
+                $urls[$index] = realpath($url);
+
+                if ($isFileProtocol) {
+                    $urls[$index] = $fileProtocol . $urls[$index];
+                }
+            }
+        }
+
+        return $urls;
     }
 }

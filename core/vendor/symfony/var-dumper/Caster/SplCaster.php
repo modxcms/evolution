@@ -34,30 +34,6 @@ class SplCaster
         return self::castSplArray($c, $a, $stub, $isNested);
     }
 
-    private static function castSplArray($c, array $a, Stub $stub, bool $isNested): array
-    {
-        $prefix = Caster::PREFIX_VIRTUAL;
-        $flags = $c->getFlags();
-
-        if (!($flags & \ArrayObject::STD_PROP_LIST)) {
-            $c->setFlags(\ArrayObject::STD_PROP_LIST);
-            $a = Caster::castObject($c, \get_class($c), method_exists($c, '__debugInfo'), $stub->class);
-            $c->setFlags($flags);
-        }
-        if (\PHP_VERSION_ID < 70400) {
-            $a[$prefix.'storage'] = $c->getArrayCopy();
-        }
-        $a += [
-            $prefix.'flag::STD_PROP_LIST' => (bool) ($flags & \ArrayObject::STD_PROP_LIST),
-            $prefix.'flag::ARRAY_AS_PROPS' => (bool) ($flags & \ArrayObject::ARRAY_AS_PROPS),
-        ];
-        if ($c instanceof \ArrayObject) {
-            $a[$prefix.'iteratorClass'] = new ClassStub($c->getIteratorClass());
-        }
-
-        return $a;
-    }
-
     public static function castArrayIterator(\ArrayIterator $c, array $a, Stub $stub, bool $isNested)
     {
         return self::castSplArray($c, $a, $stub, $isNested);
@@ -239,6 +215,30 @@ class SplCaster
     public static function castWeakReference(\WeakReference $c, array $a, Stub $stub, bool $isNested)
     {
         $a[Caster::PREFIX_VIRTUAL.'object'] = $c->get();
+
+        return $a;
+    }
+
+    private static function castSplArray($c, array $a, Stub $stub, bool $isNested): array
+    {
+        $prefix = Caster::PREFIX_VIRTUAL;
+        $flags = $c->getFlags();
+
+        if (!($flags & \ArrayObject::STD_PROP_LIST)) {
+            $c->setFlags(\ArrayObject::STD_PROP_LIST);
+            $a = Caster::castObject($c, \get_class($c), method_exists($c, '__debugInfo'), $stub->class);
+            $c->setFlags($flags);
+        }
+        if (\PHP_VERSION_ID < 70400) {
+            $a[$prefix.'storage'] = $c->getArrayCopy();
+        }
+        $a += [
+            $prefix.'flag::STD_PROP_LIST' => (bool) ($flags & \ArrayObject::STD_PROP_LIST),
+            $prefix.'flag::ARRAY_AS_PROPS' => (bool) ($flags & \ArrayObject::ARRAY_AS_PROPS),
+        ];
+        if ($c instanceof \ArrayObject) {
+            $a[$prefix.'iteratorClass'] = new ClassStub($c->getIteratorClass());
+        }
 
         return $a;
     }

@@ -35,26 +35,21 @@ trait PluggableTrait
     }
 
     /**
-     * Plugins pass-through.
+     * Find a specific plugin.
      *
      * @param string $method
-     * @param array  $arguments
      *
-     * @throws BadMethodCallException
+     * @throws PluginNotFoundException
      *
-     * @return mixed
+     * @return PluginInterface
      */
-    public function __call($method, array $arguments)
+    protected function findPlugin($method)
     {
-        try {
-            return $this->invokePlugin($method, $arguments, $this);
-        } catch (PluginNotFoundException $e) {
-            throw new BadMethodCallException(
-                'Call to undefined method '
-                . get_class($this)
-                . '::' . $method
-            );
+        if ( ! isset($this->plugins[$method])) {
+            throw new PluginNotFoundException('Plugin not found for method: ' . $method);
         }
+
+        return $this->plugins[$method];
     }
 
     /**
@@ -78,20 +73,25 @@ trait PluggableTrait
     }
 
     /**
-     * Find a specific plugin.
+     * Plugins pass-through.
      *
      * @param string $method
+     * @param array  $arguments
      *
-     * @throws PluginNotFoundException
+     * @throws BadMethodCallException
      *
-     * @return PluginInterface
+     * @return mixed
      */
-    protected function findPlugin($method)
+    public function __call($method, array $arguments)
     {
-        if ( ! isset($this->plugins[$method])) {
-            throw new PluginNotFoundException('Plugin not found for method: ' . $method);
+        try {
+            return $this->invokePlugin($method, $arguments, $this);
+        } catch (PluginNotFoundException $e) {
+            throw new BadMethodCallException(
+                'Call to undefined method '
+                . get_class($this)
+                . '::' . $method
+            );
         }
-
-        return $this->plugins[$method];
     }
 }

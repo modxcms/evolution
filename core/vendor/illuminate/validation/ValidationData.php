@@ -44,43 +44,6 @@ class ValidationData
     }
 
     /**
-     * Get the explicit part of the attribute name.
-     *
-     * E.g. 'foo.bar.*.baz' -> 'foo.bar'
-     *
-     * Allows us to not spin through all of the flattened data for some operations.
-     *
-     * @param  string  $attribute
-     * @return string
-     */
-    public static function getLeadingExplicitAttributePath($attribute)
-    {
-        return rtrim(explode('*', $attribute)[0], '.') ?: null;
-    }
-
-    /**
-     * Extract data based on the given dot-notated path.
-     *
-     * Used to extract a sub-section of the data for faster iteration.
-     *
-     * @param  string  $attribute
-     * @param  array  $masterData
-     * @return array
-     */
-    public static function extractDataFromPath($attribute, $masterData)
-    {
-        $results = [];
-
-        $value = Arr::get($masterData, $attribute, '__missing__');
-
-        if ($value !== '__missing__') {
-            Arr::set($results, $attribute, $value);
-        }
-
-        return $results;
-    }
-
-    /**
      * Get all of the exact attribute values for a given wildcard attribute.
      *
      * @param  array  $masterData
@@ -109,5 +72,42 @@ class ValidationData
         }
 
         return $data;
+    }
+
+    /**
+     * Extract data based on the given dot-notated path.
+     *
+     * Used to extract a sub-section of the data for faster iteration.
+     *
+     * @param  string  $attribute
+     * @param  array  $masterData
+     * @return array
+     */
+    public static function extractDataFromPath($attribute, $masterData)
+    {
+        $results = [];
+
+        $value = Arr::get($masterData, $attribute, '__missing__');
+
+        if ($value !== '__missing__') {
+            Arr::set($results, $attribute, $value);
+        }
+
+        return $results;
+    }
+
+    /**
+     * Get the explicit part of the attribute name.
+     *
+     * E.g. 'foo.bar.*.baz' -> 'foo.bar'
+     *
+     * Allows us to not spin through all of the flattened data for some operations.
+     *
+     * @param  string  $attribute
+     * @return string
+     */
+    public static function getLeadingExplicitAttributePath($attribute)
+    {
+        return rtrim(explode('*', $attribute)[0], '.') ?: null;
     }
 }

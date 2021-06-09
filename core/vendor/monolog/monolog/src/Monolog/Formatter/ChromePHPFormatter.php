@@ -37,20 +37,6 @@ class ChromePHPFormatter implements FormatterInterface
     /**
      * {@inheritdoc}
      */
-    public function formatBatch(array $records)
-    {
-        $formatted = [];
-
-        foreach ($records as $record) {
-            $formatted[] = $this->format($record);
-        }
-
-        return $formatted;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function format(array $record)
     {
         // Retrieve the line and file if set and remove them from the formatted extra
@@ -77,5 +63,19 @@ class ChromePHPFormatter implements FormatterInterface
             $backtrace,
             $this->logLevels[$record['level']],
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function formatBatch(array $records)
+    {
+        $formatted = [];
+
+        foreach ($records as $record) {
+            $formatted[] = $this->format($record);
+        }
+
+        return $formatted;
     }
 }

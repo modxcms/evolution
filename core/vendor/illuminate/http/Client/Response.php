@@ -39,16 +39,6 @@ class Response implements ArrayAccess
     }
 
     /**
-     * Get the JSON decoded body of the response as an object.
-     *
-     * @return object
-     */
-    public function object()
-    {
-        return json_decode($this->body(), false);
-    }
-
-    /**
      * Get the body of the response.
      *
      * @return string
@@ -56,17 +46,6 @@ class Response implements ArrayAccess
     public function body()
     {
         return (string) $this->response->getBody();
-    }
-
-    /**
-     * Get the JSON decoded body of the response as a collection.
-     *
-     * @param  string|null  $key
-     * @return \Illuminate\Support\Collection
-     */
-    public function collect($key = null)
-    {
-        return Collection::make($this->json($key));
     }
 
     /**
@@ -87,6 +66,27 @@ class Response implements ArrayAccess
         }
 
         return data_get($this->decoded, $key, $default);
+    }
+
+    /**
+     * Get the JSON decoded body of the response as an object.
+     *
+     * @return object
+     */
+    public function object()
+    {
+        return json_decode($this->body(), false);
+    }
+
+    /**
+     * Get the JSON decoded body of the response as a collection.
+     *
+     * @param  string|null  $key
+     * @return \Illuminate\Support\Collection
+     */
+    public function collect($key = null)
+    {
+        return Collection::make($this->json($key));
     }
 
     /**
@@ -113,13 +113,23 @@ class Response implements ArrayAccess
     }
 
     /**
+     * Get the status code of the response.
+     *
+     * @return int
+     */
+    public function status()
+    {
+        return (int) $this->response->getStatusCode();
+    }
+
+    /**
      * Get the effective URI of the response.
      *
-     * @return \Psr\Http\Message\UriInterface
+     * @return \Psr\Http\Message\UriInterface|null
      */
     public function effectiveUri()
     {
-        return $this->transferStats->getEffectiveUri();
+        return optional($this->transferStats)->getEffectiveUri();
     }
 
     /**
@@ -130,16 +140,6 @@ class Response implements ArrayAccess
     public function successful()
     {
         return $this->status() >= 200 && $this->status() < 300;
-    }
-
-    /**
-     * Get the status code of the response.
-     *
-     * @return int
-     */
-    public function status()
-    {
-        return (int) $this->response->getStatusCode();
     }
 
     /**
@@ -163,21 +163,6 @@ class Response implements ArrayAccess
     }
 
     /**
-     * Execute the given callback if there was a server or client error.
-     *
-     * @param  \Closure|callable $callback
-     * @return $this
-     */
-    public function onError(callable $callback)
-    {
-        if ($this->failed()) {
-            $callback($this);
-        }
-
-        return $this;
-    }
-
-    /**
      * Determine if the response indicates a client or server error occurred.
      *
      * @return bool
@@ -185,6 +170,16 @@ class Response implements ArrayAccess
     public function failed()
     {
         return $this->serverError() || $this->clientError();
+    }
+
+    /**
+     * Determine if the response indicates a client error occurred.
+     *
+     * @return bool
+     */
+    public function clientError()
+    {
+        return $this->status() >= 400 && $this->status() < 500;
     }
 
     /**
@@ -198,13 +193,18 @@ class Response implements ArrayAccess
     }
 
     /**
-     * Determine if the response indicates a client error occurred.
+     * Execute the given callback if there was a server or client error.
      *
-     * @return bool
+     * @param  \Closure|callable $callback
+     * @return $this
      */
-    public function clientError()
+    public function onError(callable $callback)
     {
-        return $this->status() >= 400 && $this->status() < 500;
+        if ($this->failed()) {
+            $callback($this);
+        }
+
+        return $this;
     }
 
     /**
@@ -224,7 +224,19 @@ class Response implements ArrayAccess
      */
     public function handlerStats()
     {
-        return $this->transferStats->getHandlerStats();
+        return optional($this->transferStats)->getHandlerStats() ?? [];
+    }
+
+    /**
+     * Close the stream and any underlying resources.
+     *
+     * @return $this
+     */
+    public function close()
+    {
+        $this->response->getBody()->close();
+
+        return $this;
     }
 
     /**
@@ -235,6 +247,18 @@ class Response implements ArrayAccess
     public function toPsrResponse()
     {
         return $this->response;
+    }
+
+    /**
+     * Create an exception if a server or client error occurred.
+     *
+     * @return \Illuminate\Http\Client\RequestException|null
+     */
+    public function toException()
+    {
+        if ($this->failed()) {
+            return new RequestException($this);
+        }
     }
 
     /**
@@ -258,18 +282,6 @@ class Response implements ArrayAccess
         }
 
         return $this;
-    }
-
-    /**
-     * Create an exception if a server or client error occurred.
-     *
-     * @return \Illuminate\Http\Client\RequestException|null
-     */
-    public function toException()
-    {
-        if ($this->failed()) {
-            return new RequestException($this);
-        }
     }
 
     /**

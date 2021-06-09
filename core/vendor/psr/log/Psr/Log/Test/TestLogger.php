@@ -99,19 +99,6 @@ class TestLogger extends AbstractLogger
         }, $level);
     }
 
-    public function hasRecordThatPasses(callable $predicate, $level)
-    {
-        if (!isset($this->recordsByLevel[$level])) {
-            return false;
-        }
-        foreach ($this->recordsByLevel[$level] as $i => $rec) {
-            if (call_user_func($predicate, $rec, $i)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public function hasRecordThatContains($message, $level)
     {
         return $this->hasRecordThatPasses(function ($rec) use ($message) {
@@ -124,6 +111,19 @@ class TestLogger extends AbstractLogger
         return $this->hasRecordThatPasses(function ($rec) use ($regex) {
             return preg_match($regex, $rec['message']) > 0;
         }, $level);
+    }
+
+    public function hasRecordThatPasses(callable $predicate, $level)
+    {
+        if (!isset($this->recordsByLevel[$level])) {
+            return false;
+        }
+        foreach ($this->recordsByLevel[$level] as $i => $rec) {
+            if (call_user_func($predicate, $rec, $i)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function __call($method, $args)

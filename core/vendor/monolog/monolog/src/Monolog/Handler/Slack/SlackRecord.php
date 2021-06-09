@@ -111,84 +111,6 @@ class SlackRecord
         }
     }
 
-    public function setFormatter(?FormatterInterface $formatter = null): self
-    {
-        $this->formatter = $formatter;
-
-        return $this;
-    }
-
-    public function excludeFields(array $excludeFields = []): self
-    {
-        $this->excludeFields = $excludeFields;
-
-        return $this;
-    }
-
-    public function includeContextAndExtra(bool $includeContextAndExtra = false): self
-    {
-        $this->includeContextAndExtra = $includeContextAndExtra;
-
-        if ($this->includeContextAndExtra) {
-            $this->normalizerFormatter = new NormalizerFormatter();
-        }
-
-        return $this;
-    }
-
-    public function useShortAttachment(bool $useShortAttachment = false): self
-    {
-        $this->useShortAttachment = $useShortAttachment;
-
-        return $this;
-    }
-
-    public function setUserIcon(?string $userIcon = null): self
-    {
-        $this->userIcon = $userIcon;
-
-        if (\is_string($userIcon)) {
-            $this->userIcon = trim($userIcon, ':');
-        }
-
-        return $this;
-    }
-
-    public function useAttachment(bool $useAttachment = true): self
-    {
-        $this->useAttachment = $useAttachment;
-
-        return $this;
-    }
-
-    /**
-     * Username used by the bot when posting
-     *
-     * @param ?string $username
-     *
-     * @return static
-     */
-    public function setUsername(?string $username = null): self
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
-    /**
-     * Channel used by the bot when posting
-     *
-     * @param ?string $channel
-     *
-     * @return static
-     */
-    public function setChannel(?string $channel = null): self
-    {
-        $this->channel = $channel;
-
-        return $this;
-    }
-
     /**
      * Returns required data in format that Slack
      * is expecting.
@@ -267,30 +189,6 @@ class SlackRecord
     }
 
     /**
-     * Get a copy of record with fields excluded according to $this->excludeFields
-     */
-    private function removeExcludedFields(array $record): array
-    {
-        foreach ($this->excludeFields as $field) {
-            $keys = explode('.', $field);
-            $node = &$record;
-            $lastKey = end($keys);
-            foreach ($keys as $key) {
-                if (!isset($node[$key])) {
-                    break;
-                }
-                if ($lastKey === $key) {
-                    unset($node[$key]);
-                    break;
-                }
-                $node = &$node[$key];
-            }
-        }
-
-        return $record;
-    }
-
-    /**
      * Returns a Slack message attachment color associated with
      * provided level.
      */
@@ -306,6 +204,99 @@ class SlackRecord
             default:
                 return static::COLOR_DEFAULT;
         }
+    }
+
+    /**
+     * Stringifies an array of key/value pairs to be used in attachment fields
+     */
+    public function stringify(array $fields): string
+    {
+        $normalized = $this->normalizerFormatter->format($fields);
+
+        $hasSecondDimension = count(array_filter($normalized, 'is_array'));
+        $hasNonNumericKeys = !count(array_filter(array_keys($normalized), 'is_numeric'));
+
+        return $hasSecondDimension || $hasNonNumericKeys
+            ? Utils::jsonEncode($normalized, JSON_PRETTY_PRINT|Utils::DEFAULT_JSON_FLAGS)
+            : Utils::jsonEncode($normalized, Utils::DEFAULT_JSON_FLAGS);
+    }
+
+    /**
+     * Channel used by the bot when posting
+     *
+     * @param ?string $channel
+     *
+     * @return static
+     */
+    public function setChannel(?string $channel = null): self
+    {
+        $this->channel = $channel;
+
+        return $this;
+    }
+
+    /**
+     * Username used by the bot when posting
+     *
+     * @param ?string $username
+     *
+     * @return static
+     */
+    public function setUsername(?string $username = null): self
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    public function useAttachment(bool $useAttachment = true): self
+    {
+        $this->useAttachment = $useAttachment;
+
+        return $this;
+    }
+
+    public function setUserIcon(?string $userIcon = null): self
+    {
+        $this->userIcon = $userIcon;
+
+        if (\is_string($userIcon)) {
+            $this->userIcon = trim($userIcon, ':');
+        }
+
+        return $this;
+    }
+
+    public function useShortAttachment(bool $useShortAttachment = false): self
+    {
+        $this->useShortAttachment = $useShortAttachment;
+
+        return $this;
+    }
+
+    public function includeContextAndExtra(bool $includeContextAndExtra = false): self
+    {
+        $this->includeContextAndExtra = $includeContextAndExtra;
+
+        if ($this->includeContextAndExtra) {
+            $this->normalizerFormatter = new NormalizerFormatter();
+        }
+
+        return $this;
+    }
+
+    public function excludeFields(array $excludeFields = []): self
+    {
+        $this->excludeFields = $excludeFields;
+
+        return $this;
+    }
+
+    public function setFormatter(?FormatterInterface $formatter = null): self
+    {
+        $this->formatter = $formatter;
+
+        return $this;
     }
 
     /**
@@ -327,21 +318,6 @@ class SlackRecord
     }
 
     /**
-     * Stringifies an array of key/value pairs to be used in attachment fields
-     */
-    public function stringify(array $fields): string
-    {
-        $normalized = $this->normalizerFormatter->format($fields);
-
-        $hasSecondDimension = count(array_filter($normalized, 'is_array'));
-        $hasNonNumericKeys = !count(array_filter(array_keys($normalized), 'is_numeric'));
-
-        return $hasSecondDimension || $hasNonNumericKeys
-            ? Utils::jsonEncode($normalized, JSON_PRETTY_PRINT|Utils::DEFAULT_JSON_FLAGS)
-            : Utils::jsonEncode($normalized, Utils::DEFAULT_JSON_FLAGS);
-    }
-
-    /**
      * Generates a collection of attachment fields from array
      */
     private function generateAttachmentFields(array $data): array
@@ -352,5 +328,29 @@ class SlackRecord
         }
 
         return $fields;
+    }
+
+    /**
+     * Get a copy of record with fields excluded according to $this->excludeFields
+     */
+    private function removeExcludedFields(array $record): array
+    {
+        foreach ($this->excludeFields as $field) {
+            $keys = explode('.', $field);
+            $node = &$record;
+            $lastKey = end($keys);
+            foreach ($keys as $key) {
+                if (!isset($node[$key])) {
+                    break;
+                }
+                if ($lastKey === $key) {
+                    unset($node[$key]);
+                    break;
+                }
+                $node = &$node[$key];
+            }
+        }
+
+        return $record;
     }
 }

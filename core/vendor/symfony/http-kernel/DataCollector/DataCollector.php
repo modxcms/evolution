@@ -39,18 +39,6 @@ abstract class DataCollector implements DataCollectorInterface
     private $cloner;
 
     /**
-     * @return array
-     */
-    public function __sleep()
-    {
-        return ['data'];
-    }
-
-    public function __wakeup()
-    {
-    }
-
-    /**
      * Converts the variable into a serializable Data instance.
      *
      * This array can be displayed in the template using
@@ -94,6 +82,18 @@ abstract class DataCollector implements DataCollectorInterface
         ] + ReflectionCaster::UNSET_CLOSURE_FILE_INFO;
 
         return $casters;
+    }
+
+    /**
+     * @return array
+     */
+    public function __sleep()
+    {
+        return ['data'];
+    }
+
+    public function __wakeup()
+    {
     }
 
     /**

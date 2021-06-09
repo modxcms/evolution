@@ -52,6 +52,11 @@ class Transaction
         $this->operations = $this->calculateOperations();
     }
 
+    public function getOperations()
+    {
+        return $this->operations;
+    }
+
     private function setResultPackageMaps($resultPackages)
     {
         $packageSort = function (PackageInterface $a, PackageInterface $b) {
@@ -331,10 +336,5 @@ class Transaction
         }
 
         return array_merge($uninstOps, $operations);
-    }
-
-    public function getOperations()
-    {
-        return $this->operations;
     }
 }

@@ -145,6 +145,67 @@ class ClassMapGenerator
     }
 
     /**
+     * Remove classes which could not have been loaded by namespace autoloaders
+     *
+     * @param  array       $classes       found classes in given file
+     * @param  string      $filePath      current file
+     * @param  string      $baseNamespace prefix of given autoload mapping
+     * @param  string      $namespaceType psr-0|psr-4
+     * @param  string      $basePath      root directory of given autoload mapping
+     * @param  IOInterface $io            IO object
+     * @return array       valid classes
+     */
+    private static function filterByNamespace($classes, $filePath, $baseNamespace, $namespaceType, $basePath, $io)
+    {
+        $validClasses = array();
+        $rejectedClasses = array();
+
+        $realSubPath = substr($filePath, strlen($basePath) + 1);
+        $realSubPath = substr($realSubPath, 0, strrpos($realSubPath, '.'));
+
+        foreach ($classes as $class) {
+            // silently skip if ns doesn't have common root
+            if ('' !== $baseNamespace && 0 !== strpos($class, $baseNamespace)) {
+                continue;
+            }
+            // transform class name to file path and validate
+            if ('psr-0' === $namespaceType) {
+                $namespaceLength = strrpos($class, '\\');
+                if (false !== $namespaceLength) {
+                    $namespace = substr($class, 0, $namespaceLength + 1);
+                    $className = substr($class, $namespaceLength + 1);
+                    $subPath = str_replace('\\', DIRECTORY_SEPARATOR, $namespace)
+                        . str_replace('_', DIRECTORY_SEPARATOR, $className);
+                } else {
+                    $subPath = str_replace('_', DIRECTORY_SEPARATOR, $class);
+                }
+            } elseif ('psr-4' === $namespaceType) {
+                $subNamespace = ('' !== $baseNamespace) ? substr($class, strlen($baseNamespace)) : $class;
+                $subPath = str_replace('\\', DIRECTORY_SEPARATOR, $subNamespace);
+            } else {
+                throw new \RuntimeException("namespaceType must be psr-0 or psr-4, $namespaceType given");
+            }
+            if ($subPath === $realSubPath) {
+                $validClasses[] = $class;
+            } else {
+                $rejectedClasses[] = $class;
+            }
+        }
+        // warn only if no valid classes, else silently skip invalid
+        if (empty($validClasses)) {
+            foreach ($rejectedClasses as $class) {
+                if ($io) {
+                    $io->writeError("<warning>Class $class located in ".preg_replace('{^'.preg_quote(getcwd()).'}', '.', $filePath, 1)." does not comply with $namespaceType autoloading standard. Skipping.</warning>");
+                }
+            }
+
+            return array();
+        }
+
+        return $validClasses;
+    }
+
+    /**
      * Extract the classes in the given file
      *
      * @param  string            $path The file to check
@@ -241,66 +302,5 @@ class ClassMapGenerator
         }
 
         return $classes;
-    }
-
-    /**
-     * Remove classes which could not have been loaded by namespace autoloaders
-     *
-     * @param  array       $classes       found classes in given file
-     * @param  string      $filePath      current file
-     * @param  string      $baseNamespace prefix of given autoload mapping
-     * @param  string      $namespaceType psr-0|psr-4
-     * @param  string      $basePath      root directory of given autoload mapping
-     * @param  IOInterface $io            IO object
-     * @return array       valid classes
-     */
-    private static function filterByNamespace($classes, $filePath, $baseNamespace, $namespaceType, $basePath, $io)
-    {
-        $validClasses = array();
-        $rejectedClasses = array();
-
-        $realSubPath = substr($filePath, strlen($basePath) + 1);
-        $realSubPath = substr($realSubPath, 0, strrpos($realSubPath, '.'));
-
-        foreach ($classes as $class) {
-            // silently skip if ns doesn't have common root
-            if ('' !== $baseNamespace && 0 !== strpos($class, $baseNamespace)) {
-                continue;
-            }
-            // transform class name to file path and validate
-            if ('psr-0' === $namespaceType) {
-                $namespaceLength = strrpos($class, '\\');
-                if (false !== $namespaceLength) {
-                    $namespace = substr($class, 0, $namespaceLength + 1);
-                    $className = substr($class, $namespaceLength + 1);
-                    $subPath = str_replace('\\', DIRECTORY_SEPARATOR, $namespace)
-                        . str_replace('_', DIRECTORY_SEPARATOR, $className);
-                } else {
-                    $subPath = str_replace('_', DIRECTORY_SEPARATOR, $class);
-                }
-            } elseif ('psr-4' === $namespaceType) {
-                $subNamespace = ('' !== $baseNamespace) ? substr($class, strlen($baseNamespace)) : $class;
-                $subPath = str_replace('\\', DIRECTORY_SEPARATOR, $subNamespace);
-            } else {
-                throw new \RuntimeException("namespaceType must be psr-0 or psr-4, $namespaceType given");
-            }
-            if ($subPath === $realSubPath) {
-                $validClasses[] = $class;
-            } else {
-                $rejectedClasses[] = $class;
-            }
-        }
-        // warn only if no valid classes, else silently skip invalid
-        if (empty($validClasses)) {
-            foreach ($rejectedClasses as $class) {
-                if ($io) {
-                    $io->writeError("<warning>Class $class located in ".preg_replace('{^'.preg_quote(getcwd()).'}', '.', $filePath, 1)." does not comply with $namespaceType autoloading standard. Skipping.</warning>");
-                }
-            }
-
-            return array();
-        }
-
-        return $validClasses;
     }
 }

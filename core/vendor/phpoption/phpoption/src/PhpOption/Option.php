@@ -29,6 +29,30 @@ use IteratorAggregate;
 abstract class Option implements IteratorAggregate
 {
     /**
+     * Creates an option given a return value.
+     *
+     * This is intended for consuming existing APIs and allows you to easily
+     * convert them to an option. By default, we treat ``null`` as the None
+     * case, and everything else as Some.
+     *
+     * @template S
+     *
+     * @param S $value     The actual return value.
+     * @param S $noneValue The value which should be considered "None"; null by
+     *                     default.
+     *
+     * @return Option<S>
+     */
+    public static function fromValue($value, $noneValue = null)
+    {
+        if ($value === $noneValue) {
+            return None::create();
+        }
+
+        return new Some($value);
+    }
+
+    /**
      * Creates an option from an array's value.
      *
      * If the key does not exist in the array, the array is not actually an
@@ -82,6 +106,42 @@ abstract class Option implements IteratorAggregate
     }
 
     /**
+     * Option factory, which creates new option based on passed value.
+     *
+     * If value is already an option, it simply returns. If value is callable,
+     * LazyOption with passed callback created and returned. If Option
+     * returned from callback, it returns directly. On other case value passed
+     * to Option::fromValue() method.
+     *
+     * @template S
+     *
+     * @param Option<S>|callable|S $value
+     * @param S                    $noneValue Used when $value is mixed or
+     *                                        callable, for None-check.
+     *
+     * @return Option<S>|LazyOption<S>
+     */
+    public static function ensure($value, $noneValue = null)
+    {
+        if ($value instanceof self) {
+            return $value;
+        } elseif (is_callable($value)) {
+            return new LazyOption(static function () use ($value, $noneValue) {
+                /** @var mixed */
+                $return = $value();
+
+                if ($return instanceof self) {
+                    return $return;
+                } else {
+                    return self::fromValue($return, $noneValue);
+                }
+            });
+        } else {
+            return self::fromValue($value, $noneValue);
+        }
+    }
+
+    /**
      * Lift a function so that it accepts Option as parameters.
      *
      * We return a new closure that wraps the original callback. If any of the
@@ -132,13 +192,6 @@ abstract class Option implements IteratorAggregate
     }
 
     /**
-     * Returns true if no value is available, false otherwise.
-     *
-     * @return bool
-     */
-    abstract public function isEmpty();
-
-    /**
      * Returns the value if available, or throws an exception otherwise.
      *
      * @throws \RuntimeException If value is not available.
@@ -146,66 +199,6 @@ abstract class Option implements IteratorAggregate
      * @return T
      */
     abstract public function get();
-
-    /**
-     * Option factory, which creates new option based on passed value.
-     *
-     * If value is already an option, it simply returns. If value is callable,
-     * LazyOption with passed callback created and returned. If Option
-     * returned from callback, it returns directly. On other case value passed
-     * to Option::fromValue() method.
-     *
-     * @template S
-     *
-     * @param Option<S>|callable|S $value
-     * @param S                    $noneValue Used when $value is mixed or
-     *                                        callable, for None-check.
-     *
-     * @return Option<S>|LazyOption<S>
-     */
-    public static function ensure($value, $noneValue = null)
-    {
-        if ($value instanceof self) {
-            return $value;
-        } elseif (is_callable($value)) {
-            return new LazyOption(static function () use ($value, $noneValue) {
-                /** @var mixed */
-                $return = $value();
-
-                if ($return instanceof self) {
-                    return $return;
-                } else {
-                    return self::fromValue($return, $noneValue);
-                }
-            });
-        } else {
-            return self::fromValue($value, $noneValue);
-        }
-    }
-
-    /**
-     * Creates an option given a return value.
-     *
-     * This is intended for consuming existing APIs and allows you to easily
-     * convert them to an option. By default, we treat ``null`` as the None
-     * case, and everything else as Some.
-     *
-     * @template S
-     *
-     * @param S $value     The actual return value.
-     * @param S $noneValue The value which should be considered "None"; null by
-     *                     default.
-     *
-     * @return Option<S>
-     */
-    public static function fromValue($value, $noneValue = null)
-    {
-        if ($value === $noneValue) {
-            return None::create();
-        }
-
-        return new Some($value);
-    }
 
     /**
      * Returns the value if available, or the default value if not.
@@ -240,6 +233,13 @@ abstract class Option implements IteratorAggregate
      * @return T
      */
     abstract public function getOrThrow(\Exception $ex);
+
+    /**
+     * Returns true if no value is available, false otherwise.
+     *
+     * @return bool
+     */
+    abstract public function isEmpty();
 
     /**
      * Returns true if a value is available, false otherwise.

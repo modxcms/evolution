@@ -55,6 +55,19 @@ class Options implements OptionsInterface
     /**
      * {@inheritdoc}
      */
+    public function getDefault($option)
+    {
+        if (isset($this->handlers[$option])) {
+            $handler = $this->handlers[$option];
+            $handler = new $handler();
+
+            return $handler->getDefault($this);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function defined($option)
     {
         return
@@ -105,18 +118,5 @@ class Options implements OptionsInterface
         }
 
         return;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefault($option)
-    {
-        if (isset($this->handlers[$option])) {
-            $handler = $this->handlers[$option];
-            $handler = new $handler();
-
-            return $handler->getDefault($this);
-        }
     }
 }

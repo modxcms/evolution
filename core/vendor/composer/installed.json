@@ -2,17 +2,17 @@
     "packages": [
         {
             "name": "composer/ca-bundle",
-            "version": "1.2.9",
-            "version_normalized": "1.2.9.0",
+            "version": "1.2.10",
+            "version_normalized": "1.2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "78a0e288fdcebf92aa2318a8d3656168da6ac1a5"
+                "reference": "9fdb22c2e97a614657716178093cd1da90a64aa8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/78a0e288fdcebf92aa2318a8d3656168da6ac1a5",
-                "reference": "78a0e288fdcebf92aa2318a8d3656168da6ac1a5",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/9fdb22c2e97a614657716178093cd1da90a64aa8",
+                "reference": "9fdb22c2e97a614657716178093cd1da90a64aa8",
                 "shasum": ""
             },
             "require": {
@@ -26,7 +26,7 @@
                 "symfony/phpunit-bridge": "^4.2 || ^5",
                 "symfony/process": "^2.5 || ^3.0 || ^4.0 || ^5.0"
             },
-            "time": "2021-01-12T12:10:35+00:00",
+            "time": "2021-06-07T13:58:28+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -61,7 +61,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/ca-bundle/issues",
-                "source": "https://github.com/composer/ca-bundle/tree/1.2.9"
+                "source": "https://github.com/composer/ca-bundle/tree/1.2.10"
             },
             "funding": [
                 {
@@ -81,17 +81,17 @@
         },
         {
             "name": "composer/composer",
-            "version": "2.1.0",
-            "version_normalized": "2.1.0.0",
+            "version": "2.1.3",
+            "version_normalized": "2.1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "59bb0df323c75308e6a72c6c9bc7dc8cc577f1ca"
+                "reference": "fc5c4573aafce3a018eb7f1f8f91cea423970f2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/59bb0df323c75308e6a72c6c9bc7dc8cc577f1ca",
-                "reference": "59bb0df323c75308e6a72c6c9bc7dc8cc577f1ca",
+                "url": "https://api.github.com/repos/composer/composer/zipball/fc5c4573aafce3a018eb7f1f8f91cea423970f2e",
+                "reference": "fc5c4573aafce3a018eb7f1f8f91cea423970f2e",
                 "shasum": ""
             },
             "require": {
@@ -120,7 +120,7 @@
                 "ext-zip": "Enabling the zip extension allows you to unzip archives",
                 "ext-zlib": "Allow gzip compression of HTTP requests"
             },
-            "time": "2021-06-03T09:30:09+00:00",
+            "time": "2021-06-09T14:31:20+00:00",
             "bin": [
                 "bin/composer"
             ],
@@ -162,7 +162,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/composer/issues",
-                "source": "https://github.com/composer/composer/tree/2.1.0"
+                "source": "https://github.com/composer/composer/tree/2.1.3"
             },
             "funding": [
                 {
@@ -1562,8 +1562,8 @@
         },
         {
             "name": "illuminate/bus",
-            "version": "v8.44.0",
-            "version_normalized": "8.44.0.0",
+            "version": "v8.46.0",
+            "version_normalized": "8.46.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/bus.git",
@@ -1618,8 +1618,8 @@
         },
         {
             "name": "illuminate/cache",
-            "version": "v8.44.0",
-            "version_normalized": "8.44.0.0",
+            "version": "v8.46.0",
+            "version_normalized": "8.46.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/cache.git",
@@ -1678,8 +1678,8 @@
         },
         {
             "name": "illuminate/collections",
-            "version": "v8.44.0",
-            "version_normalized": "8.44.0.0",
+            "version": "v8.46.0",
+            "version_normalized": "8.46.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
@@ -1735,8 +1735,8 @@
         },
         {
             "name": "illuminate/config",
-            "version": "v8.44.0",
-            "version_normalized": "8.44.0.0",
+            "version": "v8.46.0",
+            "version_normalized": "8.46.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/config.git",
@@ -1786,17 +1786,17 @@
         },
         {
             "name": "illuminate/console",
-            "version": "v8.44.0",
-            "version_normalized": "8.44.0.0",
+            "version": "v8.46.0",
+            "version_normalized": "8.46.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/console.git",
-                "reference": "67e8cd22a6e6cefd1296234c8d494e5ce509f491"
+                "reference": "1f1ff88a2efbfc85f87ea7d8283acbefc5b56191"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/console/zipball/67e8cd22a6e6cefd1296234c8d494e5ce509f491",
-                "reference": "67e8cd22a6e6cefd1296234c8d494e5ce509f491",
+                "url": "https://api.github.com/repos/illuminate/console/zipball/1f1ff88a2efbfc85f87ea7d8283acbefc5b56191",
+                "reference": "1f1ff88a2efbfc85f87ea7d8283acbefc5b56191",
                 "shasum": ""
             },
             "require": {
@@ -1816,7 +1816,7 @@
                 "illuminate/filesystem": "Required to use the generator command (^8.0).",
                 "illuminate/queue": "Required to use closures for scheduled jobs (^8.0)."
             },
-            "time": "2021-05-26T18:52:36+00:00",
+            "time": "2021-06-04T13:29:57+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1849,8 +1849,8 @@
         },
         {
             "name": "illuminate/container",
-            "version": "v8.44.0",
-            "version_normalized": "8.44.0.0",
+            "version": "v8.46.0",
+            "version_normalized": "8.46.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
@@ -1903,17 +1903,17 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v8.44.0",
-            "version_normalized": "8.44.0.0",
+            "version": "v8.46.0",
+            "version_normalized": "8.46.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
-                "reference": "b9a7cf6acf1d05d863b6ef67c00cdb0e4ccea097"
+                "reference": "199fcedc161ba4a0b83feaddc4629f395dbf1641"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/contracts/zipball/b9a7cf6acf1d05d863b6ef67c00cdb0e4ccea097",
-                "reference": "b9a7cf6acf1d05d863b6ef67c00cdb0e4ccea097",
+                "url": "https://api.github.com/repos/illuminate/contracts/zipball/199fcedc161ba4a0b83feaddc4629f395dbf1641",
+                "reference": "199fcedc161ba4a0b83feaddc4629f395dbf1641",
                 "shasum": ""
             },
             "require": {
@@ -1921,7 +1921,7 @@
                 "psr/container": "^1.0",
                 "psr/simple-cache": "^1.0"
             },
-            "time": "2021-05-21T19:16:29+00:00",
+            "time": "2021-06-01T14:53:38+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1954,17 +1954,17 @@
         },
         {
             "name": "illuminate/database",
-            "version": "v8.44.0",
-            "version_normalized": "8.44.0.0",
+            "version": "v8.46.0",
+            "version_normalized": "8.46.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "c8a1d6c4bd636779cdf3c3b93d0b149472278070"
+                "reference": "a86efc94475ca00e1a11cfe7ee212699af9ddd61"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/c8a1d6c4bd636779cdf3c3b93d0b149472278070",
-                "reference": "c8a1d6c4bd636779cdf3c3b93d0b149472278070",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/a86efc94475ca00e1a11cfe7ee212699af9ddd61",
+                "reference": "a86efc94475ca00e1a11cfe7ee212699af9ddd61",
                 "shasum": ""
             },
             "require": {
@@ -1986,7 +1986,7 @@
                 "illuminate/pagination": "Required to paginate the result set (^8.0).",
                 "symfony/finder": "Required to use Eloquent model factories (^5.1.4)."
             },
-            "time": "2021-05-27T15:21:03+00:00",
+            "time": "2021-06-08T13:23:07+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -2025,8 +2025,8 @@
         },
         {
             "name": "illuminate/events",
-            "version": "v8.44.0",
-            "version_normalized": "8.44.0.0",
+            "version": "v8.46.0",
+            "version_normalized": "8.46.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/events.git",
@@ -2083,8 +2083,8 @@
         },
         {
             "name": "illuminate/filesystem",
-            "version": "v8.44.0",
-            "version_normalized": "8.44.0.0",
+            "version": "v8.46.0",
+            "version_normalized": "8.46.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/filesystem.git",
@@ -2148,17 +2148,17 @@
         },
         {
             "name": "illuminate/http",
-            "version": "v8.44.0",
-            "version_normalized": "8.44.0.0",
+            "version": "v8.46.0",
+            "version_normalized": "8.46.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/http.git",
-                "reference": "59230d2fc1c0ab29d5ae951fbb11346731d09745"
+                "reference": "5960bb86a9c9aa24ac4bde3684b9132803ef20ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/http/zipball/59230d2fc1c0ab29d5ae951fbb11346731d09745",
-                "reference": "59230d2fc1c0ab29d5ae951fbb11346731d09745",
+                "url": "https://api.github.com/repos/illuminate/http/zipball/5960bb86a9c9aa24ac4bde3684b9132803ef20ff",
+                "reference": "5960bb86a9c9aa24ac4bde3684b9132803ef20ff",
                 "shasum": ""
             },
             "require": {
@@ -2176,7 +2176,7 @@
                 "ext-gd": "Required to use Illuminate\\Http\\Testing\\FileFactory::image().",
                 "guzzlehttp/guzzle": "Required to use the HTTP Client (^6.5.5|^7.0.1)."
             },
-            "time": "2021-05-18T12:49:19+00:00",
+            "time": "2021-06-04T18:36:12+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -2209,8 +2209,8 @@
         },
         {
             "name": "illuminate/log",
-            "version": "v8.44.0",
-            "version_normalized": "8.44.0.0",
+            "version": "v8.46.0",
+            "version_normalized": "8.46.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/log.git",
@@ -2261,8 +2261,8 @@
         },
         {
             "name": "illuminate/macroable",
-            "version": "v8.44.0",
-            "version_normalized": "8.44.0.0",
+            "version": "v8.46.0",
+            "version_normalized": "8.46.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -2310,8 +2310,8 @@
         },
         {
             "name": "illuminate/pagination",
-            "version": "v8.44.0",
-            "version_normalized": "8.44.0.0",
+            "version": "v8.46.0",
+            "version_normalized": "8.46.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/pagination.git",
@@ -2363,8 +2363,8 @@
         },
         {
             "name": "illuminate/pipeline",
-            "version": "v8.44.0",
-            "version_normalized": "8.44.0.0",
+            "version": "v8.46.0",
+            "version_normalized": "8.46.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/pipeline.git",
@@ -2414,8 +2414,8 @@
         },
         {
             "name": "illuminate/redis",
-            "version": "v8.44.0",
-            "version_normalized": "8.44.0.0",
+            "version": "v8.46.0",
+            "version_normalized": "8.46.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/redis.git",
@@ -2471,8 +2471,8 @@
         },
         {
             "name": "illuminate/routing",
-            "version": "v8.44.0",
-            "version_normalized": "8.44.0.0",
+            "version": "v8.46.0",
+            "version_normalized": "8.46.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/routing.git",
@@ -2537,17 +2537,17 @@
         },
         {
             "name": "illuminate/session",
-            "version": "v8.44.0",
-            "version_normalized": "8.44.0.0",
+            "version": "v8.46.0",
+            "version_normalized": "8.46.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/session.git",
-                "reference": "5fee71ca59ce9f8c89ea78a0a2904fcefca772f4"
+                "reference": "40b9a38558b7b232fe68a75c18fa7959a25dc9e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/session/zipball/5fee71ca59ce9f8c89ea78a0a2904fcefca772f4",
-                "reference": "5fee71ca59ce9f8c89ea78a0a2904fcefca772f4",
+                "url": "https://api.github.com/repos/illuminate/session/zipball/40b9a38558b7b232fe68a75c18fa7959a25dc9e5",
+                "reference": "40b9a38558b7b232fe68a75c18fa7959a25dc9e5",
                 "shasum": ""
             },
             "require": {
@@ -2563,7 +2563,7 @@
             "suggest": {
                 "illuminate/console": "Required to use the session:table command (^8.0)."
             },
-            "time": "2021-04-11T16:12:42+00:00",
+            "time": "2021-05-31T12:52:50+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -2596,17 +2596,17 @@
         },
         {
             "name": "illuminate/support",
-            "version": "v8.44.0",
-            "version_normalized": "8.44.0.0",
+            "version": "v8.46.0",
+            "version_normalized": "8.46.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "8a2db3cb7e76fdbd28c6172492a79ab540a9b8e5"
+                "reference": "79e1ec26d58426e4f06e5b548712a8a6dc1ffdca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/8a2db3cb7e76fdbd28c6172492a79ab540a9b8e5",
-                "reference": "8a2db3cb7e76fdbd28c6172492a79ab540a9b8e5",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/79e1ec26d58426e4f06e5b548712a8a6dc1ffdca",
+                "reference": "79e1ec26d58426e4f06e5b548712a8a6dc1ffdca",
                 "shasum": ""
             },
             "require": {
@@ -2631,7 +2631,7 @@
                 "symfony/var-dumper": "Required to use the dd function (^5.1.4).",
                 "vlucas/phpdotenv": "Required to use the Env class and env helper (^5.2)."
             },
-            "time": "2021-05-20T18:46:23+00:00",
+            "time": "2021-06-08T13:14:36+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -2667,8 +2667,8 @@
         },
         {
             "name": "illuminate/translation",
-            "version": "v8.44.0",
-            "version_normalized": "8.44.0.0",
+            "version": "v8.46.0",
+            "version_normalized": "8.46.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/translation.git",
@@ -2722,17 +2722,17 @@
         },
         {
             "name": "illuminate/validation",
-            "version": "v8.44.0",
-            "version_normalized": "8.44.0.0",
+            "version": "v8.46.0",
+            "version_normalized": "8.46.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/validation.git",
-                "reference": "010662668641a402d9a379dd85b5131a31c991d3"
+                "reference": "679a8eec1a7e75eb7f89ec5d3ae20af750a0d818"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/validation/zipball/010662668641a402d9a379dd85b5131a31c991d3",
-                "reference": "010662668641a402d9a379dd85b5131a31c991d3",
+                "url": "https://api.github.com/repos/illuminate/validation/zipball/679a8eec1a7e75eb7f89ec5d3ae20af750a0d818",
+                "reference": "679a8eec1a7e75eb7f89ec5d3ae20af750a0d818",
                 "shasum": ""
             },
             "require": {
@@ -2751,7 +2751,7 @@
             "suggest": {
                 "illuminate/database": "Required to use the database presence verifier (^8.0)."
             },
-            "time": "2021-05-21T18:51:37+00:00",
+            "time": "2021-06-08T13:24:10+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -2784,17 +2784,17 @@
         },
         {
             "name": "illuminate/view",
-            "version": "v8.44.0",
-            "version_normalized": "8.44.0.0",
+            "version": "v8.46.0",
+            "version_normalized": "8.46.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/view.git",
-                "reference": "e5157304e3c29f4f04ec6dd566252c3cbb51c190"
+                "reference": "0aa62b8e2ed4ad0fd6b251f7eda9079364f1cba7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/view/zipball/e5157304e3c29f4f04ec6dd566252c3cbb51c190",
-                "reference": "e5157304e3c29f4f04ec6dd566252c3cbb51c190",
+                "url": "https://api.github.com/repos/illuminate/view/zipball/0aa62b8e2ed4ad0fd6b251f7eda9079364f1cba7",
+                "reference": "0aa62b8e2ed4ad0fd6b251f7eda9079364f1cba7",
                 "shasum": ""
             },
             "require": {
@@ -2808,7 +2808,7 @@
                 "illuminate/support": "^8.0",
                 "php": "^7.3|^8.0"
             },
-            "time": "2021-05-18T12:49:19+00:00",
+            "time": "2021-06-07T13:41:00+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -3230,17 +3230,17 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.48.1",
-            "version_normalized": "2.48.1.0",
+            "version": "2.49.0",
+            "version_normalized": "2.49.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "8d1f50f1436fb4b05e7127360483dd9c6e73da16"
+                "reference": "93d9db91c0235c486875d22f1e08b50bdf3e6eee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/8d1f50f1436fb4b05e7127360483dd9c6e73da16",
-                "reference": "8d1f50f1436fb4b05e7127360483dd9c6e73da16",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/93d9db91c0235c486875d22f1e08b50bdf3e6eee",
+                "reference": "93d9db91c0235c486875d22f1e08b50bdf3e6eee",
                 "shasum": ""
             },
             "require": {
@@ -3259,7 +3259,7 @@
                 "phpunit/phpunit": "^7.5.20 || ^8.5.14",
                 "squizlabs/php_codesniffer": "^3.4"
             },
-            "time": "2021-05-26T22:08:38+00:00",
+            "time": "2021-06-02T07:31:40+00:00",
             "bin": [
                 "bin/carbon"
             ],
@@ -3973,18 +3973,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "9460a22455b82b353d2212fecedebcf73b141baa"
+                "reference": "14f52bfb898ca5b11a0f75e2a299213db2606003"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/9460a22455b82b353d2212fecedebcf73b141baa",
-                "reference": "9460a22455b82b353d2212fecedebcf73b141baa",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/14f52bfb898ca5b11a0f75e2a299213db2606003",
+                "reference": "14f52bfb898ca5b11a0f75e2a299213db2606003",
                 "shasum": ""
             },
             "conflict": {
                 "3f/pygmentize": "<1.2",
                 "adodb/adodb-php": "<5.20.12",
                 "alterphp/easyadmin-extension-bundle": ">=1.2,<1.2.11|>=1.3,<1.3.1",
+                "amazing/media2click": ">=1,<1.3.3",
                 "amphp/artax": "<1.0.6|>=2,<2.0.6",
                 "amphp/http": "<1.0.1",
                 "amphp/http-client": ">=4,<4.4",
@@ -3994,7 +3995,7 @@
                 "bagisto/bagisto": "<0.1.5",
                 "barrelstrength/sprout-base-email": "<1.2.7",
                 "barrelstrength/sprout-forms": "<3.9",
-                "baserproject/basercms": ">=4,<=4.3.6|>=4.4,<4.4.1",
+                "baserproject/basercms": "<4.4.5",
                 "bk2k/bootstrap-package": ">=7.1,<7.1.2|>=8,<8.0.8|>=9,<9.0.4|>=9.1,<9.1.3|>=10,<10.0.10|>=11,<11.0.3",
                 "bolt/bolt": "<3.7.2",
                 "bolt/core": "<4.1.13",
@@ -4004,7 +4005,7 @@
                 "cakephp/cakephp": ">=1.3,<1.3.18|>=2,<2.4.99|>=2.5,<2.5.99|>=2.6,<2.6.12|>=2.7,<2.7.6|>=3,<3.5.18|>=3.6,<3.6.15|>=3.7,<3.7.7",
                 "cart2quote/module-quotation": ">=4.1.6,<=4.4.5|>=5,<5.4.4",
                 "cartalyst/sentry": "<=2.1.6",
-                "centreon/centreon": "<18.10.8|>=19,<19.4.5",
+                "centreon/centreon": "<20.10.7",
                 "cesnet/simplesamlphp-module-proxystatistics": "<3.1",
                 "codeigniter/framework": "<=3.0.6",
                 "composer/composer": "<1.10.22|>=2-alpha.1,<2.0.13",
@@ -4049,7 +4050,9 @@
                 "ezsystems/repository-forms": ">=2.3,<2.3.2.1",
                 "ezyang/htmlpurifier": "<4.1.1",
                 "facade/ignition": "<1.16.14|>=2,<2.4.2|>=2.5,<2.5.2",
+                "feehi/cms": "<=2.1.1",
                 "firebase/php-jwt": "<2",
+                "flarum/core": ">=1,<=1.0.1",
                 "flarum/sticky": ">=0.1-beta.14,<=0.1-beta.15",
                 "flarum/tags": "<=0.1-beta.13",
                 "fluidtypo3/vhs": "<5.1.1",
@@ -4085,6 +4088,7 @@
                 "klaviyo/magento2-extension": ">=1,<3",
                 "kreait/firebase-php": ">=3.2,<3.8.1",
                 "la-haute-societe/tcpdf": "<6.2.22",
+                "laminas/laminas-http": "<2.14.2",
                 "laravel/framework": "<6.20.26|>=7,<8.40",
                 "laravel/socialite": ">=1,<1.0.99|>=2,<2.0.10",
                 "league/commonmark": "<0.18.3",
@@ -4230,12 +4234,14 @@
                 "symfony/var-exporter": ">=4.2,<4.2.12|>=4.3,<4.3.8",
                 "symfony/web-profiler-bundle": ">=2,<2.3.19|>=2.4,<2.4.9|>=2.5,<2.5.4",
                 "symfony/yaml": ">=2,<2.0.22|>=2.1,<2.1.7",
+                "t3/dce": ">=2.2,<2.6.2",
                 "t3g/svg-sanitizer": "<1.0.3",
                 "tecnickcom/tcpdf": "<6.2.22",
                 "thelia/backoffice-default-template": ">=2.1,<2.1.2",
                 "thelia/thelia": ">=2.1-beta.1,<2.1.3",
                 "theonedemon/phpwhois": "<=4.2.5",
                 "titon/framework": ">=0,<9.9.99",
+                "tribalsystems/zenario": "<8.8.53370",
                 "truckersmp/phpwhois": "<=4.3.1",
                 "twig/twig": "<1.38|>=2,<2.7",
                 "typo3/cms": ">=6.2,<6.2.30|>=7,<7.6.32|>=8,<8.7.38|>=9,<9.5.25|>=10,<10.4.14|>=11,<11.1.1",
@@ -4284,7 +4290,7 @@
                 "zendframework/zend-validator": ">=2.3,<2.3.6",
                 "zendframework/zend-view": ">=2,<2.2.7|>=2.3,<2.3.1",
                 "zendframework/zend-xmlrpc": ">=2.1,<2.1.6|>=2.2,<2.2.6",
-                "zendframework/zendframework": "<2.5.1",
+                "zendframework/zendframework": "<=3",
                 "zendframework/zendframework1": "<1.12.20",
                 "zendframework/zendopenid": ">=2,<2.0.2",
                 "zendframework/zendxml": ">=1,<1.0.1",
@@ -4294,7 +4300,7 @@
                 "zfr/zfr-oauth2-server-module": "<0.1.2",
                 "zoujingli/thinkadmin": "<6.0.22"
             },
-            "time": "2021-06-01T22:04:47+00:00",
+            "time": "2021-06-08T21:03:32+00:00",
             "type": "metapackage",
             "notification-url": "https://packagist.org/downloads/",
             "license": [

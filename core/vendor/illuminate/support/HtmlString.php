@@ -25,13 +25,13 @@ class HtmlString implements Htmlable
     }
 
     /**
-     * Determine if the given HTML string is not empty.
+     * Get the HTML string.
      *
-     * @return bool
+     * @return string
      */
-    public function isNotEmpty()
+    public function toHtml()
     {
-        return ! $this->isEmpty();
+        return $this->html;
     }
 
     /**
@@ -45,13 +45,13 @@ class HtmlString implements Htmlable
     }
 
     /**
-     * Get the HTML string.
+     * Determine if the given HTML string is not empty.
      *
-     * @return string
+     * @return bool
      */
-    public function __toString()
+    public function isNotEmpty()
     {
-        return $this->toHtml();
+        return ! $this->isEmpty();
     }
 
     /**
@@ -59,8 +59,8 @@ class HtmlString implements Htmlable
      *
      * @return string
      */
-    public function toHtml()
+    public function __toString()
     {
-        return $this->html;
+        return $this->toHtml();
     }
 }

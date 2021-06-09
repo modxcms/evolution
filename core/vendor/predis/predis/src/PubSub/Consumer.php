@@ -43,6 +43,16 @@ class Consumer extends AbstractConsumer
     }
 
     /**
+     * Returns the underlying client instance used by the pub/sub iterator.
+     *
+     * @return ClientInterface
+     */
+    public function getClient()
+    {
+        return $this->client;
+    }
+
+    /**
      * Checks if the client instance satisfies the required conditions needed to
      * initialize a PUB/SUB consumer.
      *
@@ -77,16 +87,6 @@ class Consumer extends AbstractConsumer
         if (isset($this->options[$subscribeAction])) {
             $this->$subscribeAction($this->options[$subscribeAction]);
         }
-    }
-
-    /**
-     * Returns the underlying client instance used by the pub/sub iterator.
-     *
-     * @return ClientInterface
-     */
-    public function getClient()
-    {
-        return $this->client;
     }
 
     /**

@@ -112,6 +112,13 @@ abstract class GeneratorCommand extends Command
     }
 
     /**
+     * Get the stub file for the generator.
+     *
+     * @return string
+     */
+    abstract protected function getStub();
+
+    /**
      * Execute the console command.
      *
      * @return bool|null
@@ -155,29 +162,6 @@ abstract class GeneratorCommand extends Command
     }
 
     /**
-     * Checks whether the given name is reserved.
-     *
-     * @param  string  $name
-     * @return bool
-     */
-    protected function isReservedName($name)
-    {
-        $name = strtolower($name);
-
-        return in_array($name, $this->reservedNames);
-    }
-
-    /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput()
-    {
-        return trim($this->argument('name'));
-    }
-
-    /**
      * Parse the class name and format according to the root namespace.
      *
      * @param  string  $name
@@ -201,13 +185,26 @@ abstract class GeneratorCommand extends Command
     }
 
     /**
-     * Get the root namespace for the class.
+     * Qualify the given model class base name.
      *
+     * @param  string  $model
      * @return string
      */
-    protected function rootNamespace()
+    protected function qualifyModel(string $model)
     {
-        return $this->laravel->getNamespace();
+        $model = ltrim($model, '\\/');
+
+        $model = str_replace('/', '\\', $model);
+
+        $rootNamespace = $this->rootNamespace();
+
+        if (Str::startsWith($model, $rootNamespace)) {
+            return $model;
+        }
+
+        return is_dir(app_path('Models'))
+                    ? $rootNamespace.'Models\\'.$model
+                    : $rootNamespace.$model;
     }
 
     /**
@@ -222,6 +219,17 @@ abstract class GeneratorCommand extends Command
     }
 
     /**
+     * Determine if the class already exists.
+     *
+     * @param  string  $rawName
+     * @return bool
+     */
+    protected function alreadyExists($rawName)
+    {
+        return $this->files->exists($this->getPath($this->qualifyClass($rawName)));
+    }
+
+    /**
      * Get the destination class path.
      *
      * @param  string  $name
@@ -232,17 +240,6 @@ abstract class GeneratorCommand extends Command
         $name = Str::replaceFirst($this->rootNamespace(), '', $name);
 
         return $this->laravel['path'].'/'.str_replace('\\', '/', $name).'.php';
-    }
-
-    /**
-     * Determine if the class already exists.
-     *
-     * @param  string  $rawName
-     * @return bool
-     */
-    protected function alreadyExists($rawName)
-    {
-        return $this->files->exists($this->getPath($this->qualifyClass($rawName)));
     }
 
     /**
@@ -261,25 +258,6 @@ abstract class GeneratorCommand extends Command
     }
 
     /**
-     * Alphabetically sorts the imports for the given stub.
-     *
-     * @param  string  $stub
-     * @return string
-     */
-    protected function sortImports($stub)
-    {
-        if (preg_match('/(?P<imports>(?:use [^;]+;$\n?)+)/m', $stub, $match)) {
-            $imports = explode("\n", trim($match['imports']));
-
-            sort($imports);
-
-            return str_replace(trim($match['imports']), implode("\n", $imports), $stub);
-        }
-
-        return $stub;
-    }
-
-    /**
      * Build the class with the given name.
      *
      * @param  string  $name
@@ -292,38 +270,6 @@ abstract class GeneratorCommand extends Command
         $stub = $this->files->get($this->getStub());
 
         return $this->replaceNamespace($stub, $name)->replaceClass($stub, $name);
-    }
-
-    /**
-     * Get the stub file for the generator.
-     *
-     * @return string
-     */
-    abstract protected function getStub();
-
-    /**
-     * Replace the class name for the given stub.
-     *
-     * @param  string  $stub
-     * @param  string  $name
-     * @return string
-     */
-    protected function replaceClass($stub, $name)
-    {
-        $class = str_replace($this->getNamespace($name).'\\', '', $name);
-
-        return str_replace(['DummyClass', '{{ class }}', '{{class}}'], $class, $stub);
-    }
-
-    /**
-     * Get the full namespace for a given class, without the class name.
-     *
-     * @param  string  $name
-     * @return string
-     */
-    protected function getNamespace($name)
-    {
-        return trim(implode('\\', array_slice(explode('\\', $name), 0, -1)), '\\');
     }
 
     /**
@@ -353,6 +299,70 @@ abstract class GeneratorCommand extends Command
     }
 
     /**
+     * Get the full namespace for a given class, without the class name.
+     *
+     * @param  string  $name
+     * @return string
+     */
+    protected function getNamespace($name)
+    {
+        return trim(implode('\\', array_slice(explode('\\', $name), 0, -1)), '\\');
+    }
+
+    /**
+     * Replace the class name for the given stub.
+     *
+     * @param  string  $stub
+     * @param  string  $name
+     * @return string
+     */
+    protected function replaceClass($stub, $name)
+    {
+        $class = str_replace($this->getNamespace($name).'\\', '', $name);
+
+        return str_replace(['DummyClass', '{{ class }}', '{{class}}'], $class, $stub);
+    }
+
+    /**
+     * Alphabetically sorts the imports for the given stub.
+     *
+     * @param  string  $stub
+     * @return string
+     */
+    protected function sortImports($stub)
+    {
+        if (preg_match('/(?P<imports>(?:use [^;]+;$\n?)+)/m', $stub, $match)) {
+            $imports = explode("\n", trim($match['imports']));
+
+            sort($imports);
+
+            return str_replace(trim($match['imports']), implode("\n", $imports), $stub);
+        }
+
+        return $stub;
+    }
+
+    /**
+     * Get the desired class name from the input.
+     *
+     * @return string
+     */
+    protected function getNameInput()
+    {
+        return trim($this->argument('name'));
+    }
+
+    /**
+     * Get the root namespace for the class.
+     *
+     * @return string
+     */
+    protected function rootNamespace()
+    {
+        return $this->laravel->getNamespace();
+    }
+
+    /**
      * Get the model for the default guard's user provider.
      *
      * @return string|null
@@ -367,26 +377,16 @@ abstract class GeneratorCommand extends Command
     }
 
     /**
-     * Qualify the given model class base name.
+     * Checks whether the given name is reserved.
      *
-     * @param  string  $model
-     * @return string
+     * @param  string  $name
+     * @return bool
      */
-    protected function qualifyModel(string $model)
+    protected function isReservedName($name)
     {
-        $model = ltrim($model, '\\/');
+        $name = strtolower($name);
 
-        $model = str_replace('/', '\\', $model);
-
-        $rootNamespace = $this->rootNamespace();
-
-        if (Str::startsWith($model, $rootNamespace)) {
-            return $model;
-        }
-
-        return is_dir(app_path('Models'))
-                    ? $rootNamespace.'Models\\'.$model
-                    : $rootNamespace.$model;
+        return in_array($name, $this->reservedNames);
     }
 
     /**

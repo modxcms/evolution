@@ -56,17 +56,6 @@ class MasterSlaveConnection extends PrimaryReadReplicaConnection
         parent::__construct($params, $driver, $config, $eventManager);
     }
 
-    private function deprecated(string $thing, string $instead): void
-    {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4054',
-            '%s is deprecated since doctrine/dbal 2.11 and will be removed in 3.0, use %s instead.',
-            $thing,
-            $instead
-        );
-    }
-
     /**
      * Checks if the connection is currently towards the primary or not.
      */
@@ -97,5 +86,16 @@ class MasterSlaveConnection extends PrimaryReadReplicaConnection
         }
 
         return $this->performConnect($connectionName);
+    }
+
+    private function deprecated(string $thing, string $instead): void
+    {
+        Deprecation::trigger(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/pull/4054',
+            '%s is deprecated since doctrine/dbal 2.11 and will be removed in 3.0, use %s instead.',
+            $thing,
+            $instead
+        );
     }
 }

@@ -13,35 +13,39 @@ use Illuminate\View\Compilers\BladeCompiler;
 abstract class ServiceProvider
 {
     /**
-     * The paths that should be published.
-     *
-     * @var array
-     */
-    public static $publishes = [];
-    /**
-     * The paths that should be published by group.
-     *
-     * @var array
-     */
-    public static $publishGroups = [];
-    /**
      * The application instance.
      *
      * @var \Illuminate\Contracts\Foundation\Application
      */
     protected $app;
+
     /**
      * All of the registered booting callbacks.
      *
      * @var array
      */
     protected $bootingCallbacks = [];
+
     /**
      * All of the registered booted callbacks.
      *
      * @var array
      */
     protected $bootedCallbacks = [];
+
+    /**
+     * The paths that should be published.
+     *
+     * @var array
+     */
+    public static $publishes = [];
+
+    /**
+     * The paths that should be published by group.
+     *
+     * @var array
+     */
+    public static $publishGroups = [];
 
     /**
      * Create a new service provider instance.
@@ -52,80 +56,6 @@ abstract class ServiceProvider
     public function __construct($app)
     {
         $this->app = $app;
-    }
-
-    /**
-     * Get the paths to publish.
-     *
-     * @param  string|null  $provider
-     * @param  string|null  $group
-     * @return array
-     */
-    public static function pathsToPublish($provider = null, $group = null)
-    {
-        if (! is_null($paths = static::pathsForProviderOrGroup($provider, $group))) {
-            return $paths;
-        }
-
-        return collect(static::$publishes)->reduce(function ($paths, $p) {
-            return array_merge($paths, $p);
-        }, []);
-    }
-
-    /**
-     * Get the paths for the provider or group (or both).
-     *
-     * @param  string|null  $provider
-     * @param  string|null  $group
-     * @return array
-     */
-    protected static function pathsForProviderOrGroup($provider, $group)
-    {
-        if ($provider && $group) {
-            return static::pathsForProviderAndGroup($provider, $group);
-        } elseif ($group && array_key_exists($group, static::$publishGroups)) {
-            return static::$publishGroups[$group];
-        } elseif ($provider && array_key_exists($provider, static::$publishes)) {
-            return static::$publishes[$provider];
-        } elseif ($group || $provider) {
-            return [];
-        }
-    }
-
-    /**
-     * Get the paths for the provider and group.
-     *
-     * @param  string  $provider
-     * @param  string  $group
-     * @return array
-     */
-    protected static function pathsForProviderAndGroup($provider, $group)
-    {
-        if (! empty(static::$publishes[$provider]) && ! empty(static::$publishGroups[$group])) {
-            return array_intersect_key(static::$publishes[$provider], static::$publishGroups[$group]);
-        }
-
-        return [];
-    }
-
-    /**
-     * Get the service providers available for publishing.
-     *
-     * @return array
-     */
-    public static function publishableProviders()
-    {
-        return array_keys(static::$publishes);
-    }
-
-    /**
-     * Get the groups available for publishing.
-     *
-     * @return array
-     */
-    public static function publishableGroups()
-    {
-        return array_keys(static::$publishGroups);
     }
 
     /**
@@ -185,51 +115,6 @@ abstract class ServiceProvider
     }
 
     /**
-     * Register the package's custom Artisan commands.
-     *
-     * @param  array|mixed  $commands
-     * @return void
-     */
-    public function commands($commands)
-    {
-        $commands = is_array($commands) ? $commands : func_get_args();
-
-        Artisan::starting(function ($artisan) use ($commands) {
-            $artisan->resolveCommands($commands);
-        });
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return [];
-    }
-
-    /**
-     * Get the events that trigger this service provider to register.
-     *
-     * @return array
-     */
-    public function when()
-    {
-        return [];
-    }
-
-    /**
-     * Determine if the provider is deferred.
-     *
-     * @return bool
-     */
-    public function isDeferred()
-    {
-        return $this instanceof DeferrableProvider;
-    }
-
-    /**
      * Merge the given configuration with the existing configuration.
      *
      * @param  string  $path
@@ -281,22 +166,6 @@ abstract class ServiceProvider
 
             $view->addNamespace($namespace, $path);
         });
-    }
-
-    /**
-     * Setup an after resolving listener, or fire immediately if already resolved.
-     *
-     * @param  string  $name
-     * @param  callable  $callback
-     * @return void
-     */
-    protected function callAfterResolving($name, $callback)
-    {
-        $this->app->afterResolving($name, $callback);
-
-        if ($this->app->resolved($name)) {
-            $callback($this->app->make($name), $this->app);
-        }
     }
 
     /**
@@ -375,6 +244,22 @@ abstract class ServiceProvider
     }
 
     /**
+     * Setup an after resolving listener, or fire immediately if already resolved.
+     *
+     * @param  string  $name
+     * @param  callable  $callback
+     * @return void
+     */
+    protected function callAfterResolving($name, $callback)
+    {
+        $this->app->afterResolving($name, $callback);
+
+        if ($this->app->resolved($name)) {
+            $callback($this->app->make($name), $this->app);
+        }
+    }
+
+    /**
      * Register paths to be published by the publish command.
      *
      * @param  array  $paths
@@ -421,5 +306,124 @@ abstract class ServiceProvider
         static::$publishGroups[$group] = array_merge(
             static::$publishGroups[$group], $paths
         );
+    }
+
+    /**
+     * Get the paths to publish.
+     *
+     * @param  string|null  $provider
+     * @param  string|null  $group
+     * @return array
+     */
+    public static function pathsToPublish($provider = null, $group = null)
+    {
+        if (! is_null($paths = static::pathsForProviderOrGroup($provider, $group))) {
+            return $paths;
+        }
+
+        return collect(static::$publishes)->reduce(function ($paths, $p) {
+            return array_merge($paths, $p);
+        }, []);
+    }
+
+    /**
+     * Get the paths for the provider or group (or both).
+     *
+     * @param  string|null  $provider
+     * @param  string|null  $group
+     * @return array
+     */
+    protected static function pathsForProviderOrGroup($provider, $group)
+    {
+        if ($provider && $group) {
+            return static::pathsForProviderAndGroup($provider, $group);
+        } elseif ($group && array_key_exists($group, static::$publishGroups)) {
+            return static::$publishGroups[$group];
+        } elseif ($provider && array_key_exists($provider, static::$publishes)) {
+            return static::$publishes[$provider];
+        } elseif ($group || $provider) {
+            return [];
+        }
+    }
+
+    /**
+     * Get the paths for the provider and group.
+     *
+     * @param  string  $provider
+     * @param  string  $group
+     * @return array
+     */
+    protected static function pathsForProviderAndGroup($provider, $group)
+    {
+        if (! empty(static::$publishes[$provider]) && ! empty(static::$publishGroups[$group])) {
+            return array_intersect_key(static::$publishes[$provider], static::$publishGroups[$group]);
+        }
+
+        return [];
+    }
+
+    /**
+     * Get the service providers available for publishing.
+     *
+     * @return array
+     */
+    public static function publishableProviders()
+    {
+        return array_keys(static::$publishes);
+    }
+
+    /**
+     * Get the groups available for publishing.
+     *
+     * @return array
+     */
+    public static function publishableGroups()
+    {
+        return array_keys(static::$publishGroups);
+    }
+
+    /**
+     * Register the package's custom Artisan commands.
+     *
+     * @param  array|mixed  $commands
+     * @return void
+     */
+    public function commands($commands)
+    {
+        $commands = is_array($commands) ? $commands : func_get_args();
+
+        Artisan::starting(function ($artisan) use ($commands) {
+            $artisan->resolveCommands($commands);
+        });
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return [];
+    }
+
+    /**
+     * Get the events that trigger this service provider to register.
+     *
+     * @return array
+     */
+    public function when()
+    {
+        return [];
+    }
+
+    /**
+     * Determine if the provider is deferred.
+     *
+     * @return bool
+     */
+    public function isDeferred()
+    {
+        return $this instanceof DeferrableProvider;
     }
 }

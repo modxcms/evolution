@@ -390,7 +390,7 @@ EOT
             ),
             'bin-compat' => array(
                 function ($val) {
-                    return in_array($val, array('auto', 'full'));
+                    return in_array($val, array('auto', 'full', 'symlink'));
                 },
                 function ($val) {
                     return $val;
@@ -759,6 +759,46 @@ EOT
         throw new \InvalidArgumentException('Setting '.$settingKey.' does not exist or is not supported by this command');
     }
 
+    protected function handleSingleValue($key, array $callbacks, array $values, $method)
+    {
+        list($validator, $normalizer) = $callbacks;
+        if (1 !== count($values)) {
+            throw new \RuntimeException('You can only pass one value. Example: php composer.phar config process-timeout 300');
+        }
+
+        if (true !== $validation = $validator($values[0])) {
+            throw new \RuntimeException(sprintf(
+                '"%s" is an invalid value'.($validation ? ' ('.$validation.')' : ''),
+                $values[0]
+            ));
+        }
+
+        $normalizedValue = $normalizer($values[0]);
+
+        if ($key === 'disable-tls') {
+            if (!$normalizedValue && $this->config->get('disable-tls')) {
+                $this->getIO()->writeError('<info>You are now running Composer with SSL/TLS protection enabled.</info>');
+            } elseif ($normalizedValue && !$this->config->get('disable-tls')) {
+                $this->getIO()->writeError('<warning>You are now running Composer with SSL/TLS protection disabled.</warning>');
+            }
+        }
+
+        return call_user_func(array($this->configSource, $method), $key, $normalizedValue);
+    }
+
+    protected function handleMultiValue($key, array $callbacks, array $values, $method)
+    {
+        list($validator, $normalizer) = $callbacks;
+        if (true !== $validation = $validator($values)) {
+            throw new \RuntimeException(sprintf(
+                '%s is an invalid value'.($validation ? ' ('.$validation.')' : ''),
+                json_encode($values)
+            ));
+        }
+
+        return call_user_func(array($this->configSource, $method), $key, $normalizer($values));
+    }
+
     /**
      * Display the contents of the file in a pretty formatted way
      *
@@ -804,45 +844,5 @@ EOT
                 $io->write('[<comment>' . $k . $key . '</comment>] <info>' . $value . '</info>', true, IOInterface::QUIET);
             }
         }
-    }
-
-    protected function handleSingleValue($key, array $callbacks, array $values, $method)
-    {
-        list($validator, $normalizer) = $callbacks;
-        if (1 !== count($values)) {
-            throw new \RuntimeException('You can only pass one value. Example: php composer.phar config process-timeout 300');
-        }
-
-        if (true !== $validation = $validator($values[0])) {
-            throw new \RuntimeException(sprintf(
-                '"%s" is an invalid value'.($validation ? ' ('.$validation.')' : ''),
-                $values[0]
-            ));
-        }
-
-        $normalizedValue = $normalizer($values[0]);
-
-        if ($key === 'disable-tls') {
-            if (!$normalizedValue && $this->config->get('disable-tls')) {
-                $this->getIO()->writeError('<info>You are now running Composer with SSL/TLS protection enabled.</info>');
-            } elseif ($normalizedValue && !$this->config->get('disable-tls')) {
-                $this->getIO()->writeError('<warning>You are now running Composer with SSL/TLS protection disabled.</warning>');
-            }
-        }
-
-        return call_user_func(array($this->configSource, $method), $key, $normalizedValue);
-    }
-
-    protected function handleMultiValue($key, array $callbacks, array $values, $method)
-    {
-        list($validator, $normalizer) = $callbacks;
-        if (true !== $validation = $validator($values)) {
-            throw new \RuntimeException(sprintf(
-                '%s is an invalid value'.($validation ? ' ('.$validation.')' : ''),
-                json_encode($values)
-            ));
-        }
-
-        return call_user_func(array($this->configSource, $method), $key, $normalizer($values));
     }
 }

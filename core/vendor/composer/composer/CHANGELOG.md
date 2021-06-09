@@ -1,3 +1,25 @@
+### [2.1.3] 2021-06-09
+
+  * Add "symlink" option for "bin-compat" config to force symlinking even on WSL/Windows (#9959)
+  * Fixed source binaries not being made executable when symlinks cannot be used (#9961)
+  * Fixed more deletion edge cases (#9955, #9956)
+  * Fixed `dump-autoload` command not dispatching scripts anymore, regressed in 2.1.2 (#9954)
+
+### [2.1.2] 2021-06-07
+
+  * Added `--dev` to `dump-autoload` command to allow force-dumping dev autoload rules even if dev requirements are not present (#9946)
+  * Fixed `--no-scripts` disabling events for plugins too instead of only disabling script handlers, using `--no-plugins` is the way to disable plugins (#9942)
+  * Fixed handling of deletions during package installs on some filesystems (#9945, #9947)
+  * Fixed undefined array access when using "@php <absolute path>" in a script handler (#9943)
+  * Fixed usage of InstalledVersions when loaded from composer/composer installed as a dependency and runtime Composer is v1 (#9937)
+
+### [2.1.1] 2021-06-04
+
+  * Fixed regression in autoload generation when --no-scripts is used (#9935)
+  * Fixed `outdated` color legend to have the right color in the right place (#9939)
+  * Fixed PCRE bug causing a previously valid pattern to fail to match (#9941)
+  * Fixed JsonFile::validateSchema regression when used as a library to validate custom schema files (#9938)
+
 ### [2.1.0] 2021-06-03
 
   * Fixed PHP 8.1 deprecation warning (#9932)
@@ -1195,7 +1217,10 @@
 
   * Initial release
 
-[2.1.0]: https://github.com/composer/composer/compare/2.1.0...2.1.0
+[2.1.3]: https://github.com/composer/composer/compare/2.1.2...2.1.3
+[2.1.2]: https://github.com/composer/composer/compare/2.1.1...2.1.2
+[2.1.1]: https://github.com/composer/composer/compare/2.1.0...2.1.1
+[2.1.0]: https://github.com/composer/composer/compare/2.1.0-RC1...2.1.0
 [2.1.0-RC1]: https://github.com/composer/composer/compare/2.0.14...2.1.0-RC1
 [2.0.14]: https://github.com/composer/composer/compare/2.0.13...2.0.14
 [2.0.13]: https://github.com/composer/composer/compare/2.0.12...2.0.13

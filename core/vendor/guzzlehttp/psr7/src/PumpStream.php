@@ -83,6 +83,11 @@ class PumpStream implements StreamInterface
         return $this->tellPos;
     }
 
+    public function eof()
+    {
+        return !$this->source;
+    }
+
     public function isSeekable()
     {
         return false;
@@ -113,21 +118,6 @@ class PumpStream implements StreamInterface
         return true;
     }
 
-    public function getContents()
-    {
-        $result = '';
-        while (!$this->eof()) {
-            $result .= $this->read(1000000);
-        }
-
-        return $result;
-    }
-
-    public function eof()
-    {
-        return !$this->source;
-    }
-
     public function read($length)
     {
         $data = $this->buffer->read($length);
@@ -144,6 +134,25 @@ class PumpStream implements StreamInterface
         return $data;
     }
 
+    public function getContents()
+    {
+        $result = '';
+        while (!$this->eof()) {
+            $result .= $this->read(1000000);
+        }
+
+        return $result;
+    }
+
+    public function getMetadata($key = null)
+    {
+        if (!$key) {
+            return $this->metadata;
+        }
+
+        return isset($this->metadata[$key]) ? $this->metadata[$key] : null;
+    }
+
     private function pump($length)
     {
         if ($this->source) {
@@ -157,14 +166,5 @@ class PumpStream implements StreamInterface
                 $length -= strlen($data);
             } while ($length > 0);
         }
-    }
-
-    public function getMetadata($key = null)
-    {
-        if (!$key) {
-            return $this->metadata;
-        }
-
-        return isset($this->metadata[$key]) ? $this->metadata[$key] : null;
     }
 }

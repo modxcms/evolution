@@ -91,18 +91,6 @@ class MySqlBuilder extends Builder
     }
 
     /**
-     * Get all of the table names for the database.
-     *
-     * @return array
-     */
-    public function getAllTables()
-    {
-        return $this->connection->select(
-            $this->grammar->compileGetAllTables()
-        );
-    }
-
-    /**
      * Drop all views from the database.
      *
      * @return void
@@ -123,6 +111,18 @@ class MySqlBuilder extends Builder
 
         $this->connection->statement(
             $this->grammar->compileDropAllViews($views)
+        );
+    }
+
+    /**
+     * Get all of the table names for the database.
+     *
+     * @return array
+     */
+    public function getAllTables()
+    {
+        return $this->connection->select(
+            $this->grammar->compileGetAllTables()
         );
     }
 

@@ -129,17 +129,6 @@ class EachPromise implements PromisorInterface
         $this->aggregate->then($clearFn, $clearFn);
     }
 
-    private function checkIfFinished()
-    {
-        if (!$this->pending && !$this->iterable->valid()) {
-            // Resolve the promise if there's nothing left to do.
-            $this->aggregate->resolve(null);
-            return true;
-        }
-
-        return false;
-    }
-
     private function refillPending()
     {
         if (!$this->concurrency) {
@@ -209,24 +198,6 @@ class EachPromise implements PromisorInterface
         return true;
     }
 
-    private function step($idx)
-    {
-        // If the promise was already resolved, then ignore this step.
-        if (Is::settled($this->aggregate)) {
-            return;
-        }
-
-        unset($this->pending[$idx]);
-
-        // Only refill pending promises if we are not locked, preventing the
-        // EachPromise to recursively invoke the provided iterator, which
-        // cause a fatal error: "Cannot resume an already running generator"
-        if ($this->advanceIterator() && !$this->checkIfFinished()) {
-            // Add more pending promises if possible.
-            $this->refillPending();
-        }
-    }
-
     private function advanceIterator()
     {
         // Place a lock on the iterator so that we ensure to not recurse,
@@ -250,5 +221,34 @@ class EachPromise implements PromisorInterface
             $this->mutex = false;
             return false;
         }
+    }
+
+    private function step($idx)
+    {
+        // If the promise was already resolved, then ignore this step.
+        if (Is::settled($this->aggregate)) {
+            return;
+        }
+
+        unset($this->pending[$idx]);
+
+        // Only refill pending promises if we are not locked, preventing the
+        // EachPromise to recursively invoke the provided iterator, which
+        // cause a fatal error: "Cannot resume an already running generator"
+        if ($this->advanceIterator() && !$this->checkIfFinished()) {
+            // Add more pending promises if possible.
+            $this->refillPending();
+        }
+    }
+
+    private function checkIfFinished()
+    {
+        if (!$this->pending && !$this->iterable->valid()) {
+            // Resolve the promise if there's nothing left to do.
+            $this->aggregate->resolve(null);
+            return true;
+        }
+
+        return false;
     }
 }

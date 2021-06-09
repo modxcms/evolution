@@ -21,8 +21,8 @@ use Monolog\Logger;
  */
 class GitProcessor implements ProcessorInterface
 {
-    private static $cache;
     private $level;
+    private static $cache;
 
     /**
      * @param string|int $level The minimum logging level at which this Processor will be triggered

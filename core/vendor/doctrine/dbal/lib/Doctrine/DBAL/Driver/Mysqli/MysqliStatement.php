@@ -218,25 +218,6 @@ class MysqliStatement implements IteratorAggregate, StatementInterface, Result
     }
 
     /**
-     * Binds a array of values to bound parameters.
-     *
-     * @param mixed[] $values
-     *
-     * @return bool
-     */
-    private function bindUntypedValues(array $values)
-    {
-        $params = [];
-        $types  = str_repeat('s', count($values));
-
-        foreach ($values as &$v) {
-            $params[] =& $v;
-        }
-
-        return $this->_stmt->bind_param($types, ...$params);
-    }
-
-    /**
      * Binds parameters with known types previously bound to the statement
      */
     private function bindTypedParameters(): void
@@ -302,43 +283,41 @@ class MysqliStatement implements IteratorAggregate, StatementInterface, Result
     }
 
     /**
-     * {@inheritdoc}
+     * Binds a array of values to bound parameters.
      *
-     * @deprecated Use fetchAllNumeric(), fetchAllAssociative() or fetchFirstColumn() instead.
+     * @param mixed[] $values
+     *
+     * @return bool
      */
-    public function fetchAll($fetchMode = null, $fetchArgument = null, $ctorArgs = null)
+    private function bindUntypedValues(array $values)
     {
-        $fetchMode = $fetchMode ?: $this->_defaultFetchMode;
+        $params = [];
+        $types  = str_repeat('s', count($values));
 
-        $rows = [];
-
-        if ($fetchMode === FetchMode::COLUMN) {
-            while (($row = $this->fetchColumn()) !== false) {
-                $rows[] = $row;
-            }
-        } else {
-            while (($row = $this->fetch($fetchMode)) !== false) {
-                $rows[] = $row;
-            }
+        foreach ($values as &$v) {
+            $params[] =& $v;
         }
 
-        return $rows;
+        return $this->_stmt->bind_param($types, ...$params);
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @deprecated Use fetchOne() instead.
+     * @return mixed[]|false|null
      */
-    public function fetchColumn($columnIndex = 0)
+    private function _fetch()
     {
-        $row = $this->fetch(FetchMode::NUMERIC);
+        $ret = $this->_stmt->fetch();
 
-        if ($row === false) {
-            return false;
+        if ($ret === true) {
+            $values = [];
+            foreach ($this->_rowBindedValues as $v) {
+                $values[] = $v;
+            }
+
+            return $values;
         }
 
-        return $row[$columnIndex] ?? null;
+        return $ret;
     }
 
     /**
@@ -394,40 +373,43 @@ class MysqliStatement implements IteratorAggregate, StatementInterface, Result
     }
 
     /**
-     * @return mixed[]|false|null
+     * {@inheritdoc}
+     *
+     * @deprecated Use fetchAllNumeric(), fetchAllAssociative() or fetchFirstColumn() instead.
      */
-    private function _fetch()
+    public function fetchAll($fetchMode = null, $fetchArgument = null, $ctorArgs = null)
     {
-        $ret = $this->_stmt->fetch();
+        $fetchMode = $fetchMode ?: $this->_defaultFetchMode;
 
-        if ($ret === true) {
-            $values = [];
-            foreach ($this->_rowBindedValues as $v) {
-                $values[] = $v;
+        $rows = [];
+
+        if ($fetchMode === FetchMode::COLUMN) {
+            while (($row = $this->fetchColumn()) !== false) {
+                $rows[] = $row;
             }
-
-            return $values;
+        } else {
+            while (($row = $this->fetch($fetchMode)) !== false) {
+                $rows[] = $row;
+            }
         }
 
-        return $ret;
+        return $rows;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
+     * @deprecated Use fetchOne() instead.
      */
-    public function fetchAssociative()
+    public function fetchColumn($columnIndex = 0)
     {
-        $values = $this->fetchNumeric();
+        $row = $this->fetch(FetchMode::NUMERIC);
 
-        if ($values === false) {
+        if ($row === false) {
             return false;
         }
 
-        assert(is_array($this->_columnNames));
-        $row = array_combine($this->_columnNames, $values);
-        assert(is_array($row));
-
-        return $row;
+        return $row[$columnIndex] ?? null;
     }
 
     /**
@@ -454,6 +436,24 @@ class MysqliStatement implements IteratorAggregate, StatementInterface, Result
         }
 
         return $values;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fetchAssociative()
+    {
+        $values = $this->fetchNumeric();
+
+        if ($values === false) {
+            return false;
+        }
+
+        assert(is_array($this->_columnNames));
+        $row = array_combine($this->_columnNames, $values);
+        assert(is_array($row));
+
+        return $row;
     }
 
     /**
@@ -520,12 +520,6 @@ class MysqliStatement implements IteratorAggregate, StatementInterface, Result
         return true;
     }
 
-    public function free(): void
-    {
-        $this->_stmt->free_result();
-        $this->result = false;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -544,6 +538,12 @@ class MysqliStatement implements IteratorAggregate, StatementInterface, Result
     public function columnCount()
     {
         return $this->_stmt->field_count;
+    }
+
+    public function free(): void
+    {
+        $this->_stmt->free_result();
+        $this->result = false;
     }
 
     /**

@@ -55,44 +55,6 @@ class DataCollectorTranslator implements TranslatorInterface, TranslatorBagInter
         return $trans;
     }
 
-    private function collectMessage(?string $locale, ?string $domain, string $id, string $translation, ?array $parameters = [])
-    {
-        if (null === $domain) {
-            $domain = 'messages';
-        }
-
-        $catalogue = $this->translator->getCatalogue($locale);
-        $locale = $catalogue->getLocale();
-        $fallbackLocale = null;
-        if ($catalogue->defines($id, $domain)) {
-            $state = self::MESSAGE_DEFINED;
-        } elseif ($catalogue->has($id, $domain)) {
-            $state = self::MESSAGE_EQUALS_FALLBACK;
-
-            $fallbackCatalogue = $catalogue->getFallbackCatalogue();
-            while ($fallbackCatalogue) {
-                if ($fallbackCatalogue->defines($id, $domain)) {
-                    $fallbackLocale = $fallbackCatalogue->getLocale();
-                    break;
-                }
-                $fallbackCatalogue = $fallbackCatalogue->getFallbackCatalogue();
-            }
-        } else {
-            $state = self::MESSAGE_MISSING;
-        }
-
-        $this->messages[] = [
-            'locale' => $locale,
-            'fallbackLocale' => $fallbackLocale,
-            'domain' => $domain,
-            'id' => $id,
-            'translation' => $translation,
-            'parameters' => $parameters,
-            'state' => $state,
-            'transChoiceNumber' => isset($parameters['%count%']) && is_numeric($parameters['%count%']) ? $parameters['%count%'] : null,
-        ];
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -167,5 +129,43 @@ class DataCollectorTranslator implements TranslatorInterface, TranslatorBagInter
     public function getCollectedMessages()
     {
         return $this->messages;
+    }
+
+    private function collectMessage(?string $locale, ?string $domain, string $id, string $translation, ?array $parameters = [])
+    {
+        if (null === $domain) {
+            $domain = 'messages';
+        }
+
+        $catalogue = $this->translator->getCatalogue($locale);
+        $locale = $catalogue->getLocale();
+        $fallbackLocale = null;
+        if ($catalogue->defines($id, $domain)) {
+            $state = self::MESSAGE_DEFINED;
+        } elseif ($catalogue->has($id, $domain)) {
+            $state = self::MESSAGE_EQUALS_FALLBACK;
+
+            $fallbackCatalogue = $catalogue->getFallbackCatalogue();
+            while ($fallbackCatalogue) {
+                if ($fallbackCatalogue->defines($id, $domain)) {
+                    $fallbackLocale = $fallbackCatalogue->getLocale();
+                    break;
+                }
+                $fallbackCatalogue = $fallbackCatalogue->getFallbackCatalogue();
+            }
+        } else {
+            $state = self::MESSAGE_MISSING;
+        }
+
+        $this->messages[] = [
+            'locale' => $locale,
+            'fallbackLocale' => $fallbackLocale,
+            'domain' => $domain,
+            'id' => $id,
+            'translation' => $translation,
+            'parameters' => $parameters,
+            'state' => $state,
+            'transChoiceNumber' => isset($parameters['%count%']) && is_numeric($parameters['%count%']) ? $parameters['%count%'] : null,
+        ];
     }
 }

@@ -62,88 +62,6 @@ class Route implements \Serializable
         $this->setCondition($condition);
     }
 
-    /**
-     * Adds defaults.
-     *
-     * This method implements a fluent interface.
-     *
-     * @param array $defaults The defaults
-     *
-     * @return $this
-     */
-    public function addDefaults(array $defaults)
-    {
-        if (isset($defaults['_locale']) && $this->isLocalized()) {
-            unset($defaults['_locale']);
-        }
-
-        foreach ($defaults as $name => $default) {
-            $this->defaults[$name] = $default;
-        }
-        $this->compiled = null;
-
-        return $this;
-    }
-
-    private function isLocalized(): bool
-    {
-        return isset($this->defaults['_locale']) && isset($this->defaults['_canonical_route']) && ($this->requirements['_locale'] ?? null) === preg_quote($this->defaults['_locale']);
-    }
-
-    /**
-     * Adds requirements.
-     *
-     * This method implements a fluent interface.
-     *
-     * @param array $requirements The requirements
-     *
-     * @return $this
-     */
-    public function addRequirements(array $requirements)
-    {
-        if (isset($requirements['_locale']) && $this->isLocalized()) {
-            unset($requirements['_locale']);
-        }
-
-        foreach ($requirements as $key => $regex) {
-            $this->requirements[$key] = $this->sanitizeRequirement($key, $regex);
-        }
-        $this->compiled = null;
-
-        return $this;
-    }
-
-    private function sanitizeRequirement(string $key, string $regex)
-    {
-        if ('' !== $regex) {
-            if ('^' === $regex[0]) {
-                $regex = substr($regex, 1);
-            } elseif (0 === strpos($regex, '\\A')) {
-                $regex = substr($regex, 2);
-            }
-        }
-
-        if ('$' === substr($regex, -1)) {
-            $regex = substr($regex, 0, -1);
-        } elseif (\strlen($regex) - 2 === strpos($regex, '\\z')) {
-            $regex = substr($regex, 0, -2);
-        }
-
-        if ('' === $regex) {
-            throw new \InvalidArgumentException(sprintf('Routing requirement for "%s" cannot be empty.', $key));
-        }
-
-        return $regex;
-    }
-
-    /**
-     * @internal
-     */
-    final public function serialize(): string
-    {
-        return serialize($this->__serialize());
-    }
-
     public function __serialize(): array
     {
         return [
@@ -162,9 +80,9 @@ class Route implements \Serializable
     /**
      * @internal
      */
-    final public function unserialize($serialized)
+    final public function serialize(): string
     {
-        $this->__unserialize(unserialize($serialized));
+        return serialize($this->__serialize());
     }
 
     public function __unserialize(array $data): void
@@ -183,6 +101,14 @@ class Route implements \Serializable
         if (isset($data['compiled'])) {
             $this->compiled = $data['compiled'];
         }
+    }
+
+    /**
+     * @internal
+     */
+    final public function unserialize($serialized)
+    {
+        $this->__unserialize(unserialize($serialized));
     }
 
     /**
@@ -368,6 +294,16 @@ class Route implements \Serializable
     }
 
     /**
+     * Get an option value.
+     *
+     * @return mixed The option value or null when not given
+     */
+    public function getOption(string $name)
+    {
+        return $this->options[$name] ?? null;
+    }
+
+    /**
      * Checks if an option has been set.
      *
      * @return bool true if the option is set, false otherwise
@@ -401,6 +337,29 @@ class Route implements \Serializable
         $this->defaults = [];
 
         return $this->addDefaults($defaults);
+    }
+
+    /**
+     * Adds defaults.
+     *
+     * This method implements a fluent interface.
+     *
+     * @param array $defaults The defaults
+     *
+     * @return $this
+     */
+    public function addDefaults(array $defaults)
+    {
+        if (isset($defaults['_locale']) && $this->isLocalized()) {
+            unset($defaults['_locale']);
+        }
+
+        foreach ($defaults as $name => $default) {
+            $this->defaults[$name] = $default;
+        }
+        $this->compiled = null;
+
+        return $this;
     }
 
     /**
@@ -466,6 +425,29 @@ class Route implements \Serializable
         $this->requirements = [];
 
         return $this->addRequirements($requirements);
+    }
+
+    /**
+     * Adds requirements.
+     *
+     * This method implements a fluent interface.
+     *
+     * @param array $requirements The requirements
+     *
+     * @return $this
+     */
+    public function addRequirements(array $requirements)
+    {
+        if (isset($requirements['_locale']) && $this->isLocalized()) {
+            unset($requirements['_locale']);
+        }
+
+        foreach ($requirements as $key => $regex) {
+            $this->requirements[$key] = $this->sanitizeRequirement($key, $regex);
+        }
+        $this->compiled = null;
+
+        return $this;
     }
 
     /**
@@ -551,16 +533,6 @@ class Route implements \Serializable
         return $this->compiled = $class::compile($this);
     }
 
-    /**
-     * Get an option value.
-     *
-     * @return mixed The option value or null when not given
-     */
-    public function getOption(string $name)
-    {
-        return $this->options[$name] ?? null;
-    }
-
     private function extractInlineDefaultsAndRequirements(string $pattern): string
     {
         if (false === strpbrk($pattern, '?<')) {
@@ -577,5 +549,33 @@ class Route implements \Serializable
 
             return '{'.$m[1].$m[2].'}';
         }, $pattern);
+    }
+
+    private function sanitizeRequirement(string $key, string $regex)
+    {
+        if ('' !== $regex) {
+            if ('^' === $regex[0]) {
+                $regex = substr($regex, 1);
+            } elseif (0 === strpos($regex, '\\A')) {
+                $regex = substr($regex, 2);
+            }
+        }
+
+        if ('$' === substr($regex, -1)) {
+            $regex = substr($regex, 0, -1);
+        } elseif (\strlen($regex) - 2 === strpos($regex, '\\z')) {
+            $regex = substr($regex, 0, -2);
+        }
+
+        if ('' === $regex) {
+            throw new \InvalidArgumentException(sprintf('Routing requirement for "%s" cannot be empty.', $key));
+        }
+
+        return $regex;
+    }
+
+    private function isLocalized(): bool
+    {
+        return isset($this->defaults['_locale']) && isset($this->defaults['_canonical_route']) && ($this->requirements['_locale'] ?? null) === preg_quote($this->defaults['_locale']);
     }
 }

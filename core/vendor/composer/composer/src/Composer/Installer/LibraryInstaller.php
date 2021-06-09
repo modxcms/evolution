@@ -89,25 +89,6 @@ class LibraryInstaller implements InstallerInterface, BinaryPresenceInterface
     /**
      * {@inheritDoc}
      */
-    public function getInstallPath(PackageInterface $package)
-    {
-        $this->initializeVendorDir();
-
-        $basePath = ($this->vendorDir ? $this->vendorDir.'/' : '') . $package->getPrettyName();
-        $targetDir = $package->getTargetDir();
-
-        return $basePath . ($targetDir ? '/'.$targetDir : '');
-    }
-
-    protected function initializeVendorDir()
-    {
-        $this->filesystem->ensureDirectoryExists($this->vendorDir);
-        $this->vendorDir = realpath($this->vendorDir);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function download(PackageInterface $package, PackageInterface $prevPackage = null)
     {
         $this->initializeVendorDir();
@@ -167,13 +148,6 @@ class LibraryInstaller implements InstallerInterface, BinaryPresenceInterface
         });
     }
 
-    protected function installCode(PackageInterface $package)
-    {
-        $downloadPath = $this->getInstallPath($package);
-
-        return $this->downloadManager->install($package, $downloadPath);
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -201,6 +175,88 @@ class LibraryInstaller implements InstallerInterface, BinaryPresenceInterface
                 $repo->addPackage(clone $target);
             }
         });
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function uninstall(InstalledRepositoryInterface $repo, PackageInterface $package)
+    {
+        if (!$repo->hasPackage($package)) {
+            throw new \InvalidArgumentException('Package is not installed: '.$package);
+        }
+
+        $promise = $this->removeCode($package);
+        if (!$promise instanceof PromiseInterface) {
+            $promise = \React\Promise\resolve();
+        }
+
+        $binaryInstaller = $this->binaryInstaller;
+        $downloadPath = $this->getPackageBasePath($package);
+        $filesystem = $this->filesystem;
+
+        return $promise->then(function () use ($binaryInstaller, $filesystem, $downloadPath, $package, $repo) {
+            $binaryInstaller->removeBinaries($package);
+            $repo->removePackage($package);
+
+            if (strpos($package->getName(), '/')) {
+                $packageVendorDir = dirname($downloadPath);
+                if (is_dir($packageVendorDir) && $filesystem->isDirEmpty($packageVendorDir)) {
+                    Silencer::call('rmdir', $packageVendorDir);
+                }
+            }
+        });
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getInstallPath(PackageInterface $package)
+    {
+        $this->initializeVendorDir();
+
+        $basePath = ($this->vendorDir ? $this->vendorDir.'/' : '') . $package->getPrettyName();
+        $targetDir = $package->getTargetDir();
+
+        return $basePath . ($targetDir ? '/'.$targetDir : '');
+    }
+
+    /**
+     * Make sure binaries are installed for a given package.
+     *
+     * @param PackageInterface $package Package instance
+     */
+    public function ensureBinariesPresence(PackageInterface $package)
+    {
+        $this->binaryInstaller->installBinaries($package, $this->getInstallPath($package), false);
+    }
+
+    /**
+     * Returns the base path of the package without target-dir path
+     *
+     * It is used for BC as getInstallPath tends to be overridden by
+     * installer plugins but not getPackageBasePath
+     *
+     * @param  PackageInterface $package
+     * @return string
+     */
+    protected function getPackageBasePath(PackageInterface $package)
+    {
+        $installPath = $this->getInstallPath($package);
+        $targetDir = $package->getTargetDir();
+
+        if ($targetDir) {
+            return preg_replace('{/*'.str_replace('/', '/+', preg_quote($targetDir)).'/?$}', '', $installPath);
+        }
+
+        return $installPath;
+    }
+
+    protected function installCode(PackageInterface $package)
+    {
+        $downloadPath = $this->getInstallPath($package);
+
+        return $this->downloadManager->install($package, $downloadPath);
     }
 
     protected function updateCode(PackageInterface $initial, PackageInterface $target)
@@ -243,65 +299,9 @@ class LibraryInstaller implements InstallerInterface, BinaryPresenceInterface
         return $this->downloadManager->remove($package, $downloadPath);
     }
 
-    /**
-     * Returns the base path of the package without target-dir path
-     *
-     * It is used for BC as getInstallPath tends to be overridden by
-     * installer plugins but not getPackageBasePath
-     *
-     * @param  PackageInterface $package
-     * @return string
-     */
-    protected function getPackageBasePath(PackageInterface $package)
+    protected function initializeVendorDir()
     {
-        $installPath = $this->getInstallPath($package);
-        $targetDir = $package->getTargetDir();
-
-        if ($targetDir) {
-            return preg_replace('{/*'.str_replace('/', '/+', preg_quote($targetDir)).'/?$}', '', $installPath);
-        }
-
-        return $installPath;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function uninstall(InstalledRepositoryInterface $repo, PackageInterface $package)
-    {
-        if (!$repo->hasPackage($package)) {
-            throw new \InvalidArgumentException('Package is not installed: '.$package);
-        }
-
-        $promise = $this->removeCode($package);
-        if (!$promise instanceof PromiseInterface) {
-            $promise = \React\Promise\resolve();
-        }
-
-        $binaryInstaller = $this->binaryInstaller;
-        $downloadPath = $this->getPackageBasePath($package);
-        $filesystem = $this->filesystem;
-
-        return $promise->then(function () use ($binaryInstaller, $filesystem, $downloadPath, $package, $repo) {
-            $binaryInstaller->removeBinaries($package);
-            $repo->removePackage($package);
-
-            if (strpos($package->getName(), '/')) {
-                $packageVendorDir = dirname($downloadPath);
-                if (is_dir($packageVendorDir) && $filesystem->isDirEmpty($packageVendorDir)) {
-                    Silencer::call('rmdir', $packageVendorDir);
-                }
-            }
-        });
-    }
-
-    /**
-     * Make sure binaries are installed for a given package.
-     *
-     * @param PackageInterface $package Package instance
-     */
-    public function ensureBinariesPresence(PackageInterface $package)
-    {
-        $this->binaryInstaller->installBinaries($package, $this->getInstallPath($package), false);
+        $this->filesystem->ensureDirectoryExists($this->vendorDir);
+        $this->vendorDir = realpath($this->vendorDir);
     }
 }

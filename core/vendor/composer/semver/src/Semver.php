@@ -22,23 +22,6 @@ class Semver
     private static $versionParser;
 
     /**
-     * Return all versions that satisfy given constraints.
-     *
-     * @param string[] $versions
-     * @param string   $constraints
-     *
-     * @return string[]
-     */
-    public static function satisfiedBy(array $versions, $constraints)
-    {
-        $versions = array_filter($versions, function ($version) use ($constraints) {
-            return Semver::satisfies($version, $constraints);
-        });
-
-        return array_values($versions);
-    }
-
-    /**
      * Determine if given version satisfies given constraints.
      *
      * @param string $version
@@ -60,6 +43,23 @@ class Semver
     }
 
     /**
+     * Return all versions that satisfy given constraints.
+     *
+     * @param string[] $versions
+     * @param string   $constraints
+     *
+     * @return string[]
+     */
+    public static function satisfiedBy(array $versions, $constraints)
+    {
+        $versions = array_filter($versions, function ($version) use ($constraints) {
+            return Semver::satisfies($version, $constraints);
+        });
+
+        return array_values($versions);
+    }
+
+    /**
      * Sort given array of versions.
      *
      * @param string[] $versions
@@ -69,6 +69,18 @@ class Semver
     public static function sort(array $versions)
     {
         return self::usort($versions, self::SORT_ASC);
+    }
+
+    /**
+     * Sort given array of versions in reverse.
+     *
+     * @param string[] $versions
+     *
+     * @return string[]
+     */
+    public static function rsort(array $versions)
+    {
+        return self::usort($versions, self::SORT_DESC);
     }
 
     /**
@@ -113,17 +125,5 @@ class Semver
         }
 
         return $sorted;
-    }
-
-    /**
-     * Sort given array of versions in reverse.
-     *
-     * @param string[] $versions
-     *
-     * @return string[]
-     */
-    public static function rsort(array $versions)
-    {
-        return self::usort($versions, self::SORT_DESC);
     }
 }

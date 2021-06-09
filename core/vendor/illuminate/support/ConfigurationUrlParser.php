@@ -22,28 +22,6 @@ class ConfigurationUrlParser
     ];
 
     /**
-     * Get all of the current drivers' aliases.
-     *
-     * @return array
-     */
-    public static function getDriverAliases()
-    {
-        return static::$driverAliases;
-    }
-
-    /**
-     * Add the given driver alias to the driver aliases array.
-     *
-     * @param  string  $alias
-     * @param  string  $driver
-     * @return void
-     */
-    public static function addDriverAlias($alias, $driver)
-    {
-        static::$driverAliases[$alias] = $driver;
-    }
-
-    /**
      * Parse the database configuration, hydrating options using a database configuration URL if possible.
      *
      * @param  array|string  $config
@@ -72,52 +50,6 @@ class ConfigurationUrlParser
             $this->getPrimaryOptions($decodedComponents),
             $this->getQueryOptions($rawComponents)
         );
-    }
-
-    /**
-     * Parse the string URL to an array of components.
-     *
-     * @param  string  $url
-     * @return array
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected function parseUrl($url)
-    {
-        $url = preg_replace('#^(sqlite3?):///#', '$1://null/', $url);
-
-        $parsedUrl = parse_url($url);
-
-        if ($parsedUrl === false) {
-            throw new InvalidArgumentException('The database configuration URL is malformed.');
-        }
-
-        return $parsedUrl;
-    }
-
-    /**
-     * Convert string casted values to their native types.
-     *
-     * @param  mixed  $value
-     * @return mixed
-     */
-    protected function parseStringsToNativeTypes($value)
-    {
-        if (is_array($value)) {
-            return array_map([$this, 'parseStringsToNativeTypes'], $value);
-        }
-
-        if (! is_string($value)) {
-            return $value;
-        }
-
-        $parsedValue = json_decode($value, true);
-
-        if (json_last_error() === JSON_ERROR_NONE) {
-            return $parsedValue;
-        }
-
-        return $value;
     }
 
     /**
@@ -189,5 +121,73 @@ class ConfigurationUrlParser
         parse_str($queryString, $query);
 
         return $this->parseStringsToNativeTypes($query);
+    }
+
+    /**
+     * Parse the string URL to an array of components.
+     *
+     * @param  string  $url
+     * @return array
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function parseUrl($url)
+    {
+        $url = preg_replace('#^(sqlite3?):///#', '$1://null/', $url);
+
+        $parsedUrl = parse_url($url);
+
+        if ($parsedUrl === false) {
+            throw new InvalidArgumentException('The database configuration URL is malformed.');
+        }
+
+        return $parsedUrl;
+    }
+
+    /**
+     * Convert string casted values to their native types.
+     *
+     * @param  mixed  $value
+     * @return mixed
+     */
+    protected function parseStringsToNativeTypes($value)
+    {
+        if (is_array($value)) {
+            return array_map([$this, 'parseStringsToNativeTypes'], $value);
+        }
+
+        if (! is_string($value)) {
+            return $value;
+        }
+
+        $parsedValue = json_decode($value, true);
+
+        if (json_last_error() === JSON_ERROR_NONE) {
+            return $parsedValue;
+        }
+
+        return $value;
+    }
+
+    /**
+     * Get all of the current drivers' aliases.
+     *
+     * @return array
+     */
+    public static function getDriverAliases()
+    {
+        return static::$driverAliases;
+    }
+
+    /**
+     * Add the given driver alias to the driver aliases array.
+     *
+     * @param  string  $alias
+     * @param  string  $driver
+     * @return void
+     */
+    public static function addDriverAlias($alias, $driver)
+    {
+        static::$driverAliases[$alias] = $driver;
     }
 }

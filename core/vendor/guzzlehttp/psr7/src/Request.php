@@ -56,36 +56,6 @@ class Request implements RequestInterface
         }
     }
 
-    private function assertMethod($method)
-    {
-        if (!is_string($method) || $method === '') {
-            throw new \InvalidArgumentException('Method must be a non-empty string.');
-        }
-    }
-
-    private function updateHostFromUri()
-    {
-        $host = $this->uri->getHost();
-
-        if ($host == '') {
-            return;
-        }
-
-        if (($port = $this->uri->getPort()) !== null) {
-            $host .= ':' . $port;
-        }
-
-        if (isset($this->headerNames['host'])) {
-            $header = $this->headerNames['host'];
-        } else {
-            $header = 'Host';
-            $this->headerNames['host'] = 'Host';
-        }
-        // Ensure Host is the first header.
-        // See: http://tools.ietf.org/html/rfc7230#section-5.4
-        $this->headers = [$header => [$host]] + $this->headers;
-    }
-
     public function getRequestTarget()
     {
         if ($this->requestTarget !== null) {
@@ -148,5 +118,35 @@ class Request implements RequestInterface
         }
 
         return $new;
+    }
+
+    private function updateHostFromUri()
+    {
+        $host = $this->uri->getHost();
+
+        if ($host == '') {
+            return;
+        }
+
+        if (($port = $this->uri->getPort()) !== null) {
+            $host .= ':' . $port;
+        }
+
+        if (isset($this->headerNames['host'])) {
+            $header = $this->headerNames['host'];
+        } else {
+            $header = 'Host';
+            $this->headerNames['host'] = 'Host';
+        }
+        // Ensure Host is the first header.
+        // See: http://tools.ietf.org/html/rfc7230#section-5.4
+        $this->headers = [$header => [$host]] + $this->headers;
+    }
+
+    private function assertMethod($method)
+    {
+        if (!is_string($method) || $method === '') {
+            throw new \InvalidArgumentException('Method must be a non-empty string.');
+        }
     }
 }

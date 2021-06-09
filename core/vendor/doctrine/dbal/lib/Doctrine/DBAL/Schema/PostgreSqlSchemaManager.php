@@ -37,6 +37,76 @@ class PostgreSqlSchemaManager extends AbstractSchemaManager
     private $existingSchemaPaths;
 
     /**
+     * Gets all the existing schema names.
+     *
+     * @return string[]
+     */
+    public function getSchemaNames()
+    {
+        $statement = $this->_conn->executeQuery(
+            "SELECT nspname FROM pg_namespace WHERE nspname !~ '^pg_.*' AND nspname != 'information_schema'"
+        );
+
+        return $statement->fetchAll(FetchMode::COLUMN);
+    }
+
+    /**
+     * Returns an array of schema search paths.
+     *
+     * This is a PostgreSQL only function.
+     *
+     * @return string[]
+     */
+    public function getSchemaSearchPaths()
+    {
+        $params = $this->_conn->getParams();
+
+        $searchPaths = $this->_conn->fetchColumn('SHOW search_path');
+        assert($searchPaths !== false);
+
+        $schema = explode(',', $searchPaths);
+
+        if (isset($params['user'])) {
+            $schema = str_replace('"$user"', $params['user'], $schema);
+        }
+
+        return array_map('trim', $schema);
+    }
+
+    /**
+     * Gets names of all existing schemas in the current users search path.
+     *
+     * This is a PostgreSQL only function.
+     *
+     * @return string[]
+     */
+    public function getExistingSchemaSearchPaths()
+    {
+        if ($this->existingSchemaPaths === null) {
+            $this->determineExistingSchemaSearchPaths();
+        }
+
+        return $this->existingSchemaPaths;
+    }
+
+    /**
+     * Sets or resets the order of the existing schemas in the current search path of the user.
+     *
+     * This is a PostgreSQL only function.
+     *
+     * @return void
+     */
+    public function determineExistingSchemaSearchPaths()
+    {
+        $names = $this->getSchemaNames();
+        $paths = $this->getSchemaSearchPaths();
+
+        $this->existingSchemaPaths = array_filter($paths, static function ($v) use ($names) {
+            return in_array($v, $names);
+        });
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function dropDatabase($database)
@@ -63,26 +133,6 @@ class PostgreSqlSchemaManager extends AbstractSchemaManager
 
             parent::dropDatabase($database);
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function listTableDetails($name): Table
-    {
-        $table = parent::listTableDetails($name);
-
-        $platform = $this->_platform;
-        assert($platform instanceof PostgreSqlPlatform);
-        $sql = $platform->getListTableMetadataSQL($name);
-
-        $tableOptions = $this->_conn->fetchAssoc($sql);
-
-        if ($tableOptions !== false) {
-            $table->addOption('comment', $tableOptions['table_comment']);
-        }
-
-        return $table;
     }
 
     /**
@@ -165,76 +215,6 @@ class PostgreSqlSchemaManager extends AbstractSchemaManager
     }
 
     /**
-     * Gets names of all existing schemas in the current users search path.
-     *
-     * This is a PostgreSQL only function.
-     *
-     * @return string[]
-     */
-    public function getExistingSchemaSearchPaths()
-    {
-        if ($this->existingSchemaPaths === null) {
-            $this->determineExistingSchemaSearchPaths();
-        }
-
-        return $this->existingSchemaPaths;
-    }
-
-    /**
-     * Sets or resets the order of the existing schemas in the current search path of the user.
-     *
-     * This is a PostgreSQL only function.
-     *
-     * @return void
-     */
-    public function determineExistingSchemaSearchPaths()
-    {
-        $names = $this->getSchemaNames();
-        $paths = $this->getSchemaSearchPaths();
-
-        $this->existingSchemaPaths = array_filter($paths, static function ($v) use ($names) {
-            return in_array($v, $names);
-        });
-    }
-
-    /**
-     * Gets all the existing schema names.
-     *
-     * @return string[]
-     */
-    public function getSchemaNames()
-    {
-        $statement = $this->_conn->executeQuery(
-            "SELECT nspname FROM pg_namespace WHERE nspname !~ '^pg_.*' AND nspname != 'information_schema'"
-        );
-
-        return $statement->fetchAll(FetchMode::COLUMN);
-    }
-
-    /**
-     * Returns an array of schema search paths.
-     *
-     * This is a PostgreSQL only function.
-     *
-     * @return string[]
-     */
-    public function getSchemaSearchPaths()
-    {
-        $params = $this->_conn->getParams();
-
-        $searchPaths = $this->_conn->fetchColumn('SHOW search_path');
-        assert($searchPaths !== false);
-
-        $schema = explode(',', $searchPaths);
-
-        if (isset($params['user'])) {
-            $schema = str_replace('"$user"', $params['user'], $schema);
-        }
-
-        return array_map('trim', $schema);
-    }
-
-    /**
      * {@inheritdoc}
      *
      * @link http://ezcomponents.org/docs/api/trunk/DatabaseSchema/ezcDbSchemaPgsqlReader.html
@@ -310,6 +290,14 @@ class PostgreSqlSchemaManager extends AbstractSchemaManager
     /**
      * {@inheritdoc}
      */
+    protected function getPortableNamespaceDefinition(array $namespace)
+    {
+        return $namespace['nspname'];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function _getPortableSequenceDefinition($sequence)
     {
         if ($sequence['schemaname'] !== 'public') {
@@ -328,14 +316,6 @@ class PostgreSqlSchemaManager extends AbstractSchemaManager
         }
 
         return new Sequence($sequenceName, (int) $sequence['increment_by'], (int) $sequence['min_value']);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getPortableNamespaceDefinition(array $namespace)
-    {
-        return $namespace['nspname'];
     }
 
     /**
@@ -532,5 +512,25 @@ class PostgreSqlSchemaManager extends AbstractSchemaManager
         }
 
         return str_replace("''", "'", $default);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function listTableDetails($name): Table
+    {
+        $table = parent::listTableDetails($name);
+
+        $platform = $this->_platform;
+        assert($platform instanceof PostgreSqlPlatform);
+        $sql = $platform->getListTableMetadataSQL($name);
+
+        $tableOptions = $this->_conn->fetchAssoc($sql);
+
+        if ($tableOptions !== false) {
+            $table->addOption('comment', $tableOptions['table_comment']);
+        }
+
+        return $table;
     }
 }

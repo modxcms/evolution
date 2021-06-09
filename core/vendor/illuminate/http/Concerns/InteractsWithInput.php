@@ -24,23 +24,6 @@ trait InteractsWithInput
     }
 
     /**
-     * Retrieve a parameter item from a given source.
-     *
-     * @param  string  $source
-     * @param  string  $key
-     * @param  string|array|null  $default
-     * @return string|array|null
-     */
-    protected function retrieveItem($source, $key, $default)
-    {
-        if (is_null($key)) {
-            return $this->$source->all();
-        }
-
-        return $this->$source->get($key, $default);
-    }
-
-    /**
      * Determine if a header is set on the request.
      *
      * @param  string  $key
@@ -110,6 +93,146 @@ trait InteractsWithInput
     }
 
     /**
+     * Determine if the request contains any of the given inputs.
+     *
+     * @param  string|array  $keys
+     * @return bool
+     */
+    public function hasAny($keys)
+    {
+        $keys = is_array($keys) ? $keys : func_get_args();
+
+        $input = $this->all();
+
+        return Arr::hasAny($input, $keys);
+    }
+
+    /**
+     * Apply the callback if the request contains the given input item key.
+     *
+     * @param  string  $key
+     * @param  callable  $callback
+     * @return $this|mixed
+     */
+    public function whenHas($key, callable $callback)
+    {
+        if ($this->has($key)) {
+            return $callback(data_get($this->all(), $key)) ?: $this;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Determine if the request contains a non-empty value for an input item.
+     *
+     * @param  string|array  $key
+     * @return bool
+     */
+    public function filled($key)
+    {
+        $keys = is_array($key) ? $key : func_get_args();
+
+        foreach ($keys as $value) {
+            if ($this->isEmptyString($value)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Determine if the request contains an empty value for an input item.
+     *
+     * @param  string|array  $key
+     * @return bool
+     */
+    public function isNotFilled($key)
+    {
+        $keys = is_array($key) ? $key : func_get_args();
+
+        foreach ($keys as $value) {
+            if (! $this->isEmptyString($value)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Determine if the request contains a non-empty value for any of the given inputs.
+     *
+     * @param  string|array  $keys
+     * @return bool
+     */
+    public function anyFilled($keys)
+    {
+        $keys = is_array($keys) ? $keys : func_get_args();
+
+        foreach ($keys as $key) {
+            if ($this->filled($key)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Apply the callback if the request contains a non-empty value for the given input item key.
+     *
+     * @param  string  $key
+     * @param  callable  $callback
+     * @return $this|mixed
+     */
+    public function whenFilled($key, callable $callback)
+    {
+        if ($this->filled($key)) {
+            return $callback(data_get($this->all(), $key)) ?: $this;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Determine if the request is missing a given input item key.
+     *
+     * @param  string|array  $key
+     * @return bool
+     */
+    public function missing($key)
+    {
+        $keys = is_array($key) ? $key : func_get_args();
+
+        return ! $this->has($keys);
+    }
+
+    /**
+     * Determine if the given input key is an empty string for "has".
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    protected function isEmptyString($key)
+    {
+        $value = $this->input($key);
+
+        return ! is_bool($value) && ! is_array($value) && trim((string) $value) === '';
+    }
+
+    /**
+     * Get the keys for all of the input and files.
+     *
+     * @return array
+     */
+    public function keys()
+    {
+        return array_merge(array_keys($this->input()), $this->files->keys());
+    }
+
+    /**
      * Get all of the input and files for the request.
      *
      * @param  array|mixed|null  $keys
@@ -147,177 +270,6 @@ trait InteractsWithInput
     }
 
     /**
-     * Get an array of all of the files on the request.
-     *
-     * @return array
-     */
-    public function allFiles()
-    {
-        $files = $this->files->all();
-
-        return $this->convertedFiles = $this->convertedFiles ?? $this->convertUploadedFiles($files);
-    }
-
-    /**
-     * Convert the given array of Symfony UploadedFiles to custom Laravel UploadedFiles.
-     *
-     * @param  array  $files
-     * @return array
-     */
-    protected function convertUploadedFiles(array $files)
-    {
-        return array_map(function ($file) {
-            if (is_null($file) || (is_array($file) && empty(array_filter($file)))) {
-                return $file;
-            }
-
-            return is_array($file)
-                        ? $this->convertUploadedFiles($file)
-                        : UploadedFile::createFromBase($file);
-        }, $files);
-    }
-
-    /**
-     * Determine if the request contains any of the given inputs.
-     *
-     * @param  string|array  $keys
-     * @return bool
-     */
-    public function hasAny($keys)
-    {
-        $keys = is_array($keys) ? $keys : func_get_args();
-
-        $input = $this->all();
-
-        return Arr::hasAny($input, $keys);
-    }
-
-    /**
-     * Apply the callback if the request contains the given input item key.
-     *
-     * @param  string  $key
-     * @param  callable  $callback
-     * @return $this|mixed
-     */
-    public function whenHas($key, callable $callback)
-    {
-        if ($this->has($key)) {
-            return $callback(data_get($this->all(), $key)) ?: $this;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Determine if the request contains an empty value for an input item.
-     *
-     * @param  string|array  $key
-     * @return bool
-     */
-    public function isNotFilled($key)
-    {
-        $keys = is_array($key) ? $key : func_get_args();
-
-        foreach ($keys as $value) {
-            if (! $this->isEmptyString($value)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Determine if the given input key is an empty string for "has".
-     *
-     * @param  string  $key
-     * @return bool
-     */
-    protected function isEmptyString($key)
-    {
-        $value = $this->input($key);
-
-        return ! is_bool($value) && ! is_array($value) && trim((string) $value) === '';
-    }
-
-    /**
-     * Determine if the request contains a non-empty value for any of the given inputs.
-     *
-     * @param  string|array  $keys
-     * @return bool
-     */
-    public function anyFilled($keys)
-    {
-        $keys = is_array($keys) ? $keys : func_get_args();
-
-        foreach ($keys as $key) {
-            if ($this->filled($key)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Determine if the request contains a non-empty value for an input item.
-     *
-     * @param  string|array  $key
-     * @return bool
-     */
-    public function filled($key)
-    {
-        $keys = is_array($key) ? $key : func_get_args();
-
-        foreach ($keys as $value) {
-            if ($this->isEmptyString($value)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Apply the callback if the request contains a non-empty value for the given input item key.
-     *
-     * @param  string  $key
-     * @param  callable  $callback
-     * @return $this|mixed
-     */
-    public function whenFilled($key, callable $callback)
-    {
-        if ($this->filled($key)) {
-            return $callback(data_get($this->all(), $key)) ?: $this;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Determine if the request is missing a given input item key.
-     *
-     * @param  string|array  $key
-     * @return bool
-     */
-    public function missing($key)
-    {
-        $keys = is_array($key) ? $key : func_get_args();
-
-        return ! $this->has($keys);
-    }
-
-    /**
-     * Get the keys for all of the input and files.
-     *
-     * @return array
-     */
-    public function keys()
-    {
-        return array_merge(array_keys($this->input()), $this->files->keys());
-    }
-
-    /**
      * Retrieve input as a boolean value.
      *
      * Returns true when value is "1", "true", "on", and "yes". Otherwise, returns false.
@@ -329,6 +281,31 @@ trait InteractsWithInput
     public function boolean($key = null, $default = false)
     {
         return filter_var($this->input($key, $default), FILTER_VALIDATE_BOOLEAN);
+    }
+
+    /**
+     * Get a subset containing the provided keys with values from the input data.
+     *
+     * @param  array|mixed  $keys
+     * @return array
+     */
+    public function only($keys)
+    {
+        $results = [];
+
+        $input = $this->all();
+
+        $placeholder = new stdClass;
+
+        foreach (is_array($keys) ? $keys : func_get_args() as $key) {
+            $value = data_get($input, $key, $placeholder);
+
+            if ($value !== $placeholder) {
+                Arr::set($results, $key, $value);
+            }
+        }
+
+        return $results;
     }
 
     /**
@@ -396,6 +373,37 @@ trait InteractsWithInput
     }
 
     /**
+     * Get an array of all of the files on the request.
+     *
+     * @return array
+     */
+    public function allFiles()
+    {
+        $files = $this->files->all();
+
+        return $this->convertedFiles = $this->convertedFiles ?? $this->convertUploadedFiles($files);
+    }
+
+    /**
+     * Convert the given array of Symfony UploadedFiles to custom Laravel UploadedFiles.
+     *
+     * @param  array  $files
+     * @return array
+     */
+    protected function convertUploadedFiles(array $files)
+    {
+        return array_map(function ($file) {
+            if (is_null($file) || (is_array($file) && empty(array_filter($file)))) {
+                return $file;
+            }
+
+            return is_array($file)
+                        ? $this->convertUploadedFiles($file)
+                        : UploadedFile::createFromBase($file);
+        }, $files);
+    }
+
+    /**
      * Determine if the uploaded data contains a file.
      *
      * @param  string  $key
@@ -417,6 +425,17 @@ trait InteractsWithInput
     }
 
     /**
+     * Check that the given file is a valid file instance.
+     *
+     * @param  mixed  $file
+     * @return bool
+     */
+    protected function isValidFile($file)
+    {
+        return $file instanceof SplFileInfo && $file->getPath() !== '';
+    }
+
+    /**
      * Retrieve a file from the request.
      *
      * @param  string|null  $key
@@ -429,14 +448,20 @@ trait InteractsWithInput
     }
 
     /**
-     * Check that the given file is a valid file instance.
+     * Retrieve a parameter item from a given source.
      *
-     * @param  mixed  $file
-     * @return bool
+     * @param  string  $source
+     * @param  string  $key
+     * @param  string|array|null  $default
+     * @return string|array|null
      */
-    protected function isValidFile($file)
+    protected function retrieveItem($source, $key, $default)
     {
-        return $file instanceof SplFileInfo && $file->getPath() !== '';
+        if (is_null($key)) {
+            return $this->$source->all();
+        }
+
+        return $this->$source->get($key, $default);
     }
 
     /**
@@ -467,30 +492,5 @@ trait InteractsWithInput
         VarDumper::dump(count($keys) > 0 ? $this->only($keys) : $this->all());
 
         return $this;
-    }
-
-    /**
-     * Get a subset containing the provided keys with values from the input data.
-     *
-     * @param  array|mixed  $keys
-     * @return array
-     */
-    public function only($keys)
-    {
-        $results = [];
-
-        $input = $this->all();
-
-        $placeholder = new stdClass;
-
-        foreach (is_array($keys) ? $keys : func_get_args() as $key) {
-            $value = data_get($input, $key, $placeholder);
-
-            if ($value !== $placeholder) {
-                Arr::set($results, $key, $value);
-            }
-        }
-
-        return $results;
     }
 }

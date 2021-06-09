@@ -34,6 +34,73 @@ use WebPConvert\WebPConvert;
 class ServeConvertedWebP
 {
 
+    /**
+     * Process options.
+     *
+     * @throws \WebPConvert\Options\Exceptions\InvalidOptionTypeException   If the type of an option is invalid
+     * @throws \WebPConvert\Options\Exceptions\InvalidOptionValueException  If the value of an option is invalid
+     * @param array $options
+     */
+    private static function processOptions($options)
+    {
+        $options2 = new Options();
+        $options2->addOptions(
+            new BooleanOption('reconvert', false),
+            new BooleanOption('serve-original', false),
+            new BooleanOption('show-report', false),
+            new BooleanOption('suppress-warnings', true),
+            new BooleanOption('redirect-to-self-instead-of-serving', false),
+            new ArrayOption('serve-image', []),
+            new SensitiveArrayOption('convert', [])
+        );
+        foreach ($options as $optionId => $optionValue) {
+            $options2->setOrCreateOption($optionId, $optionValue);
+        }
+        $options2->check();
+        return $options2->getOptions();
+    }
+
+    /**
+     * Serve original file (source).
+     *
+     * @param   string  $source                        path to source file
+     * @param   array   $serveImageOptions (optional)  options for serving an image
+     *                  Supported options:
+     *                  - All options supported by ServeFile::serve()
+     * @throws  ServeFailedException  if source is not an image or mime type cannot be determined
+     * @return  void
+     */
+    public static function serveOriginal($source, $serveImageOptions = [])
+    {
+        InputValidator::checkSource($source);
+        $contentType = MimeType::getMimeTypeDetectionResult($source);
+        if (is_null($contentType)) {
+            throw new ServeFailedException('Rejecting to serve original (mime type cannot be determined)');
+        } elseif ($contentType === false) {
+            throw new ServeFailedException('Rejecting to serve original (it is not an image)');
+        } else {
+            ServeFile::serve($source, $contentType, $serveImageOptions);
+        }
+    }
+
+    /**
+     * Serve destination file.
+     *
+     * TODO: SHould this really be public?
+     *
+     * @param   string  $destination                   path to destination file
+     * @param   array   $serveImageOptions (optional)  options for serving (such as which headers to add)
+     *       Supported options:
+     *       - All options supported by ServeFile::serve()
+     * @return  void
+     */
+    public static function serveDestination($destination, $serveImageOptions = [])
+    {
+        InputValidator::checkDestination($destination);
+        ServeFile::serve($destination, 'image/webp', $serveImageOptions);
+    }
+
+
     public static function warningHandler()
     {
         // do nothing! - as we do not return anything, the warning is suppressed
@@ -137,71 +204,5 @@ class ServeConvertedWebP
 
         Header::addLogHeader('Serving converted file', $serveLogger);
         self::serveDestination($destination, $options['serve-image']);
-    }
-
-    /**
-     * Process options.
-     *
-     * @throws \WebPConvert\Options\Exceptions\InvalidOptionTypeException   If the type of an option is invalid
-     * @throws \WebPConvert\Options\Exceptions\InvalidOptionValueException  If the value of an option is invalid
-     * @param array $options
-     */
-    private static function processOptions($options)
-    {
-        $options2 = new Options();
-        $options2->addOptions(
-            new BooleanOption('reconvert', false),
-            new BooleanOption('serve-original', false),
-            new BooleanOption('show-report', false),
-            new BooleanOption('suppress-warnings', true),
-            new BooleanOption('redirect-to-self-instead-of-serving', false),
-            new ArrayOption('serve-image', []),
-            new SensitiveArrayOption('convert', [])
-        );
-        foreach ($options as $optionId => $optionValue) {
-            $options2->setOrCreateOption($optionId, $optionValue);
-        }
-        $options2->check();
-        return $options2->getOptions();
-    }
-
-    /**
-     * Serve original file (source).
-     *
-     * @param   string  $source                        path to source file
-     * @param   array   $serveImageOptions (optional)  options for serving an image
-     *                  Supported options:
-     *                  - All options supported by ServeFile::serve()
-     * @throws  ServeFailedException  if source is not an image or mime type cannot be determined
-     * @return  void
-     */
-    public static function serveOriginal($source, $serveImageOptions = [])
-    {
-        InputValidator::checkSource($source);
-        $contentType = MimeType::getMimeTypeDetectionResult($source);
-        if (is_null($contentType)) {
-            throw new ServeFailedException('Rejecting to serve original (mime type cannot be determined)');
-        } elseif ($contentType === false) {
-            throw new ServeFailedException('Rejecting to serve original (it is not an image)');
-        } else {
-            ServeFile::serve($source, $contentType, $serveImageOptions);
-        }
-    }
-
-    /**
-     * Serve destination file.
-     *
-     * TODO: SHould this really be public?
-     *
-     * @param   string  $destination                   path to destination file
-     * @param   array   $serveImageOptions (optional)  options for serving (such as which headers to add)
-     *       Supported options:
-     *       - All options supported by ServeFile::serve()
-     * @return  void
-     */
-    public static function serveDestination($destination, $serveImageOptions = [])
-    {
-        InputValidator::checkDestination($destination);
-        ServeFile::serve($destination, 'image/webp', $serveImageOptions);
     }
 }

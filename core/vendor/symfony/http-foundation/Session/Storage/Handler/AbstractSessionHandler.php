@@ -43,6 +43,21 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
     }
 
     /**
+     * @return string
+     */
+    abstract protected function doRead(string $sessionId);
+
+    /**
+     * @return bool
+     */
+    abstract protected function doWrite(string $sessionId, string $data);
+
+    /**
+     * @return bool
+     */
+    abstract protected function doDestroy(string $sessionId);
+
+    /**
      * @return bool
      */
     #[\ReturnTypeWillChange]
@@ -86,11 +101,6 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
 
         return $data;
     }
-
-    /**
-     * @return string
-     */
-    abstract protected function doRead(string $sessionId);
 
     /**
      * @return bool
@@ -142,14 +152,4 @@ abstract class AbstractSessionHandler implements \SessionHandlerInterface, \Sess
 
         return $this->newSessionId === $sessionId || $this->doDestroy($sessionId);
     }
-
-    /**
-     * @return bool
-     */
-    abstract protected function doDestroy(string $sessionId);
-
-    /**
-     * @return bool
-     */
-    abstract protected function doWrite(string $sessionId, string $data);
 }

@@ -40,11 +40,6 @@ class PackageRepository extends ArrayRepository
         }
     }
 
-    public function getRepoName()
-    {
-        return preg_replace('{^array }', 'package ', parent::getRepoName());
-    }
-
     /**
      * Initializes repository (reads file, or remote address).
      */
@@ -62,5 +57,10 @@ class PackageRepository extends ArrayRepository
 
             $this->addPackage($package);
         }
+    }
+
+    public function getRepoName()
+    {
+        return preg_replace('{^array }', 'package ', parent::getRepoName());
     }
 }

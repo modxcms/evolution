@@ -92,60 +92,69 @@ class Event
      * @var bool
      */
     public $runInBackground = false;
-    /**
-     * The location that output should be sent to.
-     *
-     * @var string
-     */
-    public $output = '/dev/null';
-    /**
-     * Indicates whether output should be appended.
-     *
-     * @var bool
-     */
-    public $shouldAppendOutput = false;
-    /**
-     * The human readable description of the event.
-     *
-     * @var string
-     */
-    public $description;
-    /**
-     * The event mutex implementation.
-     *
-     * @var \Illuminate\Console\Scheduling\EventMutex
-     */
-    public $mutex;
-    /**
-     * The exit status code of the command.
-     *
-     * @var int|null
-     */
-    public $exitCode;
+
     /**
      * The array of filter callbacks.
      *
      * @var array
      */
     protected $filters = [];
+
     /**
      * The array of reject callbacks.
      *
      * @var array
      */
     protected $rejects = [];
+
+    /**
+     * The location that output should be sent to.
+     *
+     * @var string
+     */
+    public $output = '/dev/null';
+
+    /**
+     * Indicates whether output should be appended.
+     *
+     * @var bool
+     */
+    public $shouldAppendOutput = false;
+
     /**
      * The array of callbacks to be run before the event is started.
      *
      * @var array
      */
     protected $beforeCallbacks = [];
+
     /**
      * The array of callbacks to be run after the event is finished.
      *
      * @var array
      */
     protected $afterCallbacks = [];
+
+    /**
+     * The human readable description of the event.
+     *
+     * @var string
+     */
+    public $description;
+
+    /**
+     * The event mutex implementation.
+     *
+     * @var \Illuminate\Console\Scheduling\EventMutex
+     */
+    public $mutex;
+
+    /**
+     * The exit status code of the command.
+     *
+     * @var int|null
+     */
+    public $exitCode;
 
     /**
      * Create a new event instance.
@@ -193,6 +202,31 @@ class Event
     }
 
     /**
+     * Get the mutex name for the scheduled command.
+     *
+     * @return string
+     */
+    public function mutexName()
+    {
+        return 'framework'.DIRECTORY_SEPARATOR.'schedule-'.sha1($this->expression.$this->command);
+    }
+
+    /**
+     * Run the command in the foreground.
+     *
+     * @param  \Illuminate\Contracts\Container\Container  $container
+     * @return void
+     */
+    protected function runCommandInForeground(Container $container)
+    {
+        $this->callBeforeCallbacks($container);
+
+        $this->exitCode = Process::fromShellCommandline($this->buildCommand(), base_path(), null, null, null)->run();
+
+        $this->callAfterCallbacks($container);
+    }
+
+    /**
      * Run the command in the background.
      *
      * @param  \Illuminate\Contracts\Container\Container  $container
@@ -216,31 +250,6 @@ class Event
         foreach ($this->beforeCallbacks as $callback) {
             $container->call($callback);
         }
-    }
-
-    /**
-     * Build the command string.
-     *
-     * @return string
-     */
-    public function buildCommand()
-    {
-        return (new CommandBuilder)->buildCommand($this);
-    }
-
-    /**
-     * Run the command in the foreground.
-     *
-     * @param  \Illuminate\Contracts\Container\Container  $container
-     * @return void
-     */
-    protected function runCommandInForeground(Container $container)
-    {
-        $this->callBeforeCallbacks($container);
-
-        $this->exitCode = Process::fromShellCommandline($this->buildCommand(), base_path(), null, null, null)->run();
-
-        $this->callAfterCallbacks($container);
     }
 
     /**
@@ -268,6 +277,16 @@ class Event
         $this->exitCode = (int) $exitCode;
 
         $this->callAfterCallbacks($container);
+    }
+
+    /**
+     * Build the command string.
+     *
+     * @return string
+     */
+    public function buildCommand()
+    {
+        return (new CommandBuilder)->buildCommand($this);
     }
 
     /**
@@ -359,18 +378,6 @@ class Event
     }
 
     /**
-     * Ensure that the command output is being captured.
-     *
-     * @return void
-     */
-    protected function ensureOutputIsBeingCaptured()
-    {
-        if (is_null($this->output) || $this->output == $this->getDefaultOutput()) {
-            $this->sendOutputTo(storage_path('logs/schedule-'.sha1($this->mutexName()).'.log'));
-        }
-    }
-
-    /**
      * Send the output of the command to a given location.
      *
      * @param  string  $location
@@ -387,16 +394,6 @@ class Event
     }
 
     /**
-     * Get the mutex name for the scheduled command.
-     *
-     * @return string
-     */
-    public function mutexName()
-    {
-        return 'framework'.DIRECTORY_SEPARATOR.'schedule-'.sha1($this->expression.$this->command);
-    }
-
-    /**
      * Append the output of the command to a given location.
      *
      * @param  string  $location
@@ -405,19 +402,6 @@ class Event
     public function appendOutputTo($location)
     {
         return $this->sendOutputTo($location, true);
-    }
-
-    /**
-     * E-mail the results of the scheduled operation if it produces output.
-     *
-     * @param  array|mixed  $addresses
-     * @return $this
-     *
-     * @throws \LogicException
-     */
-    public function emailWrittenOutputTo($addresses)
-    {
-        return $this->emailOutputTo($addresses, true);
     }
 
     /**
@@ -441,54 +425,45 @@ class Event
     }
 
     /**
-     * Register a callback to be called after the operation.
+     * E-mail the results of the scheduled operation if it produces output.
      *
-     * @param  \Closure  $callback
+     * @param  array|mixed  $addresses
      * @return $this
+     *
+     * @throws \LogicException
      */
-    public function then(Closure $callback)
+    public function emailWrittenOutputTo($addresses)
     {
-        $parameters = $this->closureParameterTypes($callback);
-
-        if (Arr::get($parameters, 'output') === Stringable::class) {
-            return $this->thenWithOutput($callback);
-        }
-
-        $this->afterCallbacks[] = $callback;
-
-        return $this;
+        return $this->emailOutputTo($addresses, true);
     }
 
     /**
-     * Register a callback that uses the output after the job runs.
+     * E-mail the results of the scheduled operation if it fails.
      *
-     * @param  \Closure  $callback
-     * @param  bool  $onlyIfOutputExists
+     * @param  array|mixed  $addresses
      * @return $this
      */
-    public function thenWithOutput(Closure $callback, $onlyIfOutputExists = false)
+    public function emailOutputOnFailure($addresses)
     {
         $this->ensureOutputIsBeingCaptured();
 
-        return $this->then($this->withOutputCallback($callback, $onlyIfOutputExists));
+        $addresses = Arr::wrap($addresses);
+
+        return $this->onFailure(function (Mailer $mailer) use ($addresses) {
+            $this->emailOutput($mailer, $addresses, false);
+        });
     }
 
     /**
-     * Get a callback that provides output.
+     * Ensure that the command output is being captured.
      *
-     * @param  \Closure  $callback
-     * @param  bool  $onlyIfOutputExists
-     * @return \Closure
+     * @return void
      */
-    protected function withOutputCallback(Closure $callback, $onlyIfOutputExists = false)
+    protected function ensureOutputIsBeingCaptured()
     {
-        return function (Container $container) use ($callback, $onlyIfOutputExists) {
-            $output = $this->output && is_file($this->output) ? file_get_contents($this->output) : '';
-
-            return $onlyIfOutputExists && empty($output)
-                            ? null
-                            : $container->call($callback, ['output' => new Stringable($output)]);
-        };
+        if (is_null($this->output) || $this->output == $this->getDefaultOutput()) {
+            $this->sendOutputTo(storage_path('logs/schedule-'.sha1($this->mutexName()).'.log'));
+        }
     }
 
     /**
@@ -527,55 +502,14 @@ class Event
     }
 
     /**
-     * E-mail the results of the scheduled operation if it fails.
+     * Register a callback to ping a given URL before the job runs.
      *
-     * @param  array|mixed  $addresses
+     * @param  string  $url
      * @return $this
      */
-    public function emailOutputOnFailure($addresses)
+    public function pingBefore($url)
     {
-        $this->ensureOutputIsBeingCaptured();
-
-        $addresses = Arr::wrap($addresses);
-
-        return $this->onFailure(function (Mailer $mailer) use ($addresses) {
-            $this->emailOutput($mailer, $addresses, false);
-        });
-    }
-
-    /**
-     * Register a callback to be called if the operation fails.
-     *
-     * @param  \Closure  $callback
-     * @return $this
-     */
-    public function onFailure(Closure $callback)
-    {
-        $parameters = $this->closureParameterTypes($callback);
-
-        if (Arr::get($parameters, 'output') === Stringable::class) {
-            return $this->onFailureWithOutput($callback);
-        }
-
-        return $this->then(function (Container $container) use ($callback) {
-            if (0 !== $this->exitCode) {
-                $container->call($callback);
-            }
-        });
-    }
-
-    /**
-     * Register a callback that uses the output if the operation fails.
-     *
-     * @param  \Closure  $callback
-     * @param  bool  $onlyIfOutputExists
-     * @return $this
-     */
-    public function onFailureWithOutput(Closure $callback, $onlyIfOutputExists = false)
-    {
-        $this->ensureOutputIsBeingCaptured();
-
-        return $this->onFailure($this->withOutputCallback($callback, $onlyIfOutputExists));
+        return $this->before($this->pingCallback($url));
     }
 
     /**
@@ -591,27 +525,48 @@ class Event
     }
 
     /**
-     * Register a callback to ping a given URL before the job runs.
+     * Register a callback to ping a given URL after the job runs.
      *
      * @param  string  $url
      * @return $this
      */
-    public function pingBefore($url)
+    public function thenPing($url)
     {
-        return $this->before($this->pingCallback($url));
+        return $this->then($this->pingCallback($url));
     }
 
     /**
-     * Register a callback to be called before the operation.
+     * Register a callback to ping a given URL after the job runs if the given condition is true.
      *
-     * @param  \Closure  $callback
+     * @param  bool  $value
+     * @param  string  $url
      * @return $this
      */
-    public function before(Closure $callback)
+    public function thenPingIf($value, $url)
     {
-        $this->beforeCallbacks[] = $callback;
+        return $value ? $this->thenPing($url) : $this;
+    }
 
-        return $this;
+    /**
+     * Register a callback to ping a given URL if the operation succeeds.
+     *
+     * @param  string  $url
+     * @return $this
+     */
+    public function pingOnSuccess($url)
+    {
+        return $this->onSuccess($this->pingCallback($url));
+    }
+
+    /**
+     * Register a callback to ping a given URL if the operation fails.
+     *
+     * @param  string  $url
+     * @return $this
+     */
+    public function pingOnFailure($url)
+    {
+        return $this->onFailure($this->pingCallback($url));
     }
 
     /**
@@ -629,86 +584,6 @@ class Event
                 $container->make(ExceptionHandler::class)->report($e);
             }
         };
-    }
-
-    /**
-     * Register a callback to ping a given URL after the job runs if the given condition is true.
-     *
-     * @param  bool  $value
-     * @param  string  $url
-     * @return $this
-     */
-    public function thenPingIf($value, $url)
-    {
-        return $value ? $this->thenPing($url) : $this;
-    }
-
-    /**
-     * Register a callback to ping a given URL after the job runs.
-     *
-     * @param  string  $url
-     * @return $this
-     */
-    public function thenPing($url)
-    {
-        return $this->then($this->pingCallback($url));
-    }
-
-    /**
-     * Register a callback to ping a given URL if the operation succeeds.
-     *
-     * @param  string  $url
-     * @return $this
-     */
-    public function pingOnSuccess($url)
-    {
-        return $this->onSuccess($this->pingCallback($url));
-    }
-
-    /**
-     * Register a callback to be called if the operation succeeds.
-     *
-     * @param  \Closure  $callback
-     * @return $this
-     */
-    public function onSuccess(Closure $callback)
-    {
-        $parameters = $this->closureParameterTypes($callback);
-
-        if (Arr::get($parameters, 'output') === Stringable::class) {
-            return $this->onSuccessWithOutput($callback);
-        }
-
-        return $this->then(function (Container $container) use ($callback) {
-            if (0 === $this->exitCode) {
-                $container->call($callback);
-            }
-        });
-    }
-
-    /**
-     * Register a callback that uses the output if the operation succeeds.
-     *
-     * @param  \Closure  $callback
-     * @param  bool  $onlyIfOutputExists
-     * @return $this
-     */
-    public function onSuccessWithOutput(Closure $callback, $onlyIfOutputExists = false)
-    {
-        $this->ensureOutputIsBeingCaptured();
-
-        return $this->onSuccess($this->withOutputCallback($callback, $onlyIfOutputExists));
-    }
-
-    /**
-     * Register a callback to ping a given URL if the operation fails.
-     *
-     * @param  string  $url
-     * @return $this
-     */
-    public function pingOnFailure($url)
-    {
-        return $this->onFailure($this->pingCallback($url));
     }
 
     /**
@@ -781,21 +656,6 @@ class Event
     }
 
     /**
-     * Register a callback to further filter the schedule.
-     *
-     * @param  \Closure|bool  $callback
-     * @return $this
-     */
-    public function skip($callback)
-    {
-        $this->rejects[] = Reflector::isCallable($callback) ? $callback : function () use ($callback) {
-            return $callback;
-        };
-
-        return $this;
-    }
-
-    /**
      * Allow the event to only run on one server for each cron expression.
      *
      * @return $this
@@ -823,6 +683,34 @@ class Event
     }
 
     /**
+     * Register a callback to further filter the schedule.
+     *
+     * @param  \Closure|bool  $callback
+     * @return $this
+     */
+    public function skip($callback)
+    {
+        $this->rejects[] = Reflector::isCallable($callback) ? $callback : function () use ($callback) {
+            return $callback;
+        };
+
+        return $this;
+    }
+
+    /**
+     * Register a callback to be called before the operation.
+     *
+     * @param  \Closure  $callback
+     * @return $this
+     */
+    public function before(Closure $callback)
+    {
+        $this->beforeCallbacks[] = $callback;
+
+        return $this;
+    }
+
+    /**
      * Register a callback to be called after the operation.
      *
      * @param  \Closure  $callback
@@ -831,6 +719,127 @@ class Event
     public function after(Closure $callback)
     {
         return $this->then($callback);
+    }
+
+    /**
+     * Register a callback to be called after the operation.
+     *
+     * @param  \Closure  $callback
+     * @return $this
+     */
+    public function then(Closure $callback)
+    {
+        $parameters = $this->closureParameterTypes($callback);
+
+        if (Arr::get($parameters, 'output') === Stringable::class) {
+            return $this->thenWithOutput($callback);
+        }
+
+        $this->afterCallbacks[] = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Register a callback that uses the output after the job runs.
+     *
+     * @param  \Closure  $callback
+     * @param  bool  $onlyIfOutputExists
+     * @return $this
+     */
+    public function thenWithOutput(Closure $callback, $onlyIfOutputExists = false)
+    {
+        $this->ensureOutputIsBeingCaptured();
+
+        return $this->then($this->withOutputCallback($callback, $onlyIfOutputExists));
+    }
+
+    /**
+     * Register a callback to be called if the operation succeeds.
+     *
+     * @param  \Closure  $callback
+     * @return $this
+     */
+    public function onSuccess(Closure $callback)
+    {
+        $parameters = $this->closureParameterTypes($callback);
+
+        if (Arr::get($parameters, 'output') === Stringable::class) {
+            return $this->onSuccessWithOutput($callback);
+        }
+
+        return $this->then(function (Container $container) use ($callback) {
+            if (0 === $this->exitCode) {
+                $container->call($callback);
+            }
+        });
+    }
+
+    /**
+     * Register a callback that uses the output if the operation succeeds.
+     *
+     * @param  \Closure  $callback
+     * @param  bool  $onlyIfOutputExists
+     * @return $this
+     */
+    public function onSuccessWithOutput(Closure $callback, $onlyIfOutputExists = false)
+    {
+        $this->ensureOutputIsBeingCaptured();
+
+        return $this->onSuccess($this->withOutputCallback($callback, $onlyIfOutputExists));
+    }
+
+    /**
+     * Register a callback to be called if the operation fails.
+     *
+     * @param  \Closure  $callback
+     * @return $this
+     */
+    public function onFailure(Closure $callback)
+    {
+        $parameters = $this->closureParameterTypes($callback);
+
+        if (Arr::get($parameters, 'output') === Stringable::class) {
+            return $this->onFailureWithOutput($callback);
+        }
+
+        return $this->then(function (Container $container) use ($callback) {
+            if (0 !== $this->exitCode) {
+                $container->call($callback);
+            }
+        });
+    }
+
+    /**
+     * Register a callback that uses the output if the operation fails.
+     *
+     * @param  \Closure  $callback
+     * @param  bool  $onlyIfOutputExists
+     * @return $this
+     */
+    public function onFailureWithOutput(Closure $callback, $onlyIfOutputExists = false)
+    {
+        $this->ensureOutputIsBeingCaptured();
+
+        return $this->onFailure($this->withOutputCallback($callback, $onlyIfOutputExists));
+    }
+
+    /**
+     * Get a callback that provides output.
+     *
+     * @param  \Closure  $callback
+     * @param  bool  $onlyIfOutputExists
+     * @return \Closure
+     */
+    protected function withOutputCallback(Closure $callback, $onlyIfOutputExists = false)
+    {
+        return function (Container $container) use ($callback, $onlyIfOutputExists) {
+            $output = $this->output && is_file($this->output) ? file_get_contents($this->output) : '';
+
+            return $onlyIfOutputExists && empty($output)
+                            ? null
+                            : $container->call($callback, ['output' => new Stringable($output)]);
+        };
     }
 
     /**

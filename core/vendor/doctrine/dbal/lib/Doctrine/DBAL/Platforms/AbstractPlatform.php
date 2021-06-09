@@ -155,16 +155,6 @@ abstract class AbstractPlatform
     }
 
     /**
-     * Gets the EventManager used by the Platform.
-     *
-     * @return EventManager|null
-     */
-    public function getEventManager()
-    {
-        return $this->_eventManager;
-    }
-
-    /**
      * Sets the EventManager used by the Platform.
      *
      * @return void
@@ -172,6 +162,16 @@ abstract class AbstractPlatform
     public function setEventManager(EventManager $eventManager)
     {
         $this->_eventManager = $eventManager;
+    }
+
+    /**
+     * Gets the EventManager used by the Platform.
+     *
+     * @return EventManager|null
+     */
+    public function getEventManager()
+    {
+        return $this->_eventManager;
     }
 
     /**
@@ -211,6 +211,39 @@ abstract class AbstractPlatform
     abstract public function getSmallIntTypeDeclarationSQL(array $column);
 
     /**
+     * Returns the SQL snippet that declares common properties of an integer column.
+     *
+     * @param mixed[] $column
+     *
+     * @return string
+     */
+    abstract protected function _getCommonIntegerTypeDeclarationSQL(array $column);
+
+    /**
+     * Lazy load Doctrine Type Mappings.
+     *
+     * @return void
+     */
+    abstract protected function initializeDoctrineTypeMappings();
+
+    /**
+     * Initializes Doctrine Type Mappings with the platform defaults
+     * and with all additional type mappings.
+     *
+     * @return void
+     */
+    private function initializeAllDoctrineTypeMappings()
+    {
+        $this->initializeDoctrineTypeMappings();
+
+        foreach (Type::getTypesMap() as $typeName => $className) {
+            foreach (Type::getType($typeName)->getMappedDatabaseTypes($this) as $dbType) {
+                $this->doctrineTypeMapping[$dbType] = $typeName;
+            }
+        }
+    }
+
+    /**
      * Returns the SQL snippet used to declare a column that can
      * store characters in the ASCII character set
      *
@@ -245,56 +278,6 @@ abstract class AbstractPlatform
         }
 
         return $this->getVarcharTypeDeclarationSQLSnippet($column['length'], $fixed);
-    }
-
-    /**
-     * Gets the default length of a varchar column.
-     *
-     * @return int
-     */
-    public function getVarcharDefaultLength()
-    {
-        return 255;
-    }
-
-    /**
-     * Gets the maximum length of a char column.
-     */
-    public function getCharMaxLength(): int
-    {
-        return $this->getVarcharMaxLength();
-    }
-
-    /**
-     * Gets the maximum length of a varchar column.
-     *
-     * @return int
-     */
-    public function getVarcharMaxLength()
-    {
-        return 4000;
-    }
-
-    /**
-     * Returns the SQL snippet used to declare a CLOB column type.
-     *
-     * @param mixed[] $column
-     *
-     * @return string
-     */
-    abstract public function getClobTypeDeclarationSQL(array $column);
-
-    /**
-     * @param int  $length
-     * @param bool $fixed
-     *
-     * @return string
-     *
-     * @throws Exception If not supported on this platform.
-     */
-    protected function getVarcharTypeDeclarationSQLSnippet($length, $fixed)
-    {
-        throw Exception::notSupported('VARCHARs not supported by Platform.');
     }
 
     /**
@@ -333,50 +316,6 @@ abstract class AbstractPlatform
     }
 
     /**
-     * Gets the default length of a binary column.
-     *
-     * @return int
-     */
-    public function getBinaryDefaultLength()
-    {
-        return 255;
-    }
-
-    /**
-     * Gets the maximum length of a binary column.
-     *
-     * @return int
-     */
-    public function getBinaryMaxLength()
-    {
-        return 4000;
-    }
-
-    /**
-     * Returns the SQL Snippet used to declare a BLOB column type.
-     *
-     * @param mixed[] $column
-     *
-     * @return string
-     */
-    abstract public function getBlobTypeDeclarationSQL(array $column);
-
-    /**
-     * Returns the SQL snippet used to declare a BINARY/VARBINARY column type.
-     *
-     * @param int  $length The length of the column.
-     * @param bool $fixed  Whether the column length is fixed.
-     *
-     * @return string
-     *
-     * @throws Exception If not supported on this platform.
-     */
-    protected function getBinaryTypeDeclarationSQLSnippet($length, $fixed)
-    {
-        throw Exception::notSupported('BINARY/VARBINARY column types are not supported by this platform.');
-    }
-
-    /**
      * Returns the SQL snippet to declare a GUID/UUID column.
      *
      * By default this maps directly to a CHAR(36) and only maps to more
@@ -410,6 +349,59 @@ abstract class AbstractPlatform
     }
 
     /**
+     * @param int  $length
+     * @param bool $fixed
+     *
+     * @return string
+     *
+     * @throws Exception If not supported on this platform.
+     */
+    protected function getVarcharTypeDeclarationSQLSnippet($length, $fixed)
+    {
+        throw Exception::notSupported('VARCHARs not supported by Platform.');
+    }
+
+    /**
+     * Returns the SQL snippet used to declare a BINARY/VARBINARY column type.
+     *
+     * @param int  $length The length of the column.
+     * @param bool $fixed  Whether the column length is fixed.
+     *
+     * @return string
+     *
+     * @throws Exception If not supported on this platform.
+     */
+    protected function getBinaryTypeDeclarationSQLSnippet($length, $fixed)
+    {
+        throw Exception::notSupported('BINARY/VARBINARY column types are not supported by this platform.');
+    }
+
+    /**
+     * Returns the SQL snippet used to declare a CLOB column type.
+     *
+     * @param mixed[] $column
+     *
+     * @return string
+     */
+    abstract public function getClobTypeDeclarationSQL(array $column);
+
+    /**
+     * Returns the SQL Snippet used to declare a BLOB column type.
+     *
+     * @param mixed[] $column
+     *
+     * @return string
+     */
+    abstract public function getBlobTypeDeclarationSQL(array $column);
+
+    /**
+     * Gets the name of the platform.
+     *
+     * @return string
+     */
+    abstract public function getName();
+
+    /**
      * Registers a doctrine type to be used in conjunction with a column type of this platform.
      *
      * @param string $dbType
@@ -439,68 +431,6 @@ abstract class AbstractPlatform
         }
 
         $this->markDoctrineTypeCommented($doctrineType);
-    }
-
-    /**
-     * Initializes Doctrine Type Mappings with the platform defaults
-     * and with all additional type mappings.
-     *
-     * @return void
-     */
-    private function initializeAllDoctrineTypeMappings()
-    {
-        $this->initializeDoctrineTypeMappings();
-
-        foreach (Type::getTypesMap() as $typeName => $className) {
-            foreach (Type::getType($typeName)->getMappedDatabaseTypes($this) as $dbType) {
-                $this->doctrineTypeMapping[$dbType] = $typeName;
-            }
-        }
-    }
-
-    /**
-     * Lazy load Doctrine Type Mappings.
-     *
-     * @return void
-     */
-    abstract protected function initializeDoctrineTypeMappings();
-
-    /**
-     * Marks this type as to be commented in ALTER TABLE and CREATE TABLE statements.
-     *
-     * @param string|Type $doctrineType
-     *
-     * @return void
-     */
-    public function markDoctrineTypeCommented($doctrineType)
-    {
-        if ($this->doctrineTypeComments === null) {
-            $this->initializeCommentedDoctrineTypes();
-        }
-
-        assert(is_array($this->doctrineTypeComments));
-
-        $this->doctrineTypeComments[] = $doctrineType instanceof Type ? $doctrineType->getName() : $doctrineType;
-    }
-
-    /**
-     * Initializes the Doctrine Type comments instance variable for in_array() checks.
-     *
-     * @return void
-     */
-    protected function initializeCommentedDoctrineTypes()
-    {
-        $this->doctrineTypeComments = [];
-
-        foreach (Type::getTypesMap() as $typeName => $className) {
-            $type = Type::getType($typeName);
-
-            if (! $type->requiresSQLCommentHint($this)) {
-                continue;
-            }
-
-            $this->doctrineTypeComments[] = $typeName;
-        }
     }
 
     /**
@@ -548,6 +478,96 @@ abstract class AbstractPlatform
     }
 
     /**
+     * Initializes the Doctrine Type comments instance variable for in_array() checks.
+     *
+     * @return void
+     */
+    protected function initializeCommentedDoctrineTypes()
+    {
+        $this->doctrineTypeComments = [];
+
+        foreach (Type::getTypesMap() as $typeName => $className) {
+            $type = Type::getType($typeName);
+
+            if (! $type->requiresSQLCommentHint($this)) {
+                continue;
+            }
+
+            $this->doctrineTypeComments[] = $typeName;
+        }
+    }
+
+    /**
+     * Is it necessary for the platform to add a parsable type comment to allow reverse engineering the given type?
+     *
+     * @return bool
+     */
+    public function isCommentedDoctrineType(Type $doctrineType)
+    {
+        if ($this->doctrineTypeComments === null) {
+            $this->initializeCommentedDoctrineTypes();
+        }
+
+        assert(is_array($this->doctrineTypeComments));
+
+        return in_array($doctrineType->getName(), $this->doctrineTypeComments);
+    }
+
+    /**
+     * Marks this type as to be commented in ALTER TABLE and CREATE TABLE statements.
+     *
+     * @param string|Type $doctrineType
+     *
+     * @return void
+     */
+    public function markDoctrineTypeCommented($doctrineType)
+    {
+        if ($this->doctrineTypeComments === null) {
+            $this->initializeCommentedDoctrineTypes();
+        }
+
+        assert(is_array($this->doctrineTypeComments));
+
+        $this->doctrineTypeComments[] = $doctrineType instanceof Type ? $doctrineType->getName() : $doctrineType;
+    }
+
+    /**
+     * Gets the comment to append to a column comment that helps parsing this type in reverse engineering.
+     *
+     * @return string
+     */
+    public function getDoctrineTypeComment(Type $doctrineType)
+    {
+        return '(DC2Type:' . $doctrineType->getName() . ')';
+    }
+
+    /**
+     * Gets the comment of a passed column modified by potential doctrine type comment hints.
+     *
+     * @return string|null
+     */
+    protected function getColumnComment(Column $column)
+    {
+        $comment = $column->getComment();
+
+        if ($this->isCommentedDoctrineType($column->getType())) {
+            $comment .= $this->getDoctrineTypeComment($column->getType());
+        }
+
+        return $comment;
+    }
+
+    /**
+     * Gets the character used for identifier quoting.
+     *
+     * @return string
+     */
+    public function getIdentifierQuoteCharacter()
+    {
+        return '"';
+    }
+
+    /**
      * Gets the string portion that starts an SQL comment.
      *
      * @return string
@@ -565,6 +585,54 @@ abstract class AbstractPlatform
     public function getSqlCommentEndString()
     {
         return "\n";
+    }
+
+    /**
+     * Gets the maximum length of a char column.
+     */
+    public function getCharMaxLength(): int
+    {
+        return $this->getVarcharMaxLength();
+    }
+
+    /**
+     * Gets the maximum length of a varchar column.
+     *
+     * @return int
+     */
+    public function getVarcharMaxLength()
+    {
+        return 4000;
+    }
+
+    /**
+     * Gets the default length of a varchar column.
+     *
+     * @return int
+     */
+    public function getVarcharDefaultLength()
+    {
+        return 255;
+    }
+
+    /**
+     * Gets the maximum length of a binary column.
+     *
+     * @return int
+     */
+    public function getBinaryMaxLength()
+    {
+        return 4000;
+    }
+
+    /**
+     * Gets the default length of a binary column.
+     *
+     * @return int
+     */
+    public function getBinaryDefaultLength()
+    {
+        return 255;
     }
 
     /**
@@ -664,6 +732,8 @@ abstract class AbstractPlatform
     {
         return 'SUM(' . $column . ')';
     }
+
+    // scalar functions
 
     /**
      * Returns the SQL snippet to get the md5 sum of a column.
@@ -766,8 +836,6 @@ abstract class AbstractPlatform
 
         return 'TRIM(' . $expression . $str . ')';
     }
-
-    // scalar functions
 
     /**
      * Returns the SQL snippet to trim trailing space characters from the expression.
@@ -1022,24 +1090,6 @@ abstract class AbstractPlatform
     }
 
     /**
-     * Returns the SQL for a date arithmetic expression.
-     *
-     * @param string $date     The column or literal representing a date to perform the arithmetic operation on.
-     * @param string $operator The arithmetic operator (+ or -).
-     * @param int    $interval The interval that shall be calculated into the date.
-     * @param string $unit     The unit of the interval that shall be calculated into the date.
-     *                         One of the DATE_INTERVAL_UNIT_* constants.
-     *
-     * @return string
-     *
-     * @throws Exception If not supported on this platform.
-     */
-    protected function getDateArithmeticIntervalExpression($date, $operator, $interval, $unit)
-    {
-        throw Exception::notSupported(__METHOD__);
-    }
-
-    /**
      * Returns the SQL to subtract the number of given seconds from a date.
      *
      * @param string $date
@@ -1265,6 +1315,24 @@ abstract class AbstractPlatform
     }
 
     /**
+     * Returns the SQL for a date arithmetic expression.
+     *
+     * @param string $date     The column or literal representing a date to perform the arithmetic operation on.
+     * @param string $operator The arithmetic operator (+ or -).
+     * @param int    $interval The interval that shall be calculated into the date.
+     * @param string $unit     The unit of the interval that shall be calculated into the date.
+     *                         One of the DATE_INTERVAL_UNIT_* constants.
+     *
+     * @return string
+     *
+     * @throws Exception If not supported on this platform.
+     */
+    protected function getDateArithmeticIntervalExpression($date, $operator, $interval, $unit)
+    {
+        throw Exception::notSupported(__METHOD__);
+    }
+
+    /**
      * Returns the SQL bit AND comparison expression.
      *
      * @param string $value1
@@ -1288,6 +1356,16 @@ abstract class AbstractPlatform
     public function getBitOrComparisonExpression($value1, $value2)
     {
         return '(' . $value1 . ' | ' . $value2 . ')';
+    }
+
+    /**
+     * Returns the FOR UPDATE expression.
+     *
+     * @return string
+     */
+    public function getForUpdateSQL()
+    {
+        return 'FOR UPDATE';
     }
 
     /**
@@ -1319,16 +1397,6 @@ abstract class AbstractPlatform
     }
 
     /**
-     * Returns the FOR UPDATE expression.
-     *
-     * @return string
-     */
-    public function getForUpdateSQL()
-    {
-        return 'FOR UPDATE';
-    }
-
-    /**
      * Returns the SQL snippet to append to any SELECT statement which obtains an exclusive lock on the rows.
      *
      * The semantics of this lock mode should equal the SELECT .. FOR UPDATE of the ANSI SQL standard.
@@ -1350,18 +1418,6 @@ abstract class AbstractPlatform
     public function getDropDatabaseSQL($database)
     {
         return 'DROP DATABASE ' . $database;
-    }
-
-    /**
-     * Returns the SQL to safely drop a temporary table WITHOUT implicitly committing an open transaction.
-     *
-     * @param Table|string $table
-     *
-     * @return string
-     */
-    public function getDropTemporaryTableSQL($table)
-    {
-        return $this->getDropTableSQL($table);
     }
 
     /**
@@ -1406,6 +1462,41 @@ abstract class AbstractPlatform
     }
 
     /**
+     * Returns the SQL to safely drop a temporary table WITHOUT implicitly committing an open transaction.
+     *
+     * @param Table|string $table
+     *
+     * @return string
+     */
+    public function getDropTemporaryTableSQL($table)
+    {
+        return $this->getDropTableSQL($table);
+    }
+
+    /**
+     * Returns the SQL to drop an index from a table.
+     *
+     * @param Index|string $index
+     * @param Table|string $table
+     *
+     * @return string
+     *
+     * @throws InvalidArgumentException
+     */
+    public function getDropIndexSQL($index, $table = null)
+    {
+        if ($index instanceof Index) {
+            $index = $index->getQuotedName($this);
+        } elseif (! is_string($index)) {
+            throw new InvalidArgumentException(
+                __METHOD__ . '() expects $index parameter to be string or ' . Index::class . '.'
+            );
+        }
+
+        return 'DROP INDEX ' . $index;
+    }
+
+    /**
      * Returns the SQL to drop a constraint.
      *
      * @param Constraint|string $constraint
@@ -1427,6 +1518,30 @@ abstract class AbstractPlatform
         $table      = $table->getQuotedName($this);
 
         return 'ALTER TABLE ' . $table . ' DROP CONSTRAINT ' . $constraint;
+    }
+
+    /**
+     * Returns the SQL to drop a foreign key.
+     *
+     * @param ForeignKeyConstraint|string $foreignKey
+     * @param Table|string                $table
+     *
+     * @return string
+     */
+    public function getDropForeignKeySQL($foreignKey, $table)
+    {
+        if (! $foreignKey instanceof ForeignKeyConstraint) {
+            $foreignKey = new Identifier($foreignKey);
+        }
+
+        if (! $table instanceof Table) {
+            $table = new Identifier($table);
+        }
+
+        $foreignKey = $foreignKey->getQuotedName($this);
+        $table      = $table->getQuotedName($this);
+
+        return 'ALTER TABLE ' . $table . ' DROP FOREIGN KEY ' . $foreignKey;
     }
 
     /**
@@ -1542,46 +1657,53 @@ abstract class AbstractPlatform
         return array_merge($sql, $columnSql);
     }
 
-    /**
-     * Gets the comment of a passed column modified by potential doctrine type comment hints.
-     *
-     * @return string|null
-     */
-    protected function getColumnComment(Column $column)
+    protected function getCommentOnTableSQL(string $tableName, ?string $comment): string
     {
-        $comment = $column->getComment();
+        $tableName = new Identifier($tableName);
 
-        if ($this->isCommentedDoctrineType($column->getType())) {
-            $comment .= $this->getDoctrineTypeComment($column->getType());
-        }
-
-        return $comment;
+        return sprintf(
+            'COMMENT ON TABLE %s IS %s',
+            $tableName->getQuotedName($this),
+            $this->quoteStringLiteral((string) $comment)
+        );
     }
 
     /**
-     * Is it necessary for the platform to add a parsable type comment to allow reverse engineering the given type?
-     *
-     * @return bool
-     */
-    public function isCommentedDoctrineType(Type $doctrineType)
-    {
-        if ($this->doctrineTypeComments === null) {
-            $this->initializeCommentedDoctrineTypes();
-        }
-
-        assert(is_array($this->doctrineTypeComments));
-
-        return in_array($doctrineType->getName(), $this->doctrineTypeComments);
-    }
-
-    /**
-     * Gets the comment to append to a column comment that helps parsing this type in reverse engineering.
+     * @param string      $tableName
+     * @param string      $columnName
+     * @param string|null $comment
      *
      * @return string
      */
-    public function getDoctrineTypeComment(Type $doctrineType)
+    public function getCommentOnColumnSQL($tableName, $columnName, $comment)
     {
-        return '(DC2Type:' . $doctrineType->getName() . ')';
+        $tableName  = new Identifier($tableName);
+        $columnName = new Identifier($columnName);
+
+        return sprintf(
+            'COMMENT ON COLUMN %s.%s IS %s',
+            $tableName->getQuotedName($this),
+            $columnName->getQuotedName($this),
+            $this->quoteStringLiteral((string) $comment)
+        );
+    }
+
+    /**
+     * Returns the SQL to create inline comment on a column.
+     *
+     * @param string $comment
+     *
+     * @return string
+     *
+     * @throws Exception If not supported on this platform.
+     */
+    public function getInlineColumnCommentSQL($comment)
+    {
+        if (! $this->supportsInlineColumnComments()) {
+            throw Exception::notSupported(__METHOD__);
+        }
+
+        return 'COMMENT ' . $this->quoteStringLiteral($comment);
     }
 
     /**
@@ -1631,6 +1753,455 @@ abstract class AbstractPlatform
         }
 
         return $sql;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreateTemporaryTableSnippetSQL()
+    {
+        return 'CREATE TEMPORARY TABLE';
+    }
+
+    /**
+     * Returns the SQL to create a sequence on this platform.
+     *
+     * @return string
+     *
+     * @throws Exception If not supported on this platform.
+     */
+    public function getCreateSequenceSQL(Sequence $sequence)
+    {
+        throw Exception::notSupported(__METHOD__);
+    }
+
+    /**
+     * Returns the SQL to change a sequence on this platform.
+     *
+     * @return string
+     *
+     * @throws Exception If not supported on this platform.
+     */
+    public function getAlterSequenceSQL(Sequence $sequence)
+    {
+        throw Exception::notSupported(__METHOD__);
+    }
+
+    /**
+     * Returns the SQL to create a constraint on a table on this platform.
+     *
+     * @param Table|string $table
+     *
+     * @return string
+     *
+     * @throws InvalidArgumentException
+     */
+    public function getCreateConstraintSQL(Constraint $constraint, $table)
+    {
+        if ($table instanceof Table) {
+            $table = $table->getQuotedName($this);
+        }
+
+        $query = 'ALTER TABLE ' . $table . ' ADD CONSTRAINT ' . $constraint->getQuotedName($this);
+
+        $columnList = '(' . implode(', ', $constraint->getQuotedColumns($this)) . ')';
+
+        $referencesClause = '';
+        if ($constraint instanceof Index) {
+            if ($constraint->isPrimary()) {
+                $query .= ' PRIMARY KEY';
+            } elseif ($constraint->isUnique()) {
+                $query .= ' UNIQUE';
+            } else {
+                throw new InvalidArgumentException(
+                    'Can only create primary or unique constraints, no common indexes with getCreateConstraintSQL().'
+                );
+            }
+        } elseif ($constraint instanceof ForeignKeyConstraint) {
+            $query .= ' FOREIGN KEY';
+
+            $referencesClause = ' REFERENCES ' . $constraint->getQuotedForeignTableName($this) .
+                ' (' . implode(', ', $constraint->getQuotedForeignColumns($this)) . ')';
+        }
+
+        $query .= ' ' . $columnList . $referencesClause;
+
+        return $query;
+    }
+
+    /**
+     * Returns the SQL to create an index on a table on this platform.
+     *
+     * @param Table|string $table The name of the table on which the index is to be created.
+     *
+     * @return string
+     *
+     * @throws InvalidArgumentException
+     */
+    public function getCreateIndexSQL(Index $index, $table)
+    {
+        if ($table instanceof Table) {
+            $table = $table->getQuotedName($this);
+        }
+
+        $name    = $index->getQuotedName($this);
+        $columns = $index->getColumns();
+
+        if (count($columns) === 0) {
+            throw new InvalidArgumentException("Incomplete definition. 'columns' required.");
+        }
+
+        if ($index->isPrimary()) {
+            return $this->getCreatePrimaryKeySQL($index, $table);
+        }
+
+        $query  = 'CREATE ' . $this->getCreateIndexSQLFlags($index) . 'INDEX ' . $name . ' ON ' . $table;
+        $query .= ' (' . $this->getIndexFieldDeclarationListSQL($index) . ')' . $this->getPartialIndexSQL($index);
+
+        return $query;
+    }
+
+    /**
+     * Adds condition for partial index.
+     *
+     * @return string
+     */
+    protected function getPartialIndexSQL(Index $index)
+    {
+        if ($this->supportsPartialIndexes() && $index->hasOption('where')) {
+            return ' WHERE ' . $index->getOption('where');
+        }
+
+        return '';
+    }
+
+    /**
+     * Adds additional flags for index generation.
+     *
+     * @return string
+     */
+    protected function getCreateIndexSQLFlags(Index $index)
+    {
+        return $index->isUnique() ? 'UNIQUE ' : '';
+    }
+
+    /**
+     * Returns the SQL to create an unnamed primary key constraint.
+     *
+     * @param Table|string $table
+     *
+     * @return string
+     */
+    public function getCreatePrimaryKeySQL(Index $index, $table)
+    {
+        if ($table instanceof Table) {
+            $table = $table->getQuotedName($this);
+        }
+
+        return 'ALTER TABLE ' . $table . ' ADD PRIMARY KEY (' . $this->getIndexFieldDeclarationListSQL($index) . ')';
+    }
+
+    /**
+     * Returns the SQL to create a named schema.
+     *
+     * @param string $schemaName
+     *
+     * @return string
+     *
+     * @throws Exception If not supported on this platform.
+     */
+    public function getCreateSchemaSQL($schemaName)
+    {
+        throw Exception::notSupported(__METHOD__);
+    }
+
+    /**
+     * Quotes a string so that it can be safely used as a table or column name,
+     * even if it is a reserved word of the platform. This also detects identifier
+     * chains separated by dot and quotes them independently.
+     *
+     * NOTE: Just because you CAN use quoted identifiers doesn't mean
+     * you SHOULD use them. In general, they end up causing way more
+     * problems than they solve.
+     *
+     * @param string $str The identifier name to be quoted.
+     *
+     * @return string The quoted identifier string.
+     */
+    public function quoteIdentifier($str)
+    {
+        if (strpos($str, '.') !== false) {
+            $parts = array_map([$this, 'quoteSingleIdentifier'], explode('.', $str));
+
+            return implode('.', $parts);
+        }
+
+        return $this->quoteSingleIdentifier($str);
+    }
+
+    /**
+     * Quotes a single identifier (no dot chain separation).
+     *
+     * @param string $str The identifier name to be quoted.
+     *
+     * @return string The quoted identifier string.
+     */
+    public function quoteSingleIdentifier($str)
+    {
+        $c = $this->getIdentifierQuoteCharacter();
+
+        return $c . str_replace($c, $c . $c, $str) . $c;
+    }
+
+    /**
+     * Returns the SQL to create a new foreign key.
+     *
+     * @param ForeignKeyConstraint $foreignKey The foreign key constraint.
+     * @param Table|string         $table      The name of the table on which the foreign key is to be created.
+     *
+     * @return string
+     */
+    public function getCreateForeignKeySQL(ForeignKeyConstraint $foreignKey, $table)
+    {
+        if ($table instanceof Table) {
+            $table = $table->getQuotedName($this);
+        }
+
+        return 'ALTER TABLE ' . $table . ' ADD ' . $this->getForeignKeyDeclarationSQL($foreignKey);
+    }
+
+    /**
+     * Gets the SQL statements for altering an existing table.
+     *
+     * This method returns an array of SQL statements, since some platforms need several statements.
+     *
+     * @return string[]
+     *
+     * @throws Exception If not supported on this platform.
+     */
+    public function getAlterTableSQL(TableDiff $diff)
+    {
+        throw Exception::notSupported(__METHOD__);
+    }
+
+    /**
+     * @param mixed[] $columnSql
+     *
+     * @return bool
+     */
+    protected function onSchemaAlterTableAddColumn(Column $column, TableDiff $diff, &$columnSql)
+    {
+        if ($this->_eventManager === null) {
+            return false;
+        }
+
+        if (! $this->_eventManager->hasListeners(Events::onSchemaAlterTableAddColumn)) {
+            return false;
+        }
+
+        $eventArgs = new SchemaAlterTableAddColumnEventArgs($column, $diff, $this);
+        $this->_eventManager->dispatchEvent(Events::onSchemaAlterTableAddColumn, $eventArgs);
+
+        $columnSql = array_merge($columnSql, $eventArgs->getSql());
+
+        return $eventArgs->isDefaultPrevented();
+    }
+
+    /**
+     * @param string[] $columnSql
+     *
+     * @return bool
+     */
+    protected function onSchemaAlterTableRemoveColumn(Column $column, TableDiff $diff, &$columnSql)
+    {
+        if ($this->_eventManager === null) {
+            return false;
+        }
+
+        if (! $this->_eventManager->hasListeners(Events::onSchemaAlterTableRemoveColumn)) {
+            return false;
+        }
+
+        $eventArgs = new SchemaAlterTableRemoveColumnEventArgs($column, $diff, $this);
+        $this->_eventManager->dispatchEvent(Events::onSchemaAlterTableRemoveColumn, $eventArgs);
+
+        $columnSql = array_merge($columnSql, $eventArgs->getSql());
+
+        return $eventArgs->isDefaultPrevented();
+    }
+
+    /**
+     * @param string[] $columnSql
+     *
+     * @return bool
+     */
+    protected function onSchemaAlterTableChangeColumn(ColumnDiff $columnDiff, TableDiff $diff, &$columnSql)
+    {
+        if ($this->_eventManager === null) {
+            return false;
+        }
+
+        if (! $this->_eventManager->hasListeners(Events::onSchemaAlterTableChangeColumn)) {
+            return false;
+        }
+
+        $eventArgs = new SchemaAlterTableChangeColumnEventArgs($columnDiff, $diff, $this);
+        $this->_eventManager->dispatchEvent(Events::onSchemaAlterTableChangeColumn, $eventArgs);
+
+        $columnSql = array_merge($columnSql, $eventArgs->getSql());
+
+        return $eventArgs->isDefaultPrevented();
+    }
+
+    /**
+     * @param string   $oldColumnName
+     * @param string[] $columnSql
+     *
+     * @return bool
+     */
+    protected function onSchemaAlterTableRenameColumn($oldColumnName, Column $column, TableDiff $diff, &$columnSql)
+    {
+        if ($this->_eventManager === null) {
+            return false;
+        }
+
+        if (! $this->_eventManager->hasListeners(Events::onSchemaAlterTableRenameColumn)) {
+            return false;
+        }
+
+        $eventArgs = new SchemaAlterTableRenameColumnEventArgs($oldColumnName, $column, $diff, $this);
+        $this->_eventManager->dispatchEvent(Events::onSchemaAlterTableRenameColumn, $eventArgs);
+
+        $columnSql = array_merge($columnSql, $eventArgs->getSql());
+
+        return $eventArgs->isDefaultPrevented();
+    }
+
+    /**
+     * @param string[] $sql
+     *
+     * @return bool
+     */
+    protected function onSchemaAlterTable(TableDiff $diff, &$sql)
+    {
+        if ($this->_eventManager === null) {
+            return false;
+        }
+
+        if (! $this->_eventManager->hasListeners(Events::onSchemaAlterTable)) {
+            return false;
+        }
+
+        $eventArgs = new SchemaAlterTableEventArgs($diff, $this);
+        $this->_eventManager->dispatchEvent(Events::onSchemaAlterTable, $eventArgs);
+
+        $sql = array_merge($sql, $eventArgs->getSql());
+
+        return $eventArgs->isDefaultPrevented();
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getPreAlterTableIndexForeignKeySQL(TableDiff $diff)
+    {
+        $tableName = $diff->getName($this)->getQuotedName($this);
+
+        $sql = [];
+        if ($this->supportsForeignKeyConstraints()) {
+            foreach ($diff->removedForeignKeys as $foreignKey) {
+                $sql[] = $this->getDropForeignKeySQL($foreignKey, $tableName);
+            }
+
+            foreach ($diff->changedForeignKeys as $foreignKey) {
+                $sql[] = $this->getDropForeignKeySQL($foreignKey, $tableName);
+            }
+        }
+
+        foreach ($diff->removedIndexes as $index) {
+            $sql[] = $this->getDropIndexSQL($index, $tableName);
+        }
+
+        foreach ($diff->changedIndexes as $index) {
+            $sql[] = $this->getDropIndexSQL($index, $tableName);
+        }
+
+        return $sql;
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getPostAlterTableIndexForeignKeySQL(TableDiff $diff)
+    {
+        $sql     = [];
+        $newName = $diff->getNewName();
+
+        if ($newName !== false) {
+            $tableName = $newName->getQuotedName($this);
+        } else {
+            $tableName = $diff->getName($this)->getQuotedName($this);
+        }
+
+        if ($this->supportsForeignKeyConstraints()) {
+            foreach ($diff->addedForeignKeys as $foreignKey) {
+                $sql[] = $this->getCreateForeignKeySQL($foreignKey, $tableName);
+            }
+
+            foreach ($diff->changedForeignKeys as $foreignKey) {
+                $sql[] = $this->getCreateForeignKeySQL($foreignKey, $tableName);
+            }
+        }
+
+        foreach ($diff->addedIndexes as $index) {
+            $sql[] = $this->getCreateIndexSQL($index, $tableName);
+        }
+
+        foreach ($diff->changedIndexes as $index) {
+            $sql[] = $this->getCreateIndexSQL($index, $tableName);
+        }
+
+        foreach ($diff->renamedIndexes as $oldIndexName => $index) {
+            $oldIndexName = new Identifier($oldIndexName);
+            $sql          = array_merge(
+                $sql,
+                $this->getRenameIndexSQL($oldIndexName->getQuotedName($this), $index, $tableName)
+            );
+        }
+
+        return $sql;
+    }
+
+    /**
+     * Returns the SQL for renaming an index on a table.
+     *
+     * @param string $oldIndexName The name of the index to rename from.
+     * @param Index  $index        The definition of the index to rename to.
+     * @param string $tableName    The table to rename the given index on.
+     *
+     * @return string[] The sequence of SQL statements for renaming the given index.
+     */
+    protected function getRenameIndexSQL($oldIndexName, Index $index, $tableName)
+    {
+        return [
+            $this->getDropIndexSQL($oldIndexName, $tableName),
+            $this->getCreateIndexSQL($index, $tableName),
+        ];
+    }
+
+    /**
+     * Common code for alter table statement generation that updates the changed Index and Foreign Key definitions.
+     *
+     * @deprecated
+     *
+     * @return string[]
+     */
+    protected function _getAlterTableIndexForeignKeySQL(TableDiff $diff)
+    {
+        return array_merge(
+            $this->getPreAlterTableIndexForeignKeySQL($diff),
+            $this->getPostAlterTableIndexForeignKeySQL($diff)
+        );
     }
 
     /**
@@ -1739,17 +2310,20 @@ abstract class AbstractPlatform
     }
 
     /**
-     * Obtains SQL code portion needed to create a custom column,
-     * e.g. when a column has the "columnDefinition" keyword.
-     * Only "AUTOINCREMENT" and "PRIMARY KEY" are added if appropriate.
+     * Returns the SQL snippet that declares a floating point column of arbitrary precision.
      *
      * @param mixed[] $column
      *
      * @return string
      */
-    public function getCustomTypeDeclarationSQL(array $column)
+    public function getDecimalTypeDeclarationSQL(array $column)
     {
-        return $column['columnDefinition'];
+        $column['precision'] = ! isset($column['precision']) || empty($column['precision'])
+            ? 10 : $column['precision'];
+        $column['scale']     = ! isset($column['scale']) || empty($column['scale'])
+            ? 0 : $column['scale'];
+
+        return 'NUMERIC(' . $column['precision'] . ', ' . $column['scale'] . ')';
     }
 
     /**
@@ -1798,169 +2372,31 @@ abstract class AbstractPlatform
     }
 
     /**
-     * Returns the SQL specific for the platform to get the current timestamp
+     * Obtains DBMS specific SQL code portion needed to set a CHECK constraint
+     * declaration to be used in statements like CREATE TABLE.
      *
-     * @return string
+     * @param string[]|mixed[][] $definition The check definition.
+     *
+     * @return string DBMS specific SQL code portion needed to set a CHECK constraint.
      */
-    public function getCurrentTimestampSQL()
+    public function getCheckDeclarationSQL(array $definition)
     {
-        return 'CURRENT_TIMESTAMP';
-    }
-
-    /**
-     * Returns the SQL specific for the platform to get the current time.
-     *
-     * @return string
-     */
-    public function getCurrentTimeSQL()
-    {
-        return 'CURRENT_TIME';
-    }
-
-    /**
-     * Returns the SQL specific for the platform to get the current date.
-     *
-     * @return string
-     */
-    public function getCurrentDateSQL()
-    {
-        return 'CURRENT_DATE';
-    }
-
-    /**
-     * Some platforms need the boolean values to be converted.
-     *
-     * The default conversion in this implementation converts to integers (false => 0, true => 1).
-     *
-     * Note: if the input is not a boolean the original input might be returned.
-     *
-     * There are two contexts when converting booleans: Literals and Prepared Statements.
-     * This method should handle the literal case
-     *
-     * @param mixed $item A boolean or an array of them.
-     *
-     * @return mixed A boolean database value or an array of them.
-     */
-    public function convertBooleans($item)
-    {
-        if (is_array($item)) {
-            foreach ($item as $k => $value) {
-                if (! is_bool($value)) {
-                    continue;
+        $constraints = [];
+        foreach ($definition as $column => $def) {
+            if (is_string($def)) {
+                $constraints[] = 'CHECK (' . $def . ')';
+            } else {
+                if (isset($def['min'])) {
+                    $constraints[] = 'CHECK (' . $column . ' >= ' . $def['min'] . ')';
                 }
 
-                $item[$k] = (int) $value;
+                if (isset($def['max'])) {
+                    $constraints[] = 'CHECK (' . $column . ' <= ' . $def['max'] . ')';
+                }
             }
-        } elseif (is_bool($item)) {
-            $item = (int) $item;
         }
 
-        return $item;
-    }
-
-    /**
-     * Quotes a literal string.
-     * This method is NOT meant to fix SQL injections!
-     * It is only meant to escape this platform's string literal
-     * quote character inside the given literal string.
-     *
-     * @param string $str The literal string to be quoted.
-     *
-     * @return string The quoted literal string.
-     */
-    public function quoteStringLiteral($str)
-    {
-        $c = $this->getStringLiteralQuoteCharacter();
-
-        return $c . str_replace($c, $c . $c, $str) . $c;
-    }
-
-    /**
-     * Gets the character used for string literal quoting.
-     *
-     * @return string
-     */
-    public function getStringLiteralQuoteCharacter()
-    {
-        return "'";
-    }
-
-    /**
-     * Obtains DBMS specific SQL code portion needed to set the CHARACTER SET
-     * of a column declaration to be used in statements like CREATE TABLE.
-     *
-     * @param string $charset The name of the charset.
-     *
-     * @return string DBMS specific SQL code portion needed to set the CHARACTER SET
-     *                of a column declaration.
-     */
-    public function getColumnCharsetDeclarationSQL($charset)
-    {
-        return '';
-    }
-
-    /**
-     * Obtains DBMS specific SQL code portion needed to set the COLLATION
-     * of a column declaration to be used in statements like CREATE TABLE.
-     *
-     * @param string $collation The name of the collation.
-     *
-     * @return string DBMS specific SQL code portion needed to set the COLLATION
-     *                of a column declaration.
-     */
-    public function getColumnCollationDeclarationSQL($collation)
-    {
-        return $this->supportsColumnCollation() ? 'COLLATE ' . $collation : '';
-    }
-
-    /**
-     * Does this platform support column collation?
-     *
-     * @return bool
-     */
-    public function supportsColumnCollation()
-    {
-        return false;
-    }
-
-    /**
-     * Obtains DBMS specific SQL code portion needed to set the UNIQUE constraint
-     * of a column declaration to be used in statements like CREATE TABLE.
-     *
-     * @return string DBMS specific SQL code portion needed to set the UNIQUE constraint
-     *                of a column declaration.
-     */
-    public function getUniqueFieldDeclarationSQL()
-    {
-        return 'UNIQUE';
-    }
-
-    /**
-     * Whether this platform support to add inline column comments as postfix.
-     *
-     * @return bool
-     */
-    public function supportsInlineColumnComments()
-    {
-        return false;
-    }
-
-    /**
-     * Returns the SQL to create inline comment on a column.
-     *
-     * @param string $comment
-     *
-     * @return string
-     *
-     * @throws Exception If not supported on this platform.
-     */
-    public function getInlineColumnCommentSQL($comment)
-    {
-        if (! $this->supportsInlineColumnComments()) {
-            throw Exception::notSupported(__METHOD__);
-        }
-
-        return 'COMMENT ' . $this->quoteStringLiteral($comment);
+        return implode(', ', $constraints);
     }
 
     /**
@@ -1986,6 +2422,45 @@ abstract class AbstractPlatform
         return 'CONSTRAINT ' . $name->getQuotedName($this) . ' UNIQUE ('
             . $this->getIndexFieldDeclarationListSQL($index)
             . ')' . $this->getPartialIndexSQL($index);
+    }
+
+    /**
+     * Obtains DBMS specific SQL code portion needed to set an index
+     * declaration to be used in statements like CREATE TABLE.
+     *
+     * @param string $name  The name of the index.
+     * @param Index  $index The index definition.
+     *
+     * @return string DBMS specific SQL code portion needed to set an index.
+     *
+     * @throws InvalidArgumentException
+     */
+    public function getIndexDeclarationSQL($name, Index $index)
+    {
+        $columns = $index->getColumns();
+        $name    = new Identifier($name);
+
+        if (count($columns) === 0) {
+            throw new InvalidArgumentException("Incomplete definition. 'columns' required.");
+        }
+
+        return $this->getCreateIndexSQLFlags($index) . 'INDEX ' . $name->getQuotedName($this) . ' ('
+            . $this->getIndexFieldDeclarationListSQL($index)
+            . ')' . $this->getPartialIndexSQL($index);
+    }
+
+    /**
+     * Obtains SQL code portion needed to create a custom column,
+     * e.g. when a column has the "columnDefinition" keyword.
+     * Only "AUTOINCREMENT" and "PRIMARY KEY" are added if appropriate.
+     *
+     * @param mixed[] $column
+     *
+     * @return string
+     */
+    public function getCustomTypeDeclarationSQL(array $column)
+    {
+        return $column['columnDefinition'];
     }
 
     /**
@@ -2018,107 +2493,34 @@ abstract class AbstractPlatform
     }
 
     /**
-     * Adds condition for partial index.
+     * Returns the required SQL string that fits between CREATE ... TABLE
+     * to create the table as a temporary table.
+     *
+     * Should be overridden in driver classes to return the correct string for the
+     * specific database type.
+     *
+     * The default is to return the string "TEMPORARY" - this will result in a
+     * SQL error for any database that does not support temporary tables, or that
+     * requires a different SQL command from "CREATE TEMPORARY TABLE".
+     *
+     * @return string The string required to be placed between "CREATE" and "TABLE"
+     *                to generate a temporary table, if possible.
+     */
+    public function getTemporaryTableSQL()
+    {
+        return 'TEMPORARY';
+    }
+
+    /**
+     * Some vendors require temporary table names to be qualified specially.
+     *
+     * @param string $tableName
      *
      * @return string
      */
-    protected function getPartialIndexSQL(Index $index)
+    public function getTemporaryTableName($tableName)
     {
-        if ($this->supportsPartialIndexes() && $index->hasOption('where')) {
-            return ' WHERE ' . $index->getOption('where');
-        }
-
-        return '';
-    }
-
-    /**
-     * Whether the platform supports partial indexes.
-     *
-     * @return bool
-     */
-    public function supportsPartialIndexes()
-    {
-        return false;
-    }
-
-    /**
-     * Obtains DBMS specific SQL code portion needed to set an index
-     * declaration to be used in statements like CREATE TABLE.
-     *
-     * @param string $name  The name of the index.
-     * @param Index  $index The index definition.
-     *
-     * @return string DBMS specific SQL code portion needed to set an index.
-     *
-     * @throws InvalidArgumentException
-     */
-    public function getIndexDeclarationSQL($name, Index $index)
-    {
-        $columns = $index->getColumns();
-        $name    = new Identifier($name);
-
-        if (count($columns) === 0) {
-            throw new InvalidArgumentException("Incomplete definition. 'columns' required.");
-        }
-
-        return $this->getCreateIndexSQLFlags($index) . 'INDEX ' . $name->getQuotedName($this) . ' ('
-            . $this->getIndexFieldDeclarationListSQL($index)
-            . ')' . $this->getPartialIndexSQL($index);
-    }
-
-    /**
-     * Adds additional flags for index generation.
-     *
-     * @return string
-     */
-    protected function getCreateIndexSQLFlags(Index $index)
-    {
-        return $index->isUnique() ? 'UNIQUE ' : '';
-    }
-
-    /**
-     * Obtains DBMS specific SQL code portion needed to set a CHECK constraint
-     * declaration to be used in statements like CREATE TABLE.
-     *
-     * @param string[]|mixed[][] $definition The check definition.
-     *
-     * @return string DBMS specific SQL code portion needed to set a CHECK constraint.
-     */
-    public function getCheckDeclarationSQL(array $definition)
-    {
-        $constraints = [];
-        foreach ($definition as $column => $def) {
-            if (is_string($def)) {
-                $constraints[] = 'CHECK (' . $def . ')';
-            } else {
-                if (isset($def['min'])) {
-                    $constraints[] = 'CHECK (' . $column . ' >= ' . $def['min'] . ')';
-                }
-
-                if (isset($def['max'])) {
-                    $constraints[] = 'CHECK (' . $column . ' <= ' . $def['max'] . ')';
-                }
-            }
-        }
-
-        return implode(', ', $constraints);
-    }
-
-    /**
-     * Returns the SQL to create a new foreign key.
-     *
-     * @param ForeignKeyConstraint $foreignKey The foreign key constraint.
-     * @param Table|string         $table      The name of the table on which the foreign key is to be created.
-     *
-     * @return string
-     */
-    public function getCreateForeignKeySQL(ForeignKeyConstraint $foreignKey, $table)
-    {
-        if ($table instanceof Table) {
-            $table = $table->getQuotedName($this);
-        }
-
-        return 'ALTER TABLE ' . $table . ' ADD ' . $this->getForeignKeyDeclarationSQL($foreignKey);
+        return $tableName;
     }
 
     /**
@@ -2134,6 +2536,53 @@ abstract class AbstractPlatform
         $sql .= $this->getAdvancedForeignKeyOptionsSQL($foreignKey);
 
         return $sql;
+    }
+
+    /**
+     * Returns the FOREIGN KEY query section dealing with non-standard options
+     * as MATCH, INITIALLY DEFERRED, ON UPDATE, ...
+     *
+     * @param ForeignKeyConstraint $foreignKey The foreign key definition.
+     *
+     * @return string
+     */
+    public function getAdvancedForeignKeyOptionsSQL(ForeignKeyConstraint $foreignKey)
+    {
+        $query = '';
+        if ($this->supportsForeignKeyOnUpdate() && $foreignKey->hasOption('onUpdate')) {
+            $query .= ' ON UPDATE ' . $this->getForeignKeyReferentialActionSQL($foreignKey->getOption('onUpdate'));
+        }
+
+        if ($foreignKey->hasOption('onDelete')) {
+            $query .= ' ON DELETE ' . $this->getForeignKeyReferentialActionSQL($foreignKey->getOption('onDelete'));
+        }
+
+        return $query;
+    }
+
+    /**
+     * Returns the given referential action in uppercase if valid, otherwise throws an exception.
+     *
+     * @param string $action The foreign key referential action.
+     *
+     * @return string
+     *
+     * @throws InvalidArgumentException If unknown referential action given.
+     */
+    public function getForeignKeyReferentialActionSQL($action)
+    {
+        $upper = strtoupper($action);
+        switch ($upper) {
+            case 'CASCADE':
+            case 'SET NULL':
+            case 'NO ACTION':
+            case 'RESTRICT':
+            case 'SET DEFAULT':
+                return $upper;
+
+            default:
+                throw new InvalidArgumentException('Invalid foreign key action: ' . $upper);
+        }
     }
 
     /**
@@ -2172,317 +2621,43 @@ abstract class AbstractPlatform
     }
 
     /**
-     * Returns the FOREIGN KEY query section dealing with non-standard options
-     * as MATCH, INITIALLY DEFERRED, ON UPDATE, ...
+     * Obtains DBMS specific SQL code portion needed to set the UNIQUE constraint
+     * of a column declaration to be used in statements like CREATE TABLE.
      *
-     * @param ForeignKeyConstraint $foreignKey The foreign key definition.
-     *
-     * @return string
+     * @return string DBMS specific SQL code portion needed to set the UNIQUE constraint
+     *                of a column declaration.
      */
-    public function getAdvancedForeignKeyOptionsSQL(ForeignKeyConstraint $foreignKey)
+    public function getUniqueFieldDeclarationSQL()
     {
-        $query = '';
-        if ($this->supportsForeignKeyOnUpdate() && $foreignKey->hasOption('onUpdate')) {
-            $query .= ' ON UPDATE ' . $this->getForeignKeyReferentialActionSQL($foreignKey->getOption('onUpdate'));
-        }
-
-        if ($foreignKey->hasOption('onDelete')) {
-            $query .= ' ON DELETE ' . $this->getForeignKeyReferentialActionSQL($foreignKey->getOption('onDelete'));
-        }
-
-        return $query;
+        return 'UNIQUE';
     }
 
     /**
-     * Whether this platform supports onUpdate in foreign key constraints.
+     * Obtains DBMS specific SQL code portion needed to set the CHARACTER SET
+     * of a column declaration to be used in statements like CREATE TABLE.
      *
-     * @deprecated
+     * @param string $charset The name of the charset.
      *
-     * @return bool
+     * @return string DBMS specific SQL code portion needed to set the CHARACTER SET
+     *                of a column declaration.
      */
-    public function supportsForeignKeyOnUpdate()
+    public function getColumnCharsetDeclarationSQL($charset)
     {
-        Deprecation::trigger(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/4229',
-            'AbstractPlatform::supportsForeignKeyOnUpdate() is deprecated without replacement and removed in DBAL 3.0'
-        );
-
-        return $this->supportsForeignKeyConstraints();
+        return '';
     }
 
     /**
-     * Whether the platform supports foreign key constraints.
+     * Obtains DBMS specific SQL code portion needed to set the COLLATION
+     * of a column declaration to be used in statements like CREATE TABLE.
      *
-     * @return bool
+     * @param string $collation The name of the collation.
+     *
+     * @return string DBMS specific SQL code portion needed to set the COLLATION
+     *                of a column declaration.
      */
-    public function supportsForeignKeyConstraints()
+    public function getColumnCollationDeclarationSQL($collation)
     {
-        return true;
-    }
-
-    /**
-     * Returns the given referential action in uppercase if valid, otherwise throws an exception.
-     *
-     * @param string $action The foreign key referential action.
-     *
-     * @return string
-     *
-     * @throws InvalidArgumentException If unknown referential action given.
-     */
-    public function getForeignKeyReferentialActionSQL($action)
-    {
-        $upper = strtoupper($action);
-        switch ($upper) {
-            case 'CASCADE':
-            case 'SET NULL':
-            case 'NO ACTION':
-            case 'RESTRICT':
-            case 'SET DEFAULT':
-                return $upper;
-
-            default:
-                throw new InvalidArgumentException('Invalid foreign key action: ' . $upper);
-        }
-    }
-
-    /**
-     * Whether this platform support the proprietary syntax "COMMENT ON asset".
-     *
-     * @return bool
-     */
-    public function supportsCommentOnStatement()
-    {
-        return false;
-    }
-
-    protected function getCommentOnTableSQL(string $tableName, ?string $comment): string
-    {
-        $tableName = new Identifier($tableName);
-
-        return sprintf(
-            'COMMENT ON TABLE %s IS %s',
-            $tableName->getQuotedName($this),
-            $this->quoteStringLiteral((string) $comment)
-        );
-    }
-
-    /**
-     * @param string      $tableName
-     * @param string      $columnName
-     * @param string|null $comment
-     *
-     * @return string
-     */
-    public function getCommentOnColumnSQL($tableName, $columnName, $comment)
-    {
-        $tableName  = new Identifier($tableName);
-        $columnName = new Identifier($columnName);
-
-        return sprintf(
-            'COMMENT ON COLUMN %s.%s IS %s',
-            $tableName->getQuotedName($this),
-            $columnName->getQuotedName($this),
-            $this->quoteStringLiteral((string) $comment)
-        );
-    }
-
-    /**
-     * @return string
-     */
-    public function getCreateTemporaryTableSnippetSQL()
-    {
-        return 'CREATE TEMPORARY TABLE';
-    }
-
-    /**
-     * Returns the SQL to create a sequence on this platform.
-     *
-     * @return string
-     *
-     * @throws Exception If not supported on this platform.
-     */
-    public function getCreateSequenceSQL(Sequence $sequence)
-    {
-        throw Exception::notSupported(__METHOD__);
-    }
-
-    /**
-     * Returns the SQL to change a sequence on this platform.
-     *
-     * @return string
-     *
-     * @throws Exception If not supported on this platform.
-     */
-    public function getAlterSequenceSQL(Sequence $sequence)
-    {
-        throw Exception::notSupported(__METHOD__);
-    }
-
-    /**
-     * Returns the SQL to create a constraint on a table on this platform.
-     *
-     * @param Table|string $table
-     *
-     * @return string
-     *
-     * @throws InvalidArgumentException
-     */
-    public function getCreateConstraintSQL(Constraint $constraint, $table)
-    {
-        if ($table instanceof Table) {
-            $table = $table->getQuotedName($this);
-        }
-
-        $query = 'ALTER TABLE ' . $table . ' ADD CONSTRAINT ' . $constraint->getQuotedName($this);
-
-        $columnList = '(' . implode(', ', $constraint->getQuotedColumns($this)) . ')';
-
-        $referencesClause = '';
-        if ($constraint instanceof Index) {
-            if ($constraint->isPrimary()) {
-                $query .= ' PRIMARY KEY';
-            } elseif ($constraint->isUnique()) {
-                $query .= ' UNIQUE';
-            } else {
-                throw new InvalidArgumentException(
-                    'Can only create primary or unique constraints, no common indexes with getCreateConstraintSQL().'
-                );
-            }
-        } elseif ($constraint instanceof ForeignKeyConstraint) {
-            $query .= ' FOREIGN KEY';
-
-            $referencesClause = ' REFERENCES ' . $constraint->getQuotedForeignTableName($this) .
-                ' (' . implode(', ', $constraint->getQuotedForeignColumns($this)) . ')';
-        }
-
-        $query .= ' ' . $columnList . $referencesClause;
-
-        return $query;
-    }
-
-    /**
-     * Returns the SQL to create a named schema.
-     *
-     * @param string $schemaName
-     *
-     * @return string
-     *
-     * @throws Exception If not supported on this platform.
-     */
-    public function getCreateSchemaSQL($schemaName)
-    {
-        throw Exception::notSupported(__METHOD__);
-    }
-
-    /**
-     * Quotes a string so that it can be safely used as a table or column name,
-     * even if it is a reserved word of the platform. This also detects identifier
-     * chains separated by dot and quotes them independently.
-     *
-     * NOTE: Just because you CAN use quoted identifiers doesn't mean
-     * you SHOULD use them. In general, they end up causing way more
-     * problems than they solve.
-     *
-     * @param string $str The identifier name to be quoted.
-     *
-     * @return string The quoted identifier string.
-     */
-    public function quoteIdentifier($str)
-    {
-        if (strpos($str, '.') !== false) {
-            $parts = array_map([$this, 'quoteSingleIdentifier'], explode('.', $str));
-
-            return implode('.', $parts);
-        }
-
-        return $this->quoteSingleIdentifier($str);
-    }
-
-    /**
-     * Quotes a single identifier (no dot chain separation).
-     *
-     * @param string $str The identifier name to be quoted.
-     *
-     * @return string The quoted identifier string.
-     */
-    public function quoteSingleIdentifier($str)
-    {
-        $c = $this->getIdentifierQuoteCharacter();
-
-        return $c . str_replace($c, $c . $c, $str) . $c;
-    }
-
-    /**
-     * Gets the character used for identifier quoting.
-     *
-     * @return string
-     */
-    public function getIdentifierQuoteCharacter()
-    {
-        return '"';
-    }
-
-    /**
-     * Gets the SQL statements for altering an existing table.
-     *
-     * This method returns an array of SQL statements, since some platforms need several statements.
-     *
-     * @return string[]
-     *
-     * @throws Exception If not supported on this platform.
-     */
-    public function getAlterTableSQL(TableDiff $diff)
-    {
-        throw Exception::notSupported(__METHOD__);
-    }
-
-    /**
-     * Returns the SQL snippet that declares a floating point column of arbitrary precision.
-     *
-     * @param mixed[] $column
-     *
-     * @return string
-     */
-    public function getDecimalTypeDeclarationSQL(array $column)
-    {
-        $column['precision'] = ! isset($column['precision']) || empty($column['precision'])
-            ? 10 : $column['precision'];
-        $column['scale']     = ! isset($column['scale']) || empty($column['scale'])
-            ? 0 : $column['scale'];
-
-        return 'NUMERIC(' . $column['precision'] . ', ' . $column['scale'] . ')';
-    }
-
-    /**
-     * Returns the required SQL string that fits between CREATE ... TABLE
-     * to create the table as a temporary table.
-     *
-     * Should be overridden in driver classes to return the correct string for the
-     * specific database type.
-     *
-     * The default is to return the string "TEMPORARY" - this will result in a
-     * SQL error for any database that does not support temporary tables, or that
-     * requires a different SQL command from "CREATE TEMPORARY TABLE".
-     *
-     * @return string The string required to be placed between "CREATE" and "TABLE"
-     *                to generate a temporary table, if possible.
-     */
-    public function getTemporaryTableSQL()
-    {
-        return 'TEMPORARY';
-    }
-
-    /**
-     * Some vendors require temporary table names to be qualified specially.
-     *
-     * @param string $tableName
-     *
-     * @return string
-     */
-    public function getTemporaryTableName($tableName)
-    {
-        return $tableName;
+        return $this->supportsColumnCollation() ? 'COLLATE ' . $collation : '';
     }
 
     /**
@@ -2516,6 +2691,37 @@ abstract class AbstractPlatform
     }
 
     /**
+     * Some platforms need the boolean values to be converted.
+     *
+     * The default conversion in this implementation converts to integers (false => 0, true => 1).
+     *
+     * Note: if the input is not a boolean the original input might be returned.
+     *
+     * There are two contexts when converting booleans: Literals and Prepared Statements.
+     * This method should handle the literal case
+     *
+     * @param mixed $item A boolean or an array of them.
+     *
+     * @return mixed A boolean database value or an array of them.
+     */
+    public function convertBooleans($item)
+    {
+        if (is_array($item)) {
+            foreach ($item as $k => $value) {
+                if (! is_bool($value)) {
+                    continue;
+                }
+
+                $item[$k] = (int) $value;
+            }
+        } elseif (is_bool($item)) {
+            $item = (int) $item;
+        }
+
+        return $item;
+    }
+
+    /**
      * Some platforms have boolean literals that needs to be correctly converted
      *
      * The default conversion tries to convert value into bool "(bool)$item"
@@ -2542,6 +2748,65 @@ abstract class AbstractPlatform
     public function convertBooleansToDatabaseValue($item)
     {
         return $this->convertBooleans($item);
+    }
+
+    /**
+     * Returns the SQL specific for the platform to get the current date.
+     *
+     * @return string
+     */
+    public function getCurrentDateSQL()
+    {
+        return 'CURRENT_DATE';
+    }
+
+    /**
+     * Returns the SQL specific for the platform to get the current time.
+     *
+     * @return string
+     */
+    public function getCurrentTimeSQL()
+    {
+        return 'CURRENT_TIME';
+    }
+
+    /**
+     * Returns the SQL specific for the platform to get the current timestamp
+     *
+     * @return string
+     */
+    public function getCurrentTimestampSQL()
+    {
+        return 'CURRENT_TIMESTAMP';
+    }
+
+    /**
+     * Returns the SQL for a given transaction isolation level Connection constant.
+     *
+     * @param int $level
+     *
+     * @return string
+     *
+     * @throws InvalidArgumentException
+     */
+    protected function _getTransactionIsolationLevelSQL($level)
+    {
+        switch ($level) {
+            case TransactionIsolationLevel::READ_UNCOMMITTED:
+                return 'READ UNCOMMITTED';
+
+            case TransactionIsolationLevel::READ_COMMITTED:
+                return 'READ COMMITTED';
+
+            case TransactionIsolationLevel::REPEATABLE_READ:
+                return 'REPEATABLE READ';
+
+            case TransactionIsolationLevel::SERIALIZABLE:
+                return 'SERIALIZABLE';
+
+            default:
+                throw new InvalidArgumentException('Invalid isolation level:' . $level);
+        }
     }
 
     /**
@@ -2751,18 +3016,6 @@ abstract class AbstractPlatform
     }
 
     /**
-     * Obtains DBMS specific SQL to be used to create datetime with timezone offset columns.
-     *
-     * @param mixed[] $column
-     *
-     * @return string
-     */
-    public function getDateTimeTzTypeDeclarationSQL(array $column)
-    {
-        return $this->getDateTimeTypeDeclarationSQL($column);
-    }
-
-    /**
      * Obtains DBMS specific SQL to be used to create datetime columns in
      * statements like CREATE TABLE.
      *
@@ -2775,6 +3028,18 @@ abstract class AbstractPlatform
     public function getDateTimeTypeDeclarationSQL(array $column)
     {
         throw Exception::notSupported(__METHOD__);
+    }
+
+    /**
+     * Obtains DBMS specific SQL to be used to create datetime with timezone offset columns.
+     *
+     * @param mixed[] $column
+     *
+     * @return string
+     */
+    public function getDateTimeTzTypeDeclarationSQL(array $column)
+    {
+        return $this->getDateTimeTypeDeclarationSQL($column);
     }
 
     /**
@@ -2828,6 +3093,8 @@ abstract class AbstractPlatform
     {
         return TransactionIsolationLevel::READ_COMMITTED;
     }
+
+    /* supports*() methods */
 
     /**
      * Whether the platform supports sequences.
@@ -2894,6 +3161,16 @@ abstract class AbstractPlatform
     }
 
     /**
+     * Whether the platform supports partial indexes.
+     *
+     * @return bool
+     */
+    public function supportsPartialIndexes()
+    {
+        return false;
+    }
+
+    /**
      * Whether the platform supports indexes with column length definitions.
      */
     public function supportsColumnLengthIndexes(): bool
@@ -2921,7 +3198,15 @@ abstract class AbstractPlatform
         return true;
     }
 
-    /* supports*() methods */
+    /**
+     * Whether the platform supports savepoints.
+     *
+     * @return bool
+     */
+    public function supportsSavepoints()
+    {
+        return true;
+    }
 
     /**
      * Whether the platform supports releasing savepoints.
@@ -2934,16 +3219,6 @@ abstract class AbstractPlatform
     }
 
     /**
-     * Whether the platform supports savepoints.
-     *
-     * @return bool
-     */
-    public function supportsSavepoints()
-    {
-        return true;
-    }
-
-    /**
      * Whether the platform supports primary key constraints.
      *
      * @return bool
@@ -2951,6 +3226,34 @@ abstract class AbstractPlatform
     public function supportsPrimaryConstraints()
     {
         return true;
+    }
+
+    /**
+     * Whether the platform supports foreign key constraints.
+     *
+     * @return bool
+     */
+    public function supportsForeignKeyConstraints()
+    {
+        return true;
+    }
+
+    /**
+     * Whether this platform supports onUpdate in foreign key constraints.
+     *
+     * @deprecated
+     *
+     * @return bool
+     */
+    public function supportsForeignKeyOnUpdate()
+    {
+        Deprecation::trigger(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/pull/4229',
+            'AbstractPlatform::supportsForeignKeyOnUpdate() is deprecated without replacement and removed in DBAL 3.0'
+        );
+
+        return $this->supportsForeignKeyConstraints();
     }
 
     /**
@@ -3011,6 +3314,26 @@ abstract class AbstractPlatform
     }
 
     /**
+     * Whether this platform support to add inline column comments as postfix.
+     *
+     * @return bool
+     */
+    public function supportsInlineColumnComments()
+    {
+        return false;
+    }
+
+    /**
+     * Whether this platform support the proprietary syntax "COMMENT ON asset".
+     *
+     * @return bool
+     */
+    public function supportsCommentOnStatement()
+    {
+        return false;
+    }
+
+    /**
      * Does this platform have native guid type.
      *
      * @return bool
@@ -3050,6 +3373,16 @@ abstract class AbstractPlatform
     public function supportsViews()
     {
         return true;
+    }
+
+    /**
+     * Does this platform support column collation?
+     *
+     * @return bool
+     */
+    public function supportsColumnCollation()
+    {
+        return false;
     }
 
     /**
@@ -3133,23 +3466,6 @@ abstract class AbstractPlatform
     }
 
     /**
-     * Whether the database platform support offsets in modify limit clauses.
-     *
-     * @return bool
-     */
-    public function supportsLimitOffset()
-    {
-        return true;
-    }
-
-    /**
-     * Gets the name of the platform.
-     *
-     * @return string
-     */
-    abstract public function getName();
-
-    /**
      * Adds an platform-specific LIMIT clause to the query.
      *
      * @param string   $query
@@ -3169,6 +3485,16 @@ abstract class AbstractPlatform
         }
 
         return $query;
+    }
+
+    /**
+     * Whether the database platform support offsets in modify limit clauses.
+     *
+     * @return bool
+     */
+    public function supportsLimitOffset()
+    {
+        return true;
     }
 
     /**
@@ -3343,6 +3669,33 @@ abstract class AbstractPlatform
     }
 
     /**
+     * Quotes a literal string.
+     * This method is NOT meant to fix SQL injections!
+     * It is only meant to escape this platform's string literal
+     * quote character inside the given literal string.
+     *
+     * @param string $str The literal string to be quoted.
+     *
+     * @return string The quoted literal string.
+     */
+    public function quoteStringLiteral($str)
+    {
+        $c = $this->getStringLiteralQuoteCharacter();
+
+        return $c . str_replace($c, $c . $c, $str) . $c;
+    }
+
+    /**
+     * Gets the character used for string literal quoting.
+     *
+     * @return string
+     */
+    public function getStringLiteralQuoteCharacter()
+    {
+        return "'";
+    }
+
+    /**
      * Escapes metacharacters in a string intended to be used with a LIKE
      * operator.
      *
@@ -3362,358 +3715,5 @@ abstract class AbstractPlatform
     protected function getLikeWildcardCharacters(): string
     {
         return '%_';
-    }
-
-    /**
-     * Returns the SQL snippet that declares common properties of an integer column.
-     *
-     * @param mixed[] $column
-     *
-     * @return string
-     */
-    abstract protected function _getCommonIntegerTypeDeclarationSQL(array $column);
-
-    /**
-     * @param mixed[] $columnSql
-     *
-     * @return bool
-     */
-    protected function onSchemaAlterTableAddColumn(Column $column, TableDiff $diff, &$columnSql)
-    {
-        if ($this->_eventManager === null) {
-            return false;
-        }
-
-        if (! $this->_eventManager->hasListeners(Events::onSchemaAlterTableAddColumn)) {
-            return false;
-        }
-
-        $eventArgs = new SchemaAlterTableAddColumnEventArgs($column, $diff, $this);
-        $this->_eventManager->dispatchEvent(Events::onSchemaAlterTableAddColumn, $eventArgs);
-
-        $columnSql = array_merge($columnSql, $eventArgs->getSql());
-
-        return $eventArgs->isDefaultPrevented();
-    }
-
-    /**
-     * @param string[] $columnSql
-     *
-     * @return bool
-     */
-    protected function onSchemaAlterTableRemoveColumn(Column $column, TableDiff $diff, &$columnSql)
-    {
-        if ($this->_eventManager === null) {
-            return false;
-        }
-
-        if (! $this->_eventManager->hasListeners(Events::onSchemaAlterTableRemoveColumn)) {
-            return false;
-        }
-
-        $eventArgs = new SchemaAlterTableRemoveColumnEventArgs($column, $diff, $this);
-        $this->_eventManager->dispatchEvent(Events::onSchemaAlterTableRemoveColumn, $eventArgs);
-
-        $columnSql = array_merge($columnSql, $eventArgs->getSql());
-
-        return $eventArgs->isDefaultPrevented();
-    }
-
-    /**
-     * @param string[] $columnSql
-     *
-     * @return bool
-     */
-    protected function onSchemaAlterTableChangeColumn(ColumnDiff $columnDiff, TableDiff $diff, &$columnSql)
-    {
-        if ($this->_eventManager === null) {
-            return false;
-        }
-
-        if (! $this->_eventManager->hasListeners(Events::onSchemaAlterTableChangeColumn)) {
-            return false;
-        }
-
-        $eventArgs = new SchemaAlterTableChangeColumnEventArgs($columnDiff, $diff, $this);
-        $this->_eventManager->dispatchEvent(Events::onSchemaAlterTableChangeColumn, $eventArgs);
-
-        $columnSql = array_merge($columnSql, $eventArgs->getSql());
-
-        return $eventArgs->isDefaultPrevented();
-    }
-
-    /**
-     * @param string   $oldColumnName
-     * @param string[] $columnSql
-     *
-     * @return bool
-     */
-    protected function onSchemaAlterTableRenameColumn($oldColumnName, Column $column, TableDiff $diff, &$columnSql)
-    {
-        if ($this->_eventManager === null) {
-            return false;
-        }
-
-        if (! $this->_eventManager->hasListeners(Events::onSchemaAlterTableRenameColumn)) {
-            return false;
-        }
-
-        $eventArgs = new SchemaAlterTableRenameColumnEventArgs($oldColumnName, $column, $diff, $this);
-        $this->_eventManager->dispatchEvent(Events::onSchemaAlterTableRenameColumn, $eventArgs);
-
-        $columnSql = array_merge($columnSql, $eventArgs->getSql());
-
-        return $eventArgs->isDefaultPrevented();
-    }
-
-    /**
-     * @param string[] $sql
-     *
-     * @return bool
-     */
-    protected function onSchemaAlterTable(TableDiff $diff, &$sql)
-    {
-        if ($this->_eventManager === null) {
-            return false;
-        }
-
-        if (! $this->_eventManager->hasListeners(Events::onSchemaAlterTable)) {
-            return false;
-        }
-
-        $eventArgs = new SchemaAlterTableEventArgs($diff, $this);
-        $this->_eventManager->dispatchEvent(Events::onSchemaAlterTable, $eventArgs);
-
-        $sql = array_merge($sql, $eventArgs->getSql());
-
-        return $eventArgs->isDefaultPrevented();
-    }
-
-    /**
-     * Common code for alter table statement generation that updates the changed Index and Foreign Key definitions.
-     *
-     * @deprecated
-     *
-     * @return string[]
-     */
-    protected function _getAlterTableIndexForeignKeySQL(TableDiff $diff)
-    {
-        return array_merge(
-            $this->getPreAlterTableIndexForeignKeySQL($diff),
-            $this->getPostAlterTableIndexForeignKeySQL($diff)
-        );
-    }
-
-    /**
-     * @return string[]
-     */
-    protected function getPreAlterTableIndexForeignKeySQL(TableDiff $diff)
-    {
-        $tableName = $diff->getName($this)->getQuotedName($this);
-
-        $sql = [];
-        if ($this->supportsForeignKeyConstraints()) {
-            foreach ($diff->removedForeignKeys as $foreignKey) {
-                $sql[] = $this->getDropForeignKeySQL($foreignKey, $tableName);
-            }
-
-            foreach ($diff->changedForeignKeys as $foreignKey) {
-                $sql[] = $this->getDropForeignKeySQL($foreignKey, $tableName);
-            }
-        }
-
-        foreach ($diff->removedIndexes as $index) {
-            $sql[] = $this->getDropIndexSQL($index, $tableName);
-        }
-
-        foreach ($diff->changedIndexes as $index) {
-            $sql[] = $this->getDropIndexSQL($index, $tableName);
-        }
-
-        return $sql;
-    }
-
-    /**
-     * Returns the SQL to drop a foreign key.
-     *
-     * @param ForeignKeyConstraint|string $foreignKey
-     * @param Table|string                $table
-     *
-     * @return string
-     */
-    public function getDropForeignKeySQL($foreignKey, $table)
-    {
-        if (! $foreignKey instanceof ForeignKeyConstraint) {
-            $foreignKey = new Identifier($foreignKey);
-        }
-
-        if (! $table instanceof Table) {
-            $table = new Identifier($table);
-        }
-
-        $foreignKey = $foreignKey->getQuotedName($this);
-        $table      = $table->getQuotedName($this);
-
-        return 'ALTER TABLE ' . $table . ' DROP FOREIGN KEY ' . $foreignKey;
-    }
-
-    /**
-     * Returns the SQL to drop an index from a table.
-     *
-     * @param Index|string $index
-     * @param Table|string $table
-     *
-     * @return string
-     *
-     * @throws InvalidArgumentException
-     */
-    public function getDropIndexSQL($index, $table = null)
-    {
-        if ($index instanceof Index) {
-            $index = $index->getQuotedName($this);
-        } elseif (! is_string($index)) {
-            throw new InvalidArgumentException(
-                __METHOD__ . '() expects $index parameter to be string or ' . Index::class . '.'
-            );
-        }
-
-        return 'DROP INDEX ' . $index;
-    }
-
-    /**
-     * @return string[]
-     */
-    protected function getPostAlterTableIndexForeignKeySQL(TableDiff $diff)
-    {
-        $sql     = [];
-        $newName = $diff->getNewName();
-
-        if ($newName !== false) {
-            $tableName = $newName->getQuotedName($this);
-        } else {
-            $tableName = $diff->getName($this)->getQuotedName($this);
-        }
-
-        if ($this->supportsForeignKeyConstraints()) {
-            foreach ($diff->addedForeignKeys as $foreignKey) {
-                $sql[] = $this->getCreateForeignKeySQL($foreignKey, $tableName);
-            }
-
-            foreach ($diff->changedForeignKeys as $foreignKey) {
-                $sql[] = $this->getCreateForeignKeySQL($foreignKey, $tableName);
-            }
-        }
-
-        foreach ($diff->addedIndexes as $index) {
-            $sql[] = $this->getCreateIndexSQL($index, $tableName);
-        }
-
-        foreach ($diff->changedIndexes as $index) {
-            $sql[] = $this->getCreateIndexSQL($index, $tableName);
-        }
-
-        foreach ($diff->renamedIndexes as $oldIndexName => $index) {
-            $oldIndexName = new Identifier($oldIndexName);
-            $sql          = array_merge(
-                $sql,
-                $this->getRenameIndexSQL($oldIndexName->getQuotedName($this), $index, $tableName)
-            );
-        }
-
-        return $sql;
-    }
-
-    /**
-     * Returns the SQL to create an index on a table on this platform.
-     *
-     * @param Table|string $table The name of the table on which the index is to be created.
-     *
-     * @return string
-     *
-     * @throws InvalidArgumentException
-     */
-    public function getCreateIndexSQL(Index $index, $table)
-    {
-        if ($table instanceof Table) {
-            $table = $table->getQuotedName($this);
-        }
-
-        $name    = $index->getQuotedName($this);
-        $columns = $index->getColumns();
-
-        if (count($columns) === 0) {
-            throw new InvalidArgumentException("Incomplete definition. 'columns' required.");
-        }
-
-        if ($index->isPrimary()) {
-            return $this->getCreatePrimaryKeySQL($index, $table);
-        }
-
-        $query  = 'CREATE ' . $this->getCreateIndexSQLFlags($index) . 'INDEX ' . $name . ' ON ' . $table;
-        $query .= ' (' . $this->getIndexFieldDeclarationListSQL($index) . ')' . $this->getPartialIndexSQL($index);
-
-        return $query;
-    }
-
-    /**
-     * Returns the SQL to create an unnamed primary key constraint.
-     *
-     * @param Table|string $table
-     *
-     * @return string
-     */
-    public function getCreatePrimaryKeySQL(Index $index, $table)
-    {
-        if ($table instanceof Table) {
-            $table = $table->getQuotedName($this);
-        }
-
-        return 'ALTER TABLE ' . $table . ' ADD PRIMARY KEY (' . $this->getIndexFieldDeclarationListSQL($index) . ')';
-    }
-
-    /**
-     * Returns the SQL for renaming an index on a table.
-     *
-     * @param string $oldIndexName The name of the index to rename from.
-     * @param Index  $index        The definition of the index to rename to.
-     * @param string $tableName    The table to rename the given index on.
-     *
-     * @return string[] The sequence of SQL statements for renaming the given index.
-     */
-    protected function getRenameIndexSQL($oldIndexName, Index $index, $tableName)
-    {
-        return [
-            $this->getDropIndexSQL($oldIndexName, $tableName),
-            $this->getCreateIndexSQL($index, $tableName),
-        ];
-    }
-
-    /**
-     * Returns the SQL for a given transaction isolation level Connection constant.
-     *
-     * @param int $level
-     *
-     * @return string
-     *
-     * @throws InvalidArgumentException
-     */
-    protected function _getTransactionIsolationLevelSQL($level)
-    {
-        switch ($level) {
-            case TransactionIsolationLevel::READ_UNCOMMITTED:
-                return 'READ UNCOMMITTED';
-
-            case TransactionIsolationLevel::READ_COMMITTED:
-                return 'READ COMMITTED';
-
-            case TransactionIsolationLevel::REPEATABLE_READ:
-                return 'REPEATABLE READ';
-
-            case TransactionIsolationLevel::SERIALIZABLE:
-                return 'SERIALIZABLE';
-
-            default:
-                throw new InvalidArgumentException('Invalid isolation level:' . $level);
-        }
     }
 }

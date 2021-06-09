@@ -23,11 +23,6 @@ class FulfilledPromise implements PromiseInterface
         $this->value = $value;
     }
 
-    public function otherwise(callable $onRejected)
-    {
-        return $this->then(null, $onRejected);
-    }
-
     public function then(
         callable $onFulfilled = null,
         callable $onRejected = null
@@ -53,6 +48,11 @@ class FulfilledPromise implements PromiseInterface
         });
 
         return $p;
+    }
+
+    public function otherwise(callable $onRejected)
+    {
+        return $this->then(null, $onRejected);
     }
 
     public function wait($unwrap = true, $defaultDelivery = null)

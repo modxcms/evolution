@@ -353,18 +353,6 @@ EOT
     }
 
     /**
-     * @return string|false
-     */
-    private static function idnToAsci(string $domain, int $options, ?array &$info = [])
-    {
-        if (\function_exists('idn_to_ascii') && \defined('INTL_IDNA_VARIANT_UTS46')) {
-            return \idn_to_ascii($domain, $options, \INTL_IDNA_VARIANT_UTS46, $info);
-        }
-
-        throw new \Error('ext-idn or symfony/polyfill-intl-idn not loaded or too old');
-    }
-
-    /**
      * @internal
      */
     public static function getenv(string $name): ?string
@@ -378,5 +366,17 @@ EOT
         }
 
         return null;
+    }
+
+    /**
+     * @return string|false
+     */
+    private static function idnToAsci(string $domain, int $options, ?array &$info = [])
+    {
+        if (\function_exists('idn_to_ascii') && \defined('INTL_IDNA_VARIANT_UTS46')) {
+            return \idn_to_ascii($domain, $options, \INTL_IDNA_VARIANT_UTS46, $info);
+        }
+
+        throw new \Error('ext-idn or symfony/polyfill-intl-idn not loaded or too old');
     }
 }

@@ -108,6 +108,22 @@ class Locker
     }
 
     /**
+     * Checks whether locker has been locked (lockfile found).
+     *
+     * @return bool
+     */
+    public function isLocked()
+    {
+        if (!$this->virtualFileWritten && !$this->lockFile->exists()) {
+            return false;
+        }
+
+        $data = $this->getLockData();
+
+        return isset($data['packages']);
+    }
+
+    /**
      * Checks whether the lock file is still up to date with the current hash
      *
      * @return bool
@@ -185,19 +201,6 @@ class Locker
         }
 
         throw new \RuntimeException('Your composer.lock is invalid. Run "composer update" to generate a new one.');
-    }
-
-    public function getLockData()
-    {
-        if (null !== $this->lockDataCache) {
-            return $this->lockDataCache;
-        }
-
-        if (!$this->lockFile->exists()) {
-            throw new \LogicException('No lockfile found. Unable to read locked packages');
-        }
-
-        return $this->lockDataCache = $this->lockFile->read();
     }
 
     /**
@@ -294,6 +297,19 @@ class Locker
         $lockData = $this->getLockData();
 
         return isset($lockData['aliases']) ? $lockData['aliases'] : array();
+    }
+
+    public function getLockData()
+    {
+        if (null !== $this->lockDataCache) {
+            return $this->lockDataCache;
+        }
+
+        if (!$this->lockFile->exists()) {
+            throw new \LogicException('No lockfile found. Unable to read locked packages');
+        }
+
+        return $this->lockDataCache = $this->lockFile->read();
     }
 
     /**
@@ -460,21 +476,5 @@ class Locker
         }
 
         return $datetime ? $datetime->format(DATE_RFC3339) : null;
-    }
-
-    /**
-     * Checks whether locker has been locked (lockfile found).
-     *
-     * @return bool
-     */
-    public function isLocked()
-    {
-        if (!$this->virtualFileWritten && !$this->lockFile->exists()) {
-            return false;
-        }
-
-        $data = $this->getLockData();
-
-        return isset($data['packages']);
     }
 }

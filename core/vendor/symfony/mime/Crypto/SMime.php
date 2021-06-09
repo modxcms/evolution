@@ -62,6 +62,13 @@ abstract class SMime
         return new SMimePart($this->getStreamIterator($stream), $type, $subtype, $this->getParametersFromHeader($headers['content-type']));
     }
 
+    protected function getStreamIterator($stream): iterable
+    {
+        while (!feof($stream)) {
+            yield str_replace("\n", "\r\n", str_replace("\r\n", "\n", fread($stream, 16372)));
+        }
+    }
+
     private function getMessageHeaders(string $headerData): array
     {
         $headers = [];
@@ -87,13 +94,6 @@ abstract class SMime
         }
 
         return $headers;
-    }
-
-    protected function getStreamIterator($stream): iterable
-    {
-        while (!feof($stream)) {
-            yield str_replace("\n", "\r\n", str_replace("\r\n", "\n", fread($stream, 16372)));
-        }
     }
 
     private function getParametersFromHeader(string $header): array

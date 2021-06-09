@@ -19,18 +19,18 @@ final class Uninflected
     /**
      * @return Pattern[]
      */
-    private static function getDefault() : iterable
+    public static function getPlural() : iterable
     {
-        yield new Pattern('barn');
-        yield new Pattern('fjell');
-        yield new Pattern('hus');
+        yield from self::getDefault();
     }
 
     /**
      * @return Pattern[]
      */
-    public static function getPlural() : iterable
+    private static function getDefault() : iterable
     {
-        yield from self::getDefault();
+        yield new Pattern('barn');
+        yield new Pattern('fjell');
+        yield new Pattern('hus');
     }
 }

@@ -77,6 +77,49 @@ class LoggerDataCollector extends DataCollector implements LateDataCollectorInte
         $this->currentRequest = null;
     }
 
+    public function getLogs()
+    {
+        return $this->data['logs'] ?? [];
+    }
+
+    public function getPriorities()
+    {
+        return $this->data['priorities'] ?? [];
+    }
+
+    public function countErrors()
+    {
+        return $this->data['error_count'] ?? 0;
+    }
+
+    public function countDeprecations()
+    {
+        return $this->data['deprecation_count'] ?? 0;
+    }
+
+    public function countWarnings()
+    {
+        return $this->data['warning_count'] ?? 0;
+    }
+
+    public function countScreams()
+    {
+        return $this->data['scream_count'] ?? 0;
+    }
+
+    public function getCompilerLogs()
+    {
+        return $this->cloneVar($this->getContainerCompilerLogs($this->data['compiler_logs_filepath'] ?? null));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return 'logger';
+    }
+
     private function getContainerDeprecationLogs(): array
     {
         if (null === $this->containerPathPrefix || !is_file($file = $this->containerPathPrefix.'Deprecations.log')) {
@@ -103,70 +146,23 @@ class LoggerDataCollector extends DataCollector implements LateDataCollectorInte
         return $logs;
     }
 
-    private function computeErrorsCount(array $containerDeprecationLogs): array
+    private function getContainerCompilerLogs(string $compilerLogsFilepath = null): array
     {
-        $silencedLogs = [];
-        $count = [
-            'error_count' => $this->logger->countErrors($this->currentRequest),
-            'deprecation_count' => 0,
-            'warning_count' => 0,
-            'scream_count' => 0,
-            'priorities' => [],
-        ];
+        if (!is_file($compilerLogsFilepath)) {
+            return [];
+        }
 
-        foreach ($this->logger->getLogs($this->currentRequest) as $log) {
-            if (isset($count['priorities'][$log['priority']])) {
-                ++$count['priorities'][$log['priority']]['count'];
-            } else {
-                $count['priorities'][$log['priority']] = [
-                    'count' => 1,
-                    'name' => $log['priorityName'],
-                ];
-            }
-            if ('WARNING' === $log['priorityName']) {
-                ++$count['warning_count'];
+        $logs = [];
+        foreach (file($compilerLogsFilepath, \FILE_IGNORE_NEW_LINES) as $log) {
+            $log = explode(': ', $log, 2);
+            if (!isset($log[1]) || !preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*+(?:\\\\[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*+)++$/', $log[0])) {
+                $log = ['Unknown Compiler Pass', implode(': ', $log)];
             }
 
-            if ($this->isSilencedOrDeprecationErrorLog($log)) {
-                $exception = $log['context']['exception'];
-                if ($exception instanceof SilencedErrorContext) {
-                    if (isset($silencedLogs[$h = spl_object_hash($exception)])) {
-                        continue;
-                    }
-                    $silencedLogs[$h] = true;
-                    $count['scream_count'] += $exception->count;
-                } else {
-                    ++$count['deprecation_count'];
-                }
-            }
+            $logs[$log[0]][] = ['message' => $log[1]];
         }
 
-        foreach ($containerDeprecationLogs as $deprecationLog) {
-            $count['deprecation_count'] += $deprecationLog['context']['exception']->count;
-        }
-
-        ksort($count['priorities']);
-
-        return $count;
-    }
-
-    private function isSilencedOrDeprecationErrorLog(array $log): bool
-    {
-        if (!isset($log['context']['exception'])) {
-            return false;
-        }
-
-        $exception = $log['context']['exception'];
-
-        if ($exception instanceof SilencedErrorContext) {
-            return true;
-        }
-
-        if ($exception instanceof \ErrorException && \in_array($exception->getSeverity(), [\E_DEPRECATED, \E_USER_DEPRECATED], true)) {
-            return true;
-        }
-
-        return false;
+        return $logs;
     }
 
     private function sanitizeLogs(array $logs)
@@ -218,65 +214,69 @@ class LoggerDataCollector extends DataCollector implements LateDataCollectorInte
         return array_values($sanitizedLogs);
     }
 
-    public function getLogs()
+    private function isSilencedOrDeprecationErrorLog(array $log): bool
     {
-        return $this->data['logs'] ?? [];
-    }
-
-    public function getPriorities()
-    {
-        return $this->data['priorities'] ?? [];
-    }
-
-    public function countErrors()
-    {
-        return $this->data['error_count'] ?? 0;
-    }
-
-    public function countDeprecations()
-    {
-        return $this->data['deprecation_count'] ?? 0;
-    }
-
-    public function countWarnings()
-    {
-        return $this->data['warning_count'] ?? 0;
-    }
-
-    public function countScreams()
-    {
-        return $this->data['scream_count'] ?? 0;
-    }
-
-    public function getCompilerLogs()
-    {
-        return $this->cloneVar($this->getContainerCompilerLogs($this->data['compiler_logs_filepath'] ?? null));
-    }
-
-    private function getContainerCompilerLogs(string $compilerLogsFilepath = null): array
-    {
-        if (!is_file($compilerLogsFilepath)) {
-            return [];
+        if (!isset($log['context']['exception'])) {
+            return false;
         }
 
-        $logs = [];
-        foreach (file($compilerLogsFilepath, \FILE_IGNORE_NEW_LINES) as $log) {
-            $log = explode(': ', $log, 2);
-            if (!isset($log[1]) || !preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*+(?:\\\\[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*+)++$/', $log[0])) {
-                $log = ['Unknown Compiler Pass', implode(': ', $log)];
+        $exception = $log['context']['exception'];
+
+        if ($exception instanceof SilencedErrorContext) {
+            return true;
+        }
+
+        if ($exception instanceof \ErrorException && \in_array($exception->getSeverity(), [\E_DEPRECATED, \E_USER_DEPRECATED], true)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function computeErrorsCount(array $containerDeprecationLogs): array
+    {
+        $silencedLogs = [];
+        $count = [
+            'error_count' => $this->logger->countErrors($this->currentRequest),
+            'deprecation_count' => 0,
+            'warning_count' => 0,
+            'scream_count' => 0,
+            'priorities' => [],
+        ];
+
+        foreach ($this->logger->getLogs($this->currentRequest) as $log) {
+            if (isset($count['priorities'][$log['priority']])) {
+                ++$count['priorities'][$log['priority']]['count'];
+            } else {
+                $count['priorities'][$log['priority']] = [
+                    'count' => 1,
+                    'name' => $log['priorityName'],
+                ];
+            }
+            if ('WARNING' === $log['priorityName']) {
+                ++$count['warning_count'];
             }
 
-            $logs[$log[0]][] = ['message' => $log[1]];
+            if ($this->isSilencedOrDeprecationErrorLog($log)) {
+                $exception = $log['context']['exception'];
+                if ($exception instanceof SilencedErrorContext) {
+                    if (isset($silencedLogs[$h = spl_object_hash($exception)])) {
+                        continue;
+                    }
+                    $silencedLogs[$h] = true;
+                    $count['scream_count'] += $exception->count;
+                } else {
+                    ++$count['deprecation_count'];
+                }
+            }
         }
 
-        return $logs;
-    }
+        foreach ($containerDeprecationLogs as $deprecationLog) {
+            $count['deprecation_count'] += $deprecationLog['context']['exception']->count;
+        }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'logger';
+        ksort($count['priorities']);
+
+        return $count;
     }
 }

@@ -95,69 +95,6 @@ class LengthAwarePaginator extends AbstractPaginator implements Arrayable, Array
     }
 
     /**
-     * Get the array of elements to pass to the view.
-     *
-     * @return array
-     */
-    protected function elements()
-    {
-        $window = UrlWindow::make($this);
-
-        return array_filter([
-            $window['first'],
-            is_array($window['slider']) ? '...' : null,
-            $window['slider'],
-            is_array($window['last']) ? '...' : null,
-            $window['last'],
-        ]);
-    }
-
-    /**
-     * Convert the object to its JSON representation.
-     *
-     * @param  int  $options
-     * @return string
-     */
-    public function toJson($options = 0)
-    {
-        return json_encode($this->jsonSerialize(), $options);
-    }
-
-    /**
-     * Convert the object into something JSON serializable.
-     *
-     * @return array
-     */
-    public function jsonSerialize()
-    {
-        return $this->toArray();
-    }
-
-    /**
-     * Get the instance as an array.
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return [
-            'current_page' => $this->currentPage(),
-            'data' => $this->items->toArray(),
-            'first_page_url' => $this->url(1),
-            'from' => $this->firstItem(),
-            'last_page' => $this->lastPage(),
-            'last_page_url' => $this->url($this->lastPage()),
-            'links' => $this->linkCollection()->toArray(),
-            'next_page_url' => $this->nextPageUrl(),
-            'path' => $this->path(),
-            'per_page' => $this->perPage(),
-            'prev_page_url' => $this->previousPageUrl(),
-            'to' => $this->lastItem(),
-            'total' => $this->total(),
-        ];
-    }
-
-    /**
      * Get the paginator links as a collection (for JSON responses).
      *
      * @return \Illuminate\Support\Collection
@@ -188,15 +125,31 @@ class LengthAwarePaginator extends AbstractPaginator implements Arrayable, Array
     }
 
     /**
-     * Get the URL for the next page.
+     * Get the array of elements to pass to the view.
      *
-     * @return string|null
+     * @return array
      */
-    public function nextPageUrl()
+    protected function elements()
     {
-        if ($this->hasMorePages()) {
-            return $this->url($this->currentPage() + 1);
-        }
+        $window = UrlWindow::make($this);
+
+        return array_filter([
+            $window['first'],
+            is_array($window['slider']) ? '...' : null,
+            $window['slider'],
+            is_array($window['last']) ? '...' : null,
+            $window['last'],
+        ]);
+    }
+
+    /**
+     * Get the total number of items being paginated.
+     *
+     * @return int
+     */
+    public function total()
+    {
+        return $this->total;
     }
 
     /**
@@ -210,6 +163,18 @@ class LengthAwarePaginator extends AbstractPaginator implements Arrayable, Array
     }
 
     /**
+     * Get the URL for the next page.
+     *
+     * @return string|null
+     */
+    public function nextPageUrl()
+    {
+        if ($this->hasMorePages()) {
+            return $this->url($this->currentPage() + 1);
+        }
+    }
+
+    /**
      * Get the last page.
      *
      * @return int
@@ -220,12 +185,47 @@ class LengthAwarePaginator extends AbstractPaginator implements Arrayable, Array
     }
 
     /**
-     * Get the total number of items being paginated.
+     * Get the instance as an array.
      *
-     * @return int
+     * @return array
      */
-    public function total()
+    public function toArray()
     {
-        return $this->total;
+        return [
+            'current_page' => $this->currentPage(),
+            'data' => $this->items->toArray(),
+            'first_page_url' => $this->url(1),
+            'from' => $this->firstItem(),
+            'last_page' => $this->lastPage(),
+            'last_page_url' => $this->url($this->lastPage()),
+            'links' => $this->linkCollection()->toArray(),
+            'next_page_url' => $this->nextPageUrl(),
+            'path' => $this->path(),
+            'per_page' => $this->perPage(),
+            'prev_page_url' => $this->previousPageUrl(),
+            'to' => $this->lastItem(),
+            'total' => $this->total(),
+        ];
+    }
+
+    /**
+     * Convert the object into something JSON serializable.
+     *
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return $this->toArray();
+    }
+
+    /**
+     * Convert the object to its JSON representation.
+     *
+     * @param  int  $options
+     * @return string
+     */
+    public function toJson($options = 0)
+    {
+        return json_encode($this->jsonSerialize(), $options);
     }
 }

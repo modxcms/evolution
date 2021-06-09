@@ -11,6 +11,7 @@
 namespace Carbon\Traits;
 
 use Carbon\CarbonInterface;
+use ReturnTypeWillChange;
 
 /**
  * Trait Modifiers.
@@ -87,57 +88,6 @@ trait Modifiers
     }
 
     /**
-     * Similar to native modify() method of DateTime but can handle more grammars.
-     *
-     * @example
-     * ```
-     * echo Carbon::now()->change('next 2pm');
-     * ```
-     *
-     * @link https://php.net/manual/en/datetime.modify.php
-     *
-     * @param string $modifier
-     *
-     * @return static
-     */
-    public function change($modifier)
-    {
-        return $this->modify(preg_replace_callback('/^(next|previous|last)\s+(\d{1,2}(h|am|pm|:\d{1,2}(:\d{1,2})?))$/i', function ($match) {
-            $match[2] = str_replace('h', ':00', $match[2]);
-            $test = $this->copy()->modify($match[2]);
-            $method = $match[1] === 'next' ? 'lt' : 'gt';
-            $match[1] = $test->$method($this) ? $match[1].' day' : 'today';
-
-            return $match[1].' '.$match[2];
-        }, strtr(trim($modifier), [
-            ' at ' => ' ',
-            'just now' => 'now',
-            'after tomorrow' => 'tomorrow +1 day',
-            'before yesterday' => 'yesterday -1 day',
-        ])));
-    }
-
-    /**
-     * Calls \DateTime::modify if mutable or \DateTimeImmutable::modify else.
-     *
-     * @see https://php.net/manual/en/datetime.modify.php
-     */
-    public function modify($modify)
-    {
-        return parent::modify((string) $modify);
-    }
-
-    /**
-     * Go forward to the next weekday.
-     *
-     * @return static
-     */
-    public function nextWeekday()
-    {
-        return $this->nextOrPreviousDay();
-    }
-
-    /**
      * Go forward or backward to the next week- or weekend-day.
      *
      * @param bool $weekday
@@ -156,6 +106,16 @@ trait Modifiers
         } while ($weekday ? $date->isWeekend() : $date->isWeekday());
 
         return $date;
+    }
+
+    /**
+     * Go forward to the next weekday.
+     *
+     * @return static
+     */
+    public function nextWeekday()
+    {
+        return $this->nextOrPreviousDay();
     }
 
     /**
@@ -210,26 +170,6 @@ trait Modifiers
     }
 
     /**
-     * Modify to the given occurrence of a given day of the week
-     * in the current month. If the calculated occurrence is outside the scope
-     * of the current month, then return false and no modifications are made.
-     * Use the supplied constants to indicate the desired dayOfWeek, ex. static::MONDAY.
-     *
-     * @param int $nth
-     * @param int $dayOfWeek
-     *
-     * @return mixed
-     */
-    public function nthOfMonth($nth, $dayOfWeek)
-    {
-        $date = $this->copy()->firstOfMonth();
-        $check = $date->rawFormat('Y-m');
-        $date = $date->modify('+'.$nth.' '.static::$days[$dayOfWeek]);
-
-        return $date->rawFormat('Y-m') === $check ? $this->modify("$date") : false;
-    }
-
-    /**
      * Modify to the first occurrence of a given day of the week
      * in the current month. If no dayOfWeek is provided, modify to the
      * first day of the current month.  Use the supplied constants
@@ -248,6 +188,47 @@ trait Modifiers
         }
 
         return $date->modify('first '.static::$days[$dayOfWeek].' of '.$date->rawFormat('F').' '.$date->year);
+    }
+
+    /**
+     * Modify to the last occurrence of a given day of the week
+     * in the current month. If no dayOfWeek is provided, modify to the
+     * last day of the current month.  Use the supplied constants
+     * to indicate the desired dayOfWeek, ex. static::MONDAY.
+     *
+     * @param int|null $dayOfWeek
+     *
+     * @return static
+     */
+    public function lastOfMonth($dayOfWeek = null)
+    {
+        $date = $this->startOfDay();
+
+        if ($dayOfWeek === null) {
+            return $date->day($date->daysInMonth);
+        }
+
+        return $date->modify('last '.static::$days[$dayOfWeek].' of '.$date->rawFormat('F').' '.$date->year);
+    }
+
+    /**
+     * Modify to the given occurrence of a given day of the week
+     * in the current month. If the calculated occurrence is outside the scope
+     * of the current month, then return false and no modifications are made.
+     * Use the supplied constants to indicate the desired dayOfWeek, ex. static::MONDAY.
+     *
+     * @param int $nth
+     * @param int $dayOfWeek
+     *
+     * @return mixed
+     */
+    public function nthOfMonth($nth, $dayOfWeek)
+    {
+        $date = $this->copy()->firstOfMonth();
+        $check = $date->rawFormat('Y-m');
+        $date = $date->modify('+'.$nth.' '.static::$days[$dayOfWeek]);
+
+        return $date->rawFormat('Y-m') === $check ? $this->modify("$date") : false;
     }
 
     /**
@@ -281,27 +262,6 @@ trait Modifiers
     }
 
     /**
-     * Modify to the last occurrence of a given day of the week
-     * in the current month. If no dayOfWeek is provided, modify to the
-     * last day of the current month.  Use the supplied constants
-     * to indicate the desired dayOfWeek, ex. static::MONDAY.
-     *
-     * @param int|null $dayOfWeek
-     *
-     * @return static
-     */
-    public function lastOfMonth($dayOfWeek = null)
-    {
-        $date = $this->startOfDay();
-
-        if ($dayOfWeek === null) {
-            return $date->day($date->daysInMonth);
-        }
-
-        return $date->modify('last '.static::$days[$dayOfWeek].' of '.$date->rawFormat('F').' '.$date->year);
-    }
-
-    /**
      * Modify to the given occurrence of a given day of the week
      * in the current quarter. If the calculated occurrence is outside the scope
      * of the current quarter, then return false and no modifications are made.
@@ -320,6 +280,21 @@ trait Modifiers
         $date = $date->firstOfQuarter()->modify('+'.$nth.' '.static::$days[$dayOfWeek]);
 
         return ($lastMonth < $date->month || $year !== $date->year) ? false : $this->modify("$date");
+    }
+
+    /**
+     * Modify to the first occurrence of a given day of the week
+     * in the current year. If no dayOfWeek is provided, modify to the
+     * first day of the current year.  Use the supplied constants
+     * to indicate the desired dayOfWeek, ex. static::MONDAY.
+     *
+     * @param int|null $dayOfWeek day of the week default null
+     *
+     * @return static
+     */
+    public function firstOfYear($dayOfWeek = null)
+    {
+        return $this->month(1)->firstOfMonth($dayOfWeek);
     }
 
     /**
@@ -353,21 +328,6 @@ trait Modifiers
         $date = $this->copy()->firstOfYear()->modify('+'.$nth.' '.static::$days[$dayOfWeek]);
 
         return $this->year === $date->year ? $this->modify("$date") : false;
-    }
-
-    /**
-     * Modify to the first occurrence of a given day of the week
-     * in the current year. If no dayOfWeek is provided, modify to the
-     * first day of the current year.  Use the supplied constants
-     * to indicate the desired dayOfWeek, ex. static::MONDAY.
-     *
-     * @param int|null $dayOfWeek day of the week default null
-     *
-     * @return static
-     */
-    public function firstOfYear($dayOfWeek = null)
-    {
-        return $this->month(1)->firstOfMonth($dayOfWeek);
     }
 
     /**
@@ -414,6 +374,20 @@ trait Modifiers
      *
      * @param \Carbon\Carbon|\DateTimeInterface|mixed $date
      *
+     * @return static
+     */
+    public function min($date = null)
+    {
+        $date = $this->resolveCarbon($date);
+
+        return $this->lt($date) ? $this : $date;
+    }
+
+    /**
+     * Get the minimum instance between a given instance (default now) and the current instance.
+     *
+     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date
+     *
      * @see min()
      *
      * @return static
@@ -424,17 +398,17 @@ trait Modifiers
     }
 
     /**
-     * Get the minimum instance between a given instance (default now) and the current instance.
+     * Get the maximum instance between a given instance (default now) and the current instance.
      *
      * @param \Carbon\Carbon|\DateTimeInterface|mixed $date
      *
      * @return static
      */
-    public function min($date = null)
+    public function max($date = null)
     {
         $date = $this->resolveCarbon($date);
 
-        return $this->lt($date) ? $this : $date;
+        return $this->gt($date) ? $this : $date;
     }
 
     /**
@@ -452,16 +426,44 @@ trait Modifiers
     }
 
     /**
-     * Get the maximum instance between a given instance (default now) and the current instance.
+     * Calls \DateTime::modify if mutable or \DateTimeImmutable::modify else.
      *
-     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date
+     * @see https://php.net/manual/en/datetime.modify.php
+     */
+    #[ReturnTypeWillChange]
+    public function modify($modify)
+    {
+        return parent::modify((string) $modify);
+    }
+
+    /**
+     * Similar to native modify() method of DateTime but can handle more grammars.
+     *
+     * @example
+     * ```
+     * echo Carbon::now()->change('next 2pm');
+     * ```
+     *
+     * @link https://php.net/manual/en/datetime.modify.php
+     *
+     * @param string $modifier
      *
      * @return static
      */
-    public function max($date = null)
+    public function change($modifier)
     {
-        $date = $this->resolveCarbon($date);
+        return $this->modify(preg_replace_callback('/^(next|previous|last)\s+(\d{1,2}(h|am|pm|:\d{1,2}(:\d{1,2})?))$/i', function ($match) {
+            $match[2] = str_replace('h', ':00', $match[2]);
+            $test = $this->copy()->modify($match[2]);
+            $method = $match[1] === 'next' ? 'lt' : 'gt';
+            $match[1] = $test->$method($this) ? $match[1].' day' : 'today';
 
-        return $this->gt($date) ? $this : $date;
+            return $match[1].' '.$match[2];
+        }, strtr(trim($modifier), [
+            ' at ' => ' ',
+            'just now' => 'now',
+            'after tomorrow' => 'tomorrow +1 day',
+            'before yesterday' => 'yesterday -1 day',
+        ])));
     }
 }

@@ -48,6 +48,14 @@ class NormalizerFormatter implements FormatterInterface
     /**
      * {@inheritdoc}
      */
+    public function format(array $record)
+    {
+        return $this->normalize($record);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function formatBatch(array $records)
     {
         foreach ($records as $key => $record) {
@@ -57,12 +65,60 @@ class NormalizerFormatter implements FormatterInterface
         return $records;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function format(array $record)
+    public function getDateFormat(): string
     {
-        return $this->normalize($record);
+        return $this->dateFormat;
+    }
+
+    public function setDateFormat(string $dateFormat): self
+    {
+        $this->dateFormat = $dateFormat;
+
+        return $this;
+    }
+
+    /**
+     * The maximum number of normalization levels to go through
+     */
+    public function getMaxNormalizeDepth(): int
+    {
+        return $this->maxNormalizeDepth;
+    }
+
+    public function setMaxNormalizeDepth(int $maxNormalizeDepth): self
+    {
+        $this->maxNormalizeDepth = $maxNormalizeDepth;
+
+        return $this;
+    }
+
+    /**
+     * The maximum number of items to normalize per level
+     */
+    public function getMaxNormalizeItemCount(): int
+    {
+        return $this->maxNormalizeItemCount;
+    }
+
+    public function setMaxNormalizeItemCount(int $maxNormalizeItemCount): self
+    {
+        $this->maxNormalizeItemCount = $maxNormalizeItemCount;
+
+        return $this;
+    }
+
+    /**
+     * Enables `json_encode` pretty print.
+     */
+    public function setJsonPrettyPrint(bool $enable): self
+    {
+        if ($enable) {
+            $this->jsonEncodeOptions |= JSON_PRETTY_PRINT;
+        } else {
+            $this->jsonEncodeOptions &= ~JSON_PRETTY_PRINT;
+        }
+
+        return $this;
     }
 
     /**
@@ -132,17 +188,6 @@ class NormalizerFormatter implements FormatterInterface
         return '[unknown('.gettype($data).')]';
     }
 
-    protected function formatDate(\DateTimeInterface $date)
-    {
-        // in case the date format isn't custom then we defer to the custom DateTimeImmutable
-        // formatting logic, which will pick the right format based on whether useMicroseconds is on
-        if ($this->dateFormat === self::SIMPLE_DATE && $date instanceof DateTimeImmutable) {
-            return (string) $date;
-        }
-
-        return $date->format($this->dateFormat);
-    }
-
     /**
      * @return array
      */
@@ -203,60 +248,15 @@ class NormalizerFormatter implements FormatterInterface
         return Utils::jsonEncode($data, $this->jsonEncodeOptions, $ignoreErrors);
     }
 
-    public function getDateFormat(): string
+    protected function formatDate(\DateTimeInterface $date)
     {
-        return $this->dateFormat;
-    }
-
-    public function setDateFormat(string $dateFormat): self
-    {
-        $this->dateFormat = $dateFormat;
-
-        return $this;
-    }
-
-    /**
-     * The maximum number of normalization levels to go through
-     */
-    public function getMaxNormalizeDepth(): int
-    {
-        return $this->maxNormalizeDepth;
-    }
-
-    public function setMaxNormalizeDepth(int $maxNormalizeDepth): self
-    {
-        $this->maxNormalizeDepth = $maxNormalizeDepth;
-
-        return $this;
-    }
-
-    /**
-     * The maximum number of items to normalize per level
-     */
-    public function getMaxNormalizeItemCount(): int
-    {
-        return $this->maxNormalizeItemCount;
-    }
-
-    public function setMaxNormalizeItemCount(int $maxNormalizeItemCount): self
-    {
-        $this->maxNormalizeItemCount = $maxNormalizeItemCount;
-
-        return $this;
-    }
-
-    /**
-     * Enables `json_encode` pretty print.
-     */
-    public function setJsonPrettyPrint(bool $enable): self
-    {
-        if ($enable) {
-            $this->jsonEncodeOptions |= JSON_PRETTY_PRINT;
-        } else {
-            $this->jsonEncodeOptions &= ~JSON_PRETTY_PRINT;
+        // in case the date format isn't custom then we defer to the custom DateTimeImmutable
+        // formatting logic, which will pick the right format based on whether useMicroseconds is on
+        if ($this->dateFormat === self::SIMPLE_DATE && $date instanceof DateTimeImmutable) {
+            return (string) $date;
         }
 
-        return $this;
+        return $date->format($this->dateFormat);
     }
 
     public function addJsonEncodeOption(int $option)

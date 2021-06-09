@@ -42,6 +42,14 @@ class MatchAllConstraint implements ConstraintInterface
     /**
      * {@inheritDoc}
      */
+    public function setPrettyString($prettyString)
+    {
+        $this->prettyString = $prettyString;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getPrettyString()
     {
         if ($this->prettyString) {
@@ -49,14 +57,6 @@ class MatchAllConstraint implements ConstraintInterface
         }
 
         return (string) $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setPrettyString($prettyString)
-    {
-        $this->prettyString = $prettyString;
     }
 
     /**

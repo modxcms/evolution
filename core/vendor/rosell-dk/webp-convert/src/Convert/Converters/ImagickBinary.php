@@ -14,15 +14,15 @@ use WebPConvert\Convert\Exceptions\ConversionFailedException;
  */
 class ImagickBinary extends AbstractConverter
 {
-    protected function doActualConvert()
-    {
-        $this->checkOperationality();
-    }
-
     public function checkOperationality()
     {
         throw new ConversionFailedException(
             'This converter has changed ID from "imagickbinary" to "imagemagick". You need to change!'
         );
+    }
+
+    protected function doActualConvert()
+    {
+        $this->checkOperationality();
     }
 }

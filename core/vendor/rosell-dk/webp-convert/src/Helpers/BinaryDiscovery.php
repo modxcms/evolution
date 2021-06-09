@@ -46,25 +46,20 @@ class BinaryDiscovery
     }
 
     /**
-     * Discover binaries using "which -a" or, if that fails "whereis -b"
+     * Discover installed binaries using ie "whereis -b cwebp"
      *
-     * These commands only searces within $PATH. So it only finds installed binaries (which is good,
-     * as it would be unsafe to deal with binaries found scattered around)
-     *
-     * @param  string $binary  the binary to look for (ie "cwebp")
-     *
-     * @return array binaries found in common system locations
+     * @return array  Array of cwebp paths discovered (possibly empty)
      */
-    public static function discoverInstalledBinaries($binary)
+    private static function discoverBinariesUsingWhereIs($binary)
     {
-        $paths = self::discoverBinariesUsingWhich($binary);
-        if (count($paths) > 0) {
-            return $paths;
-        }
-
-        $paths = self::discoverBinariesUsingWhereIs($binary);
-        if (count($paths) > 0) {
-            return $paths;
+        // This method was added due to #226.
+        exec('whereis -b ' . $binary . ' 2>&1', $output, $returnCode);
+        if (($returnCode == 0) && (isset($output[0]))) {
+            $result = $output[0];
+            // Ie: "cwebp: /usr/bin/cwebp /usr/local/bin/cwebp"
+            if (preg_match('#^' . $binary . ':\s(.*)$#', $result, $matches)) {
+                return explode(' ', $matches[1]);
+            }
         }
         return [];
     }
@@ -88,20 +83,25 @@ class BinaryDiscovery
     }
 
     /**
-     * Discover installed binaries using ie "whereis -b cwebp"
+     * Discover binaries using "which -a" or, if that fails "whereis -b"
      *
-     * @return array  Array of cwebp paths discovered (possibly empty)
+     * These commands only searces within $PATH. So it only finds installed binaries (which is good,
+     * as it would be unsafe to deal with binaries found scattered around)
+     *
+     * @param  string $binary  the binary to look for (ie "cwebp")
+     *
+     * @return array binaries found in common system locations
      */
-    private static function discoverBinariesUsingWhereIs($binary)
+    public static function discoverInstalledBinaries($binary)
     {
-        // This method was added due to #226.
-        exec('whereis -b ' . $binary . ' 2>&1', $output, $returnCode);
-        if (($returnCode == 0) && (isset($output[0]))) {
-            $result = $output[0];
-            // Ie: "cwebp: /usr/bin/cwebp /usr/local/bin/cwebp"
-            if (preg_match('#^' . $binary . ':\s(.*)$#', $result, $matches)) {
-                return explode(' ', $matches[1]);
-            }
+        $paths = self::discoverBinariesUsingWhich($binary);
+        if (count($paths) > 0) {
+            return $paths;
+        }
+
+        $paths = self::discoverBinariesUsingWhereIs($binary);
+        if (count($paths) > 0) {
+            return $paths;
         }
         return [];
     }

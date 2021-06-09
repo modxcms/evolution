@@ -159,6 +159,35 @@ class Comparator
     }
 
     /**
+     * @param Schema   $schema
+     * @param Sequence $sequence
+     *
+     * @return bool
+     */
+    private function isAutoIncrementSequenceInSchema($schema, $sequence)
+    {
+        foreach ($schema->getTables() as $table) {
+            if ($sequence->isAutoIncrementsFor($table)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function diffSequence(Sequence $sequence1, Sequence $sequence2)
+    {
+        if ($sequence1->getAllocationSize() !== $sequence2->getAllocationSize()) {
+            return true;
+        }
+
+        return $sequence1->getInitialValue() !== $sequence2->getInitialValue();
+    }
+
+    /**
      * Returns the difference between the tables $fromTable and $toTable.
      *
      * If there are no differences this method returns the boolean false.
@@ -279,6 +308,123 @@ class Comparator
     }
 
     /**
+     * Try to find columns that only changed their name, rename operations maybe cheaper than add/drop
+     * however ambiguities between different possibilities should not lead to renaming at all.
+     *
+     * @return void
+     */
+    private function detectColumnRenamings(TableDiff $tableDifferences)
+    {
+        $renameCandidates = [];
+        foreach ($tableDifferences->addedColumns as $addedColumnName => $addedColumn) {
+            foreach ($tableDifferences->removedColumns as $removedColumn) {
+                if (count($this->diffColumn($addedColumn, $removedColumn)) !== 0) {
+                    continue;
+                }
+
+                $renameCandidates[$addedColumn->getName()][] = [$removedColumn, $addedColumn, $addedColumnName];
+            }
+        }
+
+        foreach ($renameCandidates as $candidateColumns) {
+            if (count($candidateColumns) !== 1) {
+                continue;
+            }
+
+            [$removedColumn, $addedColumn] = $candidateColumns[0];
+            $removedColumnName             = strtolower($removedColumn->getName());
+            $addedColumnName               = strtolower($addedColumn->getName());
+
+            if (isset($tableDifferences->renamedColumns[$removedColumnName])) {
+                continue;
+            }
+
+            $tableDifferences->renamedColumns[$removedColumnName] = $addedColumn;
+            unset(
+                $tableDifferences->addedColumns[$addedColumnName],
+                $tableDifferences->removedColumns[$removedColumnName]
+            );
+        }
+    }
+
+    /**
+     * Try to find indexes that only changed their name, rename operations maybe cheaper than add/drop
+     * however ambiguities between different possibilities should not lead to renaming at all.
+     *
+     * @return void
+     */
+    private function detectIndexRenamings(TableDiff $tableDifferences)
+    {
+        $renameCandidates = [];
+
+        // Gather possible rename candidates by comparing each added and removed index based on semantics.
+        foreach ($tableDifferences->addedIndexes as $addedIndexName => $addedIndex) {
+            foreach ($tableDifferences->removedIndexes as $removedIndex) {
+                if ($this->diffIndex($addedIndex, $removedIndex)) {
+                    continue;
+                }
+
+                $renameCandidates[$addedIndex->getName()][] = [$removedIndex, $addedIndex, $addedIndexName];
+            }
+        }
+
+        foreach ($renameCandidates as $candidateIndexes) {
+            // If the current rename candidate contains exactly one semantically equal index,
+            // we can safely rename it.
+            // Otherwise it is unclear if a rename action is really intended,
+            // therefore we let those ambiguous indexes be added/dropped.
+            if (count($candidateIndexes) !== 1) {
+                continue;
+            }
+
+            [$removedIndex, $addedIndex] = $candidateIndexes[0];
+
+            $removedIndexName = strtolower($removedIndex->getName());
+            $addedIndexName   = strtolower($addedIndex->getName());
+
+            if (isset($tableDifferences->renamedIndexes[$removedIndexName])) {
+                continue;
+            }
+
+            $tableDifferences->renamedIndexes[$removedIndexName] = $addedIndex;
+            unset(
+                $tableDifferences->addedIndexes[$addedIndexName],
+                $tableDifferences->removedIndexes[$removedIndexName]
+            );
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function diffForeignKey(ForeignKeyConstraint $key1, ForeignKeyConstraint $key2)
+    {
+        if (
+            array_map('strtolower', $key1->getUnquotedLocalColumns())
+            !== array_map('strtolower', $key2->getUnquotedLocalColumns())
+        ) {
+            return true;
+        }
+
+        if (
+            array_map('strtolower', $key1->getUnquotedForeignColumns())
+            !== array_map('strtolower', $key2->getUnquotedForeignColumns())
+        ) {
+            return true;
+        }
+
+        if ($key1->getUnqualifiedForeignTableName() !== $key2->getUnqualifiedForeignTableName()) {
+            return true;
+        }
+
+        if ($key1->onUpdate() !== $key2->onUpdate()) {
+            return true;
+        }
+
+        return $key1->onDelete() !== $key2->onDelete();
+    }
+
+    /**
      * Returns the difference between the columns
      *
      * If there are differences this method returns $field2, otherwise the
@@ -396,46 +542,6 @@ class Comparator
     }
 
     /**
-     * Try to find columns that only changed their name, rename operations maybe cheaper than add/drop
-     * however ambiguities between different possibilities should not lead to renaming at all.
-     *
-     * @return void
-     */
-    private function detectColumnRenamings(TableDiff $tableDifferences)
-    {
-        $renameCandidates = [];
-        foreach ($tableDifferences->addedColumns as $addedColumnName => $addedColumn) {
-            foreach ($tableDifferences->removedColumns as $removedColumn) {
-                if (count($this->diffColumn($addedColumn, $removedColumn)) !== 0) {
-                    continue;
-                }
-
-                $renameCandidates[$addedColumn->getName()][] = [$removedColumn, $addedColumn, $addedColumnName];
-            }
-        }
-
-        foreach ($renameCandidates as $candidateColumns) {
-            if (count($candidateColumns) !== 1) {
-                continue;
-            }
-
-            [$removedColumn, $addedColumn] = $candidateColumns[0];
-            $removedColumnName             = strtolower($removedColumn->getName());
-            $addedColumnName               = strtolower($addedColumn->getName());
-
-            if (isset($tableDifferences->renamedColumns[$removedColumnName])) {
-                continue;
-            }
-
-            $tableDifferences->renamedColumns[$removedColumnName] = $addedColumn;
-            unset(
-                $tableDifferences->addedColumns[$addedColumnName],
-                $tableDifferences->removedColumns[$removedColumnName]
-            );
-        }
-    }
-
-    /**
      * Finds the difference between the indexes $index1 and $index2.
      *
      * Compares $index1 with $index2 and returns $index2 if there are any
@@ -446,111 +552,5 @@ class Comparator
     public function diffIndex(Index $index1, Index $index2)
     {
         return ! ($index1->isFullfilledBy($index2) && $index2->isFullfilledBy($index1));
-    }
-
-    /**
-     * Try to find indexes that only changed their name, rename operations maybe cheaper than add/drop
-     * however ambiguities between different possibilities should not lead to renaming at all.
-     *
-     * @return void
-     */
-    private function detectIndexRenamings(TableDiff $tableDifferences)
-    {
-        $renameCandidates = [];
-
-        // Gather possible rename candidates by comparing each added and removed index based on semantics.
-        foreach ($tableDifferences->addedIndexes as $addedIndexName => $addedIndex) {
-            foreach ($tableDifferences->removedIndexes as $removedIndex) {
-                if ($this->diffIndex($addedIndex, $removedIndex)) {
-                    continue;
-                }
-
-                $renameCandidates[$addedIndex->getName()][] = [$removedIndex, $addedIndex, $addedIndexName];
-            }
-        }
-
-        foreach ($renameCandidates as $candidateIndexes) {
-            // If the current rename candidate contains exactly one semantically equal index,
-            // we can safely rename it.
-            // Otherwise it is unclear if a rename action is really intended,
-            // therefore we let those ambiguous indexes be added/dropped.
-            if (count($candidateIndexes) !== 1) {
-                continue;
-            }
-
-            [$removedIndex, $addedIndex] = $candidateIndexes[0];
-
-            $removedIndexName = strtolower($removedIndex->getName());
-            $addedIndexName   = strtolower($addedIndex->getName());
-
-            if (isset($tableDifferences->renamedIndexes[$removedIndexName])) {
-                continue;
-            }
-
-            $tableDifferences->renamedIndexes[$removedIndexName] = $addedIndex;
-            unset(
-                $tableDifferences->addedIndexes[$addedIndexName],
-                $tableDifferences->removedIndexes[$removedIndexName]
-            );
-        }
-    }
-
-    /**
-     * @return bool
-     */
-    public function diffForeignKey(ForeignKeyConstraint $key1, ForeignKeyConstraint $key2)
-    {
-        if (
-            array_map('strtolower', $key1->getUnquotedLocalColumns())
-            !== array_map('strtolower', $key2->getUnquotedLocalColumns())
-        ) {
-            return true;
-        }
-
-        if (
-            array_map('strtolower', $key1->getUnquotedForeignColumns())
-            !== array_map('strtolower', $key2->getUnquotedForeignColumns())
-        ) {
-            return true;
-        }
-
-        if ($key1->getUnqualifiedForeignTableName() !== $key2->getUnqualifiedForeignTableName()) {
-            return true;
-        }
-
-        if ($key1->onUpdate() !== $key2->onUpdate()) {
-            return true;
-        }
-
-        return $key1->onDelete() !== $key2->onDelete();
-    }
-
-    /**
-     * @param Schema   $schema
-     * @param Sequence $sequence
-     *
-     * @return bool
-     */
-    private function isAutoIncrementSequenceInSchema($schema, $sequence)
-    {
-        foreach ($schema->getTables() as $table) {
-            if ($sequence->isAutoIncrementsFor($table)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    public function diffSequence(Sequence $sequence1, Sequence $sequence2)
-    {
-        if ($sequence1->getAllocationSize() !== $sequence2->getAllocationSize()) {
-            return true;
-        }
-
-        return $sequence1->getInitialValue() !== $sequence2->getInitialValue();
     }
 }

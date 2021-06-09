@@ -66,16 +66,6 @@ class UrlWindow
     }
 
     /**
-     * Get the last page from the paginator.
-     *
-     * @return int
-     */
-    protected function lastPage()
-    {
-        return $this->paginator->lastPage();
-    }
-
-    /**
      * Create a URL slider links.
      *
      * @param  int  $onEachSide
@@ -110,26 +100,6 @@ class UrlWindow
     }
 
     /**
-     * Determine if the underlying paginator being presented has pages to show.
-     *
-     * @return bool
-     */
-    public function hasPages()
-    {
-        return $this->paginator->lastPage() > 1;
-    }
-
-    /**
-     * Get the current page from the paginator.
-     *
-     * @return int
-     */
-    protected function currentPage()
-    {
-        return $this->paginator->currentPage();
-    }
-
-    /**
      * Get the slider of URLs when too close to beginning of window.
      *
      * @param  int  $window
@@ -143,19 +113,6 @@ class UrlWindow
             'slider' => null,
             'last' => $this->getFinish(),
         ];
-    }
-
-    /**
-     * Get the ending URLs of a pagination slider.
-     *
-     * @return array
-     */
-    public function getFinish()
-    {
-        return $this->paginator->getUrlRange(
-            $this->lastPage() - 1,
-            $this->lastPage()
-        );
     }
 
     /**
@@ -177,16 +134,6 @@ class UrlWindow
             'slider' => null,
             'last' => $last,
         ];
-    }
-
-    /**
-     * Get the starting URLs of a pagination slider.
-     *
-     * @return array
-     */
-    public function getStart()
-    {
-        return $this->paginator->getUrlRange(1, 2);
     }
 
     /**
@@ -216,5 +163,58 @@ class UrlWindow
             $this->currentPage() - $onEachSide,
             $this->currentPage() + $onEachSide
         );
+    }
+
+    /**
+     * Get the starting URLs of a pagination slider.
+     *
+     * @return array
+     */
+    public function getStart()
+    {
+        return $this->paginator->getUrlRange(1, 2);
+    }
+
+    /**
+     * Get the ending URLs of a pagination slider.
+     *
+     * @return array
+     */
+    public function getFinish()
+    {
+        return $this->paginator->getUrlRange(
+            $this->lastPage() - 1,
+            $this->lastPage()
+        );
+    }
+
+    /**
+     * Determine if the underlying paginator being presented has pages to show.
+     *
+     * @return bool
+     */
+    public function hasPages()
+    {
+        return $this->paginator->lastPage() > 1;
+    }
+
+    /**
+     * Get the current page from the paginator.
+     *
+     * @return int
+     */
+    protected function currentPage()
+    {
+        return $this->paginator->currentPage();
+    }
+
+    /**
+     * Get the last page from the paginator.
+     *
+     * @return int
+     */
+    protected function lastPage()
+    {
+        return $this->paginator->lastPage();
     }
 }

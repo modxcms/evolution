@@ -32,36 +32,6 @@ class FossilDriver extends VcsDriver
     /**
      * {@inheritDoc}
      */
-    public static function supports(IOInterface $io, Config $config, $url, $deep = false)
-    {
-        if (preg_match('#(^(?:https?|ssh)://(?:[^@]@)?(?:chiselapp\.com|fossil\.))#i', $url)) {
-            return true;
-        }
-
-        if (preg_match('!/fossil/|\.fossil!', $url)) {
-            return true;
-        }
-
-        // local filesystem
-        if (Filesystem::isLocalPath($url)) {
-            $url = Filesystem::getPlatformPath($url);
-            if (!is_dir($url)) {
-                return false;
-            }
-
-            $process = new ProcessExecutor($io);
-            // check whether there is a fossil repo in that path
-            if ($process->execute('fossil info', $output, $url) === 0) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function initialize()
     {
         // Make sure fossil is installed and reachable.
@@ -141,6 +111,68 @@ class FossilDriver extends VcsDriver
     /**
      * {@inheritDoc}
      */
+    public function getRootIdentifier()
+    {
+        if (null === $this->rootIdentifier) {
+            $this->rootIdentifier = 'trunk';
+        }
+
+        return $this->rootIdentifier;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSource($identifier)
+    {
+        return array('type' => 'fossil', 'url' => $this->getUrl(), 'reference' => $identifier);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDist($identifier)
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFileContent($file, $identifier)
+    {
+        $command = sprintf('fossil cat -r %s -- %s', ProcessExecutor::escape($identifier), ProcessExecutor::escape($file));
+        $this->process->execute($command, $content, $this->checkoutDir);
+
+        if (!trim($content)) {
+            return null;
+        }
+
+        return $content;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChangeDate($identifier)
+    {
+        $this->process->execute('fossil finfo -b -n 1 composer.json', $output, $this->checkoutDir);
+        list(, $date) = explode(' ', trim($output), 3);
+
+        return new \DateTime($date, new \DateTimeZone('UTC'));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getTags()
     {
         if (null === $this->tags) {
@@ -180,62 +212,30 @@ class FossilDriver extends VcsDriver
     /**
      * {@inheritDoc}
      */
-    public function getRootIdentifier()
+    public static function supports(IOInterface $io, Config $config, $url, $deep = false)
     {
-        if (null === $this->rootIdentifier) {
-            $this->rootIdentifier = 'trunk';
+        if (preg_match('#(^(?:https?|ssh)://(?:[^@]@)?(?:chiselapp\.com|fossil\.))#i', $url)) {
+            return true;
         }
 
-        return $this->rootIdentifier;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getSource($identifier)
-    {
-        return array('type' => 'fossil', 'url' => $this->getUrl(), 'reference' => $identifier);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getDist($identifier)
-    {
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFileContent($file, $identifier)
-    {
-        $command = sprintf('fossil cat -r %s -- %s', ProcessExecutor::escape($identifier), ProcessExecutor::escape($file));
-        $this->process->execute($command, $content, $this->checkoutDir);
-
-        if (!trim($content)) {
-            return null;
+        if (preg_match('!/fossil/|\.fossil!', $url)) {
+            return true;
         }
 
-        return $content;
-    }
+        // local filesystem
+        if (Filesystem::isLocalPath($url)) {
+            $url = Filesystem::getPlatformPath($url);
+            if (!is_dir($url)) {
+                return false;
+            }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getChangeDate($identifier)
-    {
-        $this->process->execute('fossil finfo -b -n 1 composer.json', $output, $this->checkoutDir);
-        list(, $date) = explode(' ', trim($output), 3);
+            $process = new ProcessExecutor($io);
+            // check whether there is a fossil repo in that path
+            if ($process->execute('fossil info', $output, $url) === 0) {
+                return true;
+            }
+        }
 
-        return new \DateTime($date, new \DateTimeZone('UTC'));
+        return false;
     }
 }

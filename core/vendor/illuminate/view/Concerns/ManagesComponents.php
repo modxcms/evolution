@@ -39,22 +39,6 @@ trait ManagesComponents
     protected $slotStack = [];
 
     /**
-     * Get the first view that actually exists from the given list, and start a component.
-     *
-     * @param  array  $names
-     * @param  array  $data
-     * @return void
-     */
-    public function startComponentFirst(array $names, array $data = [])
-    {
-        $name = Arr::first($names, function ($item) {
-            return $this->exists($item);
-        });
-
-        $this->startComponent($name, $data);
-    }
-
-    /**
      * Start a component rendering process.
      *
      * @param  \Illuminate\Contracts\View\View|\Illuminate\Contracts\Support\Htmlable|\Closure|string  $view
@@ -73,13 +57,19 @@ trait ManagesComponents
     }
 
     /**
-     * Get the index for the current component.
+     * Get the first view that actually exists from the given list, and start a component.
      *
-     * @return int
+     * @param  array  $names
+     * @param  array  $data
+     * @return void
      */
-    protected function currentComponent()
+    public function startComponentFirst(array $names, array $data = [])
     {
-        return count($this->componentStack) - 1;
+        $name = Arr::first($names, function ($item) {
+            return $this->exists($item);
+        });
+
+        $this->startComponent($name, $data);
     }
 
     /**
@@ -161,5 +151,15 @@ trait ManagesComponents
         );
 
         $this->slots[$this->currentComponent()][$currentSlot] = new HtmlString(trim(ob_get_clean()));
+    }
+
+    /**
+     * Get the index for the current component.
+     *
+     * @return int
+     */
+    protected function currentComponent()
+    {
+        return count($this->componentStack) - 1;
     }
 }

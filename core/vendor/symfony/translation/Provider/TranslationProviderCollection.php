@@ -38,6 +38,11 @@ final class TranslationProviderCollection
         return '['.implode(',', array_keys($this->providers)).']';
     }
 
+    public function has(string $name): bool
+    {
+        return isset($this->providers[$name]);
+    }
+
     public function get(string $name): ProviderInterface
     {
         if (!$this->has($name)) {
@@ -45,11 +50,6 @@ final class TranslationProviderCollection
         }
 
         return $this->providers[$name];
-    }
-
-    public function has(string $name): bool
-    {
-        return isset($this->providers[$name]);
     }
 
     public function keys(): array

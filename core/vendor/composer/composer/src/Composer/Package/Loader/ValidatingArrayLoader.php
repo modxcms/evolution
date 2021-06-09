@@ -386,6 +386,16 @@ class ValidatingArrayLoader implements LoaderInterface
         return $package;
     }
 
+    public function getWarnings()
+    {
+        return $this->warnings;
+    }
+
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
     public static function hasPackageNamingError($name, $isLink = false)
     {
         if (PlatformRepository::isPlatformPackage($name)) {
@@ -539,15 +549,5 @@ class ValidatingArrayLoader implements LoaderInterface
         }
 
         return true;
-    }
-
-    public function getWarnings()
-    {
-        return $this->warnings;
-    }
-
-    public function getErrors()
-    {
-        return $this->errors;
     }
 }

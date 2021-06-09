@@ -29,24 +29,6 @@ class Comparator
     }
 
     /**
-     * Evaluates the expression: $version1 $operator $version2.
-     *
-     * @param string $version1
-     * @param string $operator
-     * @param string $version2
-     *
-     * @return bool
-     *
-     * @phpstan-param Constraint::STR_OP_*  $operator
-     */
-    public static function compare($version1, $operator, $version2)
-    {
-        $constraint = new Constraint($operator, $version2);
-
-        return $constraint->matchSpecific(new Constraint('==', $version1), true);
-    }
-
-    /**
      * Evaluates the expression: $version1 >= $version2.
      *
      * @param string $version1
@@ -109,5 +91,23 @@ class Comparator
     public static function notEqualTo($version1, $version2)
     {
         return self::compare($version1, '!=', $version2);
+    }
+
+    /**
+     * Evaluates the expression: $version1 $operator $version2.
+     *
+     * @param string $version1
+     * @param string $operator
+     * @param string $version2
+     *
+     * @return bool
+     *
+     * @phpstan-param Constraint::STR_OP_*  $operator
+     */
+    public static function compare($version1, $operator, $version2)
+    {
+        $constraint = new Constraint($operator, $version2);
+
+        return $constraint->matchSpecific(new Constraint('==', $version1), true);
     }
 }

@@ -90,6 +90,18 @@ class CursorPaginator extends AbstractCursorPaginator implements Arrayable, Arra
     }
 
     /**
+     * Determine if there are more items in the data source.
+     *
+     * @return bool
+     */
+    public function hasMorePages()
+    {
+        return (is_null($this->cursor) && $this->hasMore) ||
+            (! is_null($this->cursor) && $this->cursor->pointsToNextItems() && $this->hasMore) ||
+            (! is_null($this->cursor) && $this->cursor->pointsToPreviousItems());
+    }
+
+    /**
      * Determine if there are enough items to split into multiple pages.
      *
      * @return bool
@@ -110,39 +122,6 @@ class CursorPaginator extends AbstractCursorPaginator implements Arrayable, Arra
     }
 
     /**
-     * Determine if there are more items in the data source.
-     *
-     * @return bool
-     */
-    public function hasMorePages()
-    {
-        return (is_null($this->cursor) && $this->hasMore) ||
-            (! is_null($this->cursor) && $this->cursor->pointsToNextItems() && $this->hasMore) ||
-            (! is_null($this->cursor) && $this->cursor->pointsToPreviousItems());
-    }
-
-    /**
-     * Convert the object to its JSON representation.
-     *
-     * @param  int  $options
-     * @return string
-     */
-    public function toJson($options = 0)
-    {
-        return json_encode($this->jsonSerialize(), $options);
-    }
-
-    /**
-     * Convert the object into something JSON serializable.
-     *
-     * @return array
-     */
-    public function jsonSerialize()
-    {
-        return $this->toArray();
-    }
-
-    /**
      * Get the instance as an array.
      *
      * @return array
@@ -156,5 +135,26 @@ class CursorPaginator extends AbstractCursorPaginator implements Arrayable, Arra
             'next_page_url' => $this->nextPageUrl(),
             'prev_page_url' => $this->previousPageUrl(),
         ];
+    }
+
+    /**
+     * Convert the object into something JSON serializable.
+     *
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return $this->toArray();
+    }
+
+    /**
+     * Convert the object to its JSON representation.
+     *
+     * @param  int  $options
+     * @return string
+     */
+    public function toJson($options = 0)
+    {
+        return json_encode($this->jsonSerialize(), $options);
     }
 }

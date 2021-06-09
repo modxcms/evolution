@@ -25,6 +25,24 @@ trait TranslatorTrait
     /**
      * {@inheritdoc}
      */
+    public function setLocale(string $locale)
+    {
+        $this->locale = $locale;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale ?: (class_exists(\Locale::class) ? \Locale::getDefault() : 'en');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function trans(?string $id, array $parameters = [], string $domain = null, string $locale = null): string
     {
         if (null === $id || '' === $id) {
@@ -111,24 +129,6 @@ EOF;
         }
 
         return strtr($standardRules[$position], $parameters);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     */
-    public function getLocale()
-    {
-        return $this->locale ?: (class_exists(\Locale::class) ? \Locale::getDefault() : 'en');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setLocale(string $locale)
-    {
-        $this->locale = $locale;
     }
 
     /**

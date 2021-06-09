@@ -53,6 +53,33 @@ class AmqpHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
+    protected function write(array $record): void
+    {
+        $data = $record["formatted"];
+        $routingKey = $this->getRoutingKey($record);
+
+        if ($this->exchange instanceof AMQPExchange) {
+            $this->exchange->publish(
+                $data,
+                $routingKey,
+                0,
+                [
+                    'delivery_mode' => 2,
+                    'content_type' => 'application/json',
+                ]
+            );
+        } else {
+            $this->exchange->basic_publish(
+                $this->createAmqpMessage($data),
+                $this->exchangeName,
+                $routingKey
+            );
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function handleBatch(array $records): void
     {
         if ($this->exchange instanceof AMQPExchange) {
@@ -77,33 +104,6 @@ class AmqpHandler extends AbstractProcessingHandler
         }
 
         $this->exchange->publish_batch();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function write(array $record): void
-    {
-        $data = $record["formatted"];
-        $routingKey = $this->getRoutingKey($record);
-
-        if ($this->exchange instanceof AMQPExchange) {
-            $this->exchange->publish(
-                $data,
-                $routingKey,
-                0,
-                [
-                    'delivery_mode' => 2,
-                    'content_type' => 'application/json',
-                ]
-            );
-        } else {
-            $this->exchange->basic_publish(
-                $this->createAmqpMessage($data),
-                $this->exchangeName,
-                $routingKey
-            );
-        }
     }
 
     /**

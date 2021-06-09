@@ -44,6 +44,18 @@ trait LoggerTrait
     }
 
     /**
+     * New line
+     *
+     * @return  void
+     */
+    protected function ln()
+    {
+        if (isset($this->logger)) {
+            $this->logger->ln();
+        }
+    }
+
+    /**
      * Write to the logger, without newline
      *
      * @param  string  $msg    What to write.
@@ -54,18 +66,6 @@ trait LoggerTrait
     {
         if (isset($this->logger)) {
             $this->logger->log($msg, $style);
-        }
-    }
-
-    /**
-     * New line
-     *
-     * @return  void
-     */
-    protected function ln()
-    {
-        if (isset($this->logger)) {
-            $this->logger->ln();
         }
     }
 }

@@ -45,13 +45,15 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
     }
 
     /**
-     * Get an iterator for the items.
+     * Get a given attribute from the attribute array.
      *
-     * @return \ArrayIterator
+     * @param  string  $key
+     * @param  mixed  $default
+     * @return mixed
      */
-    public function getIterator()
+    public function get($key, $default = null)
     {
-        return new ArrayIterator($this->attributes);
+        return $this->attributes[$key] ?? value($default);
     }
 
     /**
@@ -85,16 +87,22 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
     }
 
     /**
-     * Return a bag of attributes with keys that do not start with the given value / pattern.
+     * Exclude the given attribute from the attribute array.
      *
-     * @param  string  $string
+     * @param  mixed|array  $keys
      * @return static
      */
-    public function whereDoesntStartWith($string)
+    public function except($keys)
     {
-        return $this->filter(function ($value, $key) use ($string) {
-            return ! Str::startsWith($key, $string);
-        });
+        if (is_null($keys)) {
+            $values = $this->attributes;
+        } else {
+            $keys = Arr::wrap($keys);
+
+            $values = Arr::except($this->attributes, $keys);
+        }
+
+        return new static($values);
     }
 
     /**
@@ -114,9 +122,24 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
      * @param  string  $string
      * @return static
      */
-    public function thatStartWith($string)
+    public function whereStartsWith($string)
     {
-        return $this->whereStartsWith($string);
+        return $this->filter(function ($value, $key) use ($string) {
+            return Str::startsWith($key, $string);
+        });
+    }
+
+    /**
+     * Return a bag of attributes with keys that do not start with the given value / pattern.
+     *
+     * @param  string  $string
+     * @return static
+     */
+    public function whereDoesntStartWith($string)
+    {
+        return $this->filter(function ($value, $key) use ($string) {
+            return ! Str::startsWith($key, $string);
+        });
     }
 
     /**
@@ -125,11 +148,9 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
      * @param  string  $string
      * @return static
      */
-    public function whereStartsWith($string)
+    public function thatStartWith($string)
     {
-        return $this->filter(function ($value, $key) use ($string) {
-            return Str::startsWith($key, $string);
-        });
+        return $this->whereStartsWith($string);
     }
 
     /**
@@ -150,25 +171,6 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
         }
 
         return $this->except($props);
-    }
-
-    /**
-     * Exclude the given attribute from the attribute array.
-     *
-     * @param  mixed|array  $keys
-     * @return static
-     */
-    public function except($keys)
-    {
-        if (is_null($keys)) {
-            $values = $this->attributes;
-        } else {
-            $keys = Arr::wrap($keys);
-
-            $values = Arr::except($this->attributes, $keys);
-        }
-
-        return new static($values);
     }
 
     /**
@@ -246,6 +248,17 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
     }
 
     /**
+     * Create a new appendable attribute value.
+     *
+     * @param  mixed  $value
+     * @return \Illuminate\View\AppendableAttributeValue
+     */
+    public function prepends($value)
+    {
+        return new AppendableAttributeValue($value);
+    }
+
+    /**
      * Resolve an appendable attribute value default value.
      *
      * @param  array  $attributeDefaults
@@ -260,17 +273,6 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
         }
 
         return $value;
-    }
-
-    /**
-     * Create a new appendable attribute value.
-     *
-     * @param  mixed  $value
-     * @return \Illuminate\View\AppendableAttributeValue
-     */
-    public function prepends($value)
-    {
-        return new AppendableAttributeValue($value);
     }
 
     /**
@@ -347,18 +349,6 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
     }
 
     /**
-     * Get a given attribute from the attribute array.
-     *
-     * @param  string  $key
-     * @param  mixed  $default
-     * @return mixed
-     */
-    public function get($key, $default = null)
-    {
-        return $this->attributes[$key] ?? value($default);
-    }
-
-    /**
      * Set the value at a given offset.
      *
      * @param  string  $offset
@@ -379,6 +369,16 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
     public function offsetUnset($offset)
     {
         unset($this->attributes[$offset]);
+    }
+
+    /**
+     * Get an iterator for the items.
+     *
+     * @return \ArrayIterator
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->attributes);
     }
 
     /**

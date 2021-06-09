@@ -65,6 +65,45 @@ trait ManagesTransactions
     }
 
     /**
+     * Handle an exception encountered when running a transacted statement.
+     *
+     * @param  \Throwable  $e
+     * @param  int  $currentAttempt
+     * @param  int  $maxAttempts
+     * @return void
+     *
+     * @throws \Throwable
+     */
+    protected function handleTransactionException(Throwable $e, $currentAttempt, $maxAttempts)
+    {
+        // On a deadlock, MySQL rolls back the entire transaction so we can't just
+        // retry the query. We have to throw this exception all the way out and
+        // let the developer handle it in another way. We will decrement too.
+        if ($this->causedByConcurrencyError($e) &&
+            $this->transactions > 1) {
+            $this->transactions--;
+
+            optional($this->transactionsManager)->rollback(
+                $this->getName(), $this->transactions
+            );
+
+            throw $e;
+        }
+
+        // If there was an exception we will rollback this transaction and then we
+        // can check if we have exceeded the maximum attempt count for this and
+        // if we haven't we will return and try this query again in our loop.
+        $this->rollBack();
+
+        if ($this->causedByConcurrencyError($e) &&
+            $currentAttempt < $maxAttempts) {
+            return;
+        }
+
+        throw $e;
+    }
+
+    /**
      * Start a new database transaction.
      *
      * @return void
@@ -107,6 +146,20 @@ trait ManagesTransactions
     }
 
     /**
+     * Create a save point within the database.
+     *
+     * @return void
+     *
+     * @throws \Throwable
+     */
+    protected function createSavepoint()
+    {
+        $this->getPdo()->exec(
+            $this->queryGrammar->compileSavepoint('trans'.($this->transactions + 1))
+        );
+    }
+
+    /**
      * Handle an exception from a transaction beginning.
      *
      * @param  \Throwable  $e
@@ -126,21 +179,29 @@ trait ManagesTransactions
     }
 
     /**
-     * Create a save point within the database.
+     * Commit the active database transaction.
      *
      * @return void
      *
      * @throws \Throwable
      */
-    protected function createSavepoint()
+    public function commit()
     {
-        $this->getPdo()->exec(
-            $this->queryGrammar->compileSavepoint('trans'.($this->transactions + 1))
-        );
+        if ($this->transactions == 1) {
+            $this->getPdo()->commit();
+        }
+
+        $this->transactions = max(0, $this->transactions - 1);
+
+        if ($this->transactions == 0) {
+            optional($this->transactionsManager)->commit($this->getName());
+        }
+
+        $this->fireConnectionEvent('committed');
     }
 
     /**
-     * Handle an exception encountered when running a transacted statement.
+     * Handle an exception encountered when committing a transaction.
      *
      * @param  \Throwable  $e
      * @param  int  $currentAttempt
@@ -149,30 +210,17 @@ trait ManagesTransactions
      *
      * @throws \Throwable
      */
-    protected function handleTransactionException(Throwable $e, $currentAttempt, $maxAttempts)
+    protected function handleCommitTransactionException(Throwable $e, $currentAttempt, $maxAttempts)
     {
-        // On a deadlock, MySQL rolls back the entire transaction so we can't just
-        // retry the query. We have to throw this exception all the way out and
-        // let the developer handle it in another way. We will decrement too.
-        if ($this->causedByConcurrencyError($e) &&
-            $this->transactions > 1) {
-            $this->transactions--;
-
-            optional($this->transactionsManager)->rollback(
-                $this->getName(), $this->transactions
-            );
-
-            throw $e;
-        }
-
-        // If there was an exception we will rollback this transaction and then we
-        // can check if we have exceeded the maximum attempt count for this and
-        // if we haven't we will return and try this query again in our loop.
-        $this->rollBack();
+        $this->transactions = max(0, $this->transactions - 1);
 
         if ($this->causedByConcurrencyError($e) &&
             $currentAttempt < $maxAttempts) {
             return;
+        }
+
+        if ($this->causedByLostConnection($e)) {
+            $this->transactions = 0;
         }
 
         throw $e;
@@ -255,54 +303,6 @@ trait ManagesTransactions
         }
 
         throw $e;
-    }
-
-    /**
-     * Handle an exception encountered when committing a transaction.
-     *
-     * @param  \Throwable  $e
-     * @param  int  $currentAttempt
-     * @param  int  $maxAttempts
-     * @return void
-     *
-     * @throws \Throwable
-     */
-    protected function handleCommitTransactionException(Throwable $e, $currentAttempt, $maxAttempts)
-    {
-        $this->transactions = max(0, $this->transactions - 1);
-
-        if ($this->causedByConcurrencyError($e) &&
-            $currentAttempt < $maxAttempts) {
-            return;
-        }
-
-        if ($this->causedByLostConnection($e)) {
-            $this->transactions = 0;
-        }
-
-        throw $e;
-    }
-
-    /**
-     * Commit the active database transaction.
-     *
-     * @return void
-     *
-     * @throws \Throwable
-     */
-    public function commit()
-    {
-        if ($this->transactions == 1) {
-            $this->getPdo()->commit();
-        }
-
-        $this->transactions = max(0, $this->transactions - 1);
-
-        if ($this->transactions == 0) {
-            optional($this->transactionsManager)->commit($this->getName());
-        }
-
-        $this->fireConnectionEvent('committed');
     }
 
     /**

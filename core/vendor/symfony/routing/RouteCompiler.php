@@ -249,6 +249,24 @@ class RouteCompiler implements RouteCompilerInterface
     }
 
     /**
+     * Determines the longest static prefix possible for a route.
+     */
+    private static function determineStaticPrefix(Route $route, array $tokens): string
+    {
+        if ('text' !== $tokens[0][0]) {
+            return ($route->hasDefault($tokens[0][3]) || '/' === $tokens[0][1]) ? '' : $tokens[0][1];
+        }
+
+        $prefix = $tokens[0][1];
+
+        if (isset($tokens[1][1]) && '/' !== $tokens[1][1] && false === $route->hasDefault($tokens[1][3])) {
+            $prefix .= $tokens[1][1];
+        }
+
+        return $prefix;
+    }
+
+    /**
      * Returns the next static character in the Route pattern that will serve as a separator (or the empty string when none available).
      */
     private static function findNextSeparator(string $pattern, bool $useUtf8): string
@@ -266,27 +284,6 @@ class RouteCompiler implements RouteCompilerInterface
         }
 
         return false !== strpos(static::SEPARATORS, $pattern[0]) ? $pattern[0] : '';
-    }
-
-    private static function transformCapturingGroupsToNonCapturings(string $regexp): string
-    {
-        for ($i = 0; $i < \strlen($regexp); ++$i) {
-            if ('\\' === $regexp[$i]) {
-                ++$i;
-                continue;
-            }
-            if ('(' !== $regexp[$i] || !isset($regexp[$i + 2])) {
-                continue;
-            }
-            if ('*' === $regexp[++$i] || '?' === $regexp[$i]) {
-                ++$i;
-                continue;
-            }
-            $regexp = substr_replace($regexp, '?:', $i, 0);
-            ++$i;
-        }
-
-        return $regexp;
     }
 
     /**
@@ -328,21 +325,24 @@ class RouteCompiler implements RouteCompilerInterface
         }
     }
 
-    /**
-     * Determines the longest static prefix possible for a route.
-     */
-    private static function determineStaticPrefix(Route $route, array $tokens): string
+    private static function transformCapturingGroupsToNonCapturings(string $regexp): string
     {
-        if ('text' !== $tokens[0][0]) {
-            return ($route->hasDefault($tokens[0][3]) || '/' === $tokens[0][1]) ? '' : $tokens[0][1];
+        for ($i = 0; $i < \strlen($regexp); ++$i) {
+            if ('\\' === $regexp[$i]) {
+                ++$i;
+                continue;
+            }
+            if ('(' !== $regexp[$i] || !isset($regexp[$i + 2])) {
+                continue;
+            }
+            if ('*' === $regexp[++$i] || '?' === $regexp[$i]) {
+                ++$i;
+                continue;
+            }
+            $regexp = substr_replace($regexp, '?:', $i, 0);
+            ++$i;
         }
 
-        $prefix = $tokens[0][1];
-
-        if (isset($tokens[1][1]) && '/' !== $tokens[1][1] && false === $route->hasDefault($tokens[1][3])) {
-            $prefix .= $tokens[1][1];
-        }
-
-        return $prefix;
+        return $regexp;
     }
 }

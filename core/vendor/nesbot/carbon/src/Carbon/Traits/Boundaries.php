@@ -33,21 +33,6 @@ use Carbon\Exceptions\UnknownUnitException;
 trait Boundaries
 {
     /**
-     * Resets the date to the first day of the month and the time to 00:00:00
-     *
-     * @example
-     * ```
-     * echo Carbon::parse('2018-07-25 12:45:16')->startOfMonth();
-     * ```
-     *
-     * @return static
-     */
-    public function startOfMonth()
-    {
-        return $this->setDate($this->year, $this->month, 1)->startOfDay();
-    }
-
-    /**
      * Resets the time to 00:00:00 start of day
      *
      * @example
@@ -60,21 +45,6 @@ trait Boundaries
     public function startOfDay()
     {
         return $this->setTime(0, 0, 0, 0);
-    }
-
-    /**
-     * Resets the date to end of the month and time to 23:59:59.999999
-     *
-     * @example
-     * ```
-     * echo Carbon::parse('2018-07-25 12:45:16')->endOfMonth();
-     * ```
-     *
-     * @return static
-     */
-    public function endOfMonth()
-    {
-        return $this->setDate($this->year, $this->month, $this->daysInMonth)->endOfDay();
     }
 
     /**
@@ -93,18 +63,33 @@ trait Boundaries
     }
 
     /**
-     * Resets the date to end of the quarter and time to 23:59:59.999999
+     * Resets the date to the first day of the month and the time to 00:00:00
      *
      * @example
      * ```
-     * echo Carbon::parse('2018-07-25 12:45:16')->endOfQuarter();
+     * echo Carbon::parse('2018-07-25 12:45:16')->startOfMonth();
      * ```
      *
      * @return static
      */
-    public function endOfQuarter()
+    public function startOfMonth()
     {
-        return $this->startOfQuarter()->addMonths(static::MONTHS_PER_QUARTER - 1)->endOfMonth();
+        return $this->setDate($this->year, $this->month, 1)->startOfDay();
+    }
+
+    /**
+     * Resets the date to end of the month and time to 23:59:59.999999
+     *
+     * @example
+     * ```
+     * echo Carbon::parse('2018-07-25 12:45:16')->endOfMonth();
+     * ```
+     *
+     * @return static
+     */
+    public function endOfMonth()
+    {
+        return $this->setDate($this->year, $this->month, $this->daysInMonth)->endOfDay();
     }
 
     /**
@@ -122,6 +107,21 @@ trait Boundaries
         $month = ($this->quarter - 1) * static::MONTHS_PER_QUARTER + 1;
 
         return $this->setDate($this->year, $month, 1)->startOfDay();
+    }
+
+    /**
+     * Resets the date to end of the quarter and time to 23:59:59.999999
+     *
+     * @example
+     * ```
+     * echo Carbon::parse('2018-07-25 12:45:16')->endOfQuarter();
+     * ```
+     *
+     * @return static
+     */
+    public function endOfQuarter()
+    {
+        return $this->startOfQuarter()->addMonths(static::MONTHS_PER_QUARTER - 1)->endOfMonth();
     }
 
     /**

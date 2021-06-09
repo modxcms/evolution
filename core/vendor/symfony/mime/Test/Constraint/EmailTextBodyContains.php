@@ -26,6 +26,14 @@ final class EmailTextBodyContains extends Constraint
 
     /**
      * {@inheritdoc}
+     */
+    public function toString(): string
+    {
+        return sprintf('contains "%s"', $this->expectedText);
+    }
+
+    /**
+     * {@inheritdoc}
      *
      * @param RawMessage $message
      */
@@ -46,13 +54,5 @@ final class EmailTextBodyContains extends Constraint
     protected function failureDescription($message): string
     {
         return 'the Email text body '.$this->toString();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function toString(): string
-    {
-        return sprintf('contains "%s"', $this->expectedText);
     }
 }

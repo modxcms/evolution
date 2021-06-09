@@ -34,44 +34,6 @@ class Cursor implements Arrayable
     }
 
     /**
-     * Get a cursor instance from the encoded string representation.
-     *
-     * @param  string|null  $encodedString
-     * @return static|null
-     */
-    public static function fromEncoded($encodedString)
-    {
-        if (is_null($encodedString) || ! is_string($encodedString)) {
-            return null;
-        }
-
-        $parameters = json_decode(base64_decode(str_replace(['-', '_'], ['+', '/'], $encodedString)), true);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return null;
-        }
-
-        $pointsToNextItems = $parameters['_pointsToNextItems'];
-
-        unset($parameters['_pointsToNextItems']);
-
-        return new static($parameters, $pointsToNextItems);
-    }
-
-    /**
-     * Get the given parameters from the cursor.
-     *
-     * @param  array  $parameterNames
-     * @return array
-     */
-    public function parameters(array $parameterNames)
-    {
-        return collect($parameterNames)->map(function ($parameterName) {
-            return $this->parameter($parameterName);
-        })->toArray();
-    }
-
-    /**
      * Get the given parameter from the cursor.
      *
      * @param  string  $parameterName
@@ -86,6 +48,19 @@ class Cursor implements Arrayable
         }
 
         return $this->parameters[$parameterName];
+    }
+
+    /**
+     * Get the given parameters from the cursor.
+     *
+     * @param  array  $parameterNames
+     * @return array
+     */
+    public function parameters(array $parameterNames)
+    {
+        return collect($parameterNames)->map(function ($parameterName) {
+            return $this->parameter($parameterName);
+        })->toArray();
     }
 
     /**
@@ -109,6 +84,18 @@ class Cursor implements Arrayable
     }
 
     /**
+     * Get the array representation of the cursor.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return array_merge($this->parameters, [
+            '_pointsToNextItems' => $this->pointsToNextItems,
+        ]);
+    }
+
+    /**
      * Get the encoded string representation of the cursor to construct a URL.
      *
      * @return string
@@ -119,14 +106,27 @@ class Cursor implements Arrayable
     }
 
     /**
-     * Get the array representation of the cursor.
+     * Get a cursor instance from the encoded string representation.
      *
-     * @return array
+     * @param  string|null  $encodedString
+     * @return static|null
      */
-    public function toArray()
+    public static function fromEncoded($encodedString)
     {
-        return array_merge($this->parameters, [
-            '_pointsToNextItems' => $this->pointsToNextItems,
-        ]);
+        if (is_null($encodedString) || ! is_string($encodedString)) {
+            return null;
+        }
+
+        $parameters = json_decode(base64_decode(str_replace(['-', '_'], ['+', '/'], $encodedString)), true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return null;
+        }
+
+        $pointsToNextItems = $parameters['_pointsToNextItems'];
+
+        unset($parameters['_pointsToNextItems']);
+
+        return new static($parameters, $pointsToNextItems);
     }
 }

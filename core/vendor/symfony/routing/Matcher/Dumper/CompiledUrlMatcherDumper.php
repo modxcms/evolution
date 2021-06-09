@@ -53,36 +53,9 @@ return [
 EOF;
     }
 
-    private function generateCompiledRoutes(): string
+    public function addExpressionLanguageProvider(ExpressionFunctionProviderInterface $provider)
     {
-        [$matchHost, $staticRoutes, $regexpCode, $dynamicRoutes, $checkConditionCode] = $this->getCompiledRoutes(true);
-
-        $code = self::export($matchHost).', // $matchHost'."\n";
-
-        $code .= '[ // $staticRoutes'."\n";
-        foreach ($staticRoutes as $path => $routes) {
-            $code .= sprintf("    %s => [\n", self::export($path));
-            foreach ($routes as $route) {
-                $code .= sprintf("        [%s, %s, %s, %s, %s, %s, %s],\n", ...array_map([__CLASS__, 'export'], $route));
-            }
-            $code .= "    ],\n";
-        }
-        $code .= "],\n";
-
-        $code .= sprintf("[ // \$regexpList%s\n],\n", $regexpCode);
-
-        $code .= '[ // $dynamicRoutes'."\n";
-        foreach ($dynamicRoutes as $path => $routes) {
-            $code .= sprintf("    %s => [\n", self::export($path));
-            foreach ($routes as $route) {
-                $code .= sprintf("        [%s, %s, %s, %s, %s, %s, %s],\n", ...array_map([__CLASS__, 'export'], $route));
-            }
-            $code .= "    ],\n";
-        }
-        $code .= "],\n";
-        $code = preg_replace('/ => \[\n        (\[.+?),\n    \],/', ' => [$1],', $code);
-
-        return $this->indent($code, 1).$checkConditionCode;
+        $this->expressionLanguageProviders[] = $provider;
     }
 
     /**
@@ -156,6 +129,38 @@ EOF;
         return $compiledRoutes;
     }
 
+    private function generateCompiledRoutes(): string
+    {
+        [$matchHost, $staticRoutes, $regexpCode, $dynamicRoutes, $checkConditionCode] = $this->getCompiledRoutes(true);
+
+        $code = self::export($matchHost).', // $matchHost'."\n";
+
+        $code .= '[ // $staticRoutes'."\n";
+        foreach ($staticRoutes as $path => $routes) {
+            $code .= sprintf("    %s => [\n", self::export($path));
+            foreach ($routes as $route) {
+                $code .= sprintf("        [%s, %s, %s, %s, %s, %s, %s],\n", ...array_map([__CLASS__, 'export'], $route));
+            }
+            $code .= "    ],\n";
+        }
+        $code .= "],\n";
+
+        $code .= sprintf("[ // \$regexpList%s\n],\n", $regexpCode);
+
+        $code .= '[ // $dynamicRoutes'."\n";
+        foreach ($dynamicRoutes as $path => $routes) {
+            $code .= sprintf("    %s => [\n", self::export($path));
+            foreach ($routes as $route) {
+                $code .= sprintf("        [%s, %s, %s, %s, %s, %s, %s],\n", ...array_map([__CLASS__, 'export'], $route));
+            }
+            $code .= "    ],\n";
+        }
+        $code .= "],\n";
+        $code = preg_replace('/ => \[\n        (\[.+?),\n    \],/', ' => [$1],', $code);
+
+        return $this->indent($code, 1).$checkConditionCode;
+    }
+
     /**
      * Splits static routes from dynamic routes, so that they can be matched first, using a simple switch.
      */
@@ -222,48 +227,6 @@ EOF;
         }
 
         return $compiledRoutes;
-    }
-
-    /**
-     * Compiles a single Route to PHP code used to match it against the path info.
-     */
-    private function compileRoute(Route $route, string $name, $vars, bool $hasTrailingSlash, bool $hasTrailingVar, array &$conditions): array
-    {
-        $defaults = $route->getDefaults();
-
-        if (isset($defaults['_canonical_route'])) {
-            $name = $defaults['_canonical_route'];
-            unset($defaults['_canonical_route']);
-        }
-
-        if ($condition = $route->getCondition()) {
-            $condition = $this->getExpressionLanguage()->compile($condition, ['context', 'request']);
-            $condition = $conditions[$condition] ?? $conditions[$condition] = (false !== strpos($condition, '$request') ? 1 : -1) * \count($conditions);
-        } else {
-            $condition = null;
-        }
-
-        return [
-            ['_route' => $name] + $defaults,
-            $vars,
-            array_flip($route->getMethods()) ?: null,
-            array_flip($route->getSchemes()) ?: null,
-            $hasTrailingSlash,
-            $hasTrailingVar,
-            $condition,
-        ];
-    }
-
-    private function getExpressionLanguage(): ExpressionLanguage
-    {
-        if (null === $this->expressionLanguage) {
-            if (!class_exists(ExpressionLanguage::class)) {
-                throw new \LogicException('Unable to use expressions as the Symfony ExpressionLanguage component is not installed.');
-            }
-            $this->expressionLanguage = new ExpressionLanguage(null, $this->expressionLanguageProviders);
-        }
-
-        return $this->expressionLanguage;
     }
 
     /**
@@ -403,45 +366,6 @@ EOF;
     }
 
     /**
-     * @internal
-     */
-    public static function export($value): string
-    {
-        if (null === $value) {
-            return 'null';
-        }
-        if (!\is_array($value)) {
-            if (\is_object($value)) {
-                throw new \InvalidArgumentException('Symfony\Component\Routing\Route cannot contain objects.');
-            }
-
-            return str_replace("\n", '\'."\n".\'', var_export($value, true));
-        }
-        if (!$value) {
-            return '[]';
-        }
-
-        $i = 0;
-        $export = '[';
-
-        foreach ($value as $k => $v) {
-            if ($i === $k) {
-                ++$i;
-            } else {
-                $export .= self::export($k).' => ';
-
-                if (\is_int($k) && $i < $k) {
-                    $i = 1 + $k;
-                }
-            }
-
-            $export .= self::export($v).', ';
-        }
-
-        return substr_replace($export, ']', -2);
-    }
-
-    /**
      * Compiles a regexp tree of subpatterns that matches nested same-prefix routes.
      *
      * @param \stdClass $state A simple state object that keeps track of the progress of the compilation,
@@ -489,13 +413,89 @@ EOF;
         return $code;
     }
 
+    /**
+     * Compiles a single Route to PHP code used to match it against the path info.
+     */
+    private function compileRoute(Route $route, string $name, $vars, bool $hasTrailingSlash, bool $hasTrailingVar, array &$conditions): array
+    {
+        $defaults = $route->getDefaults();
+
+        if (isset($defaults['_canonical_route'])) {
+            $name = $defaults['_canonical_route'];
+            unset($defaults['_canonical_route']);
+        }
+
+        if ($condition = $route->getCondition()) {
+            $condition = $this->getExpressionLanguage()->compile($condition, ['context', 'request']);
+            $condition = $conditions[$condition] ?? $conditions[$condition] = (false !== strpos($condition, '$request') ? 1 : -1) * \count($conditions);
+        } else {
+            $condition = null;
+        }
+
+        return [
+            ['_route' => $name] + $defaults,
+            $vars,
+            array_flip($route->getMethods()) ?: null,
+            array_flip($route->getSchemes()) ?: null,
+            $hasTrailingSlash,
+            $hasTrailingVar,
+            $condition,
+        ];
+    }
+
+    private function getExpressionLanguage(): ExpressionLanguage
+    {
+        if (null === $this->expressionLanguage) {
+            if (!class_exists(ExpressionLanguage::class)) {
+                throw new \LogicException('Unable to use expressions as the Symfony ExpressionLanguage component is not installed.');
+            }
+            $this->expressionLanguage = new ExpressionLanguage(null, $this->expressionLanguageProviders);
+        }
+
+        return $this->expressionLanguage;
+    }
+
     private function indent(string $code, int $level = 1): string
     {
         return preg_replace('/^./m', str_repeat('    ', $level).'$0', $code);
     }
 
-    public function addExpressionLanguageProvider(ExpressionFunctionProviderInterface $provider)
+    /**
+     * @internal
+     */
+    public static function export($value): string
     {
-        $this->expressionLanguageProviders[] = $provider;
+        if (null === $value) {
+            return 'null';
+        }
+        if (!\is_array($value)) {
+            if (\is_object($value)) {
+                throw new \InvalidArgumentException('Symfony\Component\Routing\Route cannot contain objects.');
+            }
+
+            return str_replace("\n", '\'."\n".\'', var_export($value, true));
+        }
+        if (!$value) {
+            return '[]';
+        }
+
+        $i = 0;
+        $export = '[';
+
+        foreach ($value as $k => $v) {
+            if ($i === $k) {
+                ++$i;
+            } else {
+                $export .= self::export($k).' => ';
+
+                if (\is_int($k) && $i < $k) {
+                    $i = 1 + $k;
+                }
+            }
+
+            $export .= self::export($v).', ';
+        }
+
+        return substr_replace($export, ']', -2);
     }
 }

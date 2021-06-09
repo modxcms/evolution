@@ -58,28 +58,6 @@ class PhpRedisConnection extends Connection implements ConnectionContract
     }
 
     /**
-     * Run a command against the Redis database.
-     *
-     * @param  string  $method
-     * @param  array  $parameters
-     * @return mixed
-     *
-     * @throws \RedisException
-     */
-    public function command($method, array $parameters = [])
-    {
-        try {
-            return parent::command($method, $parameters);
-        } catch (RedisException $e) {
-            if (Str::contains($e->getMessage(), 'went away')) {
-                $this->client = $this->connector ? call_user_func($this->connector) : $this->client;
-            }
-
-            throw $e;
-        }
-    }
-
-    /**
      * Get the values of all the given keys.
      *
      * @param  array  $keys
@@ -540,6 +518,28 @@ class PhpRedisConnection extends Connection implements ConnectionContract
     }
 
     /**
+     * Run a command against the Redis database.
+     *
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return mixed
+     *
+     * @throws \RedisException
+     */
+    public function command($method, array $parameters = [])
+    {
+        try {
+            return parent::command($method, $parameters);
+        } catch (RedisException $e) {
+            if (Str::contains($e->getMessage(), 'went away')) {
+                $this->client = $this->connector ? call_user_func($this->connector) : $this->client;
+            }
+
+            throw $e;
+        }
+    }
+
+    /**
      * Disconnects from the Redis instance.
      *
      * @return void
@@ -547,18 +547,6 @@ class PhpRedisConnection extends Connection implements ConnectionContract
     public function disconnect()
     {
         $this->client->close();
-    }
-
-    /**
-     * Pass other method calls down to the underlying client.
-     *
-     * @param  string  $method
-     * @param  array  $parameters
-     * @return mixed
-     */
-    public function __call($method, $parameters)
-    {
-        return parent::__call(strtolower($method), $parameters);
     }
 
     /**
@@ -572,5 +560,17 @@ class PhpRedisConnection extends Connection implements ConnectionContract
         $prefix = (string) $this->client->getOption(Redis::OPT_PREFIX);
 
         return $prefix.$key;
+    }
+
+    /**
+     * Pass other method calls down to the underlying client.
+     *
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        return parent::__call(strtolower($method), $parameters);
     }
 }

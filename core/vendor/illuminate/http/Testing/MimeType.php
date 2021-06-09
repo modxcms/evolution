@@ -15,6 +15,20 @@ class MimeType
     private static $mime;
 
     /**
+     * Get the mime types instance.
+     *
+     * @return \Symfony\Component\Mime\MimeTypesInterface
+     */
+    public static function getMimeTypes()
+    {
+        if (self::$mime === null) {
+            self::$mime = new MimeTypes;
+        }
+
+        return self::$mime;
+    }
+
+    /**
      * Get the MIME type for a file based on the file's extension.
      *
      * @param  string  $filename
@@ -36,20 +50,6 @@ class MimeType
     public static function get($extension)
     {
         return Arr::first(self::getMimeTypes()->getMimeTypes($extension)) ?? 'application/octet-stream';
-    }
-
-    /**
-     * Get the mime types instance.
-     *
-     * @return \Symfony\Component\Mime\MimeTypesInterface
-     */
-    public static function getMimeTypes()
-    {
-        if (self::$mime === null) {
-            self::$mime = new MimeTypes;
-        }
-
-        return self::$mime;
     }
 
     /**

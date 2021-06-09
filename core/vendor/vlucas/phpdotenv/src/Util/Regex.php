@@ -40,27 +40,6 @@ final class Regex
     }
 
     /**
-     * Perform a preg operation, wrapping up the result.
-     *
-     * @template V
-     *
-     * @param callable(string):V $operation
-     * @param string             $subject
-     *
-     * @return \GrahamCampbell\ResultType\Result<V,string>
-     */
-    private static function pregAndWrap(callable $operation, string $subject)
-    {
-        $result = $operation($subject);
-
-        if (\preg_last_error() !== \PREG_NO_ERROR) {
-            return Error::create(\preg_last_error_msg());
-        }
-
-        return Success::create($result);
-    }
-
-    /**
      * Perform a preg match all, wrapping up the result.
      *
      * @param string $pattern
@@ -106,5 +85,26 @@ final class Regex
             /** @var string[] */
             return (array) @\preg_split($pattern, $subject);
         }, $subject);
+    }
+
+    /**
+     * Perform a preg operation, wrapping up the result.
+     *
+     * @template V
+     *
+     * @param callable(string):V $operation
+     * @param string             $subject
+     *
+     * @return \GrahamCampbell\ResultType\Result<V,string>
+     */
+    private static function pregAndWrap(callable $operation, string $subject)
+    {
+        $result = $operation($subject);
+
+        if (\preg_last_error() !== \PREG_NO_ERROR) {
+            return Error::create(\preg_last_error_msg());
+        }
+
+        return Success::create($result);
     }
 }

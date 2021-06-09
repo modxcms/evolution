@@ -53,6 +53,11 @@ class TableCellStyle
         $this->options = array_merge($this->options, $options);
     }
 
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
+
     /**
      * Gets options we need for tag for example fg, bg.
      *
@@ -67,11 +72,6 @@ class TableCellStyle
             },
             \ARRAY_FILTER_USE_KEY
         );
-    }
-
-    public function getOptions(): array
-    {
-        return $this->options;
     }
 
     public function getPadByAlign()

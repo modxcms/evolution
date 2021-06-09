@@ -84,17 +84,6 @@ class PluginInstaller extends LibraryInstaller
     }
 
     /**
-     * TODO v3 should make this private once we can drop PHP 5.3 support
-     * @private
-     */
-    public function rollbackInstall(\Exception $e, InstalledRepositoryInterface $repo, PackageInterface $package)
-    {
-        $this->io->writeError('Plugin initialization failed ('.$e->getMessage().'), uninstalling plugin');
-        parent::uninstall($repo, $package);
-        throw $e;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function update(InstalledRepositoryInterface $repo, PackageInterface $initial, PackageInterface $target)
@@ -123,5 +112,16 @@ class PluginInstaller extends LibraryInstaller
         $this->composer->getPluginManager()->uninstallPackage($package, true);
 
         return parent::uninstall($repo, $package);
+    }
+
+    /**
+     * TODO v3 should make this private once we can drop PHP 5.3 support
+     * @private
+     */
+    public function rollbackInstall(\Exception $e, InstalledRepositoryInterface $repo, PackageInterface $package)
+    {
+        $this->io->writeError('Plugin initialization failed ('.$e->getMessage().'), uninstalling plugin');
+        parent::uninstall($repo, $package);
+        throw $e;
     }
 }

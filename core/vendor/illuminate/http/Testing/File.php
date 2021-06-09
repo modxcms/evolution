@@ -53,26 +53,6 @@ class File extends UploadedFile
     }
 
     /**
-     * Get the path to the temporary file.
-     *
-     * @return string
-     */
-    protected function tempFilePath()
-    {
-        return stream_get_meta_data($this->tempFile)['uri'];
-    }
-
-    /**
-     * Get the MIME type of the file.
-     *
-     * @return string
-     */
-    public function getMimeType()
-    {
-        return $this->mimeTypeToReport ?: MimeType::from($this->name);
-    }
-
-    /**
      * Create a new fake file.
      *
      * @param  string  $name
@@ -143,5 +123,25 @@ class File extends UploadedFile
         $this->mimeTypeToReport = $mimeType;
 
         return $this;
+    }
+
+    /**
+     * Get the MIME type of the file.
+     *
+     * @return string
+     */
+    public function getMimeType()
+    {
+        return $this->mimeTypeToReport ?: MimeType::from($this->name);
+    }
+
+    /**
+     * Get the path to the temporary file.
+     *
+     * @return string
+     */
+    protected function tempFilePath()
+    {
+        return stream_get_meta_data($this->tempFile)['uri'];
     }
 }

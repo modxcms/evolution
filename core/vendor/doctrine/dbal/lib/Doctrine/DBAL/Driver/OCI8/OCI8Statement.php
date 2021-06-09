@@ -56,12 +56,22 @@ use const SQLT_CHR;
  */
 class OCI8Statement implements IteratorAggregate, StatementInterface, Result
 {
+    /** @var resource */
+    protected $_dbh;
+
+    /** @var resource */
+    protected $_sth;
+
+    /** @var OCI8Connection */
+    protected $_conn;
+
     /**
      * @deprecated
      *
      * @var string
      */
     protected static $_PARAM = ':param';
+
     /** @var int[] */
     protected static $fetchModeMap = [
         FetchMode::MIXED       => OCI_BOTH,
@@ -69,12 +79,7 @@ class OCI8Statement implements IteratorAggregate, StatementInterface, Result
         FetchMode::NUMERIC     => OCI_NUM,
         FetchMode::COLUMN      => OCI_NUM,
     ];
-    /** @var resource */
-    protected $_dbh;
-    /** @var resource */
-    protected $_sth;
-    /** @var OCI8Connection */
-    protected $_conn;
+
     /** @var int */
     protected $_defaultFetchMode = FetchMode::MIXED;
 
@@ -220,27 +225,6 @@ class OCI8Statement implements IteratorAggregate, StatementInterface, Result
     }
 
     /**
-     * Finds the token described by regex starting from the given offset. Updates the offset with the position
-     * where the token was found.
-     *
-     * @param string $statement The SQL statement to parse
-     * @param int    $offset    The offset to start searching from
-     * @param string $regex     The regex containing token pattern
-     *
-     * @return string|null Token or NULL if not found
-     */
-    private static function findToken($statement, &$offset, $regex)
-    {
-        if (preg_match($regex, $statement, $matches, PREG_OFFSET_CAPTURE, $offset)) {
-            $offset = $matches[0][1];
-
-            return $matches[0][0];
-        }
-
-        return null;
-    }
-
-    /**
      * Finds closing quote
      *
      * @param string $statement               The SQL statement to parse
@@ -273,77 +257,24 @@ class OCI8Statement implements IteratorAggregate, StatementInterface, Result
     }
 
     /**
-     * {@inheritdoc}
+     * Finds the token described by regex starting from the given offset. Updates the offset with the position
+     * where the token was found.
      *
-     * @deprecated Use free() instead.
-     */
-    public function closeCursor()
-    {
-        $this->free();
-
-        return true;
-    }
-
-    public function free(): void
-    {
-        // not having the result means there's nothing to close
-        if (! $this->result) {
-            return;
-        }
-
-        oci_cancel($this->_sth);
-
-        $this->result = false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function columnCount()
-    {
-        return oci_num_fields($this->_sth) ?: 0;
-    }
-
-    /**
-     * {@inheritdoc}
+     * @param string $statement The SQL statement to parse
+     * @param int    $offset    The offset to start searching from
+     * @param string $regex     The regex containing token pattern
      *
-     * @deprecated The error information is available via exceptions.
+     * @return string|null Token or NULL if not found
      */
-    public function errorCode()
+    private static function findToken($statement, &$offset, $regex)
     {
-        $error = oci_error($this->_sth);
-        if ($error !== false) {
-            $error = $error['code'];
+        if (preg_match($regex, $statement, $matches, PREG_OFFSET_CAPTURE, $offset)) {
+            $offset = $matches[0][1];
+
+            return $matches[0][0];
         }
 
-        return $error;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function execute($params = null)
-    {
-        if ($params) {
-            $hasZeroIndex = array_key_exists(0, $params);
-
-            foreach ($params as $key => $val) {
-                if ($hasZeroIndex && is_int($key)) {
-                    $this->bindValue($key + 1, $val);
-                } else {
-                    $this->bindValue($key, $val);
-                }
-            }
-        }
-
-        $ret = @oci_execute($this->_sth, $this->_conn->getExecuteMode());
-        if (! $ret) {
-            throw OCI8Exception::fromErrorInfo($this->errorInfo());
-        }
-
-        $this->result = true;
-
-        return $ret;
+        return null;
     }
 
     /**
@@ -408,6 +339,41 @@ class OCI8Statement implements IteratorAggregate, StatementInterface, Result
     /**
      * {@inheritdoc}
      *
+     * @deprecated Use free() instead.
+     */
+    public function closeCursor()
+    {
+        $this->free();
+
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function columnCount()
+    {
+        return oci_num_fields($this->_sth) ?: 0;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @deprecated The error information is available via exceptions.
+     */
+    public function errorCode()
+    {
+        $error = oci_error($this->_sth);
+        if ($error !== false) {
+            $error = $error['code'];
+        }
+
+        return $error;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @deprecated The error information is available via exceptions.
      */
     public function errorInfo()
@@ -419,6 +385,33 @@ class OCI8Statement implements IteratorAggregate, StatementInterface, Result
         }
 
         return $error;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function execute($params = null)
+    {
+        if ($params) {
+            $hasZeroIndex = array_key_exists(0, $params);
+
+            foreach ($params as $key => $val) {
+                if ($hasZeroIndex && is_int($key)) {
+                    $this->bindValue($key + 1, $val);
+                } else {
+                    $this->bindValue($key, $val);
+                }
+            }
+        }
+
+        $ret = @oci_execute($this->_sth, $this->_conn->getExecuteMode());
+        if (! $ret) {
+            throw OCI8Exception::fromErrorInfo($this->errorInfo());
+        }
+
+        $this->result = true;
+
+        return $ret;
     }
 
     /**
@@ -441,6 +434,39 @@ class OCI8Statement implements IteratorAggregate, StatementInterface, Result
     public function getIterator()
     {
         return new StatementIterator($this);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @deprecated Use fetchNumeric(), fetchAssociative() or fetchOne() instead.
+     */
+    public function fetch($fetchMode = null, $cursorOrientation = PDO::FETCH_ORI_NEXT, $cursorOffset = 0)
+    {
+        // do not try fetching from the statement if it's not expected to contain result
+        // in order to prevent exceptional situation
+        if (! $this->result) {
+            return false;
+        }
+
+        $fetchMode = $fetchMode ?: $this->_defaultFetchMode;
+
+        if ($fetchMode === FetchMode::COLUMN) {
+            return $this->fetchColumn();
+        }
+
+        if ($fetchMode === FetchMode::STANDARD_OBJECT) {
+            return oci_fetch_object($this->_sth);
+        }
+
+        if (! isset(self::$fetchModeMap[$fetchMode])) {
+            throw new InvalidArgumentException('Invalid fetch style: ' . $fetchMode);
+        }
+
+        return oci_fetch_array(
+            $this->_sth,
+            self::$fetchModeMap[$fetchMode] | OCI_RETURN_NULLS | OCI_RETURN_LOBS
+        );
     }
 
     /**
@@ -502,39 +528,6 @@ class OCI8Statement implements IteratorAggregate, StatementInterface, Result
     /**
      * {@inheritdoc}
      *
-     * @deprecated Use fetchNumeric(), fetchAssociative() or fetchOne() instead.
-     */
-    public function fetch($fetchMode = null, $cursorOrientation = PDO::FETCH_ORI_NEXT, $cursorOffset = 0)
-    {
-        // do not try fetching from the statement if it's not expected to contain result
-        // in order to prevent exceptional situation
-        if (! $this->result) {
-            return false;
-        }
-
-        $fetchMode = $fetchMode ?: $this->_defaultFetchMode;
-
-        if ($fetchMode === FetchMode::COLUMN) {
-            return $this->fetchColumn();
-        }
-
-        if ($fetchMode === FetchMode::STANDARD_OBJECT) {
-            return oci_fetch_object($this->_sth);
-        }
-
-        if (! isset(self::$fetchModeMap[$fetchMode])) {
-            throw new InvalidArgumentException('Invalid fetch style: ' . $fetchMode);
-        }
-
-        return oci_fetch_array(
-            $this->_sth,
-            self::$fetchModeMap[$fetchMode] | OCI_RETURN_NULLS | OCI_RETURN_LOBS
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     *
      * @deprecated Use fetchOne() instead.
      */
     public function fetchColumn($columnIndex = 0)
@@ -571,23 +564,6 @@ class OCI8Statement implements IteratorAggregate, StatementInterface, Result
     }
 
     /**
-     * @return mixed|false
-     */
-    private function doFetch(int $mode)
-    {
-        // do not try fetching from the statement if it's not expected to contain the result
-        // in order to prevent exceptional situation
-        if (! $this->result) {
-            return false;
-        }
-
-        return oci_fetch_array(
-            $this->_sth,
-            $mode | OCI_RETURN_NULLS | OCI_RETURN_LOBS
-        );
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function fetchAssociative()
@@ -612,6 +588,51 @@ class OCI8Statement implements IteratorAggregate, StatementInterface, Result
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function fetchAllAssociative(): array
+    {
+        return $this->doFetchAll(OCI_ASSOC, OCI_FETCHSTATEMENT_BY_ROW);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function fetchFirstColumn(): array
+    {
+        return $this->doFetchAll(OCI_NUM, OCI_FETCHSTATEMENT_BY_COLUMN)[0];
+    }
+
+    public function free(): void
+    {
+        // not having the result means there's nothing to close
+        if (! $this->result) {
+            return;
+        }
+
+        oci_cancel($this->_sth);
+
+        $this->result = false;
+    }
+
+    /**
+     * @return mixed|false
+     */
+    private function doFetch(int $mode)
+    {
+        // do not try fetching from the statement if it's not expected to contain the result
+        // in order to prevent exceptional situation
+        if (! $this->result) {
+            return false;
+        }
+
+        return oci_fetch_array(
+            $this->_sth,
+            $mode | OCI_RETURN_NULLS | OCI_RETURN_LOBS
+        );
+    }
+
+    /**
      * @return array<mixed>
      */
     private function doFetchAll(int $mode, int $fetchStructure): array
@@ -631,21 +652,5 @@ class OCI8Statement implements IteratorAggregate, StatementInterface, Result
         );
 
         return $result;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function fetchAllAssociative(): array
-    {
-        return $this->doFetchAll(OCI_ASSOC, OCI_FETCHSTATEMENT_BY_ROW);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function fetchFirstColumn(): array
-    {
-        return $this->doFetchAll(OCI_NUM, OCI_FETCHSTATEMENT_BY_COLUMN)[0];
     }
 }

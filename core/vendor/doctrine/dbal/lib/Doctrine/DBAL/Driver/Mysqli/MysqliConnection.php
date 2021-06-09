@@ -98,80 +98,6 @@ class MysqliConnection implements ConnectionInterface, PingableConnection, Serve
     }
 
     /**
-     * Establish a secure connection
-     *
-     * @param array<string,string> $params
-     *
-     * @throws MysqliException
-     */
-    private function setSecureConnection(array $params): void
-    {
-        if (
-            ! isset($params['ssl_key']) &&
-            ! isset($params['ssl_cert']) &&
-            ! isset($params['ssl_ca']) &&
-            ! isset($params['ssl_capath']) &&
-            ! isset($params['ssl_cipher'])
-        ) {
-            return;
-        }
-
-        $this->conn->ssl_set(
-            $params['ssl_key']    ?? '',
-            $params['ssl_cert']   ?? '',
-            $params['ssl_ca']     ?? '',
-            $params['ssl_capath'] ?? '',
-            $params['ssl_cipher'] ?? ''
-        );
-    }
-
-    /**
-     * Apply the driver options to the connection.
-     *
-     * @param mixed[] $driverOptions
-     *
-     * @throws MysqliException When one of of the options is not supported.
-     * @throws MysqliException When applying doesn't work - e.g. due to incorrect value.
-     */
-    private function setDriverOptions(array $driverOptions = []): void
-    {
-        $supportedDriverOptions = [
-            MYSQLI_OPT_CONNECT_TIMEOUT,
-            MYSQLI_OPT_LOCAL_INFILE,
-            MYSQLI_OPT_READ_TIMEOUT,
-            MYSQLI_INIT_COMMAND,
-            MYSQLI_READ_DEFAULT_FILE,
-            MYSQLI_READ_DEFAULT_GROUP,
-            MYSQLI_SERVER_PUBLIC_KEY,
-        ];
-
-        $exceptionMsg = "%s option '%s' with value '%s'";
-
-        foreach ($driverOptions as $option => $value) {
-            if ($option === static::OPTION_FLAGS) {
-                continue;
-            }
-
-            if (! in_array($option, $supportedDriverOptions, true)) {
-                throw InvalidOption::fromOption($option, $value);
-            }
-
-            if (@mysqli_options($this->conn, $option, $value)) {
-                continue;
-            }
-
-            $msg  = sprintf($exceptionMsg, 'Failed to set', $option, $value);
-            $msg .= sprintf(', error: %s (%d)', mysqli_error($this->conn), mysqli_errno($this->conn));
-
-            throw new MysqliException(
-                $msg,
-                $this->conn->sqlstate,
-                $this->conn->errno
-            );
-        }
-    }
-
-    /**
      * Retrieves mysqli native resource handle.
      *
      * Could be used if part of your application is not using DBAL.
@@ -222,6 +148,14 @@ class MysqliConnection implements ConnectionInterface, PingableConnection, Serve
     /**
      * {@inheritdoc}
      */
+    public function prepare($sql)
+    {
+        return new Statement($this->conn, $sql);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function query()
     {
         $args = func_get_args();
@@ -230,14 +164,6 @@ class MysqliConnection implements ConnectionInterface, PingableConnection, Serve
         $stmt->execute();
 
         return $stmt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function prepare($sql)
-    {
-        return new Statement($this->conn, $sql);
     }
 
     /**
@@ -319,6 +245,52 @@ class MysqliConnection implements ConnectionInterface, PingableConnection, Serve
     }
 
     /**
+     * Apply the driver options to the connection.
+     *
+     * @param mixed[] $driverOptions
+     *
+     * @throws MysqliException When one of of the options is not supported.
+     * @throws MysqliException When applying doesn't work - e.g. due to incorrect value.
+     */
+    private function setDriverOptions(array $driverOptions = []): void
+    {
+        $supportedDriverOptions = [
+            MYSQLI_OPT_CONNECT_TIMEOUT,
+            MYSQLI_OPT_LOCAL_INFILE,
+            MYSQLI_OPT_READ_TIMEOUT,
+            MYSQLI_INIT_COMMAND,
+            MYSQLI_READ_DEFAULT_FILE,
+            MYSQLI_READ_DEFAULT_GROUP,
+            MYSQLI_SERVER_PUBLIC_KEY,
+        ];
+
+        $exceptionMsg = "%s option '%s' with value '%s'";
+
+        foreach ($driverOptions as $option => $value) {
+            if ($option === static::OPTION_FLAGS) {
+                continue;
+            }
+
+            if (! in_array($option, $supportedDriverOptions, true)) {
+                throw InvalidOption::fromOption($option, $value);
+            }
+
+            if (@mysqli_options($this->conn, $option, $value)) {
+                continue;
+            }
+
+            $msg  = sprintf($exceptionMsg, 'Failed to set', $option, $value);
+            $msg .= sprintf(', error: %s (%d)', mysqli_error($this->conn), mysqli_errno($this->conn));
+
+            throw new MysqliException(
+                $msg,
+                $this->conn->sqlstate,
+                $this->conn->errno
+            );
+        }
+    }
+
+    /**
      * Pings the server and re-connects when `mysqli.reconnect = 1`
      *
      * @deprecated
@@ -328,5 +300,33 @@ class MysqliConnection implements ConnectionInterface, PingableConnection, Serve
     public function ping()
     {
         return $this->conn->ping();
+    }
+
+    /**
+     * Establish a secure connection
+     *
+     * @param array<string,string> $params
+     *
+     * @throws MysqliException
+     */
+    private function setSecureConnection(array $params): void
+    {
+        if (
+            ! isset($params['ssl_key']) &&
+            ! isset($params['ssl_cert']) &&
+            ! isset($params['ssl_ca']) &&
+            ! isset($params['ssl_capath']) &&
+            ! isset($params['ssl_cipher'])
+        ) {
+            return;
+        }
+
+        $this->conn->ssl_set(
+            $params['ssl_key']    ?? '',
+            $params['ssl_cert']   ?? '',
+            $params['ssl_ca']     ?? '',
+            $params['ssl_capath'] ?? '',
+            $params['ssl_cipher'] ?? ''
+        );
     }
 }

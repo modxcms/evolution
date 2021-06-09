@@ -28,10 +28,6 @@ final class None extends Option
     /** @var None|null */
     private static $instance;
 
-    private function __construct()
-    {
-    }
-
     /**
      * @return None
      */
@@ -132,5 +128,9 @@ final class None extends Option
     public function foldRight($initialValue, $callable)
     {
         return $initialValue;
+    }
+
+    private function __construct()
+    {
     }
 }

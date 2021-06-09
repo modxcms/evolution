@@ -48,32 +48,9 @@ class Profile
         $this->token = $token;
     }
 
-    /**
-     * Returns the parent profile.
-     *
-     * @return self
-     */
-    public function getParent()
+    public function setToken(string $token)
     {
-        return $this->parent;
-    }
-
-    /**
-     * Sets the parent token.
-     */
-    public function setParent(self $parent)
-    {
-        $this->parent = $parent;
-    }
-
-    /**
-     * Returns the parent token.
-     *
-     * @return string|null The parent token
-     */
-    public function getParentToken()
-    {
-        return $this->parent ? $this->parent->getToken() : null;
+        $this->token = $token;
     }
 
     /**
@@ -86,9 +63,32 @@ class Profile
         return $this->token;
     }
 
-    public function setToken(string $token)
+    /**
+     * Sets the parent token.
+     */
+    public function setParent(self $parent)
     {
-        $this->token = $token;
+        $this->parent = $parent;
+    }
+
+    /**
+     * Returns the parent profile.
+     *
+     * @return self
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * Returns the parent token.
+     *
+     * @return string|null The parent token
+     */
+    public function getParentToken()
+    {
+        return $this->parent ? $this->parent->getToken() : null;
     }
 
     /**
@@ -153,17 +153,17 @@ class Profile
         $this->time = $time;
     }
 
+    public function setStatusCode(int $statusCode)
+    {
+        $this->statusCode = $statusCode;
+    }
+
     /**
      * @return int|null
      */
     public function getStatusCode()
     {
         return $this->statusCode;
-    }
-
-    public function setStatusCode(int $statusCode)
-    {
-        $this->statusCode = $statusCode;
     }
 
     /**

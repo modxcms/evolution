@@ -32,6 +32,26 @@ class Status implements ResponseInterface
     }
 
     /**
+     * Converts the response object to its string representation.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->payload;
+    }
+
+    /**
+     * Returns the payload of status response.
+     *
+     * @return string
+     */
+    public function getPayload()
+    {
+        return $this->payload;
+    }
+
+    /**
      * Returns an instance of a status response object.
      *
      * Common status responses such as OK or QUEUED are cached in order to lower
@@ -55,25 +75,5 @@ class Status implements ResponseInterface
             default:
                 return new self($payload);
         }
-    }
-
-    /**
-     * Converts the response object to its string representation.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->payload;
-    }
-
-    /**
-     * Returns the payload of status response.
-     *
-     * @return string
-     */
-    public function getPayload()
-    {
-        return $this->payload;
     }
 }

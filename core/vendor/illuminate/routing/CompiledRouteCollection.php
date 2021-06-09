@@ -164,6 +164,28 @@ class CompiledRouteCollection extends AbstractRouteCollection
     }
 
     /**
+     * Get routes from the collection by method.
+     *
+     * @param  string|null  $method
+     * @return \Illuminate\Routing\Route[]
+     */
+    public function get($method = null)
+    {
+        return $this->getRoutesByMethod()[$method] ?? [];
+    }
+
+    /**
+     * Determine if the route collection contains a given named route.
+     *
+     * @param  string  $name
+     * @return bool
+     */
+    public function hasNamedRoute($name)
+    {
+        return isset($this->attributes[$name]) || $this->routes->hasNamedRoute($name);
+    }
+
+    /**
      * Get a route instance by its name.
      *
      * @param  string  $name
@@ -176,6 +198,82 @@ class CompiledRouteCollection extends AbstractRouteCollection
         }
 
         return $this->routes->getByName($name);
+    }
+
+    /**
+     * Get a route instance by its controller action.
+     *
+     * @param  string  $action
+     * @return \Illuminate\Routing\Route|null
+     */
+    public function getByAction($action)
+    {
+        $attributes = collect($this->attributes)->first(function (array $attributes) use ($action) {
+            if (isset($attributes['action']['controller'])) {
+                return trim($attributes['action']['controller'], '\\') === $action;
+            }
+
+            return $attributes['action']['uses'] === $action;
+        });
+
+        if ($attributes) {
+            return $this->newRoute($attributes);
+        }
+
+        return $this->routes->getByAction($action);
+    }
+
+    /**
+     * Get all of the routes in the collection.
+     *
+     * @return \Illuminate\Routing\Route[]
+     */
+    public function getRoutes()
+    {
+        return collect($this->attributes)
+            ->map(function (array $attributes) {
+                return $this->newRoute($attributes);
+            })
+            ->merge($this->routes->getRoutes())
+            ->values()
+            ->all();
+    }
+
+    /**
+     * Get all of the routes keyed by their HTTP verb / method.
+     *
+     * @return array
+     */
+    public function getRoutesByMethod()
+    {
+        return collect($this->getRoutes())
+            ->groupBy(function (Route $route) {
+                return $route->methods();
+            })
+            ->map(function (Collection $routes) {
+                return $routes->mapWithKeys(function (Route $route) {
+                    if ($domain = $route->getDomain()) {
+                        return [$domain.'/'.$route->uri => $route];
+                    }
+
+                    return [$route->uri => $route];
+                })->all();
+            })
+            ->all();
+    }
+
+    /**
+     * Get all of the routes keyed by their name.
+     *
+     * @return \Illuminate\Routing\Route[]
+     */
+    public function getRoutesByName()
+    {
+        return collect($this->getRoutes())
+            ->keyBy(function (Route $route) {
+                return $route->getName();
+            })
+            ->all();
     }
 
     /**
@@ -205,104 +303,6 @@ class CompiledRouteCollection extends AbstractRouteCollection
             ->setWheres($attributes['wheres'])
             ->setBindingFields($attributes['bindingFields'])
             ->block($attributes['lockSeconds'] ?? null, $attributes['waitSeconds'] ?? null);
-    }
-
-    /**
-     * Get routes from the collection by method.
-     *
-     * @param  string|null  $method
-     * @return \Illuminate\Routing\Route[]
-     */
-    public function get($method = null)
-    {
-        return $this->getRoutesByMethod()[$method] ?? [];
-    }
-
-    /**
-     * Get all of the routes keyed by their HTTP verb / method.
-     *
-     * @return array
-     */
-    public function getRoutesByMethod()
-    {
-        return collect($this->getRoutes())
-            ->groupBy(function (Route $route) {
-                return $route->methods();
-            })
-            ->map(function (Collection $routes) {
-                return $routes->mapWithKeys(function (Route $route) {
-                    if ($domain = $route->getDomain()) {
-                        return [$domain.'/'.$route->uri => $route];
-                    }
-
-                    return [$route->uri => $route];
-                })->all();
-            })
-            ->all();
-    }
-
-    /**
-     * Get all of the routes in the collection.
-     *
-     * @return \Illuminate\Routing\Route[]
-     */
-    public function getRoutes()
-    {
-        return collect($this->attributes)
-            ->map(function (array $attributes) {
-                return $this->newRoute($attributes);
-            })
-            ->merge($this->routes->getRoutes())
-            ->values()
-            ->all();
-    }
-
-    /**
-     * Determine if the route collection contains a given named route.
-     *
-     * @param  string  $name
-     * @return bool
-     */
-    public function hasNamedRoute($name)
-    {
-        return isset($this->attributes[$name]) || $this->routes->hasNamedRoute($name);
-    }
-
-    /**
-     * Get a route instance by its controller action.
-     *
-     * @param  string  $action
-     * @return \Illuminate\Routing\Route|null
-     */
-    public function getByAction($action)
-    {
-        $attributes = collect($this->attributes)->first(function (array $attributes) use ($action) {
-            if (isset($attributes['action']['controller'])) {
-                return trim($attributes['action']['controller'], '\\') === $action;
-            }
-
-            return $attributes['action']['uses'] === $action;
-        });
-
-        if ($attributes) {
-            return $this->newRoute($attributes);
-        }
-
-        return $this->routes->getByAction($action);
-    }
-
-    /**
-     * Get all of the routes keyed by their name.
-     *
-     * @return \Illuminate\Routing\Route[]
-     */
-    public function getRoutesByName()
-    {
-        return collect($this->getRoutes())
-            ->keyBy(function (Route $route) {
-                return $route->getName();
-            })
-            ->all();
     }
 
     /**

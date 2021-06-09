@@ -15,6 +15,14 @@ class VarDateTimeImmutableType extends VarDateTimeType
     /**
      * {@inheritdoc}
      */
+    public function getName()
+    {
+        return Types::DATETIME_IMMUTABLE;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
         if ($value === null) {
@@ -30,14 +38,6 @@ class VarDateTimeImmutableType extends VarDateTimeType
             $this->getName(),
             ['null', DateTimeImmutable::class]
         );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return Types::DATETIME_IMMUTABLE;
     }
 
     /**

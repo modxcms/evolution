@@ -79,6 +79,19 @@ class Pluralizer
     }
 
     /**
+     * Get the singular form of an English word.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public static function singular($value)
+    {
+        $singular = static::inflector()->singularize($value);
+
+        return static::matchCase($singular, $value);
+    }
+
+    /**
      * Determine if the given value is uncountable.
      *
      * @param  string  $value
@@ -87,29 +100,6 @@ class Pluralizer
     protected static function uncountable($value)
     {
         return in_array(strtolower($value), static::$uncountable);
-    }
-
-    /**
-     * Get the inflector instance.
-     *
-     * @return \Doctrine\Inflector\Inflector
-     */
-    public static function inflector()
-    {
-        static $inflector;
-
-        if (is_null($inflector)) {
-            $inflector = new Inflector(
-                new CachedWordInflector(new RulesetInflector(
-                    English\Rules::getSingularRuleset()
-                )),
-                new CachedWordInflector(new RulesetInflector(
-                    English\Rules::getPluralRuleset()
-                ))
-            );
-        }
-
-        return $inflector;
     }
 
     /**
@@ -133,15 +123,25 @@ class Pluralizer
     }
 
     /**
-     * Get the singular form of an English word.
+     * Get the inflector instance.
      *
-     * @param  string  $value
-     * @return string
+     * @return \Doctrine\Inflector\Inflector
      */
-    public static function singular($value)
+    public static function inflector()
     {
-        $singular = static::inflector()->singularize($value);
+        static $inflector;
 
-        return static::matchCase($singular, $value);
+        if (is_null($inflector)) {
+            $inflector = new Inflector(
+                new CachedWordInflector(new RulesetInflector(
+                    English\Rules::getSingularRuleset()
+                )),
+                new CachedWordInflector(new RulesetInflector(
+                    English\Rules::getPluralRuleset()
+                ))
+            );
+        }
+
+        return $inflector;
     }
 }

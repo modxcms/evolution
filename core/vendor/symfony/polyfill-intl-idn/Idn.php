@@ -189,6 +189,129 @@ final class Idn
     }
 
     /**
+     * @see https://www.unicode.org/reports/tr46/#ToUnicode
+     *
+     * @param string $domainName
+     * @param int    $options
+     * @param int    $variant
+     * @param array  $idna_info
+     *
+     * @return string|false
+     */
+    public static function idn_to_utf8($domainName, $options = self::IDNA_DEFAULT, $variant = self::INTL_IDNA_VARIANT_UTS46, &$idna_info = [])
+    {
+        if (\PHP_VERSION_ID >= 70200 && self::INTL_IDNA_VARIANT_2003 === $variant) {
+            @trigger_error('idn_to_utf8(): INTL_IDNA_VARIANT_2003 is deprecated', \E_USER_DEPRECATED);
+        }
+
+        $info = new Info();
+        $labels = self::process((string) $domainName, [
+            'CheckHyphens' => true,
+            'CheckBidi' => self::INTL_IDNA_VARIANT_2003 === $variant || 0 !== ($options & self::IDNA_CHECK_BIDI),
+            'CheckJoiners' => self::INTL_IDNA_VARIANT_UTS46 === $variant && 0 !== ($options & self::IDNA_CHECK_CONTEXTJ),
+            'UseSTD3ASCIIRules' => 0 !== ($options & self::IDNA_USE_STD3_RULES),
+            'Transitional_Processing' => self::INTL_IDNA_VARIANT_2003 === $variant || 0 === ($options & self::IDNA_NONTRANSITIONAL_TO_UNICODE),
+        ], $info);
+        $idna_info = [
+            'result' => implode('.', $labels),
+            'isTransitionalDifferent' => $info->transitionalDifferent,
+            'errors' => $info->errors,
+        ];
+
+        return 0 === $info->errors ? $idna_info['result'] : false;
+    }
+
+    /**
+     * @param string $label
+     *
+     * @return bool
+     */
+    private static function isValidContextJ(array $codePoints, $label)
+    {
+        if (!isset(self::$virama)) {
+            self::$virama = require __DIR__.\DIRECTORY_SEPARATOR.'Resources'.\DIRECTORY_SEPARATOR.'unidata'.\DIRECTORY_SEPARATOR.'virama.php';
+        }
+
+        $offset = 0;
+
+        foreach ($codePoints as $i => $codePoint) {
+            if (0x200C !== $codePoint && 0x200D !== $codePoint) {
+                continue;
+            }
+
+            if (!isset($codePoints[$i - 1])) {
+                return false;
+            }
+
+            // If Canonical_Combining_Class(Before(cp)) .eq. Virama Then True;
+            if (isset(self::$virama[$codePoints[$i - 1]])) {
+                continue;
+            }
+
+            // If RegExpMatch((Joining_Type:{L,D})(Joining_Type:T)*\u200C(Joining_Type:T)*(Joining_Type:{R,D})) Then
+            // True;
+            // Generated RegExp = ([Joining_Type:{L,D}][Joining_Type:T]*\u200C[Joining_Type:T]*)[Joining_Type:{R,D}]
+            if (0x200C === $codePoint && 1 === preg_match(Regex::ZWNJ, $label, $matches, \PREG_OFFSET_CAPTURE, $offset)) {
+                $offset += \strlen($matches[1][0]);
+
+                continue;
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @see https://www.unicode.org/reports/tr46/#ProcessingStepMap
+     *
+     * @param string              $input
+     * @param array<string, bool> $options
+     *
+     * @return string
+     */
+    private static function mapCodePoints($input, array $options, Info $info)
+    {
+        $str = '';
+        $useSTD3ASCIIRules = $options['UseSTD3ASCIIRules'];
+        $transitional = $options['Transitional_Processing'];
+
+        foreach (self::utf8Decode($input) as $codePoint) {
+            $data = self::lookupCodePointStatus($codePoint, $useSTD3ASCIIRules);
+
+            switch ($data['status']) {
+                case 'disallowed':
+                    $info->errors |= self::ERROR_DISALLOWED;
+
+                    // no break.
+
+                case 'valid':
+                    $str .= mb_chr($codePoint, 'utf-8');
+
+                    break;
+
+                case 'ignored':
+                    // Do nothing.
+                    break;
+
+                case 'mapped':
+                    $str .= $data['mapping'];
+
+                    break;
+
+                case 'deviation':
+                    $info->transitionalDifferent = true;
+                    $str .= ($transitional ? $data['mapping'] : mb_chr($codePoint, 'utf-8'));
+
+                    break;
+            }
+        }
+
+        return $str;
+    }
+
+    /**
      * @see https://www.unicode.org/reports/tr46/#Processing
      *
      * @param string              $domain
@@ -252,51 +375,407 @@ final class Idn
     }
 
     /**
-     * @see https://www.unicode.org/reports/tr46/#ProcessingStepMap
+     * @see https://tools.ietf.org/html/rfc5893#section-2
      *
-     * @param string              $input
-     * @param array<string, bool> $options
-     *
-     * @return string
+     * @param string $label
      */
-    private static function mapCodePoints($input, array $options, Info $info)
+    private static function validateBidiLabel($label, Info $info)
     {
-        $str = '';
-        $useSTD3ASCIIRules = $options['UseSTD3ASCIIRules'];
-        $transitional = $options['Transitional_Processing'];
+        if (1 === preg_match(Regex::RTL_LABEL, $label)) {
+            $info->bidiDomain = true;
 
-        foreach (self::utf8Decode($input) as $codePoint) {
-            $data = self::lookupCodePointStatus($codePoint, $useSTD3ASCIIRules);
+            // Step 1. The first character must be a character with Bidi property L, R, or AL.
+            // If it has the R or AL property, it is an RTL label
+            if (1 !== preg_match(Regex::BIDI_STEP_1_RTL, $label)) {
+                $info->validBidiDomain = false;
 
-            switch ($data['status']) {
-                case 'disallowed':
-                    $info->errors |= self::ERROR_DISALLOWED;
+                return;
+            }
 
-                    // no break.
+            // Step 2. In an RTL label, only characters with the Bidi properties R, AL, AN, EN, ES,
+            // CS, ET, ON, BN, or NSM are allowed.
+            if (1 === preg_match(Regex::BIDI_STEP_2, $label)) {
+                $info->validBidiDomain = false;
 
-                case 'valid':
-                    $str .= mb_chr($codePoint, 'utf-8');
+                return;
+            }
 
-                    break;
+            // Step 3. In an RTL label, the end of the label must be a character with Bidi property
+            // R, AL, EN, or AN, followed by zero or more characters with Bidi property NSM.
+            if (1 !== preg_match(Regex::BIDI_STEP_3, $label)) {
+                $info->validBidiDomain = false;
 
-                case 'ignored':
-                    // Do nothing.
-                    break;
+                return;
+            }
 
-                case 'mapped':
-                    $str .= $data['mapping'];
+            // Step 4. In an RTL label, if an EN is present, no AN may be present, and vice versa.
+            if (1 === preg_match(Regex::BIDI_STEP_4_AN, $label) && 1 === preg_match(Regex::BIDI_STEP_4_EN, $label)) {
+                $info->validBidiDomain = false;
 
-                    break;
+                return;
+            }
 
-                case 'deviation':
-                    $info->transitionalDifferent = true;
-                    $str .= ($transitional ? $data['mapping'] : mb_chr($codePoint, 'utf-8'));
+            return;
+        }
 
-                    break;
+        // We are a LTR label
+        // Step 1. The first character must be a character with Bidi property L, R, or AL.
+        // If it has the L property, it is an LTR label.
+        if (1 !== preg_match(Regex::BIDI_STEP_1_LTR, $label)) {
+            $info->validBidiDomain = false;
+
+            return;
+        }
+
+        // Step 5. In an LTR label, only characters with the Bidi properties L, EN,
+        // ES, CS, ET, ON, BN, or NSM are allowed.
+        if (1 === preg_match(Regex::BIDI_STEP_5, $label)) {
+            $info->validBidiDomain = false;
+
+            return;
+        }
+
+        // Step 6.In an LTR label, the end of the label must be a character with Bidi property L or
+        // EN, followed by zero or more characters with Bidi property NSM.
+        if (1 !== preg_match(Regex::BIDI_STEP_6, $label)) {
+            $info->validBidiDomain = false;
+
+            return;
+        }
+    }
+
+    /**
+     * @param array<int, string> $labels
+     */
+    private static function validateDomainAndLabelLength(array $labels, Info $info)
+    {
+        $maxDomainSize = self::MAX_DOMAIN_SIZE;
+        $length = \count($labels);
+
+        // Number of "." delimiters.
+        $domainLength = $length - 1;
+
+        // If the last label is empty and it is not the first label, then it is the root label.
+        // Increase the max size by 1, making it 254, to account for the root label's "."
+        // delimiter. This also means we don't need to check the last label's length for being too
+        // long.
+        if ($length > 1 && '' === $labels[$length - 1]) {
+            ++$maxDomainSize;
+            --$length;
+        }
+
+        for ($i = 0; $i < $length; ++$i) {
+            $bytes = \strlen($labels[$i]);
+            $domainLength += $bytes;
+
+            if ($bytes > self::MAX_LABEL_SIZE) {
+                $info->errors |= self::ERROR_LABEL_TOO_LONG;
             }
         }
 
-        return $str;
+        if ($domainLength > $maxDomainSize) {
+            $info->errors |= self::ERROR_DOMAIN_NAME_TOO_LONG;
+        }
+    }
+
+    /**
+     * @see https://www.unicode.org/reports/tr46/#Validity_Criteria
+     *
+     * @param string              $label
+     * @param array<string, bool> $options
+     * @param bool                $canBeEmpty
+     */
+    private static function validateLabel($label, Info $info, array $options, $canBeEmpty)
+    {
+        if ('' === $label) {
+            if (!$canBeEmpty && (!isset($options['VerifyDnsLength']) || $options['VerifyDnsLength'])) {
+                $info->errors |= self::ERROR_EMPTY_LABEL;
+            }
+
+            return;
+        }
+
+        // Step 1. The label must be in Unicode Normalization Form C.
+        if (!Normalizer::isNormalized($label, Normalizer::FORM_C)) {
+            $info->errors |= self::ERROR_INVALID_ACE_LABEL;
+        }
+
+        $codePoints = self::utf8Decode($label);
+
+        if ($options['CheckHyphens']) {
+            // Step 2. If CheckHyphens, the label must not contain a U+002D HYPHEN-MINUS character
+            // in both the thrid and fourth positions.
+            if (isset($codePoints[2], $codePoints[3]) && 0x002D === $codePoints[2] && 0x002D === $codePoints[3]) {
+                $info->errors |= self::ERROR_HYPHEN_3_4;
+            }
+
+            // Step 3. If CheckHyphens, the label must neither begin nor end with a U+002D
+            // HYPHEN-MINUS character.
+            if ('-' === substr($label, 0, 1)) {
+                $info->errors |= self::ERROR_LEADING_HYPHEN;
+            }
+
+            if ('-' === substr($label, -1, 1)) {
+                $info->errors |= self::ERROR_TRAILING_HYPHEN;
+            }
+        }
+
+        // Step 4. The label must not contain a U+002E (.) FULL STOP.
+        if (false !== strpos($label, '.')) {
+            $info->errors |= self::ERROR_LABEL_HAS_DOT;
+        }
+
+        // Step 5. The label must not begin with a combining mark, that is: General_Category=Mark.
+        if (1 === preg_match(Regex::COMBINING_MARK, $label)) {
+            $info->errors |= self::ERROR_LEADING_COMBINING_MARK;
+        }
+
+        // Step 6. Each code point in the label must only have certain status values according to
+        // Section 5, IDNA Mapping Table:
+        $transitional = $options['Transitional_Processing'];
+        $useSTD3ASCIIRules = $options['UseSTD3ASCIIRules'];
+
+        foreach ($codePoints as $codePoint) {
+            $data = self::lookupCodePointStatus($codePoint, $useSTD3ASCIIRules);
+            $status = $data['status'];
+
+            if ('valid' === $status || (!$transitional && 'deviation' === $status)) {
+                continue;
+            }
+
+            $info->errors |= self::ERROR_DISALLOWED;
+
+            break;
+        }
+
+        // Step 7. If CheckJoiners, the label must satisify the ContextJ rules from Appendix A, in
+        // The Unicode Code Points and Internationalized Domain Names for Applications (IDNA)
+        // [IDNA2008].
+        if ($options['CheckJoiners'] && !self::isValidContextJ($codePoints, $label)) {
+            $info->errors |= self::ERROR_CONTEXTJ;
+        }
+
+        // Step 8. If CheckBidi, and if the domain name is a  Bidi domain name, then the label must
+        // satisfy all six of the numbered conditions in [IDNA2008] RFC 5893, Section 2.
+        if ($options['CheckBidi'] && (!$info->bidiDomain || $info->validBidiDomain)) {
+            self::validateBidiLabel($label, $info);
+        }
+    }
+
+    /**
+     * @see https://tools.ietf.org/html/rfc3492#section-6.2
+     *
+     * @param string $input
+     *
+     * @return string
+     */
+    private static function punycodeDecode($input)
+    {
+        $n = self::INITIAL_N;
+        $out = 0;
+        $i = 0;
+        $bias = self::INITIAL_BIAS;
+        $lastDelimIndex = strrpos($input, self::DELIMITER);
+        $b = false === $lastDelimIndex ? 0 : $lastDelimIndex;
+        $inputLength = \strlen($input);
+        $output = [];
+        $bytes = array_map('ord', str_split($input));
+
+        for ($j = 0; $j < $b; ++$j) {
+            if ($bytes[$j] > 0x7F) {
+                throw new Exception('Invalid input');
+            }
+
+            $output[$out++] = $input[$j];
+        }
+
+        if ($b > 0) {
+            ++$b;
+        }
+
+        for ($in = $b; $in < $inputLength; ++$out) {
+            $oldi = $i;
+            $w = 1;
+
+            for ($k = self::BASE; /* no condition */; $k += self::BASE) {
+                if ($in >= $inputLength) {
+                    throw new Exception('Invalid input');
+                }
+
+                $digit = self::$basicToDigit[$bytes[$in++] & 0xFF];
+
+                if ($digit < 0) {
+                    throw new Exception('Invalid input');
+                }
+
+                if ($digit > intdiv(self::MAX_INT - $i, $w)) {
+                    throw new Exception('Integer overflow');
+                }
+
+                $i += $digit * $w;
+
+                if ($k <= $bias) {
+                    $t = self::TMIN;
+                } elseif ($k >= $bias + self::TMAX) {
+                    $t = self::TMAX;
+                } else {
+                    $t = $k - $bias;
+                }
+
+                if ($digit < $t) {
+                    break;
+                }
+
+                $baseMinusT = self::BASE - $t;
+
+                if ($w > intdiv(self::MAX_INT, $baseMinusT)) {
+                    throw new Exception('Integer overflow');
+                }
+
+                $w *= $baseMinusT;
+            }
+
+            $outPlusOne = $out + 1;
+            $bias = self::adaptBias($i - $oldi, $outPlusOne, 0 === $oldi);
+
+            if (intdiv($i, $outPlusOne) > self::MAX_INT - $n) {
+                throw new Exception('Integer overflow');
+            }
+
+            $n += intdiv($i, $outPlusOne);
+            $i %= $outPlusOne;
+            array_splice($output, $i++, 0, [mb_chr($n, 'utf-8')]);
+        }
+
+        return implode('', $output);
+    }
+
+    /**
+     * @see https://tools.ietf.org/html/rfc3492#section-6.3
+     *
+     * @param string $input
+     *
+     * @return string
+     */
+    private static function punycodeEncode($input)
+    {
+        $n = self::INITIAL_N;
+        $delta = 0;
+        $out = 0;
+        $bias = self::INITIAL_BIAS;
+        $inputLength = 0;
+        $output = '';
+        $iter = self::utf8Decode($input);
+
+        foreach ($iter as $codePoint) {
+            ++$inputLength;
+
+            if ($codePoint < 0x80) {
+                $output .= \chr($codePoint);
+                ++$out;
+            }
+        }
+
+        $h = $out;
+        $b = $out;
+
+        if ($b > 0) {
+            $output .= self::DELIMITER;
+            ++$out;
+        }
+
+        while ($h < $inputLength) {
+            $m = self::MAX_INT;
+
+            foreach ($iter as $codePoint) {
+                if ($codePoint >= $n && $codePoint < $m) {
+                    $m = $codePoint;
+                }
+            }
+
+            if ($m - $n > intdiv(self::MAX_INT - $delta, $h + 1)) {
+                throw new Exception('Integer overflow');
+            }
+
+            $delta += ($m - $n) * ($h + 1);
+            $n = $m;
+
+            foreach ($iter as $codePoint) {
+                if ($codePoint < $n && 0 === ++$delta) {
+                    throw new Exception('Integer overflow');
+                }
+
+                if ($codePoint === $n) {
+                    $q = $delta;
+
+                    for ($k = self::BASE; /* no condition */; $k += self::BASE) {
+                        if ($k <= $bias) {
+                            $t = self::TMIN;
+                        } elseif ($k >= $bias + self::TMAX) {
+                            $t = self::TMAX;
+                        } else {
+                            $t = $k - $bias;
+                        }
+
+                        if ($q < $t) {
+                            break;
+                        }
+
+                        $qMinusT = $q - $t;
+                        $baseMinusT = self::BASE - $t;
+                        $output .= self::encodeDigit($t + ($qMinusT) % ($baseMinusT), false);
+                        ++$out;
+                        $q = intdiv($qMinusT, $baseMinusT);
+                    }
+
+                    $output .= self::encodeDigit($q, false);
+                    ++$out;
+                    $bias = self::adaptBias($delta, $h + 1, $h === $b);
+                    $delta = 0;
+                    ++$h;
+                }
+            }
+
+            ++$delta;
+            ++$n;
+        }
+
+        return $output;
+    }
+
+    /**
+     * @see https://tools.ietf.org/html/rfc3492#section-6.1
+     *
+     * @param int  $delta
+     * @param int  $numPoints
+     * @param bool $firstTime
+     *
+     * @return int
+     */
+    private static function adaptBias($delta, $numPoints, $firstTime)
+    {
+        // xxx >> 1 is a faster way of doing intdiv(xxx, 2)
+        $delta = $firstTime ? intdiv($delta, self::DAMP) : $delta >> 1;
+        $delta += intdiv($delta, $numPoints);
+        $k = 0;
+
+        while ($delta > ((self::BASE - self::TMIN) * self::TMAX) >> 1) {
+            $delta = intdiv($delta, self::BASE - self::TMIN);
+            $k += self::BASE;
+        }
+
+        return $k + intdiv((self::BASE - self::TMIN + 1) * $delta, $delta + self::SKEW);
+    }
+
+    /**
+     * @param int  $d
+     * @param bool $flag
+     *
+     * @return string
+     */
+    private static function encodeDigit($d, $flag)
+    {
+        return \chr($d + 22 + 75 * ($d < 26 ? 1 : 0) - (($flag ? 1 : 0) << 5));
     }
 
     /**
@@ -442,484 +921,5 @@ final class Idn
         }
 
         return ['status' => 'valid'];
-    }
-
-    /**
-     * @see https://tools.ietf.org/html/rfc3492#section-6.2
-     *
-     * @param string $input
-     *
-     * @return string
-     */
-    private static function punycodeDecode($input)
-    {
-        $n = self::INITIAL_N;
-        $out = 0;
-        $i = 0;
-        $bias = self::INITIAL_BIAS;
-        $lastDelimIndex = strrpos($input, self::DELIMITER);
-        $b = false === $lastDelimIndex ? 0 : $lastDelimIndex;
-        $inputLength = \strlen($input);
-        $output = [];
-        $bytes = array_map('ord', str_split($input));
-
-        for ($j = 0; $j < $b; ++$j) {
-            if ($bytes[$j] > 0x7F) {
-                throw new Exception('Invalid input');
-            }
-
-            $output[$out++] = $input[$j];
-        }
-
-        if ($b > 0) {
-            ++$b;
-        }
-
-        for ($in = $b; $in < $inputLength; ++$out) {
-            $oldi = $i;
-            $w = 1;
-
-            for ($k = self::BASE; /* no condition */; $k += self::BASE) {
-                if ($in >= $inputLength) {
-                    throw new Exception('Invalid input');
-                }
-
-                $digit = self::$basicToDigit[$bytes[$in++] & 0xFF];
-
-                if ($digit < 0) {
-                    throw new Exception('Invalid input');
-                }
-
-                if ($digit > intdiv(self::MAX_INT - $i, $w)) {
-                    throw new Exception('Integer overflow');
-                }
-
-                $i += $digit * $w;
-
-                if ($k <= $bias) {
-                    $t = self::TMIN;
-                } elseif ($k >= $bias + self::TMAX) {
-                    $t = self::TMAX;
-                } else {
-                    $t = $k - $bias;
-                }
-
-                if ($digit < $t) {
-                    break;
-                }
-
-                $baseMinusT = self::BASE - $t;
-
-                if ($w > intdiv(self::MAX_INT, $baseMinusT)) {
-                    throw new Exception('Integer overflow');
-                }
-
-                $w *= $baseMinusT;
-            }
-
-            $outPlusOne = $out + 1;
-            $bias = self::adaptBias($i - $oldi, $outPlusOne, 0 === $oldi);
-
-            if (intdiv($i, $outPlusOne) > self::MAX_INT - $n) {
-                throw new Exception('Integer overflow');
-            }
-
-            $n += intdiv($i, $outPlusOne);
-            $i %= $outPlusOne;
-            array_splice($output, $i++, 0, [mb_chr($n, 'utf-8')]);
-        }
-
-        return implode('', $output);
-    }
-
-    /**
-     * @see https://tools.ietf.org/html/rfc3492#section-6.1
-     *
-     * @param int  $delta
-     * @param int  $numPoints
-     * @param bool $firstTime
-     *
-     * @return int
-     */
-    private static function adaptBias($delta, $numPoints, $firstTime)
-    {
-        // xxx >> 1 is a faster way of doing intdiv(xxx, 2)
-        $delta = $firstTime ? intdiv($delta, self::DAMP) : $delta >> 1;
-        $delta += intdiv($delta, $numPoints);
-        $k = 0;
-
-        while ($delta > ((self::BASE - self::TMIN) * self::TMAX) >> 1) {
-            $delta = intdiv($delta, self::BASE - self::TMIN);
-            $k += self::BASE;
-        }
-
-        return $k + intdiv((self::BASE - self::TMIN + 1) * $delta, $delta + self::SKEW);
-    }
-
-    /**
-     * @see https://www.unicode.org/reports/tr46/#Validity_Criteria
-     *
-     * @param string              $label
-     * @param array<string, bool> $options
-     * @param bool                $canBeEmpty
-     */
-    private static function validateLabel($label, Info $info, array $options, $canBeEmpty)
-    {
-        if ('' === $label) {
-            if (!$canBeEmpty && (!isset($options['VerifyDnsLength']) || $options['VerifyDnsLength'])) {
-                $info->errors |= self::ERROR_EMPTY_LABEL;
-            }
-
-            return;
-        }
-
-        // Step 1. The label must be in Unicode Normalization Form C.
-        if (!Normalizer::isNormalized($label, Normalizer::FORM_C)) {
-            $info->errors |= self::ERROR_INVALID_ACE_LABEL;
-        }
-
-        $codePoints = self::utf8Decode($label);
-
-        if ($options['CheckHyphens']) {
-            // Step 2. If CheckHyphens, the label must not contain a U+002D HYPHEN-MINUS character
-            // in both the thrid and fourth positions.
-            if (isset($codePoints[2], $codePoints[3]) && 0x002D === $codePoints[2] && 0x002D === $codePoints[3]) {
-                $info->errors |= self::ERROR_HYPHEN_3_4;
-            }
-
-            // Step 3. If CheckHyphens, the label must neither begin nor end with a U+002D
-            // HYPHEN-MINUS character.
-            if ('-' === substr($label, 0, 1)) {
-                $info->errors |= self::ERROR_LEADING_HYPHEN;
-            }
-
-            if ('-' === substr($label, -1, 1)) {
-                $info->errors |= self::ERROR_TRAILING_HYPHEN;
-            }
-        }
-
-        // Step 4. The label must not contain a U+002E (.) FULL STOP.
-        if (false !== strpos($label, '.')) {
-            $info->errors |= self::ERROR_LABEL_HAS_DOT;
-        }
-
-        // Step 5. The label must not begin with a combining mark, that is: General_Category=Mark.
-        if (1 === preg_match(Regex::COMBINING_MARK, $label)) {
-            $info->errors |= self::ERROR_LEADING_COMBINING_MARK;
-        }
-
-        // Step 6. Each code point in the label must only have certain status values according to
-        // Section 5, IDNA Mapping Table:
-        $transitional = $options['Transitional_Processing'];
-        $useSTD3ASCIIRules = $options['UseSTD3ASCIIRules'];
-
-        foreach ($codePoints as $codePoint) {
-            $data = self::lookupCodePointStatus($codePoint, $useSTD3ASCIIRules);
-            $status = $data['status'];
-
-            if ('valid' === $status || (!$transitional && 'deviation' === $status)) {
-                continue;
-            }
-
-            $info->errors |= self::ERROR_DISALLOWED;
-
-            break;
-        }
-
-        // Step 7. If CheckJoiners, the label must satisify the ContextJ rules from Appendix A, in
-        // The Unicode Code Points and Internationalized Domain Names for Applications (IDNA)
-        // [IDNA2008].
-        if ($options['CheckJoiners'] && !self::isValidContextJ($codePoints, $label)) {
-            $info->errors |= self::ERROR_CONTEXTJ;
-        }
-
-        // Step 8. If CheckBidi, and if the domain name is a  Bidi domain name, then the label must
-        // satisfy all six of the numbered conditions in [IDNA2008] RFC 5893, Section 2.
-        if ($options['CheckBidi'] && (!$info->bidiDomain || $info->validBidiDomain)) {
-            self::validateBidiLabel($label, $info);
-        }
-    }
-
-    /**
-     * @param string $label
-     *
-     * @return bool
-     */
-    private static function isValidContextJ(array $codePoints, $label)
-    {
-        if (!isset(self::$virama)) {
-            self::$virama = require __DIR__.\DIRECTORY_SEPARATOR.'Resources'.\DIRECTORY_SEPARATOR.'unidata'.\DIRECTORY_SEPARATOR.'virama.php';
-        }
-
-        $offset = 0;
-
-        foreach ($codePoints as $i => $codePoint) {
-            if (0x200C !== $codePoint && 0x200D !== $codePoint) {
-                continue;
-            }
-
-            if (!isset($codePoints[$i - 1])) {
-                return false;
-            }
-
-            // If Canonical_Combining_Class(Before(cp)) .eq. Virama Then True;
-            if (isset(self::$virama[$codePoints[$i - 1]])) {
-                continue;
-            }
-
-            // If RegExpMatch((Joining_Type:{L,D})(Joining_Type:T)*\u200C(Joining_Type:T)*(Joining_Type:{R,D})) Then
-            // True;
-            // Generated RegExp = ([Joining_Type:{L,D}][Joining_Type:T]*\u200C[Joining_Type:T]*)[Joining_Type:{R,D}]
-            if (0x200C === $codePoint && 1 === preg_match(Regex::ZWNJ, $label, $matches, \PREG_OFFSET_CAPTURE, $offset)) {
-                $offset += \strlen($matches[1][0]);
-
-                continue;
-            }
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @see https://tools.ietf.org/html/rfc5893#section-2
-     *
-     * @param string $label
-     */
-    private static function validateBidiLabel($label, Info $info)
-    {
-        if (1 === preg_match(Regex::RTL_LABEL, $label)) {
-            $info->bidiDomain = true;
-
-            // Step 1. The first character must be a character with Bidi property L, R, or AL.
-            // If it has the R or AL property, it is an RTL label
-            if (1 !== preg_match(Regex::BIDI_STEP_1_RTL, $label)) {
-                $info->validBidiDomain = false;
-
-                return;
-            }
-
-            // Step 2. In an RTL label, only characters with the Bidi properties R, AL, AN, EN, ES,
-            // CS, ET, ON, BN, or NSM are allowed.
-            if (1 === preg_match(Regex::BIDI_STEP_2, $label)) {
-                $info->validBidiDomain = false;
-
-                return;
-            }
-
-            // Step 3. In an RTL label, the end of the label must be a character with Bidi property
-            // R, AL, EN, or AN, followed by zero or more characters with Bidi property NSM.
-            if (1 !== preg_match(Regex::BIDI_STEP_3, $label)) {
-                $info->validBidiDomain = false;
-
-                return;
-            }
-
-            // Step 4. In an RTL label, if an EN is present, no AN may be present, and vice versa.
-            if (1 === preg_match(Regex::BIDI_STEP_4_AN, $label) && 1 === preg_match(Regex::BIDI_STEP_4_EN, $label)) {
-                $info->validBidiDomain = false;
-
-                return;
-            }
-
-            return;
-        }
-
-        // We are a LTR label
-        // Step 1. The first character must be a character with Bidi property L, R, or AL.
-        // If it has the L property, it is an LTR label.
-        if (1 !== preg_match(Regex::BIDI_STEP_1_LTR, $label)) {
-            $info->validBidiDomain = false;
-
-            return;
-        }
-
-        // Step 5. In an LTR label, only characters with the Bidi properties L, EN,
-        // ES, CS, ET, ON, BN, or NSM are allowed.
-        if (1 === preg_match(Regex::BIDI_STEP_5, $label)) {
-            $info->validBidiDomain = false;
-
-            return;
-        }
-
-        // Step 6.In an LTR label, the end of the label must be a character with Bidi property L or
-        // EN, followed by zero or more characters with Bidi property NSM.
-        if (1 !== preg_match(Regex::BIDI_STEP_6, $label)) {
-            $info->validBidiDomain = false;
-
-            return;
-        }
-    }
-
-    /**
-     * @see https://tools.ietf.org/html/rfc3492#section-6.3
-     *
-     * @param string $input
-     *
-     * @return string
-     */
-    private static function punycodeEncode($input)
-    {
-        $n = self::INITIAL_N;
-        $delta = 0;
-        $out = 0;
-        $bias = self::INITIAL_BIAS;
-        $inputLength = 0;
-        $output = '';
-        $iter = self::utf8Decode($input);
-
-        foreach ($iter as $codePoint) {
-            ++$inputLength;
-
-            if ($codePoint < 0x80) {
-                $output .= \chr($codePoint);
-                ++$out;
-            }
-        }
-
-        $h = $out;
-        $b = $out;
-
-        if ($b > 0) {
-            $output .= self::DELIMITER;
-            ++$out;
-        }
-
-        while ($h < $inputLength) {
-            $m = self::MAX_INT;
-
-            foreach ($iter as $codePoint) {
-                if ($codePoint >= $n && $codePoint < $m) {
-                    $m = $codePoint;
-                }
-            }
-
-            if ($m - $n > intdiv(self::MAX_INT - $delta, $h + 1)) {
-                throw new Exception('Integer overflow');
-            }
-
-            $delta += ($m - $n) * ($h + 1);
-            $n = $m;
-
-            foreach ($iter as $codePoint) {
-                if ($codePoint < $n && 0 === ++$delta) {
-                    throw new Exception('Integer overflow');
-                }
-
-                if ($codePoint === $n) {
-                    $q = $delta;
-
-                    for ($k = self::BASE; /* no condition */; $k += self::BASE) {
-                        if ($k <= $bias) {
-                            $t = self::TMIN;
-                        } elseif ($k >= $bias + self::TMAX) {
-                            $t = self::TMAX;
-                        } else {
-                            $t = $k - $bias;
-                        }
-
-                        if ($q < $t) {
-                            break;
-                        }
-
-                        $qMinusT = $q - $t;
-                        $baseMinusT = self::BASE - $t;
-                        $output .= self::encodeDigit($t + ($qMinusT) % ($baseMinusT), false);
-                        ++$out;
-                        $q = intdiv($qMinusT, $baseMinusT);
-                    }
-
-                    $output .= self::encodeDigit($q, false);
-                    ++$out;
-                    $bias = self::adaptBias($delta, $h + 1, $h === $b);
-                    $delta = 0;
-                    ++$h;
-                }
-            }
-
-            ++$delta;
-            ++$n;
-        }
-
-        return $output;
-    }
-
-    /**
-     * @param int  $d
-     * @param bool $flag
-     *
-     * @return string
-     */
-    private static function encodeDigit($d, $flag)
-    {
-        return \chr($d + 22 + 75 * ($d < 26 ? 1 : 0) - (($flag ? 1 : 0) << 5));
-    }
-
-    /**
-     * @param array<int, string> $labels
-     */
-    private static function validateDomainAndLabelLength(array $labels, Info $info)
-    {
-        $maxDomainSize = self::MAX_DOMAIN_SIZE;
-        $length = \count($labels);
-
-        // Number of "." delimiters.
-        $domainLength = $length - 1;
-
-        // If the last label is empty and it is not the first label, then it is the root label.
-        // Increase the max size by 1, making it 254, to account for the root label's "."
-        // delimiter. This also means we don't need to check the last label's length for being too
-        // long.
-        if ($length > 1 && '' === $labels[$length - 1]) {
-            ++$maxDomainSize;
-            --$length;
-        }
-
-        for ($i = 0; $i < $length; ++$i) {
-            $bytes = \strlen($labels[$i]);
-            $domainLength += $bytes;
-
-            if ($bytes > self::MAX_LABEL_SIZE) {
-                $info->errors |= self::ERROR_LABEL_TOO_LONG;
-            }
-        }
-
-        if ($domainLength > $maxDomainSize) {
-            $info->errors |= self::ERROR_DOMAIN_NAME_TOO_LONG;
-        }
-    }
-
-    /**
-     * @see https://www.unicode.org/reports/tr46/#ToUnicode
-     *
-     * @param string $domainName
-     * @param int    $options
-     * @param int    $variant
-     * @param array  $idna_info
-     *
-     * @return string|false
-     */
-    public static function idn_to_utf8($domainName, $options = self::IDNA_DEFAULT, $variant = self::INTL_IDNA_VARIANT_UTS46, &$idna_info = [])
-    {
-        if (\PHP_VERSION_ID >= 70200 && self::INTL_IDNA_VARIANT_2003 === $variant) {
-            @trigger_error('idn_to_utf8(): INTL_IDNA_VARIANT_2003 is deprecated', \E_USER_DEPRECATED);
-        }
-
-        $info = new Info();
-        $labels = self::process((string) $domainName, [
-            'CheckHyphens' => true,
-            'CheckBidi' => self::INTL_IDNA_VARIANT_2003 === $variant || 0 !== ($options & self::IDNA_CHECK_BIDI),
-            'CheckJoiners' => self::INTL_IDNA_VARIANT_UTS46 === $variant && 0 !== ($options & self::IDNA_CHECK_CONTEXTJ),
-            'UseSTD3ASCIIRules' => 0 !== ($options & self::IDNA_USE_STD3_RULES),
-            'Transitional_Processing' => self::INTL_IDNA_VARIANT_2003 === $variant || 0 === ($options & self::IDNA_NONTRANSITIONAL_TO_UNICODE),
-        ], $info);
-        $idna_info = [
-            'result' => implode('.', $labels),
-            'isTransitionalDifferent' => $info->transitionalDifferent,
-            'errors' => $info->errors,
-        ];
-
-        return 0 === $info->errors ? $idna_info['result'] : false;
     }
 }

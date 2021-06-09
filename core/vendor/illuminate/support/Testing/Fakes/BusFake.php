@@ -115,105 +115,6 @@ class BusFake implements QueueingDispatcher
     }
 
     /**
-     * Get all of the jobs matching a truth-test callback.
-     *
-     * @param  string  $command
-     * @param  callable|null  $callback
-     * @return \Illuminate\Support\Collection
-     */
-    public function dispatched($command, $callback = null)
-    {
-        if (! $this->hasDispatched($command)) {
-            return collect();
-        }
-
-        $callback = $callback ?: function () {
-            return true;
-        };
-
-        return collect($this->commands[$command])->filter(function ($command) use ($callback) {
-            return $callback($command);
-        });
-    }
-
-    /**
-     * Determine if there are any stored commands for a given class.
-     *
-     * @param  string  $command
-     * @return bool
-     */
-    public function hasDispatched($command)
-    {
-        return isset($this->commands[$command]) && ! empty($this->commands[$command]);
-    }
-
-    /**
-     * Get all of the jobs dispatched after the response was sent matching a truth-test callback.
-     *
-     * @param  string  $command
-     * @param  callable|null  $callback
-     * @return \Illuminate\Support\Collection
-     */
-    public function dispatchedAfterResponse(string $command, $callback = null)
-    {
-        if (! $this->hasDispatchedAfterResponse($command)) {
-            return collect();
-        }
-
-        $callback = $callback ?: function () {
-            return true;
-        };
-
-        return collect($this->commandsAfterResponse[$command])->filter(function ($command) use ($callback) {
-            return $callback($command);
-        });
-    }
-
-    /**
-     * Determine if there are any stored commands for a given class.
-     *
-     * @param  string  $command
-     * @return bool
-     */
-    public function hasDispatchedAfterResponse($command)
-    {
-        return isset($this->commandsAfterResponse[$command]) && ! empty($this->commandsAfterResponse[$command]);
-    }
-
-    /**
-     * Get all of the jobs dispatched synchronously matching a truth-test callback.
-     *
-     * @param  string  $command
-     * @param  callable|null  $callback
-     * @return \Illuminate\Support\Collection
-     */
-    public function dispatchedSync(string $command, $callback = null)
-    {
-        if (! $this->hasDispatchedSync($command)) {
-            return collect();
-        }
-
-        $callback = $callback ?: function () {
-            return true;
-        };
-
-        return collect($this->commandsSync[$command])->filter(function ($command) use ($callback) {
-            return $callback($command);
-        });
-    }
-
-    /**
-     * Determine if there are any stored commands for a given class.
-     *
-     * @param  string  $command
-     * @return bool
-     */
-    public function hasDispatchedSync($command)
-    {
-        return isset($this->commandsSync[$command]) && ! empty($this->commandsSync[$command]);
-    }
-
-    /**
      * Determine if a job was dispatched based on a truth-test callback.
      *
      * @param  string|\Closure  $command
@@ -410,16 +311,24 @@ class BusFake implements QueueingDispatcher
     }
 
     /**
-     * Determine if the given chain is entirely composed of objects.
+     * Assert if a job was dispatched with an empty chain based on a truth-test callback.
      *
-     * @param  array  $chain
-     * @return bool
+     * @param  string|\Closure  $command
+     * @param  callable|null  $callback
+     * @return void
      */
-    protected function isChainOfObjects($chain)
+    public function assertDispatchedWithoutChain($command, $callback = null)
     {
-        return ! collect($chain)->contains(function ($job) {
-            return ! is_object($job);
-        });
+        if ($command instanceof Closure) {
+            [$command, $callback] = [$this->firstClosureParameterType($command), $command];
+        }
+
+        PHPUnit::assertTrue(
+            $this->dispatched($command, $callback)->isNotEmpty(),
+            "The expected [{$command}] job was not dispatched."
+        );
+
+        $this->assertDispatchedWithChainOfClasses($command, [], $callback);
     }
 
     /**
@@ -468,24 +377,16 @@ class BusFake implements QueueingDispatcher
     }
 
     /**
-     * Assert if a job was dispatched with an empty chain based on a truth-test callback.
+     * Determine if the given chain is entirely composed of objects.
      *
-     * @param  string|\Closure  $command
-     * @param  callable|null  $callback
-     * @return void
+     * @param  array  $chain
+     * @return bool
      */
-    public function assertDispatchedWithoutChain($command, $callback = null)
+    protected function isChainOfObjects($chain)
     {
-        if ($command instanceof Closure) {
-            [$command, $callback] = [$this->firstClosureParameterType($command), $command];
-        }
-
-        PHPUnit::assertTrue(
-            $this->dispatched($command, $callback)->isNotEmpty(),
-            "The expected [{$command}] job was not dispatched."
-        );
-
-        $this->assertDispatchedWithChainOfClasses($command, [], $callback);
+        return ! collect($chain)->contains(function ($job) {
+            return ! is_object($job);
+        });
     }
 
     /**
@@ -500,6 +401,72 @@ class BusFake implements QueueingDispatcher
             $this->batched($callback)->count() > 0,
             'The expected batch was not dispatched.'
         );
+    }
+
+    /**
+     * Get all of the jobs matching a truth-test callback.
+     *
+     * @param  string  $command
+     * @param  callable|null  $callback
+     * @return \Illuminate\Support\Collection
+     */
+    public function dispatched($command, $callback = null)
+    {
+        if (! $this->hasDispatched($command)) {
+            return collect();
+        }
+
+        $callback = $callback ?: function () {
+            return true;
+        };
+
+        return collect($this->commands[$command])->filter(function ($command) use ($callback) {
+            return $callback($command);
+        });
+    }
+
+    /**
+     * Get all of the jobs dispatched synchronously matching a truth-test callback.
+     *
+     * @param  string  $command
+     * @param  callable|null  $callback
+     * @return \Illuminate\Support\Collection
+     */
+    public function dispatchedSync(string $command, $callback = null)
+    {
+        if (! $this->hasDispatchedSync($command)) {
+            return collect();
+        }
+
+        $callback = $callback ?: function () {
+            return true;
+        };
+
+        return collect($this->commandsSync[$command])->filter(function ($command) use ($callback) {
+            return $callback($command);
+        });
+    }
+
+    /**
+     * Get all of the jobs dispatched after the response was sent matching a truth-test callback.
+     *
+     * @param  string  $command
+     * @param  callable|null  $callback
+     * @return \Illuminate\Support\Collection
+     */
+    public function dispatchedAfterResponse(string $command, $callback = null)
+    {
+        if (! $this->hasDispatchedAfterResponse($command)) {
+            return collect();
+        }
+
+        $callback = $callback ?: function () {
+            return true;
+        };
+
+        return collect($this->commandsAfterResponse[$command])->filter(function ($command) use ($callback) {
+            return $callback($command);
+        });
     }
 
     /**
@@ -520,6 +487,39 @@ class BusFake implements QueueingDispatcher
     }
 
     /**
+     * Determine if there are any stored commands for a given class.
+     *
+     * @param  string  $command
+     * @return bool
+     */
+    public function hasDispatched($command)
+    {
+        return isset($this->commands[$command]) && ! empty($this->commands[$command]);
+    }
+
+    /**
+     * Determine if there are any stored commands for a given class.
+     *
+     * @param  string  $command
+     * @return bool
+     */
+    public function hasDispatchedSync($command)
+    {
+        return isset($this->commandsSync[$command]) && ! empty($this->commandsSync[$command]);
+    }
+
+    /**
+     * Determine if there are any stored commands for a given class.
+     *
+     * @param  string  $command
+     * @return bool
+     */
+    public function hasDispatchedAfterResponse($command)
+    {
+        return isset($this->commandsAfterResponse[$command]) && ! empty($this->commandsAfterResponse[$command]);
+    }
+
+    /**
      * Dispatch a command to its appropriate handler.
      *
      * @param  mixed  $command
@@ -532,26 +532,6 @@ class BusFake implements QueueingDispatcher
         } else {
             return $this->dispatcher->dispatch($command);
         }
-    }
-
-    /**
-     * Determine if a command should be faked or actually dispatched.
-     *
-     * @param  mixed  $command
-     * @return bool
-     */
-    protected function shouldFakeJob($command)
-    {
-        if (empty($this->jobsToFake)) {
-            return true;
-        }
-
-        return collect($this->jobsToFake)
-            ->filter(function ($job) use ($command) {
-                return $job instanceof Closure
-                            ? $job($command)
-                            : $job === get_class($command);
-            })->isNotEmpty();
     }
 
     /**
@@ -664,6 +644,26 @@ class BusFake implements QueueingDispatcher
         $this->batches[] = $pendingBatch;
 
         return (new BatchRepositoryFake)->store($pendingBatch);
+    }
+
+    /**
+     * Determine if a command should be faked or actually dispatched.
+     *
+     * @param  mixed  $command
+     * @return bool
+     */
+    protected function shouldFakeJob($command)
+    {
+        if (empty($this->jobsToFake)) {
+            return true;
+        }
+
+        return collect($this->jobsToFake)
+            ->filter(function ($job) use ($command) {
+                return $job instanceof Closure
+                            ? $job($command)
+                            : $job === get_class($command);
+            })->isNotEmpty();
     }
 
     /**

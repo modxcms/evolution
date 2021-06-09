@@ -31,12 +31,64 @@ class MemoryDataCollector extends DataCollector implements LateDataCollectorInte
     /**
      * {@inheritdoc}
      */
+    public function collect(Request $request, Response $response, \Throwable $exception = null)
+    {
+        $this->updateMemoryUsage();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function reset()
     {
         $this->data = [
             'memory' => 0,
             'memory_limit' => $this->convertToBytes(ini_get('memory_limit')),
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function lateCollect()
+    {
+        $this->updateMemoryUsage();
+    }
+
+    /**
+     * Gets the memory.
+     *
+     * @return int The memory
+     */
+    public function getMemory()
+    {
+        return $this->data['memory'];
+    }
+
+    /**
+     * Gets the PHP memory limit.
+     *
+     * @return int The memory limit
+     */
+    public function getMemoryLimit()
+    {
+        return $this->data['memory_limit'];
+    }
+
+    /**
+     * Updates the memory usage data.
+     */
+    public function updateMemoryUsage()
+    {
+        $this->data['memory'] = memory_get_peak_usage(true);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return 'memory';
     }
 
     /**
@@ -69,57 +121,5 @@ class MemoryDataCollector extends DataCollector implements LateDataCollectorInte
         }
 
         return $max;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function collect(Request $request, Response $response, \Throwable $exception = null)
-    {
-        $this->updateMemoryUsage();
-    }
-
-    /**
-     * Updates the memory usage data.
-     */
-    public function updateMemoryUsage()
-    {
-        $this->data['memory'] = memory_get_peak_usage(true);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function lateCollect()
-    {
-        $this->updateMemoryUsage();
-    }
-
-    /**
-     * Gets the memory.
-     *
-     * @return int The memory
-     */
-    public function getMemory()
-    {
-        return $this->data['memory'];
-    }
-
-    /**
-     * Gets the PHP memory limit.
-     *
-     * @return int The memory limit
-     */
-    public function getMemoryLimit()
-    {
-        return $this->data['memory_limit'];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'memory';
     }
 }

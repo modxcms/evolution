@@ -95,19 +95,6 @@ class DB2Connection implements ConnectionInterface, ServerInfoAwareConnection
     /**
      * {@inheritdoc}
      */
-    public function query()
-    {
-        $args = func_get_args();
-        $sql  = $args[0];
-        $stmt = $this->prepare($sql);
-        $stmt->execute();
-
-        return $stmt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function prepare($sql)
     {
         $stmt = @db2_prepare($this->conn, $sql);
@@ -117,6 +104,19 @@ class DB2Connection implements ConnectionInterface, ServerInfoAwareConnection
         }
 
         return new Statement($stmt);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function query()
+    {
+        $args = func_get_args();
+        $sql  = $args[0];
+        $stmt = $this->prepare($sql);
+        $stmt->execute();
+
+        return $stmt;
     }
 
     /**
@@ -201,12 +201,9 @@ class DB2Connection implements ConnectionInterface, ServerInfoAwareConnection
      *
      * @deprecated The error information is available via exceptions.
      */
-    public function errorInfo()
+    public function errorCode()
     {
-        return [
-            0 => db2_conn_errormsg($this->conn),
-            1 => $this->errorCode(),
-        ];
+        return db2_conn_error($this->conn);
     }
 
     /**
@@ -214,8 +211,11 @@ class DB2Connection implements ConnectionInterface, ServerInfoAwareConnection
      *
      * @deprecated The error information is available via exceptions.
      */
-    public function errorCode()
+    public function errorInfo()
     {
-        return db2_conn_error($this->conn);
+        return [
+            0 => db2_conn_errormsg($this->conn),
+            1 => $this->errorCode(),
+        ];
     }
 }

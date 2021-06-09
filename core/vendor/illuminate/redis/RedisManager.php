@@ -73,6 +73,130 @@ class RedisManager implements Factory
     }
 
     /**
+     * Get a Redis connection by name.
+     *
+     * @param  string|null  $name
+     * @return \Illuminate\Redis\Connections\Connection
+     */
+    public function connection($name = null)
+    {
+        $name = $name ?: 'default';
+
+        if (isset($this->connections[$name])) {
+            return $this->connections[$name];
+        }
+
+        return $this->connections[$name] = $this->configure(
+            $this->resolve($name), $name
+        );
+    }
+
+    /**
+     * Resolve the given connection by name.
+     *
+     * @param  string|null  $name
+     * @return \Illuminate\Redis\Connections\Connection
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function resolve($name = null)
+    {
+        $name = $name ?: 'default';
+
+        $options = $this->config['options'] ?? [];
+
+        if (isset($this->config[$name])) {
+            return $this->connector()->connect(
+                $this->parseConnectionConfiguration($this->config[$name]),
+                $options
+            );
+        }
+
+        if (isset($this->config['clusters'][$name])) {
+            return $this->resolveCluster($name);
+        }
+
+        throw new InvalidArgumentException("Redis connection [{$name}] not configured.");
+    }
+
+    /**
+     * Resolve the given cluster connection by name.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Redis\Connections\Connection
+     */
+    protected function resolveCluster($name)
+    {
+        return $this->connector()->connectToCluster(
+            array_map(function ($config) {
+                return $this->parseConnectionConfiguration($config);
+            }, $this->config['clusters'][$name]),
+            $this->config['clusters']['options'] ?? [],
+            $this->config['options'] ?? []
+        );
+    }
+
+    /**
+     * Configure the given connection to prepare it for commands.
+     *
+     * @param  \Illuminate\Redis\Connections\Connection  $connection
+     * @param  string  $name
+     * @return \Illuminate\Redis\Connections\Connection
+     */
+    protected function configure(Connection $connection, $name)
+    {
+        $connection->setName($name);
+
+        if ($this->events && $this->app->bound('events')) {
+            $connection->setEventDispatcher($this->app->make('events'));
+        }
+
+        return $connection;
+    }
+
+    /**
+     * Get the connector instance for the current driver.
+     *
+     * @return \Illuminate\Contracts\Redis\Connector
+     */
+    protected function connector()
+    {
+        $customCreator = $this->customCreators[$this->driver] ?? null;
+
+        if ($customCreator) {
+            return $customCreator();
+        }
+
+        switch ($this->driver) {
+            case 'predis':
+                return new PredisConnector;
+            case 'phpredis':
+                return new PhpRedisConnector;
+        }
+    }
+
+    /**
+     * Parse the Redis connection configuration.
+     *
+     * @param  mixed  $config
+     * @return array
+     */
+    protected function parseConnectionConfiguration($config)
+    {
+        $parsed = (new ConfigurationUrlParser)->parseConfiguration($config);
+
+        $driver = strtolower($parsed['driver'] ?? '');
+
+        if (in_array($driver, ['tcp', 'tls'])) {
+            $parsed['scheme'] = $driver;
+        }
+
+        return array_filter($parsed, function ($key) {
+            return ! in_array($key, ['driver'], true);
+        }, ARRAY_FILTER_USE_KEY);
+    }
+
+    /**
      * Return all of the created connections.
      *
      * @return array
@@ -150,129 +274,5 @@ class RedisManager implements Factory
     public function __call($method, $parameters)
     {
         return $this->connection()->{$method}(...$parameters);
-    }
-
-    /**
-     * Get a Redis connection by name.
-     *
-     * @param  string|null  $name
-     * @return \Illuminate\Redis\Connections\Connection
-     */
-    public function connection($name = null)
-    {
-        $name = $name ?: 'default';
-
-        if (isset($this->connections[$name])) {
-            return $this->connections[$name];
-        }
-
-        return $this->connections[$name] = $this->configure(
-            $this->resolve($name), $name
-        );
-    }
-
-    /**
-     * Configure the given connection to prepare it for commands.
-     *
-     * @param  \Illuminate\Redis\Connections\Connection  $connection
-     * @param  string  $name
-     * @return \Illuminate\Redis\Connections\Connection
-     */
-    protected function configure(Connection $connection, $name)
-    {
-        $connection->setName($name);
-
-        if ($this->events && $this->app->bound('events')) {
-            $connection->setEventDispatcher($this->app->make('events'));
-        }
-
-        return $connection;
-    }
-
-    /**
-     * Resolve the given connection by name.
-     *
-     * @param  string|null  $name
-     * @return \Illuminate\Redis\Connections\Connection
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function resolve($name = null)
-    {
-        $name = $name ?: 'default';
-
-        $options = $this->config['options'] ?? [];
-
-        if (isset($this->config[$name])) {
-            return $this->connector()->connect(
-                $this->parseConnectionConfiguration($this->config[$name]),
-                $options
-            );
-        }
-
-        if (isset($this->config['clusters'][$name])) {
-            return $this->resolveCluster($name);
-        }
-
-        throw new InvalidArgumentException("Redis connection [{$name}] not configured.");
-    }
-
-    /**
-     * Get the connector instance for the current driver.
-     *
-     * @return \Illuminate\Contracts\Redis\Connector
-     */
-    protected function connector()
-    {
-        $customCreator = $this->customCreators[$this->driver] ?? null;
-
-        if ($customCreator) {
-            return $customCreator();
-        }
-
-        switch ($this->driver) {
-            case 'predis':
-                return new PredisConnector;
-            case 'phpredis':
-                return new PhpRedisConnector;
-        }
-    }
-
-    /**
-     * Parse the Redis connection configuration.
-     *
-     * @param  mixed  $config
-     * @return array
-     */
-    protected function parseConnectionConfiguration($config)
-    {
-        $parsed = (new ConfigurationUrlParser)->parseConfiguration($config);
-
-        $driver = strtolower($parsed['driver'] ?? '');
-
-        if (in_array($driver, ['tcp', 'tls'])) {
-            $parsed['scheme'] = $driver;
-        }
-
-        return array_filter($parsed, function ($key) {
-            return ! in_array($key, ['driver'], true);
-        }, ARRAY_FILTER_USE_KEY);
-    }
-
-    /**
-     * Resolve the given cluster connection by name.
-     *
-     * @param  string  $name
-     * @return \Illuminate\Redis\Connections\Connection
-     */
-    protected function resolveCluster($name)
-    {
-        return $this->connector()->connectToCluster(
-            array_map(function ($config) {
-                return $this->parseConnectionConfiguration($config);
-            }, $this->config['clusters'][$name]),
-            $this->config['clusters']['options'] ?? [],
-            $this->config['options'] ?? []
-        );
     }
 }

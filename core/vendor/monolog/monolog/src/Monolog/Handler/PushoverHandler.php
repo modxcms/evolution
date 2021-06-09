@@ -106,30 +106,6 @@ class PushoverHandler extends SocketHandler
         $this->expire = $expire;
     }
 
-    public function setHighPriorityLevel($value): self
-    {
-        $this->highPriorityLevel = Logger::toMonologLevel($value);
-
-        return $this;
-    }
-
-    public function setEmergencyLevel($value): self
-    {
-        $this->emergencyLevel = Logger::toMonologLevel($value);
-
-        return $this;
-    }
-
-    /**
-     * Use the formatted message?
-     */
-    public function useFormattedMessage(bool $value): self
-    {
-        $this->useFormattedMessage = $value;
-
-        return $this;
-    }
-
     protected function generateDataStream(array $record): string
     {
         $content = $this->buildContent($record);
@@ -199,5 +175,29 @@ class PushoverHandler extends SocketHandler
         }
 
         $this->user = null;
+    }
+
+    public function setHighPriorityLevel($value): self
+    {
+        $this->highPriorityLevel = Logger::toMonologLevel($value);
+
+        return $this;
+    }
+
+    public function setEmergencyLevel($value): self
+    {
+        $this->emergencyLevel = Logger::toMonologLevel($value);
+
+        return $this;
+    }
+
+    /**
+     * Use the formatted message?
+     */
+    public function useFormattedMessage(bool $value): self
+    {
+        $this->useFormattedMessage = $value;
+
+        return $this;
     }
 }

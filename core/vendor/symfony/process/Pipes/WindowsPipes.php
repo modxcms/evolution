@@ -106,21 +106,6 @@ class WindowsPipes extends AbstractPipes
     /**
      * {@inheritdoc}
      */
-    public function close()
-    {
-        parent::close();
-        foreach ($this->fileHandles as $type => $handle) {
-            ftruncate($handle, 0);
-            fclose($handle);
-            flock($this->lockHandles[$type], \LOCK_UN);
-            fclose($this->lockHandles[$type]);
-        }
-        $this->fileHandles = $this->lockHandles = [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getDescriptors(): array
     {
         if (!$this->haveReadSupport) {
@@ -200,5 +185,20 @@ class WindowsPipes extends AbstractPipes
     public function areOpen(): bool
     {
         return $this->pipes && $this->fileHandles;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function close()
+    {
+        parent::close();
+        foreach ($this->fileHandles as $type => $handle) {
+            ftruncate($handle, 0);
+            fclose($handle);
+            flock($this->lockHandles[$type], \LOCK_UN);
+            fclose($this->lockHandles[$type]);
+        }
+        $this->fileHandles = $this->lockHandles = [];
     }
 }

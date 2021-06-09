@@ -38,6 +38,13 @@ class DumpServer
         $this->logger = $logger;
     }
 
+    public function start(): void
+    {
+        if (!$this->socket = stream_socket_server($this->host, $errno, $errstr)) {
+            throw new \RuntimeException(sprintf('Server start failed on "%s": ', $this->host).$errstr.' '.$errno);
+        }
+    }
+
     public function listen(callable $callback): void
     {
         if (null === $this->socket) {
@@ -74,11 +81,9 @@ class DumpServer
         }
     }
 
-    public function start(): void
+    public function getHost(): string
     {
-        if (!$this->socket = stream_socket_server($this->host, $errno, $errstr)) {
-            throw new \RuntimeException(sprintf('Server start failed on "%s": ', $this->host).$errstr.' '.$errno);
-        }
+        return $this->host;
     }
 
     private function getMessages(): iterable
@@ -102,10 +107,5 @@ class DumpServer
                 }
             }
         }
-    }
-
-    public function getHost(): string
-    {
-        return $this->host;
     }
 }

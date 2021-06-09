@@ -10,17 +10,19 @@ class ArrayStore extends TaggableStore implements LockProvider
     use InteractsWithTime, RetrievesMultipleKeys;
 
     /**
-     * The array of locks.
-     *
-     * @var array
-     */
-    public $locks = [];
-    /**
      * The array of stored values.
      *
      * @var array
      */
     protected $storage = [];
+
+    /**
+     * The array of locks.
+     *
+     * @var array
+     */
+    public $locks = [];
+
     /**
      * Indicates if values are serialized within the store.
      *
@@ -37,40 +39,6 @@ class ArrayStore extends TaggableStore implements LockProvider
     public function __construct($serializesValues = false)
     {
         $this->serializesValues = $serializesValues;
-    }
-
-    /**
-     * Decrement the value of an item in the cache.
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return int
-     */
-    public function decrement($key, $value = 1)
-    {
-        return $this->increment($key, $value * -1);
-    }
-
-    /**
-     * Increment the value of an item in the cache.
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return int
-     */
-    public function increment($key, $value = 1)
-    {
-        if (! is_null($existing = $this->get($key))) {
-            return tap(((int) $existing) + $value, function ($incremented) use ($key) {
-                $value = $this->serializesValues ? serialize($incremented) : $incremented;
-
-                $this->storage[$key]['value'] = $value;
-            });
-        }
-
-        $this->forever($key, $value);
-
-        return $value;
     }
 
     /**
@@ -99,35 +67,6 @@ class ArrayStore extends TaggableStore implements LockProvider
     }
 
     /**
-     * Remove an item from the cache.
-     *
-     * @param  string  $key
-     * @return bool
-     */
-    public function forget($key)
-    {
-        if (array_key_exists($key, $this->storage)) {
-            unset($this->storage[$key]);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Store an item in the cache indefinitely.
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function forever($key, $value)
-    {
-        return $this->put($key, $value, 0);
-    }
-
-    /**
      * Store an item in the cache for a given number of seconds.
      *
      * @param  string  $key
@@ -146,25 +85,66 @@ class ArrayStore extends TaggableStore implements LockProvider
     }
 
     /**
-     * Get the expiration time of the key.
+     * Increment the value of an item in the cache.
      *
-     * @param  int  $seconds
+     * @param  string  $key
+     * @param  mixed  $value
      * @return int
      */
-    protected function calculateExpiration($seconds)
+    public function increment($key, $value = 1)
     {
-        return $this->toTimestamp($seconds);
+        if (! is_null($existing = $this->get($key))) {
+            return tap(((int) $existing) + $value, function ($incremented) use ($key) {
+                $value = $this->serializesValues ? serialize($incremented) : $incremented;
+
+                $this->storage[$key]['value'] = $value;
+            });
+        }
+
+        $this->forever($key, $value);
+
+        return $value;
     }
 
     /**
-     * Get the UNIX timestamp for the given number of seconds.
+     * Decrement the value of an item in the cache.
      *
-     * @param  int  $seconds
+     * @param  string  $key
+     * @param  mixed  $value
      * @return int
      */
-    protected function toTimestamp($seconds)
+    public function decrement($key, $value = 1)
     {
-        return $seconds > 0 ? $this->availableAt($seconds) : 0;
+        return $this->increment($key, $value * -1);
+    }
+
+    /**
+     * Store an item in the cache indefinitely.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return bool
+     */
+    public function forever($key, $value)
+    {
+        return $this->put($key, $value, 0);
+    }
+
+    /**
+     * Remove an item from the cache.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    public function forget($key)
+    {
+        if (array_key_exists($key, $this->storage)) {
+            unset($this->storage[$key]);
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -190,15 +170,25 @@ class ArrayStore extends TaggableStore implements LockProvider
     }
 
     /**
-     * Restore a lock instance using the owner identifier.
+     * Get the expiration time of the key.
      *
-     * @param  string  $name
-     * @param  string  $owner
-     * @return \Illuminate\Contracts\Cache\Lock
+     * @param  int  $seconds
+     * @return int
      */
-    public function restoreLock($name, $owner)
+    protected function calculateExpiration($seconds)
     {
-        return $this->lock($name, 0, $owner);
+        return $this->toTimestamp($seconds);
+    }
+
+    /**
+     * Get the UNIX timestamp for the given number of seconds.
+     *
+     * @param  int  $seconds
+     * @return int
+     */
+    protected function toTimestamp($seconds)
+    {
+        return $seconds > 0 ? $this->availableAt($seconds) : 0;
     }
 
     /**
@@ -212,5 +202,17 @@ class ArrayStore extends TaggableStore implements LockProvider
     public function lock($name, $seconds = 0, $owner = null)
     {
         return new ArrayLock($this, $name, $seconds, $owner);
+    }
+
+    /**
+     * Restore a lock instance using the owner identifier.
+     *
+     * @param  string  $name
+     * @param  string  $owner
+     * @return \Illuminate\Contracts\Cache\Lock
+     */
+    public function restoreLock($name, $owner)
+    {
+        return $this->lock($name, 0, $owner);
     }
 }

@@ -52,6 +52,48 @@ class NamespacedAttributeBag extends AttributeBag
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function get(string $name, $default = null)
+    {
+        // reference mismatch: if fixed, re-introduced in array_key_exists; keep as it is
+        $attributes = $this->resolveAttributePath($name);
+        $name = $this->resolveKey($name);
+
+        if (null === $attributes) {
+            return $default;
+        }
+
+        return \array_key_exists($name, $attributes) ? $attributes[$name] : $default;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function set(string $name, $value)
+    {
+        $attributes = &$this->resolveAttributePath($name, true);
+        $name = $this->resolveKey($name);
+        $attributes[$name] = $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function remove(string $name)
+    {
+        $retval = null;
+        $attributes = &$this->resolveAttributePath($name);
+        $name = $this->resolveKey($name);
+        if (null !== $attributes && \array_key_exists($name, $attributes)) {
+            $retval = $attributes[$name];
+            unset($attributes[$name]);
+        }
+
+        return $retval;
+    }
+
+    /**
      * Resolves a path in attributes property and returns it as a reference.
      *
      * This method allows structured namespacing of session attributes.
@@ -115,47 +157,5 @@ class NamespacedAttributeBag extends AttributeBag
         }
 
         return $name;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function get(string $name, $default = null)
-    {
-        // reference mismatch: if fixed, re-introduced in array_key_exists; keep as it is
-        $attributes = $this->resolveAttributePath($name);
-        $name = $this->resolveKey($name);
-
-        if (null === $attributes) {
-            return $default;
-        }
-
-        return \array_key_exists($name, $attributes) ? $attributes[$name] : $default;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function set(string $name, $value)
-    {
-        $attributes = &$this->resolveAttributePath($name, true);
-        $name = $this->resolveKey($name);
-        $attributes[$name] = $value;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function remove(string $name)
-    {
-        $retval = null;
-        $attributes = &$this->resolveAttributePath($name);
-        $name = $this->resolveKey($name);
-        if (null !== $attributes && \array_key_exists($name, $attributes)) {
-            $retval = $attributes[$name];
-            unset($attributes[$name]);
-        }
-
-        return $retval;
     }
 }

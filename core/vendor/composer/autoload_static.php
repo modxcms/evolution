@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit528d3931d2594604bdb974e902524ede
+class ComposerStaticInitfed8132d037ddfbc60c3399b763a08b0
 {
     public static $files = array (
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
@@ -1853,6 +1853,7 @@ class ComposerStaticInit528d3931d2594604bdb974e902524ede
         'Illuminate\\Contracts\\Auth\\UserProvider' => __DIR__ . '/..' . '/illuminate/contracts/Auth/UserProvider.php',
         'Illuminate\\Contracts\\Broadcasting\\Broadcaster' => __DIR__ . '/..' . '/illuminate/contracts/Broadcasting/Broadcaster.php',
         'Illuminate\\Contracts\\Broadcasting\\Factory' => __DIR__ . '/..' . '/illuminate/contracts/Broadcasting/Factory.php',
+        'Illuminate\\Contracts\\Broadcasting\\HasBroadcastChannel' => __DIR__ . '/..' . '/illuminate/contracts/Broadcasting/HasBroadcastChannel.php',
         'Illuminate\\Contracts\\Broadcasting\\ShouldBroadcast' => __DIR__ . '/..' . '/illuminate/contracts/Broadcasting/ShouldBroadcast.php',
         'Illuminate\\Contracts\\Broadcasting\\ShouldBroadcastNow' => __DIR__ . '/..' . '/illuminate/contracts/Broadcasting/ShouldBroadcastNow.php',
         'Illuminate\\Contracts\\Bus\\Dispatcher' => __DIR__ . '/..' . '/illuminate/contracts/Bus/Dispatcher.php',
@@ -1993,6 +1994,8 @@ class ComposerStaticInit528d3931d2594604bdb974e902524ede
         'Illuminate\\Database\\DatabaseTransactionsManager' => __DIR__ . '/..' . '/illuminate/database/DatabaseTransactionsManager.php',
         'Illuminate\\Database\\DetectsConcurrencyErrors' => __DIR__ . '/..' . '/illuminate/database/DetectsConcurrencyErrors.php',
         'Illuminate\\Database\\DetectsLostConnections' => __DIR__ . '/..' . '/illuminate/database/DetectsLostConnections.php',
+        'Illuminate\\Database\\Eloquent\\BroadcastableModelEventOccurred' => __DIR__ . '/..' . '/illuminate/database/Eloquent/BroadcastableModelEventOccurred.php',
+        'Illuminate\\Database\\Eloquent\\BroadcastsEvents' => __DIR__ . '/..' . '/illuminate/database/Eloquent/BroadcastsEvents.php',
         'Illuminate\\Database\\Eloquent\\Builder' => __DIR__ . '/..' . '/illuminate/database/Eloquent/Builder.php',
         'Illuminate\\Database\\Eloquent\\Casts\\ArrayObject' => __DIR__ . '/..' . '/illuminate/database/Eloquent/Casts/ArrayObject.php',
         'Illuminate\\Database\\Eloquent\\Casts\\AsArrayObject' => __DIR__ . '/..' . '/illuminate/database/Eloquent/Casts/AsArrayObject.php',
@@ -2130,6 +2133,8 @@ class ComposerStaticInit528d3931d2594604bdb974e902524ede
         'Illuminate\\Filesystem\\FilesystemServiceProvider' => __DIR__ . '/..' . '/illuminate/filesystem/FilesystemServiceProvider.php',
         'Illuminate\\Filesystem\\LockableFile' => __DIR__ . '/..' . '/illuminate/filesystem/LockableFile.php',
         'Illuminate\\Http\\Client\\ConnectionException' => __DIR__ . '/..' . '/illuminate/http/Client/ConnectionException.php',
+        'Illuminate\\Http\\Client\\Events\\RequestSending' => __DIR__ . '/..' . '/illuminate/http/Client/Events/RequestSending.php',
+        'Illuminate\\Http\\Client\\Events\\ResponseReceived' => __DIR__ . '/..' . '/illuminate/http/Client/Events/ResponseReceived.php',
         'Illuminate\\Http\\Client\\Factory' => __DIR__ . '/..' . '/illuminate/http/Client/Factory.php',
         'Illuminate\\Http\\Client\\HttpClientException' => __DIR__ . '/..' . '/illuminate/http/Client/HttpClientException.php',
         'Illuminate\\Http\\Client\\PendingRequest' => __DIR__ . '/..' . '/illuminate/http/Client/PendingRequest.php',
@@ -2337,6 +2342,7 @@ class ComposerStaticInit528d3931d2594604bdb974e902524ede
         'Illuminate\\Support\\Testing\\Fakes\\PendingMailFake' => __DIR__ . '/..' . '/illuminate/support/Testing/Fakes/PendingMailFake.php',
         'Illuminate\\Support\\Testing\\Fakes\\QueueFake' => __DIR__ . '/..' . '/illuminate/support/Testing/Fakes/QueueFake.php',
         'Illuminate\\Support\\Traits\\CapsuleManagerTrait' => __DIR__ . '/..' . '/illuminate/support/Traits/CapsuleManagerTrait.php',
+        'Illuminate\\Support\\Traits\\Conditionable' => __DIR__ . '/..' . '/illuminate/support/Traits/Conditionable.php',
         'Illuminate\\Support\\Traits\\EnumeratesValues' => __DIR__ . '/..' . '/illuminate/collections/Traits/EnumeratesValues.php',
         'Illuminate\\Support\\Traits\\ForwardsCalls' => __DIR__ . '/..' . '/illuminate/support/Traits/ForwardsCalls.php',
         'Illuminate\\Support\\Traits\\Localizable' => __DIR__ . '/..' . '/illuminate/support/Traits/Localizable.php',
@@ -3813,9 +3819,9 @@ class ComposerStaticInit528d3931d2594604bdb974e902524ede
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit528d3931d2594604bdb974e902524ede::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit528d3931d2594604bdb974e902524ede::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit528d3931d2594604bdb974e902524ede::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitfed8132d037ddfbc60c3399b763a08b0::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitfed8132d037ddfbc60c3399b763a08b0::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitfed8132d037ddfbc60c3399b763a08b0::$classMap;
 
         }, null, ClassLoader::class);
     }

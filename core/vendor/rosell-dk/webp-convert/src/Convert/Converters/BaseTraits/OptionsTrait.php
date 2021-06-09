@@ -30,12 +30,90 @@ use WebPConvert\Options\QualityOption;
 trait OptionsTrait
 {
 
+    abstract public function log($msg, $style = '');
+    abstract public function logLn($msg, $style = '');
+    abstract protected function getMimeTypeOfSource();
+
     /** @var array  Provided conversion options (array of simple objects)*/
     public $providedOptions;
+
     /** @var array  Calculated conversion options (merge of default options and provided options)*/
     protected $options;
+
     /** @var Options  */
     protected $options2;
+
+    /**
+     *  Get the "general" options (options that are standard in the meaning that they
+     *  are generally available (unless specifically marked as unsupported by a given converter)
+     *
+     *  @param   string   $imageType   (png | jpeg)   The image type - determines the defaults
+     *
+     *  @return  array  Array of options
+     */
+    public function getGeneralOptions($imageType)
+    {
+        $isPng = ($imageType == 'png');
+
+        $defaultQualityOption = new IntegerOption('default-quality', ($isPng ? 85 : 75), 0, 100);
+        $defaultQualityOption->markDeprecated();
+
+        $maxQualityOption = new IntegerOption('max-quality', 85, 0, 100);
+        $maxQualityOption->markDeprecated();
+
+        return [
+            new IntegerOption('alpha-quality', 85, 0, 100),
+            new BooleanOption('auto-limit', true),
+            //new IntegerOption('auto-limit-adjustment', 5, -100, 100),
+            new BooleanOption('auto-filter', false),
+            $defaultQualityOption,
+            new StringOption('encoding', 'auto', ['lossy', 'lossless', 'auto']),
+            new BooleanOption('low-memory', false),
+            new BooleanOption('log-call-arguments', false),
+            $maxQualityOption,
+            new MetadataOption('metadata', 'none'),
+            new IntegerOption('method', 6, 0, 6),
+            new IntegerOption('near-lossless', 60, 0, 100),
+            new StringOption('preset', 'none', ['none', 'default', 'photo', 'picture', 'drawing', 'icon', 'text']),
+            new QualityOption('quality', ($isPng ? 85 : 75)),
+            new IntegerOrNullOption('size-in-percentage', null, 0, 100),
+            new BooleanOption('sharp-yuv', true),
+            new BooleanOption('skip', false),
+            new BooleanOption('use-nice', false),
+            new ArrayOption('jpeg', []),
+            new ArrayOption('png', [])
+        ];
+    }
+
+    /**
+     *  Get the unique options for a converter
+     *
+     *  @param   string   $imageType   (png | jpeg)   The image type - determines the defaults
+     *
+     *  @return  array  Array of options
+     */
+    public function getUniqueOptions($imageType)
+    {
+        return [];
+    }
+
+
+    /**
+     *  Create options.
+     *
+     *  The options created here will be available to all converters.
+     *  Individual converters may add options by overriding this method.
+     *
+     *  @param   string   $imageType   (png | jpeg)   The image type - determines the defaults
+     *
+     *  @return void
+     */
+    protected function createOptions($imageType = 'png')
+    {
+        $this->options2 = new Options();
+        $this->options2->addOptions(... $this->getGeneralOptions($imageType));
+        $this->options2->addOptions(... $this->getUniqueOptions($imageType));
+    }
 
     /**
      * Set "provided options" (options provided by the user when calling convert().
@@ -95,79 +173,6 @@ trait OptionsTrait
         //$this->logOptions();
     }
 
-    abstract protected function getMimeTypeOfSource();
-
-    /**
-     *  Create options.
-     *
-     *  The options created here will be available to all converters.
-     *  Individual converters may add options by overriding this method.
-     *
-     *  @param   string   $imageType   (png | jpeg)   The image type - determines the defaults
-     *
-     *  @return void
-     */
-    protected function createOptions($imageType = 'png')
-    {
-        $this->options2 = new Options();
-        $this->options2->addOptions(... $this->getGeneralOptions($imageType));
-        $this->options2->addOptions(... $this->getUniqueOptions($imageType));
-    }
-
-    /**
-     *  Get the "general" options (options that are standard in the meaning that they
-     *  are generally available (unless specifically marked as unsupported by a given converter)
-     *
-     *  @param   string   $imageType   (png | jpeg)   The image type - determines the defaults
-     *
-     *  @return  array  Array of options
-     */
-    public function getGeneralOptions($imageType)
-    {
-        $isPng = ($imageType == 'png');
-
-        $defaultQualityOption = new IntegerOption('default-quality', ($isPng ? 85 : 75), 0, 100);
-        $defaultQualityOption->markDeprecated();
-
-        $maxQualityOption = new IntegerOption('max-quality', 85, 0, 100);
-        $maxQualityOption->markDeprecated();
-
-        return [
-            new IntegerOption('alpha-quality', 85, 0, 100),
-            new BooleanOption('auto-limit', true),
-            //new IntegerOption('auto-limit-adjustment', 5, -100, 100),
-            new BooleanOption('auto-filter', false),
-            $defaultQualityOption,
-            new StringOption('encoding', 'auto', ['lossy', 'lossless', 'auto']),
-            new BooleanOption('low-memory', false),
-            new BooleanOption('log-call-arguments', false),
-            $maxQualityOption,
-            new MetadataOption('metadata', 'none'),
-            new IntegerOption('method', 6, 0, 6),
-            new IntegerOption('near-lossless', 60, 0, 100),
-            new StringOption('preset', 'none', ['none', 'default', 'photo', 'picture', 'drawing', 'icon', 'text']),
-            new QualityOption('quality', ($isPng ? 85 : 75)),
-            new IntegerOrNullOption('size-in-percentage', null, 0, 100),
-            new BooleanOption('sharp-yuv', true),
-            new BooleanOption('skip', false),
-            new BooleanOption('use-nice', false),
-            new ArrayOption('jpeg', []),
-            new ArrayOption('png', [])
-        ];
-    }
-
-    /**
-     *  Get the unique options for a converter
-     *
-     *  @param   string   $imageType   (png | jpeg)   The image type - determines the defaults
-     *
-     *  @return  array  Array of options
-     */
-    public function getUniqueOptions($imageType)
-    {
-        return [];
-    }
-
     /**
      * Get the resulting options after merging provided options with default options.
      *
@@ -179,6 +184,47 @@ trait OptionsTrait
     public function getOptions()
     {
         return $this->options;
+    }
+
+    /**
+     * Change an option specifically.
+     *
+     * This method is probably rarely neeeded. We are using it to change the "encoding" option temporarily
+     * in the EncodingAutoTrait.
+     *
+     * @param  string  $id      Id of option (ie "metadata")
+     * @param  mixed   $value   The new value.
+     * @return void
+     */
+    protected function setOption($id, $value)
+    {
+        $this->options[$id] = $value;
+        $this->options2->setOrCreateOption($id, $value);
+    }
+
+    /**
+     *  Check options.
+     *
+     *  @throws InvalidOptionTypeException   if an option have wrong type
+     *  @throws InvalidOptionValueException  if an option value is out of range
+     *  @throws ConversionSkippedException   if 'skip' option is set to true
+     *  @return void
+     */
+    protected function checkOptions()
+    {
+        $this->options2->check();
+
+        if ($this->options['skip']) {
+            if (($this->getMimeTypeOfSource() == 'image/png') && isset($this->options['png']['skip'])) {
+                throw new ConversionSkippedException(
+                    'skipped conversion (configured to do so for PNG)'
+                );
+            } else {
+                throw new ConversionSkippedException(
+                    'skipped conversion (configured to do so)'
+                );
+            }
+        }
     }
 
     public function logOptions()
@@ -256,56 +302,10 @@ trait OptionsTrait
         $this->logLn('------------');
     }
 
-    abstract public function logLn($msg, $style = '');
-
+    // to be overridden by converters
     protected function getUnsupportedDefaultOptions()
     {
         return [];
-    }
-
-    abstract public function log($msg, $style = '');
-
-    /**
-     * Change an option specifically.
-     *
-     * This method is probably rarely neeeded. We are using it to change the "encoding" option temporarily
-     * in the EncodingAutoTrait.
-     *
-     * @param  string  $id      Id of option (ie "metadata")
-     * @param  mixed   $value   The new value.
-     * @return void
-     */
-    protected function setOption($id, $value)
-    {
-        $this->options[$id] = $value;
-        $this->options2->setOrCreateOption($id, $value);
-    }
-
-    // to be overridden by converters
-
-    /**
-     *  Check options.
-     *
-     *  @throws InvalidOptionTypeException   if an option have wrong type
-     *  @throws InvalidOptionValueException  if an option value is out of range
-     *  @throws ConversionSkippedException   if 'skip' option is set to true
-     *  @return void
-     */
-    protected function checkOptions()
-    {
-        $this->options2->check();
-
-        if ($this->options['skip']) {
-            if (($this->getMimeTypeOfSource() == 'image/png') && isset($this->options['png']['skip'])) {
-                throw new ConversionSkippedException(
-                    'skipped conversion (configured to do so for PNG)'
-                );
-            } else {
-                throw new ConversionSkippedException(
-                    'skipped conversion (configured to do so)'
-                );
-            }
-        }
     }
 
 /*

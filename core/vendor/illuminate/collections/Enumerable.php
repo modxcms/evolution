@@ -60,14 +60,6 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
     public static function empty();
 
     /**
-     * Add a method to the list of proxied methods.
-     *
-     * @param  string  $method
-     * @return void
-     */
-    public static function proxy($method);
-
-    /**
      * Get all items in the enumerable.
      *
      * @return array
@@ -1014,6 +1006,14 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
      * @return string
      */
     public function __toString();
+
+    /**
+     * Add a method to the list of proxied methods.
+     *
+     * @param  string  $method
+     * @return void
+     */
+    public static function proxy($method);
 
     /**
      * Dynamically access collection proxies.

@@ -44,6 +44,14 @@ class UdpSocket
         $this->send($this->assembleMessage($line, $header));
     }
 
+    public function close(): void
+    {
+        if (is_resource($this->socket) || $this->socket instanceof Socket) {
+            socket_close($this->socket);
+            $this->socket = null;
+        }
+    }
+
     protected function send(string $chunk): void
     {
         if (!is_resource($this->socket) && !$this->socket instanceof Socket) {
@@ -57,13 +65,5 @@ class UdpSocket
         $chunkSize = static::DATAGRAM_MAX_LENGTH - strlen($header);
 
         return $header . Utils::substr($line, 0, $chunkSize);
-    }
-
-    public function close(): void
-    {
-        if (is_resource($this->socket) || $this->socket instanceof Socket) {
-            socket_close($this->socket);
-            $this->socket = null;
-        }
     }
 }

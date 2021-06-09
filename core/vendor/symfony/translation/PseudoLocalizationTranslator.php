@@ -108,6 +108,11 @@ final class PseudoLocalizationTranslator implements TranslatorInterface
         return $trans;
     }
 
+    public function getLocale(): string
+    {
+        return $this->translator->getLocale();
+    }
+
     private function getParts(string $originalTrans): array
     {
         if (!$this->parseHTML) {
@@ -343,11 +348,6 @@ final class PseudoLocalizationTranslator implements TranslatorInterface
         }
     }
 
-    private function strlen(string $s): int
-    {
-        return false === ($encoding = mb_detect_encoding($s, null, true)) ? \strlen($s) : mb_strlen($s, $encoding);
-    }
-
     private function addBrackets(string &$trans): void
     {
         if (!$this->brackets) {
@@ -357,8 +357,8 @@ final class PseudoLocalizationTranslator implements TranslatorInterface
         $trans = '['.$trans.']';
     }
 
-    public function getLocale(): string
+    private function strlen(string $s): int
     {
-        return $this->translator->getLocale();
+        return false === ($encoding = mb_detect_encoding($s, null, true)) ? \strlen($s) : mb_strlen($s, $encoding);
     }
 }

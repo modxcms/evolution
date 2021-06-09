@@ -12,187 +12,6 @@ trait FormatsMessages
     use ReplacesAttributes;
 
     /**
-     * Replace all error message place-holders with actual values.
-     *
-     * @param  string  $message
-     * @param  string  $attribute
-     * @param  string  $rule
-     * @param  array  $parameters
-     * @return string
-     */
-    public function makeReplacements($message, $attribute, $rule, $parameters)
-    {
-        $message = $this->replaceAttributePlaceholder(
-            $message, $this->getDisplayableAttribute($attribute)
-        );
-
-        $message = $this->replaceInputPlaceholder($message, $attribute);
-
-        if (isset($this->replacers[Str::snake($rule)])) {
-            return $this->callReplacer($message, $attribute, Str::snake($rule), $parameters, $this);
-        } elseif (method_exists($this, $replacer = "replace{$rule}")) {
-            return $this->$replacer($message, $attribute, $rule, $parameters);
-        }
-
-        return $message;
-    }
-
-    /**
-     * Replace the :attribute placeholder in the given message.
-     *
-     * @param  string  $message
-     * @param  string  $value
-     * @return string
-     */
-    protected function replaceAttributePlaceholder($message, $value)
-    {
-        return str_replace(
-            [':attribute', ':ATTRIBUTE', ':Attribute'],
-            [$value, Str::upper($value), Str::ucfirst($value)],
-            $message
-        );
-    }
-
-    /**
-     * Get the displayable name of the attribute.
-     *
-     * @param  string  $attribute
-     * @return string
-     */
-    public function getDisplayableAttribute($attribute)
-    {
-        $primaryAttribute = $this->getPrimaryAttribute($attribute);
-
-        $expectedAttributes = $attribute != $primaryAttribute
-                    ? [$attribute, $primaryAttribute] : [$attribute];
-
-        foreach ($expectedAttributes as $name) {
-            // The developer may dynamically specify the array of custom attributes on this
-            // validator instance. If the attribute exists in this array it is used over
-            // the other ways of pulling the attribute name for this given attributes.
-            if (isset($this->customAttributes[$name])) {
-                return $this->customAttributes[$name];
-            }
-
-            // We allow for a developer to specify language lines for any attribute in this
-            // application, which allows flexibility for displaying a unique displayable
-            // version of the attribute name instead of the name used in an HTTP POST.
-            if ($line = $this->getAttributeFromTranslations($name)) {
-                return $line;
-            }
-        }
-
-        // When no language line has been specified for the attribute and it is also
-        // an implicit attribute we will display the raw attribute's name and not
-        // modify it with any of these replacements before we display the name.
-        if (isset($this->implicitAttributes[$primaryAttribute])) {
-            return ($formatter = $this->implicitAttributesFormatter)
-                            ? $formatter($attribute)
-                            : $attribute;
-        }
-
-        return str_replace('_', ' ', Str::snake($attribute));
-    }
-
-    /**
-     * Get the given attribute from the attribute translations.
-     *
-     * @param  string  $name
-     * @return string
-     */
-    protected function getAttributeFromTranslations($name)
-    {
-        return Arr::get($this->translator->get('validation.attributes'), $name);
-    }
-
-    /**
-     * Replace the :input placeholder in the given message.
-     *
-     * @param  string  $message
-     * @param  string  $attribute
-     * @return string
-     */
-    protected function replaceInputPlaceholder($message, $attribute)
-    {
-        $actualValue = $this->getValue($attribute);
-
-        if (is_scalar($actualValue) || is_null($actualValue)) {
-            $message = str_replace(':input', $this->getDisplayableValue($attribute, $actualValue), $message);
-        }
-
-        return $message;
-    }
-
-    /**
-     * Get the displayable name of the value.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @return string
-     */
-    public function getDisplayableValue($attribute, $value)
-    {
-        if (isset($this->customValues[$attribute][$value])) {
-            return $this->customValues[$attribute][$value];
-        }
-
-        $key = "validation.values.{$attribute}.{$value}";
-
-        if (($line = $this->translator->get($key)) !== $key) {
-            return $line;
-        }
-
-        if (is_bool($value)) {
-            return $value ? 'true' : 'false';
-        }
-
-        if (is_null($value)) {
-            return 'empty';
-        }
-
-        return (string) $value;
-    }
-
-    /**
-     * Call a custom validator message replacer.
-     *
-     * @param  string  $message
-     * @param  string  $attribute
-     * @param  string  $rule
-     * @param  array  $parameters
-     * @param  \Illuminate\Validation\Validator  $validator
-     * @return string|null
-     */
-    protected function callReplacer($message, $attribute, $rule, $parameters, $validator)
-    {
-        $callback = $this->replacers[$rule];
-
-        if ($callback instanceof Closure) {
-            return $callback(...func_get_args());
-        } elseif (is_string($callback)) {
-            return $this->callClassBasedReplacer($callback, $message, $attribute, $rule, $parameters, $validator);
-        }
-    }
-
-    /**
-     * Call a class based validator message replacer.
-     *
-     * @param  string  $callback
-     * @param  string  $message
-     * @param  string  $attribute
-     * @param  string  $rule
-     * @param  array  $parameters
-     * @param  \Illuminate\Validation\Validator  $validator
-     * @return string
-     */
-    protected function callClassBasedReplacer($callback, $message, $attribute, $rule, $parameters, $validator)
-    {
-        [$class, $method] = Str::parseCallback($callback, 'replace');
-
-        return $this->container->make($class)->{$method}(...array_slice(func_get_args(), 1));
-    }
-
-    /**
      * Get the validation message for an attribute and rule.
      *
      * @param  string  $attribute
@@ -297,28 +116,6 @@ trait FormatsMessages
     }
 
     /**
-     * Get the data type of the given attribute.
-     *
-     * @param  string  $attribute
-     * @return string
-     */
-    protected function getAttributeType($attribute)
-    {
-        // We assume that the attributes present in the file array are files so that
-        // means that if the attribute does not have a numeric rule and the files
-        // list doesn't have it we'll just consider it a string by elimination.
-        if ($this->hasRule($attribute, $this->numericRules)) {
-            return 'numeric';
-        } elseif ($this->hasRule($attribute, ['Array'])) {
-            return 'array';
-        } elseif ($this->getValue($attribute) instanceof UploadedFile) {
-            return 'file';
-        }
-
-        return 'string';
-    }
-
-    /**
      * Get the custom error message from the translator.
      *
      * @param  string  $key
@@ -383,6 +180,170 @@ trait FormatsMessages
     }
 
     /**
+     * Get the data type of the given attribute.
+     *
+     * @param  string  $attribute
+     * @return string
+     */
+    protected function getAttributeType($attribute)
+    {
+        // We assume that the attributes present in the file array are files so that
+        // means that if the attribute does not have a numeric rule and the files
+        // list doesn't have it we'll just consider it a string by elimination.
+        if ($this->hasRule($attribute, $this->numericRules)) {
+            return 'numeric';
+        } elseif ($this->hasRule($attribute, ['Array'])) {
+            return 'array';
+        } elseif ($this->getValue($attribute) instanceof UploadedFile) {
+            return 'file';
+        }
+
+        return 'string';
+    }
+
+    /**
+     * Replace all error message place-holders with actual values.
+     *
+     * @param  string  $message
+     * @param  string  $attribute
+     * @param  string  $rule
+     * @param  array  $parameters
+     * @return string
+     */
+    public function makeReplacements($message, $attribute, $rule, $parameters)
+    {
+        $message = $this->replaceAttributePlaceholder(
+            $message, $this->getDisplayableAttribute($attribute)
+        );
+
+        $message = $this->replaceInputPlaceholder($message, $attribute);
+
+        if (isset($this->replacers[Str::snake($rule)])) {
+            return $this->callReplacer($message, $attribute, Str::snake($rule), $parameters, $this);
+        } elseif (method_exists($this, $replacer = "replace{$rule}")) {
+            return $this->$replacer($message, $attribute, $rule, $parameters);
+        }
+
+        return $message;
+    }
+
+    /**
+     * Get the displayable name of the attribute.
+     *
+     * @param  string  $attribute
+     * @return string
+     */
+    public function getDisplayableAttribute($attribute)
+    {
+        $primaryAttribute = $this->getPrimaryAttribute($attribute);
+
+        $expectedAttributes = $attribute != $primaryAttribute
+                    ? [$attribute, $primaryAttribute] : [$attribute];
+
+        foreach ($expectedAttributes as $name) {
+            // The developer may dynamically specify the array of custom attributes on this
+            // validator instance. If the attribute exists in this array it is used over
+            // the other ways of pulling the attribute name for this given attributes.
+            if (isset($this->customAttributes[$name])) {
+                return $this->customAttributes[$name];
+            }
+
+            // We allow for a developer to specify language lines for any attribute in this
+            // application, which allows flexibility for displaying a unique displayable
+            // version of the attribute name instead of the name used in an HTTP POST.
+            if ($line = $this->getAttributeFromTranslations($name)) {
+                return $line;
+            }
+        }
+
+        // When no language line has been specified for the attribute and it is also
+        // an implicit attribute we will display the raw attribute's name and not
+        // modify it with any of these replacements before we display the name.
+        if (isset($this->implicitAttributes[$primaryAttribute])) {
+            return ($formatter = $this->implicitAttributesFormatter)
+                            ? $formatter($attribute)
+                            : $attribute;
+        }
+
+        return str_replace('_', ' ', Str::snake($attribute));
+    }
+
+    /**
+     * Get the given attribute from the attribute translations.
+     *
+     * @param  string  $name
+     * @return string
+     */
+    protected function getAttributeFromTranslations($name)
+    {
+        return Arr::get($this->translator->get('validation.attributes'), $name);
+    }
+
+    /**
+     * Replace the :attribute placeholder in the given message.
+     *
+     * @param  string  $message
+     * @param  string  $value
+     * @return string
+     */
+    protected function replaceAttributePlaceholder($message, $value)
+    {
+        return str_replace(
+            [':attribute', ':ATTRIBUTE', ':Attribute'],
+            [$value, Str::upper($value), Str::ucfirst($value)],
+            $message
+        );
+    }
+
+    /**
+     * Replace the :input placeholder in the given message.
+     *
+     * @param  string  $message
+     * @param  string  $attribute
+     * @return string
+     */
+    protected function replaceInputPlaceholder($message, $attribute)
+    {
+        $actualValue = $this->getValue($attribute);
+
+        if (is_scalar($actualValue) || is_null($actualValue)) {
+            $message = str_replace(':input', $this->getDisplayableValue($attribute, $actualValue), $message);
+        }
+
+        return $message;
+    }
+
+    /**
+     * Get the displayable name of the value.
+     *
+     * @param  string  $attribute
+     * @param  mixed  $value
+     * @return string
+     */
+    public function getDisplayableValue($attribute, $value)
+    {
+        if (isset($this->customValues[$attribute][$value])) {
+            return $this->customValues[$attribute][$value];
+        }
+
+        $key = "validation.values.{$attribute}.{$value}";
+
+        if (($line = $this->translator->get($key)) !== $key) {
+            return $line;
+        }
+
+        if (is_bool($value)) {
+            return $value ? 'true' : 'false';
+        }
+
+        if (is_null($value)) {
+            return 'empty';
+        }
+
+        return (string) $value;
+    }
+
+    /**
      * Transform an array of attributes to their displayable form.
      *
      * @param  array  $values
@@ -400,5 +361,44 @@ trait FormatsMessages
         }
 
         return $attributes;
+    }
+
+    /**
+     * Call a custom validator message replacer.
+     *
+     * @param  string  $message
+     * @param  string  $attribute
+     * @param  string  $rule
+     * @param  array  $parameters
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return string|null
+     */
+    protected function callReplacer($message, $attribute, $rule, $parameters, $validator)
+    {
+        $callback = $this->replacers[$rule];
+
+        if ($callback instanceof Closure) {
+            return $callback(...func_get_args());
+        } elseif (is_string($callback)) {
+            return $this->callClassBasedReplacer($callback, $message, $attribute, $rule, $parameters, $validator);
+        }
+    }
+
+    /**
+     * Call a class based validator message replacer.
+     *
+     * @param  string  $callback
+     * @param  string  $message
+     * @param  string  $attribute
+     * @param  string  $rule
+     * @param  array  $parameters
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return string
+     */
+    protected function callClassBasedReplacer($callback, $message, $attribute, $rule, $parameters, $validator)
+    {
+        [$class, $method] = Str::parseCallback($callback, 'replace');
+
+        return $this->container->make($class)->{$method}(...array_slice(func_get_args(), 1));
     }
 }

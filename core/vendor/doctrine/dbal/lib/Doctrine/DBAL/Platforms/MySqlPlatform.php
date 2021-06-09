@@ -47,6 +47,25 @@ class MySqlPlatform extends AbstractPlatform
     /**
      * {@inheritDoc}
      */
+    protected function doModifyLimitQuery($query, $limit, $offset)
+    {
+        if ($limit !== null) {
+            $query .= ' LIMIT ' . $limit;
+
+            if ($offset > 0) {
+                $query .= ' OFFSET ' . $offset;
+            }
+        } elseif ($offset > 0) {
+            // 2^64-1 is the maximum of unsigned BIGINT, the biggest limit possible
+            $query .= ' LIMIT 18446744073709551615 OFFSET ' . $offset;
+        }
+
+        return $query;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getIdentifierQuoteCharacter()
     {
         return '`';
@@ -88,6 +107,16 @@ class MySqlPlatform extends AbstractPlatform
     public function getConcatExpression()
     {
         return sprintf('CONCAT(%s)', implode(', ', func_get_args()));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getDateArithmeticIntervalExpression($date, $operator, $interval, $unit)
+    {
+        $function = $operator === '+' ? 'DATE_ADD' : 'DATE_SUB';
+
+        return $function . '(' . $date . ', INTERVAL ' . $interval . ' ' . $unit . ')';
     }
 
     /**
@@ -134,16 +163,6 @@ class MySqlPlatform extends AbstractPlatform
         }
 
         return 'SHOW INDEX FROM ' . $table;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function quoteStringLiteral($str)
-    {
-        $str = str_replace('\\', '\\\\', $str); // MySQL requires backslashes to be escaped aswell.
-
-        return parent::quoteStringLiteral($str);
     }
 
     /**
@@ -198,6 +217,23 @@ class MySqlPlatform extends AbstractPlatform
     public function getDropViewSQL($name)
     {
         return 'DROP VIEW ' . $name;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getVarcharTypeDeclarationSQLSnippet($length, $fixed)
+    {
+        return $fixed ? ($length ? 'CHAR(' . $length . ')' : 'CHAR(255)')
+                : ($length ? 'VARCHAR(' . $length . ')' : 'VARCHAR(255)');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBinaryTypeDeclarationSQLSnippet($length, $fixed)
+    {
+        return $fixed ? 'BINARY(' . ($length ?: 255) . ')' : 'VARBINARY(' . ($length ?: 255) . ')';
     }
 
     /**
@@ -280,14 +316,6 @@ class MySqlPlatform extends AbstractPlatform
     public function getCollationFieldDeclaration($collation)
     {
         return $this->getColumnCollationDeclarationSQL($collation);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getColumnCollationDeclarationSQL($collation)
-    {
-        return 'COLLATE ' . $this->quoteSingleIdentifier($collation);
     }
 
     /**
@@ -386,6 +414,59 @@ SQL
     }
 
     /**
+     * {@inheritDoc}
+     */
+    protected function _getCreateTableSQL($name, array $columns, array $options = [])
+    {
+        $queryFields = $this->getColumnDeclarationListSQL($columns);
+
+        if (isset($options['uniqueConstraints']) && ! empty($options['uniqueConstraints'])) {
+            foreach ($options['uniqueConstraints'] as $index => $definition) {
+                $queryFields .= ', ' . $this->getUniqueConstraintDeclarationSQL($index, $definition);
+            }
+        }
+
+        // add all indexes
+        if (isset($options['indexes']) && ! empty($options['indexes'])) {
+            foreach ($options['indexes'] as $index => $definition) {
+                $queryFields .= ', ' . $this->getIndexDeclarationSQL($index, $definition);
+            }
+        }
+
+        // attach all primary keys
+        if (isset($options['primary']) && ! empty($options['primary'])) {
+            $keyColumns   = array_unique(array_values($options['primary']));
+            $queryFields .= ', PRIMARY KEY(' . implode(', ', $keyColumns) . ')';
+        }
+
+        $query = 'CREATE ';
+
+        if (! empty($options['temporary'])) {
+            $query .= 'TEMPORARY ';
+        }
+
+        $query .= 'TABLE ' . $name . ' (' . $queryFields . ') ';
+        $query .= $this->buildTableOptions($options);
+        $query .= $this->buildPartitionOptions($options);
+
+        $sql    = [$query];
+        $engine = 'INNODB';
+
+        if (isset($options['engine'])) {
+            $engine = strtoupper(trim($options['engine']));
+        }
+
+        // Propagate foreign key constraints only for InnoDB.
+        if (isset($options['foreignKeys']) && $engine === 'INNODB') {
+            foreach ((array) $options['foreignKeys'] as $definition) {
+                $sql[] = $this->getCreateForeignKeySQL($definition, $name);
+            }
+        }
+
+        return $sql;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getDefaultValueDeclarationSQL($column)
@@ -396,6 +477,74 @@ SQL
         }
 
         return parent::getDefaultValueDeclarationSQL($column);
+    }
+
+    /**
+     * Build SQL for table options
+     *
+     * @param mixed[] $options
+     *
+     * @return string
+     */
+    private function buildTableOptions(array $options)
+    {
+        if (isset($options['table_options'])) {
+            return $options['table_options'];
+        }
+
+        $tableOptions = [];
+
+        // Charset
+        if (! isset($options['charset'])) {
+            $options['charset'] = 'utf8';
+        }
+
+        $tableOptions[] = sprintf('DEFAULT CHARACTER SET %s', $options['charset']);
+
+        // Collate
+        if (! isset($options['collate'])) {
+            $options['collate'] = $options['charset'] . '_unicode_ci';
+        }
+
+        $tableOptions[] = $this->getColumnCollationDeclarationSQL($options['collate']);
+
+        // Engine
+        if (! isset($options['engine'])) {
+            $options['engine'] = 'InnoDB';
+        }
+
+        $tableOptions[] = sprintf('ENGINE = %s', $options['engine']);
+
+        // Auto increment
+        if (isset($options['auto_increment'])) {
+            $tableOptions[] = sprintf('AUTO_INCREMENT = %s', $options['auto_increment']);
+        }
+
+        // Comment
+        if (isset($options['comment'])) {
+            $tableOptions[] = sprintf('COMMENT = %s ', $this->quoteStringLiteral($options['comment']));
+        }
+
+        // Row format
+        if (isset($options['row_format'])) {
+            $tableOptions[] = sprintf('ROW_FORMAT = %s', $options['row_format']);
+        }
+
+        return implode(' ', $tableOptions);
+    }
+
+    /**
+     * Build SQL for partition options.
+     *
+     * @param mixed[] $options
+     *
+     * @return string
+     */
+    private function buildPartitionOptions(array $options)
+    {
+        return isset($options['partition_options'])
+            ? ' ' . $options['partition_options']
+            : '';
     }
 
     /**
@@ -739,34 +888,26 @@ SQL
     /**
      * {@inheritDoc}
      */
-    public function getIntegerTypeDeclarationSQL(array $column)
+    protected function getCreateIndexSQLFlags(Index $index)
     {
-        return 'INT' . $this->_getCommonIntegerTypeDeclarationSQL($column);
+        $type = '';
+        if ($index->isUnique()) {
+            $type .= 'UNIQUE ';
+        } elseif ($index->hasFlag('fulltext')) {
+            $type .= 'FULLTEXT ';
+        } elseif ($index->hasFlag('spatial')) {
+            $type .= 'SPATIAL ';
+        }
+
+        return $type;
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function _getCommonIntegerTypeDeclarationSQL(array $column)
+    public function getIntegerTypeDeclarationSQL(array $column)
     {
-        $autoinc = '';
-        if (! empty($column['autoincrement'])) {
-            $autoinc = ' AUTO_INCREMENT';
-        }
-
-        return $this->getUnsignedDeclaration($column) . $autoinc;
-    }
-
-    /**
-     * Get unsigned declaration for a column.
-     *
-     * @param mixed[] $columnDef
-     *
-     * @return string
-     */
-    private function getUnsignedDeclaration(array $columnDef)
-    {
-        return ! empty($columnDef['unsigned']) ? ' UNSIGNED' : '';
+        return 'INT' . $this->_getCommonIntegerTypeDeclarationSQL($column);
     }
 
     /**
@@ -802,11 +943,44 @@ SQL
     }
 
     /**
+     * Get unsigned declaration for a column.
+     *
+     * @param mixed[] $columnDef
+     *
+     * @return string
+     */
+    private function getUnsignedDeclaration(array $columnDef)
+    {
+        return ! empty($columnDef['unsigned']) ? ' UNSIGNED' : '';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function _getCommonIntegerTypeDeclarationSQL(array $column)
+    {
+        $autoinc = '';
+        if (! empty($column['autoincrement'])) {
+            $autoinc = ' AUTO_INCREMENT';
+        }
+
+        return $this->getUnsignedDeclaration($column) . $autoinc;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function getColumnCharsetDeclarationSQL($charset)
     {
         return 'CHARACTER SET ' . $charset;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getColumnCollationDeclarationSQL($collation)
+    {
+        return 'COLLATE ' . $this->quoteSingleIdentifier($collation);
     }
 
     /**
@@ -893,6 +1067,45 @@ SQL
     /**
      * {@inheritDoc}
      */
+    protected function initializeDoctrineTypeMappings()
+    {
+        $this->doctrineTypeMapping = [
+            'tinyint'       => 'boolean',
+            'smallint'      => 'smallint',
+            'mediumint'     => 'integer',
+            'int'           => 'integer',
+            'integer'       => 'integer',
+            'bigint'        => 'bigint',
+            'tinytext'      => 'text',
+            'mediumtext'    => 'text',
+            'longtext'      => 'text',
+            'text'          => 'text',
+            'varchar'       => 'string',
+            'string'        => 'string',
+            'char'          => 'string',
+            'date'          => 'date',
+            'datetime'      => 'datetime',
+            'timestamp'     => 'datetime',
+            'time'          => 'time',
+            'float'         => 'float',
+            'double'        => 'float',
+            'real'          => 'float',
+            'decimal'       => 'decimal',
+            'numeric'       => 'decimal',
+            'year'          => 'date',
+            'longblob'      => 'blob',
+            'blob'          => 'blob',
+            'mediumblob'    => 'blob',
+            'tinyblob'      => 'blob',
+            'binary'        => 'binary',
+            'varbinary'     => 'binary',
+            'set'           => 'simple_array',
+        ];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getVarcharMaxLength()
     {
         return 65535;
@@ -904,6 +1117,14 @@ SQL
     public function getBinaryMaxLength()
     {
         return 65535;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getReservedKeywordsClass()
+    {
+        return Keywords\MySQLKeywords::class;
     }
 
     /**
@@ -958,6 +1179,16 @@ SQL
     /**
      * {@inheritdoc}
      */
+    public function quoteStringLiteral($str)
+    {
+        $str = str_replace('\\', '\\\\', $str); // MySQL requires backslashes to be escaped aswell.
+
+        return parent::quoteStringLiteral($str);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getDefaultTransactionIsolationLevel()
     {
         return TransactionIsolationLevel::REPEATABLE_READ;
@@ -966,236 +1197,5 @@ SQL
     public function supportsColumnLengthIndexes(): bool
     {
         return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function doModifyLimitQuery($query, $limit, $offset)
-    {
-        if ($limit !== null) {
-            $query .= ' LIMIT ' . $limit;
-
-            if ($offset > 0) {
-                $query .= ' OFFSET ' . $offset;
-            }
-        } elseif ($offset > 0) {
-            // 2^64-1 is the maximum of unsigned BIGINT, the biggest limit possible
-            $query .= ' LIMIT 18446744073709551615 OFFSET ' . $offset;
-        }
-
-        return $query;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getDateArithmeticIntervalExpression($date, $operator, $interval, $unit)
-    {
-        $function = $operator === '+' ? 'DATE_ADD' : 'DATE_SUB';
-
-        return $function . '(' . $date . ', INTERVAL ' . $interval . ' ' . $unit . ')';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function getVarcharTypeDeclarationSQLSnippet($length, $fixed)
-    {
-        return $fixed ? ($length ? 'CHAR(' . $length . ')' : 'CHAR(255)')
-                : ($length ? 'VARCHAR(' . $length . ')' : 'VARCHAR(255)');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getBinaryTypeDeclarationSQLSnippet($length, $fixed)
-    {
-        return $fixed ? 'BINARY(' . ($length ?: 255) . ')' : 'VARBINARY(' . ($length ?: 255) . ')';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function _getCreateTableSQL($name, array $columns, array $options = [])
-    {
-        $queryFields = $this->getColumnDeclarationListSQL($columns);
-
-        if (isset($options['uniqueConstraints']) && ! empty($options['uniqueConstraints'])) {
-            foreach ($options['uniqueConstraints'] as $index => $definition) {
-                $queryFields .= ', ' . $this->getUniqueConstraintDeclarationSQL($index, $definition);
-            }
-        }
-
-        // add all indexes
-        if (isset($options['indexes']) && ! empty($options['indexes'])) {
-            foreach ($options['indexes'] as $index => $definition) {
-                $queryFields .= ', ' . $this->getIndexDeclarationSQL($index, $definition);
-            }
-        }
-
-        // attach all primary keys
-        if (isset($options['primary']) && ! empty($options['primary'])) {
-            $keyColumns   = array_unique(array_values($options['primary']));
-            $queryFields .= ', PRIMARY KEY(' . implode(', ', $keyColumns) . ')';
-        }
-
-        $query = 'CREATE ';
-
-        if (! empty($options['temporary'])) {
-            $query .= 'TEMPORARY ';
-        }
-
-        $query .= 'TABLE ' . $name . ' (' . $queryFields . ') ';
-        $query .= $this->buildTableOptions($options);
-        $query .= $this->buildPartitionOptions($options);
-
-        $sql    = [$query];
-        $engine = 'INNODB';
-
-        if (isset($options['engine'])) {
-            $engine = strtoupper(trim($options['engine']));
-        }
-
-        // Propagate foreign key constraints only for InnoDB.
-        if (isset($options['foreignKeys']) && $engine === 'INNODB') {
-            foreach ((array) $options['foreignKeys'] as $definition) {
-                $sql[] = $this->getCreateForeignKeySQL($definition, $name);
-            }
-        }
-
-        return $sql;
-    }
-
-    /**
-     * Build SQL for table options
-     *
-     * @param mixed[] $options
-     *
-     * @return string
-     */
-    private function buildTableOptions(array $options)
-    {
-        if (isset($options['table_options'])) {
-            return $options['table_options'];
-        }
-
-        $tableOptions = [];
-
-        // Charset
-        if (! isset($options['charset'])) {
-            $options['charset'] = 'utf8';
-        }
-
-        $tableOptions[] = sprintf('DEFAULT CHARACTER SET %s', $options['charset']);
-
-        // Collate
-        if (! isset($options['collate'])) {
-            $options['collate'] = $options['charset'] . '_unicode_ci';
-        }
-
-        $tableOptions[] = $this->getColumnCollationDeclarationSQL($options['collate']);
-
-        // Engine
-        if (! isset($options['engine'])) {
-            $options['engine'] = 'InnoDB';
-        }
-
-        $tableOptions[] = sprintf('ENGINE = %s', $options['engine']);
-
-        // Auto increment
-        if (isset($options['auto_increment'])) {
-            $tableOptions[] = sprintf('AUTO_INCREMENT = %s', $options['auto_increment']);
-        }
-
-        // Comment
-        if (isset($options['comment'])) {
-            $tableOptions[] = sprintf('COMMENT = %s ', $this->quoteStringLiteral($options['comment']));
-        }
-
-        // Row format
-        if (isset($options['row_format'])) {
-            $tableOptions[] = sprintf('ROW_FORMAT = %s', $options['row_format']);
-        }
-
-        return implode(' ', $tableOptions);
-    }
-
-    /**
-     * Build SQL for partition options.
-     *
-     * @param mixed[] $options
-     *
-     * @return string
-     */
-    private function buildPartitionOptions(array $options)
-    {
-        return isset($options['partition_options'])
-            ? ' ' . $options['partition_options']
-            : '';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function getCreateIndexSQLFlags(Index $index)
-    {
-        $type = '';
-        if ($index->isUnique()) {
-            $type .= 'UNIQUE ';
-        } elseif ($index->hasFlag('fulltext')) {
-            $type .= 'FULLTEXT ';
-        } elseif ($index->hasFlag('spatial')) {
-            $type .= 'SPATIAL ';
-        }
-
-        return $type;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function initializeDoctrineTypeMappings()
-    {
-        $this->doctrineTypeMapping = [
-            'tinyint'       => 'boolean',
-            'smallint'      => 'smallint',
-            'mediumint'     => 'integer',
-            'int'           => 'integer',
-            'integer'       => 'integer',
-            'bigint'        => 'bigint',
-            'tinytext'      => 'text',
-            'mediumtext'    => 'text',
-            'longtext'      => 'text',
-            'text'          => 'text',
-            'varchar'       => 'string',
-            'string'        => 'string',
-            'char'          => 'string',
-            'date'          => 'date',
-            'datetime'      => 'datetime',
-            'timestamp'     => 'datetime',
-            'time'          => 'time',
-            'float'         => 'float',
-            'double'        => 'float',
-            'real'          => 'float',
-            'decimal'       => 'decimal',
-            'numeric'       => 'decimal',
-            'year'          => 'date',
-            'longblob'      => 'blob',
-            'blob'          => 'blob',
-            'mediumblob'    => 'blob',
-            'tinyblob'      => 'blob',
-            'binary'        => 'binary',
-            'varbinary'     => 'binary',
-            'set'           => 'simple_array',
-        ];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function getReservedKeywordsClass()
-    {
-        return Keywords\MySQLKeywords::class;
     }
 }

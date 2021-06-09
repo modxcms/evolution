@@ -45,6 +45,26 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
+     * Get all of the items in the collection.
+     *
+     * @return array
+     */
+    public function all()
+    {
+        return $this->items;
+    }
+
+    /**
+     * Get a lazy collection for the items in this collection.
+     *
+     * @return \Illuminate\Support\LazyCollection
+     */
+    public function lazy()
+    {
+        return new LazyCollection($this->items);
+    }
+
+    /**
      * Get the average value of a given key.
      *
      * @param  callable|string|null  $callback
@@ -63,46 +83,6 @@ class Collection implements ArrayAccess, Enumerable
         if ($count = $items->count()) {
             return $items->sum() / $count;
         }
-    }
-
-    /**
-     * Run a filter over each of the items.
-     *
-     * @param  callable|null  $callback
-     * @return static
-     */
-    public function filter(callable $callback = null)
-    {
-        if ($callback) {
-            return new static(Arr::where($this->items, $callback));
-        }
-
-        return new static(array_filter($this->items));
-    }
-
-    /**
-     * Run a map over each of the items.
-     *
-     * @param  callable  $callback
-     * @return static
-     */
-    public function map(callable $callback)
-    {
-        $keys = array_keys($this->items);
-
-        $items = array_map($callback, $this->items, $keys);
-
-        return new static(array_combine($keys, $items));
-    }
-
-    /**
-     * Count the number of items in the collection.
-     *
-     * @return int
-     */
-    public function count()
-    {
-        return count($this->items);
     }
 
     /**
@@ -136,61 +116,6 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
-     * Reset the keys on the underlying array.
-     *
-     * @return static
-     */
-    public function values()
-    {
-        return new static(array_values($this->items));
-    }
-
-    /**
-     * Sort through each item with a callback.
-     *
-     * @param  callable|int|null  $callback
-     * @return static
-     */
-    public function sort($callback = null)
-    {
-        $items = $this->items;
-
-        $callback && is_callable($callback)
-            ? uasort($items, $callback)
-            : asort($items, $callback ?? SORT_REGULAR);
-
-        return new static($items);
-    }
-
-    /**
-     * Get the values of a given key.
-     *
-     * @param  string|array|int|null  $value
-     * @param  string|null  $key
-     * @return static
-     */
-    public function pluck($value, $key = null)
-    {
-        return new static(Arr::pluck($this->items, $value, $key));
-    }
-
-    /**
-     * Get an item from the collection by key.
-     *
-     * @param  mixed  $key
-     * @param  mixed  $default
-     * @return mixed
-     */
-    public function get($key, $default = null)
-    {
-        if (array_key_exists($key, $this->items)) {
-            return $this->items[$key];
-        }
-
-        return value($default);
-    }
-
-    /**
      * Get the mode of a given key.
      *
      * @param  string|array|null  $key
@@ -217,38 +142,6 @@ class Collection implements ArrayAccess, Enumerable
         return $sorted->filter(function ($value) use ($highestValue) {
             return $value == $highestValue;
         })->sort()->keys()->all();
-    }
-
-    /**
-     * Get the last item from the collection.
-     *
-     * @param  callable|null  $callback
-     * @param  mixed  $default
-     * @return mixed
-     */
-    public function last(callable $callback = null, $default = null)
-    {
-        return Arr::last($this->items, $callback, $default);
-    }
-
-    /**
-     * Get all of the items in the collection.
-     *
-     * @return array
-     */
-    public function all()
-    {
-        return $this->items;
-    }
-
-    /**
-     * Get the keys of the collection items.
-     *
-     * @return static
-     */
-    public function keys()
-    {
-        return new static(array_keys($this->items));
     }
 
     /**
@@ -282,18 +175,6 @@ class Collection implements ArrayAccess, Enumerable
         }
 
         return $this->contains($this->operatorForWhere(...func_get_args()));
-    }
-
-    /**
-     * Get the first item from the collection passing the given truth test.
-     *
-     * @param  callable|null  $callback
-     * @param  mixed  $default
-     * @return mixed
-     */
-    public function first(callable $callback = null, $default = null)
-    {
-        return Arr::first($this->items, $callback, $default);
     }
 
     /**
@@ -379,17 +260,6 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
-     * Retrieve duplicate items from the collection using strict comparison.
-     *
-     * @param  callable|string|null  $callback
-     * @return static
-     */
-    public function duplicatesStrict($callback = null)
-    {
-        return $this->duplicates($callback, true);
-    }
-
-    /**
      * Retrieve duplicate items from the collection.
      *
      * @param  callable|string|null  $callback
@@ -418,6 +288,17 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
+     * Retrieve duplicate items from the collection using strict comparison.
+     *
+     * @param  callable|string|null  $callback
+     * @return static
+     */
+    public function duplicatesStrict($callback = null)
+    {
+        return $this->duplicates($callback, true);
+    }
+
+    /**
      * Get the comparison function to detect duplicates.
      *
      * @param  bool  $strict
@@ -437,16 +318,6 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
-     * Get and remove the first item from the collection.
-     *
-     * @return mixed
-     */
-    public function shift()
-    {
-        return array_shift($this->items);
-    }
-
-    /**
      * Get all items except for those with the specified keys.
      *
      * @param  \Illuminate\Support\Collection|mixed  $keys
@@ -461,6 +332,33 @@ class Collection implements ArrayAccess, Enumerable
         }
 
         return new static(Arr::except($this->items, $keys));
+    }
+
+    /**
+     * Run a filter over each of the items.
+     *
+     * @param  callable|null  $callback
+     * @return static
+     */
+    public function filter(callable $callback = null)
+    {
+        if ($callback) {
+            return new static(Arr::where($this->items, $callback));
+        }
+
+        return new static(array_filter($this->items));
+    }
+
+    /**
+     * Get the first item from the collection passing the given truth test.
+     *
+     * @param  callable|null  $callback
+     * @param  mixed  $default
+     * @return mixed
+     */
+    public function first(callable $callback = null, $default = null)
+    {
+        return Arr::first($this->items, $callback, $default);
     }
 
     /**
@@ -500,14 +398,19 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
-     * Unset the item at a given offset.
+     * Get an item from the collection by key.
      *
-     * @param  string  $key
-     * @return void
+     * @param  mixed  $key
+     * @param  mixed  $default
+     * @return mixed
      */
-    public function offsetUnset($key)
+    public function get($key, $default = null)
     {
-        unset($this->items[$key]);
+        if (array_key_exists($key, $this->items)) {
+            return $this->items[$key];
+        }
+
+        return value($default);
     }
 
     /**
@@ -557,22 +460,6 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
-     * Set the item at a given offset.
-     *
-     * @param  mixed  $key
-     * @param  mixed  $value
-     * @return void
-     */
-    public function offsetSet($key, $value)
-    {
-        if (is_null($key)) {
-            $this->items[] = $value;
-        } else {
-            $this->items[$key] = $value;
-        }
-    }
-
-    /**
      * Key an associative array by a field or using a callback.
      *
      * @param  callable|string  $keyBy
@@ -617,6 +504,24 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
+     * Concatenate values of a given key as a string.
+     *
+     * @param  string  $value
+     * @param  string|null  $glue
+     * @return string
+     */
+    public function implode($value, $glue = null)
+    {
+        $first = $this->first();
+
+        if (is_array($first) || (is_object($first) && ! $first instanceof Stringable)) {
+            return implode($glue ?? '', $this->pluck($value)->all());
+        }
+
+        return implode($value ?? '', $this->items);
+    }
+
+    /**
      * Intersect the collection with the given items.
      *
      * @param  mixed  $items
@@ -638,6 +543,16 @@ class Collection implements ArrayAccess, Enumerable
         return new static(array_intersect_key(
             $this->items, $this->getArrayableItems($items)
         ));
+    }
+
+    /**
+     * Determine if the collection is empty or not.
+     *
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return empty($this->items);
     }
 
     /**
@@ -681,31 +596,52 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
-     * Concatenate values of a given key as a string.
+     * Get the keys of the collection items.
      *
-     * @param  string  $value
-     * @param  string|null  $glue
-     * @return string
+     * @return static
      */
-    public function implode($value, $glue = null)
+    public function keys()
     {
-        $first = $this->first();
-
-        if (is_array($first) || (is_object($first) && ! $first instanceof Stringable)) {
-            return implode($glue ?? '', $this->pluck($value)->all());
-        }
-
-        return implode($value ?? '', $this->items);
+        return new static(array_keys($this->items));
     }
 
     /**
-     * Get and remove the last item from the collection.
+     * Get the last item from the collection.
      *
+     * @param  callable|null  $callback
+     * @param  mixed  $default
      * @return mixed
      */
-    public function pop()
+    public function last(callable $callback = null, $default = null)
     {
-        return array_pop($this->items);
+        return Arr::last($this->items, $callback, $default);
+    }
+
+    /**
+     * Get the values of a given key.
+     *
+     * @param  string|array|int|null  $value
+     * @param  string|null  $key
+     * @return static
+     */
+    public function pluck($value, $key = null)
+    {
+        return new static(Arr::pluck($this->items, $value, $key));
+    }
+
+    /**
+     * Run a map over each of the items.
+     *
+     * @param  callable  $callback
+     * @return static
+     */
+    public function map(callable $callback)
+    {
+        $keys = array_keys($this->items);
+
+        $items = array_map($callback, $this->items, $keys);
+
+        return new static(array_combine($keys, $items));
     }
 
     /**
@@ -850,6 +786,16 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
+     * Get and remove the last item from the collection.
+     *
+     * @return mixed
+     */
+    public function pop()
+    {
+        return array_pop($this->items);
+    }
+
+    /**
      * Push an item onto the beginning of the collection.
      *
      * @param  mixed  $value
@@ -859,6 +805,21 @@ class Collection implements ArrayAccess, Enumerable
     public function prepend($value, $key = null)
     {
         $this->items = Arr::prepend($this->items, ...func_get_args());
+
+        return $this;
+    }
+
+    /**
+     * Push one or more items onto the end of the collection.
+     *
+     * @param  mixed  $values [optional]
+     * @return $this
+     */
+    public function push(...$values)
+    {
+        foreach ($values as $value) {
+            $this->items[] = $value;
+        }
 
         return $this;
     }
@@ -878,21 +839,6 @@ class Collection implements ArrayAccess, Enumerable
         }
 
         return $result;
-    }
-
-    /**
-     * Push one or more items onto the end of the collection.
-     *
-     * @param  mixed  $values [optional]
-     * @return $this
-     */
-    public function push(...$values)
-    {
-        foreach ($values as $value) {
-            $this->items[] = $value;
-        }
-
-        return $this;
     }
 
     /**
@@ -993,6 +939,16 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
+     * Get and remove the first item from the collection.
+     *
+     * @return mixed
+     */
+    public function shift()
+    {
+        return array_shift($this->items);
+    }
+
+    /**
      * Shuffle the items in the collection.
      *
      * @param  int|null  $seed
@@ -1015,18 +971,6 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
-     * Slice the underlying collection array.
-     *
-     * @param  int  $offset
-     * @param  int|null  $length
-     * @return static
-     */
-    public function slice($offset, $length = null)
-    {
-        return new static(array_slice($this->items, $offset, $length, true));
-    }
-
-    /**
      * Skip items in the collection until the given condition is met.
      *
      * @param  mixed  $value
@@ -1038,16 +982,6 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
-     * Get a lazy collection for the items in this collection.
-     *
-     * @return \Illuminate\Support\LazyCollection
-     */
-    public function lazy()
-    {
-        return new LazyCollection($this->items);
-    }
-
-    /**
      * Skip items in the collection while the given condition is met.
      *
      * @param  mixed  $value
@@ -1056,6 +990,18 @@ class Collection implements ArrayAccess, Enumerable
     public function skipWhile($value)
     {
         return new static($this->lazy()->skipWhile($value)->all());
+    }
+
+    /**
+     * Slice the underlying collection array.
+     *
+     * @param  int  $offset
+     * @param  int|null  $length
+     * @return static
+     */
+    public function slice($offset, $length = null)
+    {
+        return new static(array_slice($this->items, $offset, $length, true));
     }
 
     /**
@@ -1096,16 +1042,6 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
-     * Determine if the collection is empty or not.
-     *
-     * @return bool
-     */
-    public function isEmpty()
-    {
-        return empty($this->items);
-    }
-
-    /**
      * Split a collection into a certain number of groups, and fill the first groups completely.
      *
      * @param  int  $numberOfGroups
@@ -1114,27 +1050,6 @@ class Collection implements ArrayAccess, Enumerable
     public function splitIn($numberOfGroups)
     {
         return $this->chunk(ceil($this->count() / $numberOfGroups));
-    }
-
-    /**
-     * Chunk the collection into chunks of the given size.
-     *
-     * @param  int  $size
-     * @return static
-     */
-    public function chunk($size)
-    {
-        if ($size <= 0) {
-            return new static;
-        }
-
-        $chunks = [];
-
-        foreach (array_chunk($this->items, $size, true) as $chunk) {
-            $chunks[] = new static($chunk);
-        }
-
-        return new static($chunks);
     }
 
     /**
@@ -1168,6 +1083,27 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
+     * Chunk the collection into chunks of the given size.
+     *
+     * @param  int  $size
+     * @return static
+     */
+    public function chunk($size)
+    {
+        if ($size <= 0) {
+            return new static;
+        }
+
+        $chunks = [];
+
+        foreach (array_chunk($this->items, $size, true) as $chunk) {
+            $chunks[] = new static($chunk);
+        }
+
+        return new static($chunks);
+    }
+
+    /**
      * Chunk the collection into chunks with a callback.
      *
      * @param  callable  $callback
@@ -1178,6 +1114,23 @@ class Collection implements ArrayAccess, Enumerable
         return new static(
             $this->lazy()->chunkWhile($callback)->mapInto(static::class)
         );
+    }
+
+    /**
+     * Sort through each item with a callback.
+     *
+     * @param  callable|int|null  $callback
+     * @return static
+     */
+    public function sort($callback = null)
+    {
+        $items = $this->items;
+
+        $callback && is_callable($callback)
+            ? uasort($items, $callback)
+            : asort($items, $callback ?? SORT_REGULAR);
+
+        return new static($items);
     }
 
     /**
@@ -1193,18 +1146,6 @@ class Collection implements ArrayAccess, Enumerable
         arsort($items, $options);
 
         return new static($items);
-    }
-
-    /**
-     * Sort the collection in descending order using the given callback.
-     *
-     * @param  callable|string  $callback
-     * @param  int  $options
-     * @return static
-     */
-    public function sortByDesc($callback, $options = SORT_REGULAR)
-    {
-        return $this->sortBy($callback, $options, true);
     }
 
     /**
@@ -1290,14 +1231,15 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
-     * Sort the collection keys in descending order.
+     * Sort the collection in descending order using the given callback.
      *
+     * @param  callable|string  $callback
      * @param  int  $options
      * @return static
      */
-    public function sortKeysDesc($options = SORT_REGULAR)
+    public function sortByDesc($callback, $options = SORT_REGULAR)
     {
-        return $this->sortKeys($options, true);
+        return $this->sortBy($callback, $options, true);
     }
 
     /**
@@ -1314,6 +1256,17 @@ class Collection implements ArrayAccess, Enumerable
         $descending ? krsort($items, $options) : ksort($items, $options);
 
         return new static($items);
+    }
+
+    /**
+     * Sort the collection keys in descending order.
+     *
+     * @param  int  $options
+     * @return static
+     */
+    public function sortKeysDesc($options = SORT_REGULAR)
+    {
+        return $this->sortKeys($options, true);
     }
 
     /**
@@ -1384,6 +1337,16 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
+     * Reset the keys on the underlying array.
+     *
+     * @return static
+     */
+    public function values()
+    {
+        return new static(array_values($this->items));
+    }
+
+    /**
      * Zip the collection together with one or more arrays.
      *
      * e.g. new Collection([1, 2, 3])->zip([4, 5, 6]);
@@ -1425,6 +1388,16 @@ class Collection implements ArrayAccess, Enumerable
     public function getIterator()
     {
         return new ArrayIterator($this->items);
+    }
+
+    /**
+     * Count the number of items in the collection.
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->items);
     }
 
     /**
@@ -1481,5 +1454,32 @@ class Collection implements ArrayAccess, Enumerable
     public function offsetGet($key)
     {
         return $this->items[$key];
+    }
+
+    /**
+     * Set the item at a given offset.
+     *
+     * @param  mixed  $key
+     * @param  mixed  $value
+     * @return void
+     */
+    public function offsetSet($key, $value)
+    {
+        if (is_null($key)) {
+            $this->items[] = $value;
+        } else {
+            $this->items[$key] = $value;
+        }
+    }
+
+    /**
+     * Unset the item at a given offset.
+     *
+     * @param  string  $key
+     * @return void
+     */
+    public function offsetUnset($key)
+    {
+        unset($this->items[$key]);
     }
 }

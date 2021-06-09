@@ -27,106 +27,6 @@ class Ewww extends AbstractConverter
     /** @var array  Array of invalid or exceeded api keys discovered during conversions (during the request)  */
     public static $nonFunctionalApiKeysDiscoveredDuringConversion;
 
-    /**
-     *  Keep subscription alive by optimizing a jpeg
-     *  (ewww closes accounts after 6 months of inactivity - and webp conversions seems not to be counted? )
-     */
-    public static function keepSubscriptionAlive($source, $key)
-    {
-        try {
-            $ch = curl_init();
-        } catch (\Exception $e) {
-            return 'curl is not installed';
-        }
-        if ($ch === false) {
-            return 'curl could not be initialized';
-        }
-        curl_setopt_array(
-            $ch,
-            [
-            CURLOPT_URL => "https://optimize.exactlywww.com/v2/",
-            CURLOPT_HTTPHEADER => [
-                'User-Agent: WebPConvert',
-                'Accept: image/*'
-            ],
-            CURLOPT_POSTFIELDS => [
-                'api_key' => $key,
-                'webp' => '0',
-                'file' => curl_file_create($source),
-                'domain' => $_SERVER['HTTP_HOST'],
-                'quality' => 60,
-                'metadata' => 0
-            ],
-            CURLOPT_BINARYTRANSFER => true,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HEADER => false,
-            CURLOPT_SSL_VERIFYPEER => false
-            ]
-        );
-
-        $response = curl_exec($ch);
-        if (curl_errno($ch)) {
-            return 'curl error' . curl_error($ch);
-        }
-        if (curl_getinfo($ch, CURLINFO_CONTENT_TYPE) != 'application/octet-stream') {
-            curl_close($ch);
-
-            /* May return this: {"error":"invalid","t":"exceeded"} */
-            $responseObj = json_decode($response);
-            if (isset($responseObj->error)) {
-                return 'The key is invalid';
-            }
-
-            return 'ewww api did not return an image. It could be that the key is invalid. Response: ' . $response;
-        }
-
-        // Not sure this can happen. So just in case
-        if ($response == '') {
-            return 'ewww api did not return anything';
-        }
-
-        return true;
-    }
-
-    public static function isWorkingKey($key)
-    {
-        return (self::getKeyStatus($key) == 'great');
-    }
-
-    public static function isValidKey($key)
-    {
-        return (self::getKeyStatus($key) != 'invalid');
-    }
-
-    public static function getQuota($key)
-    {
-        $ch = self::initCurl();
-
-        curl_setopt($ch, CURLOPT_URL, "https://optimize.exactlywww.com/quota/");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, [
-            'api_key' => $key
-        ]);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'WebPConvert');
-
-        $response = curl_exec($ch);
-        return $response; // ie -830 23. Seems to return empty for invalid keys
-        // or empty
-        //echo $response;
-    }
-
-    /*
-    public function checkConvertability()
-    {
-        // check upload limits
-        $this->checkConvertabilityCloudConverterTrait();
-    }
-    */
-
-    // Although this method is public, do not call directly.
-    // You should rather call the static convert() function, defined in AbstractConverter, which
-    // takes care of preparing stuff before calling doConvert, and validating after.
-
     public function getUniqueOptions($imageType)
     {
         return [
@@ -134,6 +34,42 @@ class Ewww extends AbstractConverter
             new BooleanOption('check-key-status-before-converting', true)
         ];
     }
+
+    protected function getUnsupportedDefaultOptions()
+    {
+        return [
+            'alpha-quality',
+            'auto-filter',
+            'encoding',
+            'low-memory',
+            'method',
+            'near-lossless',
+            'preset',
+            'sharp-yuv',
+            'size-in-percentage',
+            'use-nice'
+        ];
+    }
+
+    /**
+     * Get api key from options or environment variable
+     *
+     * @return string|false  api key or false if none is set
+     */
+    private function getKey()
+    {
+        if (!empty($this->options['api-key'])) {
+            return $this->options['api-key'];
+        }
+        if (defined('WEBPCONVERT_EWWW_API_KEY')) {
+            return constant('WEBPCONVERT_EWWW_API_KEY');
+        }
+        if (!empty(getenv('WEBPCONVERT_EWWW_API_KEY'))) {
+            return getenv('WEBPCONVERT_EWWW_API_KEY');
+        }
+        return false;
+    }
+
 
     /**
      * Check operationality of Ewww converter.
@@ -183,98 +119,16 @@ class Ewww extends AbstractConverter
     }
 
     /*
-        public static function blacklistKey($key)
-        {
-        }
-
-        public static function isKeyBlacklisted($key)
-        {
-        }*/
-
-    /**
-     * Get api key from options or environment variable
-     *
-     * @return string|false  api key or false if none is set
-     */
-    private function getKey()
+    public function checkConvertability()
     {
-        if (!empty($this->options['api-key'])) {
-            return $this->options['api-key'];
-        }
-        if (defined('WEBPCONVERT_EWWW_API_KEY')) {
-            return constant('WEBPCONVERT_EWWW_API_KEY');
-        }
-        if (!empty(getenv('WEBPCONVERT_EWWW_API_KEY'))) {
-            return getenv('WEBPCONVERT_EWWW_API_KEY');
-        }
-        return false;
+        // check upload limits
+        $this->checkConvertabilityCloudConverterTrait();
     }
+    */
 
-    /**
-     *  Return "great", "exceeded" or "invalid"
-     */
-    public static function getKeyStatus($key)
-    {
-        $ch = self::initCurl();
-
-        curl_setopt($ch, CURLOPT_URL, "https://optimize.exactlywww.com/verify/");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, [
-            'api_key' => $key
-        ]);
-
-        curl_setopt($ch, CURLOPT_USERAGENT, 'WebPConvert');
-
-        $response = curl_exec($ch);
-        // echo $response;
-        if (curl_errno($ch)) {
-            throw new \Exception(curl_error($ch));
-        }
-        curl_close($ch);
-
-        // Possible responses:
-        // “great” = verification successful
-        // “exceeded” = indicates a valid key with no remaining image credits.
-        // an empty response indicates that the key is not valid
-
-        if ($response == '') {
-            return 'invalid';
-        }
-        $responseObj = json_decode($response);
-        if (isset($responseObj->error)) {
-            if ($responseObj->error == 'invalid') {
-                return 'invalid';
-            } else {
-                throw new \Exception('Ewww returned unexpected error: ' . $response);
-            }
-        }
-        if (!isset($responseObj->status)) {
-            throw new \Exception('Ewww returned unexpected response to verify request: ' . $response);
-        }
-        switch ($responseObj->status) {
-            case 'great':
-            case 'exceeded':
-                return $responseObj->status;
-        }
-        throw new \Exception('Ewww returned unexpected status to verify request: "' . $responseObj->status . '"');
-    }
-
-    protected function getUnsupportedDefaultOptions()
-    {
-        return [
-            'alpha-quality',
-            'auto-filter',
-            'encoding',
-            'low-memory',
-            'method',
-            'near-lossless',
-            'preset',
-            'sharp-yuv',
-            'size-in-percentage',
-            'use-nice'
-        ];
-    }
-
+    // Although this method is public, do not call directly.
+    // You should rather call the static convert() function, defined in AbstractConverter, which
+    // takes care of preparing stuff before calling doConvert, and validating after.
     protected function doActualConvert()
     {
 
@@ -363,5 +217,151 @@ class Ewww extends AbstractConverter
         if (!$success) {
             throw new ConversionFailedException('Error saving file');
         }
+    }
+
+    /**
+     *  Keep subscription alive by optimizing a jpeg
+     *  (ewww closes accounts after 6 months of inactivity - and webp conversions seems not to be counted? )
+     */
+    public static function keepSubscriptionAlive($source, $key)
+    {
+        try {
+            $ch = curl_init();
+        } catch (\Exception $e) {
+            return 'curl is not installed';
+        }
+        if ($ch === false) {
+            return 'curl could not be initialized';
+        }
+        curl_setopt_array(
+            $ch,
+            [
+            CURLOPT_URL => "https://optimize.exactlywww.com/v2/",
+            CURLOPT_HTTPHEADER => [
+                'User-Agent: WebPConvert',
+                'Accept: image/*'
+            ],
+            CURLOPT_POSTFIELDS => [
+                'api_key' => $key,
+                'webp' => '0',
+                'file' => curl_file_create($source),
+                'domain' => $_SERVER['HTTP_HOST'],
+                'quality' => 60,
+                'metadata' => 0
+            ],
+            CURLOPT_BINARYTRANSFER => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HEADER => false,
+            CURLOPT_SSL_VERIFYPEER => false
+            ]
+        );
+
+        $response = curl_exec($ch);
+        if (curl_errno($ch)) {
+            return 'curl error' . curl_error($ch);
+        }
+        if (curl_getinfo($ch, CURLINFO_CONTENT_TYPE) != 'application/octet-stream') {
+            curl_close($ch);
+
+            /* May return this: {"error":"invalid","t":"exceeded"} */
+            $responseObj = json_decode($response);
+            if (isset($responseObj->error)) {
+                return 'The key is invalid';
+            }
+
+            return 'ewww api did not return an image. It could be that the key is invalid. Response: ' . $response;
+        }
+
+        // Not sure this can happen. So just in case
+        if ($response == '') {
+            return 'ewww api did not return anything';
+        }
+
+        return true;
+    }
+
+    /*
+        public static function blacklistKey($key)
+        {
+        }
+
+        public static function isKeyBlacklisted($key)
+        {
+        }*/
+
+    /**
+     *  Return "great", "exceeded" or "invalid"
+     */
+    public static function getKeyStatus($key)
+    {
+        $ch = self::initCurl();
+
+        curl_setopt($ch, CURLOPT_URL, "https://optimize.exactlywww.com/verify/");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, [
+            'api_key' => $key
+        ]);
+
+        curl_setopt($ch, CURLOPT_USERAGENT, 'WebPConvert');
+
+        $response = curl_exec($ch);
+        // echo $response;
+        if (curl_errno($ch)) {
+            throw new \Exception(curl_error($ch));
+        }
+        curl_close($ch);
+
+        // Possible responses:
+        // “great” = verification successful
+        // “exceeded” = indicates a valid key with no remaining image credits.
+        // an empty response indicates that the key is not valid
+
+        if ($response == '') {
+            return 'invalid';
+        }
+        $responseObj = json_decode($response);
+        if (isset($responseObj->error)) {
+            if ($responseObj->error == 'invalid') {
+                return 'invalid';
+            } else {
+                throw new \Exception('Ewww returned unexpected error: ' . $response);
+            }
+        }
+        if (!isset($responseObj->status)) {
+            throw new \Exception('Ewww returned unexpected response to verify request: ' . $response);
+        }
+        switch ($responseObj->status) {
+            case 'great':
+            case 'exceeded':
+                return $responseObj->status;
+        }
+        throw new \Exception('Ewww returned unexpected status to verify request: "' . $responseObj->status . '"');
+    }
+
+    public static function isWorkingKey($key)
+    {
+        return (self::getKeyStatus($key) == 'great');
+    }
+
+    public static function isValidKey($key)
+    {
+        return (self::getKeyStatus($key) != 'invalid');
+    }
+
+    public static function getQuota($key)
+    {
+        $ch = self::initCurl();
+
+        curl_setopt($ch, CURLOPT_URL, "https://optimize.exactlywww.com/quota/");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, [
+            'api_key' => $key
+        ]);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'WebPConvert');
+
+        $response = curl_exec($ch);
+        return $response; // ie -830 23. Seems to return empty for invalid keys
+        // or empty
+        //echo $response;
     }
 }

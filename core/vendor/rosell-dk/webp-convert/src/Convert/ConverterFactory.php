@@ -15,30 +15,6 @@ use WebPConvert\Convert\Converters\AbstractConverter;
 class ConverterFactory
 {
     /**
-     * Make a converter instance by either id or class name.
-     *
-     * @param  string  $converterIdOrClassName   Either a converter ID or a fully qualified class name
-     * @param  string  $source                   The path to the file to convert
-     * @param  string  $destination              The path to save the converted file to
-     * @param  array   $options                  (optional)
-     * @param  \WebPConvert\Loggers\BaseLogger   $logger       (optional)
-     *
-     * @throws ConverterNotFoundException  If the specified converter class isn't found
-     * @return AbstractConverter  An instance of the specified converter
-     */
-    public static function makeConverter($converterIdOrClassName, $source, $destination, $options = [], $logger = null)
-    {
-        // We take it that all lowercase means it is an id rather than a class name
-        if (strtolower($converterIdOrClassName) == $converterIdOrClassName) {
-            $converterClassName = self::converterIdToClassname($converterIdOrClassName);
-        } else {
-            $converterClassName = $converterIdOrClassName;
-        }
-
-        return self::makeConverterFromClassname($converterClassName, $source, $destination, $options, $logger);
-    }
-
-    /**
      * Get classname of a converter (by id)
      *
      * @param  string  $converterId    Id of converter (ie "cwebp")
@@ -108,5 +84,29 @@ class ConverterFactory
             $options,
             $logger
         );
+    }
+
+    /**
+     * Make a converter instance by either id or class name.
+     *
+     * @param  string  $converterIdOrClassName   Either a converter ID or a fully qualified class name
+     * @param  string  $source                   The path to the file to convert
+     * @param  string  $destination              The path to save the converted file to
+     * @param  array   $options                  (optional)
+     * @param  \WebPConvert\Loggers\BaseLogger   $logger       (optional)
+     *
+     * @throws ConverterNotFoundException  If the specified converter class isn't found
+     * @return AbstractConverter  An instance of the specified converter
+     */
+    public static function makeConverter($converterIdOrClassName, $source, $destination, $options = [], $logger = null)
+    {
+        // We take it that all lowercase means it is an id rather than a class name
+        if (strtolower($converterIdOrClassName) == $converterIdOrClassName) {
+            $converterClassName = self::converterIdToClassname($converterIdOrClassName);
+        } else {
+            $converterClassName = $converterIdOrClassName;
+        }
+
+        return self::makeConverterFromClassname($converterClassName, $source, $destination, $options, $logger);
     }
 }

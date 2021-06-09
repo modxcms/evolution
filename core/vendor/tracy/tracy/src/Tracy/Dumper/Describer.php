@@ -90,44 +90,6 @@ final class Describer
 		return $this->$m($var, $depth, $refId);
 	}
 
-	/**
-	 * Finds the location where dump was called. Returns [file, line, code]
-	 */
-	private static function findLocation(): ?array
-	{
-		foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS) as $item) {
-			if (isset($item['class']) && ($item['class'] === self::class || $item['class'] === \Tracy\Dumper::class)) {
-				$location = $item;
-				continue;
-			} elseif (isset($item['function'])) {
-				try {
-					$reflection = isset($item['class'])
-						? new \ReflectionMethod($item['class'], $item['function'])
-						: new \ReflectionFunction($item['function']);
-					if (
-						$reflection->isInternal()
-						|| preg_match('#\s@tracySkipLocation\s#', (string) $reflection->getDocComment())
-					) {
-						$location = $item;
-						continue;
-					}
-				} catch (\ReflectionException $e) {
-				}
-			}
-			break;
-		}
-
-		if (isset($location['file'], $location['line']) && is_file($location['file'])) {
-			$lines = file($location['file']);
-			$line = $lines[$location['line'] - 1];
-			return [
-				$location['file'],
-				$location['line'],
-				trim(preg_match('#\w*dump(er::\w+)?\(.*\)#i', $line, $m) ? $m[0] : $line),
-			];
-		}
-		return null;
-	}
 
 	/**
 	 * @return Value|int
@@ -138,6 +100,7 @@ final class Describer
 			? $num
 			: new Value(Value::TYPE_NUMBER, "$num");
 	}
+
 
 	/**
 	 * @return Value|float
@@ -152,6 +115,23 @@ final class Describer
 			? $num
 			: new Value(Value::TYPE_NUMBER, "$js.0"); // to distinct int and float in JS
 	}
+
+
+	/**
+	 * @return Value|string
+	 */
+	private function describeString(string $s, int $depth = 0)
+	{
+		$encoded = Helpers::encodeString($s, $depth ? $this->maxLength : null, $utf);
+		if ($encoded === $s) {
+			return $encoded;
+		} elseif ($utf) {
+			return new Value(Value::TYPE_STRING_HTML, $encoded, strlen(utf8_decode($s)));
+		} else {
+			return new Value(Value::TYPE_BINARY_HTML, $encoded, strlen($s));
+		}
+	}
+
 
 	/**
 	 * @return Value|array
@@ -201,46 +181,6 @@ final class Describer
 		return $res ?? $items;
 	}
 
-	public function getReferenceId($arr, $key): ?int
-	{
-		if (PHP_VERSION_ID >= 70400) {
-			if ((!$rr = \ReflectionReference::fromArrayElement($arr, $key))) {
-				return null;
-			}
-			$tmp = &$this->references[$rr->getId()];
-			if ($tmp === null) {
-				return $tmp = count($this->references);
-			}
-			return $tmp;
-		}
-		$uniq = new \stdClass;
-		$copy = $arr;
-		$orig = $copy[$key];
-		$copy[$key] = $uniq;
-		if ($arr[$key] !== $uniq) {
-			return null;
-		}
-		$res = array_search($uniq, $this->references, true);
-		$copy[$key] = $orig;
-		if ($res === false) {
-			$this->references[] = &$arr[$key];
-			return count($this->references);
-		}
-		return $res + 1;
-	}
-
-	private function isSensitive(string $key, $val, string $class = null): bool
-	{
-		return
-			($this->scrubber !== null && ($this->scrubber)($key, $val, $class))
-			|| isset($this->keysToHide[strtolower($key)])
-			|| isset($this->keysToHide[strtolower($class . '::$' . $key)]);
-	}
-
-	private static function hideValue($var): string
-	{
-		return self::HIDDEN_VALUE . ' (' . (is_object($var) ? Helpers::getClass($var) : gettype($var)) . ')';
-	}
 
 	private function describeObject(object $obj, int $depth = 0): Value
 	{
@@ -273,21 +213,44 @@ final class Describer
 		return new Value(Value::TYPE_REF, $id);
 	}
 
-	private function exposeObject(object $obj, Value $value): ?array
+
+	/**
+	 * @param  resource  $resource
+	 */
+	private function describeResource($resource, int $depth = 0): Value
 	{
-		foreach ($this->objectExposers as $type => $dumper) {
-			if (!$type || $obj instanceof $type) {
-				return $dumper($obj, $value, $this);
+		$id = 'r' . (int) $resource;
+		$value = &$this->snapshot[$id];
+		if (!$value) {
+			$type = is_resource($resource) ? get_resource_type($resource) : 'closed';
+			$value = new Value(Value::TYPE_RESOURCE, $type . ' resource');
+			$value->id = $id;
+			$value->depth = $depth;
+			$value->items = [];
+			if (isset($this->resourceExposers[$type])) {
+				foreach (($this->resourceExposers[$type])($resource) as $k => $v) {
+					$value->items[] = [htmlspecialchars($k), $this->describeVar($v, $depth + 1)];
+				}
 			}
 		}
-
-		if ($this->debugInfo && method_exists($obj, '__debugInfo')) {
-			return $obj->__debugInfo();
-		}
-
-		Exposer::exposeObject($obj, $value, $this);
-		return null;
+		return new Value(Value::TYPE_REF, $id);
 	}
+
+
+	/**
+	 * @return Value|string
+	 */
+	public function describeKey(string $key)
+	{
+		if (preg_match('#^[\w!\#$%&*+./;<>?@^{|}~-]{1,50}$#D', $key) && !preg_match('#^(true|false|null)$#iD', $key)) {
+			return $key;
+		}
+		$value = $this->describeString($key);
+		return is_string($value) // ensure result is Value
+			? new Value(Value::TYPE_STRING_HTML, $key, strlen(utf8_decode($key)))
+			: $value;
+	}
+
 
 	public function addPropertyTo(
 		Value $value,
@@ -312,54 +275,104 @@ final class Describer
 		] + ($refId ? [3 => $refId] : []);
 	}
 
-	/**
-	 * @return Value|string
-	 */
-	public function describeKey(string $key)
-	{
-		if (preg_match('#^[\w!\#$%&*+./;<>?@^{|}~-]{1,50}$#D', $key) && !preg_match('#^(true|false|null)$#iD', $key)) {
-			return $key;
-		}
-		$value = $this->describeString($key);
-		return is_string($value) // ensure result is Value
-			? new Value(Value::TYPE_STRING_HTML, $key, strlen(utf8_decode($key)))
-			: $value;
-	}
 
-	/**
-	 * @return Value|string
-	 */
-	private function describeString(string $s, int $depth = 0)
+	private function exposeObject(object $obj, Value $value): ?array
 	{
-		$encoded = Helpers::encodeString($s, $depth ? $this->maxLength : null, $utf);
-		if ($encoded === $s) {
-			return $encoded;
-		} elseif ($utf) {
-			return new Value(Value::TYPE_STRING_HTML, $encoded, strlen(utf8_decode($s)));
-		} else {
-			return new Value(Value::TYPE_BINARY_HTML, $encoded, strlen($s));
-		}
-	}
-
-	/**
-	 * @param  resource  $resource
-	 */
-	private function describeResource($resource, int $depth = 0): Value
-	{
-		$id = 'r' . (int) $resource;
-		$value = &$this->snapshot[$id];
-		if (!$value) {
-			$type = is_resource($resource) ? get_resource_type($resource) : 'closed';
-			$value = new Value(Value::TYPE_RESOURCE, $type . ' resource');
-			$value->id = $id;
-			$value->depth = $depth;
-			$value->items = [];
-			if (isset($this->resourceExposers[$type])) {
-				foreach (($this->resourceExposers[$type])($resource) as $k => $v) {
-					$value->items[] = [htmlspecialchars($k), $this->describeVar($v, $depth + 1)];
-				}
+		foreach ($this->objectExposers as $type => $dumper) {
+			if (!$type || $obj instanceof $type) {
+				return $dumper($obj, $value, $this);
 			}
 		}
-		return new Value(Value::TYPE_REF, $id);
+
+		if ($this->debugInfo && method_exists($obj, '__debugInfo')) {
+			return $obj->__debugInfo();
+		}
+
+		Exposer::exposeObject($obj, $value, $this);
+		return null;
+	}
+
+
+	private function isSensitive(string $key, $val, string $class = null): bool
+	{
+		return
+			($this->scrubber !== null && ($this->scrubber)($key, $val, $class))
+			|| isset($this->keysToHide[strtolower($key)])
+			|| isset($this->keysToHide[strtolower($class . '::$' . $key)]);
+	}
+
+
+	private static function hideValue($var): string
+	{
+		return self::HIDDEN_VALUE . ' (' . (is_object($var) ? Helpers::getClass($var) : gettype($var)) . ')';
+	}
+
+
+	public function getReferenceId($arr, $key): ?int
+	{
+		if (PHP_VERSION_ID >= 70400) {
+			if ((!$rr = \ReflectionReference::fromArrayElement($arr, $key))) {
+				return null;
+			}
+			$tmp = &$this->references[$rr->getId()];
+			if ($tmp === null) {
+				return $tmp = count($this->references);
+			}
+			return $tmp;
+		}
+		$uniq = new \stdClass;
+		$copy = $arr;
+		$orig = $copy[$key];
+		$copy[$key] = $uniq;
+		if ($arr[$key] !== $uniq) {
+			return null;
+		}
+		$res = array_search($uniq, $this->references, true);
+		$copy[$key] = $orig;
+		if ($res === false) {
+			$this->references[] = &$arr[$key];
+			return count($this->references);
+		}
+		return $res + 1;
+	}
+
+
+	/**
+	 * Finds the location where dump was called. Returns [file, line, code]
+	 */
+	private static function findLocation(): ?array
+	{
+		foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS) as $item) {
+			if (isset($item['class']) && ($item['class'] === self::class || $item['class'] === \Tracy\Dumper::class)) {
+				$location = $item;
+				continue;
+			} elseif (isset($item['function'])) {
+				try {
+					$reflection = isset($item['class'])
+						? new \ReflectionMethod($item['class'], $item['function'])
+						: new \ReflectionFunction($item['function']);
+					if (
+						$reflection->isInternal()
+						|| preg_match('#\s@tracySkipLocation\s#', (string) $reflection->getDocComment())
+					) {
+						$location = $item;
+						continue;
+					}
+				} catch (\ReflectionException $e) {
+				}
+			}
+			break;
+		}
+
+		if (isset($location['file'], $location['line']) && is_file($location['file'])) {
+			$lines = file($location['file']);
+			$line = $lines[$location['line'] - 1];
+			return [
+				$location['file'],
+				$location['line'],
+				trim(preg_match('#\w*dump(er::\w+)?\(.*\)#i', $line, $m) ? $m[0] : $line),
+			];
+		}
+		return null;
 	}
 }

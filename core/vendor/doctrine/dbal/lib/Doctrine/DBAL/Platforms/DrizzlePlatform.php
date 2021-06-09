@@ -54,6 +54,16 @@ class DrizzlePlatform extends AbstractPlatform
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function getDateArithmeticIntervalExpression($date, $operator, $interval, $unit)
+    {
+        $function = $operator === '+' ? 'DATE_ADD' : 'DATE_SUB';
+
+        return $function . '(' . $date . ', INTERVAL ' . $interval . ' ' . $unit . ')';
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function getDateDiffExpression($date1, $date2)
@@ -109,6 +119,44 @@ class DrizzlePlatform extends AbstractPlatform
     /**
      * {@inheritDoc}
      */
+    protected function getVarcharTypeDeclarationSQLSnippet($length, $fixed)
+    {
+        return $length ? 'VARCHAR(' . $length . ')' : 'VARCHAR(255)';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBinaryTypeDeclarationSQLSnippet($length, $fixed)
+    {
+        return 'VARBINARY(' . ($length ?: 255) . ')';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function initializeDoctrineTypeMappings()
+    {
+        $this->doctrineTypeMapping = [
+            'boolean'       => 'boolean',
+            'varchar'       => 'string',
+            'varbinary'     => 'binary',
+            'integer'       => 'integer',
+            'blob'          => 'blob',
+            'decimal'       => 'decimal',
+            'datetime'      => 'datetime',
+            'date'          => 'date',
+            'time'          => 'time',
+            'text'          => 'text',
+            'timestamp'     => 'datetime',
+            'double'        => 'float',
+            'bigint'        => 'bigint',
+        ];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getClobTypeDeclarationSQL(array $column)
     {
         return 'TEXT';
@@ -141,9 +189,127 @@ class DrizzlePlatform extends AbstractPlatform
     /**
      * {@inheritDoc}
      */
+    protected function _getCreateTableSQL($name, array $columns, array $options = [])
+    {
+        $queryFields = $this->getColumnDeclarationListSQL($columns);
+
+        if (isset($options['uniqueConstraints']) && ! empty($options['uniqueConstraints'])) {
+            foreach ($options['uniqueConstraints'] as $index => $definition) {
+                $queryFields .= ', ' . $this->getUniqueConstraintDeclarationSQL($index, $definition);
+            }
+        }
+
+        // add all indexes
+        if (isset($options['indexes']) && ! empty($options['indexes'])) {
+            foreach ($options['indexes'] as $index => $definition) {
+                $queryFields .= ', ' . $this->getIndexDeclarationSQL($index, $definition);
+            }
+        }
+
+        // attach all primary keys
+        if (isset($options['primary']) && ! empty($options['primary'])) {
+            $keyColumns   = array_unique(array_values($options['primary']));
+            $queryFields .= ', PRIMARY KEY(' . implode(', ', $keyColumns) . ')';
+        }
+
+        $query = 'CREATE ';
+
+        if (! empty($options['temporary'])) {
+            $query .= 'TEMPORARY ';
+        }
+
+        $query .= 'TABLE ' . $name . ' (' . $queryFields . ') ';
+        $query .= $this->buildTableOptions($options);
+        $query .= $this->buildPartitionOptions($options);
+
+        $sql = [$query];
+
+        if (isset($options['foreignKeys'])) {
+            foreach ((array) $options['foreignKeys'] as $definition) {
+                $sql[] = $this->getCreateForeignKeySQL($definition, $name);
+            }
+        }
+
+        return $sql;
+    }
+
+    /**
+     * Build SQL for table options
+     *
+     * @param mixed[] $options
+     *
+     * @return string
+     */
+    private function buildTableOptions(array $options)
+    {
+        if (isset($options['table_options'])) {
+            return $options['table_options'];
+        }
+
+        $tableOptions = [];
+
+        // Collate
+        if (! isset($options['collate'])) {
+            $options['collate'] = 'utf8_unicode_ci';
+        }
+
+        $tableOptions[] = sprintf('COLLATE %s', $options['collate']);
+
+        // Engine
+        if (! isset($options['engine'])) {
+            $options['engine'] = 'InnoDB';
+        }
+
+        $tableOptions[] = sprintf('ENGINE = %s', $options['engine']);
+
+        // Auto increment
+        if (isset($options['auto_increment'])) {
+            $tableOptions[] = sprintf('AUTO_INCREMENT = %s', $options['auto_increment']);
+        }
+
+        // Comment
+        if (isset($options['comment'])) {
+            $comment = trim($options['comment'], " '");
+
+            $tableOptions[] = sprintf('COMMENT = %s ', $this->quoteStringLiteral($comment));
+        }
+
+        // Row format
+        if (isset($options['row_format'])) {
+            $tableOptions[] = sprintf('ROW_FORMAT = %s', $options['row_format']);
+        }
+
+        return implode(' ', $tableOptions);
+    }
+
+    /**
+     * Build SQL for partition options.
+     *
+     * @param mixed[] $options
+     *
+     * @return string
+     */
+    private function buildPartitionOptions(array $options)
+    {
+        return isset($options['partition_options'])
+            ? ' ' . $options['partition_options']
+            : '';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getListDatabasesSQL()
     {
         return "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE CATALOG_NAME='LOCAL'";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getReservedKeywordsClass()
+    {
+        return Keywords\DrizzleKeywords::class;
     }
 
     /**
@@ -475,171 +641,5 @@ class DrizzlePlatform extends AbstractPlatform
     public function getRegexpExpression()
     {
         return 'RLIKE';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getDateArithmeticIntervalExpression($date, $operator, $interval, $unit)
-    {
-        $function = $operator === '+' ? 'DATE_ADD' : 'DATE_SUB';
-
-        return $function . '(' . $date . ', INTERVAL ' . $interval . ' ' . $unit . ')';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function getVarcharTypeDeclarationSQLSnippet($length, $fixed)
-    {
-        return $length ? 'VARCHAR(' . $length . ')' : 'VARCHAR(255)';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getBinaryTypeDeclarationSQLSnippet($length, $fixed)
-    {
-        return 'VARBINARY(' . ($length ?: 255) . ')';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function initializeDoctrineTypeMappings()
-    {
-        $this->doctrineTypeMapping = [
-            'boolean'       => 'boolean',
-            'varchar'       => 'string',
-            'varbinary'     => 'binary',
-            'integer'       => 'integer',
-            'blob'          => 'blob',
-            'decimal'       => 'decimal',
-            'datetime'      => 'datetime',
-            'date'          => 'date',
-            'time'          => 'time',
-            'text'          => 'text',
-            'timestamp'     => 'datetime',
-            'double'        => 'float',
-            'bigint'        => 'bigint',
-        ];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function _getCreateTableSQL($name, array $columns, array $options = [])
-    {
-        $queryFields = $this->getColumnDeclarationListSQL($columns);
-
-        if (isset($options['uniqueConstraints']) && ! empty($options['uniqueConstraints'])) {
-            foreach ($options['uniqueConstraints'] as $index => $definition) {
-                $queryFields .= ', ' . $this->getUniqueConstraintDeclarationSQL($index, $definition);
-            }
-        }
-
-        // add all indexes
-        if (isset($options['indexes']) && ! empty($options['indexes'])) {
-            foreach ($options['indexes'] as $index => $definition) {
-                $queryFields .= ', ' . $this->getIndexDeclarationSQL($index, $definition);
-            }
-        }
-
-        // attach all primary keys
-        if (isset($options['primary']) && ! empty($options['primary'])) {
-            $keyColumns   = array_unique(array_values($options['primary']));
-            $queryFields .= ', PRIMARY KEY(' . implode(', ', $keyColumns) . ')';
-        }
-
-        $query = 'CREATE ';
-
-        if (! empty($options['temporary'])) {
-            $query .= 'TEMPORARY ';
-        }
-
-        $query .= 'TABLE ' . $name . ' (' . $queryFields . ') ';
-        $query .= $this->buildTableOptions($options);
-        $query .= $this->buildPartitionOptions($options);
-
-        $sql = [$query];
-
-        if (isset($options['foreignKeys'])) {
-            foreach ((array) $options['foreignKeys'] as $definition) {
-                $sql[] = $this->getCreateForeignKeySQL($definition, $name);
-            }
-        }
-
-        return $sql;
-    }
-
-    /**
-     * Build SQL for table options
-     *
-     * @param mixed[] $options
-     *
-     * @return string
-     */
-    private function buildTableOptions(array $options)
-    {
-        if (isset($options['table_options'])) {
-            return $options['table_options'];
-        }
-
-        $tableOptions = [];
-
-        // Collate
-        if (! isset($options['collate'])) {
-            $options['collate'] = 'utf8_unicode_ci';
-        }
-
-        $tableOptions[] = sprintf('COLLATE %s', $options['collate']);
-
-        // Engine
-        if (! isset($options['engine'])) {
-            $options['engine'] = 'InnoDB';
-        }
-
-        $tableOptions[] = sprintf('ENGINE = %s', $options['engine']);
-
-        // Auto increment
-        if (isset($options['auto_increment'])) {
-            $tableOptions[] = sprintf('AUTO_INCREMENT = %s', $options['auto_increment']);
-        }
-
-        // Comment
-        if (isset($options['comment'])) {
-            $comment = trim($options['comment'], " '");
-
-            $tableOptions[] = sprintf('COMMENT = %s ', $this->quoteStringLiteral($comment));
-        }
-
-        // Row format
-        if (isset($options['row_format'])) {
-            $tableOptions[] = sprintf('ROW_FORMAT = %s', $options['row_format']);
-        }
-
-        return implode(' ', $tableOptions);
-    }
-
-    /**
-     * Build SQL for partition options.
-     *
-     * @param mixed[] $options
-     *
-     * @return string
-     */
-    private function buildPartitionOptions(array $options)
-    {
-        return isset($options['partition_options'])
-            ? ' ' . $options['partition_options']
-            : '';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function getReservedKeywordsClass()
-    {
-        return Keywords\DrizzleKeywords::class;
     }
 }

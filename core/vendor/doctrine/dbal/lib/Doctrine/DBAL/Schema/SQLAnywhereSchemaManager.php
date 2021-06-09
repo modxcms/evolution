@@ -30,19 +30,6 @@ class SQLAnywhereSchemaManager extends AbstractSchemaManager
     }
 
     /**
-     * Starts a database.
-     *
-     * @param string $database The name of the database to start.
-     *
-     * @return void
-     */
-    public function startDatabase($database)
-    {
-        assert($this->_platform instanceof SQLAnywherePlatform);
-        $this->_execSql($this->_platform->getStartDatabaseSQL($database));
-    }
-
-    /**
      * {@inheritdoc}
      *
      * Tries stopping a database before dropping
@@ -55,6 +42,19 @@ class SQLAnywhereSchemaManager extends AbstractSchemaManager
     {
         $this->tryMethod('stopDatabase', $database);
         parent::dropDatabase($database);
+    }
+
+    /**
+     * Starts a database.
+     *
+     * @param string $database The name of the database to start.
+     *
+     * @return void
+     */
+    public function startDatabase($database)
+    {
+        assert($this->_platform instanceof SQLAnywherePlatform);
+        $this->_execSql($this->_platform->getStartDatabaseSQL($database));
     }
 
     /**

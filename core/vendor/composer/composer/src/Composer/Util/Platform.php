@@ -96,14 +96,6 @@ class Platform
     }
 
     /**
-     * @return bool Whether the host machine is running a Windows OS
-     */
-    public static function isWindows()
-    {
-        return \defined('PHP_WINDOWS_VERSION_BUILD');
-    }
-
-    /**
      * @return bool Whether the host machine is running on the Windows Subsystem for Linux (WSL)
      */
     public static function isWindowsSubsystemForLinux()
@@ -122,6 +114,14 @@ class Platform
         }
 
         return self::$isWindowsSubsystemForLinux;
+    }
+
+    /**
+     * @return bool Whether the host machine is running a Windows OS
+     */
+    public static function isWindows()
+    {
+        return \defined('PHP_WINDOWS_VERSION_BUILD');
     }
 
     /**

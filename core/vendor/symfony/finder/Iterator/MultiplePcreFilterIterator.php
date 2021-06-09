@@ -40,13 +40,6 @@ abstract class MultiplePcreFilterIterator extends \FilterIterator
     }
 
     /**
-     * Converts string into regexp.
-     *
-     * @return string
-     */
-    abstract protected function toRegex(string $str);
-
-    /**
      * Checks whether the string is accepted by the regex filters.
      *
      * If there is no regexps defined in the class, this method will accept the string.
@@ -103,4 +96,11 @@ abstract class MultiplePcreFilterIterator extends \FilterIterator
 
         return false;
     }
+
+    /**
+     * Converts string into regexp.
+     *
+     * @return string
+     */
+    abstract protected function toRegex(string $str);
 }

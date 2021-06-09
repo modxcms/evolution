@@ -74,24 +74,6 @@ class RouterListener implements EventSubscriberInterface
         $this->debug = $debug;
     }
 
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            KernelEvents::REQUEST => [['onKernelRequest', 32]],
-            KernelEvents::FINISH_REQUEST => [['onKernelFinishRequest', 0]],
-            KernelEvents::EXCEPTION => ['onKernelException', -64],
-        ];
-    }
-
-    /**
-     * After a sub-request is done, we need to reset the routing context to the parent request so that the URL generator
-     * operates on the correct context again.
-     */
-    public function onKernelFinishRequest(FinishRequestEvent $event)
-    {
-        $this->setCurrentRequest($this->requestStack->getParentRequest());
-    }
-
     private function setCurrentRequest(Request $request = null)
     {
         if (null !== $request) {
@@ -101,6 +83,15 @@ class RouterListener implements EventSubscriberInterface
                 throw new BadRequestHttpException($e->getMessage(), $e, $e->getCode());
             }
         }
+    }
+
+    /**
+     * After a sub-request is done, we need to reset the routing context to the parent request so that the URL generator
+     * operates on the correct context again.
+     */
+    public function onKernelFinishRequest(FinishRequestEvent $event)
+    {
+        $this->setCurrentRequest($this->requestStack->getParentRequest());
     }
 
     public function onKernelRequest(RequestEvent $event)
@@ -159,6 +150,15 @@ class RouterListener implements EventSubscriberInterface
         if ($e->getPrevious() instanceof NoConfigurationException) {
             $event->setResponse($this->createWelcomeResponse());
         }
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            KernelEvents::REQUEST => [['onKernelRequest', 32]],
+            KernelEvents::FINISH_REQUEST => [['onKernelFinishRequest', 0]],
+            KernelEvents::EXCEPTION => ['onKernelException', -64],
+        ];
     }
 
     private function createWelcomeResponse(): Response

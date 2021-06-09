@@ -180,6 +180,14 @@ class Client implements ClientInterface, \IteratorAggregate
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
      * Creates a new client instance for the specified connection ID or alias,
      * only when working with an aggregate connection (cluster, replication).
      * The new client instances uses the same options of the original one.
@@ -197,6 +205,51 @@ class Client implements ClientInterface, \IteratorAggregate
         }
 
         return new static($connection, $this->options);
+    }
+
+    /**
+     * Opens the underlying connection and connects to the server.
+     */
+    public function connect()
+    {
+        $this->connection->connect();
+    }
+
+    /**
+     * Closes the underlying connection and disconnects from the server.
+     */
+    public function disconnect()
+    {
+        $this->connection->disconnect();
+    }
+
+    /**
+     * Closes the underlying connection and disconnects from the server.
+     *
+     * This is the same as `Client::disconnect()` as it does not actually send
+     * the `QUIT` command to Redis, but simply closes the connection.
+     */
+    public function quit()
+    {
+        $this->disconnect();
+    }
+
+    /**
+     * Returns the current state of the underlying connection.
+     *
+     * @return bool
+     */
+    public function isConnected()
+    {
+        return $this->connection->isConnected();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getConnection()
+    {
+        return $this->connection;
     }
 
     /**
@@ -218,43 +271,6 @@ class Client implements ClientInterface, \IteratorAggregate
         }
 
         return $this->connection->getConnectionById($connectionID);
-    }
-
-    /**
-     * Opens the underlying connection and connects to the server.
-     */
-    public function connect()
-    {
-        $this->connection->connect();
-    }
-
-    /**
-     * Closes the underlying connection and disconnects from the server.
-     *
-     * This is the same as `Client::disconnect()` as it does not actually send
-     * the `QUIT` command to Redis, but simply closes the connection.
-     */
-    public function quit()
-    {
-        $this->disconnect();
-    }
-
-    /**
-     * Closes the underlying connection and disconnects from the server.
-     */
-    public function disconnect()
-    {
-        $this->connection->disconnect();
-    }
-
-    /**
-     * Returns the current state of the underlying connection.
-     *
-     * @return bool
-     */
-    public function isConnected()
-    {
-        return $this->connection->isConnected();
     }
 
     /**
@@ -297,6 +313,14 @@ class Client implements ClientInterface, \IteratorAggregate
         return $this->executeCommand(
             $this->createCommand($commandID, $arguments)
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createCommand($commandID, $arguments = array())
+    {
+        return $this->profile->createCommand($commandID, $arguments);
     }
 
     /**
@@ -350,27 +374,6 @@ class Client implements ClientInterface, \IteratorAggregate
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function createCommand($commandID, $arguments = array())
-    {
-        return $this->profile->createCommand($commandID, $arguments);
-    }
-
-    /**
-     * Creates a new pipeline context and returns it, or returns the results of
-     * a pipeline executed inside the optionally provided callable object.
-     *
-     * @param mixed ... Array of options, a callable for execution, or both.
-     *
-     * @return Pipeline|array
-     */
-    public function pipeline(/* arguments */)
-    {
-        return $this->sharedContextFactory('createPipeline', func_get_args());
-    }
-
-    /**
      * Executes the specified initializer method on `$this` by adjusting the
      * actual invokation depending on the arity (0, 1 or 2 arguments). This is
      * simply an utility method to create Redis contexts instances since they
@@ -403,76 +406,16 @@ class Client implements ClientInterface, \IteratorAggregate
     }
 
     /**
-     * Creates a new transaction context and returns it, or returns the results
-     * of a transaction executed inside the optionally provided callable object.
+     * Creates a new pipeline context and returns it, or returns the results of
+     * a pipeline executed inside the optionally provided callable object.
      *
      * @param mixed ... Array of options, a callable for execution, or both.
      *
-     * @return MultiExecTransaction|array
+     * @return Pipeline|array
      */
-    public function transaction(/* arguments */)
+    public function pipeline(/* arguments */)
     {
-        return $this->sharedContextFactory('createTransaction', func_get_args());
-    }
-
-    /**
-     * Creates a new publish/subscribe context and returns it, or starts its loop
-     * inside the optionally provided callable object.
-     *
-     * @param mixed ... Array of options, a callable for execution, or both.
-     *
-     * @return PubSubConsumer|null
-     */
-    public function pubSubLoop(/* arguments */)
-    {
-        return $this->sharedContextFactory('createPubSub', func_get_args());
-    }
-
-    /**
-     * Creates a new monitor consumer and returns it.
-     *
-     * @return MonitorConsumer
-     */
-    public function monitor()
-    {
-        return new MonitorConsumer($this);
-    }
-
-    /**
-     * @return \Traversable<string, static>
-     */
-    public function getIterator()
-    {
-        $clients = array();
-        $connection = $this->getConnection();
-
-        if (!$connection instanceof \Traversable) {
-            return new \ArrayIterator(array(
-                (string) $connection => new static($connection, $this->getOptions())
-            ));
-        }
-
-        foreach ($connection as $node) {
-            $clients[(string) $node] = new static($node, $this->getOptions());
-        }
-
-        return new \ArrayIterator($clients);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getConnection()
-    {
-        return $this->connection;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getOptions()
-    {
-        return $this->options;
+        return $this->sharedContextFactory('createPipeline', func_get_args());
     }
 
     /**
@@ -506,6 +449,19 @@ class Client implements ClientInterface, \IteratorAggregate
     }
 
     /**
+     * Creates a new transaction context and returns it, or returns the results
+     * of a transaction executed inside the optionally provided callable object.
+     *
+     * @param mixed ... Array of options, a callable for execution, or both.
+     *
+     * @return MultiExecTransaction|array
+     */
+    public function transaction(/* arguments */)
+    {
+        return $this->sharedContextFactory('createTransaction', func_get_args());
+    }
+
+    /**
      * Actual transaction context initializer method.
      *
      * @param array $options  Options for the context.
@@ -522,6 +478,19 @@ class Client implements ClientInterface, \IteratorAggregate
         }
 
         return $transaction;
+    }
+
+    /**
+     * Creates a new publish/subscribe context and returns it, or starts its loop
+     * inside the optionally provided callable object.
+     *
+     * @param mixed ... Array of options, a callable for execution, or both.
+     *
+     * @return PubSubConsumer|null
+     */
+    public function pubSubLoop(/* arguments */)
+    {
+        return $this->sharedContextFactory('createPubSub', func_get_args());
     }
 
     /**
@@ -545,5 +514,36 @@ class Client implements ClientInterface, \IteratorAggregate
                 $pubsub->stop();
             }
         }
+    }
+
+    /**
+     * Creates a new monitor consumer and returns it.
+     *
+     * @return MonitorConsumer
+     */
+    public function monitor()
+    {
+        return new MonitorConsumer($this);
+    }
+
+    /**
+     * @return \Traversable<string, static>
+     */
+    public function getIterator()
+    {
+        $clients = array();
+        $connection = $this->getConnection();
+
+        if (!$connection instanceof \Traversable) {
+            return new \ArrayIterator(array(
+                (string) $connection => new static($connection, $this->getOptions())
+            ));
+        }
+
+        foreach ($connection as $node) {
+            $clients[(string) $node] = new static($node, $this->getOptions());
+        }
+
+        return new \ArrayIterator($clients);
     }
 }

@@ -18,11 +18,6 @@ namespace Seld\JsonLint;
  */
 class Lexer
 {
-    public $match;
-    public $yylineno;
-    public $yyleng;
-    public $yytext;
-    public $yylloc;
     private $EOF = 1;
     /**
      * @phpstan-var array<int, string>
@@ -43,17 +38,25 @@ class Lexer
         12 => '/\G$/',
         13 => '/\G./',
     );
+
     private $conditions = array(
         "INITIAL" => array(
             "rules" => array(0,1,2,3,4,5,6,7,8,9,10,11,12,13),
             "inclusive" => true,
         ),
     );
+
     private $conditionStack;
     private $input;
     private $more;
     private $done;
     private $offset;
+
+    public $match;
+    public $yylineno;
+    public $yyleng;
+    public $yytext;
+    public $yylloc;
 
     public function lex()
     {
@@ -63,6 +66,64 @@ class Lexer
         }
 
         return $this->lex();
+    }
+
+    public function setInput($input)
+    {
+        $this->input = $input;
+        $this->more = false;
+        $this->done = false;
+        $this->offset = 0;
+        $this->yylineno = $this->yyleng = 0;
+        $this->yytext = $this->match = '';
+        $this->conditionStack = array('INITIAL');
+        $this->yylloc = array('first_line' => 1, 'first_column' => 0, 'last_line' => 1, 'last_column' => 0);
+
+        return $this;
+    }
+
+    public function showPosition()
+    {
+        $pre = str_replace("\n", '', $this->getPastInput());
+        $c = str_repeat('-', max(0, \strlen($pre) - 1)); // new Array(pre.length + 1).join("-");
+
+        return $pre . str_replace("\n", '', $this->getUpcomingInput()) . "\n" . $c . "^";
+    }
+
+    public function getPastInput()
+    {
+        $pastLength = $this->offset - \strlen($this->match);
+
+        return ($pastLength > 20 ? '...' : '') . substr($this->input, max(0, $pastLength - 20), min(20, $pastLength));
+    }
+
+    public function getUpcomingInput()
+    {
+        $next = $this->match;
+        if (\strlen($next) < 20) {
+            $next .= substr($this->input, $this->offset, 20 - \strlen($next));
+        }
+
+        return substr($next, 0, 20) . (\strlen($next) > 20 ? '...' : '');
+    }
+
+    public function getFullUpcomingInput()
+    {
+        $next = $this->match;
+        if (substr($next, 0, 1) === '"' && substr_count($next, '"') === 1) {
+            $len = \strlen($this->input);
+            $strEnd = min(strpos($this->input, '"', $this->offset + 1) ?: $len, strpos($this->input, "\n", $this->offset + 1) ?: $len);
+            $next .= substr($this->input, $this->offset, $strEnd - $this->offset);
+        } elseif (\strlen($next) < 20) {
+            $next .= substr($this->input, $this->offset, 20 - \strlen($next));
+        }
+
+        return $next;
+    }
+
+    protected function parseError($str, $hash)
+    {
+        throw new \Exception($str);
     }
 
     private function next()
@@ -168,63 +229,5 @@ class Lexer
         case 13:
             return 'INVALID';
         }
-    }
-
-    protected function parseError($str, $hash)
-    {
-        throw new \Exception($str);
-    }
-
-    public function showPosition()
-    {
-        $pre = str_replace("\n", '', $this->getPastInput());
-        $c = str_repeat('-', max(0, \strlen($pre) - 1)); // new Array(pre.length + 1).join("-");
-
-        return $pre . str_replace("\n", '', $this->getUpcomingInput()) . "\n" . $c . "^";
-    }
-
-    public function getPastInput()
-    {
-        $pastLength = $this->offset - \strlen($this->match);
-
-        return ($pastLength > 20 ? '...' : '') . substr($this->input, max(0, $pastLength - 20), min(20, $pastLength));
-    }
-
-    public function getUpcomingInput()
-    {
-        $next = $this->match;
-        if (\strlen($next) < 20) {
-            $next .= substr($this->input, $this->offset, 20 - \strlen($next));
-        }
-
-        return substr($next, 0, 20) . (\strlen($next) > 20 ? '...' : '');
-    }
-
-    public function setInput($input)
-    {
-        $this->input = $input;
-        $this->more = false;
-        $this->done = false;
-        $this->offset = 0;
-        $this->yylineno = $this->yyleng = 0;
-        $this->yytext = $this->match = '';
-        $this->conditionStack = array('INITIAL');
-        $this->yylloc = array('first_line' => 1, 'first_column' => 0, 'last_line' => 1, 'last_column' => 0);
-
-        return $this;
-    }
-
-    public function getFullUpcomingInput()
-    {
-        $next = $this->match;
-        if (substr($next, 0, 1) === '"' && substr_count($next, '"') === 1) {
-            $len = \strlen($this->input);
-            $strEnd = min(strpos($this->input, '"', $this->offset + 1) ?: $len, strpos($this->input, "\n", $this->offset + 1) ?: $len);
-            $next .= substr($this->input, $this->offset, $strEnd - $this->offset);
-        } elseif (\strlen($next) < 20) {
-            $next .= substr($this->input, $this->offset, 20 - \strlen($next));
-        }
-
-        return $next;
     }
 }

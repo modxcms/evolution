@@ -102,6 +102,29 @@ class TypeConstraint extends Constraint
     }
 
     /**
+     * Implodes the given array like implode() with turned around parameters and with the
+     * difference, that, if $listEnd isn't false, the last element delimiter is $listEnd instead of
+     * $delimiter.
+     *
+     * @param array  $elements  The elements to implode
+     * @param string $delimiter The delimiter to use
+     * @param bool   $listEnd   The last delimiter to use (defaults to $delimiter)
+     *
+     * @return string
+     */
+    protected function implodeWith(array $elements, $delimiter = ', ', $listEnd = false)
+    {
+        if ($listEnd === false || !isset($elements[1])) {
+            return implode($delimiter, $elements);
+        }
+        $lastElement  = array_slice($elements, -1);
+        $firsElements = join($delimiter, array_slice($elements, 0, -1));
+        $implodedElements = array_merge(array($firsElements), $lastElement);
+
+        return join(" $listEnd ", $implodedElements);
+    }
+
+    /**
      * Validates the given $type, if there's an associated self::$wording. If not, throws an
      * exception.
      *
@@ -191,31 +214,6 @@ class TypeConstraint extends Constraint
         throw new InvalidArgumentException((is_object($value) ? 'object' : $value) . ' is an invalid type for ' . $type);
     }
 
-    protected function toInteger($value)
-    {
-        if (is_numeric($value) && (int) $value == $value) {
-            return (int) $value; // cast to number
-        }
-
-        return $value;
-    }
-
-    /**
-     * Converts a numeric string to a number. For example, "4" becomes 4.
-     *
-     * @param mixed $value the value to convert to a number
-     *
-     * @return int|float|mixed
-     */
-    protected function toNumber($value)
-    {
-        if (is_numeric($value)) {
-            return $value + 0; // cast to number
-        }
-
-        return $value;
-    }
-
     /**
      * Converts a value to boolean. For example, "true" becomes true.
      *
@@ -237,25 +235,27 @@ class TypeConstraint extends Constraint
     }
 
     /**
-     * Implodes the given array like implode() with turned around parameters and with the
-     * difference, that, if $listEnd isn't false, the last element delimiter is $listEnd instead of
-     * $delimiter.
+     * Converts a numeric string to a number. For example, "4" becomes 4.
      *
-     * @param array  $elements  The elements to implode
-     * @param string $delimiter The delimiter to use
-     * @param bool   $listEnd   The last delimiter to use (defaults to $delimiter)
+     * @param mixed $value the value to convert to a number
      *
-     * @return string
+     * @return int|float|mixed
      */
-    protected function implodeWith(array $elements, $delimiter = ', ', $listEnd = false)
+    protected function toNumber($value)
     {
-        if ($listEnd === false || !isset($elements[1])) {
-            return implode($delimiter, $elements);
+        if (is_numeric($value)) {
+            return $value + 0; // cast to number
         }
-        $lastElement  = array_slice($elements, -1);
-        $firsElements = join($delimiter, array_slice($elements, 0, -1));
-        $implodedElements = array_merge(array($firsElements), $lastElement);
 
-        return join(" $listEnd ", $implodedElements);
+        return $value;
+    }
+
+    protected function toInteger($value)
+    {
+        if (is_numeric($value) && (int) $value == $value) {
+            return (int) $value; // cast to number
+        }
+
+        return $value;
     }
 }

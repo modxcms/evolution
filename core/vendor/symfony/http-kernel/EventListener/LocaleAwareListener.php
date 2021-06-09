@@ -37,29 +37,9 @@ class LocaleAwareListener implements EventSubscriberInterface
         $this->requestStack = $requestStack;
     }
 
-    public static function getSubscribedEvents()
-    {
-        return [
-            // must be registered after the Locale listener
-            KernelEvents::REQUEST => [['onKernelRequest', 15]],
-            KernelEvents::FINISH_REQUEST => [['onKernelFinishRequest', -15]],
-        ];
-    }
-
     public function onKernelRequest(RequestEvent $event): void
     {
         $this->setLocale($event->getRequest()->getLocale(), $event->getRequest()->getDefaultLocale());
-    }
-
-    private function setLocale(string $locale, string $defaultLocale): void
-    {
-        foreach ($this->localeAwareServices as $service) {
-            try {
-                $service->setLocale($locale);
-            } catch (\InvalidArgumentException $e) {
-                $service->setLocale($defaultLocale);
-            }
-        }
     }
 
     public function onKernelFinishRequest(FinishRequestEvent $event): void
@@ -73,5 +53,25 @@ class LocaleAwareListener implements EventSubscriberInterface
         }
 
         $this->setLocale($parentRequest->getLocale(), $parentRequest->getDefaultLocale());
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return [
+            // must be registered after the Locale listener
+            KernelEvents::REQUEST => [['onKernelRequest', 15]],
+            KernelEvents::FINISH_REQUEST => [['onKernelFinishRequest', -15]],
+        ];
+    }
+
+    private function setLocale(string $locale, string $defaultLocale): void
+    {
+        foreach ($this->localeAwareServices as $service) {
+            try {
+                $service->setLocale($locale);
+            } catch (\InvalidArgumentException $e) {
+                $service->setLocale($defaultLocale);
+            }
+        }
     }
 }

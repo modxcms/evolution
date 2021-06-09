@@ -7,17 +7,40 @@ use Illuminate\Support\Str;
 class ResourceRegistrar
 {
     /**
+     * The router instance.
+     *
+     * @var \Illuminate\Routing\Router
+     */
+    protected $router;
+
+    /**
+     * The default actions for a resourceful controller.
+     *
+     * @var string[]
+     */
+    protected $resourceDefaults = ['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'];
+
+    /**
+     * The parameters set for this resource instance.
+     *
+     * @var array|string
+     */
+    protected $parameters;
+
+    /**
      * The global parameter mapping.
      *
      * @var array
      */
     protected static $parameterMap = [];
+
     /**
      * Singular global parameters.
      *
      * @var bool
      */
     protected static $singularParameters = true;
+
     /**
      * The verbs used in the resource URIs.
      *
@@ -27,24 +50,6 @@ class ResourceRegistrar
         'create' => 'create',
         'edit' => 'edit',
     ];
-    /**
-     * The router instance.
-     *
-     * @var \Illuminate\Routing\Router
-     */
-    protected $router;
-    /**
-     * The default actions for a resourceful controller.
-     *
-     * @var string[]
-     */
-    protected $resourceDefaults = ['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'];
-    /**
-     * The parameters set for this resource instance.
-     *
-     * @var array|string
-     */
-    protected $parameters;
 
     /**
      * Create a new resource registrar instance.
@@ -55,53 +60,6 @@ class ResourceRegistrar
     public function __construct(Router $router)
     {
         $this->router = $router;
-    }
-
-    /**
-     * Set or unset the unmapped global parameters to singular.
-     *
-     * @param  bool  $singular
-     * @return void
-     */
-    public static function singularParameters($singular = true)
-    {
-        static::$singularParameters = (bool) $singular;
-    }
-
-    /**
-     * Get the global parameter map.
-     *
-     * @return array
-     */
-    public static function getParameters()
-    {
-        return static::$parameterMap;
-    }
-
-    /**
-     * Set the global parameter mapping.
-     *
-     * @param  array  $parameters
-     * @return void
-     */
-    public static function setParameters(array $parameters = [])
-    {
-        static::$parameterMap = $parameters;
-    }
-
-    /**
-     * Get or set the action verbs used in the resource URIs.
-     *
-     * @param  array  $verbs
-     * @return array
-     */
-    public static function verbs(array $verbs = [])
-    {
-        if (empty($verbs)) {
-            return static::$verbs;
-        } else {
-            static::$verbs = array_merge(static::$verbs, $verbs);
-        }
     }
 
     /**
@@ -192,25 +150,6 @@ class ResourceRegistrar
     }
 
     /**
-     * Format a resource parameter for usage.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    public function getResourceWildcard($value)
-    {
-        if (isset($this->parameters[$value])) {
-            $value = $this->parameters[$value];
-        } elseif (isset(static::$parameterMap[$value])) {
-            $value = static::$parameterMap[$value];
-        } elseif ($this->parameters === 'singular' || static::$singularParameters) {
-            $value = Str::singular($value);
-        }
-
-        return str_replace('-', '_', $value);
-    }
-
-    /**
      * Get the applicable resource methods.
      *
      * @param  array  $defaults
@@ -233,24 +172,6 @@ class ResourceRegistrar
     }
 
     /**
-     * Set the route's binding fields if the resource is scoped.
-     *
-     * @param  \Illuminate\Routing\Route  $route
-     * @param  array  $bindingFields
-     * @return void
-     */
-    protected function setResourceBindingFields($route, $bindingFields)
-    {
-        preg_match_all('/(?<={).*?(?=})/', $route->uri, $matches);
-
-        $fields = array_fill_keys($matches[0], null);
-
-        $route->setBindingFields(array_replace(
-            $fields, array_intersect_key($bindingFields, $fields)
-        ));
-    }
-
-    /**
      * Add the index method for a resourceful route.
      *
      * @param  string  $name
@@ -268,6 +189,158 @@ class ResourceRegistrar
         $action = $this->getResourceAction($name, $controller, 'index', $options);
 
         return $this->router->get($uri, $action);
+    }
+
+    /**
+     * Add the create method for a resourceful route.
+     *
+     * @param  string  $name
+     * @param  string  $base
+     * @param  string  $controller
+     * @param  array  $options
+     * @return \Illuminate\Routing\Route
+     */
+    protected function addResourceCreate($name, $base, $controller, $options)
+    {
+        $uri = $this->getResourceUri($name).'/'.static::$verbs['create'];
+
+        unset($options['missing']);
+
+        $action = $this->getResourceAction($name, $controller, 'create', $options);
+
+        return $this->router->get($uri, $action);
+    }
+
+    /**
+     * Add the store method for a resourceful route.
+     *
+     * @param  string  $name
+     * @param  string  $base
+     * @param  string  $controller
+     * @param  array  $options
+     * @return \Illuminate\Routing\Route
+     */
+    protected function addResourceStore($name, $base, $controller, $options)
+    {
+        $uri = $this->getResourceUri($name);
+
+        unset($options['missing']);
+
+        $action = $this->getResourceAction($name, $controller, 'store', $options);
+
+        return $this->router->post($uri, $action);
+    }
+
+    /**
+     * Add the show method for a resourceful route.
+     *
+     * @param  string  $name
+     * @param  string  $base
+     * @param  string  $controller
+     * @param  array  $options
+     * @return \Illuminate\Routing\Route
+     */
+    protected function addResourceShow($name, $base, $controller, $options)
+    {
+        $name = $this->getShallowName($name, $options);
+
+        $uri = $this->getResourceUri($name).'/{'.$base.'}';
+
+        $action = $this->getResourceAction($name, $controller, 'show', $options);
+
+        return $this->router->get($uri, $action);
+    }
+
+    /**
+     * Add the edit method for a resourceful route.
+     *
+     * @param  string  $name
+     * @param  string  $base
+     * @param  string  $controller
+     * @param  array  $options
+     * @return \Illuminate\Routing\Route
+     */
+    protected function addResourceEdit($name, $base, $controller, $options)
+    {
+        $name = $this->getShallowName($name, $options);
+
+        $uri = $this->getResourceUri($name).'/{'.$base.'}/'.static::$verbs['edit'];
+
+        $action = $this->getResourceAction($name, $controller, 'edit', $options);
+
+        return $this->router->get($uri, $action);
+    }
+
+    /**
+     * Add the update method for a resourceful route.
+     *
+     * @param  string  $name
+     * @param  string  $base
+     * @param  string  $controller
+     * @param  array  $options
+     * @return \Illuminate\Routing\Route
+     */
+    protected function addResourceUpdate($name, $base, $controller, $options)
+    {
+        $name = $this->getShallowName($name, $options);
+
+        $uri = $this->getResourceUri($name).'/{'.$base.'}';
+
+        $action = $this->getResourceAction($name, $controller, 'update', $options);
+
+        return $this->router->match(['PUT', 'PATCH'], $uri, $action);
+    }
+
+    /**
+     * Add the destroy method for a resourceful route.
+     *
+     * @param  string  $name
+     * @param  string  $base
+     * @param  string  $controller
+     * @param  array  $options
+     * @return \Illuminate\Routing\Route
+     */
+    protected function addResourceDestroy($name, $base, $controller, $options)
+    {
+        $name = $this->getShallowName($name, $options);
+
+        $uri = $this->getResourceUri($name).'/{'.$base.'}';
+
+        $action = $this->getResourceAction($name, $controller, 'destroy', $options);
+
+        return $this->router->delete($uri, $action);
+    }
+
+    /**
+     * Get the name for a given resource with shallowness applied when applicable.
+     *
+     * @param  string  $name
+     * @param  array  $options
+     * @return string
+     */
+    protected function getShallowName($name, $options)
+    {
+        return isset($options['shallow']) && $options['shallow']
+                    ? last(explode('.', $name))
+                    : $name;
+    }
+
+    /**
+     * Set the route's binding fields if the resource is scoped.
+     *
+     * @param  \Illuminate\Routing\Route  $route
+     * @param  array  $bindingFields
+     * @return void
+     */
+    protected function setResourceBindingFields($route, $bindingFields)
+    {
+        preg_match_all('/(?<={).*?(?=})/', $route->uri, $matches);
+
+        $fields = array_fill_keys($matches[0], null);
+
+        $route->setBindingFields(array_replace(
+            $fields, array_intersect_key($bindingFields, $fields)
+        ));
     }
 
     /**
@@ -306,6 +379,25 @@ class ResourceRegistrar
         return implode('/', array_map(function ($s) {
             return $s.'/{'.$this->getResourceWildcard($s).'}';
         }, $segments));
+    }
+
+    /**
+     * Format a resource parameter for usage.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getResourceWildcard($value)
+    {
+        if (isset($this->parameters[$value])) {
+            $value = $this->parameters[$value];
+        } elseif (isset(static::$parameterMap[$value])) {
+            $value = static::$parameterMap[$value];
+        } elseif ($this->parameters === 'singular' || static::$singularParameters) {
+            $value = Str::singular($value);
+        }
+
+        return str_replace('-', '_', $value);
     }
 
     /**
@@ -374,136 +466,49 @@ class ResourceRegistrar
     }
 
     /**
-     * Add the create method for a resourceful route.
+     * Set or unset the unmapped global parameters to singular.
      *
-     * @param  string  $name
-     * @param  string  $base
-     * @param  string  $controller
-     * @param  array  $options
-     * @return \Illuminate\Routing\Route
+     * @param  bool  $singular
+     * @return void
      */
-    protected function addResourceCreate($name, $base, $controller, $options)
+    public static function singularParameters($singular = true)
     {
-        $uri = $this->getResourceUri($name).'/'.static::$verbs['create'];
-
-        unset($options['missing']);
-
-        $action = $this->getResourceAction($name, $controller, 'create', $options);
-
-        return $this->router->get($uri, $action);
+        static::$singularParameters = (bool) $singular;
     }
 
     /**
-     * Add the store method for a resourceful route.
+     * Get the global parameter map.
      *
-     * @param  string  $name
-     * @param  string  $base
-     * @param  string  $controller
-     * @param  array  $options
-     * @return \Illuminate\Routing\Route
+     * @return array
      */
-    protected function addResourceStore($name, $base, $controller, $options)
+    public static function getParameters()
     {
-        $uri = $this->getResourceUri($name);
-
-        unset($options['missing']);
-
-        $action = $this->getResourceAction($name, $controller, 'store', $options);
-
-        return $this->router->post($uri, $action);
+        return static::$parameterMap;
     }
 
     /**
-     * Add the show method for a resourceful route.
+     * Set the global parameter mapping.
      *
-     * @param  string  $name
-     * @param  string  $base
-     * @param  string  $controller
-     * @param  array  $options
-     * @return \Illuminate\Routing\Route
+     * @param  array  $parameters
+     * @return void
      */
-    protected function addResourceShow($name, $base, $controller, $options)
+    public static function setParameters(array $parameters = [])
     {
-        $name = $this->getShallowName($name, $options);
-
-        $uri = $this->getResourceUri($name).'/{'.$base.'}';
-
-        $action = $this->getResourceAction($name, $controller, 'show', $options);
-
-        return $this->router->get($uri, $action);
+        static::$parameterMap = $parameters;
     }
 
     /**
-     * Get the name for a given resource with shallowness applied when applicable.
+     * Get or set the action verbs used in the resource URIs.
      *
-     * @param  string  $name
-     * @param  array  $options
-     * @return string
+     * @param  array  $verbs
+     * @return array
      */
-    protected function getShallowName($name, $options)
+    public static function verbs(array $verbs = [])
     {
-        return isset($options['shallow']) && $options['shallow']
-                    ? last(explode('.', $name))
-                    : $name;
-    }
-
-    /**
-     * Add the edit method for a resourceful route.
-     *
-     * @param  string  $name
-     * @param  string  $base
-     * @param  string  $controller
-     * @param  array  $options
-     * @return \Illuminate\Routing\Route
-     */
-    protected function addResourceEdit($name, $base, $controller, $options)
-    {
-        $name = $this->getShallowName($name, $options);
-
-        $uri = $this->getResourceUri($name).'/{'.$base.'}/'.static::$verbs['edit'];
-
-        $action = $this->getResourceAction($name, $controller, 'edit', $options);
-
-        return $this->router->get($uri, $action);
-    }
-
-    /**
-     * Add the update method for a resourceful route.
-     *
-     * @param  string  $name
-     * @param  string  $base
-     * @param  string  $controller
-     * @param  array  $options
-     * @return \Illuminate\Routing\Route
-     */
-    protected function addResourceUpdate($name, $base, $controller, $options)
-    {
-        $name = $this->getShallowName($name, $options);
-
-        $uri = $this->getResourceUri($name).'/{'.$base.'}';
-
-        $action = $this->getResourceAction($name, $controller, 'update', $options);
-
-        return $this->router->match(['PUT', 'PATCH'], $uri, $action);
-    }
-
-    /**
-     * Add the destroy method for a resourceful route.
-     *
-     * @param  string  $name
-     * @param  string  $base
-     * @param  string  $controller
-     * @param  array  $options
-     * @return \Illuminate\Routing\Route
-     */
-    protected function addResourceDestroy($name, $base, $controller, $options)
-    {
-        $name = $this->getShallowName($name, $options);
-
-        $uri = $this->getResourceUri($name).'/{'.$base.'}';
-
-        $action = $this->getResourceAction($name, $controller, 'destroy', $options);
-
-        return $this->router->delete($uri, $action);
+        if (empty($verbs)) {
+            return static::$verbs;
+        } else {
+            static::$verbs = array_merge(static::$verbs, $verbs);
+        }
     }
 }

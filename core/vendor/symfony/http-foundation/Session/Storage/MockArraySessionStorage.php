@@ -76,21 +76,6 @@ class MockArraySessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function regenerate(bool $destroy = false, int $lifetime = null)
-    {
-        if (!$this->started) {
-            $this->start();
-        }
-
-        $this->metadataBag->stampNew($lifetime);
-        $this->id = $this->generateId();
-
-        return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function start()
     {
         if ($this->started) {
@@ -107,30 +92,18 @@ class MockArraySessionStorage implements SessionStorageInterface
     }
 
     /**
-     * Generates a session ID.
-     *
-     * This doesn't need to be particularly cryptographically secure since this is just
-     * a mock.
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    protected function generateId()
+    public function regenerate(bool $destroy = false, int $lifetime = null)
     {
-        return hash('sha256', uniqid('ss_mock_', true));
-    }
-
-    protected function loadSession()
-    {
-        $bags = array_merge($this->bags, [$this->metadataBag]);
-
-        foreach ($bags as $bag) {
-            $key = $bag->getStorageKey();
-            $this->data[$key] = $this->data[$key] ?? [];
-            $bag->initialize($this->data[$key]);
+        if (!$this->started) {
+            $this->start();
         }
 
-        $this->started = true;
-        $this->closed = false;
+        $this->metadataBag->stampNew($lifetime);
+        $this->id = $this->generateId();
+
+        return true;
     }
 
     /**
@@ -231,6 +204,15 @@ class MockArraySessionStorage implements SessionStorageInterface
         return $this->started;
     }
 
+    public function setMetadataBag(MetadataBag $bag = null)
+    {
+        if (null === $bag) {
+            $bag = new MetadataBag();
+        }
+
+        $this->metadataBag = $bag;
+    }
+
     /**
      * Gets the MetadataBag.
      *
@@ -241,12 +223,30 @@ class MockArraySessionStorage implements SessionStorageInterface
         return $this->metadataBag;
     }
 
-    public function setMetadataBag(MetadataBag $bag = null)
+    /**
+     * Generates a session ID.
+     *
+     * This doesn't need to be particularly cryptographically secure since this is just
+     * a mock.
+     *
+     * @return string
+     */
+    protected function generateId()
     {
-        if (null === $bag) {
-            $bag = new MetadataBag();
+        return hash('sha256', uniqid('ss_mock_', true));
+    }
+
+    protected function loadSession()
+    {
+        $bags = array_merge($this->bags, [$this->metadataBag]);
+
+        foreach ($bags as $bag) {
+            $key = $bag->getStorageKey();
+            $this->data[$key] = $this->data[$key] ?? [];
+            $bag->initialize($this->data[$key]);
         }
 
-        $this->metadataBag = $bag;
+        $this->started = true;
+        $this->closed = false;
     }
 }

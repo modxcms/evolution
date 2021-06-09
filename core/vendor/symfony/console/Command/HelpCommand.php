@@ -26,11 +26,6 @@ class HelpCommand extends Command
 {
     private $command;
 
-    public function setCommand(Command $command)
-    {
-        $this->command = $command;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -59,6 +54,11 @@ To display the list of available commands, please use the <info>list</info> comm
 EOF
             )
         ;
+    }
+
+    public function setCommand(Command $command)
+    {
+        $this->command = $command;
     }
 
     /**

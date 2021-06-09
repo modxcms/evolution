@@ -71,17 +71,6 @@ class ArraySessionHandler implements SessionHandlerInterface
     }
 
     /**
-     * Get the expiration time of the session.
-     *
-     * @param  int  $seconds
-     * @return int
-     */
-    protected function calculateExpiration($seconds)
-    {
-        return $this->currentTime() - $seconds;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function write($sessionId, $data)
@@ -120,5 +109,16 @@ class ArraySessionHandler implements SessionHandlerInterface
         }
 
         return true;
+    }
+
+    /**
+     * Get the expiration time of the session.
+     *
+     * @param  int  $seconds
+     * @return int
+     */
+    protected function calculateExpiration($seconds)
+    {
+        return $this->currentTime() - $seconds;
     }
 }

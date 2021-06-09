@@ -87,6 +87,107 @@ class Pipeline implements ClientContextInterface
     }
 
     /**
+     * Throws an exception on -ERR responses returned by Redis.
+     *
+     * @param ConnectionInterface    $connection Redis connection that returned the error.
+     * @param ErrorResponseInterface $response   Instance of the error response.
+     *
+     * @throws ServerException
+     */
+    protected function exception(ConnectionInterface $connection, ErrorResponseInterface $response)
+    {
+        $connection->disconnect();
+        $message = $response->getMessage();
+
+        throw new ServerException($message);
+    }
+
+    /**
+     * Returns the underlying connection to be used by the pipeline.
+     *
+     * @return ConnectionInterface
+     */
+    protected function getConnection()
+    {
+        $connection = $this->getClient()->getConnection();
+
+        if ($connection instanceof ReplicationInterface) {
+            $connection->switchTo('master');
+        }
+
+        return $connection;
+    }
+
+    /**
+     * Implements the logic to flush the queued commands and read the responses
+     * from the current connection.
+     *
+     * @param ConnectionInterface $connection Current connection instance.
+     * @param \SplQueue           $commands   Queued commands.
+     *
+     * @return array
+     */
+    protected function executePipeline(ConnectionInterface $connection, \SplQueue $commands)
+    {
+        foreach ($commands as $command) {
+            $connection->writeRequest($command);
+        }
+
+        $responses = array();
+        $exceptions = $this->throwServerExceptions();
+
+        while (!$commands->isEmpty()) {
+            $command = $commands->dequeue();
+            $response = $connection->readResponse($command);
+
+            if (!$response instanceof ResponseInterface) {
+                $responses[] = $command->parseResponse($response);
+            } elseif ($response instanceof ErrorResponseInterface && $exceptions) {
+                $this->exception($connection, $response);
+            } else {
+                $responses[] = $response;
+            }
+        }
+
+        return $responses;
+    }
+
+    /**
+     * Flushes the buffer holding all of the commands queued so far.
+     *
+     * @param bool $send Specifies if the commands in the buffer should be sent to Redis.
+     *
+     * @return $this
+     */
+    public function flushPipeline($send = true)
+    {
+        if ($send && !$this->pipeline->isEmpty()) {
+            $responses = $this->executePipeline($this->getConnection(), $this->pipeline);
+            $this->responses = array_merge($this->responses, $responses);
+        } else {
+            $this->pipeline = new \SplQueue();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Marks the running status of the pipeline.
+     *
+     * @param bool $bool Sets the running status of the pipeline.
+     *
+     * @throws ClientException
+     */
+    private function setRunning($bool)
+    {
+        if ($bool && $this->running) {
+            throw new ClientException('The current pipeline context is already being executed.');
+        }
+
+        $this->running = $bool;
+    }
+
+    /**
      * Handles the actual execution of the whole pipeline.
      *
      * @param mixed $callable Optional callback for execution.
@@ -125,75 +226,6 @@ class Pipeline implements ClientContextInterface
     }
 
     /**
-     * Marks the running status of the pipeline.
-     *
-     * @param bool $bool Sets the running status of the pipeline.
-     *
-     * @throws ClientException
-     */
-    private function setRunning($bool)
-    {
-        if ($bool && $this->running) {
-            throw new ClientException('The current pipeline context is already being executed.');
-        }
-
-        $this->running = $bool;
-    }
-
-    /**
-     * Flushes the buffer holding all of the commands queued so far.
-     *
-     * @param bool $send Specifies if the commands in the buffer should be sent to Redis.
-     *
-     * @return $this
-     */
-    public function flushPipeline($send = true)
-    {
-        if ($send && !$this->pipeline->isEmpty()) {
-            $responses = $this->executePipeline($this->getConnection(), $this->pipeline);
-            $this->responses = array_merge($this->responses, $responses);
-        } else {
-            $this->pipeline = new \SplQueue();
-        }
-
-        return $this;
-    }
-
-    /**
-     * Implements the logic to flush the queued commands and read the responses
-     * from the current connection.
-     *
-     * @param ConnectionInterface $connection Current connection instance.
-     * @param \SplQueue           $commands   Queued commands.
-     *
-     * @return array
-     */
-    protected function executePipeline(ConnectionInterface $connection, \SplQueue $commands)
-    {
-        foreach ($commands as $command) {
-            $connection->writeRequest($command);
-        }
-
-        $responses = array();
-        $exceptions = $this->throwServerExceptions();
-
-        while (!$commands->isEmpty()) {
-            $command = $commands->dequeue();
-            $response = $connection->readResponse($command);
-
-            if (!$response instanceof ResponseInterface) {
-                $responses[] = $command->parseResponse($response);
-            } elseif ($response instanceof ErrorResponseInterface && $exceptions) {
-                $this->exception($connection, $response);
-            } else {
-                $responses[] = $response;
-            }
-        }
-
-        return $responses;
-    }
-
-    /**
      * Returns if the pipeline should throw exceptions on server errors.
      *
      * @return bool
@@ -201,38 +233,6 @@ class Pipeline implements ClientContextInterface
     protected function throwServerExceptions()
     {
         return (bool) $this->client->getOptions()->exceptions;
-    }
-
-    /**
-     * Throws an exception on -ERR responses returned by Redis.
-     *
-     * @param ConnectionInterface    $connection Redis connection that returned the error.
-     * @param ErrorResponseInterface $response   Instance of the error response.
-     *
-     * @throws ServerException
-     */
-    protected function exception(ConnectionInterface $connection, ErrorResponseInterface $response)
-    {
-        $connection->disconnect();
-        $message = $response->getMessage();
-
-        throw new ServerException($message);
-    }
-
-    /**
-     * Returns the underlying connection to be used by the pipeline.
-     *
-     * @return ConnectionInterface
-     */
-    protected function getConnection()
-    {
-        $connection = $this->getClient()->getConnection();
-
-        if ($connection instanceof ReplicationInterface) {
-            $connection->switchTo('master');
-        }
-
-        return $connection;
     }
 
     /**

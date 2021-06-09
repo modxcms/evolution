@@ -80,28 +80,6 @@ class ClearCommand extends Command
     }
 
     /**
-     * Get the tags passed to the command.
-     *
-     * @return array
-     */
-    protected function tags()
-    {
-        return array_filter(explode(',', $this->option('tags') ?? ''));
-    }
-
-    /**
-     * Get the cache instance for the command.
-     *
-     * @return \Illuminate\Cache\Repository
-     */
-    protected function cache()
-    {
-        $cache = $this->cache->store($this->argument('store'));
-
-        return empty($this->tags()) ? $cache : $cache->tags($this->tags());
-    }
-
-    /**
      * Flush the real-time facades stored in the cache directory.
      *
      * @return void
@@ -117,6 +95,28 @@ class ClearCommand extends Command
                 $this->files->delete($file);
             }
         }
+    }
+
+    /**
+     * Get the cache instance for the command.
+     *
+     * @return \Illuminate\Cache\Repository
+     */
+    protected function cache()
+    {
+        $cache = $this->cache->store($this->argument('store'));
+
+        return empty($this->tags()) ? $cache : $cache->tags($this->tags());
+    }
+
+    /**
+     * Get the tags passed to the command.
+     *
+     * @return array
+     */
+    protected function tags()
+    {
+        return array_filter(explode(',', $this->option('tags') ?? ''));
     }
 
     /**

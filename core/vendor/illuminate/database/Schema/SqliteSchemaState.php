@@ -32,29 +32,6 @@ class SqliteSchemaState extends SchemaState
     }
 
     /**
-     * Get the base sqlite command arguments as a string.
-     *
-     * @return string
-     */
-    protected function baseCommand()
-    {
-        return 'sqlite3 "${:LARAVEL_LOAD_DATABASE}"';
-    }
-
-    /**
-     * Get the base variables for a dump / load command.
-     *
-     * @param  array  $config
-     * @return array
-     */
-    protected function baseVariables(array $config)
-    {
-        return [
-            'LARAVEL_LOAD_DATABASE' => $config['database'],
-        ];
-    }
-
-    /**
      * Append the migration data to the schema dump.
      *
      * @param  string  $path
@@ -89,5 +66,28 @@ class SqliteSchemaState extends SchemaState
         $process->mustRun(null, array_merge($this->baseVariables($this->connection->getConfig()), [
             'LARAVEL_LOAD_PATH' => $path,
         ]));
+    }
+
+    /**
+     * Get the base sqlite command arguments as a string.
+     *
+     * @return string
+     */
+    protected function baseCommand()
+    {
+        return 'sqlite3 "${:LARAVEL_LOAD_DATABASE}"';
+    }
+
+    /**
+     * Get the base variables for a dump / load command.
+     *
+     * @param  array  $config
+     * @return array
+     */
+    protected function baseVariables(array $config)
+    {
+        return [
+            'LARAVEL_LOAD_DATABASE' => $config['database'],
+        ];
     }
 }

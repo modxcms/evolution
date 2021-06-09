@@ -114,47 +114,6 @@ class Migrator
     }
 
     /**
-     * Get all of the migration files in a given path.
-     *
-     * @param  string|array  $paths
-     * @return array
-     */
-    public function getMigrationFiles($paths)
-    {
-        return Collection::make($paths)->flatMap(function ($path) {
-            return Str::endsWith($path, '.php') ? [$path] : $this->files->glob($path.'/*_*.php');
-        })->filter()->values()->keyBy(function ($file) {
-            return $this->getMigrationName($file);
-        })->sortBy(function ($file, $key) {
-            return $key;
-        })->all();
-    }
-
-    /**
-     * Get the name of the migration.
-     *
-     * @param  string  $path
-     * @return string
-     */
-    public function getMigrationName($path)
-    {
-        return str_replace('.php', '', basename($path));
-    }
-
-    /**
-     * Require in all the migration files in a given path.
-     *
-     * @param  array  $files
-     * @return void
-     */
-    public function requireFiles(array $files)
-    {
-        foreach ($files as $file) {
-            $this->files->requireOnce($file);
-        }
-    }
-
-    /**
      * Get the migration files that have not yet run.
      *
      * @param  array  $files
@@ -215,32 +174,6 @@ class Migrator
     }
 
     /**
-     * Fire the given event for the migration.
-     *
-     * @param  \Illuminate\Contracts\Database\Events\MigrationEvent  $event
-     * @return void
-     */
-    public function fireMigrationEvent($event)
-    {
-        if ($this->events) {
-            $this->events->dispatch($event);
-        }
-    }
-
-    /**
-     * Write a note to the console's output.
-     *
-     * @param  string  $message
-     * @return void
-     */
-    protected function note($message)
-    {
-        if ($this->output) {
-            $this->output->writeln($message);
-        }
-    }
-
-    /**
      * Run "up" a migration instance.
      *
      * @param  string  $file
@@ -275,138 +208,6 @@ class Migrator
         $this->repository->log($name, $batch);
 
         $this->note("<info>Migrated:</info>  {$name} ({$runTime}ms)");
-    }
-
-    /**
-     * Resolve a migration instance from a migration path.
-     *
-     * @param  string  $path
-     * @return object
-     */
-    protected function resolvePath(string $path)
-    {
-        $class = $this->getMigrationClass($this->getMigrationName($path));
-
-        if (class_exists($class) && realpath($path) == (new ReflectionClass($class))->getFileName()) {
-            return new $class;
-        }
-
-        $migration = $this->files->getRequire($path);
-
-        return is_object($migration) ? $migration : new $class;
-    }
-
-    /**
-     * Generate a migration class name based on the migration file name.
-     *
-     * @param  string  $migrationName
-     * @return string
-     */
-    protected function getMigrationClass(string $migrationName): string
-    {
-        return Str::studly(implode('_', array_slice(explode('_', $migrationName), 4)));
-    }
-
-    /**
-     * Pretend to run the migrations.
-     *
-     * @param  object  $migration
-     * @param  string  $method
-     * @return void
-     */
-    protected function pretendToRun($migration, $method)
-    {
-        foreach ($this->getQueries($migration, $method) as $query) {
-            $name = get_class($migration);
-
-            $reflectionClass = new ReflectionClass($migration);
-
-            if ($reflectionClass->isAnonymous()) {
-                $name = $this->getMigrationName($reflectionClass->getFileName());
-            }
-
-            $this->note("<info>{$name}:</info> {$query['query']}");
-        }
-    }
-
-    /**
-     * Get all of the queries that would be run for a migration.
-     *
-     * @param  object  $migration
-     * @param  string  $method
-     * @return array
-     */
-    protected function getQueries($migration, $method)
-    {
-        // Now that we have the connections we can resolve it and pretend to run the
-        // queries against the database returning the array of raw SQL statements
-        // that would get fired against the database system for this migration.
-        $db = $this->resolveConnection(
-            $migration->getConnection()
-        );
-
-        return $db->pretend(function () use ($migration, $method) {
-            if (method_exists($migration, $method)) {
-                $migration->{$method}();
-            }
-        });
-    }
-
-    /**
-     * Resolve the database connection instance.
-     *
-     * @param  string  $connection
-     * @return \Illuminate\Database\Connection
-     */
-    public function resolveConnection($connection)
-    {
-        return $this->resolver->connection($connection ?: $this->connection);
-    }
-
-    /**
-     * Run a migration inside a transaction if the database supports it.
-     *
-     * @param  object  $migration
-     * @param  string  $method
-     * @return void
-     */
-    protected function runMigration($migration, $method)
-    {
-        $connection = $this->resolveConnection(
-            $migration->getConnection()
-        );
-
-        $callback = function () use ($migration, $method) {
-            if (method_exists($migration, $method)) {
-                $this->fireMigrationEvent(new MigrationStarted($migration, $method));
-
-                $migration->{$method}();
-
-                $this->fireMigrationEvent(new MigrationEnded($migration, $method));
-            }
-        };
-
-        $this->getSchemaGrammar($connection)->supportsSchemaTransactions()
-            && $migration->withinTransaction
-                    ? $connection->transaction($callback)
-                    : $callback();
-    }
-
-    /**
-     * Get the schema grammar out of a migration connection.
-     *
-     * @param  \Illuminate\Database\Connection  $connection
-     * @return \Illuminate\Database\Schema\Grammars\Grammar
-     */
-    protected function getSchemaGrammar($connection)
-    {
-        if (is_null($grammar = $connection->getSchemaGrammar())) {
-            $connection->useDefaultSchemaGrammar();
-
-            $grammar = $connection->getSchemaGrammar();
-        }
-
-        return $grammar;
     }
 
     /**
@@ -491,43 +292,6 @@ class Migrator
     }
 
     /**
-     * Run "down" a migration instance.
-     *
-     * @param  string  $file
-     * @param  object  $migration
-     * @param  bool  $pretend
-     * @return void
-     */
-    protected function runDown($file, $migration, $pretend)
-    {
-        // First we will get the file name of the migration so we can resolve out an
-        // instance of the migration. Once we get an instance we can either run a
-        // pretend execution of the migration or we can run the real migration.
-        $instance = $this->resolvePath($file);
-
-        $name = $this->getMigrationName($file);
-
-        $this->note("<comment>Rolling back:</comment> {$name}");
-
-        if ($pretend) {
-            return $this->pretendToRun($instance, 'down');
-        }
-
-        $startTime = microtime(true);
-
-        $this->runMigration($instance, 'down');
-
-        $runTime = number_format((microtime(true) - $startTime) * 1000, 2);
-
-        // Once we have successfully run the migration "down" we will remove it from
-        // the migration repository so it will be considered to have not been run
-        // by the application then will be able to fire by any later operation.
-        $this->repository->delete($migration);
-
-        $this->note("<info>Rolled back:</info>  {$name} ({$runTime}ms)");
-    }
-
-    /**
      * Rolls all of the currently applied migrations back.
      *
      * @param  array|string  $paths
@@ -573,6 +337,117 @@ class Migrator
     }
 
     /**
+     * Run "down" a migration instance.
+     *
+     * @param  string  $file
+     * @param  object  $migration
+     * @param  bool  $pretend
+     * @return void
+     */
+    protected function runDown($file, $migration, $pretend)
+    {
+        // First we will get the file name of the migration so we can resolve out an
+        // instance of the migration. Once we get an instance we can either run a
+        // pretend execution of the migration or we can run the real migration.
+        $instance = $this->resolvePath($file);
+
+        $name = $this->getMigrationName($file);
+
+        $this->note("<comment>Rolling back:</comment> {$name}");
+
+        if ($pretend) {
+            return $this->pretendToRun($instance, 'down');
+        }
+
+        $startTime = microtime(true);
+
+        $this->runMigration($instance, 'down');
+
+        $runTime = number_format((microtime(true) - $startTime) * 1000, 2);
+
+        // Once we have successfully run the migration "down" we will remove it from
+        // the migration repository so it will be considered to have not been run
+        // by the application then will be able to fire by any later operation.
+        $this->repository->delete($migration);
+
+        $this->note("<info>Rolled back:</info>  {$name} ({$runTime}ms)");
+    }
+
+    /**
+     * Run a migration inside a transaction if the database supports it.
+     *
+     * @param  object  $migration
+     * @param  string  $method
+     * @return void
+     */
+    protected function runMigration($migration, $method)
+    {
+        $connection = $this->resolveConnection(
+            $migration->getConnection()
+        );
+
+        $callback = function () use ($migration, $method) {
+            if (method_exists($migration, $method)) {
+                $this->fireMigrationEvent(new MigrationStarted($migration, $method));
+
+                $migration->{$method}();
+
+                $this->fireMigrationEvent(new MigrationEnded($migration, $method));
+            }
+        };
+
+        $this->getSchemaGrammar($connection)->supportsSchemaTransactions()
+            && $migration->withinTransaction
+                    ? $connection->transaction($callback)
+                    : $callback();
+    }
+
+    /**
+     * Pretend to run the migrations.
+     *
+     * @param  object  $migration
+     * @param  string  $method
+     * @return void
+     */
+    protected function pretendToRun($migration, $method)
+    {
+        foreach ($this->getQueries($migration, $method) as $query) {
+            $name = get_class($migration);
+
+            $reflectionClass = new ReflectionClass($migration);
+
+            if ($reflectionClass->isAnonymous()) {
+                $name = $this->getMigrationName($reflectionClass->getFileName());
+            }
+
+            $this->note("<info>{$name}:</info> {$query['query']}");
+        }
+    }
+
+    /**
+     * Get all of the queries that would be run for a migration.
+     *
+     * @param  object  $migration
+     * @param  string  $method
+     * @return array
+     */
+    protected function getQueries($migration, $method)
+    {
+        // Now that we have the connections we can resolve it and pretend to run the
+        // queries against the database returning the array of raw SQL statements
+        // that would get fired against the database system for this migration.
+        $db = $this->resolveConnection(
+            $migration->getConnection()
+        );
+
+        return $db->pretend(function () use ($migration, $method) {
+            if (method_exists($migration, $method)) {
+                $migration->{$method}();
+            }
+        });
+    }
+
+    /**
      * Resolve a migration instance from a file.
      *
      * @param  string  $file
@@ -583,6 +458,77 @@ class Migrator
         $class = $this->getMigrationClass($file);
 
         return new $class;
+    }
+
+    /**
+     * Resolve a migration instance from a migration path.
+     *
+     * @param  string  $path
+     * @return object
+     */
+    protected function resolvePath(string $path)
+    {
+        $class = $this->getMigrationClass($this->getMigrationName($path));
+
+        if (class_exists($class) && realpath($path) == (new ReflectionClass($class))->getFileName()) {
+            return new $class;
+        }
+
+        $migration = $this->files->getRequire($path);
+
+        return is_object($migration) ? $migration : new $class;
+    }
+
+    /**
+     * Generate a migration class name based on the migration file name.
+     *
+     * @param  string  $migrationName
+     * @return string
+     */
+    protected function getMigrationClass(string $migrationName): string
+    {
+        return Str::studly(implode('_', array_slice(explode('_', $migrationName), 4)));
+    }
+
+    /**
+     * Get all of the migration files in a given path.
+     *
+     * @param  string|array  $paths
+     * @return array
+     */
+    public function getMigrationFiles($paths)
+    {
+        return Collection::make($paths)->flatMap(function ($path) {
+            return Str::endsWith($path, '.php') ? [$path] : $this->files->glob($path.'/*_*.php');
+        })->filter()->values()->keyBy(function ($file) {
+            return $this->getMigrationName($file);
+        })->sortBy(function ($file, $key) {
+            return $key;
+        })->all();
+    }
+
+    /**
+     * Require in all the migration files in a given path.
+     *
+     * @param  array  $files
+     * @return void
+     */
+    public function requireFiles(array $files)
+    {
+        foreach ($files as $file) {
+            $this->files->requireOnce($file);
+        }
+    }
+
+    /**
+     * Get the name of the migration.
+     *
+     * @param  string  $path
+     * @return string
+     */
+    public function getMigrationName($path)
+    {
+        return str_replace('.php', '', basename($path));
     }
 
     /**
@@ -617,23 +563,6 @@ class Migrator
     }
 
     /**
-     * Set the default connection name.
-     *
-     * @param  string  $name
-     * @return void
-     */
-    public function setConnection($name)
-    {
-        if (! is_null($name)) {
-            $this->resolver->setDefaultConnection($name);
-        }
-
-        $this->repository->setSource($name);
-
-        $this->connection = $name;
-    }
-
-    /**
      * Execute the given callback using the given connection as the default connection.
      *
      * @param  string  $name
@@ -652,6 +581,51 @@ class Migrator
     }
 
     /**
+     * Set the default connection name.
+     *
+     * @param  string  $name
+     * @return void
+     */
+    public function setConnection($name)
+    {
+        if (! is_null($name)) {
+            $this->resolver->setDefaultConnection($name);
+        }
+
+        $this->repository->setSource($name);
+
+        $this->connection = $name;
+    }
+
+    /**
+     * Resolve the database connection instance.
+     *
+     * @param  string  $connection
+     * @return \Illuminate\Database\Connection
+     */
+    public function resolveConnection($connection)
+    {
+        return $this->resolver->connection($connection ?: $this->connection);
+    }
+
+    /**
+     * Get the schema grammar out of a migration connection.
+     *
+     * @param  \Illuminate\Database\Connection  $connection
+     * @return \Illuminate\Database\Schema\Grammars\Grammar
+     */
+    protected function getSchemaGrammar($connection)
+    {
+        if (is_null($grammar = $connection->getSchemaGrammar())) {
+            $connection->useDefaultSchemaGrammar();
+
+            $grammar = $connection->getSchemaGrammar();
+        }
+
+        return $grammar;
+    }
+
+    /**
      * Get the migration repository instance.
      *
      * @return \Illuminate\Database\Migrations\MigrationRepositoryInterface
@@ -662,16 +636,6 @@ class Migrator
     }
 
     /**
-     * Determine if any migrations have been run.
-     *
-     * @return bool
-     */
-    public function hasRunAnyMigrations()
-    {
-        return $this->repositoryExists() && count($this->repository->getRan()) > 0;
-    }
-
-    /**
      * Determine if the migration repository exists.
      *
      * @return bool
@@ -679,6 +643,16 @@ class Migrator
     public function repositoryExists()
     {
         return $this->repository->repositoryExists();
+    }
+
+    /**
+     * Determine if any migrations have been run.
+     *
+     * @return bool
+     */
+    public function hasRunAnyMigrations()
+    {
+        return $this->repositoryExists() && count($this->repository->getRan()) > 0;
     }
 
     /**
@@ -712,5 +686,31 @@ class Migrator
         $this->output = $output;
 
         return $this;
+    }
+
+    /**
+     * Write a note to the console's output.
+     *
+     * @param  string  $message
+     * @return void
+     */
+    protected function note($message)
+    {
+        if ($this->output) {
+            $this->output->writeln($message);
+        }
+    }
+
+    /**
+     * Fire the given event for the migration.
+     *
+     * @param  \Illuminate\Contracts\Database\Events\MigrationEvent  $event
+     * @return void
+     */
+    public function fireMigrationEvent($event)
+    {
+        if ($this->events) {
+            $this->events->dispatch($event);
+        }
     }
 }

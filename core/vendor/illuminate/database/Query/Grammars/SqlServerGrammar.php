@@ -20,43 +20,6 @@ class SqlServerGrammar extends Grammar
     ];
 
     /**
-     * Prepare the binding for a "JSON contains" statement.
-     *
-     * @param  mixed  $binding
-     * @return string
-     */
-    public function prepareBindingForJsonContains($binding)
-    {
-        return is_bool($binding) ? json_encode($binding) : $binding;
-    }
-
-    /**
-     * Compile the random statement into SQL.
-     *
-     * @param  string  $seed
-     * @return string
-     */
-    public function compileRandom($seed)
-    {
-        return 'NEWID()';
-    }
-
-    /**
-     * Compile an exists statement into SQL.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @return string
-     */
-    public function compileExists(Builder $query)
-    {
-        $existsQuery = clone $query;
-
-        $existsQuery->columns = [];
-
-        return $this->compileSelect($existsQuery->selectRaw('1 [exists]')->limit(1));
-    }
-
-    /**
      * Compile a select query into SQL.
      *
      * @param  \Illuminate\Database\Query\Builder  $query
@@ -78,6 +41,121 @@ class SqlServerGrammar extends Grammar
         return $this->compileAnsiOffset(
             $query, $this->compileComponents($query)
         );
+    }
+
+    /**
+     * Compile the "select *" portion of the query.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $columns
+     * @return string|null
+     */
+    protected function compileColumns(Builder $query, $columns)
+    {
+        if (! is_null($query->aggregate)) {
+            return;
+        }
+
+        $select = $query->distinct ? 'select distinct ' : 'select ';
+
+        // If there is a limit on the query, but not an offset, we will add the top
+        // clause to the query, which serves as a "limit" type clause within the
+        // SQL Server system similar to the limit keywords available in MySQL.
+        if (is_numeric($query->limit) && $query->limit > 0 && $query->offset <= 0) {
+            $select .= 'top '.((int) $query->limit).' ';
+        }
+
+        return $select.$this->columnize($columns);
+    }
+
+    /**
+     * Compile the "from" portion of the query.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  string  $table
+     * @return string
+     */
+    protected function compileFrom(Builder $query, $table)
+    {
+        $from = parent::compileFrom($query, $table);
+
+        if (is_string($query->lock)) {
+            return $from.' '.$query->lock;
+        }
+
+        if (! is_null($query->lock)) {
+            return $from.' with(rowlock,'.($query->lock ? 'updlock,' : '').'holdlock)';
+        }
+
+        return $from;
+    }
+
+    /**
+     * Compile a "where date" clause.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function whereDate(Builder $query, $where)
+    {
+        $value = $this->parameter($where['value']);
+
+        return 'cast('.$this->wrap($where['column']).' as date) '.$where['operator'].' '.$value;
+    }
+
+    /**
+     * Compile a "where time" clause.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function whereTime(Builder $query, $where)
+    {
+        $value = $this->parameter($where['value']);
+
+        return 'cast('.$this->wrap($where['column']).' as time) '.$where['operator'].' '.$value;
+    }
+
+    /**
+     * Compile a "JSON contains" statement into SQL.
+     *
+     * @param  string  $column
+     * @param  string  $value
+     * @return string
+     */
+    protected function compileJsonContains($column, $value)
+    {
+        [$field, $path] = $this->wrapJsonFieldAndPath($column);
+
+        return $value.' in (select [value] from openjson('.$field.$path.'))';
+    }
+
+    /**
+     * Prepare the binding for a "JSON contains" statement.
+     *
+     * @param  mixed  $binding
+     * @return string
+     */
+    public function prepareBindingForJsonContains($binding)
+    {
+        return is_bool($binding) ? json_encode($binding) : $binding;
+    }
+
+    /**
+     * Compile a "JSON length" statement into SQL.
+     *
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  string  $value
+     * @return string
+     */
+    protected function compileJsonLength($column, $operator, $value)
+    {
+        [$field, $path] = $this->wrapJsonFieldAndPath($column);
+
+        return '(select count(*) from openjson('.$field.$path.')) '.$operator.' '.$value;
     }
 
     /**
@@ -153,6 +231,114 @@ class SqlServerGrammar extends Grammar
         }
 
         return ">= {$start}";
+    }
+
+    /**
+     * Compile a delete statement without joins into SQL.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  string  $table
+     * @param  string  $where
+     * @return string
+     */
+    protected function compileDeleteWithoutJoins(Builder $query, $table, $where)
+    {
+        $sql = parent::compileDeleteWithoutJoins($query, $table, $where);
+
+        return ! is_null($query->limit) && $query->limit > 0 && $query->offset <= 0
+                        ? Str::replaceFirst('delete', 'delete top ('.$query->limit.')', $sql)
+                        : $sql;
+    }
+
+    /**
+     * Compile the random statement into SQL.
+     *
+     * @param  string  $seed
+     * @return string
+     */
+    public function compileRandom($seed)
+    {
+        return 'NEWID()';
+    }
+
+    /**
+     * Compile the "limit" portions of the query.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  int  $limit
+     * @return string
+     */
+    protected function compileLimit(Builder $query, $limit)
+    {
+        return '';
+    }
+
+    /**
+     * Compile the "offset" portions of the query.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  int  $offset
+     * @return string
+     */
+    protected function compileOffset(Builder $query, $offset)
+    {
+        return '';
+    }
+
+    /**
+     * Compile the lock into SQL.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  bool|string  $value
+     * @return string
+     */
+    protected function compileLock(Builder $query, $value)
+    {
+        return '';
+    }
+
+    /**
+     * Wrap a union subquery in parentheses.
+     *
+     * @param  string  $sql
+     * @return string
+     */
+    protected function wrapUnion($sql)
+    {
+        return 'select * from ('.$sql.') as '.$this->wrapTable('temp_table');
+    }
+
+    /**
+     * Compile an exists statement into SQL.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @return string
+     */
+    public function compileExists(Builder $query)
+    {
+        $existsQuery = clone $query;
+
+        $existsQuery->columns = [];
+
+        return $this->compileSelect($existsQuery->selectRaw('1 [exists]')->limit(1));
+    }
+
+    /**
+     * Compile an update statement with joins into SQL.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  string  $table
+     * @param  string  $columns
+     * @param  string  $where
+     * @return string
+     */
+    protected function compileUpdateWithJoins(Builder $query, $table, $columns, $where)
+    {
+        $alias = last(explode(' as ', $table));
+
+        $joins = $this->compileJoins($query, $query->joins);
+
+        return "update {$alias} set {$columns} from {$table} {$joins} {$where}";
     }
 
     /**
@@ -246,222 +432,6 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
-     * Compile the "select *" portion of the query.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  array  $columns
-     * @return string|null
-     */
-    protected function compileColumns(Builder $query, $columns)
-    {
-        if (! is_null($query->aggregate)) {
-            return;
-        }
-
-        $select = $query->distinct ? 'select distinct ' : 'select ';
-
-        // If there is a limit on the query, but not an offset, we will add the top
-        // clause to the query, which serves as a "limit" type clause within the
-        // SQL Server system similar to the limit keywords available in MySQL.
-        if (is_numeric($query->limit) && $query->limit > 0 && $query->offset <= 0) {
-            $select .= 'top '.((int) $query->limit).' ';
-        }
-
-        return $select.$this->columnize($columns);
-    }
-
-    /**
-     * Compile the "from" portion of the query.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  string  $table
-     * @return string
-     */
-    protected function compileFrom(Builder $query, $table)
-    {
-        $from = parent::compileFrom($query, $table);
-
-        if (is_string($query->lock)) {
-            return $from.' '.$query->lock;
-        }
-
-        if (! is_null($query->lock)) {
-            return $from.' with(rowlock,'.($query->lock ? 'updlock,' : '').'holdlock)';
-        }
-
-        return $from;
-    }
-
-    /**
-     * Compile a "where date" clause.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  array  $where
-     * @return string
-     */
-    protected function whereDate(Builder $query, $where)
-    {
-        $value = $this->parameter($where['value']);
-
-        return 'cast('.$this->wrap($where['column']).' as date) '.$where['operator'].' '.$value;
-    }
-
-    /**
-     * Compile a "where time" clause.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  array  $where
-     * @return string
-     */
-    protected function whereTime(Builder $query, $where)
-    {
-        $value = $this->parameter($where['value']);
-
-        return 'cast('.$this->wrap($where['column']).' as time) '.$where['operator'].' '.$value;
-    }
-
-    /**
-     * Compile a "JSON contains" statement into SQL.
-     *
-     * @param  string  $column
-     * @param  string  $value
-     * @return string
-     */
-    protected function compileJsonContains($column, $value)
-    {
-        [$field, $path] = $this->wrapJsonFieldAndPath($column);
-
-        return $value.' in (select [value] from openjson('.$field.$path.'))';
-    }
-
-    /**
-     * Compile a "JSON length" statement into SQL.
-     *
-     * @param  string  $column
-     * @param  string  $operator
-     * @param  string  $value
-     * @return string
-     */
-    protected function compileJsonLength($column, $operator, $value)
-    {
-        [$field, $path] = $this->wrapJsonFieldAndPath($column);
-
-        return '(select count(*) from openjson('.$field.$path.')) '.$operator.' '.$value;
-    }
-
-    /**
-     * Compile a delete statement without joins into SQL.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  string  $table
-     * @param  string  $where
-     * @return string
-     */
-    protected function compileDeleteWithoutJoins(Builder $query, $table, $where)
-    {
-        $sql = parent::compileDeleteWithoutJoins($query, $table, $where);
-
-        return ! is_null($query->limit) && $query->limit > 0 && $query->offset <= 0
-                        ? Str::replaceFirst('delete', 'delete top ('.$query->limit.')', $sql)
-                        : $sql;
-    }
-
-    /**
-     * Compile the "limit" portions of the query.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  int  $limit
-     * @return string
-     */
-    protected function compileLimit(Builder $query, $limit)
-    {
-        return '';
-    }
-
-    /**
-     * Compile the "offset" portions of the query.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  int  $offset
-     * @return string
-     */
-    protected function compileOffset(Builder $query, $offset)
-    {
-        return '';
-    }
-
-    /**
-     * Compile the lock into SQL.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  bool|string  $value
-     * @return string
-     */
-    protected function compileLock(Builder $query, $value)
-    {
-        return '';
-    }
-
-    /**
-     * Wrap a union subquery in parentheses.
-     *
-     * @param  string  $sql
-     * @return string
-     */
-    protected function wrapUnion($sql)
-    {
-        return 'select * from ('.$sql.') as '.$this->wrapTable('temp_table');
-    }
-
-    /**
-     * Wrap a table in keyword identifiers.
-     *
-     * @param  \Illuminate\Database\Query\Expression|string  $table
-     * @return string
-     */
-    public function wrapTable($table)
-    {
-        if (! $this->isExpression($table)) {
-            return $this->wrapTableValuedFunction(parent::wrapTable($table));
-        }
-
-        return $this->getValue($table);
-    }
-
-    /**
-     * Wrap a table in keyword identifiers.
-     *
-     * @param  string  $table
-     * @return string
-     */
-    protected function wrapTableValuedFunction($table)
-    {
-        if (preg_match('/^(.+?)(\(.*?\))]$/', $table, $matches) === 1) {
-            $table = $matches[1].']'.$matches[2];
-        }
-
-        return $table;
-    }
-
-    /**
-     * Compile an update statement with joins into SQL.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  string  $table
-     * @param  string  $columns
-     * @param  string  $where
-     * @return string
-     */
-    protected function compileUpdateWithJoins(Builder $query, $table, $columns, $where)
-    {
-        $alias = last(explode(' as ', $table));
-
-        $joins = $this->compileJoins($query, $query->joins);
-
-        return "update {$alias} set {$columns} from {$table} {$joins} {$where}";
-    }
-
-    /**
      * Wrap a single string in keyword identifiers.
      *
      * @param  string  $value
@@ -494,5 +464,35 @@ class SqlServerGrammar extends Grammar
     protected function wrapJsonBooleanValue($value)
     {
         return "'".$value."'";
+    }
+
+    /**
+     * Wrap a table in keyword identifiers.
+     *
+     * @param  \Illuminate\Database\Query\Expression|string  $table
+     * @return string
+     */
+    public function wrapTable($table)
+    {
+        if (! $this->isExpression($table)) {
+            return $this->wrapTableValuedFunction(parent::wrapTable($table));
+        }
+
+        return $this->getValue($table);
+    }
+
+    /**
+     * Wrap a table in keyword identifiers.
+     *
+     * @param  string  $table
+     * @return string
+     */
+    protected function wrapTableValuedFunction($table)
+    {
+        if (preg_match('/^(.+?)(\(.*?\))]$/', $table, $matches) === 1) {
+            $table = $matches[1].']'.$matches[2];
+        }
+
+        return $table;
     }
 }

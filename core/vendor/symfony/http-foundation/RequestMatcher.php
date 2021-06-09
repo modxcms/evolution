@@ -73,11 +73,13 @@ class RequestMatcher implements RequestMatcherInterface
     }
 
     /**
-     * Adds a check for the URL path info.
+     * Adds a check for the HTTP scheme.
+     *
+     * @param string|string[]|null $scheme An HTTP scheme or an array of HTTP schemes
      */
-    public function matchPath(?string $regexp)
+    public function matchScheme($scheme)
     {
-        $this->path = $regexp;
+        $this->schemes = null !== $scheme ? array_map('strtolower', (array) $scheme) : [];
     }
 
     /**
@@ -89,13 +91,31 @@ class RequestMatcher implements RequestMatcherInterface
     }
 
     /**
-     * Adds a check for the HTTP method.
+     * Adds a check for the the URL port.
      *
-     * @param string|string[]|null $method An HTTP method or an array of HTTP methods
+     * @param int|null $port The port number to connect to
      */
-    public function matchMethod($method)
+    public function matchPort(?int $port)
     {
-        $this->methods = null !== $method ? array_map('strtoupper', (array) $method) : [];
+        $this->port = $port;
+    }
+
+    /**
+     * Adds a check for the URL path info.
+     */
+    public function matchPath(?string $regexp)
+    {
+        $this->path = $regexp;
+    }
+
+    /**
+     * Adds a check for the client IP.
+     *
+     * @param string $ip A specific IP address or a range specified using IP/netmask like 192.168.1.0/24
+     */
+    public function matchIp(string $ip)
+    {
+        $this->matchIps($ip);
     }
 
     /**
@@ -113,23 +133,13 @@ class RequestMatcher implements RequestMatcherInterface
     }
 
     /**
-     * Adds a check for the HTTP scheme.
+     * Adds a check for the HTTP method.
      *
-     * @param string|string[]|null $scheme An HTTP scheme or an array of HTTP schemes
+     * @param string|string[]|null $method An HTTP method or an array of HTTP methods
      */
-    public function matchScheme($scheme)
+    public function matchMethod($method)
     {
-        $this->schemes = null !== $scheme ? array_map('strtolower', (array) $scheme) : [];
-    }
-
-    /**
-     * Adds a check for the the URL port.
-     *
-     * @param int|null $port The port number to connect to
-     */
-    public function matchPort(?int $port)
-    {
-        $this->port = $port;
+        $this->methods = null !== $method ? array_map('strtoupper', (array) $method) : [];
     }
 
     /**
@@ -138,16 +148,6 @@ class RequestMatcher implements RequestMatcherInterface
     public function matchAttribute(string $key, string $regexp)
     {
         $this->attributes[$key] = $regexp;
-    }
-
-    /**
-     * Adds a check for the client IP.
-     *
-     * @param string $ip A specific IP address or a range specified using IP/netmask like 192.168.1.0/24
-     */
-    public function matchIp(string $ip)
-    {
-        $this->matchIps($ip);
     }
 
     /**

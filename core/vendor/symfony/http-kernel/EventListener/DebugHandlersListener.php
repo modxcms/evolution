@@ -68,17 +68,6 @@ class DebugHandlersListener implements EventSubscriberInterface
         $this->deprecationLogger = $deprecationLogger;
     }
 
-    public static function getSubscribedEvents(): array
-    {
-        $events = [KernelEvents::REQUEST => ['configure', 2048]];
-
-        if (\defined('Symfony\Component\Console\ConsoleEvents::COMMAND')) {
-            $events[ConsoleEvents::COMMAND] = ['configure', 2048];
-        }
-
-        return $events;
-    }
-
     /**
      * Configures the error handler.
      */
@@ -184,5 +173,16 @@ class DebugHandlersListener implements EventSubscriberInterface
         if ($this->logger && $defaultLoggerLevels) {
             $handler->setDefaultLogger($this->logger, $defaultLoggerLevels);
         }
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        $events = [KernelEvents::REQUEST => ['configure', 2048]];
+
+        if (\defined('Symfony\Component\Console\ConsoleEvents::COMMAND')) {
+            $events[ConsoleEvents::COMMAND] = ['configure', 2048];
+        }
+
+        return $events;
     }
 }

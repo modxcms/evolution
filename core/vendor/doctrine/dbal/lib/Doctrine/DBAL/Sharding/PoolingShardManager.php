@@ -37,6 +37,48 @@ class PoolingShardManager implements ShardManager
 
     /**
      * {@inheritDoc}
+     */
+    public function selectGlobal()
+    {
+        $this->conn->connect(0);
+        $this->currentDistributionValue = null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function selectShard($distributionValue)
+    {
+        $shardId = $this->choser->pickShard($distributionValue, $this->conn);
+        $this->conn->connect($shardId);
+        $this->currentDistributionValue = $distributionValue;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCurrentDistributionValue()
+    {
+        return $this->currentDistributionValue;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getShards()
+    {
+        $params = $this->conn->getParams();
+        $shards = [];
+
+        foreach ($params['shards'] as $shard) {
+            $shards[] = ['id' => $shard['id']];
+        }
+
+        return $shards;
+    }
+
+    /**
+     * {@inheritDoc}
      *
      * @throws RuntimeException
      */
@@ -64,47 +106,5 @@ class PoolingShardManager implements ShardManager
         }
 
         return $result;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getShards()
-    {
-        $params = $this->conn->getParams();
-        $shards = [];
-
-        foreach ($params['shards'] as $shard) {
-            $shards[] = ['id' => $shard['id']];
-        }
-
-        return $shards;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getCurrentDistributionValue()
-    {
-        return $this->currentDistributionValue;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function selectGlobal()
-    {
-        $this->conn->connect(0);
-        $this->currentDistributionValue = null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function selectShard($distributionValue)
-    {
-        $shardId = $this->choser->pickShard($distributionValue, $this->conn);
-        $this->conn->connect($shardId);
-        $this->currentDistributionValue = $distributionValue;
     }
 }

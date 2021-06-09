@@ -513,6 +513,13 @@ class CarbonImmutable extends DateTimeImmutable implements CarbonInterface
         __clone as dateTraitClone;
     }
 
+    public function __clone()
+    {
+        $this->dateTraitClone();
+        $this->endOfTime = false;
+        $this->startOfTime = false;
+    }
+
     /**
      * Create a very old date representing start of time.
      *
@@ -524,18 +531,6 @@ class CarbonImmutable extends DateTimeImmutable implements CarbonInterface
         $date->startOfTime = true;
 
         return $date;
-    }
-
-    /**
-     * @codeCoverageIgnore
-     */
-    private static function getStartOfTimeYear(): int
-    {
-        if (version_compare(PHP_VERSION, '7.3.0-dev', '<')) {
-            return -135908816449551;
-        }
-
-        return max(PHP_INT_MIN, -9223372036854773760);
     }
 
     /**
@@ -563,10 +558,15 @@ class CarbonImmutable extends DateTimeImmutable implements CarbonInterface
         return PHP_INT_MAX;
     }
 
-    public function __clone()
+    /**
+     * @codeCoverageIgnore
+     */
+    private static function getStartOfTimeYear(): int
     {
-        $this->dateTraitClone();
-        $this->endOfTime = false;
-        $this->startOfTime = false;
+        if (version_compare(PHP_VERSION, '7.3.0-dev', '<')) {
+            return -135908816449551;
+        }
+
+        return max(PHP_INT_MIN, -9223372036854773760);
     }
 }

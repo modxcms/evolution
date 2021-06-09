@@ -32,13 +32,14 @@ use Predis\Response\Status as StatusResponse;
  */
 class MultiExec implements ClientContextInterface
 {
+    private $state;
+
     protected $client;
     protected $commands;
     protected $exceptions = true;
     protected $attempts = 0;
     protected $watchKeys = array();
     protected $modeCAS = false;
-    private $state;
 
     /**
      * @param ClientInterface $client  Client instance used by the transaction.
@@ -115,46 +116,6 @@ class MultiExec implements ClientContextInterface
     }
 
     /**
-     * Finalizes the transaction by executing MULTI on the server.
-     *
-     * @return MultiExec
-     */
-    public function multi()
-    {
-        if ($this->state->check(MultiExecState::INITIALIZED | MultiExecState::CAS)) {
-            $this->state->unflag(MultiExecState::CAS);
-            $this->call('MULTI');
-        } else {
-            $this->initialize();
-        }
-
-        return $this;
-    }
-
-    /**
-     * Executes a Redis command bypassing the transaction logic.
-     *
-     * @param string $commandID Command ID.
-     * @param array  $arguments Arguments for the command.
-     *
-     * @throws ServerException
-     *
-     * @return mixed
-     */
-    protected function call($commandID, array $arguments = array())
-    {
-        $response = $this->client->executeCommand(
-            $this->client->createCommand($commandID, $arguments)
-        );
-
-        if ($response instanceof ErrorResponseInterface) {
-            throw new ServerException($response->getMessage());
-        }
-
-        return $response;
-    }
-
-    /**
      * Initializes the transaction context.
      */
     protected function initialize()
@@ -187,53 +148,6 @@ class MultiExec implements ClientContextInterface
     }
 
     /**
-     * Executes WATCH against one or more keys.
-     *
-     * @param string|array $keys One or more keys.
-     *
-     * @throws NotSupportedException
-     * @throws ClientException
-     *
-     * @return mixed
-     */
-    public function watch($keys)
-    {
-        if (!$this->client->getProfile()->supportsCommand('WATCH')) {
-            throw new NotSupportedException('WATCH is not supported by the current profile.');
-        }
-
-        if ($this->state->isWatchAllowed()) {
-            throw new ClientException('Sending WATCH after MULTI is not allowed.');
-        }
-
-        $response = $this->call('WATCH', is_array($keys) ? $keys : array($keys));
-        $this->state->flag(MultiExecState::WATCH);
-
-        return $response;
-    }
-
-    /**
-     * Executes UNWATCH.
-     *
-     * @throws NotSupportedException
-     *
-     * @return MultiExec
-     */
-    public function unwatch()
-    {
-        if (!$this->client->getProfile()->supportsCommand('UNWATCH')) {
-            throw new NotSupportedException(
-                'UNWATCH is not supported by the current profile.'
-            );
-        }
-
-        $this->state->unflag(MultiExecState::WATCH);
-        $this->__call('UNWATCH', array());
-
-        return $this;
-    }
-
-    /**
      * Dynamically invokes a Redis command with the specified arguments.
      *
      * @param string $method    Command ID.
@@ -246,6 +160,29 @@ class MultiExec implements ClientContextInterface
         return $this->executeCommand(
             $this->client->createCommand($method, $arguments)
         );
+    }
+
+    /**
+     * Executes a Redis command bypassing the transaction logic.
+     *
+     * @param string $commandID Command ID.
+     * @param array  $arguments Arguments for the command.
+     *
+     * @throws ServerException
+     *
+     * @return mixed
+     */
+    protected function call($commandID, array $arguments = array())
+    {
+        $response = $this->client->executeCommand(
+            $this->client->createCommand($commandID, $arguments)
+        );
+
+        if ($response instanceof ErrorResponseInterface) {
+            throw new ServerException($response->getMessage());
+        }
+
+        return $response;
     }
 
     /**
@@ -280,18 +217,85 @@ class MultiExec implements ClientContextInterface
     }
 
     /**
-     * Helper method for protocol errors encountered inside the transaction.
+     * Executes WATCH against one or more keys.
      *
-     * @param string $message Error message.
+     * @param string|array $keys One or more keys.
+     *
+     * @throws NotSupportedException
+     * @throws ClientException
+     *
+     * @return mixed
      */
-    private function onProtocolError($message)
+    public function watch($keys)
     {
-        // Since a MULTI/EXEC block cannot be initialized when using aggregate
-        // connections we can safely assume that Predis\Client::getConnection()
-        // will return a Predis\Connection\NodeConnectionInterface instance.
-        CommunicationException::handle(new ProtocolException(
-            $this->client->getConnection(), $message
-        ));
+        if (!$this->client->getProfile()->supportsCommand('WATCH')) {
+            throw new NotSupportedException('WATCH is not supported by the current profile.');
+        }
+
+        if ($this->state->isWatchAllowed()) {
+            throw new ClientException('Sending WATCH after MULTI is not allowed.');
+        }
+
+        $response = $this->call('WATCH', is_array($keys) ? $keys : array($keys));
+        $this->state->flag(MultiExecState::WATCH);
+
+        return $response;
+    }
+
+    /**
+     * Finalizes the transaction by executing MULTI on the server.
+     *
+     * @return MultiExec
+     */
+    public function multi()
+    {
+        if ($this->state->check(MultiExecState::INITIALIZED | MultiExecState::CAS)) {
+            $this->state->unflag(MultiExecState::CAS);
+            $this->call('MULTI');
+        } else {
+            $this->initialize();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Executes UNWATCH.
+     *
+     * @throws NotSupportedException
+     *
+     * @return MultiExec
+     */
+    public function unwatch()
+    {
+        if (!$this->client->getProfile()->supportsCommand('UNWATCH')) {
+            throw new NotSupportedException(
+                'UNWATCH is not supported by the current profile.'
+            );
+        }
+
+        $this->state->unflag(MultiExecState::WATCH);
+        $this->__call('UNWATCH', array());
+
+        return $this;
+    }
+
+    /**
+     * Resets the transaction by UNWATCH-ing the keys that are being WATCHed and
+     * DISCARD-ing pending commands that have been already sent to the server.
+     *
+     * @return MultiExec
+     */
+    public function discard()
+    {
+        if ($this->state->isInitialized()) {
+            $this->call($this->state->isCAS() ? 'UNWATCH' : 'DISCARD');
+
+            $this->reset();
+            $this->state->flag(MultiExecState::DISCARDED);
+        }
+
+        return $this;
     }
 
     /**
@@ -302,6 +306,43 @@ class MultiExec implements ClientContextInterface
     public function exec()
     {
         return $this->execute();
+    }
+
+    /**
+     * Checks the state of the transaction before execution.
+     *
+     * @param mixed $callable Callback for execution.
+     *
+     * @throws \InvalidArgumentException
+     * @throws ClientException
+     */
+    private function checkBeforeExecution($callable)
+    {
+        if ($this->state->isExecuting()) {
+            throw new ClientException(
+                'Cannot invoke "execute" or "exec" inside an active transaction context.'
+            );
+        }
+
+        if ($callable) {
+            if (!is_callable($callable)) {
+                throw new \InvalidArgumentException('The argument must be a callable object.');
+            }
+
+            if (!$this->commands->isEmpty()) {
+                $this->discard();
+
+                throw new ClientException(
+                    'Cannot execute a transaction block after using fluent interface.'
+                );
+            }
+        } elseif ($this->attempts) {
+            $this->discard();
+
+            throw new ClientException(
+                'Automatic retries are supported only when a callable block is provided.'
+            );
+        }
     }
 
     /**
@@ -374,61 +415,6 @@ class MultiExec implements ClientContextInterface
     }
 
     /**
-     * Checks the state of the transaction before execution.
-     *
-     * @param mixed $callable Callback for execution.
-     *
-     * @throws \InvalidArgumentException
-     * @throws ClientException
-     */
-    private function checkBeforeExecution($callable)
-    {
-        if ($this->state->isExecuting()) {
-            throw new ClientException(
-                'Cannot invoke "execute" or "exec" inside an active transaction context.'
-            );
-        }
-
-        if ($callable) {
-            if (!is_callable($callable)) {
-                throw new \InvalidArgumentException('The argument must be a callable object.');
-            }
-
-            if (!$this->commands->isEmpty()) {
-                $this->discard();
-
-                throw new ClientException(
-                    'Cannot execute a transaction block after using fluent interface.'
-                );
-            }
-        } elseif ($this->attempts) {
-            $this->discard();
-
-            throw new ClientException(
-                'Automatic retries are supported only when a callable block is provided.'
-            );
-        }
-    }
-
-    /**
-     * Resets the transaction by UNWATCH-ing the keys that are being WATCHed and
-     * DISCARD-ing pending commands that have been already sent to the server.
-     *
-     * @return MultiExec
-     */
-    public function discard()
-    {
-        if ($this->state->isInitialized()) {
-            $this->call($this->state->isCAS() ? 'UNWATCH' : 'DISCARD');
-
-            $this->reset();
-            $this->state->flag(MultiExecState::DISCARDED);
-        }
-
-        return $this;
-    }
-
-    /**
      * Passes the current transaction object to a callable block for execution.
      *
      * @param mixed $callable Callback.
@@ -456,5 +442,20 @@ class MultiExec implements ClientContextInterface
         if ($exception) {
             throw $exception;
         }
+    }
+
+    /**
+     * Helper method for protocol errors encountered inside the transaction.
+     *
+     * @param string $message Error message.
+     */
+    private function onProtocolError($message)
+    {
+        // Since a MULTI/EXEC block cannot be initialized when using aggregate
+        // connections we can safely assume that Predis\Client::getConnection()
+        // will return a Predis\Connection\NodeConnectionInterface instance.
+        CommunicationException::handle(new ProtocolException(
+            $this->client->getConnection(), $message
+        ));
     }
 }

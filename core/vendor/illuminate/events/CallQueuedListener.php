@@ -108,18 +108,6 @@ class CallQueuedListener implements ShouldQueue
     }
 
     /**
-     * Unserialize the data if needed.
-     *
-     * @return void
-     */
-    protected function prepareData()
-    {
-        if (is_string($this->data)) {
-            $this->data = unserialize($this->data);
-        }
-    }
-
-    /**
      * Set the job instance of the given class if necessary.
      *
      * @param  \Illuminate\Contracts\Queue\Job  $job
@@ -153,6 +141,18 @@ class CallQueuedListener implements ShouldQueue
 
         if (method_exists($handler, 'failed')) {
             $handler->failed(...$parameters);
+        }
+    }
+
+    /**
+     * Unserialize the data if needed.
+     *
+     * @return void
+     */
+    protected function prepareData()
+    {
+        if (is_string($this->data)) {
+            $this->data = unserialize($this->data);
         }
     }
 

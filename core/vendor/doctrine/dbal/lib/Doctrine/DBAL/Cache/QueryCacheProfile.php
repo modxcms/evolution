@@ -45,29 +45,11 @@ class QueryCacheProfile
     }
 
     /**
-     * @return QueryCacheProfile
-     */
-    public function setResultCacheDriver(Cache $cache)
-    {
-        return new QueryCacheProfile($this->lifetime, $this->cacheKey, $cache);
-    }
-
-    /**
      * @return int
      */
     public function getLifetime()
     {
         return $this->lifetime;
-    }
-
-    /**
-     * @param int $lifetime
-     *
-     * @return QueryCacheProfile
-     */
-    public function setLifetime($lifetime)
-    {
-        return new QueryCacheProfile($lifetime, $this->cacheKey, $this->resultCacheDriver);
     }
 
     /**
@@ -82,16 +64,6 @@ class QueryCacheProfile
         }
 
         return $this->cacheKey;
-    }
-
-    /**
-     * @param string|null $cacheKey
-     *
-     * @return QueryCacheProfile
-     */
-    public function setCacheKey($cacheKey)
-    {
-        return new QueryCacheProfile($this->lifetime, $cacheKey, $this->resultCacheDriver);
     }
 
     /**
@@ -119,5 +91,33 @@ class QueryCacheProfile
         }
 
         return [$cacheKey, $realCacheKey];
+    }
+
+    /**
+     * @return QueryCacheProfile
+     */
+    public function setResultCacheDriver(Cache $cache)
+    {
+        return new QueryCacheProfile($this->lifetime, $this->cacheKey, $cache);
+    }
+
+    /**
+     * @param string|null $cacheKey
+     *
+     * @return QueryCacheProfile
+     */
+    public function setCacheKey($cacheKey)
+    {
+        return new QueryCacheProfile($this->lifetime, $cacheKey, $this->resultCacheDriver);
+    }
+
+    /**
+     * @param int $lifetime
+     *
+     * @return QueryCacheProfile
+     */
+    public function setLifetime($lifetime)
+    {
+        return new QueryCacheProfile($lifetime, $this->cacheKey, $this->resultCacheDriver);
     }
 }

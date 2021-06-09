@@ -144,6 +144,11 @@ class NativeMailerHandler extends MailHandler
         return $this->contentType;
     }
 
+    public function getEncoding(): string
+    {
+        return $this->encoding;
+    }
+
     /**
      * @param string $contentType The content type of the email - Defaults to text/plain. Use text/html for HTML messages.
      */
@@ -156,11 +161,6 @@ class NativeMailerHandler extends MailHandler
         $this->contentType = $contentType;
 
         return $this;
-    }
-
-    public function getEncoding(): string
-    {
-        return $this->encoding;
     }
 
     public function setEncoding(string $encoding): self

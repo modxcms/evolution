@@ -253,54 +253,91 @@ class PoolBuilder
         return $pool;
     }
 
-    private function warnAboutNonMatchingUpdateAllowList(Request $request)
+    private function markPackageNameForLoading(Request $request, $name, ConstraintInterface $constraint)
     {
-        foreach ($this->updateAllowList as $pattern => $void) {
-            $patternRegexp = BasePackage::packageNameToRegexp($pattern);
-            // update pattern matches a locked package? => all good
-            foreach ($request->getLockedRepository()->getPackages() as $package) {
-                if (preg_match($patternRegexp, $package->getName())) {
-                    continue 2;
-                }
-            }
-            // update pattern matches a root require? => all good, probably a new package
-            foreach ($request->getRequires() as $packageName => $constraint) {
-                if (preg_match($patternRegexp, $packageName)) {
-                    continue 2;
-                }
-            }
-            if (strpos($pattern, '*') !== false) {
-                $this->io->writeError('<warning>Pattern "' . $pattern . '" listed for update does not match any locked packages.</warning>');
-            } else {
-                $this->io->writeError('<warning>Package "' . $pattern . '" listed for update is not locked.</warning>');
-            }
+        // Skip platform requires at this stage
+        if (PlatformRepository::isPlatformPackage($name)) {
+            return;
         }
+
+        // Root require (which was not unlocked) already loaded the maximum range so no
+        // need to check anything here
+        if (isset($this->maxExtendedReqs[$name])) {
+            return;
+        }
+
+        // Root requires can not be overruled by dependencies so there is no point in
+        // extending the loaded constraint for those.
+        // This is triggered when loading a root require which was locked but got unlocked, then
+        // we make sure that we load at most the intervals covered by the root constraint.
+        $rootRequires = $request->getRequires();
+        if (isset($rootRequires[$name]) && !Intervals::isSubsetOf($constraint, $rootRequires[$name])) {
+            $constraint = $rootRequires[$name];
+        }
+
+        // Not yet loaded or already marked for a reload, set the constraint to be loaded
+        if (!isset($this->loadedPackages[$name])) {
+            // Maybe it was already marked before but not loaded yet. In that case
+            // we have to extend the constraint (we don't check if they are identical because
+            // MultiConstraint::create() will optimize anyway)
+            if (isset($this->packagesToLoad[$name])) {
+                // Already marked for loading and this does not expand the constraint to be loaded, nothing to do
+                if (Intervals::isSubsetOf($constraint, $this->packagesToLoad[$name])) {
+                    return;
+                }
+
+                // extend the constraint to be loaded
+                $constraint = Intervals::compactConstraint(MultiConstraint::create(array($this->packagesToLoad[$name], $constraint), false));
+            }
+
+            $this->packagesToLoad[$name] = $constraint;
+
+            return;
+        }
+
+        // No need to load this package with this constraint because it is
+        // a subset of the constraint with which we have already loaded packages
+        if (Intervals::isSubsetOf($constraint, $this->loadedPackages[$name])) {
+            return;
+        }
+
+        // We have already loaded that package but not in the constraint that's
+        // required. We extend the constraint and mark that package as not being loaded
+        // yet so we get the required package versions
+        $this->packagesToLoad[$name] = Intervals::compactConstraint(MultiConstraint::create(array($this->loadedPackages[$name], $constraint), false));
+        unset($this->loadedPackages[$name]);
     }
 
-    /**
-     * Checks whether the update allow list allows this package in the lock file to be updated
-     * @return bool
-     */
-    private function isUpdateAllowed(PackageInterface $package)
+    private function loadPackagesMarkedForLoading(Request $request, $repositories)
     {
-        // Path repo packages are never loaded from lock, to force them to always remain in sync
-        // unless symlinking is disabled in which case we probably should rather treat them like
-        // regular packages
-        if ($package->getDistType() === 'path') {
-            $transportOptions = $package->getTransportOptions();
-            if (!isset($transportOptions['symlink']) || $transportOptions['symlink'] !== false) {
-                return true;
-            }
+        foreach ($this->packagesToLoad as $name => $constraint) {
+            $this->loadedPackages[$name] = $constraint;
         }
 
-        foreach ($this->updateAllowList as $pattern => $void) {
-            $patternRegexp = BasePackage::packageNameToRegexp($pattern);
-            if (preg_match($patternRegexp, $package->getName())) {
-                return true;
+        $packageBatch = $this->packagesToLoad;
+        $this->packagesToLoad = array();
+
+        foreach ($repositories as $repoIndex => $repository) {
+            if (empty($packageBatch)) {
+                break;
+            }
+
+            // these repos have their packages fixed or locked if they need to be loaded so we
+            // never need to load anything else from them
+            if ($repository instanceof PlatformRepository || $repository === $request->getLockedRepository()) {
+                continue;
+            }
+            $result = $repository->loadPackages($packageBatch, $this->acceptableStabilities, $this->stabilityFlags, isset($this->loadedPerRepo[$repoIndex]) ? $this->loadedPerRepo[$repoIndex] : array());
+
+            foreach ($result['namesFound'] as $name) {
+                // avoid loading the same package again from other repositories once it has been found
+                unset($packageBatch[$name]);
+            }
+            foreach ($result['packages'] as $package) {
+                $this->loadedPerRepo[$repoIndex][$package->getName()][$package->getVersion()] = $package;
+                $this->loadPackage($request, $package);
             }
         }
-
-        return false;
     }
 
     private function loadPackage(Request $request, PackageInterface $package, $propagateUpdate = true)
@@ -399,6 +436,56 @@ class PoolBuilder
     }
 
     /**
+     * Checks whether the update allow list allows this package in the lock file to be updated
+     * @return bool
+     */
+    private function isUpdateAllowed(PackageInterface $package)
+    {
+        // Path repo packages are never loaded from lock, to force them to always remain in sync
+        // unless symlinking is disabled in which case we probably should rather treat them like
+        // regular packages
+        if ($package->getDistType() === 'path') {
+            $transportOptions = $package->getTransportOptions();
+            if (!isset($transportOptions['symlink']) || $transportOptions['symlink'] !== false) {
+                return true;
+            }
+        }
+
+        foreach ($this->updateAllowList as $pattern => $void) {
+            $patternRegexp = BasePackage::packageNameToRegexp($pattern);
+            if (preg_match($patternRegexp, $package->getName())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function warnAboutNonMatchingUpdateAllowList(Request $request)
+    {
+        foreach ($this->updateAllowList as $pattern => $void) {
+            $patternRegexp = BasePackage::packageNameToRegexp($pattern);
+            // update pattern matches a locked package? => all good
+            foreach ($request->getLockedRepository()->getPackages() as $package) {
+                if (preg_match($patternRegexp, $package->getName())) {
+                    continue 2;
+                }
+            }
+            // update pattern matches a root require? => all good, probably a new package
+            foreach ($request->getRequires() as $packageName => $constraint) {
+                if (preg_match($patternRegexp, $packageName)) {
+                    continue 2;
+                }
+            }
+            if (strpos($pattern, '*') !== false) {
+                $this->io->writeError('<warning>Pattern "' . $pattern . '" listed for update does not match any locked packages.</warning>');
+            } else {
+                $this->io->writeError('<warning>Package "' . $pattern . '" listed for update is not locked.</warning>');
+            }
+        }
+    }
+
+    /**
      * Reverts the decision to use a locked package if a partial update with transitive dependencies
      * found that this package actually needs to be updated
      */
@@ -448,93 +535,6 @@ class PoolBuilder
                 unset($this->packages[$aliasIndex]);
             }
             unset($this->aliasMap[spl_object_hash($package)]);
-        }
-    }
-
-    private function markPackageNameForLoading(Request $request, $name, ConstraintInterface $constraint)
-    {
-        // Skip platform requires at this stage
-        if (PlatformRepository::isPlatformPackage($name)) {
-            return;
-        }
-
-        // Root require (which was not unlocked) already loaded the maximum range so no
-        // need to check anything here
-        if (isset($this->maxExtendedReqs[$name])) {
-            return;
-        }
-
-        // Root requires can not be overruled by dependencies so there is no point in
-        // extending the loaded constraint for those.
-        // This is triggered when loading a root require which was locked but got unlocked, then
-        // we make sure that we load at most the intervals covered by the root constraint.
-        $rootRequires = $request->getRequires();
-        if (isset($rootRequires[$name]) && !Intervals::isSubsetOf($constraint, $rootRequires[$name])) {
-            $constraint = $rootRequires[$name];
-        }
-
-        // Not yet loaded or already marked for a reload, set the constraint to be loaded
-        if (!isset($this->loadedPackages[$name])) {
-            // Maybe it was already marked before but not loaded yet. In that case
-            // we have to extend the constraint (we don't check if they are identical because
-            // MultiConstraint::create() will optimize anyway)
-            if (isset($this->packagesToLoad[$name])) {
-                // Already marked for loading and this does not expand the constraint to be loaded, nothing to do
-                if (Intervals::isSubsetOf($constraint, $this->packagesToLoad[$name])) {
-                    return;
-                }
-
-                // extend the constraint to be loaded
-                $constraint = Intervals::compactConstraint(MultiConstraint::create(array($this->packagesToLoad[$name], $constraint), false));
-            }
-
-            $this->packagesToLoad[$name] = $constraint;
-
-            return;
-        }
-
-        // No need to load this package with this constraint because it is
-        // a subset of the constraint with which we have already loaded packages
-        if (Intervals::isSubsetOf($constraint, $this->loadedPackages[$name])) {
-            return;
-        }
-
-        // We have already loaded that package but not in the constraint that's
-        // required. We extend the constraint and mark that package as not being loaded
-        // yet so we get the required package versions
-        $this->packagesToLoad[$name] = Intervals::compactConstraint(MultiConstraint::create(array($this->loadedPackages[$name], $constraint), false));
-        unset($this->loadedPackages[$name]);
-    }
-
-    private function loadPackagesMarkedForLoading(Request $request, $repositories)
-    {
-        foreach ($this->packagesToLoad as $name => $constraint) {
-            $this->loadedPackages[$name] = $constraint;
-        }
-
-        $packageBatch = $this->packagesToLoad;
-        $this->packagesToLoad = array();
-
-        foreach ($repositories as $repoIndex => $repository) {
-            if (empty($packageBatch)) {
-                break;
-            }
-
-            // these repos have their packages fixed or locked if they need to be loaded so we
-            // never need to load anything else from them
-            if ($repository instanceof PlatformRepository || $repository === $request->getLockedRepository()) {
-                continue;
-            }
-            $result = $repository->loadPackages($packageBatch, $this->acceptableStabilities, $this->stabilityFlags, isset($this->loadedPerRepo[$repoIndex]) ? $this->loadedPerRepo[$repoIndex] : array());
-
-            foreach ($result['namesFound'] as $name) {
-                // avoid loading the same package again from other repositories once it has been found
-                unset($packageBatch[$name]);
-            }
-            foreach ($result['packages'] as $package) {
-                $this->loadedPerRepo[$repoIndex][$package->getName()][$package->getVersion()] = $package;
-                $this->loadPackage($request, $package);
-            }
         }
     }
 }

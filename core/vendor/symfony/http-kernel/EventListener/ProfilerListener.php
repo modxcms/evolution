@@ -53,15 +53,6 @@ class ProfilerListener implements EventSubscriberInterface
         $this->requestStack = $requestStack;
     }
 
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            KernelEvents::RESPONSE => ['onKernelResponse', -100],
-            KernelEvents::EXCEPTION => ['onKernelException', 0],
-            KernelEvents::TERMINATE => ['onKernelTerminate', -1024],
-        ];
-    }
-
     /**
      * Handles the onKernelException event.
      */
@@ -122,5 +113,14 @@ class ProfilerListener implements EventSubscriberInterface
 
         $this->profiles = new \SplObjectStorage();
         $this->parents = new \SplObjectStorage();
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            KernelEvents::RESPONSE => ['onKernelResponse', -100],
+            KernelEvents::EXCEPTION => ['onKernelException', 0],
+            KernelEvents::TERMINATE => ['onKernelTerminate', -1024],
+        ];
     }
 }

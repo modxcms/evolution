@@ -167,6 +167,41 @@ class SentinelReplication implements ReplicationInterface
     }
 
     /**
+     * Resets the current connection.
+     */
+    protected function reset()
+    {
+        $this->current = null;
+    }
+
+    /**
+     * Wipes the current list of master and slaves nodes.
+     */
+    protected function wipeServerList()
+    {
+        $this->reset();
+
+        $this->master = null;
+        $this->slaves = array();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function add(NodeConnectionInterface $connection)
+    {
+        $alias = $connection->getParameters()->alias;
+
+        if ($alias === 'master') {
+            $this->master = $connection;
+        } else {
+            $this->slaves[$alias ?: count($this->slaves)] = $connection;
+        }
+
+        $this->reset();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function remove(NodeConnectionInterface $connection)
@@ -186,81 +221,6 @@ class SentinelReplication implements ReplicationInterface
         }
 
         return false;
-    }
-
-    /**
-     * Fetches the details for the master and slave servers from a sentinel.
-     */
-    public function querySentinel()
-    {
-        $this->wipeServerList();
-
-        $this->updateSentinels();
-        $this->getMaster();
-        $this->getSlaves();
-    }
-
-    /**
-     * Wipes the current list of master and slaves nodes.
-     */
-    protected function wipeServerList()
-    {
-        $this->reset();
-
-        $this->master = null;
-        $this->slaves = array();
-    }
-
-    /**
-     * Fetches an updated list of sentinels from a sentinel.
-     */
-    public function updateSentinels()
-    {
-        SENTINEL_QUERY: {
-            $sentinel = $this->getSentinelConnection();
-
-            try {
-                $payload = $sentinel->executeCommand(
-                    RawCommand::create('SENTINEL', 'sentinels', $this->service)
-                );
-
-                $this->sentinels = array();
-                // NOTE: sentinel server does not return itself, so we add it back.
-                $this->sentinels[] = $sentinel->getParameters()->toArray();
-
-                foreach ($payload as $sentinel) {
-                    $this->sentinels[] = array(
-                        'host' => $sentinel[3],
-                        'port' => $sentinel[5],
-                    );
-                }
-            } catch (ConnectionException $exception) {
-                $this->sentinelConnection = null;
-
-                goto SENTINEL_QUERY;
-            }
-        }
-    }
-
-    /**
-     * Returns the current sentinel connection.
-     *
-     * If there is no active sentinel connection, a new connection is created.
-     *
-     * @return NodeConnectionInterface
-     */
-    public function getSentinelConnection()
-    {
-        if (!$this->sentinelConnection) {
-            if (!$this->sentinels) {
-                throw new \Predis\ClientException('No sentinel server available for autodiscovery.');
-            }
-
-            $sentinel = array_shift($this->sentinels);
-            $this->sentinelConnection = $this->createSentinelConnection($sentinel);
-        }
-
-        return $this->sentinelConnection;
     }
 
     /**
@@ -300,34 +260,82 @@ class SentinelReplication implements ReplicationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the current sentinel connection.
+     *
+     * If there is no active sentinel connection, a new connection is created.
+     *
+     * @return NodeConnectionInterface
      */
-    public function getMaster()
+    public function getSentinelConnection()
     {
-        if ($this->master) {
-            return $this->master;
+        if (!$this->sentinelConnection) {
+            if (!$this->sentinels) {
+                throw new \Predis\ClientException('No sentinel server available for autodiscovery.');
+            }
+
+            $sentinel = array_shift($this->sentinels);
+            $this->sentinelConnection = $this->createSentinelConnection($sentinel);
         }
 
-        if ($this->updateSentinels) {
-            $this->updateSentinels();
-        }
+        return $this->sentinelConnection;
+    }
 
+    /**
+     * Fetches an updated list of sentinels from a sentinel.
+     */
+    public function updateSentinels()
+    {
         SENTINEL_QUERY: {
             $sentinel = $this->getSentinelConnection();
 
             try {
-                $masterParameters = $this->querySentinelForMaster($sentinel, $this->service);
-                $masterConnection = $this->connectionFactory->create($masterParameters);
+                $payload = $sentinel->executeCommand(
+                    RawCommand::create('SENTINEL', 'sentinels', $this->service)
+                );
 
-                $this->add($masterConnection);
+                $this->sentinels = array();
+                // NOTE: sentinel server does not return itself, so we add it back.
+                $this->sentinels[] = $sentinel->getParameters()->toArray();
+
+                foreach ($payload as $sentinel) {
+                    $this->sentinels[] = array(
+                        'host' => $sentinel[3],
+                        'port' => $sentinel[5],
+                    );
+                }
             } catch (ConnectionException $exception) {
                 $this->sentinelConnection = null;
 
                 goto SENTINEL_QUERY;
             }
         }
+    }
 
-        return $masterConnection;
+    /**
+     * Fetches the details for the master and slave servers from a sentinel.
+     */
+    public function querySentinel()
+    {
+        $this->wipeServerList();
+
+        $this->updateSentinels();
+        $this->getMaster();
+        $this->getSlaves();
+    }
+
+    /**
+     * Handles error responses returned by redis-sentinel.
+     *
+     * @param NodeConnectionInterface $sentinel Connection to a sentinel server.
+     * @param ErrorResponseInterface  $error    Error response.
+     */
+    private function handleSentinelErrorResponse(NodeConnectionInterface $sentinel, ErrorResponseInterface $error)
+    {
+        if ($error->getErrorType() === 'IDONTKNOW') {
+            throw new ConnectionException($sentinel, $error->getMessage());
+        } else {
+            throw new ServerException($error->getMessage());
+        }
     }
 
     /**
@@ -357,77 +365,6 @@ class SentinelReplication implements ReplicationInterface
             'port' => $payload[1],
             'alias' => 'master',
         );
-    }
-
-    /**
-     * Handles error responses returned by redis-sentinel.
-     *
-     * @param NodeConnectionInterface $sentinel Connection to a sentinel server.
-     * @param ErrorResponseInterface  $error    Error response.
-     */
-    private function handleSentinelErrorResponse(NodeConnectionInterface $sentinel, ErrorResponseInterface $error)
-    {
-        if ($error->getErrorType() === 'IDONTKNOW') {
-            throw new ConnectionException($sentinel, $error->getMessage());
-        } else {
-            throw new ServerException($error->getMessage());
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function add(NodeConnectionInterface $connection)
-    {
-        $alias = $connection->getParameters()->alias;
-
-        if ($alias === 'master') {
-            $this->master = $connection;
-        } else {
-            $this->slaves[$alias ?: count($this->slaves)] = $connection;
-        }
-
-        $this->reset();
-    }
-
-    /**
-     * Resets the current connection.
-     */
-    protected function reset()
-    {
-        $this->current = null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSlaves()
-    {
-        if ($this->slaves) {
-            return array_values($this->slaves);
-        }
-
-        if ($this->updateSentinels) {
-            $this->updateSentinels();
-        }
-
-        SENTINEL_QUERY: {
-            $sentinel = $this->getSentinelConnection();
-
-            try {
-                $slavesParameters = $this->querySentinelForSlaves($sentinel, $this->service);
-
-                foreach ($slavesParameters as $slaveParameters) {
-                    $this->add($this->connectionFactory->create($slaveParameters));
-                }
-            } catch (ConnectionException $exception) {
-                $this->sentinelConnection = null;
-
-                goto SENTINEL_QUERY;
-            }
-        }
-
-        return array_values($this->slaves ?: array());
     }
 
     /**
@@ -476,62 +413,66 @@ class SentinelReplication implements ReplicationInterface
     }
 
     /**
-     * Switches to the master server.
+     * {@inheritdoc}
      */
-    public function switchToMaster()
+    public function getMaster()
     {
-        $this->switchTo('master');
+        if ($this->master) {
+            return $this->master;
+        }
+
+        if ($this->updateSentinels) {
+            $this->updateSentinels();
+        }
+
+        SENTINEL_QUERY: {
+            $sentinel = $this->getSentinelConnection();
+
+            try {
+                $masterParameters = $this->querySentinelForMaster($sentinel, $this->service);
+                $masterConnection = $this->connectionFactory->create($masterParameters);
+
+                $this->add($masterConnection);
+            } catch (ConnectionException $exception) {
+                $this->sentinelConnection = null;
+
+                goto SENTINEL_QUERY;
+            }
+        }
+
+        return $masterConnection;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function switchTo($connection)
+    public function getSlaves()
     {
-        if (!$connection instanceof NodeConnectionInterface) {
-            $connection = $this->getConnectionById($connection);
+        if ($this->slaves) {
+            return array_values($this->slaves);
         }
 
-        if ($connection && $connection === $this->current) {
-            return;
+        if ($this->updateSentinels) {
+            $this->updateSentinels();
         }
 
-        if ($connection !== $this->master && !in_array($connection, $this->slaves, true)) {
-            throw new \InvalidArgumentException('Invalid connection or connection not found.');
+        SENTINEL_QUERY: {
+            $sentinel = $this->getSentinelConnection();
+
+            try {
+                $slavesParameters = $this->querySentinelForSlaves($sentinel, $this->service);
+
+                foreach ($slavesParameters as $slaveParameters) {
+                    $this->add($this->connectionFactory->create($slaveParameters));
+                }
+            } catch (ConnectionException $exception) {
+                $this->sentinelConnection = null;
+
+                goto SENTINEL_QUERY;
+            }
         }
 
-        $connection->connect();
-
-        if ($this->current) {
-            $this->current->disconnect();
-        }
-
-        $this->current = $connection;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getConnectionById($connectionId)
-    {
-        if ($connectionId === 'master') {
-            return $this->getMaster();
-        }
-
-        $this->getSlaves();
-
-        if (isset($this->slaves[$connectionId])) {
-            return $this->slaves[$connectionId];
-        }
-    }
-
-    /**
-     * Switches to a random slave server.
-     */
-    public function switchToSlave()
-    {
-        $connection = $this->pickSlave();
-        $this->switchTo($connection);
+        return array_values($this->slaves ?: array());
     }
 
     /**
@@ -544,101 +485,6 @@ class SentinelReplication implements ReplicationInterface
         if ($slaves = $this->getSlaves()) {
             return $slaves[rand(1, count($slaves)) - 1];
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isConnected()
-    {
-        return $this->current ? $this->current->isConnected() : false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function connect()
-    {
-        if (!$this->current) {
-            if (!$this->current = $this->pickSlave()) {
-                $this->current = $this->getMaster();
-            }
-        }
-
-        $this->current->connect();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function disconnect()
-    {
-        if ($this->master) {
-            $this->master->disconnect();
-        }
-
-        foreach ($this->slaves as $connection) {
-            $connection->disconnect();
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function writeRequest(CommandInterface $command)
-    {
-        $this->retryCommandOnFailure($command, __FUNCTION__);
-    }
-
-    /**
-     * Retries the execution of a command upon server failure after asking a new
-     * configuration to one of the sentinels.
-     *
-     * @param CommandInterface $command Command instance.
-     * @param string           $method  Actual method.
-     *
-     * @return mixed
-     */
-    private function retryCommandOnFailure(CommandInterface $command, $method)
-    {
-        $retries = 0;
-
-        SENTINEL_RETRY: {
-            try {
-                $response = $this->getConnection($command)->$method($command);
-            } catch (CommunicationException $exception) {
-                $this->wipeServerList();
-                $exception->getConnection()->disconnect();
-
-                if ($retries == $this->retryLimit) {
-                    throw $exception;
-                }
-
-                usleep($this->retryWait * 1000);
-
-                ++$retries;
-                goto SENTINEL_RETRY;
-            }
-        }
-
-        return $response;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getConnection(CommandInterface $command)
-    {
-        $connection = $this->getConnectionInternal($command);
-
-        if (!$connection->isConnected()) {
-            // When we do not have any available slave in the pool we can expect
-            // read-only operations to hit the master server.
-            $expectedRole = $this->strategy->isReadOperation($command) && $this->slaves ? 'slave' : 'master';
-            $this->assertConnectionRole($connection, $expectedRole);
-        }
-
-        return $connection;
     }
 
     /**
@@ -687,6 +533,160 @@ class SentinelReplication implements ReplicationInterface
         if ($role !== $actualRole[0]) {
             throw new RoleException($connection, "Expected $role but got $actualRole[0] [$connection]");
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getConnection(CommandInterface $command)
+    {
+        $connection = $this->getConnectionInternal($command);
+
+        if (!$connection->isConnected()) {
+            // When we do not have any available slave in the pool we can expect
+            // read-only operations to hit the master server.
+            $expectedRole = $this->strategy->isReadOperation($command) && $this->slaves ? 'slave' : 'master';
+            $this->assertConnectionRole($connection, $expectedRole);
+        }
+
+        return $connection;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getConnectionById($connectionId)
+    {
+        if ($connectionId === 'master') {
+            return $this->getMaster();
+        }
+
+        $this->getSlaves();
+
+        if (isset($this->slaves[$connectionId])) {
+            return $this->slaves[$connectionId];
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function switchTo($connection)
+    {
+        if (!$connection instanceof NodeConnectionInterface) {
+            $connection = $this->getConnectionById($connection);
+        }
+
+        if ($connection && $connection === $this->current) {
+            return;
+        }
+
+        if ($connection !== $this->master && !in_array($connection, $this->slaves, true)) {
+            throw new \InvalidArgumentException('Invalid connection or connection not found.');
+        }
+
+        $connection->connect();
+
+        if ($this->current) {
+            $this->current->disconnect();
+        }
+
+        $this->current = $connection;
+    }
+
+    /**
+     * Switches to the master server.
+     */
+    public function switchToMaster()
+    {
+        $this->switchTo('master');
+    }
+
+    /**
+     * Switches to a random slave server.
+     */
+    public function switchToSlave()
+    {
+        $connection = $this->pickSlave();
+        $this->switchTo($connection);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isConnected()
+    {
+        return $this->current ? $this->current->isConnected() : false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function connect()
+    {
+        if (!$this->current) {
+            if (!$this->current = $this->pickSlave()) {
+                $this->current = $this->getMaster();
+            }
+        }
+
+        $this->current->connect();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function disconnect()
+    {
+        if ($this->master) {
+            $this->master->disconnect();
+        }
+
+        foreach ($this->slaves as $connection) {
+            $connection->disconnect();
+        }
+    }
+
+    /**
+     * Retries the execution of a command upon server failure after asking a new
+     * configuration to one of the sentinels.
+     *
+     * @param CommandInterface $command Command instance.
+     * @param string           $method  Actual method.
+     *
+     * @return mixed
+     */
+    private function retryCommandOnFailure(CommandInterface $command, $method)
+    {
+        $retries = 0;
+
+        SENTINEL_RETRY: {
+            try {
+                $response = $this->getConnection($command)->$method($command);
+            } catch (CommunicationException $exception) {
+                $this->wipeServerList();
+                $exception->getConnection()->disconnect();
+
+                if ($retries == $this->retryLimit) {
+                    throw $exception;
+                }
+
+                usleep($this->retryWait * 1000);
+
+                ++$retries;
+                goto SENTINEL_RETRY;
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function writeRequest(CommandInterface $command)
+    {
+        $this->retryCommandOnFailure($command, __FUNCTION__);
     }
 
     /**

@@ -26,6 +26,13 @@ abstract class TrustHosts
     }
 
     /**
+     * Get the host patterns that should be trusted.
+     *
+     * @return array
+     */
+    abstract public function hosts();
+
+    /**
      * Handle the incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -51,13 +58,6 @@ abstract class TrustHosts
         return config('app.env') !== 'local' &&
                ! $this->app->runningUnitTests();
     }
-
-    /**
-     * Get the host patterns that should be trusted.
-     *
-     * @return array
-     */
-    abstract public function hosts();
 
     /**
      * Get a regular expression matching the application URL and all of its subdomains.

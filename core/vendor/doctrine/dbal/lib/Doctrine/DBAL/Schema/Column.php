@@ -95,27 +95,6 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @param string $name
-     * @param mixed  $value
-     *
-     * @return Column
-     */
-    public function setPlatformOption($name, $value)
-    {
-        $this->_platformOptions[$name] = $value;
-
-        return $this;
-    }
-
-    /**
-     * @return Type
-     */
-    public function getType()
-    {
-        return $this->_type;
-    }
-
-    /**
      * @return Column
      */
     public function setType(Type $type)
@@ -123,14 +102,6 @@ class Column extends AbstractAsset
         $this->_type = $type;
 
         return $this;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getLength()
-    {
-        return $this->_length;
     }
 
     /**
@@ -150,14 +121,6 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @return int
-     */
-    public function getPrecision()
-    {
-        return $this->_precision;
-    }
-
-    /**
      * @param int $precision
      *
      * @return Column
@@ -171,14 +134,6 @@ class Column extends AbstractAsset
         $this->_precision = (int) $precision;
 
         return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getScale()
-    {
-        return $this->_scale;
     }
 
     /**
@@ -198,14 +153,6 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @return bool
-     */
-    public function getUnsigned()
-    {
-        return $this->_unsigned;
-    }
-
-    /**
      * @param bool $unsigned
      *
      * @return Column
@@ -215,14 +162,6 @@ class Column extends AbstractAsset
         $this->_unsigned = (bool) $unsigned;
 
         return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getFixed()
-    {
-        return $this->_fixed;
     }
 
     /**
@@ -238,14 +177,6 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @return bool
-     */
-    public function getNotnull()
-    {
-        return $this->_notnull;
-    }
-
-    /**
      * @param bool $notnull
      *
      * @return Column
@@ -255,14 +186,6 @@ class Column extends AbstractAsset
         $this->_notnull = (bool) $notnull;
 
         return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getDefault()
-    {
-        return $this->_default;
     }
 
     /**
@@ -278,14 +201,6 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @return mixed[]
-     */
-    public function getPlatformOptions()
-    {
-        return $this->_platformOptions;
-    }
-
-    /**
      * @param mixed[] $platformOptions
      *
      * @return Column
@@ -295,6 +210,103 @@ class Column extends AbstractAsset
         $this->_platformOptions = $platformOptions;
 
         return $this;
+    }
+
+    /**
+     * @param string $name
+     * @param mixed  $value
+     *
+     * @return Column
+     */
+    public function setPlatformOption($name, $value)
+    {
+        $this->_platformOptions[$name] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return Column
+     */
+    public function setColumnDefinition($value)
+    {
+        $this->_columnDefinition = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return Type
+     */
+    public function getType()
+    {
+        return $this->_type;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getLength()
+    {
+        return $this->_length;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPrecision()
+    {
+        return $this->_precision;
+    }
+
+    /**
+     * @return int
+     */
+    public function getScale()
+    {
+        return $this->_scale;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getUnsigned()
+    {
+        return $this->_unsigned;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getFixed()
+    {
+        return $this->_fixed;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getNotnull()
+    {
+        return $this->_notnull;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDefault()
+    {
+        return $this->_default;
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function getPlatformOptions()
+    {
+        return $this->_platformOptions;
     }
 
     /**
@@ -326,18 +338,6 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @param string $value
-     *
-     * @return Column
-     */
-    public function setColumnDefinition($value)
-    {
-        $this->_columnDefinition = $value;
-
-        return $this;
-    }
-
-    /**
      * @return bool
      */
     public function getAutoincrement()
@@ -358,14 +358,6 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @return string|null
-     */
-    public function getComment()
-    {
-        return $this->_comment;
-    }
-
-    /**
      * @param string|null $comment
      *
      * @return Column
@@ -375,6 +367,14 @@ class Column extends AbstractAsset
         $this->_comment = $comment;
 
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getComment()
+    {
+        return $this->_comment;
     }
 
     /**
@@ -411,14 +411,6 @@ class Column extends AbstractAsset
     }
 
     /**
-     * @return mixed[]
-     */
-    public function getCustomSchemaOptions()
-    {
-        return $this->_customSchemaOptions;
-    }
-
-    /**
      * @param mixed[] $customSchemaOptions
      *
      * @return Column
@@ -428,6 +420,14 @@ class Column extends AbstractAsset
         $this->_customSchemaOptions = $customSchemaOptions;
 
         return $this;
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function getCustomSchemaOptions()
+    {
+        return $this->_customSchemaOptions;
     }
 
     /**

@@ -110,52 +110,6 @@ class JsonFile
     }
 
     /**
-     * Parses json string and returns hash.
-     *
-     * @param string $json json string
-     * @param string $file the json file
-     *
-     * @throws ParsingException
-     * @return mixed
-     */
-    public static function parseJson($json, $file = null)
-    {
-        if (null === $json) {
-            return;
-        }
-        $data = json_decode($json, true);
-        if (null === $data && JSON_ERROR_NONE !== json_last_error()) {
-            self::validateSyntax($json, $file);
-        }
-
-        return $data;
-    }
-
-    /**
-     * Validates the syntax of a JSON string
-     *
-     * @param  string                    $json
-     * @param  string                    $file
-     * @throws \UnexpectedValueException
-     * @throws ParsingException
-     * @return bool                      true on success
-     */
-    protected static function validateSyntax($json, $file = null)
-    {
-        $parser = new JsonParser();
-        $result = $parser->lint($json);
-        if (null === $result) {
-            if (defined('JSON_ERROR_UTF8') && JSON_ERROR_UTF8 === json_last_error()) {
-                throw new \UnexpectedValueException('"'.$file.'" is not UTF-8, could not parse as JSON');
-            }
-
-            return true;
-        }
-
-        throw new ParsingException('"'.$file.'" does not contain valid JSON'."\n".$result->getMessage(), $result->getDetails());
-    }
-
-    /**
      * Writes json file.
      *
      * @param  array                                $hash    writes hash into json file
@@ -198,6 +152,72 @@ class JsonFile
                 throw $e;
             }
         }
+    }
+
+    /**
+     * modify file properties only if content modified
+     */
+    private function filePutContentsIfModified($path, $content)
+    {
+        $currentContent = @file_get_contents($path);
+        if (!$currentContent || ($currentContent != $content)) {
+            return file_put_contents($path, $content);
+        }
+
+        return 0;
+    }
+
+    /**
+     * Validates the schema of the current json file according to composer-schema.json rules
+     *
+     * @param  int                     $schema     a JsonFile::*_SCHEMA constant
+     * @param  string|null             $schemaFile a path to the schema file
+     * @throws JsonValidationException
+     * @throws ParsingException
+     * @return bool                    true on success
+     */
+    public function validateSchema($schema = self::STRICT_SCHEMA, $schemaFile = null)
+    {
+        $content = file_get_contents($this->path);
+        $data = json_decode($content);
+
+        if (null === $data && 'null' !== $content) {
+            self::validateSyntax($content, $this->path);
+        }
+
+        $isComposerSchemaFile = false;
+        if (null === $schemaFile) {
+            $isComposerSchemaFile = true;
+            $schemaFile = __DIR__ . self::COMPOSER_SCHEMA_PATH;
+        }
+
+        // Prepend with file:// only when not using a special schema already (e.g. in the phar)
+        if (false === strpos($schemaFile, '://')) {
+            $schemaFile = 'file://' . $schemaFile;
+        }
+
+        $schemaData = (object) array('$ref' => $schemaFile);
+
+        if ($schema === self::LAX_SCHEMA) {
+            $schemaData->additionalProperties = true;
+            $schemaData->required = array();
+        } elseif ($schema === self::STRICT_SCHEMA && $isComposerSchemaFile) {
+            $schemaData->additionalProperties = false;
+            $schemaData->required = array('name', 'description');
+        }
+
+        $validator = new Validator();
+        $validator->check($data, $schemaData);
+
+        if (!$validator->isValid()) {
+            $errors = array();
+            foreach ((array) $validator->getErrors() as $error) {
+                $errors[] = ($error['property'] ? $error['property'].' : ' : '').$error['message'];
+            }
+            throw new JsonValidationException('"'.$this->path.'" does not match the expected JSON schema', $errors);
+        }
+
+        return true;
     }
 
     /**
@@ -269,65 +289,48 @@ class JsonFile
     }
 
     /**
-     * modify file properties only if content modified
+     * Parses json string and returns hash.
+     *
+     * @param string $json json string
+     * @param string $file the json file
+     *
+     * @throws ParsingException
+     * @return mixed
      */
-    private function filePutContentsIfModified($path, $content)
+    public static function parseJson($json, $file = null)
     {
-        $currentContent = @file_get_contents($path);
-        if (!$currentContent || ($currentContent != $content)) {
-            return file_put_contents($path, $content);
+        if (null === $json) {
+            return;
+        }
+        $data = json_decode($json, true);
+        if (null === $data && JSON_ERROR_NONE !== json_last_error()) {
+            self::validateSyntax($json, $file);
         }
 
-        return 0;
+        return $data;
     }
 
     /**
-     * Validates the schema of the current json file according to composer-schema.json rules
+     * Validates the syntax of a JSON string
      *
-     * @param  int                     $schema     a JsonFile::*_SCHEMA constant
-     * @param  string|null             $schemaFile a path to the schema file
-     * @throws JsonValidationException
+     * @param  string                    $json
+     * @param  string                    $file
+     * @throws \UnexpectedValueException
      * @throws ParsingException
-     * @return bool                    true on success
+     * @return bool                      true on success
      */
-    public function validateSchema($schema = self::STRICT_SCHEMA, $schemaFile = null)
+    protected static function validateSyntax($json, $file = null)
     {
-        $content = file_get_contents($this->path);
-        $data = json_decode($content);
-
-        if (null === $data && 'null' !== $content) {
-            self::validateSyntax($content, $this->path);
-        }
-
-        if (null === $schemaFile) {
-            $schemaFile = __DIR__ . self::COMPOSER_SCHEMA_PATH;
-        }
-
-        // Prepend with file:// only when not using a special schema already (e.g. in the phar)
-        if (false === strpos($schemaFile, '://')) {
-            $schemaFile = 'file://' . $schemaFile;
-        }
-
-        $schemaData = (object) array('$ref' => $schemaFile);
-
-        if ($schema !== self::LAX_SCHEMA) {
-            $schemaData->additionalProperties = false;
-            $schemaData->required = array('name', 'description');
-        }
-
-        $validator = new Validator();
-        $validator->check($data, $schemaData);
-
-        // TODO add more validation like check version constraints and such, perhaps build that into the arrayloader?
-
-        if (!$validator->isValid()) {
-            $errors = array();
-            foreach ((array) $validator->getErrors() as $error) {
-                $errors[] = ($error['property'] ? $error['property'].' : ' : '').$error['message'];
+        $parser = new JsonParser();
+        $result = $parser->lint($json);
+        if (null === $result) {
+            if (defined('JSON_ERROR_UTF8') && JSON_ERROR_UTF8 === json_last_error()) {
+                throw new \UnexpectedValueException('"'.$file.'" is not UTF-8, could not parse as JSON');
             }
-            throw new JsonValidationException('"'.$this->path.'" does not match the expected JSON schema', $errors);
+
+            return true;
         }
 
-        return true;
+        throw new ParsingException('"'.$file.'" does not contain valid JSON'."\n".$result->getMessage(), $result->getDetails());
     }
 }

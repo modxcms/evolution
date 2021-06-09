@@ -20,23 +20,12 @@ use function substr;
 abstract class AbstractLexer
 {
     /**
-     * The next token in the input.
-     *
-     * @var array|null
-     */
-    public $lookahead;
-    /**
-     * The last matched/seen token.
-     *
-     * @var array|null
-     */
-    public $token;
-    /**
      * Lexer original input string.
      *
      * @var string
      */
     private $input;
+
     /**
      * Array of scanned tokens.
      *
@@ -49,18 +38,35 @@ abstract class AbstractLexer
      * @var array
      */
     private $tokens = [];
+
     /**
      * Current lexer position in input string.
      *
      * @var int
      */
     private $position = 0;
+
     /**
      * Current peek of current lexer position.
      *
      * @var int
      */
     private $peek = 0;
+
+    /**
+     * The next token in the input.
+     *
+     * @var array|null
+     */
+    public $lookahead;
+
+    /**
+     * The last matched/seen token.
+     *
+     * @var array|null
+     */
+    public $token;
+
     /**
      * Composed regex for input parsing.
      *
@@ -99,77 +105,6 @@ abstract class AbstractLexer
         $this->peek      = 0;
         $this->position  = 0;
     }
-
-    /**
-     * Scans the input string for tokens.
-     *
-     * @param string $input A query string.
-     *
-     * @return void
-     */
-    protected function scan($input)
-    {
-        if (! isset($this->regex)) {
-            $this->regex = sprintf(
-                '/(%s)|%s/%s',
-                implode(')|(', $this->getCatchablePatterns()),
-                implode('|', $this->getNonCatchablePatterns()),
-                $this->getModifiers()
-            );
-        }
-
-        $flags   = PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_OFFSET_CAPTURE;
-        $matches = preg_split($this->regex, $input, -1, $flags);
-
-        if ($matches === false) {
-            // Work around https://bugs.php.net/78122
-            $matches = [[$input, 0]];
-        }
-
-        foreach ($matches as $match) {
-            // Must remain before 'value' assignment since it can change content
-            $type = $this->getType($match[0]);
-
-            $this->tokens[] = [
-                'value' => $match[0],
-                'type'  => $type,
-                'position' => $match[1],
-            ];
-        }
-    }
-
-    /**
-     * Lexical catchable patterns.
-     *
-     * @return array
-     */
-    abstract protected function getCatchablePatterns();
-
-    /**
-     * Lexical non-catchable patterns.
-     *
-     * @return array
-     */
-    abstract protected function getNonCatchablePatterns();
-
-    /**
-     * Regex modifiers
-     *
-     * @return string
-     */
-    protected function getModifiers()
-    {
-        return 'iu';
-    }
-
-    /**
-     * Retrieve token type. Also processes the token value if necessary.
-     *
-     * @param string $value
-     *
-     * @return int|string|null
-     */
-    abstract protected function getType(&$value);
 
     /**
      * Resets the peek pointer to 0.
@@ -230,20 +165,6 @@ abstract class AbstractLexer
     }
 
     /**
-     * Tells the lexer to skip input tokens until it sees a token with the given value.
-     *
-     * @param string $type The token type to skip until.
-     *
-     * @return void
-     */
-    public function skipUntil($type)
-    {
-        while ($this->lookahead !== null && $this->lookahead['type'] !== $type) {
-            $this->moveNext();
-        }
-    }
-
-    /**
      * Moves to the next token in the input string.
      *
      * @return bool
@@ -256,6 +177,20 @@ abstract class AbstractLexer
             ? $this->tokens[$this->position++] : null;
 
         return $this->lookahead !== null;
+    }
+
+    /**
+     * Tells the lexer to skip input tokens until it sees a token with the given value.
+     *
+     * @param string $type The token type to skip until.
+     *
+     * @return void
+     */
+    public function skipUntil($type)
+    {
+        while ($this->lookahead !== null && $this->lookahead['type'] !== $type) {
+            $this->moveNext();
+        }
     }
 
     /**
@@ -272,6 +207,20 @@ abstract class AbstractLexer
     }
 
     /**
+     * Moves the lookahead token forward.
+     *
+     * @return array|null The next token or NULL if there are no more tokens ahead.
+     */
+    public function peek()
+    {
+        if (isset($this->tokens[$this->position + $this->peek])) {
+            return $this->tokens[$this->position + $this->peek++];
+        }
+
+        return null;
+    }
+
+    /**
      * Peeks at the next token, returns it and immediately resets the peek.
      *
      * @return array|null The next token or NULL if there are no more tokens ahead.
@@ -285,17 +234,41 @@ abstract class AbstractLexer
     }
 
     /**
-     * Moves the lookahead token forward.
+     * Scans the input string for tokens.
      *
-     * @return array|null The next token or NULL if there are no more tokens ahead.
+     * @param string $input A query string.
+     *
+     * @return void
      */
-    public function peek()
+    protected function scan($input)
     {
-        if (isset($this->tokens[$this->position + $this->peek])) {
-            return $this->tokens[$this->position + $this->peek++];
+        if (! isset($this->regex)) {
+            $this->regex = sprintf(
+                '/(%s)|%s/%s',
+                implode(')|(', $this->getCatchablePatterns()),
+                implode('|', $this->getNonCatchablePatterns()),
+                $this->getModifiers()
+            );
         }
 
-        return null;
+        $flags   = PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_OFFSET_CAPTURE;
+        $matches = preg_split($this->regex, $input, -1, $flags);
+
+        if ($matches === false) {
+            // Work around https://bugs.php.net/78122
+            $matches = [[$input, 0]];
+        }
+
+        foreach ($matches as $match) {
+            // Must remain before 'value' assignment since it can change content
+            $type = $this->getType($match[0]);
+
+            $this->tokens[] = [
+                'value' => $match[0],
+                'type'  => $type,
+                'position' => $match[1],
+            ];
+        }
     }
 
     /**
@@ -319,4 +292,37 @@ abstract class AbstractLexer
 
         return $token;
     }
+
+    /**
+     * Regex modifiers
+     *
+     * @return string
+     */
+    protected function getModifiers()
+    {
+        return 'iu';
+    }
+
+    /**
+     * Lexical catchable patterns.
+     *
+     * @return array
+     */
+    abstract protected function getCatchablePatterns();
+
+    /**
+     * Lexical non-catchable patterns.
+     *
+     * @return array
+     */
+    abstract protected function getNonCatchablePatterns();
+
+    /**
+     * Retrieve token type. Also processes the token value if necessary.
+     *
+     * @param string $value
+     *
+     * @return int|string|null
+     */
+    abstract protected function getType(&$value);
 }

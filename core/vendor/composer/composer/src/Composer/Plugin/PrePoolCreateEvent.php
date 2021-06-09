@@ -133,19 +133,19 @@ class PrePoolCreateEvent extends Event
     }
 
     /**
-     * @param PackageInterface[] $packages
-     */
-    public function setPackages(array $packages)
-    {
-        $this->packages = $packages;
-    }
-
-    /**
      * @return PackageInterface[]
      */
     public function getUnacceptableFixedPackages()
     {
         return $this->unacceptableFixedPackages;
+    }
+
+    /**
+     * @param PackageInterface[] $packages
+     */
+    public function setPackages(array $packages)
+    {
+        $this->packages = $packages;
     }
 
     /**

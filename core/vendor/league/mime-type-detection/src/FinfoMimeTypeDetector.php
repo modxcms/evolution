@@ -51,15 +51,6 @@ class FinfoMimeTypeDetector implements MimeTypeDetector
         return $this->detectMimeTypeFromPath($path);
     }
 
-    private function takeSample(string $contents): string
-    {
-        if ($this->bufferSampleSize === null) {
-            return $contents;
-        }
-
-        return (string) substr($contents, 0, $this->bufferSampleSize);
-    }
-
     public function detectMimeTypeFromPath(string $path): ?string
     {
         $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
@@ -75,5 +66,14 @@ class FinfoMimeTypeDetector implements MimeTypeDetector
     public function detectMimeTypeFromBuffer(string $contents): ?string
     {
         return @$this->finfo->buffer($this->takeSample($contents)) ?: null;
+    }
+
+    private function takeSample(string $contents): string
+    {
+        if ($this->bufferSampleSize === null) {
+            return $contents;
+        }
+
+        return (string) substr($contents, 0, $this->bufferSampleSize);
     }
 }

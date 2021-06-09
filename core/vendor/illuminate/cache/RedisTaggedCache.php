@@ -38,6 +38,34 @@ class RedisTaggedCache extends TaggedCache
     }
 
     /**
+     * Increment the value of an item in the cache.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return int|bool
+     */
+    public function increment($key, $value = 1)
+    {
+        $this->pushStandardKeys($this->tags->getNamespace(), $key);
+
+        return parent::increment($key, $value);
+    }
+
+    /**
+     * Decrement the value of an item in the cache.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return int|bool
+     */
+    public function decrement($key, $value = 1)
+    {
+        $this->pushStandardKeys($this->tags->getNamespace(), $key);
+
+        return parent::decrement($key, $value);
+    }
+
+    /**
      * Store an item in the cache indefinitely.
      *
      * @param  string  $key
@@ -49,6 +77,31 @@ class RedisTaggedCache extends TaggedCache
         $this->pushForeverKeys($this->tags->getNamespace(), $key);
 
         return parent::forever($key, $value);
+    }
+
+    /**
+     * Remove all items from the cache.
+     *
+     * @return bool
+     */
+    public function flush()
+    {
+        $this->deleteForeverKeys();
+        $this->deleteStandardKeys();
+
+        return parent::flush();
+    }
+
+    /**
+     * Store standard key references into store.
+     *
+     * @param  string  $namespace
+     * @param  string  $key
+     * @return void
+     */
+    protected function pushStandardKeys($namespace, $key)
+    {
+        $this->pushKeys($namespace, $key, self::REFERENCE_KEY_STANDARD);
     }
 
     /**
@@ -81,71 +134,6 @@ class RedisTaggedCache extends TaggedCache
     }
 
     /**
-     * Get the reference key for the segment.
-     *
-     * @param  string  $segment
-     * @param  string  $suffix
-     * @return string
-     */
-    protected function referenceKey($segment, $suffix)
-    {
-        return $this->store->getPrefix().$segment.':'.$suffix;
-    }
-
-    /**
-     * Store standard key references into store.
-     *
-     * @param  string  $namespace
-     * @param  string  $key
-     * @return void
-     */
-    protected function pushStandardKeys($namespace, $key)
-    {
-        $this->pushKeys($namespace, $key, self::REFERENCE_KEY_STANDARD);
-    }
-
-    /**
-     * Increment the value of an item in the cache.
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return int|bool
-     */
-    public function increment($key, $value = 1)
-    {
-        $this->pushStandardKeys($this->tags->getNamespace(), $key);
-
-        return parent::increment($key, $value);
-    }
-
-    /**
-     * Decrement the value of an item in the cache.
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return int|bool
-     */
-    public function decrement($key, $value = 1)
-    {
-        $this->pushStandardKeys($this->tags->getNamespace(), $key);
-
-        return parent::decrement($key, $value);
-    }
-
-    /**
-     * Remove all items from the cache.
-     *
-     * @return bool
-     */
-    public function flush()
-    {
-        $this->deleteForeverKeys();
-        $this->deleteStandardKeys();
-
-        return parent::flush();
-    }
-
-    /**
      * Delete all of the items that were stored forever.
      *
      * @return void
@@ -153,6 +141,16 @@ class RedisTaggedCache extends TaggedCache
     protected function deleteForeverKeys()
     {
         $this->deleteKeysByReference(self::REFERENCE_KEY_FOREVER);
+    }
+
+    /**
+     * Delete all standard items.
+     *
+     * @return void
+     */
+    protected function deleteStandardKeys()
+    {
+        $this->deleteKeysByReference(self::REFERENCE_KEY_STANDARD);
     }
 
     /**
@@ -188,12 +186,14 @@ class RedisTaggedCache extends TaggedCache
     }
 
     /**
-     * Delete all standard items.
+     * Get the reference key for the segment.
      *
-     * @return void
+     * @param  string  $segment
+     * @param  string  $suffix
+     * @return string
      */
-    protected function deleteStandardKeys()
+    protected function referenceKey($segment, $suffix)
     {
-        $this->deleteKeysByReference(self::REFERENCE_KEY_STANDARD);
+        return $this->store->getPrefix().$segment.':'.$suffix;
     }
 }

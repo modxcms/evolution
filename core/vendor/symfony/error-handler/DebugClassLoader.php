@@ -162,6 +162,12 @@ class DebugClassLoader
             'getTraceAsString' => 'string',
         ],
     ];
+
+    private $classLoader;
+    private $isFinder;
+    private $loaded = [];
+    private $patchTypes;
+
     private static $caseCheck;
     private static $checkedClasses = [];
     private static $final = [];
@@ -175,10 +181,6 @@ class DebugClassLoader
     private static $returnTypes = [];
     private static $methodTraits = [];
     private static $fileOffsets = [];
-    private $classLoader;
-    private $isFinder;
-    private $loaded = [];
-    private $patchTypes;
 
     public function __construct(callable $classLoader)
     {
@@ -213,6 +215,16 @@ class DebugClassLoader
                 self::$caseCheck = 0;
             }
         }
+    }
+
+    /**
+     * Gets the wrapped class loader.
+     *
+     * @return callable The wrapped class loader
+     */
+    public function getClassLoader(): callable
+    {
+        return $this->classLoader;
     }
 
     /**
@@ -263,16 +275,6 @@ class DebugClassLoader
         }
     }
 
-    /**
-     * Gets the wrapped class loader.
-     *
-     * @return callable The wrapped class loader
-     */
-    public function getClassLoader(): callable
-    {
-        return $this->classLoader;
-    }
-
     public static function checkClasses(): bool
     {
         if (!\is_array($functions = spl_autoload_functions())) {
@@ -317,6 +319,43 @@ class DebugClassLoader
         }
 
         return true;
+    }
+
+    public function findFile(string $class): ?string
+    {
+        return $this->isFinder ? ($this->classLoader[0]->findFile($class) ?: null) : null;
+    }
+
+    /**
+     * Loads the given class or interface.
+     *
+     * @throws \RuntimeException
+     */
+    public function loadClass(string $class): void
+    {
+        $e = error_reporting(error_reporting() | \E_PARSE | \E_ERROR | \E_CORE_ERROR | \E_COMPILE_ERROR);
+
+        try {
+            if ($this->isFinder && !isset($this->loaded[$class])) {
+                $this->loaded[$class] = true;
+                if (!$file = $this->classLoader[0]->findFile($class) ?: '') {
+                    // no-op
+                } elseif (\function_exists('opcache_is_script_cached') && @opcache_is_script_cached($file)) {
+                    include $file;
+
+                    return;
+                } elseif (false === include $file) {
+                    return;
+                }
+            } else {
+                ($this->classLoader)($class);
+                $file = '';
+            }
+        } finally {
+            error_reporting($e);
+        }
+
+        $this->checkClass($class, $file);
     }
 
     private function checkClass(string $class, string $file = null): void
@@ -650,6 +689,113 @@ class DebugClassLoader
         return $deprecations;
     }
 
+    public function checkCase(\ReflectionClass $refl, string $file, string $class): ?array
+    {
+        $real = explode('\\', $class.strrchr($file, '.'));
+        $tail = explode(\DIRECTORY_SEPARATOR, str_replace('/', \DIRECTORY_SEPARATOR, $file));
+
+        $i = \count($tail) - 1;
+        $j = \count($real) - 1;
+
+        while (isset($tail[$i], $real[$j]) && $tail[$i] === $real[$j]) {
+            --$i;
+            --$j;
+        }
+
+        array_splice($tail, 0, $i + 1);
+
+        if (!$tail) {
+            return null;
+        }
+
+        $tail = \DIRECTORY_SEPARATOR.implode(\DIRECTORY_SEPARATOR, $tail);
+        $tailLen = \strlen($tail);
+        $real = $refl->getFileName();
+
+        if (2 === self::$caseCheck) {
+            $real = $this->darwinRealpath($real);
+        }
+
+        if (0 === substr_compare($real, $tail, -$tailLen, $tailLen, true)
+            && 0 !== substr_compare($real, $tail, -$tailLen, $tailLen, false)
+        ) {
+            return [substr($tail, -$tailLen + 1), substr($real, -$tailLen + 1), substr($real, 0, -$tailLen + 1)];
+        }
+
+        return null;
+    }
+
+    /**
+     * `realpath` on MacOSX doesn't normalize the case of characters.
+     */
+    private function darwinRealpath(string $real): string
+    {
+        $i = 1 + strrpos($real, '/');
+        $file = substr($real, $i);
+        $real = substr($real, 0, $i);
+
+        if (isset(self::$darwinCache[$real])) {
+            $kDir = $real;
+        } else {
+            $kDir = strtolower($real);
+
+            if (isset(self::$darwinCache[$kDir])) {
+                $real = self::$darwinCache[$kDir][0];
+            } else {
+                $dir = getcwd();
+
+                if (!@chdir($real)) {
+                    return $real.$file;
+                }
+
+                $real = getcwd().'/';
+                chdir($dir);
+
+                $dir = $real;
+                $k = $kDir;
+                $i = \strlen($dir) - 1;
+                while (!isset(self::$darwinCache[$k])) {
+                    self::$darwinCache[$k] = [$dir, []];
+                    self::$darwinCache[$dir] = &self::$darwinCache[$k];
+
+                    while ('/' !== $dir[--$i]) {
+                    }
+                    $k = substr($k, 0, ++$i);
+                    $dir = substr($dir, 0, $i--);
+                }
+            }
+        }
+
+        $dirFiles = self::$darwinCache[$kDir][1];
+
+        if (!isset($dirFiles[$file]) && ') : eval()\'d code' === substr($file, -17)) {
+            // Get the file name from "file_name.php(123) : eval()'d code"
+            $file = substr($file, 0, strrpos($file, '(', -17));
+        }
+
+        if (isset($dirFiles[$file])) {
+            return $real.$dirFiles[$file];
+        }
+
+        $kFile = strtolower($file);
+
+        if (!isset($dirFiles[$kFile])) {
+            foreach (scandir($real, 2) as $f) {
+                if ('.' !== $f[0]) {
+                    $dirFiles[$f] = $f;
+                    if ($f === $file) {
+                        $kFile = $k = $file;
+                    } elseif ($f !== $k = strtolower($f)) {
+                        $dirFiles[$k] = $f;
+                    }
+                }
+            }
+            self::$darwinCache[$kDir][1] = $dirFiles;
+        }
+
+        return $real.$dirFiles[$kFile];
+    }
+
     /**
      * `class_implements` includes interfaces from the parents so we have to manually exclude them.
      *
@@ -672,6 +818,100 @@ class DebugClassLoader
         }
 
         return $ownInterfaces;
+    }
+
+    private function setReturnType(string $types, \ReflectionMethod $method, ?string $parent): void
+    {
+        $nullable = false;
+        $typesMap = [];
+        foreach (explode('|', $types) as $t) {
+            $typesMap[$this->normalizeType($t, $method->class, $parent)] = $t;
+        }
+
+        if (isset($typesMap['array'])) {
+            if (isset($typesMap['Traversable']) || isset($typesMap['\Traversable'])) {
+                $typesMap['iterable'] = 'array' !== $typesMap['array'] ? $typesMap['array'] : 'iterable';
+                unset($typesMap['array'], $typesMap['Traversable'], $typesMap['\Traversable']);
+            } elseif ('array' !== $typesMap['array'] && isset(self::$returnTypes[$method->class][$method->name])) {
+                return;
+            }
+        }
+
+        if (isset($typesMap['array']) && isset($typesMap['iterable'])) {
+            if ('[]' === substr($typesMap['array'], -2)) {
+                $typesMap['iterable'] = $typesMap['array'];
+            }
+            unset($typesMap['array']);
+        }
+
+        $iterable = $object = true;
+        foreach ($typesMap as $n => $t) {
+            if ('null' !== $n) {
+                $iterable = $iterable && (\in_array($n, ['array', 'iterable']) || false !== strpos($n, 'Iterator'));
+                $object = $object && (\in_array($n, ['callable', 'object', '$this', 'static']) || !isset(self::SPECIAL_RETURN_TYPES[$n]));
+            }
+        }
+
+        $normalizedType = key($typesMap);
+        $returnType = current($typesMap);
+
+        foreach ($typesMap as $n => $t) {
+            if ('null' === $n) {
+                $nullable = true;
+            } elseif ('null' === $normalizedType) {
+                $normalizedType = $t;
+                $returnType = $t;
+            } elseif ($n !== $normalizedType || !preg_match('/^\\\\?[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*+(?:\\\\[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*+)*+$/', $n)) {
+                if ($iterable) {
+                    $normalizedType = $returnType = 'iterable';
+                } elseif ($object && 'object' === $this->patchTypes['force']) {
+                    $normalizedType = $returnType = 'object';
+                } else {
+                    // ignore multi-types return declarations
+                    return;
+                }
+            }
+        }
+
+        if ('void' === $normalizedType || (\PHP_VERSION_ID >= 80000 && 'mixed' === $normalizedType)) {
+            $nullable = false;
+        } elseif (!isset(self::BUILTIN_RETURN_TYPES[$normalizedType]) && isset(self::SPECIAL_RETURN_TYPES[$normalizedType])) {
+            // ignore other special return types
+            return;
+        }
+
+        if ($nullable) {
+            $normalizedType = '?'.$normalizedType;
+            $returnType .= '|null';
+        }
+
+        self::$returnTypes[$method->class][$method->name] = [$normalizedType, $returnType, $method->class, $method->getFileName()];
+    }
+
+    private function normalizeType(string $type, string $class, ?string $parent): string
+    {
+        if (isset(self::SPECIAL_RETURN_TYPES[$lcType = strtolower($type)])) {
+            if ('parent' === $lcType = self::SPECIAL_RETURN_TYPES[$lcType]) {
+                $lcType = null !== $parent ? '\\'.$parent : 'parent';
+            } elseif ('self' === $lcType) {
+                $lcType = '\\'.$class;
+            }
+
+            return $lcType;
+        }
+
+        if ('[]' === substr($type, -2)) {
+            return 'array';
+        }
+
+        if (preg_match('/^(array|iterable|callable) *[<(]/', $lcType, $m)) {
+            return $m[1];
+        }
+
+        // We could resolve "use" statements to return the FQDN
+        // but this would be too expensive for a runtime checker
+
+        return $type;
     }
 
     /**
@@ -848,243 +1088,5 @@ EOTXT;
         if ($fixedCode !== $code) {
             file_put_contents($file, $fixedCode);
         }
-    }
-
-    private function setReturnType(string $types, \ReflectionMethod $method, ?string $parent): void
-    {
-        $nullable = false;
-        $typesMap = [];
-        foreach (explode('|', $types) as $t) {
-            $typesMap[$this->normalizeType($t, $method->class, $parent)] = $t;
-        }
-
-        if (isset($typesMap['array'])) {
-            if (isset($typesMap['Traversable']) || isset($typesMap['\Traversable'])) {
-                $typesMap['iterable'] = 'array' !== $typesMap['array'] ? $typesMap['array'] : 'iterable';
-                unset($typesMap['array'], $typesMap['Traversable'], $typesMap['\Traversable']);
-            } elseif ('array' !== $typesMap['array'] && isset(self::$returnTypes[$method->class][$method->name])) {
-                return;
-            }
-        }
-
-        if (isset($typesMap['array']) && isset($typesMap['iterable'])) {
-            if ('[]' === substr($typesMap['array'], -2)) {
-                $typesMap['iterable'] = $typesMap['array'];
-            }
-            unset($typesMap['array']);
-        }
-
-        $iterable = $object = true;
-        foreach ($typesMap as $n => $t) {
-            if ('null' !== $n) {
-                $iterable = $iterable && (\in_array($n, ['array', 'iterable']) || false !== strpos($n, 'Iterator'));
-                $object = $object && (\in_array($n, ['callable', 'object', '$this', 'static']) || !isset(self::SPECIAL_RETURN_TYPES[$n]));
-            }
-        }
-
-        $normalizedType = key($typesMap);
-        $returnType = current($typesMap);
-
-        foreach ($typesMap as $n => $t) {
-            if ('null' === $n) {
-                $nullable = true;
-            } elseif ('null' === $normalizedType) {
-                $normalizedType = $t;
-                $returnType = $t;
-            } elseif ($n !== $normalizedType || !preg_match('/^\\\\?[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*+(?:\\\\[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*+)*+$/', $n)) {
-                if ($iterable) {
-                    $normalizedType = $returnType = 'iterable';
-                } elseif ($object && 'object' === $this->patchTypes['force']) {
-                    $normalizedType = $returnType = 'object';
-                } else {
-                    // ignore multi-types return declarations
-                    return;
-                }
-            }
-        }
-
-        if ('void' === $normalizedType || (\PHP_VERSION_ID >= 80000 && 'mixed' === $normalizedType)) {
-            $nullable = false;
-        } elseif (!isset(self::BUILTIN_RETURN_TYPES[$normalizedType]) && isset(self::SPECIAL_RETURN_TYPES[$normalizedType])) {
-            // ignore other special return types
-            return;
-        }
-
-        if ($nullable) {
-            $normalizedType = '?'.$normalizedType;
-            $returnType .= '|null';
-        }
-
-        self::$returnTypes[$method->class][$method->name] = [$normalizedType, $returnType, $method->class, $method->getFileName()];
-    }
-
-    private function normalizeType(string $type, string $class, ?string $parent): string
-    {
-        if (isset(self::SPECIAL_RETURN_TYPES[$lcType = strtolower($type)])) {
-            if ('parent' === $lcType = self::SPECIAL_RETURN_TYPES[$lcType]) {
-                $lcType = null !== $parent ? '\\'.$parent : 'parent';
-            } elseif ('self' === $lcType) {
-                $lcType = '\\'.$class;
-            }
-
-            return $lcType;
-        }
-
-        if ('[]' === substr($type, -2)) {
-            return 'array';
-        }
-
-        if (preg_match('/^(array|iterable|callable) *[<(]/', $lcType, $m)) {
-            return $m[1];
-        }
-
-        // We could resolve "use" statements to return the FQDN
-        // but this would be too expensive for a runtime checker
-
-        return $type;
-    }
-
-    public function checkCase(\ReflectionClass $refl, string $file, string $class): ?array
-    {
-        $real = explode('\\', $class.strrchr($file, '.'));
-        $tail = explode(\DIRECTORY_SEPARATOR, str_replace('/', \DIRECTORY_SEPARATOR, $file));
-
-        $i = \count($tail) - 1;
-        $j = \count($real) - 1;
-
-        while (isset($tail[$i], $real[$j]) && $tail[$i] === $real[$j]) {
-            --$i;
-            --$j;
-        }
-
-        array_splice($tail, 0, $i + 1);
-
-        if (!$tail) {
-            return null;
-        }
-
-        $tail = \DIRECTORY_SEPARATOR.implode(\DIRECTORY_SEPARATOR, $tail);
-        $tailLen = \strlen($tail);
-        $real = $refl->getFileName();
-
-        if (2 === self::$caseCheck) {
-            $real = $this->darwinRealpath($real);
-        }
-
-        if (0 === substr_compare($real, $tail, -$tailLen, $tailLen, true)
-            && 0 !== substr_compare($real, $tail, -$tailLen, $tailLen, false)
-        ) {
-            return [substr($tail, -$tailLen + 1), substr($real, -$tailLen + 1), substr($real, 0, -$tailLen + 1)];
-        }
-
-        return null;
-    }
-
-    /**
-     * `realpath` on MacOSX doesn't normalize the case of characters.
-     */
-    private function darwinRealpath(string $real): string
-    {
-        $i = 1 + strrpos($real, '/');
-        $file = substr($real, $i);
-        $real = substr($real, 0, $i);
-
-        if (isset(self::$darwinCache[$real])) {
-            $kDir = $real;
-        } else {
-            $kDir = strtolower($real);
-
-            if (isset(self::$darwinCache[$kDir])) {
-                $real = self::$darwinCache[$kDir][0];
-            } else {
-                $dir = getcwd();
-
-                if (!@chdir($real)) {
-                    return $real.$file;
-                }
-
-                $real = getcwd().'/';
-                chdir($dir);
-
-                $dir = $real;
-                $k = $kDir;
-                $i = \strlen($dir) - 1;
-                while (!isset(self::$darwinCache[$k])) {
-                    self::$darwinCache[$k] = [$dir, []];
-                    self::$darwinCache[$dir] = &self::$darwinCache[$k];
-
-                    while ('/' !== $dir[--$i]) {
-                    }
-                    $k = substr($k, 0, ++$i);
-                    $dir = substr($dir, 0, $i--);
-                }
-            }
-        }
-
-        $dirFiles = self::$darwinCache[$kDir][1];
-
-        if (!isset($dirFiles[$file]) && ') : eval()\'d code' === substr($file, -17)) {
-            // Get the file name from "file_name.php(123) : eval()'d code"
-            $file = substr($file, 0, strrpos($file, '(', -17));
-        }
-
-        if (isset($dirFiles[$file])) {
-            return $real.$dirFiles[$file];
-        }
-
-        $kFile = strtolower($file);
-
-        if (!isset($dirFiles[$kFile])) {
-            foreach (scandir($real, 2) as $f) {
-                if ('.' !== $f[0]) {
-                    $dirFiles[$f] = $f;
-                    if ($f === $file) {
-                        $kFile = $k = $file;
-                    } elseif ($f !== $k = strtolower($f)) {
-                        $dirFiles[$k] = $f;
-                    }
-                }
-            }
-            self::$darwinCache[$kDir][1] = $dirFiles;
-        }
-
-        return $real.$dirFiles[$kFile];
-    }
-
-    public function findFile(string $class): ?string
-    {
-        return $this->isFinder ? ($this->classLoader[0]->findFile($class) ?: null) : null;
-    }
-
-    /**
-     * Loads the given class or interface.
-     *
-     * @throws \RuntimeException
-     */
-    public function loadClass(string $class): void
-    {
-        $e = error_reporting(error_reporting() | \E_PARSE | \E_ERROR | \E_CORE_ERROR | \E_COMPILE_ERROR);
-
-        try {
-            if ($this->isFinder && !isset($this->loaded[$class])) {
-                $this->loaded[$class] = true;
-                if (!$file = $this->classLoader[0]->findFile($class) ?: '') {
-                    // no-op
-                } elseif (\function_exists('opcache_is_script_cached') && @opcache_is_script_cached($file)) {
-                    include $file;
-
-                    return;
-                } elseif (false === include $file) {
-                    return;
-                }
-            } else {
-                ($this->classLoader)($class);
-                $file = '';
-            }
-        } finally {
-            error_reporting($e);
-        }
-
-        $this->checkClass($class, $file);
     }
 }

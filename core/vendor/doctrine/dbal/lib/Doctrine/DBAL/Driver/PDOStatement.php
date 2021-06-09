@@ -68,29 +68,6 @@ class PDOStatement extends \PDOStatement implements StatementInterface, Result
     }
 
     /**
-     * Converts DBAL parameter type to PDO parameter type
-     *
-     * @param int $type Parameter type
-     */
-    private function convertParamType(int $type): int
-    {
-        if (! isset(self::PARAM_TYPE_MAP[$type])) {
-            // TODO: next major: throw an exception
-            Deprecation::trigger(
-                'doctrine/dbal',
-                'https://github.com/doctrine/dbal/pull/3088',
-                'Using a PDO parameter type (%d given) is deprecated, ' .
-                'use \Doctrine\DBAL\Types\Types constants instead.',
-                $type
-            );
-
-            return $type;
-        }
-
-        return self::PARAM_TYPE_MAP[$type];
-    }
-
-    /**
      * @param mixed    $param
      * @param mixed    $variable
      * @param int      $type
@@ -141,28 +118,6 @@ class PDOStatement extends \PDOStatement implements StatementInterface, Result
     /**
      * {@inheritdoc}
      *
-     * @deprecated Use fetchOne() instead.
-     */
-    public function fetchColumn($columnIndex = 0)
-    {
-        try {
-            return parent::fetchColumn($columnIndex);
-        } catch (PDOException $exception) {
-            throw Exception::new($exception);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function fetchNumeric()
-    {
-        return $this->fetch(PDO::FETCH_NUM);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
      * @deprecated Use fetchNumeric(), fetchAssociative() or fetchOne() instead.
      */
     public function fetch($fetchMode = null, $cursorOrientation = PDO::FETCH_ORI_NEXT, $cursorOffset = 0)
@@ -181,25 +136,25 @@ class PDOStatement extends \PDOStatement implements StatementInterface, Result
     }
 
     /**
-     * Converts DBAL fetch mode to PDO fetch mode
+     * {@inheritdoc}
      *
-     * @param int $fetchMode Fetch mode
+     * @deprecated Use fetchOne() instead.
      */
-    private function convertFetchMode(int $fetchMode): int
+    public function fetchColumn($columnIndex = 0)
     {
-        if (! isset(self::FETCH_MODE_MAP[$fetchMode])) {
-            Deprecation::trigger(
-                'doctrine/dbal',
-                'https://github.com/doctrine/dbal/pull/3088',
-                'Using an unsupported PDO fetch mode or a bitmask of fetch modes (%d given)' .
-                ' is deprecated and will cause an error in Doctrine DBAL 3.0',
-                $fetchMode
-            );
-
-            return $fetchMode;
+        try {
+            return parent::fetchColumn($columnIndex);
+        } catch (PDOException $exception) {
+            throw Exception::new($exception);
         }
+    }
 
-        return self::FETCH_MODE_MAP[$fetchMode];
+    /**
+     * {@inheritdoc}
+     */
+    public function fetchNumeric()
+    {
+        return $this->fetch(PDO::FETCH_NUM);
     }
 
     /**
@@ -305,5 +260,50 @@ class PDOStatement extends \PDOStatement implements StatementInterface, Result
         assert(is_array($data));
 
         return $data;
+    }
+
+    /**
+     * Converts DBAL parameter type to PDO parameter type
+     *
+     * @param int $type Parameter type
+     */
+    private function convertParamType(int $type): int
+    {
+        if (! isset(self::PARAM_TYPE_MAP[$type])) {
+            // TODO: next major: throw an exception
+            Deprecation::trigger(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/pull/3088',
+                'Using a PDO parameter type (%d given) is deprecated, ' .
+                'use \Doctrine\DBAL\Types\Types constants instead.',
+                $type
+            );
+
+            return $type;
+        }
+
+        return self::PARAM_TYPE_MAP[$type];
+    }
+
+    /**
+     * Converts DBAL fetch mode to PDO fetch mode
+     *
+     * @param int $fetchMode Fetch mode
+     */
+    private function convertFetchMode(int $fetchMode): int
+    {
+        if (! isset(self::FETCH_MODE_MAP[$fetchMode])) {
+            Deprecation::trigger(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/pull/3088',
+                'Using an unsupported PDO fetch mode or a bitmask of fetch modes (%d given)' .
+                ' is deprecated and will cause an error in Doctrine DBAL 3.0',
+                $fetchMode
+            );
+
+            return $fetchMode;
+        }
+
+        return self::FETCH_MODE_MAP[$fetchMode];
     }
 }

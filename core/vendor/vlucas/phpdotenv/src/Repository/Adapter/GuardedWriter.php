@@ -54,18 +54,6 @@ final class GuardedWriter implements WriterInterface
     }
 
     /**
-     * Determine if the given variable is allowed.
-     *
-     * @param string $name
-     *
-     * @return bool
-     */
-    private function isAllowed(string $name)
-    {
-        return \in_array($name, $this->allowList, true);
-    }
-
-    /**
      * Delete an environment variable, if possible.
      *
      * @param string $name
@@ -81,5 +69,17 @@ final class GuardedWriter implements WriterInterface
 
         // Set the value on the inner writer
         return $this->writer->delete($name);
+    }
+
+    /**
+     * Determine if the given variable is allowed.
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    private function isAllowed(string $name)
+    {
+        return \in_array($name, $this->allowList, true);
     }
 }

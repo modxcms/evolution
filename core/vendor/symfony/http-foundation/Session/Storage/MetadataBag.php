@@ -25,18 +25,22 @@ class MetadataBag implements SessionBagInterface
     public const CREATED = 'c';
     public const UPDATED = 'u';
     public const LIFETIME = 'l';
-    /**
-     * @var array
-     */
-    protected $meta = [self::CREATED => 0, self::UPDATED => 0, self::LIFETIME => 0];
+
     /**
      * @var string
      */
     private $name = '__metadata';
+
     /**
      * @var string
      */
     private $storageKey;
+
+    /**
+     * @var array
+     */
+    protected $meta = [self::CREATED => 0, self::UPDATED => 0, self::LIFETIME => 0];
+
     /**
      * Unix timestamp.
      *
@@ -76,13 +80,6 @@ class MetadataBag implements SessionBagInterface
         } else {
             $this->stampCreated();
         }
-    }
-
-    private function stampCreated(int $lifetime = null): void
-    {
-        $timeStamp = time();
-        $this->meta[self::CREATED] = $this->meta[self::UPDATED] = $this->lastUsed = $timeStamp;
-        $this->meta[self::LIFETIME] = (null === $lifetime) ? ini_get('session.cookie_lifetime') : $lifetime;
     }
 
     /**
@@ -158,5 +155,12 @@ class MetadataBag implements SessionBagInterface
     public function setName(string $name)
     {
         $this->name = $name;
+    }
+
+    private function stampCreated(int $lifetime = null): void
+    {
+        $timeStamp = time();
+        $this->meta[self::CREATED] = $this->meta[self::UPDATED] = $this->lastUsed = $timeStamp;
+        $this->meta[self::LIFETIME] = (null === $lifetime) ? ini_get('session.cookie_lifetime') : $lifetime;
     }
 }

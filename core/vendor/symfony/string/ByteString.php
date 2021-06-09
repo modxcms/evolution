@@ -100,6 +100,14 @@ class ByteString extends AbstractString
         return $str;
     }
 
+    public function camel(): parent
+    {
+        $str = clone $this;
+        $str->string = lcfirst(str_replace(' ', '', ucwords(preg_replace('/[^a-zA-Z0-9\x7f-\xff]++/', ' ', $this->string))));
+
+        return $str;
+    }
+
     public function chunk(int $length = 1): array
     {
         if (1 > $length) {
@@ -357,14 +365,6 @@ class ByteString extends AbstractString
     {
         $str = $this->camel()->title();
         $str->string = strtolower(preg_replace(['/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'], '\1_\2', $str->string));
-
-        return $str;
-    }
-
-    public function camel(): parent
-    {
-        $str = clone $this;
-        $str->string = lcfirst(str_replace(' ', '', ucwords(preg_replace('/[^a-zA-Z0-9\x7f-\xff]++/', ' ', $this->string))));
 
         return $str;
     }

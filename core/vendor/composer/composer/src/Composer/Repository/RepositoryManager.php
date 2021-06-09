@@ -94,16 +94,6 @@ class RepositoryManager
     }
 
     /**
-     * Returns all repositories, except local one.
-     *
-     * @return RepositoryInterface[]
-     */
-    public function getRepositories()
-    {
-        return $this->repositories;
-    }
-
-    /**
      * Adds repository
      *
      * @param RepositoryInterface $repository repository instance
@@ -172,13 +162,13 @@ class RepositoryManager
     }
 
     /**
-     * Returns local repository for the project.
+     * Returns all repositories, except local one.
      *
-     * @return InstalledRepositoryInterface
+     * @return RepositoryInterface[]
      */
-    public function getLocalRepository()
+    public function getRepositories()
     {
-        return $this->localRepository;
+        return $this->repositories;
     }
 
     /**
@@ -189,5 +179,15 @@ class RepositoryManager
     public function setLocalRepository(InstalledRepositoryInterface $repository)
     {
         $this->localRepository = $repository;
+    }
+
+    /**
+     * Returns local repository for the project.
+     *
+     * @return InstalledRepositoryInterface
+     */
+    public function getLocalRepository()
+    {
+        return $this->localRepository;
     }
 }

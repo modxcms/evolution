@@ -11,6 +11,11 @@ use Doctrine\DBAL\Platforms\Keywords\PostgreSQL100Keywords;
  */
 class PostgreSQL100Platform extends PostgreSQL94Platform
 {
+    protected function getReservedKeywordsClass(): string
+    {
+        return PostgreSQL100Keywords::class;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -24,10 +29,5 @@ class PostgreSQL100Platform extends PostgreSQL94Platform
                 WHERE  sequence_catalog = ' . $this->quoteStringLiteral($database) . "
                 AND    sequence_schema NOT LIKE 'pg\_%'
                 AND    sequence_schema != 'information_schema'";
-    }
-
-    protected function getReservedKeywordsClass(): string
-    {
-        return PostgreSQL100Keywords::class;
     }
 }

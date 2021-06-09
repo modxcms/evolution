@@ -65,42 +65,16 @@ trait DatabaseRule
         if (is_subclass_of($table, Model::class)) {
             $model = new $table;
 
+            if (Str::contains($model->getTable(), '.')) {
+                return $table;
+            }
+
             return implode('.', array_map(function (string $part) {
                 return trim($part, '.');
             }, array_filter([$model->getConnectionName(), $model->getTable()])));
         }
 
         return $table;
-    }
-
-    /**
-     * Set a "where not" constraint on the query.
-     *
-     * @param  string  $column
-     * @param  array|string  $value
-     * @return $this
-     */
-    public function whereNot($column, $value)
-    {
-        if (is_array($value)) {
-            return $this->whereNotIn($column, $value);
-        }
-
-        return $this->where($column, '!'.$value);
-    }
-
-    /**
-     * Set a "where not in" constraint on the query.
-     *
-     * @param  string  $column
-     * @param  array  $values
-     * @return $this
-     */
-    public function whereNotIn($column, array $values)
-    {
-        return $this->where(function ($query) use ($column, $values) {
-            $query->whereNotIn($column, $values);
-        });
     }
 
     /**
@@ -130,30 +104,19 @@ trait DatabaseRule
     }
 
     /**
-     * Set a "where in" constraint on the query.
+     * Set a "where not" constraint on the query.
      *
      * @param  string  $column
-     * @param  array  $values
+     * @param  array|string  $value
      * @return $this
      */
-    public function whereIn($column, array $values)
+    public function whereNot($column, $value)
     {
-        return $this->where(function ($query) use ($column, $values) {
-            $query->whereIn($column, $values);
-        });
-    }
+        if (is_array($value)) {
+            return $this->whereNotIn($column, $value);
+        }
 
-    /**
-     * Register a custom query callback.
-     *
-     * @param  \Closure  $callback
-     * @return $this
-     */
-    public function using(Closure $callback)
-    {
-        $this->using[] = $callback;
-
-        return $this;
+        return $this->where($column, '!'.$value);
     }
 
     /**
@@ -176,6 +139,47 @@ trait DatabaseRule
     public function whereNotNull($column)
     {
         return $this->where($column, 'NOT_NULL');
+    }
+
+    /**
+     * Set a "where in" constraint on the query.
+     *
+     * @param  string  $column
+     * @param  array  $values
+     * @return $this
+     */
+    public function whereIn($column, array $values)
+    {
+        return $this->where(function ($query) use ($column, $values) {
+            $query->whereIn($column, $values);
+        });
+    }
+
+    /**
+     * Set a "where not in" constraint on the query.
+     *
+     * @param  string  $column
+     * @param  array  $values
+     * @return $this
+     */
+    public function whereNotIn($column, array $values)
+    {
+        return $this->where(function ($query) use ($column, $values) {
+            $query->whereNotIn($column, $values);
+        });
+    }
+
+    /**
+     * Register a custom query callback.
+     *
+     * @param  \Closure  $callback
+     * @return $this
+     */
+    public function using(Closure $callback)
+    {
+        $this->using[] = $callback;
+
+        return $this;
     }
 
     /**

@@ -24,20 +24,6 @@ class HgDownloader extends VcsDownloader
     /**
      * {@inheritDoc}
      */
-    public function getLocalChanges(PackageInterface $package, $path)
-    {
-        if (!is_dir($path.'/.hg')) {
-            return null;
-        }
-
-        $this->process->execute('hg st', $output, realpath($path));
-
-        return trim($output) ?: null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     protected function doDownload(PackageInterface $package, $path, $url, PackageInterface $prevPackage = null)
     {
         if (null === HgUtils::getVersion($this->process)) {
@@ -95,9 +81,15 @@ class HgDownloader extends VcsDownloader
     /**
      * {@inheritDoc}
      */
-    protected function hasMetadataRepository($path)
+    public function getLocalChanges(PackageInterface $package, $path)
     {
-        return is_dir($path . '/.hg');
+        if (!is_dir($path.'/.hg')) {
+            return null;
+        }
+
+        $this->process->execute('hg st', $output, realpath($path));
+
+        return trim($output) ?: null;
     }
 
     /**
@@ -112,5 +104,13 @@ class HgDownloader extends VcsDownloader
         }
 
         return $output;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function hasMetadataRepository($path)
+    {
+        return is_dir($path . '/.hg');
     }
 }

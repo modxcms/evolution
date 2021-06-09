@@ -150,19 +150,14 @@ class Route
         }
     }
 
-    public function getPath()
-    {
-        return $this->path;
-    }
-
     public function setPath($path)
     {
         $this->path = $path;
     }
 
-    public function getLocalizedPaths(): array
+    public function getPath()
     {
-        return $this->localizedPaths;
+        return $this->path;
     }
 
     public function setLocalizedPaths(array $localizedPaths)
@@ -170,9 +165,9 @@ class Route
         $this->localizedPaths = $localizedPaths;
     }
 
-    public function getHost()
+    public function getLocalizedPaths(): array
     {
-        return $this->host;
+        return $this->localizedPaths;
     }
 
     public function setHost($pattern)
@@ -180,9 +175,9 @@ class Route
         $this->host = $pattern;
     }
 
-    public function getName()
+    public function getHost()
     {
-        return $this->name;
+        return $this->host;
     }
 
     public function setName($name)
@@ -190,9 +185,9 @@ class Route
         $this->name = $name;
     }
 
-    public function getRequirements()
+    public function getName()
     {
-        return $this->requirements;
+        return $this->name;
     }
 
     public function setRequirements($requirements)
@@ -200,9 +195,9 @@ class Route
         $this->requirements = $requirements;
     }
 
-    public function getOptions()
+    public function getRequirements()
     {
-        return $this->options;
+        return $this->requirements;
     }
 
     public function setOptions($options)
@@ -210,9 +205,9 @@ class Route
         $this->options = $options;
     }
 
-    public function getDefaults()
+    public function getOptions()
     {
-        return $this->defaults;
+        return $this->options;
     }
 
     public function setDefaults($defaults)
@@ -220,9 +215,9 @@ class Route
         $this->defaults = $defaults;
     }
 
-    public function getSchemes()
+    public function getDefaults()
     {
-        return $this->schemes;
+        return $this->defaults;
     }
 
     public function setSchemes($schemes)
@@ -230,9 +225,9 @@ class Route
         $this->schemes = \is_array($schemes) ? $schemes : [$schemes];
     }
 
-    public function getMethods()
+    public function getSchemes()
     {
-        return $this->methods;
+        return $this->schemes;
     }
 
     public function setMethods($methods)
@@ -240,9 +235,9 @@ class Route
         $this->methods = \is_array($methods) ? $methods : [$methods];
     }
 
-    public function getCondition()
+    public function getMethods()
     {
-        return $this->condition;
+        return $this->methods;
     }
 
     public function setCondition($condition)
@@ -250,9 +245,9 @@ class Route
         $this->condition = $condition;
     }
 
-    public function getPriority(): ?int
+    public function getCondition()
     {
-        return $this->priority;
+        return $this->condition;
     }
 
     public function setPriority(int $priority): void
@@ -260,13 +255,18 @@ class Route
         $this->priority = $priority;
     }
 
-    public function getEnv(): ?string
+    public function getPriority(): ?int
     {
-        return $this->env;
+        return $this->priority;
     }
 
     public function setEnv(?string $env): void
     {
         $this->env = $env;
+    }
+
+    public function getEnv(): ?string
+    {
+        return $this->env;
     }
 }

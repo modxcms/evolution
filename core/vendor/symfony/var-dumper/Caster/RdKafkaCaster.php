@@ -51,24 +51,6 @@ class RdKafkaCaster
         return $a;
     }
 
-    private static function extractMetadata($c)
-    {
-        $prefix = Caster::PREFIX_VIRTUAL;
-
-        try {
-            $m = $c->getMetadata(true, null, 500);
-        } catch (RdKafkaException $e) {
-            return [];
-        }
-
-        return [
-            $prefix.'orig_broker_id' => $m->getOrigBrokerId(),
-            $prefix.'orig_broker_name' => $m->getOrigBrokerName(),
-            $prefix.'brokers' => $m->getBrokers(),
-            $prefix.'topics' => $m->getTopics(),
-        ];
-    }
-
     public static function castTopic(Topic $c, array $a, Stub $stub, $isNested)
     {
         $prefix = Caster::PREFIX_VIRTUAL;
@@ -182,5 +164,23 @@ class RdKafkaCaster
         ];
 
         return $a;
+    }
+
+    private static function extractMetadata($c)
+    {
+        $prefix = Caster::PREFIX_VIRTUAL;
+
+        try {
+            $m = $c->getMetadata(true, null, 500);
+        } catch (RdKafkaException $e) {
+            return [];
+        }
+
+        return [
+            $prefix.'orig_broker_id' => $m->getOrigBrokerId(),
+            $prefix.'orig_broker_name' => $m->getOrigBrokerName(),
+            $prefix.'brokers' => $m->getBrokers(),
+            $prefix.'topics' => $m->getTopics(),
+        ];
     }
 }

@@ -14,16 +14,6 @@ trait CompilesConditionals
     protected $firstCaseInSwitch = true;
 
     /**
-     * Compile an end-once block into valid PHP.
-     *
-     * @return string
-     */
-    public function compileEndOnce()
-    {
-        return '<?php endif; ?>';
-    }
-
-    /**
      * Compile the if-auth statements into valid PHP.
      *
      * @param  string|null  $guard
@@ -303,5 +293,15 @@ trait CompilesConditionals
         $id = $id ? $this->stripParentheses($id) : "'".(string) Str::uuid()."'";
 
         return '<?php if (! $__env->hasRenderedOnce('.$id.')): $__env->markAsRenderedOnce('.$id.'); ?>';
+    }
+
+    /**
+     * Compile an end-once block into valid PHP.
+     *
+     * @return string
+     */
+    public function compileEndOnce()
+    {
+        return '<?php endif; ?>';
     }
 }

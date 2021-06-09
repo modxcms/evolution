@@ -15,19 +15,6 @@ namespace WebPConvert\Loggers;
 abstract class BaseLogger
 {
     /**
-     * Write a line to the log
-     *
-     * @param  string  $msg     message to log
-     * @param  string  $style   style (null | bold | italic)
-     * @return void
-     */
-    public function logLn($msg, $style = '')
-    {
-        $this->log($msg, $style);
-        $this->ln();
-    }
-
-    /**
      * Write a message to the log
      *
      * @param  string  $msg     message to log
@@ -41,4 +28,17 @@ abstract class BaseLogger
      * @return void
      */
     abstract public function ln();
+
+    /**
+     * Write a line to the log
+     *
+     * @param  string  $msg     message to log
+     * @param  string  $style   style (null | bold | italic)
+     * @return void
+     */
+    public function logLn($msg, $style = '')
+    {
+        $this->log($msg, $style);
+        $this->ln();
+    }
 }

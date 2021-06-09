@@ -129,21 +129,21 @@ class PoolingShardConnection extends Connection
     /**
      * {@inheritdoc}
      */
-    public function getHost()
-    {
-        $params = $this->getParams();
-
-        return $params['host'] ?? parent::getHost();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getParams()
     {
         return $this->activeShardId
             ? $this->connectionParameters[$this->activeShardId]
             : $this->connectionParameters[0];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getHost()
+    {
+        $params = $this->getParams();
+
+        return $params['host'] ?? parent::getHost();
     }
 
     /**

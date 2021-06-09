@@ -14,12 +14,13 @@ use Psr\Http\Message\StreamInterface;
  */
 class FnStream implements StreamInterface
 {
+    /** @var array */
+    private $methods;
+
     /** @var array Methods that must be implemented in the given array */
     private static $slots = ['__toString', 'close', 'detach', 'rewind',
         'getSize', 'tell', 'eof', 'isSeekable', 'seek', 'isWritable', 'write',
         'isReadable', 'read', 'getContents', 'getMetadata'];
-    /** @var array */
-    private $methods;
 
     /**
      * @param array $methods Hash of method name to a callable.
@@ -32,26 +33,6 @@ class FnStream implements StreamInterface
         foreach ($methods as $name => $fn) {
             $this->{'_fn_' . $name} = $fn;
         }
-    }
-
-    /**
-     * Adds custom functionality to an underlying stream by intercepting
-     * specific method calls.
-     *
-     * @param StreamInterface $stream  Stream to decorate
-     * @param array           $methods Hash of method name to a closure
-     *
-     * @return FnStream
-     */
-    public static function decorate(StreamInterface $stream, array $methods)
-    {
-        // If any of the required methods were not provided, then simply
-        // proxy to the decorated stream.
-        foreach (array_diff(self::$slots, array_keys($methods)) as $diff) {
-            $methods[$diff] = [$stream, $diff];
-        }
-
-        return new self($methods);
     }
 
     /**
@@ -83,6 +64,26 @@ class FnStream implements StreamInterface
     public function __wakeup()
     {
         throw new \LogicException('FnStream should never be unserialized');
+    }
+
+    /**
+     * Adds custom functionality to an underlying stream by intercepting
+     * specific method calls.
+     *
+     * @param StreamInterface $stream  Stream to decorate
+     * @param array           $methods Hash of method name to a closure
+     *
+     * @return FnStream
+     */
+    public static function decorate(StreamInterface $stream, array $methods)
+    {
+        // If any of the required methods were not provided, then simply
+        // proxy to the decorated stream.
+        foreach (array_diff(self::$slots, array_keys($methods)) as $diff) {
+            $methods[$diff] = [$stream, $diff];
+        }
+
+        return new self($methods);
     }
 
     public function __toString()

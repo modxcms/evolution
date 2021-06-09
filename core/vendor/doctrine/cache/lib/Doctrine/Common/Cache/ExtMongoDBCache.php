@@ -71,39 +71,6 @@ class ExtMongoDBCache extends CacheProvider
     }
 
     /**
-     * Check if the document is expired.
-     */
-    private function isExpired(BSONDocument $document): bool
-    {
-        return isset($document[MongoDBCache::EXPIRATION_FIELD]) &&
-            $document[MongoDBCache::EXPIRATION_FIELD] instanceof UTCDateTime &&
-            $document[MongoDBCache::EXPIRATION_FIELD]->toDateTime() < new DateTime();
-    }
-
-    private function createExpirationIndex(): void
-    {
-        if ($this->expirationIndexCreated) {
-            return;
-        }
-
-        $this->collection->createIndex([MongoDBCache::EXPIRATION_FIELD => 1], ['background' => true, 'expireAfterSeconds' => 0]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function doDelete($id)
-    {
-        try {
-            $this->collection->deleteOne(['_id' => $id]);
-        } catch (Exception $e) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * {@inheritdoc}
      */
     protected function doContains($id)
@@ -140,6 +107,20 @@ class ExtMongoDBCache extends CacheProvider
                 ],
                 ['upsert' => true]
             );
+        } catch (Exception $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function doDelete($id)
+    {
+        try {
+            $this->collection->deleteOne(['_id' => $id]);
         } catch (Exception $e) {
             return false;
         }
@@ -195,5 +176,24 @@ class ExtMongoDBCache extends CacheProvider
             Cache::STATS_MEMORY_USAGE => $memoryUsage,
             Cache::STATS_MEMORY_AVAILABLE  => null,
         ];
+    }
+
+    /**
+     * Check if the document is expired.
+     */
+    private function isExpired(BSONDocument $document): bool
+    {
+        return isset($document[MongoDBCache::EXPIRATION_FIELD]) &&
+            $document[MongoDBCache::EXPIRATION_FIELD] instanceof UTCDateTime &&
+            $document[MongoDBCache::EXPIRATION_FIELD]->toDateTime() < new DateTime();
+    }
+
+    private function createExpirationIndex(): void
+    {
+        if ($this->expirationIndexCreated) {
+            return;
+        }
+
+        $this->collection->createIndex([MongoDBCache::EXPIRATION_FIELD => 1], ['background' => true, 'expireAfterSeconds' => 0]);
     }
 }

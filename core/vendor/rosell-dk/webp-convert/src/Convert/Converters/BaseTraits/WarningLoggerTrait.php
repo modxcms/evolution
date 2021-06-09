@@ -14,10 +14,14 @@ namespace WebPConvert\Convert\Converters\BaseTraits;
  */
 trait WarningLoggerTrait
 {
+    abstract public function logLn($msg, $style = '');
+
     /** @var string|array|null  Previous error handler (stored in order to be able pass warnings on) */
     private $previousErrorHandler;
+
     /** @var boolean  Suppress ALL warnings? (both from log and from bubbling up) */
     private $suppressWarnings;
+
     /** @var int  Count number of warnings */
     private $warningCounter;
 
@@ -119,8 +123,6 @@ trait WarningLoggerTrait
             return false;
         }
     }
-
-    abstract public function logLn($msg, $style = '');
 
     /**
      *  Activate warning logger.

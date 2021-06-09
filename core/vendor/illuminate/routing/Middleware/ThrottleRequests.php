@@ -138,6 +138,45 @@ class ThrottleRequests
     }
 
     /**
+     * Resolve the number of attempts if the user is authenticated or not.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int|string  $maxAttempts
+     * @return int
+     */
+    protected function resolveMaxAttempts($request, $maxAttempts)
+    {
+        if (Str::contains($maxAttempts, '|')) {
+            $maxAttempts = explode('|', $maxAttempts, 2)[$request->user() ? 1 : 0];
+        }
+
+        if (! is_numeric($maxAttempts) && $request->user()) {
+            $maxAttempts = $request->user()->{$maxAttempts};
+        }
+
+        return (int) $maxAttempts;
+    }
+
+    /**
+     * Resolve request signature.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return string
+     *
+     * @throws \RuntimeException
+     */
+    protected function resolveRequestSignature($request)
+    {
+        if ($user = $request->user()) {
+            return sha1($user->getAuthIdentifier());
+        } elseif ($route = $request->route()) {
+            return sha1($route->getDomain().'|'.$request->ip());
+        }
+
+        throw new RuntimeException('Unable to generate the request signature. Route unavailable.');
+    }
+
+    /**
      * Create a 'too many attempts' exception.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -170,6 +209,24 @@ class ThrottleRequests
     protected function getTimeUntilNextRetry($key)
     {
         return $this->limiter->availableIn($key);
+    }
+
+    /**
+     * Add the limit header information to the given response.
+     *
+     * @param  \Symfony\Component\HttpFoundation\Response  $response
+     * @param  int  $maxAttempts
+     * @param  int  $remainingAttempts
+     * @param  int|null  $retryAfter
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function addHeaders(Response $response, $maxAttempts, $remainingAttempts, $retryAfter = null)
+    {
+        $response->headers->add(
+            $this->getHeaders($maxAttempts, $remainingAttempts, $retryAfter, $response)
+        );
+
+        return $response;
     }
 
     /**
@@ -216,62 +273,5 @@ class ThrottleRequests
     protected function calculateRemainingAttempts($key, $maxAttempts, $retryAfter = null)
     {
         return is_null($retryAfter) ? $this->limiter->retriesLeft($key, $maxAttempts) : 0;
-    }
-
-    /**
-     * Add the limit header information to the given response.
-     *
-     * @param  \Symfony\Component\HttpFoundation\Response  $response
-     * @param  int  $maxAttempts
-     * @param  int  $remainingAttempts
-     * @param  int|null  $retryAfter
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    protected function addHeaders(Response $response, $maxAttempts, $remainingAttempts, $retryAfter = null)
-    {
-        $response->headers->add(
-            $this->getHeaders($maxAttempts, $remainingAttempts, $retryAfter, $response)
-        );
-
-        return $response;
-    }
-
-    /**
-     * Resolve request signature.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return string
-     *
-     * @throws \RuntimeException
-     */
-    protected function resolveRequestSignature($request)
-    {
-        if ($user = $request->user()) {
-            return sha1($user->getAuthIdentifier());
-        } elseif ($route = $request->route()) {
-            return sha1($route->getDomain().'|'.$request->ip());
-        }
-
-        throw new RuntimeException('Unable to generate the request signature. Route unavailable.');
-    }
-
-    /**
-     * Resolve the number of attempts if the user is authenticated or not.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int|string  $maxAttempts
-     * @return int
-     */
-    protected function resolveMaxAttempts($request, $maxAttempts)
-    {
-        if (Str::contains($maxAttempts, '|')) {
-            $maxAttempts = explode('|', $maxAttempts, 2)[$request->user() ? 1 : 0];
-        }
-
-        if (! is_numeric($maxAttempts) && $request->user()) {
-            $maxAttempts = $request->user()->{$maxAttempts};
-        }
-
-        return (int) $maxAttempts;
     }
 }

@@ -60,6 +60,20 @@ class MorphToMany extends BelongsToMany
     }
 
     /**
+     * Set the where clause for the relation query.
+     *
+     * @return $this
+     */
+    protected function addWhereConstraints()
+    {
+        parent::addWhereConstraints();
+
+        $this->query->where($this->qualifyPivotColumn($this->morphType), $this->morphClass);
+
+        return $this;
+    }
+
+    /**
      * Set the constraints for an eager load of the relation.
      *
      * @param  array  $models
@@ -70,6 +84,20 @@ class MorphToMany extends BelongsToMany
         parent::addEagerConstraints($models);
 
         $this->query->where($this->qualifyPivotColumn($this->morphType), $this->morphClass);
+    }
+
+    /**
+     * Create a new pivot attachment record.
+     *
+     * @param  int  $id
+     * @param  bool  $timed
+     * @return array
+     */
+    protected function baseAttachRecord($id, $timed)
+    {
+        return Arr::add(
+            parent::baseAttachRecord($id, $timed), $this->morphType, $this->morphClass
+        );
     }
 
     /**
@@ -85,6 +113,21 @@ class MorphToMany extends BelongsToMany
         return parent::getRelationExistenceQuery($query, $parentQuery, $columns)->where(
             $this->qualifyPivotColumn($this->morphType), $this->morphClass
         );
+    }
+
+    /**
+     * Get the pivot models that are currently attached.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    protected function getCurrentlyAttachedPivots()
+    {
+        return parent::getCurrentlyAttachedPivots()->map(function ($record) {
+            return $record instanceof MorphPivot
+                            ? $record->setMorphType($this->morphType)
+                                     ->setMorphClass($this->morphClass)
+                            : $record;
+        });
     }
 
     /**
@@ -119,6 +162,22 @@ class MorphToMany extends BelongsToMany
     }
 
     /**
+     * Get the pivot columns for the relation.
+     *
+     * "pivot_" is prefixed at each column for easy removal later.
+     *
+     * @return array
+     */
+    protected function aliasedPivotColumns()
+    {
+        $defaults = [$this->foreignPivotKey, $this->relatedPivotKey, $this->morphType];
+
+        return collect(array_merge($defaults, $this->pivotColumns))->map(function ($column) {
+            return $this->qualifyPivotColumn($column).' as pivot_'.$column;
+        })->unique()->all();
+    }
+
+    /**
      * Get the foreign key "type" name.
      *
      * @return string
@@ -146,64 +205,5 @@ class MorphToMany extends BelongsToMany
     public function getInverse()
     {
         return $this->inverse;
-    }
-
-    /**
-     * Set the where clause for the relation query.
-     *
-     * @return $this
-     */
-    protected function addWhereConstraints()
-    {
-        parent::addWhereConstraints();
-
-        $this->query->where($this->qualifyPivotColumn($this->morphType), $this->morphClass);
-
-        return $this;
-    }
-
-    /**
-     * Create a new pivot attachment record.
-     *
-     * @param  int  $id
-     * @param  bool  $timed
-     * @return array
-     */
-    protected function baseAttachRecord($id, $timed)
-    {
-        return Arr::add(
-            parent::baseAttachRecord($id, $timed), $this->morphType, $this->morphClass
-        );
-    }
-
-    /**
-     * Get the pivot models that are currently attached.
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    protected function getCurrentlyAttachedPivots()
-    {
-        return parent::getCurrentlyAttachedPivots()->map(function ($record) {
-            return $record instanceof MorphPivot
-                            ? $record->setMorphType($this->morphType)
-                                     ->setMorphClass($this->morphClass)
-                            : $record;
-        });
-    }
-
-    /**
-     * Get the pivot columns for the relation.
-     *
-     * "pivot_" is prefixed at each column for easy removal later.
-     *
-     * @return array
-     */
-    protected function aliasedPivotColumns()
-    {
-        $defaults = [$this->foreignPivotKey, $this->relatedPivotKey, $this->morphType];
-
-        return collect(array_merge($defaults, $this->pivotColumns))->map(function ($column) {
-            return $this->qualifyPivotColumn($column).' as pivot_'.$column;
-        })->unique()->all();
     }
 }

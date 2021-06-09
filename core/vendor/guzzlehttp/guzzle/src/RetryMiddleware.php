@@ -89,13 +89,6 @@ class RetryMiddleware
         };
     }
 
-    private function doRetry(RequestInterface $request, array $options, ResponseInterface $response = null): PromiseInterface
-    {
-        $options['delay'] = ($this->delay)(++$options['retries'], $response);
-
-        return $this($request, $options);
-    }
-
     /**
      * Execute rejected closure
      */
@@ -112,5 +105,12 @@ class RetryMiddleware
             }
             return $this->doRetry($req, $options);
         };
+    }
+
+    private function doRetry(RequestInterface $request, array $options, ResponseInterface $response = null): PromiseInterface
+    {
+        $options['delay'] = ($this->delay)(++$options['retries'], $response);
+
+        return $this($request, $options);
     }
 }

@@ -138,99 +138,6 @@ abstract class Type
     }
 
     /**
-     * Factory method to create type instances.
-     * Type instances are implemented as flyweights.
-     *
-     * @param string $name The name of the type (as returned by getName()).
-     *
-     * @return Type
-     *
-     * @throws Exception
-     */
-    public static function getType($name)
-    {
-        return self::getTypeRegistry()->get($name);
-    }
-
-    final public static function getTypeRegistry(): TypeRegistry
-    {
-        if (self::$typeRegistry === null) {
-            self::$typeRegistry = self::createTypeRegistry();
-        }
-
-        return self::$typeRegistry;
-    }
-
-    private static function createTypeRegistry(): TypeRegistry
-    {
-        $instances = [];
-
-        foreach (self::BUILTIN_TYPES_MAP as $name => $class) {
-            $instances[$name] = new $class();
-        }
-
-        return new TypeRegistry($instances);
-    }
-
-    /**
-     * Adds a custom type to the type map.
-     *
-     * @param string             $name      The name of the type. This should correspond to what getName() returns.
-     * @param class-string<Type> $className The class name of the custom type.
-     *
-     * @return void
-     *
-     * @throws Exception
-     */
-    public static function addType($name, $className)
-    {
-        self::getTypeRegistry()->register($name, new $className());
-    }
-
-    /**
-     * Checks if exists support for a type.
-     *
-     * @param string $name The name of the type.
-     *
-     * @return bool TRUE if type is supported; FALSE otherwise.
-     */
-    public static function hasType($name)
-    {
-        return self::getTypeRegistry()->has($name);
-    }
-
-    /**
-     * Overrides an already defined type to use a different implementation.
-     *
-     * @param string             $name
-     * @param class-string<Type> $className
-     *
-     * @return void
-     *
-     * @throws Exception
-     */
-    public static function overrideType($name, $className)
-    {
-        self::getTypeRegistry()->override($name, new $className());
-    }
-
-    /**
-     * Gets the types array map which holds all registered types and the corresponding
-     * type class
-     *
-     * @return string[]
-     */
-    public static function getTypesMap()
-    {
-        return array_map(
-            static function (Type $type): string {
-                return get_class($type);
-            },
-            self::getTypeRegistry()->getMap()
-        );
-    }
-
-    /**
      * Converts a value from its PHP representation to its database representation
      * of this type.
      *
@@ -295,6 +202,83 @@ abstract class Type
      */
     abstract public function getName();
 
+    final public static function getTypeRegistry(): TypeRegistry
+    {
+        if (self::$typeRegistry === null) {
+            self::$typeRegistry = self::createTypeRegistry();
+        }
+
+        return self::$typeRegistry;
+    }
+
+    private static function createTypeRegistry(): TypeRegistry
+    {
+        $instances = [];
+
+        foreach (self::BUILTIN_TYPES_MAP as $name => $class) {
+            $instances[$name] = new $class();
+        }
+
+        return new TypeRegistry($instances);
+    }
+
+    /**
+     * Factory method to create type instances.
+     * Type instances are implemented as flyweights.
+     *
+     * @param string $name The name of the type (as returned by getName()).
+     *
+     * @return Type
+     *
+     * @throws Exception
+     */
+    public static function getType($name)
+    {
+        return self::getTypeRegistry()->get($name);
+    }
+
+    /**
+     * Adds a custom type to the type map.
+     *
+     * @param string             $name      The name of the type. This should correspond to what getName() returns.
+     * @param class-string<Type> $className The class name of the custom type.
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
+    public static function addType($name, $className)
+    {
+        self::getTypeRegistry()->register($name, new $className());
+    }
+
+    /**
+     * Checks if exists support for a type.
+     *
+     * @param string $name The name of the type.
+     *
+     * @return bool TRUE if type is supported; FALSE otherwise.
+     */
+    public static function hasType($name)
+    {
+        return self::getTypeRegistry()->has($name);
+    }
+
+    /**
+     * Overrides an already defined type to use a different implementation.
+     *
+     * @param string             $name
+     * @param class-string<Type> $className
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
+    public static function overrideType($name, $className)
+    {
+        self::getTypeRegistry()->override($name, new $className());
+    }
+
     /**
      * Gets the (preferred) binding type for values of this type that
      * can be used when binding parameters to prepared statements.
@@ -306,6 +290,22 @@ abstract class Type
     public function getBindingType()
     {
         return ParameterType::STRING;
+    }
+
+    /**
+     * Gets the types array map which holds all registered types and the corresponding
+     * type class
+     *
+     * @return string[]
+     */
+    public static function getTypesMap()
+    {
+        return array_map(
+            static function (Type $type): string {
+                return get_class($type);
+            },
+            self::getTypeRegistry()->getMap()
+        );
     }
 
     /**

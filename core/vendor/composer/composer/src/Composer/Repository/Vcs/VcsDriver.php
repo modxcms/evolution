@@ -73,16 +73,14 @@ abstract class VcsDriver implements VcsDriverInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Returns whether or not the given $identifier should be cached or not.
+     *
+     * @param  string $identifier
+     * @return bool
      */
-    public function hasComposerFile($identifier)
+    protected function shouldCache($identifier)
     {
-        try {
-            return (bool) $this->getComposerInformation($identifier);
-        } catch (TransportException $e) {
-        }
-
-        return false;
+        return $this->cache && preg_match('{^[a-f0-9]{40}$}iD', $identifier);
     }
 
     /**
@@ -107,17 +105,6 @@ abstract class VcsDriver implements VcsDriverInterface
         return $this->infoCache[$identifier];
     }
 
-    /**
-     * Returns whether or not the given $identifier should be cached or not.
-     *
-     * @param  string $identifier
-     * @return bool
-     */
-    protected function shouldCache($identifier)
-    {
-        return $this->cache && preg_match('{^[a-f0-9]{40}$}iD', $identifier);
-    }
-
     protected function getBaseComposerInformation($identifier)
     {
         $composerFileContent = $this->getFileContent('composer.json', $identifier);
@@ -138,9 +125,14 @@ abstract class VcsDriver implements VcsDriverInterface
     /**
      * {@inheritDoc}
      */
-    public function cleanup()
+    public function hasComposerFile($identifier)
     {
-        return;
+        try {
+            return (bool) $this->getComposerInformation($identifier);
+        } catch (TransportException $e) {
+        }
+
+        return false;
     }
 
     /**
@@ -171,5 +163,13 @@ abstract class VcsDriver implements VcsDriverInterface
         $options = isset($this->repoConfig['options']) ? $this->repoConfig['options'] : array();
 
         return $this->httpDownloader->get($url, $options);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function cleanup()
+    {
+        return;
     }
 }

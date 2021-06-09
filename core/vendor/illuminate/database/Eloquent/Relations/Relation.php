@@ -23,41 +23,46 @@ abstract class Relation
     }
 
     /**
-     * An array to map class names to their morph names in the database.
-     *
-     * @var array
-     */
-    public static $morphMap = [];
-    /**
-     * Indicates if the relation is adding constraints.
-     *
-     * @var bool
-     */
-    protected static $constraints = true;
-    /**
-     * The count of self joins.
-     *
-     * @var int
-     */
-    protected static $selfJoinCount = 0;
-    /**
      * The Eloquent query builder instance.
      *
      * @var \Illuminate\Database\Eloquent\Builder
      */
     protected $query;
+
     /**
      * The parent model instance.
      *
      * @var \Illuminate\Database\Eloquent\Model
      */
     protected $parent;
+
     /**
      * The related model instance.
      *
      * @var \Illuminate\Database\Eloquent\Model
      */
     protected $related;
+
+    /**
+     * Indicates if the relation is adding constraints.
+     *
+     * @var bool
+     */
+    protected static $constraints = true;
+
+    /**
+     * An array to map class names to their morph names in the database.
+     *
+     * @var array
+     */
+    public static $morphMap = [];
+
+    /**
+     * The count of self joins.
+     *
+     * @var int
+     */
+    protected static $selfJoinCount = 0;
 
     /**
      * Create a new relation instance.
@@ -74,13 +79,6 @@ abstract class Relation
 
         $this->addConstraints();
     }
-
-    /**
-     * Set the base constraints on the relation query.
-     *
-     * @return void
-     */
-    abstract public function addConstraints();
 
     /**
      * Run a callback with constraints disabled on the relation.
@@ -102,6 +100,280 @@ abstract class Relation
         } finally {
             static::$constraints = $previous;
         }
+    }
+
+    /**
+     * Set the base constraints on the relation query.
+     *
+     * @return void
+     */
+    abstract public function addConstraints();
+
+    /**
+     * Set the constraints for an eager load of the relation.
+     *
+     * @param  array  $models
+     * @return void
+     */
+    abstract public function addEagerConstraints(array $models);
+
+    /**
+     * Initialize the relation on a set of models.
+     *
+     * @param  array  $models
+     * @param  string  $relation
+     * @return array
+     */
+    abstract public function initRelation(array $models, $relation);
+
+    /**
+     * Match the eagerly loaded results to their parents.
+     *
+     * @param  array  $models
+     * @param  \Illuminate\Database\Eloquent\Collection  $results
+     * @param  string  $relation
+     * @return array
+     */
+    abstract public function match(array $models, Collection $results, $relation);
+
+    /**
+     * Get the results of the relationship.
+     *
+     * @return mixed
+     */
+    abstract public function getResults();
+
+    /**
+     * Get the relationship for eager loading.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getEager()
+    {
+        return $this->get();
+    }
+
+    /**
+     * Execute the query and get the first result if it's the sole matching record.
+     *
+     * @param  array|string  $columns
+     * @return \Illuminate\Database\Eloquent\Model
+     *
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws \Illuminate\Database\MultipleRecordsFoundException
+     */
+    public function sole($columns = ['*'])
+    {
+        $result = $this->take(2)->get($columns);
+
+        if ($result->isEmpty()) {
+            throw (new ModelNotFoundException)->setModel(get_class($this->related));
+        }
+
+        if ($result->count() > 1) {
+            throw new MultipleRecordsFoundException;
+        }
+
+        return $result->first();
+    }
+
+    /**
+     * Execute the query as a "select" statement.
+     *
+     * @param  array  $columns
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function get($columns = ['*'])
+    {
+        return $this->query->get($columns);
+    }
+
+    /**
+     * Touch all of the related models for the relationship.
+     *
+     * @return void
+     */
+    public function touch()
+    {
+        $model = $this->getRelated();
+
+        if (! $model::isIgnoringTouch()) {
+            $this->rawUpdate([
+                $model->getUpdatedAtColumn() => $model->freshTimestampString(),
+            ]);
+        }
+    }
+
+    /**
+     * Run a raw update against the base query.
+     *
+     * @param  array  $attributes
+     * @return int
+     */
+    public function rawUpdate(array $attributes = [])
+    {
+        return $this->query->withoutGlobalScopes()->update($attributes);
+    }
+
+    /**
+     * Add the constraints for a relationship count query.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  \Illuminate\Database\Eloquent\Builder  $parentQuery
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function getRelationExistenceCountQuery(Builder $query, Builder $parentQuery)
+    {
+        return $this->getRelationExistenceQuery(
+            $query, $parentQuery, new Expression('count(*)')
+        )->setBindings([], 'select');
+    }
+
+    /**
+     * Add the constraints for an internal relationship existence query.
+     *
+     * Essentially, these queries compare on column names like whereColumn.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  \Illuminate\Database\Eloquent\Builder  $parentQuery
+     * @param  array|mixed  $columns
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function getRelationExistenceQuery(Builder $query, Builder $parentQuery, $columns = ['*'])
+    {
+        return $query->select($columns)->whereColumn(
+            $this->getQualifiedParentKeyName(), '=', $this->getExistenceCompareKey()
+        );
+    }
+
+    /**
+     * Get a relationship join table hash.
+     *
+     * @param  bool  $incrementJoinCount
+     * @return string
+     */
+    public function getRelationCountHash($incrementJoinCount = true)
+    {
+        return 'laravel_reserved_'.($incrementJoinCount ? static::$selfJoinCount++ : static::$selfJoinCount);
+    }
+
+    /**
+     * Get all of the primary keys for an array of models.
+     *
+     * @param  array  $models
+     * @param  string|null  $key
+     * @return array
+     */
+    protected function getKeys(array $models, $key = null)
+    {
+        return collect($models)->map(function ($value) use ($key) {
+            return $key ? $value->getAttribute($key) : $value->getKey();
+        })->values()->unique(null, true)->sort()->all();
+    }
+
+    /**
+     * Get the query builder that will contain the relationship constraints.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function getRelationQuery()
+    {
+        return $this->query;
+    }
+
+    /**
+     * Get the underlying query for the relation.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function getQuery()
+    {
+        return $this->query;
+    }
+
+    /**
+     * Get the base query builder driving the Eloquent builder.
+     *
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function getBaseQuery()
+    {
+        return $this->query->getQuery();
+    }
+
+    /**
+     * Get the parent model of the relation.
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * Get the fully qualified parent key name.
+     *
+     * @return string
+     */
+    public function getQualifiedParentKeyName()
+    {
+        return $this->parent->getQualifiedKeyName();
+    }
+
+    /**
+     * Get the related model of the relation.
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function getRelated()
+    {
+        return $this->related;
+    }
+
+    /**
+     * Get the name of the "created at" column.
+     *
+     * @return string
+     */
+    public function createdAt()
+    {
+        return $this->parent->getCreatedAtColumn();
+    }
+
+    /**
+     * Get the name of the "updated at" column.
+     *
+     * @return string
+     */
+    public function updatedAt()
+    {
+        return $this->parent->getUpdatedAtColumn();
+    }
+
+    /**
+     * Get the name of the related model's "updated at" column.
+     *
+     * @return string
+     */
+    public function relatedUpdatedAt()
+    {
+        return $this->related->getUpdatedAtColumn();
+    }
+
+    /**
+     * Get the name of the "where in" method for eager loading.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  string  $key
+     * @return string
+     */
+    protected function whereInMethod(Model $model, $key)
+    {
+        return $model->getKeyName() === last(explode('.', $key))
+                    && in_array($model->getKeyType(), ['int', 'integer'])
+                        ? 'whereIntegerInRaw'
+                        : 'whereIn';
     }
 
     /**
@@ -152,234 +424,6 @@ abstract class Relation
     }
 
     /**
-     * Set the constraints for an eager load of the relation.
-     *
-     * @param  array  $models
-     * @return void
-     */
-    abstract public function addEagerConstraints(array $models);
-
-    /**
-     * Initialize the relation on a set of models.
-     *
-     * @param  array  $models
-     * @param  string  $relation
-     * @return array
-     */
-    abstract public function initRelation(array $models, $relation);
-
-    /**
-     * Match the eagerly loaded results to their parents.
-     *
-     * @param  array  $models
-     * @param  \Illuminate\Database\Eloquent\Collection  $results
-     * @param  string  $relation
-     * @return array
-     */
-    abstract public function match(array $models, Collection $results, $relation);
-
-    /**
-     * Get the results of the relationship.
-     *
-     * @return mixed
-     */
-    abstract public function getResults();
-
-    /**
-     * Get the relationship for eager loading.
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getEager()
-    {
-        return $this->get();
-    }
-
-    /**
-     * Execute the query as a "select" statement.
-     *
-     * @param  array  $columns
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function get($columns = ['*'])
-    {
-        return $this->query->get($columns);
-    }
-
-    /**
-     * Execute the query and get the first result if it's the sole matching record.
-     *
-     * @param  array|string  $columns
-     * @return \Illuminate\Database\Eloquent\Model
-     *
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
-     * @throws \Illuminate\Database\MultipleRecordsFoundException
-     */
-    public function sole($columns = ['*'])
-    {
-        $result = $this->take(2)->get($columns);
-
-        if ($result->isEmpty()) {
-            throw (new ModelNotFoundException)->setModel(get_class($this->related));
-        }
-
-        if ($result->count() > 1) {
-            throw new MultipleRecordsFoundException;
-        }
-
-        return $result->first();
-    }
-
-    /**
-     * Touch all of the related models for the relationship.
-     *
-     * @return void
-     */
-    public function touch()
-    {
-        $model = $this->getRelated();
-
-        if (! $model::isIgnoringTouch()) {
-            $this->rawUpdate([
-                $model->getUpdatedAtColumn() => $model->freshTimestampString(),
-            ]);
-        }
-    }
-
-    /**
-     * Get the related model of the relation.
-     *
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function getRelated()
-    {
-        return $this->related;
-    }
-
-    /**
-     * Run a raw update against the base query.
-     *
-     * @param  array  $attributes
-     * @return int
-     */
-    public function rawUpdate(array $attributes = [])
-    {
-        return $this->query->withoutGlobalScopes()->update($attributes);
-    }
-
-    /**
-     * Add the constraints for a relationship count query.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  \Illuminate\Database\Eloquent\Builder  $parentQuery
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function getRelationExistenceCountQuery(Builder $query, Builder $parentQuery)
-    {
-        return $this->getRelationExistenceQuery(
-            $query, $parentQuery, new Expression('count(*)')
-        )->setBindings([], 'select');
-    }
-
-    /**
-     * Add the constraints for an internal relationship existence query.
-     *
-     * Essentially, these queries compare on column names like whereColumn.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  \Illuminate\Database\Eloquent\Builder  $parentQuery
-     * @param  array|mixed  $columns
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function getRelationExistenceQuery(Builder $query, Builder $parentQuery, $columns = ['*'])
-    {
-        return $query->select($columns)->whereColumn(
-            $this->getQualifiedParentKeyName(), '=', $this->getExistenceCompareKey()
-        );
-    }
-
-    /**
-     * Get the fully qualified parent key name.
-     *
-     * @return string
-     */
-    public function getQualifiedParentKeyName()
-    {
-        return $this->parent->getQualifiedKeyName();
-    }
-
-    /**
-     * Get a relationship join table hash.
-     *
-     * @param  bool  $incrementJoinCount
-     * @return string
-     */
-    public function getRelationCountHash($incrementJoinCount = true)
-    {
-        return 'laravel_reserved_'.($incrementJoinCount ? static::$selfJoinCount++ : static::$selfJoinCount);
-    }
-
-    /**
-     * Get the underlying query for the relation.
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function getQuery()
-    {
-        return $this->query;
-    }
-
-    /**
-     * Get the base query builder driving the Eloquent builder.
-     *
-     * @return \Illuminate\Database\Query\Builder
-     */
-    public function getBaseQuery()
-    {
-        return $this->query->getQuery();
-    }
-
-    /**
-     * Get the parent model of the relation.
-     *
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    /**
-     * Get the name of the "created at" column.
-     *
-     * @return string
-     */
-    public function createdAt()
-    {
-        return $this->parent->getCreatedAtColumn();
-    }
-
-    /**
-     * Get the name of the "updated at" column.
-     *
-     * @return string
-     */
-    public function updatedAt()
-    {
-        return $this->parent->getUpdatedAtColumn();
-    }
-
-    /**
-     * Get the name of the related model's "updated at" column.
-     *
-     * @return string
-     */
-    public function relatedUpdatedAt()
-    {
-        return $this->related->getUpdatedAtColumn();
-    }
-
-    /**
      * Handle dynamic method calls to the relationship.
      *
      * @param  string  $method
@@ -409,44 +453,5 @@ abstract class Relation
     public function __clone()
     {
         $this->query = clone $this->query;
-    }
-
-    /**
-     * Get all of the primary keys for an array of models.
-     *
-     * @param  array  $models
-     * @param  string|null  $key
-     * @return array
-     */
-    protected function getKeys(array $models, $key = null)
-    {
-        return collect($models)->map(function ($value) use ($key) {
-            return $key ? $value->getAttribute($key) : $value->getKey();
-        })->values()->unique(null, true)->sort()->all();
-    }
-
-    /**
-     * Get the query builder that will contain the relationship constraints.
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    protected function getRelationQuery()
-    {
-        return $this->query;
-    }
-
-    /**
-     * Get the name of the "where in" method for eager loading.
-     *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  string  $key
-     * @return string
-     */
-    protected function whereInMethod(Model $model, $key)
-    {
-        return $model->getKeyName() === last(explode('.', $key))
-                    && in_array($model->getKeyType(), ['int', 'integer'])
-                        ? 'whereIntegerInRaw'
-                        : 'whereIn';
     }
 }

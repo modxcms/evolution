@@ -69,6 +69,29 @@ class WebdisConnection implements NodeConnectionInterface
     }
 
     /**
+     * Frees the underlying cURL and protocol reader resources when the garbage
+     * collector kicks in.
+     */
+    public function __destruct()
+    {
+        curl_close($this->resource);
+        phpiredis_reader_destroy($this->reader);
+    }
+
+    /**
+     * Helper method used to throw on unsupported methods.
+     *
+     * @param string $method Name of the unsupported method.
+     *
+     * @throws NotSupportedException
+     */
+    private function throwNotSupportedException($method)
+    {
+        $class = __CLASS__;
+        throw new NotSupportedException("The method $class::$method() is not supported.");
+    }
+
+    /**
      * Checks if the cURL and phpiredis extensions are loaded in PHP.
      */
     private function assertExtensions()
@@ -116,14 +139,6 @@ class WebdisConnection implements NodeConnectionInterface
         curl_setopt_array($resource = curl_init(), $options);
 
         return $resource;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
     }
 
     /**
@@ -178,13 +193,18 @@ class WebdisConnection implements NodeConnectionInterface
     }
 
     /**
-     * Frees the underlying cURL and protocol reader resources when the garbage
-     * collector kicks in.
+     * Feeds the phpredis reader resource with the data read from the network.
+     *
+     * @param resource $resource Reader resource.
+     * @param string   $buffer   Buffer of data read from a connection.
+     *
+     * @return int
      */
-    public function __destruct()
+    protected function feedReader($resource, $buffer)
     {
-        curl_close($this->resource);
-        phpiredis_reader_destroy($this->reader);
+        phpiredis_reader_feed($this->reader, $buffer);
+
+        return strlen($buffer);
     }
 
     /**
@@ -212,24 +232,38 @@ class WebdisConnection implements NodeConnectionInterface
     }
 
     /**
+     * Checks if the specified command is supported by this connection class.
+     *
+     * @param CommandInterface $command Command instance.
+     *
+     * @throws NotSupportedException
+     *
+     * @return string
+     */
+    protected function getCommandId(CommandInterface $command)
+    {
+        switch ($commandID = $command->getId()) {
+            case 'AUTH':
+            case 'SELECT':
+            case 'MULTI':
+            case 'EXEC':
+            case 'WATCH':
+            case 'UNWATCH':
+            case 'DISCARD':
+            case 'MONITOR':
+                throw new NotSupportedException("Command '$commandID' is not allowed by Webdis.");
+
+            default:
+                return $commandID;
+        }
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function writeRequest(CommandInterface $command)
     {
         $this->throwNotSupportedException(__FUNCTION__);
-    }
-
-    /**
-     * Helper method used to throw on unsupported methods.
-     *
-     * @param string $method Name of the unsupported method.
-     *
-     * @throws NotSupportedException
-     */
-    private function throwNotSupportedException($method)
-    {
-        $class = __CLASS__;
-        throw new NotSupportedException("The method $class::$method() is not supported.");
     }
 
     /**
@@ -272,38 +306,19 @@ class WebdisConnection implements NodeConnectionInterface
     }
 
     /**
-     * Checks if the specified command is supported by this connection class.
-     *
-     * @param CommandInterface $command Command instance.
-     *
-     * @throws NotSupportedException
-     *
-     * @return string
-     */
-    protected function getCommandId(CommandInterface $command)
-    {
-        switch ($commandID = $command->getId()) {
-            case 'AUTH':
-            case 'SELECT':
-            case 'MULTI':
-            case 'EXEC':
-            case 'WATCH':
-            case 'UNWATCH':
-            case 'DISCARD':
-            case 'MONITOR':
-                throw new NotSupportedException("Command '$commandID' is not allowed by Webdis.");
-
-            default:
-                return $commandID;
-        }
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getResource()
     {
         return $this->resource;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
     }
 
     /**
@@ -347,20 +362,5 @@ class WebdisConnection implements NodeConnectionInterface
 
         $this->resource = $this->createCurl();
         $this->reader = $this->createReader();
-    }
-
-    /**
-     * Feeds the phpredis reader resource with the data read from the network.
-     *
-     * @param resource $resource Reader resource.
-     * @param string   $buffer   Buffer of data read from a connection.
-     *
-     * @return int
-     */
-    protected function feedReader($resource, $buffer)
-    {
-        phpiredis_reader_feed($this->reader, $buffer);
-
-        return strlen($buffer);
     }
 }

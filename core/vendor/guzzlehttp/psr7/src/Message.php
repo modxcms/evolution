@@ -105,34 +105,6 @@ final class Message
     }
 
     /**
-     * Parses a request message string into a request object.
-     *
-     * @param string $message Request message string.
-     *
-     * @return Request
-     */
-    public static function parseRequest($message)
-    {
-        $data = self::parseMessage($message);
-        $matches = [];
-        if (!preg_match('/^[\S]+\s+([a-zA-Z]+:\/\/|\/).*/', $data['start-line'], $matches)) {
-            throw new \InvalidArgumentException('Invalid request string');
-        }
-        $parts = explode(' ', $data['start-line'], 3);
-        $version = isset($parts[2]) ? explode('/', $parts[2])[1] : '1.1';
-
-        $request = new Request(
-            $parts[0],
-            $matches[1] === '/' ? self::parseRequestUri($parts[1], $data['headers']) : $parts[1],
-            $data['headers'],
-            $data['body'],
-            $version
-        );
-
-        return $matches[1] === '/' ? $request : $request->withRequestTarget($parts[1]);
-    }
-
-    /**
      * Parses an HTTP message into an associative array.
      *
      * The array contains the "start-line" key containing the start line of
@@ -221,6 +193,34 @@ final class Message
         $scheme = substr($host, -4) === ':443' ? 'https' : 'http';
 
         return $scheme . '://' . $host . '/' . ltrim($path, '/');
+    }
+
+    /**
+     * Parses a request message string into a request object.
+     *
+     * @param string $message Request message string.
+     *
+     * @return Request
+     */
+    public static function parseRequest($message)
+    {
+        $data = self::parseMessage($message);
+        $matches = [];
+        if (!preg_match('/^[\S]+\s+([a-zA-Z]+:\/\/|\/).*/', $data['start-line'], $matches)) {
+            throw new \InvalidArgumentException('Invalid request string');
+        }
+        $parts = explode(' ', $data['start-line'], 3);
+        $version = isset($parts[2]) ? explode('/', $parts[2])[1] : '1.1';
+
+        $request = new Request(
+            $parts[0],
+            $matches[1] === '/' ? self::parseRequestUri($parts[1], $data['headers']) : $parts[1],
+            $data['headers'],
+            $data['body'],
+            $version
+        );
+
+        return $matches[1] === '/' ? $request : $request->withRequestTarget($parts[1]);
     }
 
     /**

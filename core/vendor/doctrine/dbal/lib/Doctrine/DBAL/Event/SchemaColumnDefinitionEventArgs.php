@@ -45,14 +45,6 @@ class SchemaColumnDefinitionEventArgs extends SchemaEventArgs
     }
 
     /**
-     * @return Column|null
-     */
-    public function getColumn()
-    {
-        return $this->column;
-    }
-
-    /**
      * Allows to clear the column which means the column will be excluded from
      * tables column list.
      *
@@ -63,6 +55,14 @@ class SchemaColumnDefinitionEventArgs extends SchemaEventArgs
         $this->column = $column;
 
         return $this;
+    }
+
+    /**
+     * @return Column|null
+     */
+    public function getColumn()
+    {
+        return $this->column;
     }
 
     /**

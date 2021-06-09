@@ -23,17 +23,40 @@ use LogicException;
 trait HasAttributes
 {
     /**
-     * Indicates whether attributes are snake cased on arrays.
+     * The model's attributes.
      *
-     * @var bool
+     * @var array
      */
-    public static $snakeAttributes = true;
+    protected $attributes = [];
+
     /**
-     * The encrypter instance that is used to encrypt attributes.
+     * The model attribute's original state.
      *
-     * @var \Illuminate\Contracts\Encryption\Encrypter
+     * @var array
      */
-    public static $encrypter;
+    protected $original = [];
+
+    /**
+     * The changed model attributes.
+     *
+     * @var array
+     */
+    protected $changes = [];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [];
+
+    /**
+     * The attributes that have been cast using custom classes.
+     *
+     * @var array
+     */
+    protected $classCastCache = [];
+
     /**
      * The built-in, primitive cast types supported by Eloquent.
      *
@@ -63,42 +86,7 @@ trait HasAttributes
         'string',
         'timestamp',
     ];
-    /**
-     * The cache of the mutated attributes for each class.
-     *
-     * @var array
-     */
-    protected static $mutatorCache = [];
-    /**
-     * The model's attributes.
-     *
-     * @var array
-     */
-    protected $attributes = [];
-    /**
-     * The model attribute's original state.
-     *
-     * @var array
-     */
-    protected $original = [];
-    /**
-     * The changed model attributes.
-     *
-     * @var array
-     */
-    protected $changes = [];
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
-    protected $casts = [];
-    /**
-     * The attributes that have been cast using custom classes.
-     *
-     * @var array
-     */
-    protected $classCastCache = [];
+
     /**
      * The attributes that should be mutated to dates.
      *
@@ -107,12 +95,14 @@ trait HasAttributes
      * @var array
      */
     protected $dates = [];
+
     /**
      * The storage format of the model's date columns.
      *
      * @var string
      */
     protected $dateFormat;
+
     /**
      * The accessors to append to the model's array form.
      *
@@ -121,15 +111,25 @@ trait HasAttributes
     protected $appends = [];
 
     /**
-     * Set the encrypter instance that will be used to encrypt attributes.
+     * Indicates whether attributes are snake cased on arrays.
      *
-     * @param  \Illuminate\Contracts\Encryption\Encrypter  $encrypter
-     * @return void
+     * @var bool
      */
-    public static function encryptUsing($encrypter)
-    {
-        static::$encrypter = $encrypter;
-    }
+    public static $snakeAttributes = true;
+
+    /**
+     * The cache of the mutated attributes for each class.
+     *
+     * @var array
+     */
+    protected static $mutatorCache = [];
+
+    /**
+     * The encrypter instance that is used to encrypt attributes.
+     *
+     * @var \Illuminate\Contracts\Encryption\Encrypter
+     */
+    public static $encrypter;
 
     /**
      * Convert the model's attributes to an array.
@@ -188,238 +188,6 @@ trait HasAttributes
     }
 
     /**
-     * Get the attributes that should be converted to dates.
-     *
-     * @return array
-     */
-    public function getDates()
-    {
-        if (! $this->usesTimestamps()) {
-            return $this->dates;
-        }
-
-        $defaults = [
-            $this->getCreatedAtColumn(),
-            $this->getUpdatedAtColumn(),
-        ];
-
-        return array_unique(array_merge($this->dates, $defaults));
-    }
-
-    /**
-     * Prepare a date for array / JSON serialization.
-     *
-     * @param  \DateTimeInterface  $date
-     * @return string
-     */
-    protected function serializeDate(DateTimeInterface $date)
-    {
-        return Carbon::instance($date)->toJSON();
-    }
-
-    /**
-     * Return a timestamp as DateTime object.
-     *
-     * @param  mixed  $value
-     * @return \Illuminate\Support\Carbon
-     */
-    protected function asDateTime($value)
-    {
-        // If this value is already a Carbon instance, we shall just return it as is.
-        // This prevents us having to re-instantiate a Carbon instance when we know
-        // it already is one, which wouldn't be fulfilled by the DateTime check.
-        if ($value instanceof CarbonInterface) {
-            return Date::instance($value);
-        }
-
-        // If the value is already a DateTime instance, we will just skip the rest of
-        // these checks since they will be a waste of time, and hinder performance
-        // when checking the field. We will just return the DateTime right away.
-        if ($value instanceof DateTimeInterface) {
-            return Date::parse(
-                $value->format('Y-m-d H:i:s.u'), $value->getTimezone()
-            );
-        }
-
-        // If this value is an integer, we will assume it is a UNIX timestamp's value
-        // and format a Carbon object from this timestamp. This allows flexibility
-        // when defining your date fields as they might be UNIX timestamps here.
-        if (is_numeric($value)) {
-            return Date::createFromTimestamp($value);
-        }
-
-        // If the value is in simply year, month, day format, we will instantiate the
-        // Carbon instances from that format. Again, this provides for simple date
-        // fields on the database, while still supporting Carbonized conversion.
-        if ($this->isStandardDateFormat($value)) {
-            return Date::instance(Carbon::createFromFormat('Y-m-d', $value)->startOfDay());
-        }
-
-        $format = $this->getDateFormat();
-
-        // Finally, we will just assume this date is in the format used by default on
-        // the database connection and use that format to create the Carbon object
-        // that is returned back out to the developers after we convert it here.
-        try {
-            $date = Date::createFromFormat($format, $value);
-        } catch (InvalidArgumentException $e) {
-            $date = false;
-        }
-
-        return $date ?: Date::parse($value);
-    }
-
-    /**
-     * Determine if the given value is a standard date format.
-     *
-     * @param  string  $value
-     * @return bool
-     */
-    protected function isStandardDateFormat($value)
-    {
-        return preg_match('/^(\d{4})-(\d{1,2})-(\d{1,2})$/', $value);
-    }
-
-    /**
-     * Get the format for database stored dates.
-     *
-     * @return string
-     */
-    public function getDateFormat()
-    {
-        return $this->dateFormat ?: $this->getConnection()->getQueryGrammar()->getDateFormat();
-    }
-
-    /**
-     * Set the date format used by the model.
-     *
-     * @param  string  $format
-     * @return $this
-     */
-    public function setDateFormat($format)
-    {
-        $this->dateFormat = $format;
-
-        return $this;
-    }
-
-    /**
-     * Get an attribute array of all arrayable attributes.
-     *
-     * @return array
-     */
-    protected function getArrayableAttributes()
-    {
-        return $this->getArrayableItems($this->getAttributes());
-    }
-
-    /**
-     * Get an attribute array of all arrayable values.
-     *
-     * @param  array  $values
-     * @return array
-     */
-    protected function getArrayableItems(array $values)
-    {
-        if (count($this->getVisible()) > 0) {
-            $values = array_intersect_key($values, array_flip($this->getVisible()));
-        }
-
-        if (count($this->getHidden()) > 0) {
-            $values = array_diff_key($values, array_flip($this->getHidden()));
-        }
-
-        return $values;
-    }
-
-    /**
-     * Get all of the current attributes on the model.
-     *
-     * @return array
-     */
-    public function getAttributes()
-    {
-        $this->mergeAttributesFromClassCasts();
-
-        return $this->attributes;
-    }
-
-    /**
-     * Merge the cast class attributes back into the model.
-     *
-     * @return void
-     */
-    protected function mergeAttributesFromClassCasts()
-    {
-        foreach ($this->classCastCache as $key => $value) {
-            $caster = $this->resolveCasterClass($key);
-
-            $this->attributes = array_merge(
-                $this->attributes,
-                $caster instanceof CastsInboundAttributes
-                       ? [$key => $value]
-                       : $this->normalizeCastClassResponse($key, $caster->set($this, $key, $value, $this->attributes))
-            );
-        }
-    }
-
-    /**
-     * Resolve the custom caster class for a given key.
-     *
-     * @param  string  $key
-     * @return mixed
-     */
-    protected function resolveCasterClass($key)
-    {
-        $castType = $this->getCasts()[$key];
-
-        $arguments = [];
-
-        if (is_string($castType) && strpos($castType, ':') !== false) {
-            $segments = explode(':', $castType, 2);
-
-            $castType = $segments[0];
-            $arguments = explode(',', $segments[1]);
-        }
-
-        if (is_subclass_of($castType, Castable::class)) {
-            $castType = $castType::castUsing($arguments);
-        }
-
-        if (is_object($castType)) {
-            return $castType;
-        }
-
-        return new $castType(...$arguments);
-    }
-
-    /**
-     * Get the casts array.
-     *
-     * @return array
-     */
-    public function getCasts()
-    {
-        if ($this->getIncrementing()) {
-            return array_merge([$this->getKeyName() => $this->getKeyType()], $this->casts);
-        }
-
-        return $this->casts;
-    }
-
-    /**
-     * Normalize the response from a custom class caster.
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return array
-     */
-    protected function normalizeCastClassResponse($key, $value)
-    {
-        return is_array($value) ? $value : [$key => $value];
-    }
-
-    /**
      * Add the mutated attributes to the attributes array.
      *
      * @param  array  $attributes
@@ -445,144 +213,6 @@ trait HasAttributes
         }
 
         return $attributes;
-    }
-
-    /**
-     * Get the value of an attribute using its mutator for array conversion.
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return mixed
-     */
-    protected function mutateAttributeForArray($key, $value)
-    {
-        $value = $this->isClassCastable($key)
-                    ? $this->getClassCastableAttributeValue($key, $value)
-                    : $this->mutateAttribute($key, $value);
-
-        return $value instanceof Arrayable ? $value->toArray() : $value;
-    }
-
-    /**
-     * Determine if the given key is cast using a custom class.
-     *
-     * @param  string  $key
-     * @return bool
-     *
-     * @throws \Illuminate\Database\Eloquent\InvalidCastException
-     */
-    protected function isClassCastable($key)
-    {
-        if (! array_key_exists($key, $this->getCasts())) {
-            return false;
-        }
-
-        $castType = $this->parseCasterClass($this->getCasts()[$key]);
-
-        if (in_array($castType, static::$primitiveCastTypes)) {
-            return false;
-        }
-
-        if (class_exists($castType)) {
-            return true;
-        }
-
-        throw new InvalidCastException($this->getModel(), $key, $castType);
-    }
-
-    /**
-     * Parse the given caster class, removing any arguments.
-     *
-     * @param  string  $class
-     * @return string
-     */
-    protected function parseCasterClass($class)
-    {
-        return strpos($class, ':') === false
-                        ? $class
-                        : explode(':', $class, 2)[0];
-    }
-
-    /**
-     * Cast the given attribute using a custom cast class.
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return mixed
-     */
-    protected function getClassCastableAttributeValue($key, $value)
-    {
-        if (isset($this->classCastCache[$key])) {
-            return $this->classCastCache[$key];
-        } else {
-            $caster = $this->resolveCasterClass($key);
-
-            $value = $caster instanceof CastsInboundAttributes
-                        ? $value
-                        : $caster->get($this, $key, $value, $this->attributes);
-
-            if ($caster instanceof CastsInboundAttributes || ! is_object($value)) {
-                unset($this->classCastCache[$key]);
-            } else {
-                $this->classCastCache[$key] = $value;
-            }
-
-            return $value;
-        }
-    }
-
-    /**
-     * Get the value of an attribute using its mutator.
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return mixed
-     */
-    protected function mutateAttribute($key, $value)
-    {
-        return $this->{'get'.Str::studly($key).'Attribute'}($value);
-    }
-
-    /**
-     * Get the mutated attributes for a given instance.
-     *
-     * @return array
-     */
-    public function getMutatedAttributes()
-    {
-        $class = static::class;
-
-        if (! isset(static::$mutatorCache[$class])) {
-            static::cacheMutatedAttributes($class);
-        }
-
-        return static::$mutatorCache[$class];
-    }
-
-    /**
-     * Extract and cache all the mutated attributes of a class.
-     *
-     * @param  string  $class
-     * @return void
-     */
-    public static function cacheMutatedAttributes($class)
-    {
-        static::$mutatorCache[$class] = collect(static::getMutatorMethods($class))->map(function ($match) {
-            return lcfirst(static::$snakeAttributes ? Str::snake($match) : $match);
-        })->all();
-    }
-
-    /**
-     * Get all of the attribute mutator methods.
-     *
-     * @param  mixed  $class
-     * @return array
-     */
-    protected static function getMutatorMethods($class)
-    {
-        preg_match_all('/(?<=^|;)get([^;]+?)Attribute(;|$)/', implode(';', get_class_methods($class)), $matches);
-
-        return $matches[1];
     }
 
     /**
@@ -637,239 +267,13 @@ trait HasAttributes
     }
 
     /**
-     * Cast an attribute to a native PHP type.
+     * Get an attribute array of all arrayable attributes.
      *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return mixed
+     * @return array
      */
-    protected function castAttribute($key, $value)
+    protected function getArrayableAttributes()
     {
-        $castType = $this->getCastType($key);
-
-        if (is_null($value) && in_array($castType, static::$primitiveCastTypes)) {
-            return $value;
-        }
-
-        // If the key is one of the encrypted castable types, we'll first decrypt
-        // the value and update the cast type so we may leverage the following
-        // logic for casting this value to any additionally specified types.
-        if ($this->isEncryptedCastable($key)) {
-            $value = $this->fromEncryptedString($value);
-
-            $castType = Str::after($castType, 'encrypted:');
-        }
-
-        switch ($castType) {
-            case 'int':
-            case 'integer':
-                return (int) $value;
-            case 'real':
-            case 'float':
-            case 'double':
-                return $this->fromFloat($value);
-            case 'decimal':
-                return $this->asDecimal($value, explode(':', $this->getCasts()[$key], 2)[1]);
-            case 'string':
-                return (string) $value;
-            case 'bool':
-            case 'boolean':
-                return (bool) $value;
-            case 'object':
-                return $this->fromJson($value, true);
-            case 'array':
-            case 'json':
-                return $this->fromJson($value);
-            case 'collection':
-                return new BaseCollection($this->fromJson($value));
-            case 'date':
-                return $this->asDate($value);
-            case 'datetime':
-            case 'custom_datetime':
-                return $this->asDateTime($value);
-            case 'timestamp':
-                return $this->asTimestamp($value);
-        }
-
-        if ($this->isClassCastable($key)) {
-            return $this->getClassCastableAttributeValue($key, $value);
-        }
-
-        return $value;
-    }
-
-    /**
-     * Get the type of cast for a model attribute.
-     *
-     * @param  string  $key
-     * @return string
-     */
-    protected function getCastType($key)
-    {
-        if ($this->isCustomDateTimeCast($this->getCasts()[$key])) {
-            return 'custom_datetime';
-        }
-
-        if ($this->isDecimalCast($this->getCasts()[$key])) {
-            return 'decimal';
-        }
-
-        return trim(strtolower($this->getCasts()[$key]));
-    }
-
-    /**
-     * Determine if the cast type is a custom date time cast.
-     *
-     * @param  string  $cast
-     * @return bool
-     */
-    protected function isCustomDateTimeCast($cast)
-    {
-        return strncmp($cast, 'date:', 5) === 0 ||
-               strncmp($cast, 'datetime:', 9) === 0;
-    }
-
-    /**
-     * Determine if the cast type is a decimal cast.
-     *
-     * @param  string  $cast
-     * @return bool
-     */
-    protected function isDecimalCast($cast)
-    {
-        return strncmp($cast, 'decimal:', 8) === 0;
-    }
-
-    /**
-     * Determine whether a value is an encrypted castable for inbound manipulation.
-     *
-     * @param  string  $key
-     * @return bool
-     */
-    protected function isEncryptedCastable($key)
-    {
-        return $this->hasCast($key, ['encrypted', 'encrypted:array', 'encrypted:collection', 'encrypted:json', 'encrypted:object']);
-    }
-
-    /**
-     * Determine whether an attribute should be cast to a native type.
-     *
-     * @param  string  $key
-     * @param  array|string|null  $types
-     * @return bool
-     */
-    public function hasCast($key, $types = null)
-    {
-        if (array_key_exists($key, $this->getCasts())) {
-            return $types ? in_array($this->getCastType($key), (array) $types, true) : true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Decrypt the given encrypted string.
-     *
-     * @param  string  $value
-     * @return mixed
-     */
-    public function fromEncryptedString($value)
-    {
-        return (static::$encrypter ?? Crypt::getFacadeRoot())->decrypt($value, false);
-    }
-
-    /**
-     * Decode the given float.
-     *
-     * @param  mixed  $value
-     * @return mixed
-     */
-    public function fromFloat($value)
-    {
-        switch ((string) $value) {
-            case 'Infinity':
-                return INF;
-            case '-Infinity':
-                return -INF;
-            case 'NaN':
-                return NAN;
-            default:
-                return (float) $value;
-        }
-    }
-
-    /**
-     * Return a decimal as string.
-     *
-     * @param  float  $value
-     * @param  int  $decimals
-     * @return string
-     */
-    protected function asDecimal($value, $decimals)
-    {
-        return number_format($value, $decimals, '.', '');
-    }
-
-    /**
-     * Decode the given JSON back into an array or object.
-     *
-     * @param  string  $value
-     * @param  bool  $asObject
-     * @return mixed
-     */
-    public function fromJson($value, $asObject = false)
-    {
-        return json_decode($value, ! $asObject);
-    }
-
-    /**
-     * Return a timestamp as DateTime object with time set to 00:00:00.
-     *
-     * @param  mixed  $value
-     * @return \Illuminate\Support\Carbon
-     */
-    protected function asDate($value)
-    {
-        return $this->asDateTime($value)->startOfDay();
-    }
-
-    /**
-     * Return a timestamp as unix timestamp.
-     *
-     * @param  mixed  $value
-     * @return int
-     */
-    protected function asTimestamp($value)
-    {
-        return $this->asDateTime($value)->getTimestamp();
-    }
-
-    /**
-     * Determine if the key is serializable using a custom class.
-     *
-     * @param  string  $key
-     * @return bool
-     *
-     * @throws \Illuminate\Database\Eloquent\InvalidCastException
-     */
-    protected function isClassSerializable($key)
-    {
-        return $this->isClassCastable($key) &&
-               method_exists($this->parseCasterClass($this->getCasts()[$key]), 'serialize');
-    }
-
-    /**
-     * Serialize the given attribute using the custom cast class.
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return mixed
-     */
-    protected function serializeClassCastableAttribute($key, $value)
-    {
-        return $this->resolveCasterClass($key)->serialize(
-            $this, $key, $value, $this->attributes
-        );
+        return $this->getArrayableItems($this->getAttributes());
     }
 
     /**
@@ -943,409 +347,22 @@ trait HasAttributes
     }
 
     /**
-     * Merge new casts with existing casts on the model.
+     * Get an attribute array of all arrayable values.
      *
-     * @param  array  $casts
-     * @return $this
-     */
-    public function mergeCasts($casts)
-    {
-        $this->casts = array_merge($this->casts, $casts);
-
-        return $this;
-    }
-
-    /**
-     * Set a given attribute on the model.
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return mixed
-     */
-    public function setAttribute($key, $value)
-    {
-        // First we will check for the presence of a mutator for the set operation
-        // which simply lets the developers tweak the attribute as it is set on
-        // this model, such as "json_encoding" a listing of data for storage.
-        if ($this->hasSetMutator($key)) {
-            return $this->setMutatedAttributeValue($key, $value);
-        }
-
-        // If an attribute is listed as a "date", we'll convert it from a DateTime
-        // instance into a form proper for storage on the database tables using
-        // the connection grammar's date format. We will auto set the values.
-        elseif ($value && $this->isDateAttribute($key)) {
-            $value = $this->fromDateTime($value);
-        }
-
-        if ($this->isClassCastable($key)) {
-            $this->setClassCastableAttribute($key, $value);
-
-            return $this;
-        }
-
-        if (! is_null($value) && $this->isJsonCastable($key)) {
-            $value = $this->castAttributeAsJson($key, $value);
-        }
-
-        // If this attribute contains a JSON ->, we'll set the proper value in the
-        // attribute's underlying array. This takes care of properly nesting an
-        // attribute in the array's value in the case of deeply nested items.
-        if (Str::contains($key, '->')) {
-            return $this->fillJsonAttribute($key, $value);
-        }
-
-        if (! is_null($value) && $this->isEncryptedCastable($key)) {
-            $value = $this->castAttributeAsEncryptedString($key, $value);
-        }
-
-        $this->attributes[$key] = $value;
-
-        return $this;
-    }
-
-    /**
-     * Determine if a set mutator exists for an attribute.
-     *
-     * @param  string  $key
-     * @return bool
-     */
-    public function hasSetMutator($key)
-    {
-        return method_exists($this, 'set'.Str::studly($key).'Attribute');
-    }
-
-    /**
-     * Set the value of an attribute using its mutator.
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return mixed
-     */
-    protected function setMutatedAttributeValue($key, $value)
-    {
-        return $this->{'set'.Str::studly($key).'Attribute'}($value);
-    }
-
-    /**
-     * Determine if the given attribute is a date or date castable.
-     *
-     * @param  string  $key
-     * @return bool
-     */
-    protected function isDateAttribute($key)
-    {
-        return in_array($key, $this->getDates(), true) ||
-               $this->isDateCastable($key);
-    }
-
-    /**
-     * Determine whether a value is Date / DateTime castable for inbound manipulation.
-     *
-     * @param  string  $key
-     * @return bool
-     */
-    protected function isDateCastable($key)
-    {
-        return $this->hasCast($key, ['date', 'datetime']);
-    }
-
-    /**
-     * Convert a DateTime to a storable string.
-     *
-     * @param  mixed  $value
-     * @return string|null
-     */
-    public function fromDateTime($value)
-    {
-        return empty($value) ? $value : $this->asDateTime($value)->format(
-            $this->getDateFormat()
-        );
-    }
-
-    /**
-     * Set the value of a class castable attribute.
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return void
-     */
-    protected function setClassCastableAttribute($key, $value)
-    {
-        $caster = $this->resolveCasterClass($key);
-
-        if (is_null($value)) {
-            $this->attributes = array_merge($this->attributes, array_map(
-                function () {
-                },
-                $this->normalizeCastClassResponse($key, $caster->set(
-                    $this, $key, $this->{$key}, $this->attributes
-                ))
-            ));
-        } else {
-            $this->attributes = array_merge(
-                $this->attributes,
-                $this->normalizeCastClassResponse($key, $caster->set(
-                    $this, $key, $value, $this->attributes
-                ))
-            );
-        }
-
-        if ($caster instanceof CastsInboundAttributes || ! is_object($value)) {
-            unset($this->classCastCache[$key]);
-        } else {
-            $this->classCastCache[$key] = $value;
-        }
-    }
-
-    /**
-     * Determine whether a value is JSON castable for inbound manipulation.
-     *
-     * @param  string  $key
-     * @return bool
-     */
-    protected function isJsonCastable($key)
-    {
-        return $this->hasCast($key, ['array', 'json', 'object', 'collection', 'encrypted:array', 'encrypted:collection', 'encrypted:json', 'encrypted:object']);
-    }
-
-    /**
-     * Cast the given attribute to JSON.
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return string
-     */
-    protected function castAttributeAsJson($key, $value)
-    {
-        $value = $this->asJson($value);
-
-        if ($value === false) {
-            throw JsonEncodingException::forAttribute(
-                $this, $key, json_last_error_msg()
-            );
-        }
-
-        return $value;
-    }
-
-    /**
-     * Encode the given value as JSON.
-     *
-     * @param  mixed  $value
-     * @return string
-     */
-    protected function asJson($value)
-    {
-        return json_encode($value);
-    }
-
-    /**
-     * Set a given JSON attribute on the model.
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return $this
-     */
-    public function fillJsonAttribute($key, $value)
-    {
-        [$key, $path] = explode('->', $key, 2);
-
-        $value = $this->asJson($this->getArrayAttributeWithValue(
-            $path, $key, $value
-        ));
-
-        $this->attributes[$key] = $this->isEncryptedCastable($key)
-                    ? $this->castAttributeAsEncryptedString($key, $value)
-                    : $value;
-
-        return $this;
-    }
-
-    /**
-     * Get an array attribute with the given key and value set.
-     *
-     * @param  string  $path
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return $this
-     */
-    protected function getArrayAttributeWithValue($path, $key, $value)
-    {
-        return tap($this->getArrayAttributeByKey($key), function (&$array) use ($path, $value) {
-            Arr::set($array, str_replace('->', '.', $path), $value);
-        });
-    }
-
-    /**
-     * Get an array attribute or return an empty array if it is not set.
-     *
-     * @param  string  $key
+     * @param  array  $values
      * @return array
      */
-    protected function getArrayAttributeByKey($key)
+    protected function getArrayableItems(array $values)
     {
-        if (! isset($this->attributes[$key])) {
-            return [];
+        if (count($this->getVisible()) > 0) {
+            $values = array_intersect_key($values, array_flip($this->getVisible()));
         }
 
-        return $this->fromJson(
-            $this->isEncryptedCastable($key)
-                    ? $this->fromEncryptedString($this->attributes[$key])
-                    : $this->attributes[$key]
-        );
-    }
-
-    /**
-     * Cast the given attribute to an encrypted string.
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return string
-     */
-    protected function castAttributeAsEncryptedString($key, $value)
-    {
-        return (static::$encrypter ?? Crypt::getFacadeRoot())->encrypt($value, false);
-    }
-
-    /**
-     * Get the model's original attribute values.
-     *
-     * @param  string|null  $key
-     * @param  mixed  $default
-     * @return mixed|array
-     */
-    public function getOriginal($key = null, $default = null)
-    {
-        return (new static)->setRawAttributes(
-            $this->original, $sync = true
-        )->getOriginalWithoutRewindingModel($key, $default);
-    }
-
-    /**
-     * Get the model's original attribute values.
-     *
-     * @param  string|null  $key
-     * @param  mixed  $default
-     * @return mixed|array
-     */
-    protected function getOriginalWithoutRewindingModel($key = null, $default = null)
-    {
-        if ($key) {
-            return $this->transformModelValue(
-                $key, Arr::get($this->original, $key, $default)
-            );
+        if (count($this->getHidden()) > 0) {
+            $values = array_diff_key($values, array_flip($this->getHidden()));
         }
 
-        return collect($this->original)->mapWithKeys(function ($value, $key) {
-            return [$key => $this->transformModelValue($key, $value)];
-        })->all();
-    }
-
-    /**
-     * Transform a raw model value using mutators, casts, etc.
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return mixed
-     */
-    protected function transformModelValue($key, $value)
-    {
-        // If the attribute has a get mutator, we will call that then return what
-        // it returns as the value, which is useful for transforming values on
-        // retrieval from the model to a form that is more useful for usage.
-        if ($this->hasGetMutator($key)) {
-            return $this->mutateAttribute($key, $value);
-        }
-
-        // If the attribute exists within the cast array, we will convert it to
-        // an appropriate native PHP type dependent upon the associated value
-        // given with the key in the pair. Dayle made this comment line up.
-        if ($this->hasCast($key)) {
-            return $this->castAttribute($key, $value);
-        }
-
-        // If the attribute is listed as a date, we will convert it to a DateTime
-        // instance on retrieval, which makes it quite convenient to work with
-        // date fields without having to create a mutator for each property.
-        if ($value !== null
-            && \in_array($key, $this->getDates(), false)) {
-            return $this->asDateTime($value);
-        }
-
-        return $value;
-    }
-
-    /**
-     * Determine if a get mutator exists for an attribute.
-     *
-     * @param  string  $key
-     * @return bool
-     */
-    public function hasGetMutator($key)
-    {
-        return method_exists($this, 'get'.Str::studly($key).'Attribute');
-    }
-
-    /**
-     * Set the array of model attributes. No checking is done.
-     *
-     * @param  array  $attributes
-     * @param  bool  $sync
-     * @return $this
-     */
-    public function setRawAttributes(array $attributes, $sync = false)
-    {
-        $this->attributes = $attributes;
-
-        if ($sync) {
-            $this->syncOriginal();
-        }
-
-        $this->classCastCache = [];
-
-        return $this;
-    }
-
-    /**
-     * Sync the original attributes with the current.
-     *
-     * @return $this
-     */
-    public function syncOriginal()
-    {
-        $this->original = $this->getAttributes();
-
-        return $this;
-    }
-
-    /**
-     * Get the model's raw original attribute values.
-     *
-     * @param  string|null  $key
-     * @param  mixed  $default
-     * @return mixed|array
-     */
-    public function getRawOriginal($key = null, $default = null)
-    {
-        return Arr::get($this->original, $key, $default);
-    }
-
-    /**
-     * Get a subset of the model's attributes.
-     *
-     * @param  array|mixed  $attributes
-     * @return array
-     */
-    public function only($attributes)
-    {
-        $results = [];
-
-        foreach (is_array($attributes) ? $attributes : func_get_args() as $attribute) {
-            $results[$attribute] = $this->getAttribute($attribute);
-        }
-
-        return $results;
+        return $values;
     }
 
     /**
@@ -1488,6 +505,964 @@ trait HasAttributes
     }
 
     /**
+     * Determine if a get mutator exists for an attribute.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    public function hasGetMutator($key)
+    {
+        return method_exists($this, 'get'.Str::studly($key).'Attribute');
+    }
+
+    /**
+     * Get the value of an attribute using its mutator.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return mixed
+     */
+    protected function mutateAttribute($key, $value)
+    {
+        return $this->{'get'.Str::studly($key).'Attribute'}($value);
+    }
+
+    /**
+     * Get the value of an attribute using its mutator for array conversion.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return mixed
+     */
+    protected function mutateAttributeForArray($key, $value)
+    {
+        $value = $this->isClassCastable($key)
+                    ? $this->getClassCastableAttributeValue($key, $value)
+                    : $this->mutateAttribute($key, $value);
+
+        return $value instanceof Arrayable ? $value->toArray() : $value;
+    }
+
+    /**
+     * Merge new casts with existing casts on the model.
+     *
+     * @param  array  $casts
+     * @return $this
+     */
+    public function mergeCasts($casts)
+    {
+        $this->casts = array_merge($this->casts, $casts);
+
+        return $this;
+    }
+
+    /**
+     * Cast an attribute to a native PHP type.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return mixed
+     */
+    protected function castAttribute($key, $value)
+    {
+        $castType = $this->getCastType($key);
+
+        if (is_null($value) && in_array($castType, static::$primitiveCastTypes)) {
+            return $value;
+        }
+
+        // If the key is one of the encrypted castable types, we'll first decrypt
+        // the value and update the cast type so we may leverage the following
+        // logic for casting this value to any additionally specified types.
+        if ($this->isEncryptedCastable($key)) {
+            $value = $this->fromEncryptedString($value);
+
+            $castType = Str::after($castType, 'encrypted:');
+        }
+
+        switch ($castType) {
+            case 'int':
+            case 'integer':
+                return (int) $value;
+            case 'real':
+            case 'float':
+            case 'double':
+                return $this->fromFloat($value);
+            case 'decimal':
+                return $this->asDecimal($value, explode(':', $this->getCasts()[$key], 2)[1]);
+            case 'string':
+                return (string) $value;
+            case 'bool':
+            case 'boolean':
+                return (bool) $value;
+            case 'object':
+                return $this->fromJson($value, true);
+            case 'array':
+            case 'json':
+                return $this->fromJson($value);
+            case 'collection':
+                return new BaseCollection($this->fromJson($value));
+            case 'date':
+                return $this->asDate($value);
+            case 'datetime':
+            case 'custom_datetime':
+                return $this->asDateTime($value);
+            case 'timestamp':
+                return $this->asTimestamp($value);
+        }
+
+        if ($this->isClassCastable($key)) {
+            return $this->getClassCastableAttributeValue($key, $value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Cast the given attribute using a custom cast class.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return mixed
+     */
+    protected function getClassCastableAttributeValue($key, $value)
+    {
+        if (isset($this->classCastCache[$key])) {
+            return $this->classCastCache[$key];
+        } else {
+            $caster = $this->resolveCasterClass($key);
+
+            $value = $caster instanceof CastsInboundAttributes
+                        ? $value
+                        : $caster->get($this, $key, $value, $this->attributes);
+
+            if ($caster instanceof CastsInboundAttributes || ! is_object($value)) {
+                unset($this->classCastCache[$key]);
+            } else {
+                $this->classCastCache[$key] = $value;
+            }
+
+            return $value;
+        }
+    }
+
+    /**
+     * Get the type of cast for a model attribute.
+     *
+     * @param  string  $key
+     * @return string
+     */
+    protected function getCastType($key)
+    {
+        if ($this->isCustomDateTimeCast($this->getCasts()[$key])) {
+            return 'custom_datetime';
+        }
+
+        if ($this->isDecimalCast($this->getCasts()[$key])) {
+            return 'decimal';
+        }
+
+        return trim(strtolower($this->getCasts()[$key]));
+    }
+
+    /**
+     * Increment or decrement the given attribute using the custom cast class.
+     *
+     * @param  string  $method
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return mixed
+     */
+    protected function deviateClassCastableAttribute($method, $key, $value)
+    {
+        return $this->resolveCasterClass($key)->{$method}(
+            $this, $key, $value, $this->attributes
+        );
+    }
+
+    /**
+     * Serialize the given attribute using the custom cast class.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return mixed
+     */
+    protected function serializeClassCastableAttribute($key, $value)
+    {
+        return $this->resolveCasterClass($key)->serialize(
+            $this, $key, $value, $this->attributes
+        );
+    }
+
+    /**
+     * Determine if the cast type is a custom date time cast.
+     *
+     * @param  string  $cast
+     * @return bool
+     */
+    protected function isCustomDateTimeCast($cast)
+    {
+        return strncmp($cast, 'date:', 5) === 0 ||
+               strncmp($cast, 'datetime:', 9) === 0;
+    }
+
+    /**
+     * Determine if the cast type is a decimal cast.
+     *
+     * @param  string  $cast
+     * @return bool
+     */
+    protected function isDecimalCast($cast)
+    {
+        return strncmp($cast, 'decimal:', 8) === 0;
+    }
+
+    /**
+     * Set a given attribute on the model.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return mixed
+     */
+    public function setAttribute($key, $value)
+    {
+        // First we will check for the presence of a mutator for the set operation
+        // which simply lets the developers tweak the attribute as it is set on
+        // this model, such as "json_encoding" a listing of data for storage.
+        if ($this->hasSetMutator($key)) {
+            return $this->setMutatedAttributeValue($key, $value);
+        }
+
+        // If an attribute is listed as a "date", we'll convert it from a DateTime
+        // instance into a form proper for storage on the database tables using
+        // the connection grammar's date format. We will auto set the values.
+        elseif ($value && $this->isDateAttribute($key)) {
+            $value = $this->fromDateTime($value);
+        }
+
+        if ($this->isClassCastable($key)) {
+            $this->setClassCastableAttribute($key, $value);
+
+            return $this;
+        }
+
+        if (! is_null($value) && $this->isJsonCastable($key)) {
+            $value = $this->castAttributeAsJson($key, $value);
+        }
+
+        // If this attribute contains a JSON ->, we'll set the proper value in the
+        // attribute's underlying array. This takes care of properly nesting an
+        // attribute in the array's value in the case of deeply nested items.
+        if (Str::contains($key, '->')) {
+            return $this->fillJsonAttribute($key, $value);
+        }
+
+        if (! is_null($value) && $this->isEncryptedCastable($key)) {
+            $value = $this->castAttributeAsEncryptedString($key, $value);
+        }
+
+        $this->attributes[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Determine if a set mutator exists for an attribute.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    public function hasSetMutator($key)
+    {
+        return method_exists($this, 'set'.Str::studly($key).'Attribute');
+    }
+
+    /**
+     * Set the value of an attribute using its mutator.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return mixed
+     */
+    protected function setMutatedAttributeValue($key, $value)
+    {
+        return $this->{'set'.Str::studly($key).'Attribute'}($value);
+    }
+
+    /**
+     * Determine if the given attribute is a date or date castable.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    protected function isDateAttribute($key)
+    {
+        return in_array($key, $this->getDates(), true) ||
+               $this->isDateCastable($key);
+    }
+
+    /**
+     * Set a given JSON attribute on the model.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function fillJsonAttribute($key, $value)
+    {
+        [$key, $path] = explode('->', $key, 2);
+
+        $value = $this->asJson($this->getArrayAttributeWithValue(
+            $path, $key, $value
+        ));
+
+        $this->attributes[$key] = $this->isEncryptedCastable($key)
+                    ? $this->castAttributeAsEncryptedString($key, $value)
+                    : $value;
+
+        return $this;
+    }
+
+    /**
+     * Set the value of a class castable attribute.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return void
+     */
+    protected function setClassCastableAttribute($key, $value)
+    {
+        $caster = $this->resolveCasterClass($key);
+
+        if (is_null($value)) {
+            $this->attributes = array_merge($this->attributes, array_map(
+                function () {
+                },
+                $this->normalizeCastClassResponse($key, $caster->set(
+                    $this, $key, $this->{$key}, $this->attributes
+                ))
+            ));
+        } else {
+            $this->attributes = array_merge(
+                $this->attributes,
+                $this->normalizeCastClassResponse($key, $caster->set(
+                    $this, $key, $value, $this->attributes
+                ))
+            );
+        }
+
+        if ($caster instanceof CastsInboundAttributes || ! is_object($value)) {
+            unset($this->classCastCache[$key]);
+        } else {
+            $this->classCastCache[$key] = $value;
+        }
+    }
+
+    /**
+     * Get an array attribute with the given key and value set.
+     *
+     * @param  string  $path
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return $this
+     */
+    protected function getArrayAttributeWithValue($path, $key, $value)
+    {
+        return tap($this->getArrayAttributeByKey($key), function (&$array) use ($path, $value) {
+            Arr::set($array, str_replace('->', '.', $path), $value);
+        });
+    }
+
+    /**
+     * Get an array attribute or return an empty array if it is not set.
+     *
+     * @param  string  $key
+     * @return array
+     */
+    protected function getArrayAttributeByKey($key)
+    {
+        if (! isset($this->attributes[$key])) {
+            return [];
+        }
+
+        return $this->fromJson(
+            $this->isEncryptedCastable($key)
+                    ? $this->fromEncryptedString($this->attributes[$key])
+                    : $this->attributes[$key]
+        );
+    }
+
+    /**
+     * Cast the given attribute to JSON.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return string
+     */
+    protected function castAttributeAsJson($key, $value)
+    {
+        $value = $this->asJson($value);
+
+        if ($value === false) {
+            throw JsonEncodingException::forAttribute(
+                $this, $key, json_last_error_msg()
+            );
+        }
+
+        return $value;
+    }
+
+    /**
+     * Encode the given value as JSON.
+     *
+     * @param  mixed  $value
+     * @return string
+     */
+    protected function asJson($value)
+    {
+        return json_encode($value);
+    }
+
+    /**
+     * Decode the given JSON back into an array or object.
+     *
+     * @param  string  $value
+     * @param  bool  $asObject
+     * @return mixed
+     */
+    public function fromJson($value, $asObject = false)
+    {
+        return json_decode($value, ! $asObject);
+    }
+
+    /**
+     * Decrypt the given encrypted string.
+     *
+     * @param  string  $value
+     * @return mixed
+     */
+    public function fromEncryptedString($value)
+    {
+        return (static::$encrypter ?? Crypt::getFacadeRoot())->decrypt($value, false);
+    }
+
+    /**
+     * Cast the given attribute to an encrypted string.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return string
+     */
+    protected function castAttributeAsEncryptedString($key, $value)
+    {
+        return (static::$encrypter ?? Crypt::getFacadeRoot())->encrypt($value, false);
+    }
+
+    /**
+     * Set the encrypter instance that will be used to encrypt attributes.
+     *
+     * @param  \Illuminate\Contracts\Encryption\Encrypter  $encrypter
+     * @return void
+     */
+    public static function encryptUsing($encrypter)
+    {
+        static::$encrypter = $encrypter;
+    }
+
+    /**
+     * Decode the given float.
+     *
+     * @param  mixed  $value
+     * @return mixed
+     */
+    public function fromFloat($value)
+    {
+        switch ((string) $value) {
+            case 'Infinity':
+                return INF;
+            case '-Infinity':
+                return -INF;
+            case 'NaN':
+                return NAN;
+            default:
+                return (float) $value;
+        }
+    }
+
+    /**
+     * Return a decimal as string.
+     *
+     * @param  float  $value
+     * @param  int  $decimals
+     * @return string
+     */
+    protected function asDecimal($value, $decimals)
+    {
+        return number_format($value, $decimals, '.', '');
+    }
+
+    /**
+     * Return a timestamp as DateTime object with time set to 00:00:00.
+     *
+     * @param  mixed  $value
+     * @return \Illuminate\Support\Carbon
+     */
+    protected function asDate($value)
+    {
+        return $this->asDateTime($value)->startOfDay();
+    }
+
+    /**
+     * Return a timestamp as DateTime object.
+     *
+     * @param  mixed  $value
+     * @return \Illuminate\Support\Carbon
+     */
+    protected function asDateTime($value)
+    {
+        // If this value is already a Carbon instance, we shall just return it as is.
+        // This prevents us having to re-instantiate a Carbon instance when we know
+        // it already is one, which wouldn't be fulfilled by the DateTime check.
+        if ($value instanceof CarbonInterface) {
+            return Date::instance($value);
+        }
+
+        // If the value is already a DateTime instance, we will just skip the rest of
+        // these checks since they will be a waste of time, and hinder performance
+        // when checking the field. We will just return the DateTime right away.
+        if ($value instanceof DateTimeInterface) {
+            return Date::parse(
+                $value->format('Y-m-d H:i:s.u'), $value->getTimezone()
+            );
+        }
+
+        // If this value is an integer, we will assume it is a UNIX timestamp's value
+        // and format a Carbon object from this timestamp. This allows flexibility
+        // when defining your date fields as they might be UNIX timestamps here.
+        if (is_numeric($value)) {
+            return Date::createFromTimestamp($value);
+        }
+
+        // If the value is in simply year, month, day format, we will instantiate the
+        // Carbon instances from that format. Again, this provides for simple date
+        // fields on the database, while still supporting Carbonized conversion.
+        if ($this->isStandardDateFormat($value)) {
+            return Date::instance(Carbon::createFromFormat('Y-m-d', $value)->startOfDay());
+        }
+
+        $format = $this->getDateFormat();
+
+        // Finally, we will just assume this date is in the format used by default on
+        // the database connection and use that format to create the Carbon object
+        // that is returned back out to the developers after we convert it here.
+        try {
+            $date = Date::createFromFormat($format, $value);
+        } catch (InvalidArgumentException $e) {
+            $date = false;
+        }
+
+        return $date ?: Date::parse($value);
+    }
+
+    /**
+     * Determine if the given value is a standard date format.
+     *
+     * @param  string  $value
+     * @return bool
+     */
+    protected function isStandardDateFormat($value)
+    {
+        return preg_match('/^(\d{4})-(\d{1,2})-(\d{1,2})$/', $value);
+    }
+
+    /**
+     * Convert a DateTime to a storable string.
+     *
+     * @param  mixed  $value
+     * @return string|null
+     */
+    public function fromDateTime($value)
+    {
+        return empty($value) ? $value : $this->asDateTime($value)->format(
+            $this->getDateFormat()
+        );
+    }
+
+    /**
+     * Return a timestamp as unix timestamp.
+     *
+     * @param  mixed  $value
+     * @return int
+     */
+    protected function asTimestamp($value)
+    {
+        return $this->asDateTime($value)->getTimestamp();
+    }
+
+    /**
+     * Prepare a date for array / JSON serialization.
+     *
+     * @param  \DateTimeInterface  $date
+     * @return string
+     */
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return Carbon::instance($date)->toJSON();
+    }
+
+    /**
+     * Get the attributes that should be converted to dates.
+     *
+     * @return array
+     */
+    public function getDates()
+    {
+        if (! $this->usesTimestamps()) {
+            return $this->dates;
+        }
+
+        $defaults = [
+            $this->getCreatedAtColumn(),
+            $this->getUpdatedAtColumn(),
+        ];
+
+        return array_unique(array_merge($this->dates, $defaults));
+    }
+
+    /**
+     * Get the format for database stored dates.
+     *
+     * @return string
+     */
+    public function getDateFormat()
+    {
+        return $this->dateFormat ?: $this->getConnection()->getQueryGrammar()->getDateFormat();
+    }
+
+    /**
+     * Set the date format used by the model.
+     *
+     * @param  string  $format
+     * @return $this
+     */
+    public function setDateFormat($format)
+    {
+        $this->dateFormat = $format;
+
+        return $this;
+    }
+
+    /**
+     * Determine whether an attribute should be cast to a native type.
+     *
+     * @param  string  $key
+     * @param  array|string|null  $types
+     * @return bool
+     */
+    public function hasCast($key, $types = null)
+    {
+        if (array_key_exists($key, $this->getCasts())) {
+            return $types ? in_array($this->getCastType($key), (array) $types, true) : true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get the casts array.
+     *
+     * @return array
+     */
+    public function getCasts()
+    {
+        if ($this->getIncrementing()) {
+            return array_merge([$this->getKeyName() => $this->getKeyType()], $this->casts);
+        }
+
+        return $this->casts;
+    }
+
+    /**
+     * Determine whether a value is Date / DateTime castable for inbound manipulation.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    protected function isDateCastable($key)
+    {
+        return $this->hasCast($key, ['date', 'datetime']);
+    }
+
+    /**
+     * Determine whether a value is JSON castable for inbound manipulation.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    protected function isJsonCastable($key)
+    {
+        return $this->hasCast($key, ['array', 'json', 'object', 'collection', 'encrypted:array', 'encrypted:collection', 'encrypted:json', 'encrypted:object']);
+    }
+
+    /**
+     * Determine whether a value is an encrypted castable for inbound manipulation.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    protected function isEncryptedCastable($key)
+    {
+        return $this->hasCast($key, ['encrypted', 'encrypted:array', 'encrypted:collection', 'encrypted:json', 'encrypted:object']);
+    }
+
+    /**
+     * Determine if the given key is cast using a custom class.
+     *
+     * @param  string  $key
+     * @return bool
+     *
+     * @throws \Illuminate\Database\Eloquent\InvalidCastException
+     */
+    protected function isClassCastable($key)
+    {
+        if (! array_key_exists($key, $this->getCasts())) {
+            return false;
+        }
+
+        $castType = $this->parseCasterClass($this->getCasts()[$key]);
+
+        if (in_array($castType, static::$primitiveCastTypes)) {
+            return false;
+        }
+
+        if (class_exists($castType)) {
+            return true;
+        }
+
+        throw new InvalidCastException($this->getModel(), $key, $castType);
+    }
+
+    /**
+     * Determine if the key is deviable using a custom class.
+     *
+     * @param  string  $key
+     * @return bool
+     *
+     * @throws \Illuminate\Database\Eloquent\InvalidCastException
+     */
+    protected function isClassDeviable($key)
+    {
+        return $this->isClassCastable($key) &&
+            method_exists($castType = $this->parseCasterClass($this->getCasts()[$key]), 'increment') &&
+            method_exists($castType, 'decrement');
+    }
+
+    /**
+     * Determine if the key is serializable using a custom class.
+     *
+     * @param  string  $key
+     * @return bool
+     *
+     * @throws \Illuminate\Database\Eloquent\InvalidCastException
+     */
+    protected function isClassSerializable($key)
+    {
+        return $this->isClassCastable($key) &&
+               method_exists($this->parseCasterClass($this->getCasts()[$key]), 'serialize');
+    }
+
+    /**
+     * Resolve the custom caster class for a given key.
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+    protected function resolveCasterClass($key)
+    {
+        $castType = $this->getCasts()[$key];
+
+        $arguments = [];
+
+        if (is_string($castType) && strpos($castType, ':') !== false) {
+            $segments = explode(':', $castType, 2);
+
+            $castType = $segments[0];
+            $arguments = explode(',', $segments[1]);
+        }
+
+        if (is_subclass_of($castType, Castable::class)) {
+            $castType = $castType::castUsing($arguments);
+        }
+
+        if (is_object($castType)) {
+            return $castType;
+        }
+
+        return new $castType(...$arguments);
+    }
+
+    /**
+     * Parse the given caster class, removing any arguments.
+     *
+     * @param  string  $class
+     * @return string
+     */
+    protected function parseCasterClass($class)
+    {
+        return strpos($class, ':') === false
+                        ? $class
+                        : explode(':', $class, 2)[0];
+    }
+
+    /**
+     * Merge the cast class attributes back into the model.
+     *
+     * @return void
+     */
+    protected function mergeAttributesFromClassCasts()
+    {
+        foreach ($this->classCastCache as $key => $value) {
+            $caster = $this->resolveCasterClass($key);
+
+            $this->attributes = array_merge(
+                $this->attributes,
+                $caster instanceof CastsInboundAttributes
+                       ? [$key => $value]
+                       : $this->normalizeCastClassResponse($key, $caster->set($this, $key, $value, $this->attributes))
+            );
+        }
+    }
+
+    /**
+     * Normalize the response from a custom class caster.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return array
+     */
+    protected function normalizeCastClassResponse($key, $value)
+    {
+        return is_array($value) ? $value : [$key => $value];
+    }
+
+    /**
+     * Get all of the current attributes on the model.
+     *
+     * @return array
+     */
+    public function getAttributes()
+    {
+        $this->mergeAttributesFromClassCasts();
+
+        return $this->attributes;
+    }
+
+    /**
+     * Get all of the current attributes on the model for an insert operation.
+     *
+     * @return array
+     */
+    protected function getAttributesForInsert()
+    {
+        return $this->getAttributes();
+    }
+
+    /**
+     * Set the array of model attributes. No checking is done.
+     *
+     * @param  array  $attributes
+     * @param  bool  $sync
+     * @return $this
+     */
+    public function setRawAttributes(array $attributes, $sync = false)
+    {
+        $this->attributes = $attributes;
+
+        if ($sync) {
+            $this->syncOriginal();
+        }
+
+        $this->classCastCache = [];
+
+        return $this;
+    }
+
+    /**
+     * Get the model's original attribute values.
+     *
+     * @param  string|null  $key
+     * @param  mixed  $default
+     * @return mixed|array
+     */
+    public function getOriginal($key = null, $default = null)
+    {
+        return (new static)->setRawAttributes(
+            $this->original, $sync = true
+        )->getOriginalWithoutRewindingModel($key, $default);
+    }
+
+    /**
+     * Get the model's original attribute values.
+     *
+     * @param  string|null  $key
+     * @param  mixed  $default
+     * @return mixed|array
+     */
+    protected function getOriginalWithoutRewindingModel($key = null, $default = null)
+    {
+        if ($key) {
+            return $this->transformModelValue(
+                $key, Arr::get($this->original, $key, $default)
+            );
+        }
+
+        return collect($this->original)->mapWithKeys(function ($value, $key) {
+            return [$key => $this->transformModelValue($key, $value)];
+        })->all();
+    }
+
+    /**
+     * Get the model's raw original attribute values.
+     *
+     * @param  string|null  $key
+     * @param  mixed  $default
+     * @return mixed|array
+     */
+    public function getRawOriginal($key = null, $default = null)
+    {
+        return Arr::get($this->original, $key, $default);
+    }
+
+    /**
+     * Get a subset of the model's attributes.
+     *
+     * @param  array|mixed  $attributes
+     * @return array
+     */
+    public function only($attributes)
+    {
+        $results = [];
+
+        foreach (is_array($attributes) ? $attributes : func_get_args() as $attribute) {
+            $results[$attribute] = $this->getAttribute($attribute);
+        }
+
+        return $results;
+    }
+
+    /**
+     * Sync the original attributes with the current.
+     *
+     * @return $this
+     */
+    public function syncOriginal()
+    {
+        $this->original = $this->getAttributes();
+
+        return $this;
+    }
+
+    /**
      * Sync a single original attribute with its current value.
      *
      * @param  string  $attribute
@@ -1530,6 +1505,71 @@ trait HasAttributes
     }
 
     /**
+     * Determine if the model or any of the given attribute(s) have been modified.
+     *
+     * @param  array|string|null  $attributes
+     * @return bool
+     */
+    public function isDirty($attributes = null)
+    {
+        return $this->hasChanges(
+            $this->getDirty(), is_array($attributes) ? $attributes : func_get_args()
+        );
+    }
+
+    /**
+     * Determine if the model and all the given attribute(s) have remained the same.
+     *
+     * @param  array|string|null  $attributes
+     * @return bool
+     */
+    public function isClean($attributes = null)
+    {
+        return ! $this->isDirty(...func_get_args());
+    }
+
+    /**
+     * Determine if the model or any of the given attribute(s) have been modified.
+     *
+     * @param  array|string|null  $attributes
+     * @return bool
+     */
+    public function wasChanged($attributes = null)
+    {
+        return $this->hasChanges(
+            $this->getChanges(), is_array($attributes) ? $attributes : func_get_args()
+        );
+    }
+
+    /**
+     * Determine if any of the given attributes were changed.
+     *
+     * @param  array  $changes
+     * @param  array|string|null  $attributes
+     * @return bool
+     */
+    protected function hasChanges($changes, $attributes = null)
+    {
+        // If no specific attributes were provided, we will just see if the dirty array
+        // already contains any attributes. If it does we will just return that this
+        // count is greater than zero. Else, we need to check specific attributes.
+        if (empty($attributes)) {
+            return count($changes) > 0;
+        }
+
+        // Here we will spin through every attribute and see if this is in the array of
+        // dirty attributes. If it is, we will return true and if we make it through
+        // all of the attributes for the entire array we will return false at end.
+        foreach (Arr::wrap($attributes) as $attribute) {
+            if (array_key_exists($attribute, $changes)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Get the attributes that have been changed since the last sync.
      *
      * @return array
@@ -1545,6 +1585,16 @@ trait HasAttributes
         }
 
         return $dirty;
+    }
+
+    /**
+     * Get the attributes that were changed.
+     *
+     * @return array
+     */
+    public function getChanges()
+    {
+        return $this->changes;
     }
 
     /**
@@ -1588,78 +1638,37 @@ trait HasAttributes
     }
 
     /**
-     * Determine if the model and all the given attribute(s) have remained the same.
+     * Transform a raw model value using mutators, casts, etc.
      *
-     * @param  array|string|null  $attributes
-     * @return bool
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return mixed
      */
-    public function isClean($attributes = null)
+    protected function transformModelValue($key, $value)
     {
-        return ! $this->isDirty(...func_get_args());
-    }
-
-    /**
-     * Determine if the model or any of the given attribute(s) have been modified.
-     *
-     * @param  array|string|null  $attributes
-     * @return bool
-     */
-    public function isDirty($attributes = null)
-    {
-        return $this->hasChanges(
-            $this->getDirty(), is_array($attributes) ? $attributes : func_get_args()
-        );
-    }
-
-    /**
-     * Determine if any of the given attributes were changed.
-     *
-     * @param  array  $changes
-     * @param  array|string|null  $attributes
-     * @return bool
-     */
-    protected function hasChanges($changes, $attributes = null)
-    {
-        // If no specific attributes were provided, we will just see if the dirty array
-        // already contains any attributes. If it does we will just return that this
-        // count is greater than zero. Else, we need to check specific attributes.
-        if (empty($attributes)) {
-            return count($changes) > 0;
+        // If the attribute has a get mutator, we will call that then return what
+        // it returns as the value, which is useful for transforming values on
+        // retrieval from the model to a form that is more useful for usage.
+        if ($this->hasGetMutator($key)) {
+            return $this->mutateAttribute($key, $value);
         }
 
-        // Here we will spin through every attribute and see if this is in the array of
-        // dirty attributes. If it is, we will return true and if we make it through
-        // all of the attributes for the entire array we will return false at end.
-        foreach (Arr::wrap($attributes) as $attribute) {
-            if (array_key_exists($attribute, $changes)) {
-                return true;
-            }
+        // If the attribute exists within the cast array, we will convert it to
+        // an appropriate native PHP type dependent upon the associated value
+        // given with the key in the pair. Dayle made this comment line up.
+        if ($this->hasCast($key)) {
+            return $this->castAttribute($key, $value);
         }
 
-        return false;
-    }
+        // If the attribute is listed as a date, we will convert it to a DateTime
+        // instance on retrieval, which makes it quite convenient to work with
+        // date fields without having to create a mutator for each property.
+        if ($value !== null
+            && \in_array($key, $this->getDates(), false)) {
+            return $this->asDateTime($value);
+        }
 
-    /**
-     * Determine if the model or any of the given attribute(s) have been modified.
-     *
-     * @param  array|string|null  $attributes
-     * @return bool
-     */
-    public function wasChanged($attributes = null)
-    {
-        return $this->hasChanges(
-            $this->getChanges(), is_array($attributes) ? $attributes : func_get_args()
-        );
-    }
-
-    /**
-     * Get the attributes that were changed.
-     *
-     * @return array
-     */
-    public function getChanges()
-    {
-        return $this->changes;
+        return $value;
     }
 
     /**
@@ -1702,42 +1711,44 @@ trait HasAttributes
     }
 
     /**
-     * Increment or decrement the given attribute using the custom cast class.
-     *
-     * @param  string  $method
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return mixed
-     */
-    protected function deviateClassCastableAttribute($method, $key, $value)
-    {
-        return $this->resolveCasterClass($key)->{$method}(
-            $this, $key, $value, $this->attributes
-        );
-    }
-
-    /**
-     * Determine if the key is deviable using a custom class.
-     *
-     * @param  string  $key
-     * @return bool
-     *
-     * @throws \Illuminate\Database\Eloquent\InvalidCastException
-     */
-    protected function isClassDeviable($key)
-    {
-        return $this->isClassCastable($key) &&
-            method_exists($castType = $this->parseCasterClass($this->getCasts()[$key]), 'increment') &&
-            method_exists($castType, 'decrement');
-    }
-
-    /**
-     * Get all of the current attributes on the model for an insert operation.
+     * Get the mutated attributes for a given instance.
      *
      * @return array
      */
-    protected function getAttributesForInsert()
+    public function getMutatedAttributes()
     {
-        return $this->getAttributes();
+        $class = static::class;
+
+        if (! isset(static::$mutatorCache[$class])) {
+            static::cacheMutatedAttributes($class);
+        }
+
+        return static::$mutatorCache[$class];
+    }
+
+    /**
+     * Extract and cache all the mutated attributes of a class.
+     *
+     * @param  string  $class
+     * @return void
+     */
+    public static function cacheMutatedAttributes($class)
+    {
+        static::$mutatorCache[$class] = collect(static::getMutatorMethods($class))->map(function ($match) {
+            return lcfirst(static::$snakeAttributes ? Str::snake($match) : $match);
+        })->all();
+    }
+
+    /**
+     * Get all of the attribute mutator methods.
+     *
+     * @param  mixed  $class
+     * @return array
+     */
+    protected static function getMutatorMethods($class)
+    {
+        preg_match_all('/(?<=^|;)get([^;]+?)Attribute(;|$)/', implode(';', get_class_methods($class)), $matches);
+
+        return $matches[1];
     }
 }

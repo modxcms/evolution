@@ -50,12 +50,6 @@ class FilesystemRepository extends WritableArrayRepository
         }
     }
 
-    public function reload()
-    {
-        $this->packages = null;
-        $this->initialize();
-    }
-
     /**
      * Initializes repository (reads file, or remote address).
      */
@@ -91,6 +85,12 @@ class FilesystemRepository extends WritableArrayRepository
             $package = $loader->load($packageData);
             $this->addPackage($package);
         }
+    }
+
+    public function reload()
+    {
+        $this->packages = null;
+        $this->initialize();
     }
 
     /**
@@ -136,6 +136,38 @@ class FilesystemRepository extends WritableArrayRepository
 
             \Composer\InstalledVersions::reload($versions);
         }
+    }
+
+    private function dumpToPhpCode(array $array = array(), $level = 0)
+    {
+        $lines = "array(\n";
+        $level++;
+
+        foreach ($array as $key => $value) {
+            $lines .= str_repeat('    ', $level);
+            $lines .= is_int($key) ? $key . ' => ' : '\'' . $key . '\' => ';
+
+            if (is_array($value)) {
+                if (!empty($value)) {
+                    $lines .= $this->dumpToPhpCode($value, $level);
+                } else {
+                    $lines .= "array(),\n";
+                }
+            } elseif ($key === 'install_path' && is_string($value)) {
+                $fs = new Filesystem();
+                if ($fs->isAbsolutePath($value)) {
+                    $lines .= var_export($value, true) . ",\n";
+                } else {
+                    $lines .= "__DIR__ . " . var_export('/' . $value, true) . ",\n";
+                }
+            } else {
+                $lines .= var_export($value, true) . ",\n";
+            }
+        }
+
+        $lines .= str_repeat('    ', $level - 1) . ')' . ($level - 1 == 0 ? '' : ",\n");
+
+        return $lines;
     }
 
     /**
@@ -251,37 +283,5 @@ class FilesystemRepository extends WritableArrayRepository
         ksort($versions);
 
         return $versions;
-    }
-
-    private function dumpToPhpCode(array $array = array(), $level = 0)
-    {
-        $lines = "array(\n";
-        $level++;
-
-        foreach ($array as $key => $value) {
-            $lines .= str_repeat('    ', $level);
-            $lines .= is_int($key) ? $key . ' => ' : '\'' . $key . '\' => ';
-
-            if (is_array($value)) {
-                if (!empty($value)) {
-                    $lines .= $this->dumpToPhpCode($value, $level);
-                } else {
-                    $lines .= "array(),\n";
-                }
-            } elseif ($key === 'install_path' && is_string($value)) {
-                $fs = new Filesystem();
-                if ($fs->isAbsolutePath($value)) {
-                    $lines .= var_export($value, true) . ",\n";
-                } else {
-                    $lines .= "__DIR__ . " . var_export('/' . $value, true) . ",\n";
-                }
-            } else {
-                $lines .= var_export($value, true) . ",\n";
-            }
-        }
-
-        $lines .= str_repeat('    ', $level - 1) . ')' . ($level - 1 == 0 ? '' : ",\n");
-
-        return $lines;
     }
 }

@@ -164,36 +164,6 @@ class Statement implements IteratorAggregate, DriverStatement, Result
     }
 
     /**
-     * @param mixed $row
-     * @param bool  $iterateRow
-     * @param bool  $fixCase
-     *
-     * @return mixed
-     */
-    protected function fixRow($row, $iterateRow, $fixCase)
-    {
-        if (! $row) {
-            return $row;
-        }
-
-        if ($fixCase) {
-            $row = array_change_key_case($row, $this->case);
-        }
-
-        if ($iterateRow) {
-            foreach ($row as $k => $v) {
-                if (($this->portability & Connection::PORTABILITY_EMPTY_TO_NULL) && $v === '') {
-                    $row[$k] = null;
-                } elseif (($this->portability & Connection::PORTABILITY_RTRIM) && is_string($v)) {
-                    $row[$k] = rtrim($v);
-                }
-            }
-        }
-
-        return $row;
-    }
-
-    /**
      * {@inheritdoc}
      *
      * @deprecated Use fetchAllNumeric(), fetchAllAssociative() or fetchFirstColumn() instead.
@@ -216,42 +186,6 @@ class Statement implements IteratorAggregate, DriverStatement, Result
     }
 
     /**
-     * @param array<int,mixed> $resultSet
-     *
-     * @return array<int,mixed>
-     */
-    private function fixResultSet(array $resultSet, bool $fixCase, bool $isArray): array
-    {
-        $iterateRow = (
-            $this->portability & (Connection::PORTABILITY_EMPTY_TO_NULL | Connection::PORTABILITY_RTRIM)
-        ) !== 0;
-
-        $fixCase = $fixCase && $this->case !== null && ($this->portability & Connection::PORTABILITY_FIX_CASE) !== 0;
-
-        if (! $iterateRow && ! $fixCase) {
-            return $resultSet;
-        }
-
-        if (! $isArray) {
-            foreach ($resultSet as $num => $value) {
-                $resultSet[$num] = [$value];
-            }
-        }
-
-        foreach ($resultSet as $num => $row) {
-            $resultSet[$num] = $this->fixRow($row, $iterateRow, $fixCase);
-        }
-
-        if (! $isArray) {
-            foreach ($resultSet as $num => $row) {
-                $resultSet[$num] = $row[0];
-            }
-        }
-
-        return $resultSet;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function fetchNumeric()
@@ -263,22 +197,6 @@ class Statement implements IteratorAggregate, DriverStatement, Result
         }
 
         return $this->fixResult($row, false);
-    }
-
-    /**
-     * @param mixed $result
-     *
-     * @return mixed
-     */
-    private function fixResult($result, bool $fixCase)
-    {
-        $iterateRow = (
-            $this->portability & (Connection::PORTABILITY_EMPTY_TO_NULL | Connection::PORTABILITY_RTRIM)
-        ) !== 0;
-
-        $fixCase = $fixCase && $this->case !== null && ($this->portability & Connection::PORTABILITY_FIX_CASE) !== 0;
-
-        return $this->fixRow($result, $iterateRow, $fixCase);
     }
 
     /**
@@ -366,6 +284,88 @@ class Statement implements IteratorAggregate, DriverStatement, Result
         }
 
         $this->stmt->closeCursor();
+    }
+
+    /**
+     * @param mixed $result
+     *
+     * @return mixed
+     */
+    private function fixResult($result, bool $fixCase)
+    {
+        $iterateRow = (
+            $this->portability & (Connection::PORTABILITY_EMPTY_TO_NULL | Connection::PORTABILITY_RTRIM)
+        ) !== 0;
+
+        $fixCase = $fixCase && $this->case !== null && ($this->portability & Connection::PORTABILITY_FIX_CASE) !== 0;
+
+        return $this->fixRow($result, $iterateRow, $fixCase);
+    }
+
+    /**
+     * @param array<int,mixed> $resultSet
+     *
+     * @return array<int,mixed>
+     */
+    private function fixResultSet(array $resultSet, bool $fixCase, bool $isArray): array
+    {
+        $iterateRow = (
+            $this->portability & (Connection::PORTABILITY_EMPTY_TO_NULL | Connection::PORTABILITY_RTRIM)
+        ) !== 0;
+
+        $fixCase = $fixCase && $this->case !== null && ($this->portability & Connection::PORTABILITY_FIX_CASE) !== 0;
+
+        if (! $iterateRow && ! $fixCase) {
+            return $resultSet;
+        }
+
+        if (! $isArray) {
+            foreach ($resultSet as $num => $value) {
+                $resultSet[$num] = [$value];
+            }
+        }
+
+        foreach ($resultSet as $num => $row) {
+            $resultSet[$num] = $this->fixRow($row, $iterateRow, $fixCase);
+        }
+
+        if (! $isArray) {
+            foreach ($resultSet as $num => $row) {
+                $resultSet[$num] = $row[0];
+            }
+        }
+
+        return $resultSet;
+    }
+
+    /**
+     * @param mixed $row
+     * @param bool  $iterateRow
+     * @param bool  $fixCase
+     *
+     * @return mixed
+     */
+    protected function fixRow($row, $iterateRow, $fixCase)
+    {
+        if (! $row) {
+            return $row;
+        }
+
+        if ($fixCase) {
+            $row = array_change_key_case($row, $this->case);
+        }
+
+        if ($iterateRow) {
+            foreach ($row as $k => $v) {
+                if (($this->portability & Connection::PORTABILITY_EMPTY_TO_NULL) && $v === '') {
+                    $row[$k] = null;
+                } elseif (($this->portability & Connection::PORTABILITY_RTRIM) && is_string($v)) {
+                    $row[$k] = rtrim($v);
+                }
+            }
+        }
+
+        return $row;
     }
 
     /**

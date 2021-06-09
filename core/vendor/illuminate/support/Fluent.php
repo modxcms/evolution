@@ -30,6 +30,22 @@ class Fluent implements Arrayable, ArrayAccess, Jsonable, JsonSerializable
     }
 
     /**
+     * Get an attribute from the fluent instance.
+     *
+     * @param  string  $key
+     * @param  mixed  $default
+     * @return mixed
+     */
+    public function get($key, $default = null)
+    {
+        if (array_key_exists($key, $this->attributes)) {
+            return $this->attributes[$key];
+        }
+
+        return value($default);
+    }
+
+    /**
      * Get the attributes from the fluent instance.
      *
      * @return array
@@ -37,6 +53,26 @@ class Fluent implements Arrayable, ArrayAccess, Jsonable, JsonSerializable
     public function getAttributes()
     {
         return $this->attributes;
+    }
+
+    /**
+     * Convert the fluent instance to an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * Convert the object into something JSON serializable.
+     *
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return $this->toArray();
     }
 
     /**
@@ -51,23 +87,14 @@ class Fluent implements Arrayable, ArrayAccess, Jsonable, JsonSerializable
     }
 
     /**
-     * Convert the object into something JSON serializable.
+     * Determine if the given offset exists.
      *
-     * @return array
+     * @param  string  $offset
+     * @return bool
      */
-    public function jsonSerialize()
+    public function offsetExists($offset)
     {
-        return $this->toArray();
-    }
-
-    /**
-     * Convert the fluent instance to an array.
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return $this->attributes;
+        return isset($this->attributes[$offset]);
     }
 
     /**
@@ -82,19 +109,26 @@ class Fluent implements Arrayable, ArrayAccess, Jsonable, JsonSerializable
     }
 
     /**
-     * Get an attribute from the fluent instance.
+     * Set the value at the given offset.
      *
-     * @param  string  $key
-     * @param  mixed  $default
-     * @return mixed
+     * @param  string  $offset
+     * @param  mixed  $value
+     * @return void
      */
-    public function get($key, $default = null)
+    public function offsetSet($offset, $value)
     {
-        if (array_key_exists($key, $this->attributes)) {
-            return $this->attributes[$key];
-        }
+        $this->attributes[$offset] = $value;
+    }
 
-        return value($default);
+    /**
+     * Unset the value at the given offset.
+     *
+     * @param  string  $offset
+     * @return void
+     */
+    public function offsetUnset($offset)
+    {
+        unset($this->attributes[$offset]);
     }
 
     /**
@@ -135,18 +169,6 @@ class Fluent implements Arrayable, ArrayAccess, Jsonable, JsonSerializable
     }
 
     /**
-     * Set the value at the given offset.
-     *
-     * @param  string  $offset
-     * @param  mixed  $value
-     * @return void
-     */
-    public function offsetSet($offset, $value)
-    {
-        $this->attributes[$offset] = $value;
-    }
-
-    /**
      * Dynamically check if an attribute is set.
      *
      * @param  string  $key
@@ -158,17 +180,6 @@ class Fluent implements Arrayable, ArrayAccess, Jsonable, JsonSerializable
     }
 
     /**
-     * Determine if the given offset exists.
-     *
-     * @param  string  $offset
-     * @return bool
-     */
-    public function offsetExists($offset)
-    {
-        return isset($this->attributes[$offset]);
-    }
-
-    /**
      * Dynamically unset an attribute.
      *
      * @param  string  $key
@@ -177,16 +188,5 @@ class Fluent implements Arrayable, ArrayAccess, Jsonable, JsonSerializable
     public function __unset($key)
     {
         $this->offsetUnset($key);
-    }
-
-    /**
-     * Unset the value at the given offset.
-     *
-     * @param  string  $offset
-     * @return void
-     */
-    public function offsetUnset($offset)
-    {
-        unset($this->attributes[$offset]);
     }
 }

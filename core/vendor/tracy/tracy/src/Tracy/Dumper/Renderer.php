@@ -103,6 +103,30 @@ final class Renderer
 			. "</pre>\n";
 	}
 
+
+	public function renderAsText(\stdClass $model, array $colors = []): string
+	{
+		try {
+			$this->snapshot = $model->snapshot;
+			$this->lazy = false;
+			$s = $this->renderVar($model->value);
+		} finally {
+			$this->parents = $this->snapshot = $this->above = [];
+		}
+
+		$s = $colors ? self::htmlToAnsi($s, $colors) : $s;
+		$s = htmlspecialchars_decode(strip_tags($s), ENT_QUOTES | ENT_HTML5);
+		$s = str_replace('…', '...', $s);
+		$s .= substr($s, -1) === "\n" ? '' : "\n";
+
+		if ($this->sourceLocation && ([$file, $line] = $model->location)) {
+			$s .= "in $file:$line\n";
+		}
+
+		return $s;
+	}
+
+
 	/**
 	 * @param  mixed  $value
 	 * @param  string|int|null  $keyType
@@ -153,17 +177,6 @@ final class Renderer
 		}
 	}
 
-	public static function jsonEncode($snapshot): string
-	{
-		$old = @ini_set('serialize_precision', '-1'); // @ may be disabled
-		try {
-			return json_encode($snapshot, JSON_HEX_APOS | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-		} finally {
-			if ($old !== false) {
-				ini_set('serialize_precision', $old);
-			}
-		}
-	}
 
 	/**
 	 * @param  string|Value  $str
@@ -308,30 +321,6 @@ final class Renderer
 		return $out . '</div>';
 	}
 
-	private function copySnapshot($value): void
-	{
-		if ($this->collectingMode) {
-			return;
-		}
-		if ($this->snapshotSelection === null) {
-			$this->snapshotSelection = [];
-		}
-
-		if (is_array($value)) {
-			foreach ($value as [, $v]) {
-				$this->copySnapshot($v);
-			}
-		} elseif ($value instanceof Value && $value->type === Value::TYPE_REF) {
-			if (!isset($this->snapshotSelection[$value->value])) {
-				$ref = $this->snapshotSelection[$value->value] = $this->snapshot[$value->value];
-				$this->copySnapshot($ref);
-			}
-		} elseif ($value instanceof Value && $value->items) {
-			foreach ($value->items as [, $v]) {
-				$this->copySnapshot($v);
-			}
-		}
-	}
 
 	private function renderObject(Value $object, int $depth): string
 	{
@@ -403,6 +392,7 @@ final class Renderer
 		return $out . '</div>';
 	}
 
+
 	private function renderResource(Value $resource, int $depth): string
 	{
 		$out = '<span class="tracy-dump-resource">' . Helpers::escapeHtml($resource->value) . '</span> '
@@ -433,27 +423,45 @@ final class Renderer
 		}
 	}
 
-	public function renderAsText(\stdClass $model, array $colors = []): string
+
+	private function copySnapshot($value): void
 	{
-		try {
-			$this->snapshot = $model->snapshot;
-			$this->lazy = false;
-			$s = $this->renderVar($model->value);
-		} finally {
-			$this->parents = $this->snapshot = $this->above = [];
+		if ($this->collectingMode) {
+			return;
+		}
+		if ($this->snapshotSelection === null) {
+			$this->snapshotSelection = [];
 		}
 
-		$s = $colors ? self::htmlToAnsi($s, $colors) : $s;
-		$s = htmlspecialchars_decode(strip_tags($s), ENT_QUOTES | ENT_HTML5);
-		$s = str_replace('…', '...', $s);
-		$s .= substr($s, -1) === "\n" ? '' : "\n";
-
-		if ($this->sourceLocation && ([$file, $line] = $model->location)) {
-			$s .= "in $file:$line\n";
+		if (is_array($value)) {
+			foreach ($value as [, $v]) {
+				$this->copySnapshot($v);
+			}
+		} elseif ($value instanceof Value && $value->type === Value::TYPE_REF) {
+			if (!isset($this->snapshotSelection[$value->value])) {
+				$ref = $this->snapshotSelection[$value->value] = $this->snapshot[$value->value];
+				$this->copySnapshot($ref);
+			}
+		} elseif ($value instanceof Value && $value->items) {
+			foreach ($value->items as [, $v]) {
+				$this->copySnapshot($v);
+			}
 		}
-
-		return $s;
 	}
+
+
+	public static function jsonEncode($snapshot): string
+	{
+		$old = @ini_set('serialize_precision', '-1'); // @ may be disabled
+		try {
+			return json_encode($snapshot, JSON_HEX_APOS | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+		} finally {
+			if ($old !== false) {
+				ini_set('serialize_precision', $old);
+			}
+		}
+	}
+
 
 	private static function htmlToAnsi(string $s, array $colors): string
 	{

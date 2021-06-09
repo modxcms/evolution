@@ -27,18 +27,6 @@ abstract class Seeder
      * Run the given seeder class.
      *
      * @param  array|string  $class
-     * @param  array  $parameters
-     * @return void
-     */
-    public function callWith($class, array $parameters = [])
-    {
-        $this->call($class, false, $parameters);
-    }
-
-    /**
-     * Run the given seeder class.
-     *
-     * @param  array|string  $class
      * @param  bool  $silent
      * @param  array  $parameters
      * @return $this
@@ -71,6 +59,30 @@ abstract class Seeder
     }
 
     /**
+     * Run the given seeder class.
+     *
+     * @param  array|string  $class
+     * @param  array  $parameters
+     * @return void
+     */
+    public function callWith($class, array $parameters = [])
+    {
+        $this->call($class, false, $parameters);
+    }
+
+    /**
+     * Silently run the given seeder class.
+     *
+     * @param  array|string  $class
+     * @param  array  $parameters
+     * @return void
+     */
+    public function callSilent($class, array $parameters = [])
+    {
+        $this->call($class, true, $parameters);
+    }
+
+    /**
      * Resolve an instance of the given seeder class.
      *
      * @param  string  $class
@@ -91,37 +103,6 @@ abstract class Seeder
         }
 
         return $instance;
-    }
-
-    /**
-     * Run the database seeds.
-     *
-     * @param  array  $parameters
-     * @return mixed
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function __invoke(array $parameters = [])
-    {
-        if (! method_exists($this, 'run')) {
-            throw new InvalidArgumentException('Method [run] missing from '.get_class($this));
-        }
-
-        return isset($this->container)
-                    ? $this->container->call([$this, 'run'], $parameters)
-                    : $this->run(...$parameters);
-    }
-
-    /**
-     * Silently run the given seeder class.
-     *
-     * @param  array|string  $class
-     * @param  array  $parameters
-     * @return void
-     */
-    public function callSilent($class, array $parameters = [])
-    {
-        $this->call($class, true, $parameters);
     }
 
     /**
@@ -148,5 +129,24 @@ abstract class Seeder
         $this->command = $command;
 
         return $this;
+    }
+
+    /**
+     * Run the database seeds.
+     *
+     * @param  array  $parameters
+     * @return mixed
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function __invoke(array $parameters = [])
+    {
+        if (! method_exists($this, 'run')) {
+            throw new InvalidArgumentException('Method [run] missing from '.get_class($this));
+        }
+
+        return isset($this->container)
+                    ? $this->container->call([$this, 'run'], $parameters)
+                    : $this->run(...$parameters);
     }
 }

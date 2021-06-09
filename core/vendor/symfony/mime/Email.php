@@ -52,16 +52,6 @@ class Email extends Message
         return $this->setHeaderBody('Text', 'Subject', $subject);
     }
 
-    /**
-     * @return $this
-     */
-    private function setHeaderBody(string $type, string $name, $body): object
-    {
-        $this->getHeaders()->setHeaderBody($type, $name, $body);
-
-        return $this;
-    }
-
     public function getSubject(): ?string
     {
         return $this->getHeaders()->getHeaderBody('Subject');
@@ -118,29 +108,6 @@ class Email extends Message
     public function addFrom(...$addresses)
     {
         return $this->addListAddressHeaderBody('From', $addresses);
-    }
-
-    private function addListAddressHeaderBody(string $name, array $addresses)
-    {
-        if (!$header = $this->getHeaders()->get($name)) {
-            return $this->setListAddressHeaderBody($name, $addresses);
-        }
-        $header->addAddresses(Address::createArray($addresses));
-
-        return $this;
-    }
-
-    private function setListAddressHeaderBody(string $name, array $addresses)
-    {
-        $addresses = Address::createArray($addresses);
-        $headers = $this->getHeaders();
-        if ($header = $headers->get($name)) {
-            $header->setAddresses($addresses);
-        } else {
-            $headers->addMailboxListHeader($name, $addresses);
-        }
-
-        return $this;
     }
 
     /**
@@ -423,24 +390,6 @@ class Email extends Message
         return $parts;
     }
 
-    private function createDataPart(array $attachment): DataPart
-    {
-        if (isset($attachment['part'])) {
-            return $attachment['part'];
-        }
-
-        if (isset($attachment['body'])) {
-            $part = new DataPart($attachment['body'], $attachment['name'] ?? null, $attachment['content-type'] ?? null);
-        } else {
-            $part = DataPart::fromPath($attachment['path'] ?? '', $attachment['name'] ?? null, $attachment['content-type'] ?? null);
-        }
-        if ($attachment['inline']) {
-            $part->asInline();
-        }
-
-        return $part;
-    }
-
     public function getBody(): AbstractPart
     {
         if (null !== $body = parent::getBody()) {
@@ -448,6 +397,15 @@ class Email extends Message
         }
 
         return $this->generateBody();
+    }
+
+    public function ensureValidity()
+    {
+        if (null === $this->text && null === $this->html && !$this->attachments) {
+            throw new LogicException('A message must have a text or an HTML part or attachments.');
+        }
+
+        parent::ensureValidity();
     }
 
     /**
@@ -500,15 +458,6 @@ class Email extends Message
         return $part;
     }
 
-    public function ensureValidity()
-    {
-        if (null === $this->text && null === $this->html && !$this->attachments) {
-            throw new LogicException('A message must have a text or an HTML part or attachments.');
-        }
-
-        parent::ensureValidity();
-    }
-
     private function prepareParts(): ?array
     {
         $names = [];
@@ -546,6 +495,57 @@ class Email extends Message
         }
 
         return [$htmlPart, $attachmentParts, array_values($inlineParts)];
+    }
+
+    private function createDataPart(array $attachment): DataPart
+    {
+        if (isset($attachment['part'])) {
+            return $attachment['part'];
+        }
+
+        if (isset($attachment['body'])) {
+            $part = new DataPart($attachment['body'], $attachment['name'] ?? null, $attachment['content-type'] ?? null);
+        } else {
+            $part = DataPart::fromPath($attachment['path'] ?? '', $attachment['name'] ?? null, $attachment['content-type'] ?? null);
+        }
+        if ($attachment['inline']) {
+            $part->asInline();
+        }
+
+        return $part;
+    }
+
+    /**
+     * @return $this
+     */
+    private function setHeaderBody(string $type, string $name, $body): object
+    {
+        $this->getHeaders()->setHeaderBody($type, $name, $body);
+
+        return $this;
+    }
+
+    private function addListAddressHeaderBody(string $name, array $addresses)
+    {
+        if (!$header = $this->getHeaders()->get($name)) {
+            return $this->setListAddressHeaderBody($name, $addresses);
+        }
+        $header->addAddresses(Address::createArray($addresses));
+
+        return $this;
+    }
+
+    private function setListAddressHeaderBody(string $name, array $addresses)
+    {
+        $addresses = Address::createArray($addresses);
+        $headers = $this->getHeaders();
+        if ($header = $headers->get($name)) {
+            $header->setAddresses($addresses);
+        } else {
+            $headers->addMailboxListHeader($name, $addresses);
+        }
+
+        return $this;
     }
 
     /**
