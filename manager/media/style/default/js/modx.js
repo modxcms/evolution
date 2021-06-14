@@ -516,6 +516,10 @@
             },
             work: function() {
                 d.getElementById('mainloader').classList.add('show');
+
+                setTimeout(function(self) {
+                    self.stopWork();
+                }, 3000, this);
             },
             stopWork: function() {
                 d.getElementById('mainloader').classList.remove('show');
