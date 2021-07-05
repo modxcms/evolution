@@ -2045,7 +2045,7 @@
                                     e.target.contentWindow.document.body.innerHTML = '';
                                     e.target.contentWindow.alert = function() {};
                                 } else {
-                                    if (modx.isDasboard(modx.getActionFromUrl(a.url)) || o.wrap.querySelectorAll('#evo-popup-' + o.uid).length > 1) {
+                                    if (modx.isDashboard(modx.getActionFromUrl(a.url)) || o.wrap.querySelectorAll('#evo-popup-' + o.uid).length > 1) {
                                         o.el.close();
                                     } else {
                                         if (e.target.contentDocument.querySelectorAll('h1')[0]) {
