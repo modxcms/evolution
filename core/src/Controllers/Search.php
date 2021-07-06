@@ -94,7 +94,6 @@ class Search extends AbstractController implements ManagerTheme\PageControllerIn
                              ->toArray() as $articul) {
                     $articul_id[] = $articul;
                 }
-                $searchQuery = $searchQuery->orWhereIn('site_content.id', $articul_id);
             }
 
             if (ctype_digit($searchfields)) {
@@ -163,6 +162,10 @@ class Search extends AbstractController implements ManagerTheme\PageControllerIn
             'application/vnd.ms-word' => $this->managerTheme->getStyle('icon_word'),
             'application/vnd.ms-excel' => $this->managerTheme->getStyle('icon_excel'),
         ];
+
+        if(!empty($articul_id)){
+            $searchQuery = $searchQuery->orWhereIn('site_content.id', $articul_id);
+        }
 
         $searchQuery = $searchQuery->groupBy('site_content.id');
 
