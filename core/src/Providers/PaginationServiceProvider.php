@@ -1,26 +1,10 @@
 <?php namespace EvolutionCMS\Providers;
 
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Pagination\PaginationServiceProvider as IlluminatePaginationServiceProvider;
 
-class PaginationServiceProvider extends ServiceProvider
+class PaginationServiceProvider extends IlluminatePaginationServiceProvider
 {
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->loadViewsFrom(__DIR__.'/resources/views', 'pagination');
-
-        if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__.'/resources/views' => $this->app->resourcePath('views/vendor/pagination'),
-            ], 'laravel-pagination');
-        }
-    }
-
     /**
      * Register the service provider.
      *
@@ -28,6 +12,8 @@ class PaginationServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        parent::register();
+
         Paginator::viewFactoryResolver(function () {
             return $this->app['view'];
         });
