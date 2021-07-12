@@ -107,7 +107,7 @@ class HelperProcessor
         }
 
         if (isset($webp) && class_exists('\WebPConvert\WebPConvert')) {
-            if( isset( $_SERVER['HTTP_ACCEPT'] ) && strpos( $_SERVER['HTTP_ACCEPT'], 'image/webp' ) !== false ) {
+            if( isset( $_SERVER['HTTP_ACCEPT'] ) && strpos( $_SERVER['HTTP_ACCEPT'], 'image/webp' ) !== false && pathinfo($outputFilename, PATHINFO_EXTENSION) != 'gif') {
                 if (file_exists($outputFilename . '.webp')) {
                     $fNameSuf .= '.webp';
                 } else {
