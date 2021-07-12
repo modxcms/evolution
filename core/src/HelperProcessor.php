@@ -107,7 +107,7 @@ class HelperProcessor
         }
 
         if (isset($webp) && class_exists('\WebPConvert\WebPConvert')) {
-            if (strpos($_SERVER['HTTP_USER_AGENT'], 'Mac OS') === false ) {
+            if( isset( $_SERVER['HTTP_ACCEPT'] ) && strpos( $_SERVER['HTTP_ACCEPT'], 'image/webp' ) !== false ) {
                 if (file_exists($outputFilename . '.webp')) {
                     $fNameSuf .= '.webp';
                 } else {
