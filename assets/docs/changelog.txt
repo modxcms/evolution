@@ -1,9 +1,20 @@
 This file shows the changes in recent releases of Evolution CMS. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+Evolution CMS 3.1.6 (Jul 12, 2021)
+* [GitHub: 3eaf63692] - fix phpthumb webp support (Dmi3yy)
+* [GitHub: fd50690b7] - minify fixed js (mnoskov)
+* [GitHub: 39af92a74] - fix: search in tv (Klym)
+* [GitHub: f26debaaa] - Fix isDasboard to isDashboard(lost letter h) (by_scrimm)
+* [GitHub: 3c5812cb6] - fix default views for links (mnoskov)
+* [GitHub: 8dae96062] - default pagination lang (mnoskov)
+* [GitHub: 2edc1f26f] - stop blockscreen after 3 secs (mnoskov)
+
+
 Evolution CMS 3.1.5 (Jun 09, 2021)
 * [GitHub: 67766f17e] - composer update (Dmi3yy)
 * [GitHub: 67766f17e] hot fix in install (mnoskov)
+
 
 Evolution CMS 3.1.4 (Jun 03, 2021)
 * [GitHub: 67766f17e] - composer update (Dmi3yy)
