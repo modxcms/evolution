@@ -57,7 +57,7 @@ class User extends Eloquent\Model
 
     public function values()
     {
-        return $this->hasMany(UserValue::class);
+        return $this->hasMany(UserValue::class,'userid','id');
     }
 
     public function delete()
