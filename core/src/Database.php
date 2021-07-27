@@ -91,8 +91,6 @@ class Database extends Manager
     }
 
 
-
-
     /**
      * {@inheritDoc}
      */
@@ -245,7 +243,7 @@ class Database extends Manager
     {
         $out = false;
 
-        if(is_string($result)){
+        if (is_string($result)) {
             $result = $this->query($result);
         }
 
@@ -805,8 +803,13 @@ class Database extends Manager
 
     public function prepareNativeConfig()
     {
-        $this->config = $this->getConfig();
-        $this->config['table_prefix'] = $this->getConfig('prefix');
+        try {
+            $this->config = $this->getConfig();
+            $this->config['table_prefix'] = $this->getConfig('prefix');
+        } catch (Exception $e) {
+            if (!is_cli())
+                throw $e;
+        }
     }
 
     public function begin()
@@ -826,6 +829,6 @@ class Database extends Manager
 
     public function optimize($table_name)
     {
-        DB::statement('OPTIMIZE TABLE '.$table_name);
+        DB::statement('OPTIMIZE TABLE ' . $table_name);
     }
 }

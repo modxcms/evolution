@@ -949,7 +949,7 @@ trait Comparison
         $tester = trim($tester);
 
         if (preg_match('/^\d+$/', $tester)) {
-            return $this->year === \intval($tester);
+            return $this->year === (int) $tester;
         }
 
         if (preg_match('/^\d{3,}-\d{1,2}$/', $tester)) {
@@ -964,9 +964,9 @@ trait Comparison
 
         /* @var CarbonInterface $max */
         $median = static::parse('5555-06-15 12:30:30.555555')->modify($modifier);
-        $current = $this->copy();
+        $current = $this->avoidMutation();
         /* @var CarbonInterface $other */
-        $other = $this->copy()->modify($modifier);
+        $other = $this->avoidMutation()->modify($modifier);
 
         if ($current->eq($other)) {
             return true;

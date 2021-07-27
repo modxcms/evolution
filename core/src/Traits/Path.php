@@ -35,7 +35,7 @@ trait Path
      */
     public function basePath($path = '')
     {
-        return EVO_CORE_PATH;
+        return EVO_CORE_PATH . $path;
     }
 
     /**
@@ -75,9 +75,9 @@ trait Path
      *
      * @return string
      */
-    public function publicPath()
+    public function publicPath($path = '')
     {
-        return MODX_BASE_PATH;
+        return MODX_BASE_PATH . $path;
     }
 
     /**
@@ -229,7 +229,7 @@ trait Path
      */
     public function bootstrapWith(array $bootstrappers)
     {
-        return [ ];
+        return [];
     }
 
     /**

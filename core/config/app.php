@@ -66,6 +66,7 @@ return [
         'Evolution_Routing' => EvolutionCMS\Providers\RoutingServiceProvider::class,
         'Evolution_Config' => EvolutionCMS\Providers\ConfigServiceProvider::class,
         'Evolution_Session' => EvolutionCMS\Providers\SessionServiceProvider::class,
+        'Evolution_Salo' => \EvolutionCMS\Salo\SaloServiceProvider::class,
 
         'Fix_DLTemplate' => EvolutionCMS\Providers\DLTemplateServiceProvider::class,
         'Fix_Phx' => EvolutionCMS\Providers\PhxServiceProvider::class,
