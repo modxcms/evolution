@@ -1134,17 +1134,17 @@
         },
         {
             "name": "evolution-cms/salo",
-            "version": "1.x-dev",
-            "version_normalized": "1.9999999.9999999.9999999-dev",
+            "version": "1.0.1",
+            "version_normalized": "1.0.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Ser1ous/sail.git",
-                "reference": "28161a11f854a70c95660a860a337f74e12f8743"
+                "url": "https://github.com/Ser1ous/salo.git",
+                "reference": "f224115d310037d49fd271ff71fb0358ddaf2e6e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Ser1ous/sail/zipball/28161a11f854a70c95660a860a337f74e12f8743",
-                "reference": "28161a11f854a70c95660a860a337f74e12f8743",
+                "url": "https://api.github.com/repos/Ser1ous/salo/zipball/f224115d310037d49fd271ff71fb0358ddaf2e6e",
+                "reference": "f224115d310037d49fd271ff71fb0358ddaf2e6e",
                 "shasum": ""
             },
             "require": {
@@ -1153,10 +1153,9 @@
                 "illuminate/support": "^8.0|^9.0",
                 "php": "^7.3|^8.0"
             },
-            "time": "2021-07-27T09:15:13+00:00",
-            "default-branch": true,
+            "time": "2021-07-28T13:21:32+00:00",
             "bin": [
-                "bin/sail"
+                "bin/salo"
             ],
             "type": "library",
             "extra": {
@@ -1179,20 +1178,14 @@
             "license": [
                 "MIT"
             ],
-            "authors": [
-                {
-                    "name": "Taylor Otwell",
-                    "email": "taylor@laravel.com"
-                }
-            ],
-            "description": "Docker files for running a basic Laravel application.",
+            "description": "Docker files for running a basic evo application.",
             "keywords": [
                 "docker",
-                "laravel"
+                "evo"
             ],
             "support": {
-                "issues": "https://github.com/laravel/sail/issues",
-                "source": "https://github.com/laravel/sail"
+                "issues": "https://github.com/Ser1ous/salo/issues",
+                "source": "https://github.com/Ser1ous/salo/tree/1.0.1"
             },
             "install-path": "../evolution-cms/salo"
         },
@@ -3299,17 +3292,17 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.51.0",
-            "version_normalized": "2.51.0.0",
+            "version": "2.51.1",
+            "version_normalized": "2.51.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "48ebff252df4d3b60ecb8e2583f79dfba6b56bc8"
+                "reference": "8619c299d1e0d4b344e1f98ca07a1ce2cfbf1922"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/48ebff252df4d3b60ecb8e2583f79dfba6b56bc8",
-                "reference": "48ebff252df4d3b60ecb8e2583f79dfba6b56bc8",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/8619c299d1e0d4b344e1f98ca07a1ce2cfbf1922",
+                "reference": "8619c299d1e0d4b344e1f98ca07a1ce2cfbf1922",
                 "shasum": ""
             },
             "require": {
@@ -3329,7 +3322,7 @@
                 "phpunit/phpunit": "^7.5.20 || ^8.5.14",
                 "squizlabs/php_codesniffer": "^3.4"
             },
-            "time": "2021-07-28T08:28:41+00:00",
+            "time": "2021-07-28T13:16:28+00:00",
             "bin": [
                 "bin/carbon"
             ],

@@ -1,4 +1,4 @@
-# For more information: https://laravel.com/docs/sail
+# For more information: https://laravel.com/docs/salo
 version: '3'
 services:
     evo.php:
@@ -12,14 +12,14 @@ services:
             - '${APP_PORT:-80}:80'
         environment:
             WWWUSER: '${WWWUSER}'
-            LARAVEL_SAIL: 1
+            LARAVEL_SALO: 1
         volumes:
             - '.:/var/www/html'
         networks:
-            - sail
+            - salo
 {{depends}}
 {{services}}
 networks:
-    sail:
+    salo:
         driver: bridge
 {{volumes}}

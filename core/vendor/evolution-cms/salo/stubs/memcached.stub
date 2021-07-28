@@ -3,4 +3,4 @@
         ports:
             - '11211:11211'
         networks:
-            - sail
+            - salo

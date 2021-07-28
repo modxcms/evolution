@@ -9,9 +9,9 @@
             MYSQL_PASSWORD: '${DB_PASSWORD}'
             MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
         volumes:
-            - 'sailmariadb:/var/lib/mysql'
+            - 'salomariadb:/var/lib/mysql'
         networks:
-            - sail
+            - salo
         healthcheck:
           test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
           retries: 3

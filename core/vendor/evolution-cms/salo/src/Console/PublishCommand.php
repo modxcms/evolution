@@ -11,14 +11,14 @@ class PublishCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'sail:publish';
+    protected $signature = 'salo:publish';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Publish the Laravel Sail Docker files';
+    protected $description = 'Publish the Laravel Salo Docker files';
 
     /**
      * Execute the console command.
@@ -27,14 +27,14 @@ class PublishCommand extends Command
      */
     public function handle()
     {
-        $this->call('vendor:publish', ['--tag' => 'sail']);
+        $this->call('vendor:publish', ['--tag' => 'salo']);
 
         file_put_contents(
             $this->laravel->basePath('docker-compose.yml'),
             str_replace(
                 [
-                    './vendor/laravel/sail/runtimes/8.0',
-                    './vendor/laravel/sail/runtimes/7.4',
+                    './vendor/laravel/salo/runtimes/8.0',
+                    './vendor/laravel/salo/runtimes/7.4',
                 ],
                 [
                     './docker/8.0',

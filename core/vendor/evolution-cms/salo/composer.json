@@ -1,18 +1,8 @@
 {
     "name": "evolution-cms/salo",
-    "description": "Docker files for running a basic Laravel application.",
-    "keywords": ["laravel", "docker"],
+    "description": "Docker files for running a basic evo application.",
+    "keywords": ["evo", "docker"],
     "license": "MIT",
-    "support": {
-        "issues": "https://github.com/laravel/sail/issues",
-        "source": "https://github.com/laravel/sail"
-    },
-    "authors": [
-        {
-            "name": "Taylor Otwell",
-            "email": "taylor@laravel.com"
-        }
-    ],
     "require": {
         "php": "^7.3|^8.0",
         "illuminate/contracts": "^8.0|^9.0",
@@ -20,7 +10,7 @@
         "illuminate/support": "^8.0|^9.0"
     },
     "bin": [
-        "bin/sail"
+        "bin/salo"
     ],
     "autoload": {
         "psr-4": {

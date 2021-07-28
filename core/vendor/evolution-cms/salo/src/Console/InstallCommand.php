@@ -11,14 +11,14 @@ class InstallCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'sail:install {--with= : The services that should be included in the installation}';
+    protected $signature = 'salo:install {--with= : The services that should be included in the installation}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Install Laravel Sail\'s default Docker Compose file';
+    protected $description = 'Install Laravel Salo\'s default Docker Compose file';
 
     /**
      * Execute the console command.
@@ -38,11 +38,11 @@ class InstallCommand extends Command
         $this->buildDockerCompose($services);
         $this->replaceEnvVariables($services);
 
-        $this->info('Sail scaffolding installed successfully.');
+        $this->info('Salo scaffolding installed successfully.');
     }
 
     /**
-     * Gather the desired Sail services using a Symfony menu.
+     * Gather the desired Salo services using a Symfony menu.
      *
      * @return array
      */
@@ -50,7 +50,6 @@ class InstallCommand extends Command
     {
         return $this->choice('Which services would you like to install?', [
             'mysql',
-            'pgsql',
             'mariadb',
             'redis',
             'memcached',
@@ -86,7 +85,7 @@ class InstallCommand extends Command
             ->filter(function ($service) {
                 return in_array($service, ['mysql', 'pgsql', 'mariadb', 'redis', 'meilisearch', 'minio']);
             })->map(function ($service) {
-                return "    sail{$service}:\n        driver: local";
+                return "    salo{$service}:\n        driver: local";
             })->whenNotEmpty(function ($collection) {
                 return $collection->prepend('volumes:');
             })->implode("\n");
@@ -114,7 +113,7 @@ class InstallCommand extends Command
         if (file_exists(evo()->basePath('custom/.env'))) {
             $environment = file_get_contents(evo()->basePath('custom/.env'));
         } else {
-            $environment = file_get_contents(evo()->basePath('custom/.env.example'));
+            $environment = file_get_contents(evo()->basePath('custom/.env.docker.example'));
         }
 
         if (in_array('pgsql', $services)) {
@@ -127,7 +126,7 @@ class InstallCommand extends Command
             $environment = str_replace('DB_HOST=127.0.0.1', "DB_HOST=mysql", $environment);
         }
 
-        $environment = str_replace('DB_USERNAME=root', "DB_USERNAME=sail", $environment);
+        $environment = str_replace('DB_USERNAME=root', "DB_USERNAME=salo", $environment);
         $environment = preg_replace("/DB_PASSWORD=(.*)/", "DB_PASSWORD=password", $environment);
 
         $environment = str_replace('MEMCACHED_HOST=127.0.0.1', 'MEMCACHED_HOST=memcached', $environment);

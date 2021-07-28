@@ -45,11 +45,11 @@ class SaloServiceProvider extends ServiceProvider implements DeferrableProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__ . '/../runtimes' => $this->app->basePath('docker'),
-            ], ['sail', 'sail-docker']);
+            ], ['salo', 'salo-docker']);
 
             $this->publishes([
-                __DIR__ . '/../bin/sail' => $this->app->basePath('sail'),
-            ], ['sail', 'sail-bin']);
+                __DIR__ . '/../bin/salo' => $this->app->basePath('salo'),
+            ], ['salo', 'salo-bin']);
         }
     }
 

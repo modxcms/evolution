@@ -13,7 +13,7 @@ case "${UNAMEOUT}" in
 esac
 
 if [ "$MACHINE" == "UNKNOWN" ]; then
-    echo "Unsupported operating system [$(uname -s)]. Laravel Sail supports macOS, Linux, and Windows (WSL2)." >&2
+    echo "Unsupported operating system [$(uname -s)]. Laravel Salo supports macOS, Linux, and Windows (WSL2)." >&2
 
     exit 1
 fi
@@ -25,9 +25,9 @@ export DB_PORT=${DB_PORT:-3306}
 export WWWUSER=${WWWUSER:-$UID}
 export WWWGROUP=${WWWGROUP:-$(id -g)}
 
-export SAIL_SHARE_DASHBOARD=${SAIL_SHARE_DASHBOARD:-4040}
-export SAIL_SHARE_SERVER_HOST=${SAIL_SHARE_SERVER_HOST:-"laravel-sail.site"}
-export SAIL_SHARE_SERVER_PORT=${SAIL_SHARE_SERVER_PORT:-8080}
+export SALO_SHARE_DASHBOARD=${SALO_SHARE_DASHBOARD:-4040}
+export SALO_SHARE_SERVER_HOST=${SALO_SHARE_SERVER_HOST:-"laravel-salo.site"}
+export SALO_SHARE_SERVER_PORT=${SALO_SHARE_SERVER_PORT:-8080}
 
 # Ensure that Docker is running...
 if ! docker info > /dev/null 2>&1; then
@@ -36,11 +36,11 @@ if ! docker info > /dev/null 2>&1; then
     exit 1
 fi
 
-# Determine if Sail is currently up...
+# Determine if Salo is currently up...
 PSRESULT="$(docker-compose ps -q)"
 
 if docker-compose ps | grep $APP_SERVICE | grep 'Exit'; then
-    echo -e "${WHITE}Shutting down old Sail processes...${NC}" >&2
+    echo -e "${WHITE}Shutting down old Salo processes...${NC}" >&2
 
     docker-compose down > /dev/null 2>&1
 
@@ -51,11 +51,11 @@ else
     EXEC="no"
 fi
 
-# Function that outputs Sail is not running...
-function sail_is_not_running {
-    echo -e "${WHITE}Sail is not running.${NC}" >&2
+# Function that outputs Salo is not running...
+function salo_is_not_running {
+    echo -e "${WHITE}Salo is not running.${NC}" >&2
     echo "" >&2
-    echo -e "${WHITE}You may Sail using the following commands:${NC} './vendor/bin/sail up' or './vendor/bin/sail up -d'" >&2
+    echo -e "${WHITE}You may Salo using the following commands:${NC} './vendor/bin/salo up' or './vendor/bin/salo up -d'" >&2
 
     exit 1
 }
@@ -72,11 +72,11 @@ if [ $# -gt 0 ]; then
 
         if [ "$EXEC" == "yes" ]; then
             docker-compose exec \
-                -u sail \
+                -u salo \
                 "$APP_SERVICE" \
                 php "$@"
         else
-            sail_is_not_running
+            salo_is_not_running
         fi
 
     # Proxy vendor binary commands on the application container...
@@ -85,11 +85,11 @@ if [ $# -gt 0 ]; then
 
         if [ "$EXEC" == "yes" ]; then
             docker-compose exec \
-                -u sail \
+                -u salo \
                 "$APP_SERVICE" \
                 ./vendor/bin/"$@"
         else
-            sail_is_not_running
+            salo_is_not_running
         fi
 
     # Proxy Composer commands to the "composer" binary on the application container...
@@ -98,11 +98,11 @@ if [ $# -gt 0 ]; then
 
         if [ "$EXEC" == "yes" ]; then
             docker-compose exec \
-                -u sail \
+                -u salo \
                 "$APP_SERVICE" \
                 composer "$@"
         else
-            sail_is_not_running
+            salo_is_not_running
         fi
 
     # Proxy Artisan commands to the "artisan" binary on the application container...
@@ -111,11 +111,11 @@ if [ $# -gt 0 ]; then
 
         if [ "$EXEC" == "yes" ]; then
             docker-compose exec \
-                -u sail \
+                -u salo \
                 "$APP_SERVICE" \
                 php core/artisan "$@"
         else
-            sail_is_not_running
+            salo_is_not_running
         fi
 
     # Proxy the "test" command to the "php artisan test" Artisan command...
@@ -124,11 +124,11 @@ if [ $# -gt 0 ]; then
 
         if [ "$EXEC" == "yes" ]; then
             docker-compose exec \
-                -u sail \
+                -u salo \
                 "$APP_SERVICE" \
                 php core/artisan test "$@"
         else
-            sail_is_not_running
+            salo_is_not_running
         fi
 
     # Proxy the "dusk" command to the "php artisan dusk" Artisan command...
@@ -137,13 +137,13 @@ if [ $# -gt 0 ]; then
 
         if [ "$EXEC" == "yes" ]; then
             docker-compose exec \
-                -u sail \
+                -u salo \
                 -e "APP_URL=http://laravel.test" \
                 -e "DUSK_DRIVER_URL=http://selenium:4444/wd/hub" \
                 "$APP_SERVICE" \
                 php core/artisan dusk "$@"
         else
-            sail_is_not_running
+            salo_is_not_running
         fi
 
     # Proxy the "dusk:fails" command to the "php artisan dusk:fails" Artisan command...
@@ -152,13 +152,13 @@ if [ $# -gt 0 ]; then
 
         if [ "$EXEC" == "yes" ]; then
             docker-compose exec \
-                -u sail \
+                -u salo \
                 -e "APP_URL=http://laravel.test" \
                 -e "DUSK_DRIVER_URL=http://selenium:4444/wd/hub" \
                 "$APP_SERVICE" \
                 php core/artisan dusk:fails "$@"
         else
-            sail_is_not_running
+            salo_is_not_running
         fi
 
     # Initiate a Laravel Tinker session within the application container...
@@ -167,11 +167,11 @@ if [ $# -gt 0 ]; then
 
         if [ "$EXEC" == "yes" ]; then
             docker-compose exec \
-                -u sail \
+                -u salo \
                 "$APP_SERVICE" \
                 php core/artisan tinker
         else
-            sail_is_not_running
+            salo_is_not_running
         fi
 
     # Proxy Node commands to the "node" binary on the application container...
@@ -180,11 +180,11 @@ if [ $# -gt 0 ]; then
 
         if [ "$EXEC" == "yes" ]; then
             docker-compose exec \
-                -u sail \
+                -u salo \
                 "$APP_SERVICE" \
                 node "$@"
         else
-            sail_is_not_running
+            salo_is_not_running
         fi
 
     # Proxy NPM commands to the "npm" binary on the application container...
@@ -193,11 +193,11 @@ if [ $# -gt 0 ]; then
 
         if [ "$EXEC" == "yes" ]; then
             docker-compose exec \
-                -u sail \
+                -u salo \
                 "$APP_SERVICE" \
                 npm "$@"
         else
-            sail_is_not_running
+            salo_is_not_running
         fi
 
     # Proxy NPX commands to the "npx" binary on the application container...
@@ -206,11 +206,11 @@ if [ $# -gt 0 ]; then
 
         if [ "$EXEC" == "yes" ]; then
             docker-compose exec \
-                -u sail \
+                -u salo \
                 "$APP_SERVICE" \
                 npx "$@"
         else
-            sail_is_not_running
+            salo_is_not_running
         fi
 
     # Proxy YARN commands to the "yarn" binary on the application container...
@@ -219,11 +219,11 @@ if [ $# -gt 0 ]; then
 
         if [ "$EXEC" == "yes" ]; then
             docker-compose exec \
-                -u sail \
+                -u salo \
                 "$APP_SERVICE" \
                 yarn "$@"
         else
-            sail_is_not_running
+            salo_is_not_running
         fi
 
     # Initiate a MySQL CLI terminal session within the "mysql" container...
@@ -235,7 +235,7 @@ if [ $# -gt 0 ]; then
                 mysql \
                 bash -c 'MYSQL_PWD=${MYSQL_PASSWORD} mysql -u ${MYSQL_USER} ${MYSQL_DATABASE}'
         else
-            sail_is_not_running
+            salo_is_not_running
         fi
 
     # Initiate a MySQL CLI terminal session within the "mariadb" container...
@@ -247,7 +247,7 @@ if [ $# -gt 0 ]; then
                 mariadb \
                 bash -c 'MYSQL_PWD=${MYSQL_PASSWORD} mysql -u ${MYSQL_USER} ${MYSQL_DATABASE}'
         else
-            sail_is_not_running
+            salo_is_not_running
         fi
 
     # Initiate a PostgreSQL CLI terminal session within the "pgsql" container...
@@ -259,7 +259,7 @@ if [ $# -gt 0 ]; then
                  pgsql \
                  bash -c 'PGPASSWORD=${PGPASSWORD} psql -U ${POSTGRES_USER} ${POSTGRES_DB}'
         else
-            sail_is_not_running
+            salo_is_not_running
         fi
 
     # Initiate a Bash shell within the application container...
@@ -268,11 +268,11 @@ if [ $# -gt 0 ]; then
 
         if [ "$EXEC" == "yes" ]; then
             docker-compose exec \
-                -u sail \
+                -u salo \
                 "$APP_SERVICE" \
                 bash
         else
-            sail_is_not_running
+            salo_is_not_running
         fi
 
     # Initiate a root user Bash shell within the application container...
@@ -284,7 +284,7 @@ if [ $# -gt 0 ]; then
                 "$APP_SERVICE" \
                 bash
         else
-            sail_is_not_running
+            salo_is_not_running
         fi
 
     # Initiate a Redis CLI terminal session within the "redis" container...
@@ -296,7 +296,7 @@ if [ $# -gt 0 ]; then
                 redis \
                 redis-cli
         else
-            sail_is_not_running
+            salo_is_not_running
         fi
 
     # Share the site...
@@ -304,14 +304,14 @@ if [ $# -gt 0 ]; then
         shift 1
 
         if [ "$EXEC" == "yes" ]; then
-            docker run --init --rm -p $SAIL_SHARE_DASHBOARD:4040 -t beyondcodegmbh/expose-server:latest share http://host.docker.internal:"$APP_PORT" \
-            --server-host="$SAIL_SHARE_SERVER_HOST" \
-            --server-port="$SAIL_SHARE_SERVER_PORT" \
-            --auth="$SAIL_SHARE_TOKEN" \
+            docker run --init --rm -p $SALO_SHARE_DASHBOARD:4040 -t beyondcodegmbh/expose-server:latest share http://host.docker.internal:"$APP_PORT" \
+            --server-host="$SALO_SHARE_SERVER_HOST" \
+            --server-port="$SALO_SHARE_SERVER_PORT" \
+            --auth="$SALO_SHARE_TOKEN" \
             --subdomain="" \
             "$@"
         else
-            sail_is_not_running
+            salo_is_not_running
         fi
 
     # Pass unknown commands to the "docker-compose" binary...
