@@ -374,7 +374,7 @@ $agreeToggle = $errors > 0 ? '' : ' onclick="if(document.getElementById(\'chkagr
 
         <input type="hidden" value="1" name="options_selected"/>
 
-        <input type="hidden" value="<?php echo $_POST['installdata'] ?>" name="installdata"/>
+        <input type="hidden" value="<?php echo $_POST['installdata'] ?? '' ?>" name="installdata"/>
         <?php
         $templates = isset ($_POST['template']) ? $_POST['template'] : array();
         foreach ($templates as $i => $template) echo '<input type="hidden" name="template[]" value="' . $template . '" />';

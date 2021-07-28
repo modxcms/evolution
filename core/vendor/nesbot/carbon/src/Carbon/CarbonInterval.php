@@ -380,7 +380,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
 
         parent::__construct($spec);
 
-        if (!\is_null($microseconds)) {
+        if ($microseconds !== null) {
             $this->f = $microseconds / Carbon::MICROSECONDS_PER_SECOND;
         }
     }
@@ -996,7 +996,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
      */
     public function get($name)
     {
-        if (substr($name, 0, 5) === 'total') {
+        if (str_starts_with($name, 'total')) {
             return $this->total(substr($name, 5));
         }
 
@@ -1360,7 +1360,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
         $minimumUnit = 's';
         extract($this->getForHumansInitialVariables($syntax, $short));
 
-        if (\is_null($syntax)) {
+        if ($syntax === null) {
             $syntax = CarbonInterface::DIFF_ABSOLUTE;
         }
 
@@ -1368,7 +1368,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
             $parts = INF;
         }
 
-        if (\is_null($options)) {
+        if ($options === null) {
             $options = static::getHumanDiffOptions();
         }
 
@@ -2242,12 +2242,12 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
             'years' => $this->years,
             'months' => $this->months,
             'weeks' => (int) ($this->d / $daysPerWeek),
-            'dayz' => (int) ($this->d % $daysPerWeek),
+            'dayz' => $this->d % $daysPerWeek,
             'hours' => $this->hours,
             'minutes' => $this->minutes,
             'seconds' => $this->seconds,
             'milliseconds' => (int) ($this->microseconds / Carbon::MICROSECONDS_PER_MILLISECOND),
-            'microseconds' => (int) ($this->microseconds % Carbon::MICROSECONDS_PER_MILLISECOND),
+            'microseconds' => $this->microseconds % Carbon::MICROSECONDS_PER_MILLISECOND,
         ];
 
         if (isset($factors['dayz']) && $factors['dayz'][0] !== 'weeks') {

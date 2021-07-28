@@ -890,7 +890,7 @@ trait Date
         switch (true) {
             case isset($formats[$name]):
                 $format = $formats[$name];
-                $method = substr($format, 0, 1) === '%' ? 'formatLocalized' : 'rawFormat';
+                $method = str_starts_with($format, '%') ? 'formatLocalized' : 'rawFormat';
                 $value = $this->$method($format);
 
                 return is_numeric($value) ? (int) $value : $value;
@@ -945,11 +945,11 @@ trait Date
 
             // @property-read int 51 through 53
             case $name === 'weeksInYear':
-                return (int) $this->weeksInYear();
+                return $this->weeksInYear();
 
             // @property-read int 51 through 53
             case $name === 'isoWeeksInYear':
-                return (int) $this->isoWeeksInYear();
+                return $this->isoWeeksInYear();
 
             // @property-read int 1 through 5
             case $name === 'weekOfMonth':
@@ -1132,7 +1132,7 @@ trait Date
             case 'microseconds':
             case 'microsecond':
             case 'micro':
-                if (substr($name, 0, 5) === 'milli') {
+                if (str_starts_with($name, 'milli')) {
                     $value *= 1000;
                 }
 
@@ -1327,7 +1327,7 @@ trait Date
     {
         $dayOfYear = $this->dayOfYear;
 
-        return \is_null($value) ? $dayOfYear : $this->addDays($value - $dayOfYear);
+        return $value === null ? $dayOfYear : $this->addDays($value - $dayOfYear);
     }
 
     /**
@@ -1341,7 +1341,7 @@ trait Date
     {
         $dayOfWeek = ($this->dayOfWeek + 7 - (int) ($this->getTranslationMessage('first_day_of_week') ?? 0)) % 7;
 
-        return \is_null($value) ? $dayOfWeek : $this->addDays($value - $dayOfWeek);
+        return $value === null ? $dayOfWeek : $this->addDays($value - $dayOfWeek);
     }
 
     /**
@@ -1355,7 +1355,7 @@ trait Date
     {
         $dayOfWeekIso = $this->dayOfWeekIso;
 
-        return \is_null($value) ? $dayOfWeekIso : $this->addDays($value - $dayOfWeekIso);
+        return $value === null ? $dayOfWeekIso : $this->addDays($value - $dayOfWeekIso);
     }
 
     /**
@@ -1527,7 +1527,7 @@ trait Date
      */
     public function setTimeFromTimeString($time)
     {
-        if (strpos($time, ':') === false) {
+        if (!str_contains($time, ':')) {
             $time .= ':0';
         }
 
@@ -1918,7 +1918,7 @@ trait Date
                 's' => 'second',
                 'ss' => ['getPaddedUnit', ['second']],
                 'S' => function (CarbonInterface $date) {
-                    return (string) ((string) floor($date->micro / 100000));
+                    return (string) floor($date->micro / 100000);
                 },
                 'SS' => function (CarbonInterface $date) {
                     return str_pad((string) floor($date->micro / 10000), 2, '0', STR_PAD_LEFT);
@@ -2537,7 +2537,7 @@ trait Date
 
         $unit = rtrim($method, 's');
 
-        if (substr($unit, 0, 2) === 'is') {
+        if (str_starts_with($unit, 'is')) {
             $word = substr($unit, 2);
 
             if (\in_array($word, static::$days)) {
@@ -2575,7 +2575,7 @@ trait Date
         if ($action === 'add' || $action === 'sub') {
             $unit = substr($unit, 3);
 
-            if (substr($unit, 0, 4) === 'Real') {
+            if (str_starts_with($unit, 'Real')) {
                 $unit = static::singularUnit(substr($unit, 4));
 
                 return $this->{"${action}RealUnit"}($unit, ...$parameters);
@@ -2617,7 +2617,7 @@ trait Date
             }
         }
 
-        if (substr($unit, 0, 9) === 'isCurrent') {
+        if (str_starts_with($unit, 'isCurrent')) {
             try {
                 return $this->isCurrentUnit(strtolower(substr($unit, 9)));
             } catch (BadComparisonUnitException | BadMethodCallException $exception) {
@@ -2625,7 +2625,7 @@ trait Date
             }
         }
 
-        if (substr($method, -5) === 'Until') {
+        if (str_ends_with($method, 'Until')) {
             try {
                 $unit = static::singularUnit(substr($method, 0, -5));
 
