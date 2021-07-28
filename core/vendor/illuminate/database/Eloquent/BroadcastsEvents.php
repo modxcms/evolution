@@ -50,85 +50,6 @@ trait BroadcastsEvents
     }
 
     /**
-     * Broadcast the given event instance if channels are configured for the model event.
-     *
-     * @param  mixed  $instance
-     * @param  string  $event
-     * @param  mixed  $channels
-     * @return \Illuminate\Broadcasting\PendingBroadcast|null
-     */
-    protected function broadcastIfBroadcastChannelsExistForEvent($instance, $event, $channels = null)
-    {
-        if (! empty($this->broadcastOn($event)) || ! empty($channels)) {
-            return broadcast($instance->onChannels(Arr::wrap($channels)));
-        }
-    }
-
-    /**
-     * Get the channels that model events should broadcast on.
-     *
-     * @param  string  $event
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
-    public function broadcastOn($event)
-    {
-        return [$this];
-    }
-
-    /**
-     * Create a new broadcastable model event event.
-     *
-     * @param  string  $event
-     * @return mixed
-     */
-    public function newBroadcastableModelEvent($event)
-    {
-        return tap(new BroadcastableModelEventOccurred($this, $event), function ($event) {
-            $event->connection = property_exists($this, 'broadcastConnection')
-                            ? $this->broadcastConnection
-                            : $this->broadcastConnection();
-
-            $event->queue = property_exists($this, 'broadcastQueue')
-                            ? $this->broadcastQueue
-                            : $this->broadcastQueue();
-
-            $event->afterCommit = property_exists($this, 'broadcastAfterCommit')
-                            ? $this->broadcastAfterCommit
-                            : $this->broadcastAfterCommit();
-        });
-    }
-
-    /**
-     * Get the queue connection that should be used to broadcast model events.
-     *
-     * @return string|null
-     */
-    public function broadcastConnection()
-    {
-        //
-    }
-
-    /**
-     * Get the queue that should be used to broadcast model events.
-     *
-     * @return string|null
-     */
-    public function broadcastQueue()
-    {
-        //
-    }
-
-    /**
-     * Determine if the model event broadcast queued job should be dispatched after all transactions are committed.
-     *
-     * @return bool
-     */
-    public function broadcastAfterCommit()
-    {
-        return false;
-    }
-
-    /**
      * Broadcast that the model was updated.
      *
      * @param  \Illuminate\Broadcasting\Channel|\Illuminate\Contracts\Broadcasting\HasBroadcastChannel|array|null  $channels
@@ -178,5 +99,95 @@ trait BroadcastsEvents
         return $this->broadcastIfBroadcastChannelsExistForEvent(
             $this->newBroadcastableModelEvent('deleted'), 'deleted', $channels
         );
+    }
+
+    /**
+     * Broadcast the given event instance if channels are configured for the model event.
+     *
+     * @param  mixed  $instance
+     * @param  string  $event
+     * @param  mixed  $channels
+     * @return \Illuminate\Broadcasting\PendingBroadcast|null
+     */
+    protected function broadcastIfBroadcastChannelsExistForEvent($instance, $event, $channels = null)
+    {
+        if (! empty($this->broadcastOn($event)) || ! empty($channels)) {
+            return broadcast($instance->onChannels(Arr::wrap($channels)));
+        }
+    }
+
+    /**
+     * Create a new broadcastable model event event.
+     *
+     * @param  string  $event
+     * @return mixed
+     */
+    public function newBroadcastableModelEvent($event)
+    {
+        return tap($this->newBroadcastableEvent($event), function ($event) {
+            $event->connection = property_exists($this, 'broadcastConnection')
+                            ? $this->broadcastConnection
+                            : $this->broadcastConnection();
+
+            $event->queue = property_exists($this, 'broadcastQueue')
+                            ? $this->broadcastQueue
+                            : $this->broadcastQueue();
+
+            $event->afterCommit = property_exists($this, 'broadcastAfterCommit')
+                            ? $this->broadcastAfterCommit
+                            : $this->broadcastAfterCommit();
+        });
+    }
+
+    /**
+     * Create a new broadcastable model event for the model.
+     *
+     * @param  string  $event
+     * @return \Illuminate\Database\Eloquent\BroadcastableModelEventOccurred
+     */
+    protected function newBroadcastableEvent($event)
+    {
+        return new BroadcastableModelEventOccurred($this, $event);
+    }
+
+    /**
+     * Get the channels that model events should broadcast on.
+     *
+     * @param  string  $event
+     * @return \Illuminate\Broadcasting\Channel|array
+     */
+    public function broadcastOn($event)
+    {
+        return [$this];
+    }
+
+    /**
+     * Get the queue connection that should be used to broadcast model events.
+     *
+     * @return string|null
+     */
+    public function broadcastConnection()
+    {
+        //
+    }
+
+    /**
+     * Get the queue that should be used to broadcast model events.
+     *
+     * @return string|null
+     */
+    public function broadcastQueue()
+    {
+        //
+    }
+
+    /**
+     * Determine if the model event broadcast queued job should be dispatched after all transactions are committed.
+     *
+     * @return bool
+     */
+    public function broadcastAfterCommit()
+    {
+        return false;
     }
 }

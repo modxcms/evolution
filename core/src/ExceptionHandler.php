@@ -409,7 +409,7 @@ class ExceptionHandler
             }
 
             echo "\n", $this->renderConsoleBacktrace($backtrace);
-        } else if ($this->shouldDisplay()) {
+        } else if (!$this->shouldDisplay()) {
             $version = isset($GLOBALS['modx_version']) ? $GLOBALS['modx_version'] : '';
             $release_date = isset($GLOBALS['release_date']) ? $GLOBALS['release_date'] : '';
 

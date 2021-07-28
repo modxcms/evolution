@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xmlns="http://symfony.com/schema/routing"
+<xsd:schema xmlns="http://symfony.com/schema/routing"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     targetNamespace="http://symfony.com/schema/routing"
     elementFormDefault="qualified">
 
