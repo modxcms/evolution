@@ -15,6 +15,16 @@ class HelperProcessor
         $this->core = $core;
     }
 
+    protected function makeFilename($pathinfo, $params)
+    {
+        return $pathinfo['filename'];
+    }
+
+    protected function makeFilePath($newFilename, $pathinfo, $params)
+    {
+        return str_replace('assets/images', '', $path_parts['dirname']);
+    }
+
     public function phpThumb($input = '', $options = '', $webp = true)
     {
         if (!empty($input) && strtolower(substr($input, -4)) == '.svg') {
@@ -55,16 +65,17 @@ class HelperProcessor
         }
 
         $path_parts = pathinfo($input);
-        $tmpImagesFolder = str_replace('assets/images', '', $path_parts['dirname']);
-        $tmpImagesFolder = explode('/', $tmpImagesFolder);
         $ext = strtolower($path_parts['extension']);
         $options = 'f=' . (in_array($ext, array('png', 'gif', 'jpeg')) ? $ext : 'jpg&q=85') . '&' .
             strtr($options, array(',' => '&', '_' => '=', '{' => '[', '}' => ']'));
 
-
-
-
         parse_str($options, $params);
+
+        $fName = $this->makeFilename($path_parts, $params);
+
+        $tmpImagesFolder = $this->makeFilePath($fName, $path_parts, $params);
+        $tmpImagesFolder = explode('/', $tmpImagesFolder);
+
         foreach ($tmpImagesFolder as $folder) {
             if (!empty($folder)) {
                 $cacheFolder .= '/' . $folder;
@@ -81,7 +92,6 @@ class HelperProcessor
         }
 
         $fNamePref = rtrim($cacheFolder, '/') . '/';
-        $fName = $path_parts['filename'];
         $fNameSuf = '-' .
             (isset($params['w']) ? $params['w'] : '') . 'x' . (isset($params['h']) ? $params['h'] : '') . '-' .
             substr(md5(serialize($params) . $fmtime), 0, 3) .
@@ -119,6 +129,4 @@ class HelperProcessor
 
         return $fNamePref . rawurlencode($fName) . $fNameSuf;
     }
-
-
 }
