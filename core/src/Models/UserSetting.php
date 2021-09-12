@@ -27,6 +27,13 @@ class UserSetting extends Eloquent\Model
         'setting_value'
     ];
 
+    protected function setKeysForSaveQuery($query)
+    {
+        return $query
+            ->where('user', $this->attributes['user'])
+            ->where('setting_name', $this->attributes['setting_name']);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user','id');
