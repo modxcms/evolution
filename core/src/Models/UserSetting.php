@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent;
  */
 class UserSetting extends Eloquent\Model
 {
+    protected $primaryKey = null;
     public $incrementing = false;
     public $timestamps = false;
 
@@ -25,6 +26,13 @@ class UserSetting extends Eloquent\Model
         'setting_name',
         'setting_value'
     ];
+
+    protected function setKeysForSaveQuery($query)
+    {
+        return $query
+            ->where('user', $this->attributes['user'])
+            ->where('setting_name', $this->attributes['setting_name']);
+    }
 
     public function user()
     {
