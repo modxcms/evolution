@@ -4035,11 +4035,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         if ($this->isFrontend()) {
             if (!$docgrp) {
-                $documentChildren = $documentChildren->where('privatemgr', 0);
+                $documentChildren = $documentChildren->where('privateweb', 0);
             } else {
                 $documentChildren = $documentChildren->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document');
                 $documentChildren = $documentChildren->where(function ($query) use ($docgrp) {
-                    $query->where('privatemgr', 0)
+                    $query->where('privateweb', 0)
                         ->orWhereIn('document_groups.document_group', $docgrp);
                 });
             }
