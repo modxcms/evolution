@@ -1,0 +1,66 @@
+# For full documentation and other suggested options, please see
+# http://rtfm.modx.com/evolution/1.0/administration/friendly-url-solutions
+# including for unexpected logouts in multi-server/cloud environments
+# and especially for the first three commented out rules
+
+#php_flag register_globals Off
+AddDefaultCharset utf-8
+#php_value date.timezone Europe/Moscow
+
+#Options +FollowSymlinks
+RewriteEngine On
+RewriteBase /
+
+# Fix Apache internal dummy connections from breaking [(site_url)] cache
+RewriteCond %{HTTP_USER_AGENT} ^.*internal\ dummy\ connection.*$ [NC]
+RewriteRule .* - [F,L]
+
+#Remove ///// in url
+#RewriteCond %{REQUEST_URI} ^(.*)/{2,}(.*)$
+#RewriteRule . %1/%2 [R=301,L]
+
+#redirect http to https
+#RewriteCond %{HTTP:SSL} !=1 [NC]
+#RewriteRule ^(.*) https://%{SERVER_NAME}/$1 [L,R=301]
+#or
+#RewriteCond %{HTTPS} off
+#RewriteRule ^(.*) https://%{HTTP_HOST}%{REQUEST_URI}
+#work for litespeed
+#RewriteCond %{HTTPS}  !=on
+#RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
+
+
+# Rewrite domain.com -> www.domain.com -- used with SEO Strict URLs plugin
+#RewriteCond %{HTTP_HOST} !^$
+#RewriteCond %{HTTP_HOST} !^www\. [NC]
+#RewriteCond %{HTTP_HOST} (.+)$
+#RewriteRule ^(.*)$ http://www.%1/$1 [R=permanent,L] .
+
+# without www
+#RewriteCond %{HTTP_HOST} .
+#RewriteCond %{HTTP_HOST} !^example\.com [NC]
+#RewriteRule (.*) http://example.com/$1 [R=301,L]
+
+# without www all domains
+#RewriteCond %{HTTP_HOST} .
+#RewriteCond %{HTTP_HOST} ^www.(.*)$ [NC]
+#RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
+# 301 that removes index.php?q= from all urls
+#RewriteCond %{THE_REQUEST} \s/+index\.php\?&q=([^\s&]+) [NC]
+#RewriteRule ^ /%1? [R=301,L]
+#RewriteCond %{THE_REQUEST} \s/+index\.php\?q=([^\s&]+) [NC]
+#RewriteRule ^ /%1? [R=301,L]
+
+# Exclude /assets and /manager directories and images from rewrite rules
+RewriteRule ^(manager|assets|js|css|images|img)/.*$ - [L]
+RewriteRule \.(jpg|jpeg|png|gif|ico)$ - [L]
+
+# For Friendly URLs
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
+
+# Reduce server overhead by enabling output compression if supported.
+#php_flag zlib.output_compression On
+#php_value zlib.output_compression_level 5
