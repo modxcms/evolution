@@ -61,7 +61,6 @@
     "tracy/tracy": "~2.5",
     "wikimedia/composer-merge-plugin": "2.*",
     "symfony/process": "^5.1",
-    "i-rocky/eloquent-dynamic-relation": "^1.0",
     "dmitry-suffi/redis-session-handler": "*",
     "rosell-dk/webp-convert": "*",
     "predis/predis": "*",

@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
 use EvolutionCMS\Extensions\Collection;
-use Rocky\Eloquent\HasDynamicRelation;
 
 /**
  * EvolutionCMS\Models\SiteContent
@@ -83,8 +82,7 @@ class SiteContent extends Eloquent\Model
 {
     use Traits\Models\SoftDeletes,
         Traits\Models\ManagerActions,
-        Traits\Models\TimeMutator,
-        HasDynamicRelation;
+        Traits\Models\TimeMutator;
 
     protected $table = 'site_content';
 
