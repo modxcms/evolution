@@ -46,16 +46,13 @@ https://t.me/evolutioncms
 English Forum:
 https://forum.evo.im
 
-Slack channel:
-https://evocmf.slack.com
-
 Download:
 https://github.com/evolution-cms/evolution/releases
 
 Previous Releases:
 https://modx.com/download/evolution/previous-releases.html
 
-Extras:
+Extras / Add-ons:
 https://extras.evo.im
 
 Documentation:
