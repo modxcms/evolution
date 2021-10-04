@@ -1327,7 +1327,7 @@ $_lang['help_translating_title'] = "Help Evolution vertalen";
 $_lang['download'] = "Download";
 $_lang['downloads'] = "Downloads";
 $_lang["previous_releases"] = "Vorige versies";
-$_lang["extras"] = "Extra's";
+$_lang["extras"] = "Add-ons";
 
 $_lang["display_locks"] = "Toon geblokkeerde";
 $_lang["role_display_locks"] = "Toon geblokkeerde";
