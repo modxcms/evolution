@@ -1,6 +1,21 @@
 This file shows the changes in recent releases of Evolution CMS. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+Evolution CMS 3.1.7 (Oct 06, 2021)
+* [GitHub: d8f3cf066] - update composer, delete i-rocky/eloquent-dynamic-relation (Dmi3yy)
+* [GitHub: f4e12443a] - revert ht.access (Dmi3yy)
+* [GitHub: a2095509d] - Update Core.php (Ser1ous)
+* [GitHub: 86b2aa463] - composite key query (mnoskov)
+* [GitHub: 952842fef] - disable primary key (mnoskov)
+* [GitHub: c3f69fce9] - overloadable methods for resulting thumbnames (mnoskov)
+* [GitHub: 1b25bae9e] - fix error showing (mnoskov)
+* [GitHub: 0c855b28c] - Bug fix salo (Ser1ous)
+* [GitHub: 934868e23] - Add evolution-cms/salo package (Ser1ous)
+* [GitHub: d3a296356] - Docker work update (Ser1ous)
+* [GitHub: d7a3ca0a9] - prepare docker (Ser1ous)
+* [GitHub: 9f08f0b76] - Fix user -> values relation (Dzhuryn Volodymyr)
+
+
 Evolution CMS 3.1.6 (Jul 12, 2021)
 * [GitHub: 3eaf63692] - fix phpthumb webp support (Dmi3yy)
 * [GitHub: fd50690b7] - minify fixed js (mnoskov)
