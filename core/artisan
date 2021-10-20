@@ -6,7 +6,7 @@ define('MODX_API_MODE', true);
 require __DIR__ . '/bootstrap.php';
 
 if (!defined('IN_INSTALL_MODE')) {
-    if (!file_exists(__DIR__ . 'config/database/connections/default.php')) {
+    if (!file_exists(__DIR__ . '/config/database/connections/default.php')) {
         define('IN_INSTALL_MODE', true);
     } else {
         define('IN_INSTALL_MODE', false);
