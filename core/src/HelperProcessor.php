@@ -22,7 +22,7 @@ class HelperProcessor
 
     protected function makeFilePath($newFilename, $pathinfo, $params)
     {
-        return str_replace('assets/images', '', $path_parts['dirname']);
+        return str_replace('assets/images', '', $pathinfo['dirname']);
     }
 
     public function phpThumb($input = '', $options = '', $webp = true)
