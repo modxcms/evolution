@@ -1,8 +1,6 @@
 @extends('manager::template.page')
 
 @section('content')
-    {!! $contextMenu['menu'] !!}
-
     <h1>
         <i class="<?= ManagerTheme::getStyle('icon_modules') ?>"></i>{{ __('global.module_management') }}<i
                 class="<?= ManagerTheme::getStyle('icon_question_circle') ?> help"></i>
@@ -71,6 +69,8 @@
 @endsection
 
 @push('scripts.bot')
+    {!! $contextMenu['menu'] !!}
+
     <script>
       var selectedItem;
       var contextm = {!! $contextMenu['script'] !!};
