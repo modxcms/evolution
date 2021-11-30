@@ -98,7 +98,7 @@ class ManagerTheme implements ManagerThemeInterface
         /** empty cache & synchronisation */
         26 => Controllers\RefreshSite::class,
         /** Module management */
-        106,
+        106 => Controllers\Modules::class,
         107,
         108,
         109,
