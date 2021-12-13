@@ -19,6 +19,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use IntlDateFormatter;
 use PHPMailer\PHPMailer\Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
@@ -4631,20 +4632,44 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             case 'mm/dd/YYYY':
                 $dateFormat = '%m/%d/%Y';
                 break;
-            /*
-            case 'dd-mmm-YYYY':
-                $dateFormat = '%e-%b-%Y';
-                break;
-            */
         }
 
-        if (empty($mode)) {
-            $strTime = strftime($dateFormat . " %H:%M:%S", $timestamp);
-        } elseif ($mode === 'dateOnly') {
-            $strTime = strftime($dateFormat, $timestamp);
-        } elseif ($mode === 'formatOnly') {
-            $strTime = $dateFormat;
+        if (extension_loaded('intl')) {
+            // https://www.php.net/manual/en/class.intldateformatter.php
+            // https://www.php.net/manual/en/datetime.createfromformat.php
+            if (empty($mode)) {
+                $formatter = new IntlDateFormatter(
+                    $this->getConfig('manager_language'),
+                    IntlDateFormatter::MEDIUM,
+                    IntlDateFormatter::MEDIUM,
+                    null,
+                    null,
+                    $this->getConfig('datetime_format') . " hh:mm:ss"
+                );
+                $strTime = $formatter->format($timestamp);
+            } elseif ($mode === 'dateOnly') {
+                $formatter = new IntlDateFormatter(
+                    $this->getConfig('manager_language'),
+                    IntlDateFormatter::MEDIUM,
+                    IntlDateFormatter::NONE,
+                    null,
+                    null,
+                    $this->getConfig('datetime_format')
+                );
+                $strTime = $formatter->format($timestamp);
+            } elseif ($mode === 'formatOnly') {
+                $strTime = $dateFormat;
+            }
+        } else {
+            if (empty($mode)) {
+                $strTime = strftime($dateFormat . " %H:%M:%S", $timestamp);
+            } elseif ($mode === 'dateOnly') {
+                $strTime = strftime($dateFormat, $timestamp);
+            } elseif ($mode === 'formatOnly') {
+                $strTime = $dateFormat;
+            }
         }
+
         return $strTime;
     }
 
