@@ -3534,13 +3534,17 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if ($userId != false) {
             Models\ActiveUserSession::where('internalKey', $userId)->delete();
             Models\ActiveUserSession::where('sid', $this->sid)->delete();
-            Models\ActiveUserSession::updateOrCreate([
-                'internalKey' => $userId,
-                'sid' => $this->sid,
-            ], [
-                'lasthit' => $this->time,
-                'ip' => $_SESSION['ip'],
-            ]);
+            try {
+                Models\ActiveUserSession::updateOrCreate([
+                    'internalKey' => $userId,
+                    'sid' => $this->sid,
+                ], [
+                    'lasthit' => $this->time,
+                    'ip' => $_SESSION['ip'],
+                ]);
+            } catch (\Exception $exception) {
+
+            }
         }
     }
 
