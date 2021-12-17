@@ -3,6 +3,7 @@
 use EvolutionCMS\Interfaces\ModifiersInterface;
 use EvolutionCMS\Models\SiteTemplate;
 use EvolutionCMS\Support\DataGrid;
+use IntlDateFormatter;
 
 class Modifiers implements ModifiersInterface
 {
@@ -851,7 +852,21 @@ class Modifiers implements ModifiersInterface
                 if (strpos($opt, '%') !== false) {
                     return strftime($opt, 0 + $value);
                 } else {
-                    return date($opt, 0 + $value);
+                    if (extension_loaded('intl')) {
+                        // https://www.php.net/manual/en/class.intldateformatter.php
+                        // https://www.php.net/manual/en/datetime.createfromformat.php
+                        $formatter = new IntlDateFormatter(
+                            evolutionCMS()->getConfig('manager_language'),
+                            IntlDateFormatter::MEDIUM,
+                            IntlDateFormatter::MEDIUM,
+                            null,
+                            null,
+                            $opt
+                        );
+                        return $formatter->format(0 + $value);
+                    } else {
+                        return date($opt, 0 + $value);
+                    }
                 }
             case 'time':
                 if (empty($opt)) {

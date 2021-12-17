@@ -3534,17 +3534,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if ($userId != false) {
             Models\ActiveUserSession::where('internalKey', $userId)->delete();
             Models\ActiveUserSession::where('sid', $this->sid)->delete();
-            try {
-                Models\ActiveUserSession::updateOrCreate([
-                    'internalKey' => $userId,
-                    'sid' => $this->sid,
-                ], [
-                    'lasthit' => $this->time,
-                    'ip' => $_SESSION['ip'],
-                ]);
-            } catch (\Exception $exception) {
-                
-            }
+            Models\ActiveUserSession::updateOrCreate([
+                'internalKey' => $userId,
+                'sid' => $this->sid,
+            ], [
+                'lasthit' => $this->time,
+                'ip' => $_SESSION['ip'],
+            ]);
         }
     }
 
@@ -4658,7 +4654,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 );
                 $strTime = $formatter->format($timestamp);
             } elseif ($mode === 'formatOnly') {
-                $strTime = $dateFormat;
+                $strTime = $this->getConfig('datetime_format');
             }
         } else {
             if (empty($mode)) {
