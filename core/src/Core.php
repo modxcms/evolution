@@ -4637,28 +4637,43 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (extension_loaded('intl')) {
             // https://www.php.net/manual/en/class.intldateformatter.php
             // https://www.php.net/manual/en/datetime.createfromformat.php
+            $dateFormat = str_replace(
+                ['%Y', '%m', '%d', '%I', '%H', '%M', '%S', '%p'],
+                ['Y', 'MM', 'dd', 'h', 'hh', 'mm', 'ss', 'a'],
+                $dateFormat
+            );
             if (empty($mode)) {
                 $formatter = new IntlDateFormatter(
                     $this->getConfig('manager_language'),
-                    IntlDateFormatter::MEDIUM,
-                    IntlDateFormatter::MEDIUM,
+                    IntlDateFormatter::FULL,
+                    IntlDateFormatter::FULL,
                     null,
                     null,
-                    $this->getConfig('datetime_format') . " hh:mm:ss"
+                    $dateFormat . " hh:mm:ss"
                 );
                 $strTime = $formatter->format($timestamp);
             } elseif ($mode === 'dateOnly') {
                 $formatter = new IntlDateFormatter(
                     $this->getConfig('manager_language'),
-                    IntlDateFormatter::MEDIUM,
+                    IntlDateFormatter::FULL,
                     IntlDateFormatter::NONE,
                     null,
                     null,
-                    $this->getConfig('datetime_format')
+                    $dateFormat
+                );
+                $strTime = $formatter->format($timestamp);
+            } elseif ($mode === 'timeOnly') {
+                $formatter = new IntlDateFormatter(
+                    $this->getConfig('manager_language'),
+                    IntlDateFormatter::NONE,
+                    IntlDateFormatter::MEDIUM,
+                    null,
+                    null,
+                    "hh:mm:ss"
                 );
                 $strTime = $formatter->format($timestamp);
             } elseif ($mode === 'formatOnly') {
-                $strTime = $this->getConfig('datetime_format');
+                $strTime = $dateFormat;
             }
         } else {
             if (empty($mode)) {

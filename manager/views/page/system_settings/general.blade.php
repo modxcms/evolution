@@ -475,7 +475,7 @@
                 'value' => $settings['server_offset_time'],
                 'options' => $serverTimes,
                 'attributes' => 'onChange="documentDirty=true;" size="1"',
-                'comment' => sprintf(ManagerTheme::getLexicon('serveroffset_message'), strftime('%H:%M:%S', time()), strftime('%H:%M:%S', time() + $settings['server_offset_time']))
+                'comment' => sprintf(ManagerTheme::getLexicon('serveroffset_message'), evolutionCMS()->toDateFormat(time(), 'timeOnly'), evolutionCMS()->toDateFormat(time() + $settings['server_offset_time'], 'timeOnly'))
             ])
 
             <div class="split my-1"></div>
