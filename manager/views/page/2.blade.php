@@ -133,7 +133,21 @@
         $html = '<p>[%no_active_users_found%]</p>';
     } else {
         $now = $modx->timestamp($_SERVER['REQUEST_TIME']);
-        $ph['now'] = strftime('%H:%M:%S', $now);
+        if (extension_loaded('intl')) {
+            // https://www.php.net/manual/en/class.intldateformatter.php
+            // https://www.php.net/manual/en/datetime.createfromformat.php
+            $formatter = new IntlDateFormatter(
+                evolutionCMS()->getConfig('manager_language'),
+                IntlDateFormatter::MEDIUM,
+                IntlDateFormatter::MEDIUM,
+                null,
+                null,
+                "hh:mm:ss"
+            );
+            $ph['now'] = $formatter->format($now);
+        } else {
+            $ph['now'] = strftime('%H:%M:%S', $now);
+        }
         $timetocheck = ($now - (60 * 20)); //+$server_offset_time;
         $html = '
 	<div class="card-body">
@@ -163,6 +177,21 @@
             $webicon = $activeUser['internalKey'] < 0 ? '<i class="[&icon_globe&]"></i>' : '';
             $ip = $activeUser['ip'] === '::1' ? '127.0.0.1' : $activeUser['ip'];
             $currentaction = EvolutionCMS\Legacy\LogHandler::getAction($activeUser['action'], $activeUser['id']);
+            if (extension_loaded('intl')) {
+                // https://www.php.net/manual/en/class.intldateformatter.php
+                // https://www.php.net/manual/en/datetime.createfromformat.php
+                $formatter = new IntlDateFormatter(
+                    evolutionCMS()->getConfig('manager_language'),
+                    IntlDateFormatter::MEDIUM,
+                    IntlDateFormatter::MEDIUM,
+                    null,
+                    null,
+                    "hh:mm:ss"
+                );
+                $lasthit = $formatter->format($modx->timestamp($activeUser['lasthit']));
+            } else {
+                $lasthit = strftime('%H:%M:%S', $modx->timestamp($activeUser['lasthit']));
+            }
             $userList[] = array(
                 $idle,
                 '',
@@ -170,7 +199,7 @@
                 $webicon,
                 abs($activeUser['internalKey']),
                 $ip,
-                strftime('%H:%M:%S', $modx->timestamp($activeUser['lasthit'])),
+                $lasthit,
                 $currentaction
             );
         }
@@ -280,7 +309,7 @@
         'title' => '[%welcome_title%]',
         'body' => '
             <div class="wm_buttons card-body">' .
-                ($modx->hasPermission("new_document") ? '
+            ($modx->hasPermission("new_document") ? '
                 <span class="wm_button">
                     <a target="main" href="index.php?a=4">
                         <i class="'. $_style['icon_document'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
@@ -294,7 +323,7 @@
                     </a>
                 </span>
                 ' : '') .
-                ($modx->hasPermission("assets_images") ? '
+            ($modx->hasPermission("assets_images") ? '
                 <span class="wm_button">
                     <a target="main" href="media/browser/mcpuk/browse.php?filemanager=media/browser/mcpuk/browse.php&type=images">
                         <i class="'. $_style['icon_camera'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
@@ -302,7 +331,7 @@
                     </a>
                 </span>
                 ' : '') .
-                ($modx->hasPermission("assets_files") ? '
+            ($modx->hasPermission("assets_files") ? '
                 <span class="wm_button">
                     <a target="main" href="media/browser/mcpuk/browse.php?filemanager=media/browser/mcpuk/browse.php&type=files">
                         <i class="'. $_style['icon_files'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
@@ -310,7 +339,7 @@
                     </a>
                 </span>
                 ' : '') .
-                ($modx->hasPermission("bk_manager") ? '
+            ($modx->hasPermission("bk_manager") ? '
                 <span class="wm_button">
                     <a target="main" href="index.php?a=93">
                         <i class="'. $_style['icon_database'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
@@ -318,7 +347,7 @@
                     </a>
                 </span>
                 ' : '') .
-                ($modx->hasPermission("change_password") ? '
+            ($modx->hasPermission("change_password") ? '
                 <span class="wm_button">
                     <a target="main" href="index.php?a=28">
                         <i class="'. $_style['icon_lock'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
@@ -351,7 +380,7 @@
                         <td>[%yourinfo_total_logins%]</td>
                         <td><b>[[$_SESSION[\'mgrLogincount\']:math(\'%s+1\')]]</b></td>
                     </tr>' .
-                    ($modx->hasPermission("change_password") ? '
+            ($modx->hasPermission("change_password") ? '
 
                     ' : '') . '
                 </table>
