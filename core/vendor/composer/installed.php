@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '0dbf7d2f9137f26ae8a30572fe4251940b54a016',
+        'reference' => '96b51532247898b29f78c49e679e96bd0c77e67f',
         'name' => 'evolutioncms/core',
         'dev' => true,
     ),
@@ -178,7 +178,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '0dbf7d2f9137f26ae8a30572fe4251940b54a016',
+            'reference' => '96b51532247898b29f78c49e679e96bd0c77e67f',
             'dev_requirement' => false,
         ),
         'graham-campbell/result-type' => array(
@@ -583,8 +583,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0',
-                1 => '1.0.0 || 2.0.0 || 3.0.0',
+                0 => '1.0.0 || 2.0.0 || 3.0.0',
+                1 => '1.0|2.0',
             ),
         ),
         'psr/simple-cache' => array(
@@ -912,12 +912,12 @@
             'dev_requirement' => false,
         ),
         'tracy/tracy' => array(
-            'pretty_version' => 'v2.9.0',
-            'version' => '2.9.0.0',
+            'pretty_version' => 'v2.8.10',
+            'version' => '2.8.10.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../tracy/tracy',
             'aliases' => array(),
-            'reference' => '551a7d936dfbd7075ced9a604b9527d1f7bfa8b4',
+            'reference' => '361d71494c49f77e4ccfe3f7d312fda6143b3193',
             'dev_requirement' => false,
         ),
         'vlucas/phpdotenv' => array(

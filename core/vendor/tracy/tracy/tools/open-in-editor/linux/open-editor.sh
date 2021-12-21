@@ -78,7 +78,6 @@ done
 if [ "$action" == "create" ] && [[ ! -f "$file" ]]; then
 	mkdir -p $(dirname "$file")
 	touch "$file"
-	echo $replace > "$file"
 fi
 
 # Action: Fix the file (if the file exists and while creating backup beforehand).

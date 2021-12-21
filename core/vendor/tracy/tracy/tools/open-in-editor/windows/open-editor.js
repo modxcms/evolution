@@ -68,7 +68,7 @@ for (var id in settings.mappings) {
 
 if (action === 'create' && !fileSystem.FileExists(file)) {
 	shell.Run('cmd /c mkdir "' + fileSystem.GetParentFolderName(file) + '"', 0, 1);
-	fileSystem.CreateTextFile(file).Write(replace);
+	fileSystem.CreateTextFile(file);
 
 } else if (action === 'fix') {
 	var lines = fileSystem.OpenTextFile(file).ReadAll().split('\n');
