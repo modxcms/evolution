@@ -4619,14 +4619,18 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function toDateFormat($timestamp = 0, $mode = '')
     {
+        $strTime = '-';
+
         if (is_null($timestamp)) {
             $timestamp = '';
         } else {
             $timestamp = trim($timestamp);
         }
+
         if ($mode !== 'formatOnly' && empty($timestamp)) {
-            return '-';
+            return $strTime;
         }
+
         $timestamp = (int)$timestamp;
 
         switch ($this->getConfig('datetime_format')) {
