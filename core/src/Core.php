@@ -1993,6 +1993,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $value = $this->_get_snip_result($call);
 
             if (Str::contains($content, $s)) {
+                if (is_null($value)) {
+                    $value = '';
+                }
                 $content = str_replace($s, $value, $content);
             } elseif ($this->debug) {
                 $this->addLog('evalSnippets parse error', $_SERVER['REQUEST_URI'] . $s, 2);
@@ -4616,7 +4619,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function toDateFormat($timestamp = 0, $mode = '')
     {
-        $timestamp = trim($timestamp);
+        if (is_null($timestamp)) {
+            $timestamp = '';
+        } else {
+            $timestamp = trim($timestamp);
+        }
         if ($mode !== 'formatOnly' && empty($timestamp)) {
             return '-';
         }
