@@ -58,7 +58,7 @@
     "illuminate/http": "8.*",
     "league/flysystem": "^1.0.8",
     "phpmailer/phpmailer": "6.*",
-    "tracy/tracy": "~2.5",
+    "tracy/tracy": "2.8.*",
     "wikimedia/composer-merge-plugin": "2.*",
     "symfony/process": "^5.1",
     "dmitry-suffi/redis-session-handler": "*",

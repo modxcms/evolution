@@ -24,8 +24,11 @@ class Bridge
 	public static function initialize(): void
 	{
 		$blueScreen = Tracy\Debugger::getBlueScreen();
-		$blueScreen->addPanel([self::class, 'renderLatteError']);
-		$blueScreen->addAction([self::class, 'renderLatteUnknownMacro']);
+		if (!class_exists(Latte\Bridges\Tracy\BlueScreenPanel::class)) {
+			$blueScreen->addPanel([self::class, 'renderLatteError']);
+			$blueScreen->addAction([self::class, 'renderLatteUnknownMacro']);
+		}
+
 		$blueScreen->addAction([self::class, 'renderMemberAccessException']);
 		$blueScreen->addPanel([self::class, 'renderNeonError']);
 	}
@@ -62,6 +65,7 @@ class Bridge
 				];
 			}
 		}
+
 		return null;
 	}
 
@@ -80,6 +84,7 @@ class Bridge
 				'label' => 'fix it',
 			];
 		}
+
 		return null;
 	}
 
@@ -89,6 +94,7 @@ class Bridge
 		if (!$e instanceof Nette\MemberAccessException && !$e instanceof \LogicException) {
 			return null;
 		}
+
 		$loc = $e->getTrace()[$e instanceof Nette\MemberAccessException ? 1 : 0];
 		if (preg_match('#Cannot (?:read|write to) an undeclared property .+::\$(\w+), did you mean \$(\w+)\?#A', $e->getMessage(), $m)) {
 			return [
@@ -102,26 +108,27 @@ class Bridge
 				'label' => 'fix it',
 			];
 		}
+
 		return null;
 	}
 
 
 	public static function renderNeonError(?\Throwable $e): ?array
 	{
-		if (
-			$e instanceof Nette\Neon\Exception
-			&& preg_match('#line (\d+)#', $e->getMessage(), $m)
-			&& ($trace = Helpers::findTrace($e->getTrace(), [Nette\Neon\Decoder::class, 'decode']))
+		if (!$e instanceof Nette\Neon\Exception || !preg_match('#line (\d+)#', $e->getMessage(), $m)) {
+			return null;
+
+		} elseif ($trace = Helpers::findTrace($e->getTrace(), [Nette\Neon\Decoder::class, 'decodeFile'])
+			?? Helpers::findTrace($e->getTrace(), [Nette\DI\Config\Adapters\NeonAdapter::class, 'load'])
 		) {
-			return [
-				'tab' => 'NEON',
-				'panel' => ($trace2 = Helpers::findTrace($e->getTrace(), [Nette\DI\Config\Adapters\NeonAdapter::class, 'load']))
-					? '<p><b>File:</b> ' . Helpers::editorLink($trace2['args'][0], (int) $m[1]) . '</p>'
-						. self::highlightNeon(file_get_contents($trace2['args'][0]), (int) $m[1])
-					: self::highlightNeon($trace['args'][0], (int) $m[1]),
-			];
+			$panel = '<p><b>File:</b> ' . Helpers::editorLink($trace['args'][0], (int) $m[1]) . '</p>'
+				. self::highlightNeon(file_get_contents($trace['args'][0]), (int) $m[1]);
+
+		} elseif ($trace = Helpers::findTrace($e->getTrace(), [Nette\Neon\Decoder::class, 'decode'])) {
+			$panel = self::highlightNeon($trace['args'][0], (int) $m[1]);
 		}
-		return null;
+
+		return isset($panel) ? ['tab' => 'NEON', 'panel' => $panel] : null;
 	}
 
 

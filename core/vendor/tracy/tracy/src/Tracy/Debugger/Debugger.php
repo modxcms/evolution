@@ -17,7 +17,7 @@ use ErrorException;
  */
 class Debugger
 {
-	public const VERSION = '2.8.7';
+	public const VERSION = '2.8.10';
 
 	/** server modes for Debugger::enable() */
 	public const
@@ -47,6 +47,9 @@ class Debugger
 
 	/** @var int initial output buffer level */
 	private static $obLevel;
+
+	/** @var ?array output buffer status @internal */
+	public static $obStatus;
 
 	/********************* errors and exceptions reporting ****************d*g**/
 
@@ -155,7 +158,7 @@ class Debugger
 	 * @param  string  $logDirectory  error log directory
 	 * @param  string|array  $email  administrator email; enables email sending in production mode
 	 */
-	public static function enable($mode = null, string $logDirectory = null, $email = null): void
+	public static function enable($mode = null, ?string $logDirectory = null, $email = null): void
 	{
 		if ($mode !== null || self::$productionMode === null) {
 			self::$productionMode = is_bool($mode)
@@ -172,9 +175,11 @@ class Debugger
 		if ($email !== null) {
 			self::$email = $email;
 		}
+
 		if ($logDirectory !== null) {
 			self::$logDirectory = $logDirectory;
 		}
+
 		if (self::$logDirectory) {
 			if (!preg_match('#([a-z]+:)?[/\\\\]#Ai', self::$logDirectory)) {
 				self::exceptionHandler(new \RuntimeException('Logging directory must be absolute path.'));
@@ -198,6 +203,7 @@ class Debugger
 		) {
 			self::exceptionHandler(new \RuntimeException("Unable to set 'display_errors' because function ini_set() is disabled."));
 		}
+
 		error_reporting(E_ALL);
 
 		if (self::$enabled) {
@@ -220,6 +226,7 @@ class Debugger
 			'Dumper/Exposer',
 			'Dumper/Renderer',
 			'Dumper/Value',
+			'Logger/FireLogger',
 			'Logger/Logger',
 			'Helpers',
 		] as $path) {
@@ -233,7 +240,7 @@ class Debugger
 
 	public static function dispatch(): void
 	{
-		if (self::$productionMode || PHP_SAPI === 'cli') {
+		if (self::$productionMode || Helpers::isCli()) {
 			return;
 
 		} elseif (headers_sent($file, $line) || ob_get_length()) {
@@ -252,6 +259,7 @@ class Debugger
 		}
 
 		if (self::getBar()->dispatchAssets()) {
+			self::$showBar = false;
 			exit;
 		}
 	}
@@ -290,7 +298,7 @@ class Debugger
 
 		self::$reserved = null;
 
-		if (self::$showBar && !self::$productionMode) {
+		if (self::$showBar && !self::$productionMode && !Helpers::isCli()) {
 			self::removeOutputBuffers(false);
 			try {
 				self::getBar()->render();
@@ -309,6 +317,7 @@ class Debugger
 	{
 		$firstTime = (bool) self::$reserved;
 		self::$reserved = null;
+		self::$obStatus = ob_get_status(true);
 
 		if (!headers_sent()) {
 			http_response_code(isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE ') !== false ? 503 : 500);
@@ -329,10 +338,11 @@ class Debugger
 				if (!headers_sent()) {
 					header('Content-Type: text/html; charset=UTF-8');
 				}
+
 				(function ($logged) use ($exception) {
 					require self::$errorTemplate ?: __DIR__ . '/assets/error.500.phtml';
 				})(empty($e));
-			} elseif (PHP_SAPI === 'cli') {
+			} elseif (Helpers::isCli()) {
 				// @ triggers E_NOTICE when strerr is closed since PHP 7.4
 				@fwrite(STDERR, "ERROR: {$exception->getMessage()}\n"
 					. (isset($e)
@@ -340,7 +350,6 @@ class Debugger
 						: 'Check log to see more info.')
 					. "\n");
 			}
-
 		} elseif ($firstTime && Helpers::isHtmlMode() || Helpers::isAjax()) {
 			self::getBlueScreen()->render($exception);
 
@@ -351,9 +360,11 @@ class Debugger
 				if ($file && !headers_sent()) {
 					header("X-Tracy-Error-Log: $file", false);
 				}
+
 				if (Helpers::detectColors()) {
 					echo "\n\n" . BlueScreen::highlightPhpCli($exception->getFile(), $exception->getLine()) . "\n";
 				}
+
 				echo "$exception\n" . ($file ? "\n(stored in $file)\n" : '');
 				if ($file && self::$browser) {
 					exec(self::$browser . ' ' . escapeshellarg(strtr($file, self::$editorMapping)));
@@ -387,7 +398,7 @@ class Debugger
 		string $message,
 		string $file,
 		int $line,
-		array $context = null
+		?array $context = null
 	): ?bool {
 		$error = error_get_last();
 		if (($error['type'] ?? null) === E_COMPILE_WARNING) {
@@ -418,10 +429,10 @@ class Debugger
 			$e->context = $context;
 			throw $e;
 
-		} elseif (($severity & error_reporting()) !== $severity) { // muted errors
+		} elseif (!($severity & error_reporting())) { // muted errors
 
 		} elseif (self::$productionMode) {
-			if (($severity & self::$logSeverity) === $severity) {
+			if ($severity & self::$logSeverity) {
 				$e = new ErrorException($message, 0, $severity, $file, $line);
 				$e->context = $context;
 				Helpers::improveException($e);
@@ -433,9 +444,8 @@ class Debugger
 				self::log($e, self::ERROR);
 			} catch (\Throwable $foo) {
 			}
-
 		} elseif (
-			(is_bool(self::$strictMode) ? self::$strictMode : ((self::$strictMode & $severity) === $severity)) // $strictMode
+			(is_bool(self::$strictMode) ? self::$strictMode : (self::$strictMode & $severity)) // $strictMode
 			&& !isset($_GET['_tracy_skip_error'])
 		) {
 			$e = new ErrorException($message, 0, $severity, $file, $line);
@@ -468,6 +478,7 @@ class Debugger
 			if (in_array($status['name'], ['ob_gzhandler', 'zlib output compression'], true)) {
 				break;
 			}
+
 			$fnc = $status['chunk_size'] || !$errorOccurred
 				? 'ob_end_flush'
 				: 'ob_end_clean';
@@ -491,6 +502,7 @@ class Debugger
 				'Tracy ' . self::VERSION,
 			];
 		}
+
 		return self::$blueScreen;
 	}
 
@@ -503,6 +515,7 @@ class Debugger
 			$info->cpuUsage = self::$cpuUsage;
 			self::$bar->addPanel(new DefaultBarPanel('errors'), 'Tracy:errors'); // filled by errorHandler()
 		}
+
 		return self::$bar;
 	}
 
@@ -520,6 +533,7 @@ class Debugger
 			self::$logger->directory = &self::$logDirectory; // back compatiblity
 			self::$logger->email = &self::$email;
 		}
+
 		return self::$logger;
 	}
 
@@ -529,6 +543,7 @@ class Debugger
 		if (!self::$fireLogger) {
 			self::$fireLogger = new FireLogger;
 		}
+
 		return self::$fireLogger;
 	}
 
@@ -550,7 +565,7 @@ class Debugger
 				Dumper::DEPTH => self::$maxDepth,
 				Dumper::TRUNCATE => self::$maxLength,
 			];
-			return PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg'
+			return Helpers::isCli()
 				? Dumper::toText($var)
 				: Helpers::capture(function () use ($var, $options) {
 					Dumper::dump($var, $options);
@@ -574,7 +589,7 @@ class Debugger
 	 * Starts/stops stopwatch.
 	 * @return float   elapsed seconds
 	 */
-	public static function timer(string $name = null): float
+	public static function timer(?string $name = null): float
 	{
 		static $time = [];
 		$now = microtime(true);
@@ -590,13 +605,14 @@ class Debugger
 	 * @param  mixed  $var
 	 * @return mixed  variable itself
 	 */
-	public static function barDump($var, string $title = null, array $options = [])
+	public static function barDump($var, ?string $title = null, array $options = [])
 	{
 		if (!self::$productionMode) {
 			static $panel;
 			if (!$panel) {
 				self::getBar()->addPanel($panel = new DefaultBarPanel('dumps'), 'Tracy:dumps');
 			}
+
 			$panel->data[] = ['title' => $title, 'dump' => Dumper::toHtml($var, $options + [
 				Dumper::DEPTH => self::$maxDepth,
 				Dumper::TRUNCATE => self::$maxLength,
@@ -604,6 +620,7 @@ class Debugger
 				Dumper::LAZY => true,
 			])];
 		}
+
 		return $var;
 	}
 
@@ -649,6 +666,7 @@ class Debugger
 			$list[] = '::1';
 			$list[] = '[::1]'; // workaround for PHP < 7.3.4
 		}
+
 		return in_array($addr, $list, true) || in_array("$secret@$addr", $list, true);
 	}
 }

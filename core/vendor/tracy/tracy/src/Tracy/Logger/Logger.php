@@ -37,7 +37,7 @@ class Logger implements ILogger
 	/**
 	 * @param  string|array|null  $email
 	 */
-	public function __construct(?string $directory, $email = null, BlueScreen $blueScreen = null)
+	public function __construct(?string $directory, $email = null, ?BlueScreen $blueScreen = null)
 	{
 		$this->directory = $directory;
 		$this->email = $email;
@@ -94,6 +94,7 @@ class Logger implements ILogger
 					: Helpers::getClass($exception) . ': ' . $exception->getMessage() . ($exception->getCode() ? ' #' . $exception->getCode() : '')
 				) . ' in ' . $exception->getFile() . ':' . $exception->getLine();
 			}
+
 			$message = implode("\ncaused by ", $tmp);
 
 		} elseif (!is_string($message)) {
@@ -107,7 +108,7 @@ class Logger implements ILogger
 	/**
 	 * @param  mixed  $message
 	 */
-	public static function formatLogLine($message, string $exceptionFile = null): string
+	public static function formatLogLine($message, ?string $exceptionFile = null): string
 	{
 		return implode(' ', [
 			date('[Y-m-d H-i-s]'),
@@ -126,6 +127,7 @@ class Logger implements ILogger
 				array_map(function (array $item): array { unset($item['args']); return $item; }, $exception->getTrace()),
 			];
 		}
+
 		$hash = substr(md5(serialize($data)), 0, 10);
 		$dir = strtr($this->directory . '/', '\\/', DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR);
 		foreach (new \DirectoryIterator($this->directory) as $file) {
@@ -133,6 +135,7 @@ class Logger implements ILogger
 				return $dir . $file;
 			}
 		}
+
 		return $dir . $level . '--' . date('Y-m-d--H-i') . "--$hash.html";
 	}
 
@@ -141,7 +144,7 @@ class Logger implements ILogger
 	 * Logs exception to the file if file doesn't exist.
 	 * @return string logged error filename
 	 */
-	protected function logException(\Throwable $exception, string $file = null): string
+	protected function logException(\Throwable $exception, ?string $file = null): string
 	{
 		$file = $file ?: $this->getExceptionFile($exception);
 		$bs = $this->blueScreen ?: new BlueScreen;

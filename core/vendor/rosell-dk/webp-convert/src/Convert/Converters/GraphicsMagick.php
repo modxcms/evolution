@@ -5,9 +5,10 @@ namespace WebPConvert\Convert\Converters;
 use WebPConvert\Convert\Converters\AbstractConverter;
 use WebPConvert\Convert\Converters\ConverterTraits\EncodingAutoTrait;
 use WebPConvert\Convert\Converters\ConverterTraits\ExecTrait;
-
 use WebPConvert\Convert\Exceptions\ConversionFailed\ConverterNotOperational\SystemRequirementsNotMetException;
 use WebPConvert\Convert\Exceptions\ConversionFailedException;
+use WebPConvert\Options\OptionFactory;
+use ExecWithFallback\ExecWithFallback;
 
 //use WebPConvert\Convert\Exceptions\ConversionFailed\InvalidInput\TargetNotFoundException;
 
@@ -31,6 +32,18 @@ class GraphicsMagick extends AbstractConverter
         ];
     }
 
+    /**
+     * Get the options unique for this converter
+     *
+     * @return  array  Array of options
+     */
+    public function getUniqueOptions($imageType)
+    {
+        return OptionFactory::createOptions([
+            self::niceOption()
+        ]);
+    }
+
     private function getPath()
     {
         if (defined('WEBPCONVERT_GRAPHICSMAGICK_PATH')) {
@@ -44,13 +57,13 @@ class GraphicsMagick extends AbstractConverter
 
     public function isInstalled()
     {
-        exec($this->getPath() . ' -version 2>&1', $output, $returnCode);
+        ExecWithFallback::exec($this->getPath() . ' -version 2>&1', $output, $returnCode);
         return ($returnCode == 0);
     }
 
     public function getVersion()
     {
-        exec($this->getPath() . ' -version 2>&1', $output, $returnCode);
+        ExecWithFallback::exec($this->getPath() . ' -version 2>&1', $output, $returnCode);
         if (($returnCode == 0) && isset($output[0])) {
             return preg_replace('#http.*#', '', $output[0]);
         }
@@ -60,7 +73,7 @@ class GraphicsMagick extends AbstractConverter
     // Check if webp delegate is installed
     public function isWebPDelegateInstalled()
     {
-        exec($this->getPath() . ' -version 2>&1', $output, $returnCode);
+        ExecWithFallback::exec($this->getPath() . ' -version 2>&1', $output, $returnCode);
         foreach ($output as $line) {
             if (preg_match('#WebP.*yes#i', $line)) {
                 return true;
@@ -93,9 +106,8 @@ class GraphicsMagick extends AbstractConverter
      */
     private function createCommandLineOptions()
     {
-        // I cannot find any documentation on available webp options for graphicsmagick :(
-        // Checking for new supported options is currently done by searching for "webp" in the
-        // news page: http://www.graphicsmagick.org/NEWS.html
+        // For available webp options, check out:
+        // https://github.com/kstep/graphicsmagick/blob/master/coders/webp.c
 
         $commandArguments = [];
 
@@ -181,13 +193,12 @@ class GraphicsMagick extends AbstractConverter
 
         $command = $this->getPath() . ' convert ' . $this->createCommandLineOptions() . ' 2>&1';
 
-        $useNice = (($this->options['use-nice']) && self::hasNiceSupport()) ? true : false;
+        $useNice = ($this->options['use-nice'] && $this->checkNiceSupport());
         if ($useNice) {
-            $this->logLn('using nice');
             $command = 'nice ' . $command;
         }
         $this->logLn('Executing command: ' . $command);
-        exec($command, $output, $returnCode);
+        ExecWithFallback::exec($command, $output, $returnCode);
 
         $this->logExecOutput($output);
         if ($returnCode == 0) {
@@ -203,7 +214,7 @@ class GraphicsMagick extends AbstractConverter
             $this->logLn('command:' . $command);
             $this->logLn('return code:' . $returnCode);
             $this->logLn('output:' . print_r(implode("\n", $output), true));
-            throw new SystemRequirementsNotMetException('The exec call failed');
+            throw new SystemRequirementsNotMetException('The exec() call failed');
         }
     }
 }

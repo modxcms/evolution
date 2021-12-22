@@ -6,6 +6,7 @@ namespace WebPConvert;
 use WebPConvert\Convert\Converters\Stack;
 //use WebPConvert\Serve\ServeExistingOrHandOver;
 use WebPConvert\Convert\ConverterFactory;
+use WebPConvert\Options\OptionFactory;
 use WebPConvert\Serve\ServeConvertedWebP;
 use WebPConvert\Serve\ServeConvertedWebPWithErrorHandling;
 
@@ -40,7 +41,14 @@ class WebPConvert
      */
     public static function convert($source, $destination, $options = [], $logger = null)
     {
-        Stack::convert($source, $destination, $options, $logger);
+        if (isset($options['converter'])) {
+            $converter = $options['converter'];
+            unset($options['converter']);
+            $c = ConverterFactory::makeConverter($converter, $source, $destination, $options, $logger);
+            $c->doConvert();
+        } else {
+            Stack::convert($source, $destination, $options, $logger);
+        }
     }
 
     /**
@@ -89,32 +97,63 @@ class WebPConvert
     }
 
     /**
-     *  Get option definitions for all converters
+     * Get option definitions for all converters
      *
-     *  Added in order to give GUI's a way to automatically adjust their setting screens.
+     * Added in order to give GUI's a way to automatically adjust their setting screens.
      *
-     *  @param   string   $imageType   (png | jpeg)   The image type - determines the defaults
-     *  @param   bool     $returnGeneral              Whether the general setting definitions should be returned
-     *  @param   bool     $returnGeneralSupport       Whether the ids of supported/unsupported general options
-     *                                                should be returned
+     * @param bool $filterOutOptionsWithoutUI  If options without UI defined should be filtered out
      *
-     *  @return  array  Array of options definitions - ready to be json encoded, or whatever
+     * @return  array  Array of options definitions - ready to be json encoded, or whatever
+     * @since 2.8.0
      */
-     /*  POST-PONED till 2.7.0
-    public static function getConverterOptionDefinitions(
-        $imageType = 'png',
-        $returnGeneral = true,
-        $returnGeneralSupport = true
-    ) {
-
-        $ids = self::getConverterIds();
+    public static function getConverterOptionDefinitions($filterOutOptionsWithoutUI = true)
+    {
+        $converterIds = self::getConverterIds();
         $result = [];
-        foreach ($ids as $id) {
-            $c = ConverterFactory::makeConverter($id, '', '');
-            $optionDefinitions = $c->getOptionDefinitions($imageType, $returnGeneral, $returnGeneralSupport);
 
-            $result[$id] = $optionDefinitions;
+        $ewww = ConverterFactory::makeConverter('ewww', '', '');
+        $result['general'] = $ewww->getGeneralOptionDefinitions($filterOutOptionsWithoutUI);
+
+        $generalOptionHash = [];
+        $generalOptionIds = [];
+        foreach ($result['general'] as &$option) {
+            $generalOptionIds[] = $option['id'];
+            $option['unsupportedBy'] = [];
+            $generalOptionHash[$option['id']] = &$option;
         }
+        //$result['general'] = $generalOptionIds;
+        array_unshift($result['general'], OptionFactory::createOption('converter', 'string', [
+                'title' => 'Converter',
+                'description' => 'Conversion method. ' .
+                    "Cwebp and vips are best. " .
+                    'the *magick are nearly as good, but only recent versions supports near-lossless. ' .
+                    'gd is poor, as it does not support any webp options. ' .
+                    'For full discussion, check the guide',
+                'default' => 'stack',
+                'enum' => $converterIds,
+                'ui' => [
+                    'component' => 'select',
+                    'links' => [
+                        [
+                          'Guide',
+                          'https://github.com/rosell-dk/webp-convert/blob/master/docs/v1.3/converting/converters.md'
+                        ]
+                    ],
+                ]
+            ])->getDefinition());
+
+        $supportedBy = [];
+        $uniqueOptions  = [];
+
+        foreach ($converterIds as $converterId) {
+            $c = ConverterFactory::makeConverter($converterId, '', '');
+            foreach ($c->getUnsupportedGeneralOptions() as $optionId) {
+                $generalOptionHash[$optionId]['unsupportedBy'][] = $converterId;
+            }
+            $optionDefinitions = $c->getUniqueOptionDefinitions($filterOutOptionsWithoutUI);
+            $uniqueOptions[$converterId] = $optionDefinitions;
+        }
+        $result['unique'] = $uniqueOptions;
         return $result;
-    }*/
+    }
 }

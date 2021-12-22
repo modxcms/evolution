@@ -1,11 +1,11 @@
 # WebP Convert
 
-[![Latest Stable Version](https://img.shields.io/packagist/v/rosell-dk/webp-convert.svg?style=flat-square)](https://packagist.org/packages/rosell-dk/webp-convert)
-[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%205.6-8892BF.svg?style=flat-square)](https://php.net)
-[![Build Status](https://travis-ci.org/rosell-dk/webp-convert.png?branch=master)](https://travis-ci.org/rosell-dk/webp-convert)
-[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/rosell-dk/webp-convert.svg?style=flat-square)](https://scrutinizer-ci.com/g/rosell-dk/webp-convert/code-structure/master)
-[![Quality Score](https://img.shields.io/scrutinizer/g/rosell-dk/webp-convert.svg?style=flat-square)](https://scrutinizer-ci.com/g/rosell-dk/webp-convert/)
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](https://github.com/rosell-dk/webp-convert/blob/master/LICENSE)
+[![Latest Stable Version](https://img.shields.io/packagist/v/rosell-dk/webp-convert.svg)](https://packagist.org/packages/rosell-dk/webp-convert)
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%205.6-8892BF.svg)](https://php.net)
+[![Build Status](https://img.shields.io/github/workflow/status/rosell-dk/webp-convert/PHP?logo=GitHub)](https://github.com/rosell-dk/webp-convert/actions/workflows/php.yml)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/rosell-dk/webp-convert/blob/master/LICENSE)
+[![Monthly Downloads](http://poser.pugx.org/rosell-dk/webp-convert/d/monthly)](https://packagist.org/packages/rosell-dk/webp-convert)
+[![Dependents](http://poser.pugx.org/rosell-dk/webp-convert/dependents)](https://packagist.org/packages/rosell-dk/webp-convert/dependents?order_by=downloads)
 
 *Convert JPEG & PNG to WebP with PHP*
 
@@ -24,18 +24,6 @@ The library can convert using the following methods:
 - *gd* (using the [Gd PHP extension](https://www.php.net/manual/en/book.image.php))
 
 In addition to converting, the library also has a method for *serving* converted images, and we have instructions here on how to set up a solution for automatically serving webp images to browsers that supports webp.
-
-## News: 2.6.0 has just been released
-- Introduced [auto-limit](https://github.com/rosell-dk/webp-convert/blob/master/docs/v2.0/converting/options.md#auto-limit) option which replaces setting "quality" to "auto" [#281](https://github.com/rosell-dk/webp-convert/issues/281)
-- Added "sharp-yuv" option and made it default on. [Its great](https://www.ctrl.blog/entry/webp-sharp-yuv.html), use it! Works in most converters (works in cwebp, vips, imagemagick, graphicsmagick, imagick and gmagick) [#267](https://github.com/rosell-dk/webp-convert/issues/267), [#280](https://github.com/rosell-dk/webp-convert/issues/280), [#284](https://github.com/rosell-dk/webp-convert/issues/284)
-- Bumped cwebp binaries to 1.2.0 [#273](https://github.com/rosell-dk/webp-convert/issues/273)
-- vips now supports "method" option and "preset" option.
-- graphicsmagick now supports "auto-filter" potion
-- vips, imagick, imagemagick, graphicsmagick and gmagick now supports "preset" option [#275(https://github.com/rosell-dk/webp-convert/issues/275)
-- cwebp now only validates hash of supplied precompiled binaries when necessary. This cuts down conversion time. [#287](https://github.com/rosell-dk/webp-convert/issues/287)
-- Added [new option](https://github.com/rosell-dk/webp-convert/blob/master/docs/v2.0/converting/options.md#cwebp-skip-these-precompiled-binaries) to cwebp for skipping precompiled binaries that are known not to work on current system. This will cut down on conversion time. [#288](https://github.com/rosell-dk/webp-convert/issues/288)
-- And more (view closed issues [here](https://github.com/rosell-dk/webp-convert/milestone/22?closed=1))
-
 
 ## Installation
 Require the library with *Composer*, like this:
@@ -129,7 +117,7 @@ Bread on the table don't come for free, even though this library does, and alway
 - [Become a backer or sponsor on Patreon](https://www.patreon.com/rosell).
 - [Buy me a Coffee](https://ko-fi.com/rosell)
 
-## Supporters ==
+## Supporters
 *Persons currently backing the project via patreon - Thanks!*
 
 - Max Kreminsky
@@ -137,11 +125,12 @@ Bread on the table don't come for free, even though this library does, and alway
 - [Mathieu Gollain-Dupont](https://www.linkedin.com/in/mathieu-gollain-dupont-9938a4a/)
 - Ruben Solvang
 
-*Persons who contributed with coffee within the last 30 days:*
-
-- Anon
-- Eder Ribeiro
-- Christian
+*Persons who recently contributed with [ko-fi](https://ko-fi.com/rosell) - Thanks!*
+* 3 Dec: Dallas
+* 29 Nov: tadesco.org
+* 20 Nov: Ben J
+* 13 Nov: @sween
+* 9 Nov: @utrenkner
 
 *Persons who contributed with extra generously amounts of coffee / lifetime backing (>50$) - thanks!:*
 
@@ -150,3 +139,32 @@ Bread on the table don't come for free, even though this library does, and alway
 - Tammy Lee ($90)
 - Max Kreminsky ($65)
 - Steven Sullivan ($51)
+
+## New in 2.9.0 (released 7 dec 2021, on my daughters 10 years birthday!)
+- When exec() is unavailable, alternatives are now tried (emulations with proc_open(), passthru() etc). Using [this library](https://github.com/rosell-dk/exec-with-fallback) to do it.
+- Gd is now marked as not operational when the needed functions for converting palette images to RGB is missing. Rationale: A half-working converter causes more trouble than one that is marked as not operational
+- Improved CI tests. It is now tested on Windows, Mac and with deactivated functions (such as when exec() is disabled)
+- And more (view closed issues [here](https://github.com/rosell-dk/webp-convert/milestone/25?closed=1)
+
+## New in 2.8.0:
+- Converter option definitions are now accessible along with suggested UI and helptexts. This allows one to auto-generate a frontend based on conversion options. The feature is already in use in the [webp-convert file manager](https://github.com/rosell-dk/webp-convert-filemanager), which is used in WebP Express. New method: `WebPConvert::getConverterOptionDefinitions()`
+- The part of the log that displays the options are made more readable. It also now warns about deprecated options.
+- Bumped image-mime-type guesser library to 0.4. This version is able to dectect more mime types by sniffing the first couple of bytes.
+- And more (view closed issues [here](https://github.com/rosell-dk/webp-convert/milestone/23?closed=1)
+
+## New in 2.7.0:
+- ImageMagick now supports the "near-lossless" option (provided Imagick >= 7.0.10-54) [#299](https://github.com/rosell-dk/webp-convert/issues/299)
+- Added "try-common-system-paths" option for ImageMagick (default: true). So ImageMagick will now peek for "convert" in common system paths [#293](https://github.com/rosell-dk/webp-convert/issues/293)
+- Fixed memory leak in Gd on very old versions of PHP [#264](https://github.com/rosell-dk/webp-convert/issues/264)
+- And more (view closed issues [here](https://github.com/rosell-dk/webp-convert/milestone/24?closed=1)
+
+## New in 2.6.0:
+- Introduced [auto-limit](https://github.com/rosell-dk/webp-convert/blob/master/docs/v2.0/converting/options.md#auto-limit) option which replaces setting "quality" to "auto" [#281](https://github.com/rosell-dk/webp-convert/issues/281)
+- Added "sharp-yuv" option and made it default on. [Its great](https://www.ctrl.blog/entry/webp-sharp-yuv.html), use it! Works in most converters (works in cwebp, vips, imagemagick, graphicsmagick, imagick and gmagick) [#267](https://github.com/rosell-dk/webp-convert/issues/267), [#280](https://github.com/rosell-dk/webp-convert/issues/280), [#284](https://github.com/rosell-dk/webp-convert/issues/284)
+- Bumped cwebp binaries to 1.2.0 [#273](https://github.com/rosell-dk/webp-convert/issues/273)
+- vips now supports "method" option and "preset" option.
+- graphicsmagick now supports "auto-filter" potion
+- vips, imagick, imagemagick, graphicsmagick and gmagick now supports "preset" option [#275](https://github.com/rosell-dk/webp-convert/issues/275)
+- cwebp now only validates hash of supplied precompiled binaries when necessary. This cuts down conversion time. [#287](https://github.com/rosell-dk/webp-convert/issues/287)
+- Added [new option](https://github.com/rosell-dk/webp-convert/blob/master/docs/v2.0/converting/options.md#cwebp-skip-these-precompiled-binaries) to cwebp for skipping precompiled binaries that are known not to work on current system. This will cut down on conversion time. [#288](https://github.com/rosell-dk/webp-convert/issues/288)
+- And more (view closed issues [here](https://github.com/rosell-dk/webp-convert/milestone/22?closed=1))

@@ -8,6 +8,7 @@
 declare(strict_types=1);
 
 namespace Tracy\Dumper;
+use Ds;
 
 
 /**
@@ -59,6 +60,7 @@ final class Exposer
 		if (isset($cache[$class])) {
 			return $cache[$class];
 		}
+
 		$rc = new \ReflectionClass($class);
 		$parentProps = $rc->getParentClass() ? self::getProperties($rc->getParentClass()->getName()) : [];
 		$props = [];
@@ -92,6 +94,7 @@ final class Exposer
 		foreach ($rc->getParameters() as $param) {
 			$params[] = '$' . $param->getName();
 		}
+
 		$value->value .= '(' . implode(', ', $params) . ')';
 
 		$uses = [];
@@ -101,6 +104,7 @@ final class Exposer
 			$uses[] = '$' . $name;
 			$describer->addPropertyTo($useValue, '$' . $name, $v);
 		}
+
 		if ($uses) {
 			$useValue->value = implode(', ', $uses);
 			$useValue->collapsed = true;
@@ -161,6 +165,7 @@ final class Exposer
 		foreach (clone $obj as $item) {
 			$res[] = ['object' => $item, 'data' => $obj[$item]];
 		}
+
 		return $res;
 	}
 
@@ -185,14 +190,16 @@ final class Exposer
 				$k = (string) $k;
 				$decl = null;
 			}
+
 			$describer->addPropertyTo($value, $k, $v, $type, $refId, $decl);
 		}
+
 		$value->value = $class . ' (Incomplete Class)';
 	}
 
 
 	public static function exposeDsCollection(
-		\Ds\Collection $obj,
+		Ds\Collection $obj,
 		Value $value,
 		Describer $describer
 	): void {
@@ -203,13 +210,13 @@ final class Exposer
 
 
 	public static function exposeDsMap(
-		\Ds\Map $obj,
+		Ds\Map $obj,
 		Value $value,
 		Describer $describer
 	): void {
 		$i = 0;
 		foreach ($obj as $k => $v) {
-			$describer->addPropertyTo($value, (string) $i++, new \Ds\Pair($k, $v), Value::PROP_VIRTUAL);
+			$describer->addPropertyTo($value, (string) $i++, new Ds\Pair($k, $v), Value::PROP_VIRTUAL);
 		}
 	}
 }

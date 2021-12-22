@@ -19,6 +19,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH'])) { // AJAX request
 	if (!empty($_GET['error'])) {
 		this_is_fatal_error();
 	}
+
 	$data = [rand(), rand(), rand()];
 	header('Content-Type: application/json');
 	header('Cache-Control: no-cache');
@@ -60,8 +61,8 @@ document.querySelectorAll('button').forEach((button) => {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
-					'X-Requested-With': 'XMLHttpRequest'
-					// 'X-Tracy-Ajax': Tracy.getAjaxHeader()}, // use when auto-refresh is disabled via window.TracyAutoRefresh = false;
+					'X-Requested-With': 'XMLHttpRequest',
+					//'X-Tracy-Ajax': Tracy.getAjaxHeader(), // use when auto-refresh is disabled via window.TracyAutoRefresh = false;
 				}
 			}
 		)

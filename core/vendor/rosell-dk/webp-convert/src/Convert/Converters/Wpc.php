@@ -13,6 +13,7 @@ use WebPConvert\Convert\Exceptions\ConversionFailed\ConverterNotOperational\Inva
 use WebPConvert\Options\BooleanOption;
 use WebPConvert\Options\IntegerOption;
 use WebPConvert\Options\SensitiveStringOption;
+use WebPConvert\Options\OptionFactory;
 
 /**
  * Convert images to webp using Wpc (a cloud converter based on WebP Convert).
@@ -34,14 +35,75 @@ class Wpc extends AbstractConverter
 
     public function getUniqueOptions($imageType)
     {
-        return [
-            new SensitiveStringOption('api-key', ''),   /* for communicating with wpc api v.1+ */
-            new SensitiveStringOption('secret', ''),    /* for communicating with wpc api v.0 */
+        return OptionFactory::createOptions([
+            ['api-key', 'string', [
+               'title' => 'API key',
+               'description' => 'The API key is set up on the remote. Copy that.',
+               'default' => '',
+               'sensitive' => true,
+               'ui' => [
+                   'component' => 'password',
+                   'advanced' => false,
+                   'display' => "option('wpc-api-version') != 0"
+               ]
+            ]],
+            ['secret', 'string', [
+               'title' => 'Secret',
+               'description' => '',
+               'default' => '',
+               'sensitive' => true,
+               'ui' => [
+                   'component' => 'password',
+                   'advanced' => false,
+                   'display' => "option('wpc-api-version') == 0"
+               ]
+            ]],
+            ['api-url', 'string', [
+               'title' => 'API url',
+               'description' => 'The endpoint of the web service. Copy it from the remote setup',
+               'default' => '',
+               'sensitive' => true,
+               'ui' => [
+                   'component' => 'password',
+                   'advanced' => false,
+               ]
+            ]],
+            ['api-version', 'int', [
+               'title' => 'API version',
+               'description' =>
+                    'Refers to the major version of Wpc. ' .
+                    'It is probably 2, as it is a long time since 2.0 was released',
+               'default' => 2,
+               'minimum' => 0,
+               'maximum' => 2,
+               'ui' => [
+                   'component' => 'select',
+                   'advanced' => false,
+                   'options' => [0, 1, 2],
+               ]
+            ]],
+            ['crypt-api-key-in-transfer', 'boolean', [
+               'title' => 'Crypt API key in transfer',
+               'description' =>
+                  'If checked, the api key will be crypted in requests. ' .
+                  'Crypting the api-key protects it from being stolen during transfer',
+               'default' => false,
+               'ui' => [
+                   'component' => 'checkbox',
+                   'advanced' => true,
+                   'display' => "option('wpc-api-version') >= 1"
+               ]
+            ]],
+        ]);
+
+        /*return [
+            new SensitiveStringOption('api-key', ''),
+            new SensitiveStringOption('secret', ''),
             new SensitiveStringOption('api-url', ''),
-            new SensitiveStringOption('url', ''),       /* DO NOT USE. Only here to keep the protection */
+            new SensitiveStringOption('url', ''),       // DO NOT USE. Only here to keep the protection
             new IntegerOption('api-version', 2, 0, 2),
-            new BooleanOption('crypt-api-key-in-transfer', false)  /* new in api v.1 */
-        ];
+            new BooleanOption('crypt-api-key-in-transfer', false)  // new in api v.1
+        ];*/
     }
 
     public function supportsLossless()
@@ -160,7 +222,7 @@ class Wpc extends AbstractConverter
                     );
                 }
             }
-        } elseif ($apiVersion >= 1) {
+        } else {
             if ($options['crypt-api-key-in-transfer']) {
                 if (!function_exists('crypt')) {
                     throw new ConverterNotOperationalException(
@@ -242,7 +304,7 @@ class Wpc extends AbstractConverter
 
         if ($apiVersion == 0) {
             $postData['hash'] = md5(md5_file($this->source) . $apiKey);
-        } elseif ($apiVersion == 1) {
+        } else {
             //$this->logLn('api key: ' . $apiKey);
 
             if ($options['crypt-api-key-in-transfer']) {
