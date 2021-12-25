@@ -6,11 +6,13 @@
     "authors": [
         {
             "name": "Johannes M. Schmitt",
-            "email": "schmittjoh@gmail.com"
+            "email": "schmittjoh@gmail.com",
+            "homepage": "https://github.com/schmittjoh"
         },
         {
             "name": "Graham Campbell",
-            "email": "hello@gjcampbell.co.uk"
+            "email": "hello@gjcampbell.co.uk",
+            "homepage": "https://github.com/GrahamCampbell"
         }
     ],
     "require": {
@@ -18,7 +20,7 @@
     },
     "require-dev": {
         "bamarni/composer-bin-plugin": "^1.4.1",
-        "phpunit/phpunit": "^6.5.14 || ^7.0.20 || ^8.5.19 || ^9.5.8"
+        "phpunit/phpunit": "^6.5.14 || ^7.5.20 || ^8.5.19 || ^9.5.8"
     },
     "autoload": {
         "psr-4": {

@@ -7,6 +7,8 @@ use WebPConvert\Convert\Converters\ConverterTraits\ExecTrait;
 use WebPConvert\Convert\Converters\ConverterTraits\EncodingAutoTrait;
 use WebPConvert\Convert\Exceptions\ConversionFailed\ConverterNotOperational\SystemRequirementsNotMetException;
 use WebPConvert\Convert\Exceptions\ConversionFailedException;
+use WebPConvert\Options\OptionFactory;
+use ExecWithFallback\ExecWithFallback;
 
 //use WebPConvert\Convert\Exceptions\ConversionFailed\InvalidInput\TargetNotFoundException;
 
@@ -27,14 +29,24 @@ class FFMpeg extends AbstractConverter
         return [
             'alpha-quality',
             'auto-filter',
-            'encoding',
             'low-memory',
+            'metadata',
             'near-lossless',
-            'preset',
             'sharp-yuv',
             'size-in-percentage',
-            'use-nice'
         ];
+    }
+
+    /**
+     * Get the options unique for this converter
+     *
+     * @return  array  Array of options
+     */
+    public function getUniqueOptions($imageType)
+    {
+        return OptionFactory::createOptions([
+            self::niceOption()
+        ]);
     }
 
     private function getPath()
@@ -50,14 +62,14 @@ class FFMpeg extends AbstractConverter
 
     public function isInstalled()
     {
-        exec($this->getPath() . ' -version 2>&1', $output, $returnCode);
+        ExecWithFallback::exec($this->getPath() . ' -version 2>&1', $output, $returnCode);
         return ($returnCode == 0);
     }
 
     // Check if webp delegate is installed
     public function isWebPDelegateInstalled()
     {
-        exec($this->getPath() . ' -version 2>&1', $output, $returnCode);
+        ExecWithFallback::exec($this->getPath() . ' -version 2>&1', $output, $returnCode);
         foreach ($output as $line) {
             if (preg_match('# --enable-libwebp#i', $line)) {
                 return true;
@@ -142,13 +154,12 @@ class FFMpeg extends AbstractConverter
 
         $command = $this->getPath() . ' ' . $this->createCommandLineOptions() . ' 2>&1';
 
-        $useNice = (($this->options['use-nice']) && self::hasNiceSupport()) ? true : false;
+        $useNice = ($this->options['use-nice'] && $this->checkNiceSupport());
         if ($useNice) {
-            $this->logLn('using nice');
             $command = 'nice ' . $command;
         }
         $this->logLn('Executing command: ' . $command);
-        exec($command, $output, $returnCode);
+        ExecWithFallback::exec($command, $output, $returnCode);
 
         $this->logExecOutput($output);
         if ($returnCode == 0) {
@@ -161,7 +172,7 @@ class FFMpeg extends AbstractConverter
             throw new SystemRequirementsNotMetException('ffmpeg is not installed');
         }
         if ($returnCode != 0) {
-            throw new SystemRequirementsNotMetException('The exec call failed');
+            throw new SystemRequirementsNotMetException('The exec() call failed');
         }
     }
 }

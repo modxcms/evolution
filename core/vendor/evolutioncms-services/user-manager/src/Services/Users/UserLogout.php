@@ -7,6 +7,8 @@ use \EvolutionCMS\Models\User;
 
 class UserLogout implements UserServiceInterface
 {
+    use SafelyDestroyUserSessionTrait;
+
     /**
      * @var \string[][]
      */
@@ -56,6 +58,11 @@ class UserLogout implements UserServiceInterface
     private $userSettings;
 
     /**
+     * @var string
+     */
+    private $context;
+
+    /**
      * UserRegistration constructor.
      * @param array $userData
      * @param bool $events
@@ -63,6 +70,7 @@ class UserLogout implements UserServiceInterface
      */
     public function __construct(array $userData, bool $events = true, bool $cache = true)
     {
+        $this->context = evo()->getContext();
         $this->validate = $this->getValidationRules();
         $this->messages = $this->getValidationMessages();
         $this->userData = $userData;
@@ -75,7 +83,9 @@ class UserLogout implements UserServiceInterface
      */
     public function getValidationRules(): array
     {
-        return [];
+        return [
+            'context' => ['nullable', 'in:web,mgr'],
+        ];
     }
 
     /**
@@ -103,8 +113,11 @@ class UserLogout implements UserServiceInterface
             throw $exception;
         }
 
+        if (isset($this->userData['context'])) {
+            $this->context = $this->userData['context'];
+        }
 
-        $internalKey = EvolutionCMS()->getLoginUserID();
+        $internalKey = EvolutionCMS()->getLoginUserID($this->context);
         if (!$internalKey) {
             return false;
         }
@@ -115,7 +128,7 @@ class UserLogout implements UserServiceInterface
             $user->access_token = '';
             $user->valid_to = NULL;
             $user->save();
-            $username = $_SESSION[evo()->getContext() . 'Shortname'];
+            $username = $_SESSION[$this->context . 'Shortname'];
             if(is_null($username)) $username = '';
             $sid = EvolutionCMS()->sid;
             if ($this->events) {
@@ -127,10 +140,8 @@ class UserLogout implements UserServiceInterface
                     ));
             }
         }
-        if (isset($_COOKIE[session_name()])) {
-            setcookie(session_name(), '', 0, MODX_BASE_URL);
-        }
-        @session_destroy(); // this sometimes generate an error in iis
+
+        $this->safelyDestroyUserSession();
 
         \EvolutionCMS\Models\ActiveUserLock::query()->where('sid', $sid)->delete();
 
@@ -160,8 +171,8 @@ class UserLogout implements UserServiceInterface
      */
     public function validate(): bool
     {
-        return true;
+        $validator = \Validator::make($this->userData, $this->validate, $this->messages);
+        $this->validateErrors = $validator->errors()->toArray();
+        return !$validator->fails();
     }
-
-
 }

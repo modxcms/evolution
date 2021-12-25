@@ -29,7 +29,7 @@ class Bar
 	 * Add custom panel.
 	 * @return static
 	 */
-	public function addPanel(IBarPanel $panel, string $id = null): self
+	public function addPanel(IBarPanel $panel, ?string $id = null): self
 	{
 		if ($id === null) {
 			$c = 0;
@@ -37,6 +37,7 @@ class Bar
 				$id = get_class($panel) . ($c++ ? "-$c" : '');
 			} while (isset($this->panels[$id]));
 		}
+
 		$this->panels[$id] = $panel;
 		return $this;
 	}
@@ -60,7 +61,8 @@ class Bar
 		if (!$this->useSession) {
 			throw new \LogicException('Start session before Tracy is enabled.');
 		}
-		$contentId = $this->contentId = $this->contentId ?: substr(md5(uniqid('', true)), 0, 10);
+
+		$contentId = $this->contentId = $this->contentId ?: Helpers::createId();
 		$nonce = Helpers::getNonce();
 		$async = true;
 		require __DIR__ . '/assets/loader.phtml';
@@ -86,21 +88,20 @@ class Bar
 		if (Helpers::isAjax()) {
 			if ($useSession) {
 				$contentId = $_SERVER['HTTP_X_TRACY_AJAX'];
-				$_SESSION['_tracy']['bar'][$contentId] = ['content' => $this->renderHtml('ajax', '-ajax:' . $contentId), 'time' => time()];
+				$_SESSION['_tracy']['bar'][$contentId] = ['content' => $this->renderPartial('ajax', '-ajax:' . $contentId), 'time' => time()];
 			}
-
-		} elseif (preg_match('#^Location:#im', implode("\n", headers_list()))) { // redirect
+		} elseif (Helpers::isRedirect()) {
 			if ($useSession) {
-				$redirectQueue[] = ['content' => $this->renderHtml('redirect', '-r' . count($redirectQueue)), 'time' => time()];
+				$redirectQueue[] = ['content' => $this->renderPartial('redirect', '-r' . count($redirectQueue)), 'time' => time()];
 			}
-
 		} elseif (Helpers::isHtmlMode()) {
-			$content = $this->renderHtml('main');
+			$content = $this->renderPartial('main');
 
 			foreach (array_reverse((array) $redirectQueue) as $item) {
 				$content['bar'] .= $item['content']['bar'];
 				$content['panels'] .= $item['content']['panels'];
 			}
+
 			$redirectQueue = null;
 
 			$content = '<div id=tracy-debug-bar>' . $content['bar'] . '</div>' . $content['panels'];
@@ -108,7 +109,7 @@ class Bar
 			if ($this->contentId) {
 				$_SESSION['_tracy']['bar'][$this->contentId] = ['content' => $content, 'time' => time()];
 			} else {
-				$contentId = substr(md5(uniqid('', true)), 0, 10);
+				$contentId = Helpers::createId();
 				$nonce = Helpers::getNonce();
 				$async = false;
 				require __DIR__ . '/assets/loader.phtml';
@@ -117,7 +118,7 @@ class Bar
 	}
 
 
-	private function renderHtml(string $type, string $suffix = ''): array
+	private function renderPartial(string $type, string $suffix = ''): array
 	{
 		$panels = $this->renderPanels($suffix);
 
@@ -153,11 +154,13 @@ class Bar
 				while (ob_get_level() > $obLevel) { // restore ob-level if broken
 					ob_end_clean();
 				}
+
 				$idHtml = "error-$idHtml";
 				$tab = "Error in $id";
 				$panelHtml = "<h1>Error: $id</h1><div class='tracy-inner'>" . nl2br(Helpers::escapeHtml($e)) . '</div>';
 				unset($e);
 			}
+
 			$panels[] = (object) ['id' => $idHtml, 'tab' => $tab, 'panel' => $panelHtml];
 		}
 
@@ -183,30 +186,37 @@ class Bar
 		}
 
 		$this->useSession = session_status() === PHP_SESSION_ACTIVE;
-
-		if ($this->useSession && Helpers::isAjax()) {
-			header('X-Tracy-Ajax: 1'); // session must be already locked
+		if (!$this->useSession) {
+			return false;
 		}
 
-		if ($this->useSession && is_string($asset) && preg_match('#^content(-ajax)?\.(\w+)$#', $asset, $m)) {
-			$session = &$_SESSION['_tracy']['bar'][$m[2]];
+		if (is_string($asset) && preg_match('#^content(-ajax)?\.(\w+)$#', $asset, $m)) {
+			[, $ajax, $requestId] = $m;
 			header('Content-Type: application/javascript; charset=UTF-8');
 			header('Cache-Control: max-age=60');
 			header_remove('Set-Cookie');
-			if (!$m[1]) {
+			if (!$ajax) {
 				$this->renderAssets();
 			}
+
+			$session = &$_SESSION['_tracy']['bar'][$requestId];
 			if ($session) {
-				$method = $m[1] ? 'loadAjax' : 'init';
+				$method = $ajax ? 'loadAjax' : 'init';
 				echo "Tracy.Debug.$method(", json_encode($session['content'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE), ');';
 				$session = null;
 			}
-			$session = &$_SESSION['_tracy']['bluescreen'][$m[2]];
+
+			$session = &$_SESSION['_tracy']['bluescreen'][$requestId];
 			if ($session) {
 				echo 'Tracy.BlueScreen.loadAjax(', json_encode($session['content'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE), ');';
 				$session = null;
 			}
+
 			return true;
+		}
+
+		if (Helpers::isAjax()) {
+			header('X-Tracy-Ajax: 1'); // session must be already locked
 		}
 
 		return false;
@@ -224,13 +234,12 @@ class Bar
 			__DIR__ . '/../BlueScreen/assets/bluescreen.css',
 		], Debugger::$customCssFiles));
 
-		echo
-"'use strict';
+		echo "'use strict';
 (function(){
 	var el = document.createElement('style');
 	el.setAttribute('nonce', document.currentScript.getAttribute('nonce') || document.currentScript.nonce);
 	el.className='tracy-debug';
-	el.textContent=" . json_encode(Helpers::minifyCss(implode($css))) . ";
+	el.textContent=" . json_encode(Helpers::minifyCss(implode('', $css))) . ";
 	document.head.appendChild(el);})
 ();\n";
 

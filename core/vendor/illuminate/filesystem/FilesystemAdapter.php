@@ -222,7 +222,7 @@ class FilesystemAdapter implements CloudFilesystemContract
      * Write the contents of a file.
      *
      * @param  string  $path
-     * @param  string|resource  $contents
+     * @param  \Psr\Http\Message\StreamInterface|\Illuminate\Http\File|\Illuminate\Http\UploadedFile|string|resource  $contents
      * @param  mixed  $options
      * @return bool
      */
@@ -651,7 +651,7 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function files($directory = null, $recursive = false)
     {
-        $contents = $this->driver->listContents($directory, $recursive);
+        $contents = $this->driver->listContents($directory ?? '', $recursive);
 
         return $this->filterContentsByType($contents, 'file');
     }
@@ -676,7 +676,7 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function directories($directory = null, $recursive = false)
     {
-        $contents = $this->driver->listContents($directory, $recursive);
+        $contents = $this->driver->listContents($directory ?? '', $recursive);
 
         return $this->filterContentsByType($contents, 'dir');
     }

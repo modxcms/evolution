@@ -25,7 +25,6 @@ class Gmagick extends AbstractConverter
         return [
             'near-lossless',
             'size-in-percentage',
-            'use-nice'
         ];
     }
 
@@ -107,7 +106,7 @@ class Gmagick extends AbstractConverter
 
         $im->setimageformat('WEBP');
 
-        // Not completely sure if setimageoption() has always been there, so lets check first. #169
+        // setimageoption() has not always been there, so check first. #169
         if (method_exists($im, 'setimageoption')) {
             // Finally cracked setting webp options.
             // See #167

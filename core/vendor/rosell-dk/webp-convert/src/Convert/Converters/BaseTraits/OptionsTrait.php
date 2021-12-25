@@ -7,15 +7,9 @@ use WebPConvert\Convert\Exceptions\ConversionFailed\ConversionSkippedException;
 use WebPConvert\Options\Exceptions\InvalidOptionValueException;
 use WebPConvert\Options\Exceptions\InvalidOptionTypeException;
 
-use WebPConvert\Options\ArrayOption;
-use WebPConvert\Options\BooleanOption;
 use WebPConvert\Options\GhostOption;
-use WebPConvert\Options\IntegerOption;
-use WebPConvert\Options\IntegerOrNullOption;
-use WebPConvert\Options\MetadataOption;
 use WebPConvert\Options\Options;
-use WebPConvert\Options\StringOption;
-use WebPConvert\Options\QualityOption;
+use WebPConvert\Options\OptionFactory;
 
 /**
  * Trait for handling options
@@ -55,34 +49,210 @@ trait OptionsTrait
     {
         $isPng = ($imageType == 'png');
 
-        $defaultQualityOption = new IntegerOption('default-quality', ($isPng ? 85 : 75), 0, 100);
-        $defaultQualityOption->markDeprecated();
-
-        $maxQualityOption = new IntegerOption('max-quality', 85, 0, 100);
-        $maxQualityOption->markDeprecated();
-
+        /*
         return [
-            new IntegerOption('alpha-quality', 85, 0, 100),
-            new BooleanOption('auto-limit', true),
             //new IntegerOption('auto-limit-adjustment', 5, -100, 100),
-            new BooleanOption('auto-filter', false),
-            $defaultQualityOption,
-            new StringOption('encoding', 'auto', ['lossy', 'lossless', 'auto']),
-            new BooleanOption('low-memory', false),
             new BooleanOption('log-call-arguments', false),
-            $maxQualityOption,
-            new MetadataOption('metadata', 'none'),
-            new IntegerOption('method', 6, 0, 6),
-            new IntegerOption('near-lossless', 60, 0, 100),
-            new StringOption('preset', 'none', ['none', 'default', 'photo', 'picture', 'drawing', 'icon', 'text']),
-            new QualityOption('quality', ($isPng ? 85 : 75)),
-            new IntegerOrNullOption('size-in-percentage', null, 0, 100),
-            new BooleanOption('sharp-yuv', true),
             new BooleanOption('skip', false),
             new BooleanOption('use-nice', false),
             new ArrayOption('jpeg', []),
             new ArrayOption('png', [])
-        ];
+        ];*/
+
+        $introMd = 'https://github.com/rosell-dk/webp-convert/blob/master/docs/v2.0/' .
+            'converting/introduction-for-converting.md';
+
+        return OptionFactory::createOptions([
+            ['encoding', 'string', [
+                'title' => 'Encoding',
+                'description' => 'Set encoding for the webp. ' .
+                    'If you choose "auto", webp-convert will ' .
+                    'convert to both lossy and lossless and pick the smallest result',
+                'default' => 'auto',
+                'enum' => ['auto', 'lossy', 'lossless'],
+                'ui' => [
+                    'component' => 'select',
+                    'links' => [['Guide', $introMd . '#auto-selecting-between-losslesslossy-encoding']],
+                ]
+            ]],
+            ['quality', 'int', [
+                'title' => 'Quality (Lossy)',
+                'description' =>
+                    'Quality for lossy encoding. ' .
+                    'In case you enable "auto-limit", you can consider this property a maximum quality.',
+                'default' => ($isPng ? 85 : 75),
+                'default-png' => 85,
+                'default-jpeg' => 75,
+                //'minimum' => 0,
+                //'maximum' => 100,
+                "oneOf" => [
+                    ["type" => "number", "minimum" => 0, 'maximum' => 100],
+                    ["type" => "string", "enum" => ["auto"]]
+                ],
+                'ui' => [
+                    'component' => 'slider',
+                    'display' => "option('encoding') != 'lossless'"
+                ]
+            ]],
+            ['auto-limit', 'boolean', [
+                'title' => 'Auto-limit',
+                'description' =>
+                    'Enable this option to prevent an unnecessarily high quality setting for low ' .
+                    'quality jpegs. It works by adjusting quality setting down to the quality of the jpeg. ' .
+                    'Converting ie a jpeg with quality:50 to ie quality:80 does not get you better quality ' .
+                    'than converting it to quality:80, but it does get you a much bigger file - so you ' .
+                    'really should enable this option.' . "\n\n" .
+                    'The option is ignored for PNG and never adjusts quality up. ' . "\n\n" .
+                    'The feature requires Imagick, ImageMagick or Gmagick in order to detect the quality of ' .
+                    'the jpeg. ' . "\n\n" .
+                    'PS: The "auto-limit" option is relative new. However, before this option, you could achieve ' .
+                    'the same by setting quality to "auto" and specifying a "max-quality" and a "default-quality". ' .
+                    'These are deprecated now, but still works.',
+                'default' => true,
+                'ui' => [
+                    'component' => 'checkbox',
+                    'advanced' => true,
+                    'links' => [
+                        [
+                            'Guide',
+                            $introMd . '#preventing-unnecessarily-high-quality-setting-for-low-quality-jpegs'
+                        ]
+                    ],
+                    'display' => "option('encoding') != 'lossless'"
+                ]
+            ]],
+            ['alpha-quality', 'int', [
+                'title' => 'Alpha quality',
+                'description' =>
+                    'Quality of alpha channel. ' .
+                    'Often, there is no need for high quality transparency layer and in some cases you ' .
+                    'can tweak this all the way down to 10 and save a lot in file size. The option only ' .
+                    'has effect with lossy encoding, and of course only on images with transparency.',
+                'default' => 85,
+                'minimum' => 0,
+                'maximum' => 100,
+                'ui' => [
+                    'component' => 'slider',
+                    'links' => [['Guide', $introMd . '#alpha-quality']],
+                    'display' => "(option('encoding') != 'lossless') && (imageType!='jpeg')"
+                ]
+            ]],
+            ['near-lossless', 'int', [
+                'title' => '"Near lossless" quality',
+                'description' =>
+                    'This option allows you to get impressively better compression for lossless encoding, with ' .
+                    'minimal impact on visual quality. The range is 0 (maximum preprocessing) to 100 (no ' .
+                    'preprocessing). Read the guide for more info.',
+                'default' => 60,
+                'minimum' => 0,
+                'maximum' => 100,
+                'ui' => [
+                    'component' => 'slider',
+                    'links' => [['Guide', $introMd . '#near-lossless']],
+                    'display' => "option('encoding') != 'lossy'"
+                ]
+            ]],
+            ['metadata', 'string', [
+                'title' => 'Metadata',
+                'description' =>
+                    'Determines which metadata that should be copied over to the webp. ' .
+                    'Setting it to "all" preserves all metadata, setting it to "none" strips all metadata. ' .
+                    '*cwebp* can take a comma-separated list of which kinds of metadata that should be copied ' .
+                    '(ie "exif,icc"). *gd* will always remove all metadata and *ffmpeg* will always keep all ' .
+                    'metadata. The rest can either strip all or keep all (they will keep all, unless the option ' .
+                    'is set to *none*)',
+                'default' => 'none',
+                'ui' => [
+                    'component' => 'multi-select',
+                    'options' => ['all', 'none', 'exif', 'icc', 'xmp'],
+                ]
+                // TODO: set regex validation
+            ]],
+            ['method', 'int', [
+                'title' => 'Reduction effort (0-6)',
+                'description' =>
+                    'Controls the trade off between encoding speed and the compressed file size and quality. ' .
+                    'Possible values range from 0 to 6. 0 is fastest. 6 results in best quality and compression. ' .
+                    'PS: The option corresponds to the "method" option in libwebp',
+                'default' => 6,
+                'minimum' => 0,
+                'maximum' => 6,
+                'ui' => [
+                  'component' => 'slider',
+                  'advanced' => true,
+                ]
+            ]],
+            ['sharp-yuv', 'boolean', [
+                'title' => 'Sharp YUV',
+                'description' =>
+                    'Better RGB->YUV color conversion (sharper and more accurate) at the expense of a little extra ' .
+                    'conversion time.',
+                'default' => true,
+                'ui' => [
+                    'component' => 'checkbox',
+                    'advanced' => true,
+                    'links' => [
+                        ['Ctrl.blog', 'https://www.ctrl.blog/entry/webp-sharp-yuv.html'],
+                    ],
+                ]
+            ]],
+            ['auto-filter', 'boolean', [
+                'title' => 'Auto-filter',
+                'description' =>
+                    'Turns auto-filter on. ' .
+                    'This algorithm will spend additional time optimizing the filtering strength to reach a well-' .
+                    'balanced quality. Unfortunately, it is extremely expensive in terms of computation. It takes ' .
+                    'about 5-10 times longer to do a conversion. A 1MB picture which perhaps typically takes about ' .
+                    '2 seconds to convert, will takes about 15 seconds to convert with auto-filter. ',
+                'default' => false,
+                'ui' => [
+                    'component' => 'checkbox',
+                    'advanced' => true,
+                ]
+            ]],
+            ['low-memory', 'boolean', [
+                'title' => 'Low memory',
+                'description' =>
+                    'Reduce memory usage of lossy encoding at the cost of ~30% longer encoding time and marginally ' .
+                    'larger output size. Only effective when the *method* option is 3 or more. Read more in ' .
+                    '[the docs](https://developers.google.com/speed/webp/docs/cwebp)',
+                'default' => false,
+                'ui' => [
+                    'component' => 'checkbox',
+                    'advanced' => true,
+                    'display' => "(option('encoding') != 'lossless') && (option('method')>2)"
+                ]
+            ]],
+            ['preset', 'string', [
+                'title' => 'Preset',
+                'description' =>
+                    'Using a preset will set many of the other options to suit a particular type of ' .
+                    'source material. It even overrides them. It does however not override the quality option. ' .
+                    '"none" means that no preset will be set',
+                'default' => 'none',
+                'enum' => ['none', 'default', 'photo', 'picture', 'drawing', 'icon', 'text'],
+                'ui' => [
+                    'component' => 'select',
+                    'advanced' => true,
+                ]
+            ]],
+            ['size-in-percentage', 'int', ['default' => null, 'minimum' => 0, 'maximum' => 100, 'allow-null' => true]],
+            ['skip', 'boolean', ['default' => false]],
+            ['log-call-arguments', 'boolean', ['default' => false]],
+            // TODO: use-nice should not be a "general" option
+            //['use-nice', 'boolean', ['default' => false]],
+            ['jpeg', 'array', ['default' => []]],
+            ['png', 'array', ['default' => []]],
+
+            // Deprecated options
+            ['default-quality', 'int', [
+                'default' => ($isPng ? 85 : 75),
+                'minimum' => 0,
+                'maximum' => 100,
+                'deprecated' => true]
+            ],
+            ['max-quality', 'int', ['default' => 85, 'minimum' => 0, 'maximum' => 100, 'deprecated' => true]],
+        ]);
     }
 
     /**
@@ -96,7 +266,6 @@ trait OptionsTrait
     {
         return [];
     }
-
 
     /**
      *  Create options.
@@ -154,6 +323,7 @@ trait OptionsTrait
         foreach ($this->providedOptions as $optionKey => $optionValue) {
             if (substr($optionKey, 0, $strLen + 1) == ($converterId . '-')) {
                 $this->providedOptions[substr($optionKey, $strLen + 1)] = $optionValue;
+                unset($this->providedOptions[$optionKey]);
             }
         }
 
@@ -232,74 +402,73 @@ trait OptionsTrait
         $this->logLn('');
         $this->logLn('Options:');
         $this->logLn('------------');
-        $this->logLn(
-            'The following options have been set explicitly. ' .
-            'Note: it is the resulting options after merging down the "jpeg" and "png" options and any ' .
-            'converter-prefixed options.'
-        );
-        $this->logLn('- source: ' . $this->source);
-        $this->logLn('- destination: ' . $this->destination);
 
         $unsupported = $this->getUnsupportedDefaultOptions();
-        //$this->logLn('Unsupported:' . print_r($this->getUnsupportedDefaultOptions(), true));
-        $ignored = [];
-        $implicit = [];
+        $received = [];
+        $implicitlySet = [];
         foreach ($this->options2->getOptionsMap() as $id => $option) {
-            if (($id == 'png') || ($id == 'jpeg')) {
+            if (in_array($id, [
+                'png', 'jpeg', '_skip_input_check', '_suppress_success_message', 'skip', 'log_call_arguments'
+            ])) {
                 continue;
             }
             if ($option->isValueExplicitlySet()) {
-                if (($option instanceof GhostOption) || in_array($id, $unsupported)) {
-                    //$this->log(' (note: this option is ignored by this converter)');
-                    if (($id != '_skip_input_check') && ($id != '_suppress_success_message')) {
-                        $ignored[] = $option;
-                    }
-                } else {
-                    $this->log('- ' . $id . ': ');
-                    $this->log($option->getValueForPrint());
-                    $this->logLn('');
-                }
+                $received[] = $option;
             } else {
                 if (($option instanceof GhostOption) || in_array($id, $unsupported)) {
+                    //$received[] = $option;
                 } else {
-                    $implicit[] = $option;
+                    if (!$option->isDeprecated()) {
+                        $implicitlySet[] = $option;
+                    }
                 }
             }
         }
 
-        if (count($implicit) > 0) {
+        if (count($received) > 0) {
+            foreach ($received as $option) {
+                $this->log('- ' . $option->getId() . ': ');
+                if ($option instanceof GhostOption) {
+                    $this->log('  (unknown to ' . $this->getConverterId() . ')', 'bold');
+                    $this->logLn('');
+                    continue;
+                }
+                $this->log($option->getValueForPrint());
+                if ($option->isDeprecated()) {
+                    $this->log(' (deprecated)', 'bold');
+                }
+                if (in_array($option->getId(), $unsupported)) {
+                    if ($this instanceof Stack) {
+                        //$this->log('  *(passed on)*');
+                    } else {
+                        $this->log(' (unsupported by ' . $this->getConverterId() . ')', 'bold');
+                    }
+                }
+                $this->logLn('');
+            }
             $this->logLn('');
             $this->logLn(
-                'The following options have not been explicitly set, so using the following defaults:'
+                'Note that these are the resulting options after merging down the "jpeg" and "png" options and any ' .
+                'converter-prefixed options'
             );
-            foreach ($implicit as $option) {
+        }
+
+        if (count($implicitlySet) > 0) {
+            $this->logLn('');
+            $this->logLn('Defaults:');
+            $this->logLn('------------');
+            $this->logLn(
+                'The following options was not set, so using the following defaults:'
+            );
+            foreach ($implicitlySet as $option) {
                 $this->log('- ' . $option->getId() . ': ');
                 $this->log($option->getValueForPrint());
+                /*if ($option instanceof GhostOption) {
+                    $this->log('  **(ghost)**');
+                }*/
                 $this->logLn('');
             }
         }
-        if (count($ignored) > 0) {
-            $this->logLn('');
-            if ($this instanceof Stack) {
-                $this->logLn(
-                    'The following options were supplied and are passed on to the converters in the stack:'
-                );
-                foreach ($ignored as $option) {
-                    $this->log('- ' . $option->getId() . ': ');
-                    $this->log($option->getValueForPrint());
-                    $this->logLn('');
-                }
-            } else {
-                $this->logLn(
-                    'The following options were supplied but are ignored because they are not supported by this ' .
-                        'converter:'
-                );
-                foreach ($ignored as $option) {
-                    $this->logLn('- ' . $option->getId());
-                }
-            }
-        }
-        $this->logLn('------------');
     }
 
     // to be overridden by converters
@@ -308,13 +477,105 @@ trait OptionsTrait
         return [];
     }
 
-/*
-    public static function getUniqueOptions($imageType = 'png')
+    public function getUnsupportedGeneralOptions()
     {
-        $options = new Options();
-//        $options->addOptions(... self::getGeneralOptions($imageType));
-//        $options->addOptions(... self::getUniqueOptions($imageType));
+        return $this->getUnsupportedDefaultOptions();
+    }
 
-        return $options->getDefinitions();
-    }*/
+    /**
+      * Get unique option definitions.
+      *
+      * Gets definitions of the converters "unique" options (that is, those options that
+      * are not general). It was added in order to give GUI's a way to automatically adjust
+      * their setting screens.
+      *
+      * @param  bool  $filterOutOptionsWithoutUI  If options without UI defined should be filtered out
+      * @param  string   $imageType   (png | jpeg)   The image type - determines the defaults
+      *
+      * @return array  Array of options definitions - ready to be json encoded, or whatever
+      */
+    public function getUniqueOptionDefinitions($filterOutOptionsWithoutUI = true, $imageType = 'jpeg')
+    {
+        $uniqueOptions = new Options();
+        //$uniqueOptions->addOptions(... $this->getUniqueOptions($imageType));
+        foreach ($this->getUniqueOptions($imageType) as $uoption) {
+            $uoption->setId(self::getConverterId() . '-' . $uoption->getId());
+            $uniqueOptions->addOption($uoption);
+        }
+
+        $optionDefinitions = $uniqueOptions->getDefinitions();
+        if ($filterOutOptionsWithoutUI) {
+            $optionDefinitions = array_filter($optionDefinitions, function ($value) {
+                return !is_null($value['ui']);
+            });
+            $optionDefinitions = array_values($optionDefinitions); // re-index
+        }
+        return $optionDefinitions;
+    }
+
+    /**
+     * Get general option definitions.
+     *
+     * Gets definitions of all general options (not just the ones supported by current converter)
+     * For UI's, as a way to automatically adjust their setting screens.
+     *
+     * @param  bool  $filterOutOptionsWithoutUI  If options without UI defined should be filtered out
+     * @param  string   $imageType   (png | jpeg)   The image type - determines the defaults
+     *
+     * @return  array  Array of options definitions - ready to be json encoded, or whatever
+     */
+    public function getGeneralOptionDefinitions($filterOutOptionsWithoutUI = true, $imageType = 'jpeg')
+    {
+        $generalOptions = new Options();
+        $generalOptions->addOptions(... $this->getGeneralOptions($imageType));
+        //$generalOptions->setUI($this->getUIForGeneralOptions($imageType));
+        $optionDefinitions = $generalOptions->getDefinitions();
+        if ($filterOutOptionsWithoutUI) {
+            $optionDefinitions = array_filter($optionDefinitions, function ($value) {
+                return !is_null($value['ui']);
+            });
+            $optionDefinitions = array_values($optionDefinitions); // re-index
+        }
+        return $optionDefinitions;
+    }
+
+    public function getSupportedGeneralOptions($imageType = 'png')
+    {
+        $unsupportedGeneral = $this->getUnsupportedDefaultOptions();
+        $generalOptionsArr = $this->getGeneralOptions($imageType);
+        $supportedIds = [];
+        foreach ($generalOptionsArr as $i => $option) {
+            if (in_array($option->getId(), $unsupportedGeneral)) {
+                unset($generalOptionsArr[$i]);
+            }
+        }
+        return $generalOptionsArr;
+    }
+
+       /**
+        *  Get general option definitions.
+        *
+        *  Gets definitions of the converters "general" options. (that is, those options that
+        *  It was added in order to give GUI's a way to automatically adjust their setting screens.
+        *
+        *  @param   string   $imageType   (png | jpeg)   The image type - determines the defaults
+        *
+        *  @return  array  Array of options definitions - ready to be json encoded, or whatever
+        */
+    public function getSupportedGeneralOptionDefinitions($imageType = 'png')
+    {
+        $generalOptions = new Options();
+        $generalOptions->addOptions(... $this->getSupportedGeneralOptions($imageType));
+        return $generalOptions->getDefinitions();
+    }
+
+    public function getSupportedGeneralOptionIds()
+    {
+        $supportedGeneralOptions = $this->getSupportedGeneralOptions();
+        $supportedGeneralIds = [];
+        foreach ($supportedGeneralOptions as $option) {
+            $supportedGeneralIds[] = $option->getId();
+        }
+        return $supportedGeneralIds;
+    }
 }

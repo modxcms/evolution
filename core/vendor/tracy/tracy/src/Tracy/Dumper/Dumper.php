@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Tracy;
 
+use Ds;
 use Tracy\Dumper\Describer;
 use Tracy\Dumper\Exposer;
 use Tracy\Dumper\Renderer;
@@ -33,7 +34,8 @@ class Dumper
 		DEBUGINFO = 'debuginfo', // use magic method __debugInfo if exists (defaults to false)
 		KEYS_TO_HIDE = 'keystohide', // sensitive keys not displayed (defaults to [])
 		SCRUBBER = 'scrubber', // detects sensitive keys not to be displayed
-		THEME = 'theme'; // color theme (defaults to light)
+		THEME = 'theme', // color theme (defaults to light)
+		HASH = 'hash'; // show object and reference hashes (defaults to true)
 
 	public const
 		LOCATION_CLASS = 0b0001, // shows where classes are defined
@@ -81,8 +83,8 @@ class Dumper
 		\DOMNode::class => [Exposer::class, 'exposeDOMNode'],
 		\DOMNodeList::class => [Exposer::class, 'exposeDOMNodeList'],
 		\DOMNamedNodeMap::class => [Exposer::class, 'exposeDOMNodeList'],
-		\Ds\Collection::class => [Exposer::class, 'exposeDsCollection'],
-		\Ds\Map::class => [Exposer::class, 'exposeDsMap'],
+		Ds\Collection::class => [Exposer::class, 'exposeDsCollection'],
+		Ds\Map::class => [Exposer::class, 'exposeDsMap'],
 	];
 
 	/** @var Describer */
@@ -98,7 +100,7 @@ class Dumper
 	 */
 	public static function dump($var, array $options = [])
 	{
-		if (PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg') {
+		if (Helpers::isCli()) {
 			$useColors = self::$terminalColors && Helpers::detectColors();
 			$dumper = new self($options);
 			fwrite(STDOUT, $dumper->asTerminal($var, $useColors ? self::$terminalColors : []));
@@ -111,6 +113,7 @@ class Dumper
 			self::renderAssets();
 			echo self::toHtml($var, $options);
 		}
+
 		return $var;
 	}
 
@@ -151,6 +154,7 @@ class Dumper
 		if (Debugger::$productionMode === true || $sent) {
 			return;
 		}
+
 		$sent = true;
 
 		$nonce = Helpers::getNonce();
@@ -188,6 +192,7 @@ class Dumper
 		} elseif (isset($options[self::SNAPSHOT])) {
 			$tmp = &$options[self::SNAPSHOT];
 		}
+
 		if (isset($tmp)) {
 			$tmp[0] = $tmp[0] ?? [];
 			$tmp[1] = $tmp[1] ?? [];
@@ -205,6 +210,7 @@ class Dumper
 		$renderer->sourceLocation = !(~$location & self::LOCATION_SOURCE);
 		$renderer->classLocation = !(~$location & self::LOCATION_CLASS);
 		$renderer->theme = $options[self::THEME] ?? $renderer->theme;
+		$renderer->hash = $options[self::HASH] ?? true;
 	}
 
 
@@ -219,6 +225,7 @@ class Dumper
 			$model = $this->describer->describe([$key => $var]);
 			$model->value = $model->value[0][1];
 		}
+
 		return $this->renderer->renderAsHtml($model);
 	}
 

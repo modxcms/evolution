@@ -19,6 +19,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH'])) { // AJAX request
 	if (!empty($_GET['error'])) {
 		this_is_fatal_error();
 	}
+
 	$data = [rand(), rand(), rand()];
 	header('Content-Type: application/json');
 	header('Cache-Control: no-cache');
@@ -61,8 +62,7 @@ $('button').click(function() {
 	jqxhr = $.ajax({
 		data: {error: $(this).hasClass('error') * 1},
 		dataType: 'json',
-		jsonp: false,
-		// headers: {'X-Tracy-Ajax': Tracy.getAjaxHeader()}, // use when auto-refresh is disabled via window.TracyAutoRefresh = false;
+		jsonp: false
 	}).done(function(data) {
 		$('#result').text('loaded: ' + data);
 

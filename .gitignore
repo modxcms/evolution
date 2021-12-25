@@ -44,8 +44,6 @@
 !/assets/site/.htaccess
 
 # Core
-/core/composer.lock
-/core/vendor/bin
 /core/.install
 
 # Manager

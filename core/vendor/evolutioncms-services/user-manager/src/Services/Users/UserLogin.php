@@ -10,6 +10,8 @@ use Illuminate\Support\Str;
 
 class UserLogin implements UserServiceInterface
 {
+    use SafelyDestroyUserSessionTrait;
+
     /**
      * @var \string[][]
      */
@@ -47,21 +49,22 @@ class UserLogin implements UserServiceInterface
     /**
      * @var int
      */
-    private $blockedMinutes;
+    protected $blockedMinutes;
     /**
      * @var int
      */
-    private $failedLoginAttempts;
+    protected $failedLoginAttempts;
 
     /**
      * @var
      */
-    private $userSettings;
+    protected $userSettings;
 
     /**
      * @var string
      */
-    private $context;
+    protected $context;
+
     /**
      * UserRegistration constructor.
      * @param array $userData
@@ -85,8 +88,11 @@ class UserLogin implements UserServiceInterface
      */
     public function getValidationRules(): array
     {
-        return ['username' => ['required'],
-            'password' => ['required']];
+        return [
+            'username' => ['required'],
+            'password' => ['required'],
+            'context'  => ['nullable', 'in:web,mgr'],
+        ];
     }
 
     /**
@@ -94,8 +100,10 @@ class UserLogin implements UserServiceInterface
      */
     public function getValidationMessages(): array
     {
-        return ['username.required' => Lang::get("global.required_field", ['field' => 'username']),
-            'password.required' => Lang::get("global.required_field", ['field' => 'password'])];
+        return [
+            'username.required' => Lang::get("global.required_field", ['field' => 'username']),
+            'password.required' => Lang::get("global.required_field", ['field' => 'password']),
+        ];
     }
 
     /**
@@ -113,6 +121,10 @@ class UserLogin implements UserServiceInterface
             $exception = new ServiceValidationException();
             $exception->setValidationErrors($this->validateErrors);
             throw $exception;
+        }
+
+        if (isset($this->userData['context'])) {
+            $this->context = $this->userData['context'];
         }
 
         if ($this->events) {
@@ -181,64 +193,87 @@ class UserLogin implements UserServiceInterface
             $this->user->attributes->save();
         }
 
-        // this user has been blocked by an admin, so no way he's loggin in!
-        if ($this->user->attributes->blocked == '1') {
-            if(!defined('NO_SESSION')) {
-                @session_destroy();
-                session_unset();
+        try {
+            // this user has been blocked by an admin, so no way he's loggin in!
+            if ($this->user->attributes->blocked == '1') {
+                throw new ServiceActionException(\Lang::get('global.login_processor_blocked1'));
             }
-            throw new ServiceActionException(\Lang::get('global.login_processor_blocked1'));
-        }
 
-        if ($this->user->attributes->verified != 1) {
-            if(!defined('NO_SESSION')) {
-                @session_destroy();
-                session_unset();
+            if ($this->user->attributes->verified != 1) {
+                throw new ServiceActionException(\Lang::get('global.login_processor_verified'));
             }
-            throw new ServiceActionException(\Lang::get('global.login_processor_verified'));
-        }
 
-        // blockuntil: this user has a block until date
-        if ($this->user->attributes->blockeduntil > time()) {
-            if(!defined('NO_SESSION')) {
-                @session_destroy();
-                session_unset();
+            // blockuntil: this user has a block until date
+            if ($this->user->attributes->blockeduntil > time()) {
+                throw new ServiceActionException(\Lang::get('global.login_processor_blocked2'));
             }
-            throw new ServiceActionException(\Lang::get('global.login_processor_blocked2'));
-        }
 
-        // blockafter: this user has a block after date
-        if ($this->user->attributes->blockedafter > 0 && $this->user->attributes->blockedafter < time()) {
-            if(!defined('NO_SESSION')) {
-                @session_destroy();
-                session_unset();
+            // blockafter: this user has a block after date
+            if ($this->user->attributes->blockedafter > 0 && $this->user->attributes->blockedafter < time()) {
+                throw new ServiceActionException(\Lang::get('global.login_processor_blocked2'));
             }
-            throw new ServiceActionException(\Lang::get('global.login_processor_blocked2'));
-        }
 
-        // allowed ip
-        if (isset($this->userSettings['allowed_ip'])) {
-            if (($hostname = gethostbyaddr($_SERVER['REMOTE_ADDR'])) && ($hostname != $_SERVER['REMOTE_ADDR'])) {
-                if (gethostbyname($hostname) != $_SERVER['REMOTE_ADDR']) {
-                    throw new ServiceActionException(\Lang::get('global.login_processor_remotehost_ip'));
-                }
+            if (!$this->isUserHostCorrespondsToIP()) {
+                throw new ServiceActionException(\Lang::get('global.login_processor_remotehost_ip'));
             }
-            if (!in_array($_SERVER['REMOTE_ADDR'], array_filter(array_map('trim', explode(',', $this->userSettings['allowed_ip']))))) {
+
+            if (!$this->isUserHasAllowedIP()) {
                 throw new ServiceActionException(\Lang::get('global.login_processor_remote_ip'));
             }
-        }
 
-        // allowed days
-        if (isset($this->userSettings['allowed_days'])) {
-            $date = getdate();
-            $day = $date['wday'] + 1;
-            if (!in_array($day, explode(',', $this->userSettings['allowed_days']))) {
+            if (!$this->isUserAllowedToLogInToday()) {
                 throw new ServiceActionException(\Lang::get('global.login_processor_date'));
             }
+        } catch (ServiceActionException $e) {
+            $this->safelyDestroyUserSession();
+            throw $e;
         }
+
         return true;
     }
 
+    protected function isUserHostCorrespondsToIP(): bool
+    {
+        if (!isset($this->userSettings['allowed_ip'])) {
+            return true;
+        }
+
+        $remoteAddress = request()->server('REMOTE_ADDR');
+        $hostname = gethostbyaddr($remoteAddress);
+
+        if (!$hostname || $hostname == $remoteAddress) {
+            return false;
+        }
+
+        if (gethostbyname($hostname) == $remoteAddress) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function isUserHasAllowedIP()
+    {
+        if (!isset($this->userSettings['allowed_ip'])) {
+            return true;
+        }
+
+        $ips = array_filter(array_map('trim', explode(',', $this->userSettings['allowed_ip'])));
+
+        return in_array(request()->server('REMOTE_ADDR'), $ips);
+    }
+
+    protected function isUserAllowedToLogInToday()
+    {
+        if (!isset($this->userSettings['allowed_days'])) {
+            return true;
+        }
+
+        $date = getdate();
+        $day = $date['wday'] + 1;
+
+        return in_array($day, explode(',', $this->userSettings['allowed_days']));
+    }
 
     public function authProcess()
     {

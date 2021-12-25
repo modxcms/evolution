@@ -27,7 +27,7 @@ class MailSender
 	private $fromEmail;
 
 
-	public function __construct(Nette\Mail\IMailer $mailer, string $fromEmail = null)
+	public function __construct(Nette\Mail\IMailer $mailer, ?string $fromEmail = null)
 	{
 		$this->mailer = $mailer;
 		$this->fromEmail = $fromEmail;
@@ -46,9 +46,11 @@ class MailSender
 		if ($this->fromEmail || Nette\Utils\Validators::isEmail("noreply@$host")) {
 			$mail->setFrom($this->fromEmail ?: "noreply@$host");
 		}
+
 		foreach (explode(',', $email) as $item) {
 			$mail->addTo(trim($item));
 		}
+
 		$mail->setSubject('PHP: An error occurred on the server ' . $host);
 		$mail->setBody(Tracy\Logger::formatMessage($message) . "\n\nsource: " . Tracy\Helpers::getSource());
 
