@@ -17,7 +17,7 @@ class Search extends AbstractController implements ManagerTheme\PageControllerIn
     public function canView(): bool
     {
         return $this->managerTheme->getCore()
-            ->hasPermission('settings');
+            ->hasPermission('view_document');
     }
 
     public function checkLocked(): ?string
@@ -137,7 +137,7 @@ class Search extends AbstractController implements ManagerTheme\PageControllerIn
             $mgrRole = (isset ($_SESSION['mgrRole']) && $_SESSION['mgrRole'] == 1) ? 1 : 0;
             if ($mgrRole != 1) {
                 if (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) {
-                    $searchQuery = $searchQuery->join('document_groups', 'site_content.id', '=', 'document_groups.document')
+                    $searchQuery = $searchQuery->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document')
                         ->where(function ($query) use ($searchfields) {
                             $query->where('privatemgr', 0)
                                 ->orWhereIn('document_group', $_SESSION['mgrDocgroups']);
@@ -177,7 +177,7 @@ class Search extends AbstractController implements ManagerTheme\PageControllerIn
             if ($result['type'] == 'reference') {
                 $result['iconClass'] .= $this->managerTheme->getStyle('tree_linkgo');
             } elseif ($result['isfolder'] == 0) {
-                $result['iconClass'] .= isset($icons[$result['contenttype']]) ? $icons[$result['contenttype']] : $this->managerTheme->getStyle('icon_document');
+                $result['iconClass'] .= isset($result['contenttype'], $icons[$result['contenttype']]) ? $icons[$result['contenttype']] : $this->managerTheme->getStyle('icon_document');
             } else {
                 $result['iconClass'] .= $this->managerTheme->getStyle('icon_folder');
             }
