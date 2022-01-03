@@ -237,6 +237,7 @@ class ManagerTheme implements ManagerThemeInterface
         $this->lexicon = $_lang;
         $this->langName = $lang;
         $this->lang = $modx_lang_attribute;
+        app()->setLocale($lang);
         $this->setTextDir($modx_textdir);
         $this->setCharset($modx_manager_charset);
         $this->getCore()->setConfig('lang_code', $this->getLang());
