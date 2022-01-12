@@ -1,6 +1,25 @@
 This file shows the changes in recent releases of Evolution CMS. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+Evolution CMS 3.1.8 (Jan 05, 2022)
+* [GitHub: 0a0bbff33] - core (fix) lang in template (Serious)
+* [GitHub: 740755d75] - core (fix) when user blockeduntil and blockedafter show info in global table fix #1784 (Serious)
+* [GitHub: bbca383b4] - core (fix) search for all user who can view document fix #2015 (Serious)
+* [GitHub: ace27c8ee] - update composer (dmi3yy)
+* [GitHub: c798659aa] - [FIX] PHP 8.1 Deprecated: Function str_replace() and trim() is deprecated. (Serhii Kornelyuk)
+* [GitHub: 18fc2e883] - [FIX] PHP 8.1 Deprecated: Function strftime() is deprecated in settings and dataGrid (Serhii Kornelyuk)
+* [GitHub: 520b1539a] - [FIX] PHP 8.1 Deprecated: Function strftime() is deprecated (Serhii Kornelyuk)
+* [GitHub: c4a34fd18] - check that request is set (mnoskov)
+* [GitHub: e9ea41236] - [FIX] Deprecated: Function strftime() is deprecated in /www/public/core/src/Core.php on line 4639 (Serhii Kornelyuk)
+* [GitHub: f2c36d6dc] - core (fix) Added controller Modules (s.kochin)
+* [GitHub: 1ec509628] - core (add) Added controller Modules (s.kochin)
+* [GitHub: 12ed837b8] - [F] missing Date import for functions now and today (mnoskov)
+* [GitHub: 6dad9783e] - PHP Notice: Undefined variable: path_parts in .../www/core/src/HelperProcessor.php:26 (Kamil)
+* [GitHub: f39547c46] - Update artisan (Ser1ous)
+* [GitHub: 065a5c51d] - fix laravel session (mnoskov)
+* [GitHub: 321daeff4] - Update Core.php (Ser1ous)
+
+
 Evolution CMS 3.1.7 (Oct 06, 2021)
 * [GitHub: d8f3cf066] - update composer, delete i-rocky/eloquent-dynamic-relation (Dmi3yy)
 * [GitHub: f4e12443a] - revert ht.access (Dmi3yy)
