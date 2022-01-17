@@ -11,7 +11,7 @@ class Debugger extends BaseDebugger
         set_error_handler([__CLASS__, 'errorHandler']);
     }
 
-    public static function errorHandler(int $severity, string $message, string $file, int $line, ?array $context = []): ?bool
+    public static function errorHandler(int $severity, string $message, string $file, int $line, ?array $context = []): bool
     {
         if (!empty(evolutionCMS()->currentSnippet)) {
             $file = 'Snippet: ' . evolutionCMS()->currentSnippet;
