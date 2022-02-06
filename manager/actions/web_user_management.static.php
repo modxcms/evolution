@@ -124,7 +124,7 @@ echo $cm->render();
 				<div class="table-responsive">
 					<?php
                     $managerUsers = \EvolutionCMS\Models\User::query()
-                        ->select('users.id', 'users.username', 'user_attributes.fullname', 'user_attributes.email', 'user_attributes.blocked', 'user_attributes.thislogin', 'user_attributes.logincount')
+                        ->select('users.id', 'users.username', 'user_attributes.fullname', 'user_attributes.email', 'user_attributes.blocked', 'user_attributes.thislogin', 'user_attributes.logincount', 'user_attributes.blockeduntil', 'user_attributes.blockedafter')
                         ->join('user_attributes', 'user_attributes.internalKey', '=', 'users.id')
                         ->orderBy('users.username', 'ASC');
                     $where = "";
@@ -141,7 +141,7 @@ echo $cm->render();
 					$grd->noRecordMsg = $_lang["no_records_found"];
 					$grd->cssClass = "table data";
 					$grd->columnHeaderClass = "tableHeader";
-                    $grd->prepareResult = ['blocked'=>[1=>$_lang['yes'],0=>'-']];
+                    $grd->prepareResult = ['blocked'=>[1=>$_lang['yes'],0=>'-', '__checktime' => ['blockeduntil', 'blockedafter']]];
 					$grd->itemClass = "tableItem";
 					$grd->altItemClass = "tableAltItem";
 					$grd->fields = "id,username,fullname,email,thislogin,logincount,blocked";

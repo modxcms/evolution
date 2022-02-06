@@ -1,4 +1,5 @@
-<?php namespace EvolutionCMS\Support;
+<?php
+namespace EvolutionCMS\Support;
 
 use EvolutionCMS\Interfaces\DataGridInterface;
 use Illuminate\Database\Query\Builder;
@@ -182,10 +183,15 @@ class DataGrid implements DataGridInterface
                         $tblRows .= $this->RenderRowFnc($r + 1, $row);
                     }
                 }
-
             } else {
                 if (!$this->pager) {
-                    $this->pager = new DataSetPager($this->id, $this->ds, $this->pageSize, $this->pageNumber, $this->prepareResult);
+                    $this->pager = new DataSetPager(
+                        $this->id,
+                        $this->ds,
+                        $this->pageSize,
+                        $this->pageNumber,
+                        $this->prepareResult
+                    );
                     $this->pager->setRenderRowFnc($this); // pass this object
                     $this->pager->cssStyle = $pagerStyle;
                     $this->pager->cssClass = $pagerClass;
@@ -208,16 +214,23 @@ class DataGrid implements DataGridInterface
             $o .= "<tr><td bgcolor='#ffffff' colspan='" . $this->_colcount . "'>" . $this->header . "</td></tr>";
         }
         if (!empty($tblPager) && $ptop) {
-            $o .= "<tr><td align='" . (substr($this->pagerLocation, -4) == "left" ? "left" : "right") . "' $pagerClass $pagerStyle colspan='" . $this->_colcount . "'>" . $tblPager . "&nbsp;</td></tr>";
+            $o .= "<tr><td align='" . (substr(
+                    $this->pagerLocation,
+                    -4
+                ) == "left" ? "left" : "right") . "' $pagerClass $pagerStyle colspan='" . $this->_colcount . "'>" . $tblPager . "&nbsp;</td></tr>";
         }
         $o .= $tblColHdr . $tblRows;
         if (!empty($tblPager) && $pbot) {
-            $o .= "<tr><td align='" . (substr($this->pagerLocation, -4) == "left" ? "left" : "right") . "' $pagerClass $pagerStyle colspan='" . $this->_colcount . "'>" . $tblPager . "&nbsp;</td></tr>";
+            $o .= "<tr><td align='" . (substr(
+                    $this->pagerLocation,
+                    -4
+                ) == "left" ? "left" : "right") . "' $pagerClass $pagerStyle colspan='" . $this->_colcount . "'>" . $tblPager . "&nbsp;</td></tr>";
         }
         if ($this->footer) {
             $o .= "<tr><td bgcolor='#ffffff' colspan='" . $this->_colcount . "'>" . $this->footer . "</td></tr>";
         }
         $o .= $tblEnd;
+
         return $o;
     }
 
@@ -229,8 +242,11 @@ class DataGrid implements DataGridInterface
             if (isset($row[$key]) && isset($value[$row[$key]])) {
                 $row[$key] = $value[$row[$key]];
             }
-            if($row[$key] === '' && isset($value['__'])){
+            if ($row[$key] === '' && isset($value['__'])) {
                 $row[$key] = $value['__'];
+            }
+            if (isset($value['__checktime'])) {
+                $row[$key] = $this->checkTime($value['__checktime'], $row);
             }
         }
         if ($this->_alt == 0) {
@@ -259,6 +275,7 @@ class DataGrid implements DataGridInterface
             $o .= "<td $colStyle $Class" . ($align ? " align='$align'" : "") . ($color ? " bgcolor='$color'" : "") . ($nowrap ? " nowrap='$nowrap'" : "") . ($width ? " width='$width'" : "") . ">$value</td>";
         }
         $o .= "</tr>\n";
+
         return $o;
     }
 
@@ -350,8 +367,31 @@ class DataGrid implements DataGridInterface
                     }
                 }
                 break;
-
         }
+
+        return $value;
+    }
+
+    private function checkTime($__checktime, $row)
+    {
+        $value = '';
+        foreach ($__checktime as $checkTime) {
+            if ($row[$checkTime] != 0) {
+                switch ($checkTime) {
+                    case 'blockedafter':
+                        if ($row[$checkTime] < time()) {
+                            $value = __('global.yes');
+                        }
+                        break;
+                    case 'blockeduntil':
+                        if ($row[$checkTime] > time()) {
+                            $value = __('global.yes');
+                        }
+                        break;
+                }
+            }
+        }
+
         return $value;
     }
 }

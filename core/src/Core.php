@@ -4693,6 +4693,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $strTime = strftime($dateFormat, $timestamp);
             } elseif ($mode === 'formatOnly') {
                 $strTime = $dateFormat;
+            } elseif ($mode === 'timeOnly') {
+                $strTime = $dateFormat;
             }
         }
 
