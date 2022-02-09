@@ -23,4 +23,4 @@ Allow: /assets/snippets/*.js
 # Host: example.com
 
 # For sitemaps.xml autodiscovery. Uncomment if you have one:
-# Sitemap: http://example.com/sitemap.xml
+# Sitemap: https://example.com/sitemap.xml
