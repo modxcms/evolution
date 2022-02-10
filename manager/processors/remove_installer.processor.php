@@ -50,6 +50,6 @@ if ($msg) {
     echo "<script>alert('" . addslashes($msg) . "');</script>";
 }
 
-echo "<script>window.location='../index.php?a=2';</script>";
+echo "<script>window.location='../#?a=2';</script>";
 
 
