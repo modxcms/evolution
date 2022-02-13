@@ -156,7 +156,6 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
             $this['env'] = $this['config']->get('app.env',  'production');
         }
 
-        date_default_timezone_set($config->get('app.timezone', 'UTC'));
         mb_internal_encoding('UTF-8');
 
         Facade::clearResolvedInstances();
