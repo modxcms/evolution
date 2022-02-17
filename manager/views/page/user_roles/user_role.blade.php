@@ -4,7 +4,7 @@
     <form name="userform" method="post" action="index.php" enctype="multipart/form-data">
         <input type="hidden" name="a" value="36">
         <input type="hidden" name="mode" value="<?= $modx->getManagerApi()->action ?>">
-        <input type="hidden" name="id" value="<?= isset($_GET['id']) ? $_GET['id'] : '' ?>">
+        <input type="hidden" name="id" value="<?= isset($_GET['id']) ? (int)$_GET['id'] : '' ?>">
 
         <h1>
             <i class="{{ $_style['icon_role'] }}"></i>@if(isset($role->name)){{$role->name}} <small>({{$role->id}})</small> @else {{ ManagerTheme::getLexicon('role_title') }}@endif
