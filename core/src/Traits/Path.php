@@ -83,10 +83,9 @@ trait Path
     /**
      * Get the path to the storage directory.
      *
-     * @param  string  $path
      * @return string
      */
-    public function storagePath($path = '')
+    public function storagePath()
     {
         return $this->storagePath ?: EVO_STORAGE_PATH;
     }
@@ -386,27 +385,6 @@ trait Path
      * @return void
      */
     public function terminate()
-    {
-
-    }
-
-    /**
-     * Register a terminating callback with the application.
-     *
-     * @param  callable|string  $callback
-     * @return \Illuminate\Contracts\Foundation\Application
-     */
-    public function terminating($callback)
-    {
-
-    }
-
-    /**
-     * Get an instance of the maintenance mode manager implementation.
-     *
-     * @return \Illuminate\Contracts\Foundation\MaintenanceMode
-     */
-    public function maintenanceMode()
     {
 
     }
