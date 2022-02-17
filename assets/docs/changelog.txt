@@ -1,6 +1,19 @@
 This file shows the changes in recent releases of Evolution CMS. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+Evolution CMS 3.1.9 (Feb 17, 2022)
+* [GitHub: 4daa05017] - Security fix Reflected XSS - RCE in Manager Panel, thanks Positive Technologies (dmi3yy)
+* [GitHub: b4f46da0a] - fix for 3.1.8 (dmi3yy)
+* [GitHub: 25ef5b193] - Update vendor folder (dmi3yy)
+* [GitHub: 939f452a9] - update tracy. clear vendor (dmi3yy)
+* [GitHub: 5eaee0269] - Update AbstractLaravel.php (zatomant)
+* [GitHub: 079117fb8] - Update app.php (zatomant)
+* [GitHub: 10ad672a9] - link change: http -> https (lazar2038)
+* [GitHub: ac9b1073d] - PHP8 Error : Undefined array key "richtext" fix (lazar2038)
+* [GitHub: 20ec67754] - Update remove_installer.processor.php (Martin Plavala)
+* [GitHub: f7ae313ba] - Update Debugger.php (lazar2038)
+
+
 Evolution CMS 3.1.8 (Jan 05, 2022)
 * [GitHub: 0a0bbff33] - core (fix) lang in template (Serious)
 * [GitHub: 740755d75] - core (fix) when user blockeduntil and blockedafter show info in global table fix #1784 (Serious)
