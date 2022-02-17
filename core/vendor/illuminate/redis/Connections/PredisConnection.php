@@ -44,7 +44,7 @@ class PredisConnection extends Connection implements ConnectionContract
 
         foreach ($loop as $message) {
             if ($message->kind === 'message' || $message->kind === 'pmessage') {
-                $callback($message->payload, $message->channel);
+                call_user_func($callback, $message->payload, $message->channel);
             }
         }
 

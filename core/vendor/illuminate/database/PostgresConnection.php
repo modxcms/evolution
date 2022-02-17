@@ -2,6 +2,8 @@
 
 namespace Illuminate\Database;
 
+use Doctrine\DBAL\Driver\PDOPgSql\Driver as DoctrineDriver;
+use Doctrine\DBAL\Version;
 use Illuminate\Database\PDO\PostgresDriver;
 use Illuminate\Database\Query\Grammars\PostgresGrammar as QueryGrammar;
 use Illuminate\Database\Query\Processors\PostgresProcessor;
@@ -98,10 +100,10 @@ class PostgresConnection extends Connection
     /**
      * Get the Doctrine DBAL driver.
      *
-     * @return \Illuminate\Database\PDO\PostgresDriver
+     * @return \Doctrine\DBAL\Driver\PDOPgSql\Driver|\Illuminate\Database\PDO\PostgresDriver
      */
     protected function getDoctrineDriver()
     {
-        return new PostgresDriver;
+        return class_exists(Version::class) ? new DoctrineDriver : new PostgresDriver;
     }
 }

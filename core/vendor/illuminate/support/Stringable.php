@@ -196,18 +196,6 @@ class Stringable implements JsonSerializable
     }
 
     /**
-     * Extracts an excerpt from text that matches the first instance of a phrase.
-     *
-     * @param  string  $phrase
-     * @param  array  $options
-     * @return string|null
-     */
-    public function excerpt($phrase = '', $options = [])
-    {
-        return Str::excerpt($this->value, $phrase, $options);
-    }
-
-    /**
      * Explode the string into an array.
      *
      * @param  string  $delimiter
@@ -456,7 +444,7 @@ class Stringable implements JsonSerializable
      */
     public function pipe(callable $callback)
     {
-        return new static($callback($this));
+        return new static(call_user_func($callback, $this));
     }
 
     /**
@@ -522,7 +510,7 @@ class Stringable implements JsonSerializable
      */
     public function repeat(int $times)
     {
-        return new static(str_repeat($this->value, $times));
+        return new static(Str::repeat($this->value, $times));
     }
 
     /**
@@ -534,7 +522,7 @@ class Stringable implements JsonSerializable
      */
     public function replace($search, $replace)
     {
-        return new static(str_replace($search, $replace, $this->value));
+        return new static(Str::replace($search, $replace, $this->value));
     }
 
     /**
@@ -1005,31 +993,12 @@ class Stringable implements JsonSerializable
     }
 
     /**
-     * Get the underlying string value.
-     *
-     * @return string
-     */
-    public function value()
-    {
-        return $this->toString();
-    }
-
-    /**
-     * Get the underlying string value.
-     *
-     * @return string
-     */
-    public function toString()
-    {
-        return $this->value;
-    }
-
-    /**
      * Convert the object to a string when JSON encoded.
      *
      * @return string
      */
-    public function jsonSerialize(): string
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
     {
         return $this->__toString();
     }

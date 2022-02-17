@@ -77,7 +77,7 @@ class DataPart extends TextPart
     /**
      * @return $this
      */
-    public function asInline(): static
+    public function asInline()
     {
         return $this->setDisposition('inline');
     }
@@ -134,7 +134,10 @@ class DataPart extends TextPart
         }
     }
 
-    public function __sleep(): array
+    /**
+     * @return array
+     */
+    public function __sleep()
     {
         // converts the body to a string
         parent::__sleep();

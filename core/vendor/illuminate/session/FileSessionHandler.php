@@ -50,7 +50,8 @@ class FileSessionHandler implements SessionHandlerInterface
      *
      * @return bool
      */
-    public function open($savePath, $sessionName): bool
+    #[\ReturnTypeWillChange]
+    public function open($savePath, $sessionName)
     {
         return true;
     }
@@ -60,7 +61,8 @@ class FileSessionHandler implements SessionHandlerInterface
      *
      * @return bool
      */
-    public function close(): bool
+    #[\ReturnTypeWillChange]
+    public function close()
     {
         return true;
     }
@@ -70,11 +72,13 @@ class FileSessionHandler implements SessionHandlerInterface
      *
      * @return string|false
      */
-    public function read($sessionId): string|false
+    #[\ReturnTypeWillChange]
+    public function read($sessionId)
     {
-        if ($this->files->isFile($path = $this->path.'/'.$sessionId) &&
-            $this->files->lastModified($path) >= Carbon::now()->subMinutes($this->minutes)->getTimestamp()) {
-            return $this->files->sharedGet($path);
+        if ($this->files->isFile($path = $this->path.'/'.$sessionId)) {
+            if ($this->files->lastModified($path) >= Carbon::now()->subMinutes($this->minutes)->getTimestamp()) {
+                return $this->files->sharedGet($path);
+            }
         }
 
         return '';
@@ -85,7 +89,8 @@ class FileSessionHandler implements SessionHandlerInterface
      *
      * @return bool
      */
-    public function write($sessionId, $data): bool
+    #[\ReturnTypeWillChange]
+    public function write($sessionId, $data)
     {
         $this->files->put($this->path.'/'.$sessionId, $data, true);
 
@@ -97,7 +102,8 @@ class FileSessionHandler implements SessionHandlerInterface
      *
      * @return bool
      */
-    public function destroy($sessionId): bool
+    #[\ReturnTypeWillChange]
+    public function destroy($sessionId)
     {
         $this->files->delete($this->path.'/'.$sessionId);
 
@@ -107,9 +113,10 @@ class FileSessionHandler implements SessionHandlerInterface
     /**
      * {@inheritdoc}
      *
-     * @return int
+     * @return int|false
      */
-    public function gc($lifetime): int
+    #[\ReturnTypeWillChange]
+    public function gc($lifetime)
     {
         $files = Finder::create()
                     ->in($this->path)
@@ -117,13 +124,8 @@ class FileSessionHandler implements SessionHandlerInterface
                     ->ignoreDotFiles(true)
                     ->date('<= now - '.$lifetime.' seconds');
 
-        $deletedSessions = 0;
-
         foreach ($files as $file) {
             $this->files->delete($file->getRealPath());
-            $deletedSessions++;
         }
-
-        return $deletedSessions;
     }
 }

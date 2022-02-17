@@ -137,7 +137,7 @@ class Response implements ArrayAccess
      */
     public function effectiveUri()
     {
-        return $this->transferStats?->getEffectiveUri();
+        return optional($this->transferStats)->getEffectiveUri();
     }
 
     /**
@@ -252,7 +252,7 @@ class Response implements ArrayAccess
      */
     public function handlerStats()
     {
-        return $this->transferStats?->getHandlerStats() ?? [];
+        return optional($this->transferStats)->getHandlerStats() ?? [];
     }
 
     /**
@@ -331,7 +331,8 @@ class Response implements ArrayAccess
      * @param  string  $offset
      * @return bool
      */
-    public function offsetExists($offset): bool
+    #[\ReturnTypeWillChange]
+    public function offsetExists($offset)
     {
         return isset($this->json()[$offset]);
     }
@@ -342,7 +343,8 @@ class Response implements ArrayAccess
      * @param  string  $offset
      * @return mixed
      */
-    public function offsetGet($offset): mixed
+    #[\ReturnTypeWillChange]
+    public function offsetGet($offset)
     {
         return $this->json()[$offset];
     }
@@ -356,7 +358,8 @@ class Response implements ArrayAccess
      *
      * @throws \LogicException
      */
-    public function offsetSet($offset, $value): void
+    #[\ReturnTypeWillChange]
+    public function offsetSet($offset, $value)
     {
         throw new LogicException('Response data may not be mutated using array access.');
     }
@@ -369,7 +372,8 @@ class Response implements ArrayAccess
      *
      * @throws \LogicException
      */
-    public function offsetUnset($offset): void
+    #[\ReturnTypeWillChange]
+    public function offsetUnset($offset)
     {
         throw new LogicException('Response data may not be mutated using array access.');
     }

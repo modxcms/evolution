@@ -95,7 +95,7 @@ class StartSession
 
             return $this->handleStatefulRequest($request, $session, $next);
         } finally {
-            $lock?->release();
+            optional($lock)->release();
         }
     }
 
@@ -199,7 +199,7 @@ class StartSession
      */
     protected function storeCurrentUrl(Request $request, $session)
     {
-        if ($request->isMethod('GET') &&
+        if ($request->method() === 'GET' &&
             $request->route() instanceof Route &&
             ! $request->ajax() &&
             ! $request->prefetch()) {

@@ -4,6 +4,7 @@ namespace Illuminate\Database\Query\Grammars;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class PostgresGrammar extends Grammar
 {
@@ -21,16 +22,7 @@ class PostgresGrammar extends Grammar
     ];
 
     /**
-     * The grammar specific bit operators.
-     *
-     * @var array
-     */
-    protected $bitOperators = [
-        '~', '&', '|', '#', '<<', '>>', '<<=', '>>=',
-    ];
-
-    /**
-     * Compile a basic where clause.
+     * {@inheritdoc}
      *
      * @param  \Illuminate\Database\Query\Builder  $query
      * @param  array  $where
@@ -38,7 +30,7 @@ class PostgresGrammar extends Grammar
      */
     protected function whereBasic(Builder $query, $where)
     {
-        if (str_contains(strtolower($where['operator']), 'like')) {
+        if (Str::contains(strtolower($where['operator']), 'like')) {
             return sprintf(
                 '%s::text %s %s',
                 $this->wrap($where['column']),
@@ -211,7 +203,7 @@ class PostgresGrammar extends Grammar
     {
         $column = str_replace('->>', '->', $this->wrap($column));
 
-        return 'jsonb_array_length(('.$column.')::jsonb) '.$operator.' '.$value;
+        return 'json_array_length(('.$column.')::json) '.$operator.' '.$value;
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace Illuminate\Validation;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class ValidationData
 {
@@ -35,7 +36,7 @@ class ValidationData
 
         $data = static::extractDataFromPath($explicitPath, $masterData);
 
-        if (! str_contains($attribute, '*') || str_ends_with($attribute, '*')) {
+        if (! Str::contains($attribute, '*') || Str::endsWith($attribute, '*')) {
             return $data;
         }
 

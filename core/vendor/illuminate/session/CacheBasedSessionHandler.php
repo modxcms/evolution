@@ -39,7 +39,8 @@ class CacheBasedSessionHandler implements SessionHandlerInterface
      *
      * @return bool
      */
-    public function open($savePath, $sessionName): bool
+    #[\ReturnTypeWillChange]
+    public function open($savePath, $sessionName)
     {
         return true;
     }
@@ -49,7 +50,8 @@ class CacheBasedSessionHandler implements SessionHandlerInterface
      *
      * @return bool
      */
-    public function close(): bool
+    #[\ReturnTypeWillChange]
+    public function close()
     {
         return true;
     }
@@ -57,9 +59,10 @@ class CacheBasedSessionHandler implements SessionHandlerInterface
     /**
      * {@inheritdoc}
      *
-     * @return string
+     * @return string|false
      */
-    public function read($sessionId): string
+    #[\ReturnTypeWillChange]
+    public function read($sessionId)
     {
         return $this->cache->get($sessionId, '');
     }
@@ -69,7 +72,8 @@ class CacheBasedSessionHandler implements SessionHandlerInterface
      *
      * @return bool
      */
-    public function write($sessionId, $data): bool
+    #[\ReturnTypeWillChange]
+    public function write($sessionId, $data)
     {
         return $this->cache->put($sessionId, $data, $this->minutes * 60);
     }
@@ -79,7 +83,8 @@ class CacheBasedSessionHandler implements SessionHandlerInterface
      *
      * @return bool
      */
-    public function destroy($sessionId): bool
+    #[\ReturnTypeWillChange]
+    public function destroy($sessionId)
     {
         return $this->cache->forget($sessionId);
     }
@@ -87,11 +92,12 @@ class CacheBasedSessionHandler implements SessionHandlerInterface
     /**
      * {@inheritdoc}
      *
-     * @return int
+     * @return int|false
      */
-    public function gc($lifetime): int
+    #[\ReturnTypeWillChange]
+    public function gc($lifetime)
     {
-        return 0;
+        return true;
     }
 
     /**

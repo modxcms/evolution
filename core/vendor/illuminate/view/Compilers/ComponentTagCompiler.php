@@ -231,9 +231,6 @@ class ComponentTagCompiler
         }
 
         return "##BEGIN-COMPONENT-CLASS##@component('{$class}', '{$component}', [".$this->attributesToString($parameters, $escapeBound = false).'])
-<?php if (isset($attributes) && $constructor = (new ReflectionClass('.$class.'::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
 <?php $component->withAttributes(['.$this->attributesToString($attributes->all(), $escapeAttributes = $class !== DynamicComponent::class).']); ?>';
     }
 
@@ -349,7 +346,7 @@ class ComponentTagCompiler
 
         $delimiter = ViewFinderInterface::HINT_PATH_DELIMITER;
 
-        if (str_contains($name, $delimiter)) {
+        if (Str::contains($name, $delimiter)) {
             return Str::replaceFirst($delimiter, $delimiter.$prefix, $name);
         }
 
@@ -406,8 +403,8 @@ class ComponentTagCompiler
             <
                 \s*
                 x[\-\:]slot
-                (?:\:(?<inlineName>\w+))?
-                (?:\s+(:?)name=(?<name>(\"[^\"]+\"|\\\'[^\\\']+\\\'|[^\s>]+)))?
+                \s+
+                (:?)name=(?<name>(\"[^\"]+\"|\\\'[^\\\']+\\\'|[^\s>]+))
                 (?<attributes>
                     (?:
                         \s+
@@ -438,9 +435,9 @@ class ComponentTagCompiler
         /x";
 
         $value = preg_replace_callback($pattern, function ($matches) {
-            $name = $this->stripQuotes($matches['inlineName'] ?: $matches['name']);
+            $name = $this->stripQuotes($matches['name']);
 
-            if ($matches[2] !== ':') {
+            if ($matches[1] !== ':') {
                 $name = "'{$name}'";
             }
 
@@ -498,7 +495,7 @@ class ComponentTagCompiler
 
             $value = $this->stripQuotes($value);
 
-            if (str_starts_with($attribute, 'bind:')) {
+            if (Str::startsWith($attribute, 'bind:')) {
                 $attribute = Str::after($attribute, 'bind:');
 
                 $this->boundAttributes[$attribute] = true;
@@ -506,7 +503,7 @@ class ComponentTagCompiler
                 $value = "'".$this->compileAttributeEchos($value)."'";
             }
 
-            if (str_starts_with($attribute, '::')) {
+            if (Str::startsWith($attribute, '::')) {
                 $attribute = substr($attribute, 1);
             }
 

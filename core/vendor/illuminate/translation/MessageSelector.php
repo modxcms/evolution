@@ -2,6 +2,8 @@
 
 namespace Illuminate\Translation;
 
+use Illuminate\Support\Str;
+
 class MessageSelector
 {
     /**
@@ -66,7 +68,7 @@ class MessageSelector
 
         $value = $matches[2];
 
-        if (str_contains($condition, ',')) {
+        if (Str::contains($condition, ',')) {
             [$from, $to] = explode(',', $condition, 2);
 
             if ($to === '*' && $number >= $from) {

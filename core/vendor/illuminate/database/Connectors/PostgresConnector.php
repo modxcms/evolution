@@ -42,7 +42,7 @@ class PostgresConnector extends Connector implements ConnectorInterface
         // database. Setting this DB timezone is an optional configuration item.
         $this->configureTimezone($connection, $config);
 
-        $this->configureSearchPath($connection, $config);
+        $this->configureSchema($connection, $config);
 
         // Postgres allows an application_name to be set by the user and this name is
         // used to when monitoring the application with pg_stat_activity. So we'll
@@ -101,59 +101,38 @@ class PostgresConnector extends Connector implements ConnectorInterface
     }
 
     /**
-     * Set the "search_path" on the database connection.
+     * Set the schema on the connection.
      *
      * @param  \PDO  $connection
      * @param  array  $config
      * @return void
      */
-    protected function configureSearchPath($connection, $config)
+    protected function configureSchema($connection, $config)
     {
-        if (isset($config['search_path']) || isset($config['schema'])) {
-            $searchPath = $this->quoteSearchPath(
-                $this->parseSearchPath($config['search_path'] ?? $config['schema'])
-            );
+        if (isset($config['schema'])) {
+            $schema = $this->formatSchema($config['schema']);
 
-            $connection->prepare("set search_path to {$searchPath}")->execute();
+            $connection->prepare("set search_path to {$schema}")->execute();
         }
     }
 
     /**
-     * Parse the "search_path" configuration value into an array.
+     * Format the schema for the DSN.
      *
-     * @param  string|array  $searchPath
-     * @return array
-     */
-    protected function parseSearchPath($searchPath)
-    {
-        if (is_string($searchPath)) {
-            preg_match_all('/[a-zA-z0-9$]{1,}/i', $searchPath, $matches);
-
-            $searchPath = $matches[0];
-        }
-
-        $searchPath = $searchPath ?? [];
-
-        array_walk($searchPath, function (&$schema) {
-            $schema = trim($schema, '\'"');
-        });
-
-        return $searchPath;
-    }
-
-    /**
-     * Format the search path for the DSN.
-     *
-     * @param  array|string  $searchPath
+     * @param  array|string  $schema
      * @return string
      */
-    protected function quoteSearchPath($searchPath)
+    protected function formatSchema($schema)
     {
-        return count($searchPath) === 1 ? '"'.$searchPath[0].'"' : '"'.implode('", "', $searchPath).'"';
+        if (is_array($schema)) {
+            return '"'.implode('", "', $schema).'"';
+        }
+
+        return '"'.$schema.'"';
     }
 
     /**
-     * Set the application name on the connection.
+     * Set the schema on the connection.
      *
      * @param  \PDO  $connection
      * @param  array  $config

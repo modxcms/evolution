@@ -26,8 +26,15 @@ class MetadataBag implements SessionBagInterface
     public const UPDATED = 'u';
     public const LIFETIME = 'l';
 
-    private string $name = '__metadata';
-    private string $storageKey;
+    /**
+     * @var string
+     */
+    private $name = '__metadata';
+
+    /**
+     * @var string
+     */
+    private $storageKey;
 
     /**
      * @var array
@@ -36,10 +43,15 @@ class MetadataBag implements SessionBagInterface
 
     /**
      * Unix timestamp.
+     *
+     * @var int
      */
-    private int $lastUsed;
+    private $lastUsed;
 
-    private int $updateThreshold;
+    /**
+     * @var int
+     */
+    private $updateThreshold;
 
     /**
      * @param string $storageKey      The key used to store bag in the session
@@ -72,8 +84,10 @@ class MetadataBag implements SessionBagInterface
 
     /**
      * Gets the lifetime that the session cookie was set with.
+     *
+     * @return int
      */
-    public function getLifetime(): int
+    public function getLifetime()
     {
         return $this->meta[self::LIFETIME];
     }
@@ -94,7 +108,7 @@ class MetadataBag implements SessionBagInterface
     /**
      * {@inheritdoc}
      */
-    public function getStorageKey(): string
+    public function getStorageKey()
     {
         return $this->storageKey;
     }
@@ -104,7 +118,7 @@ class MetadataBag implements SessionBagInterface
      *
      * @return int Unix timestamp
      */
-    public function getCreated(): int
+    public function getCreated()
     {
         return $this->meta[self::CREATED];
     }
@@ -114,7 +128,7 @@ class MetadataBag implements SessionBagInterface
      *
      * @return int Unix timestamp
      */
-    public function getLastUsed(): int
+    public function getLastUsed()
     {
         return $this->lastUsed;
     }
@@ -122,7 +136,7 @@ class MetadataBag implements SessionBagInterface
     /**
      * {@inheritdoc}
      */
-    public function clear(): mixed
+    public function clear()
     {
         // nothing to do
         return null;
@@ -131,7 +145,7 @@ class MetadataBag implements SessionBagInterface
     /**
      * {@inheritdoc}
      */
-    public function getName(): string
+    public function getName()
     {
         return $this->name;
     }

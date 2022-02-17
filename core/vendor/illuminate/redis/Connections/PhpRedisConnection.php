@@ -5,6 +5,7 @@ namespace Illuminate\Redis\Connections;
 use Closure;
 use Illuminate\Contracts\Redis\Connection as ConnectionContract;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Redis;
 use RedisException;
 
@@ -531,7 +532,7 @@ class PhpRedisConnection extends Connection implements ConnectionContract
         try {
             return parent::command($method, $parameters);
         } catch (RedisException $e) {
-            if (str_contains($e->getMessage(), 'went away')) {
+            if (Str::contains($e->getMessage(), 'went away')) {
                 $this->client = $this->connector ? call_user_func($this->connector) : $this->client;
             }
 

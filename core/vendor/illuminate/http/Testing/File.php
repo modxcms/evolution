@@ -107,7 +107,8 @@ class File extends UploadedFile
      *
      * @return int
      */
-    public function getSize(): int
+    #[\ReturnTypeWillChange]
+    public function getSize()
     {
         return $this->sizeToReport ?: parent::getSize();
     }
@@ -130,7 +131,7 @@ class File extends UploadedFile
      *
      * @return string
      */
-    public function getMimeType(): string
+    public function getMimeType()
     {
         return $this->mimeTypeToReport ?: MimeType::from($this->name);
     }

@@ -462,7 +462,8 @@ class Batch implements Arrayable, JsonSerializable
      *
      * @return array
      */
-    public function jsonSerialize(): array
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
     {
         return $this->toArray();
     }

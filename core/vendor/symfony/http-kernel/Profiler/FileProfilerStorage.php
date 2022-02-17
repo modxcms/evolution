@@ -20,8 +20,10 @@ class FileProfilerStorage implements ProfilerStorageInterface
 {
     /**
      * Folder where profiler data are stored.
+     *
+     * @var string
      */
-    private string $folder;
+    private $folder;
 
     /**
      * Constructs the file storage using a "dsn-like" path.
@@ -197,8 +199,10 @@ class FileProfilerStorage implements ProfilerStorageInterface
 
     /**
      * Gets filename to store data, associated to the token.
+     *
+     * @return string
      */
-    protected function getFilename(string $token): string
+    protected function getFilename(string $token)
     {
         // Uses 4 last characters, because first are mostly the same.
         $folderA = substr($token, -2, 2);
@@ -209,8 +213,10 @@ class FileProfilerStorage implements ProfilerStorageInterface
 
     /**
      * Gets the index filename.
+     *
+     * @return string
      */
-    protected function getIndexFilename(): string
+    protected function getIndexFilename()
     {
         return $this->folder.'/index.csv';
     }
@@ -221,8 +227,10 @@ class FileProfilerStorage implements ProfilerStorageInterface
      * This function automatically skips the empty lines and do not include the line return in result value.
      *
      * @param resource $file The file resource, with the pointer placed at the end of the line to read
+     *
+     * @return mixed
      */
-    protected function readLineFromFile($file): mixed
+    protected function readLineFromFile($file)
     {
         $line = '';
         $position = ftell($file);

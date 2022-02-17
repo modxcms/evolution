@@ -2,8 +2,6 @@
 
 namespace Illuminate\View\Compilers\Concerns;
 
-use Illuminate\Support\Str;
-
 trait CompilesStacks
 {
     /**
@@ -29,24 +27,6 @@ trait CompilesStacks
     }
 
     /**
-     * Compile the push-once statements into valid PHP.
-     *
-     * @param  string  $expression
-     * @return string
-     */
-    protected function compilePushOnce($expression)
-    {
-        $parts = explode(',', $this->stripParentheses($expression), 2);
-
-        [$stack, $id] = [$parts[0], $parts[1] ?? null];
-
-        $id = trim($id) ?: "'".(string) Str::uuid()."'";
-
-        return '<?php if (! $__env->hasRenderedOnce('.$id.')): $__env->markAsRenderedOnce('.$id.');
-$__env->startPush('.$stack.'); ?>';
-    }
-
-    /**
      * Compile the end-push statements into valid PHP.
      *
      * @return string
@@ -54,16 +34,6 @@ $__env->startPush('.$stack.'); ?>';
     protected function compileEndpush()
     {
         return '<?php $__env->stopPush(); ?>';
-    }
-
-    /**
-     * Compile the end-push-once statements into valid PHP.
-     *
-     * @return string
-     */
-    protected function compileEndpushOnce()
-    {
-        return '<?php $__env->stopPush(); endif; ?>';
     }
 
     /**
@@ -78,24 +48,6 @@ $__env->startPush('.$stack.'); ?>';
     }
 
     /**
-     * Compile the prepend-once statements into valid PHP.
-     *
-     * @param  string  $expression
-     * @return string
-     */
-    protected function compilePrependOnce($expression)
-    {
-        $parts = explode(',', $this->stripParentheses($expression), 2);
-
-        [$stack, $id] = [$parts[0], $parts[1] ?? null];
-
-        $id = trim($id) ?: "'".(string) Str::uuid()."'";
-
-        return '<?php if (! $__env->hasRenderedOnce('.$id.')): $__env->markAsRenderedOnce('.$id.');
-$__env->startPrepend('.$stack.'); ?>';
-    }
-
-    /**
      * Compile the end-prepend statements into valid PHP.
      *
      * @return string
@@ -103,15 +55,5 @@ $__env->startPrepend('.$stack.'); ?>';
     protected function compileEndprepend()
     {
         return '<?php $__env->stopPrepend(); ?>';
-    }
-
-    /**
-     * Compile the end-prepend-once statements into valid PHP.
-     *
-     * @return string
-     */
-    protected function compileEndprependOnce()
-    {
-        return '<?php $__env->stopPrepend(); endif; ?>';
     }
 }

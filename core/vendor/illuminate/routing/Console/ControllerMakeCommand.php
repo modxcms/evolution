@@ -19,15 +19,6 @@ class ControllerMakeCommand extends GeneratorCommand
     protected $name = 'make:controller';
 
     /**
-     * The name of the console command.
-     *
-     * This name is used to identify the command during lazy loading.
-     *
-     * @var string|null
-     */
-    protected static $defaultName = 'make:controller';
-
-    /**
      * The console command description.
      *
      * @var string
@@ -135,9 +126,10 @@ class ControllerMakeCommand extends GeneratorCommand
     {
         $parentModelClass = $this->parseModel($this->option('parent'));
 
-        if (! class_exists($parentModelClass) &&
-            $this->confirm("A {$parentModelClass} model does not exist. Do you want to generate it?", true)) {
-            $this->call('make:model', ['name' => $parentModelClass]);
+        if (! class_exists($parentModelClass)) {
+            if ($this->confirm("A {$parentModelClass} model does not exist. Do you want to generate it?", true)) {
+                $this->call('make:model', ['name' => $parentModelClass]);
+            }
         }
 
         return [
@@ -163,8 +155,10 @@ class ControllerMakeCommand extends GeneratorCommand
     {
         $modelClass = $this->parseModel($this->option('model'));
 
-        if (! class_exists($modelClass) && $this->confirm("A {$modelClass} model does not exist. Do you want to generate it?", true)) {
-            $this->call('make:model', ['name' => $modelClass]);
+        if (! class_exists($modelClass)) {
+            if ($this->confirm("A {$modelClass} model does not exist. Do you want to generate it?", true)) {
+                $this->call('make:model', ['name' => $modelClass]);
+            }
         }
 
         $replace = $this->buildFormRequestReplacements($replace, $modelClass);
@@ -243,7 +237,7 @@ class ControllerMakeCommand extends GeneratorCommand
     /**
      * Generate the form requests for the given model and classes.
      *
-     * @param  string  $modelClass
+     * @param  string  $modelName
      * @param  string  $storeRequestClass
      * @param  string  $updateRequestClass
      * @return array

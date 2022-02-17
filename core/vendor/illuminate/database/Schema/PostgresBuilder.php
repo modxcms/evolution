@@ -38,12 +38,12 @@ class PostgresBuilder extends Builder
      */
     public function hasTable($table)
     {
-        [$database, $schema, $table] = $this->parseSchemaAndTable($table);
+        [$schema, $table] = $this->parseSchemaAndTable($table);
 
         $table = $this->connection->getTablePrefix().$table;
 
         return count($this->connection->select(
-            $this->grammar->compileTableExists(), [$database, $schema, $table]
+            $this->grammar->compileTableExists(), [$schema, $table]
         )) > 0;
     }
 
@@ -133,11 +133,7 @@ class PostgresBuilder extends Builder
     public function getAllTables()
     {
         return $this->connection->select(
-            $this->grammar->compileGetAllTables(
-                $this->parseSearchPath(
-                    $this->connection->getConfig('search_path') ?: $this->connection->getConfig('schema')
-                )
-            )
+            $this->grammar->compileGetAllTables((array) $this->connection->getConfig('schema'))
         );
     }
 
@@ -149,11 +145,7 @@ class PostgresBuilder extends Builder
     public function getAllViews()
     {
         return $this->connection->select(
-            $this->grammar->compileGetAllViews(
-                $this->parseSearchPath(
-                    $this->connection->getConfig('search_path') ?: $this->connection->getConfig('schema')
-                )
-            )
+            $this->grammar->compileGetAllViews((array) $this->connection->getConfig('schema'))
         );
     }
 
@@ -177,80 +169,35 @@ class PostgresBuilder extends Builder
      */
     public function getColumnListing($table)
     {
-        [$database, $schema, $table] = $this->parseSchemaAndTable($table);
+        [$schema, $table] = $this->parseSchemaAndTable($table);
 
         $table = $this->connection->getTablePrefix().$table;
 
         $results = $this->connection->select(
-            $this->grammar->compileColumnListing(), [$database, $schema, $table]
+            $this->grammar->compileColumnListing(), [$schema, $table]
         );
 
         return $this->connection->getPostProcessor()->processColumnListing($results);
     }
 
     /**
-     * Parse the database object reference and extract the database, schema, and table.
+     * Parse the table name and extract the schema and table.
      *
-     * @param  string  $reference
+     * @param  string  $table
      * @return array
      */
-    protected function parseSchemaAndTable($reference)
+    protected function parseSchemaAndTable($table)
     {
-        $searchPath = $this->parseSearchPath(
-            $this->connection->getConfig('search_path') ?: 'public'
-        );
+        $table = explode('.', $table);
 
-        $parts = explode('.', $reference);
+        if (is_array($schema = $this->connection->getConfig('schema'))) {
+            if (in_array($table[0], $schema)) {
+                return [array_shift($table), implode('.', $table)];
+            }
 
-        $database = $this->connection->getConfig('database');
-
-        // If the reference contains a database name, we will use that instead of the
-        // default database name for the connection. This allows the database name
-        // to be specified in the query instead of at the full connection level.
-        if (count($parts) === 3) {
-            $database = $parts[0];
-            array_shift($parts);
+            $schema = head($schema);
         }
 
-        // We will use the default schema unless the schema has been specified in the
-        // query. If the schema has been specified in the query then we can use it
-        // instead of a default schema configured in the connection search path.
-        $schema = $searchPath[0] === '$user'
-            ? $this->connection->getConfig('username')
-            : $searchPath[0];
-
-        if (count($parts) === 2) {
-            $schema = $parts[0];
-            array_shift($parts);
-        }
-
-        return [$database, $schema, $parts[0]];
-    }
-
-    /**
-     * Parse the "search_path" value into an array.
-     *
-     * @param  string|array  $searchPath
-     * @return array
-     */
-    protected function parseSearchPath($searchPath)
-    {
-        if (is_string($searchPath)) {
-            preg_match_all('/[a-zA-z0-9$]{1,}/i', $searchPath, $matches);
-
-            $searchPath = $matches[0];
-        }
-
-        $searchPath = $searchPath ?? [];
-
-        array_walk($searchPath, function (&$schema) {
-            $schema = trim($schema, '\'"');
-
-            $schema = $schema === '$user'
-                ? $this->connection->getConfig('username')
-                : $schema;
-        });
-
-        return $searchPath;
+        return [$schema ?: 'public', implode('.', $table)];
     }
 }

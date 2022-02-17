@@ -30,7 +30,7 @@ trait QueriesRelationships
     public function has($relation, $operator = '>=', $count = 1, $boolean = 'and', Closure $callback = null)
     {
         if (is_string($relation)) {
-            if (str_contains($relation, '.')) {
+            if (strpos($relation, '.') !== false) {
                 return $this->hasNested($relation, $operator, $count, $boolean, $callback);
             }
 
@@ -462,11 +462,11 @@ trait QueriesRelationships
      * Add a "belongs to" relationship where clause to the query.
      *
      * @param  \Illuminate\Database\Eloquent\Model  $related
-     * @param  string|null  $relationshipName
+     * @param  string  $relationship
      * @param  string  $boolean
      * @return $this
      *
-     * @throws \Illuminate\Database\Eloquent\RelationNotFoundException
+     * @throws \RuntimeException
      */
     public function whereBelongsTo($related, $relationshipName = null, $boolean = 'and')
     {
@@ -498,7 +498,7 @@ trait QueriesRelationships
      * Add an "BelongsTo" relationship with an "or where" clause to the query.
      *
      * @param  \Illuminate\Database\Eloquent\Model  $related
-     * @param  string|null  $relationshipName
+     * @param  string  $relationship
      * @return $this
      *
      * @throws \RuntimeException

@@ -44,8 +44,10 @@ class ResponseHeaderBag extends HeaderBag
 
     /**
      * Returns the headers, with original capitalizations.
+     *
+     * @return array
      */
-    public function allPreserveCase(): array
+    public function allPreserveCase()
     {
         $headers = [];
         foreach ($this->all() as $name => $value) {
@@ -86,7 +88,7 @@ class ResponseHeaderBag extends HeaderBag
     /**
      * {@inheritdoc}
      */
-    public function all(string $key = null): array
+    public function all(string $key = null)
     {
         $headers = parent::all();
 
@@ -106,7 +108,7 @@ class ResponseHeaderBag extends HeaderBag
     /**
      * {@inheritdoc}
      */
-    public function set(string $key, string|array|null $values, bool $replace = true)
+    public function set(string $key, $values, bool $replace = true)
     {
         $uniqueKey = strtr($key, self::UPPER, self::LOWER);
 
@@ -162,7 +164,7 @@ class ResponseHeaderBag extends HeaderBag
     /**
      * {@inheritdoc}
      */
-    public function hasCacheControlDirective(string $key): bool
+    public function hasCacheControlDirective(string $key)
     {
         return \array_key_exists($key, $this->computedCacheControl);
     }
@@ -170,7 +172,7 @@ class ResponseHeaderBag extends HeaderBag
     /**
      * {@inheritdoc}
      */
-    public function getCacheControlDirective(string $key): bool|string|null
+    public function getCacheControlDirective(string $key)
     {
         return $this->computedCacheControl[$key] ?? null;
     }
@@ -212,7 +214,7 @@ class ResponseHeaderBag extends HeaderBag
      *
      * @throws \InvalidArgumentException When the $format is invalid
      */
-    public function getCookies(string $format = self::COOKIES_FLAT): array
+    public function getCookies(string $format = self::COOKIES_FLAT)
     {
         if (!\in_array($format, [self::COOKIES_FLAT, self::COOKIES_ARRAY])) {
             throw new \InvalidArgumentException(sprintf('Format "%s" invalid (%s).', $format, implode(', ', [self::COOKIES_FLAT, self::COOKIES_ARRAY])));
@@ -255,8 +257,10 @@ class ResponseHeaderBag extends HeaderBag
      *
      * This considers several other headers and calculates or modifies the
      * cache-control header to a sensible, conservative value.
+     *
+     * @return string
      */
-    protected function computeCacheControlValue(): string
+    protected function computeCacheControlValue()
     {
         if (!$this->cacheControl) {
             if ($this->has('Last-Modified') || $this->has('Expires')) {

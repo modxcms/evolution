@@ -3,15 +3,13 @@
 namespace Egulias\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailLexer;
-use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Validation\Exception\EmptyValidationList;
-use Egulias\EmailValidator\Result\MultipleErrors;
 
 class MultipleValidationWithAnd implements EmailValidation
 {
     /**
-     * If one of validations fails, the remaining validations will be skept.
-     * This means MultipleErrors will only contain a single error, the first found.
+     * If one of validations gets failure skips all succeeding validation.
+     * This means MultipleErrors will only contain a single error which first found.
      */
     const STOP_ON_ERROR = 0;
 
@@ -58,51 +56,60 @@ class MultipleValidationWithAnd implements EmailValidation
     /**
      * {@inheritdoc}
      */
-    public function isValid(string $email, EmailLexer $emailLexer) : bool
+    public function isValid($email, EmailLexer $emailLexer)
     {
         $result = true;
+        $errors = [];
         foreach ($this->validations as $validation) {
             $emailLexer->reset();
             $validationResult = $validation->isValid($email, $emailLexer);
             $result = $result && $validationResult;
             $this->warnings = array_merge($this->warnings, $validation->getWarnings());
-            if (!$validationResult) {
-                $this->processError($validation);
-            }
+            $errors = $this->addNewError($validation->getError(), $errors);
 
             if ($this->shouldStop($result)) {
                 break;
             }
         }
 
+        if (!empty($errors)) {
+            $this->error = new MultipleErrors($errors);
+        }
+
         return $result;
     }
 
-    private function initErrorStorage() : void
+    /**
+     * @param \Egulias\EmailValidator\Exception\InvalidEmail|null $possibleError
+     * @param \Egulias\EmailValidator\Exception\InvalidEmail[] $errors
+     *
+     * @return \Egulias\EmailValidator\Exception\InvalidEmail[]
+     */
+    private function addNewError($possibleError, array $errors)
     {
-        if (null === $this->error) {
-            $this->error = new MultipleErrors();
+        if (null !== $possibleError) {
+            $errors[] = $possibleError;
         }
+
+        return $errors;
     }
 
-    private function processError(EmailValidation $validation) : void
-    {
-        if (null !== $validation->getError()) {
-            $this->initErrorStorage();
-            /** @psalm-suppress PossiblyNullReference */
-            $this->error->addReason($validation->getError()->reason());
-        }
-    }
-
-    private function shouldStop(bool $result) : bool
+    /**
+     * @param bool $result
+     *
+     * @return bool
+     */
+    private function shouldStop($result)
     {
         return !$result && $this->mode === self::STOP_ON_ERROR;
     }
 
     /**
      * Returns the validation errors.
+     *
+     * @return MultipleErrors|null
      */
-    public function getError() : ?InvalidEmail
+    public function getError()
     {
         return $this->error;
     }
@@ -110,7 +117,7 @@ class MultipleValidationWithAnd implements EmailValidation
     /**
      * {@inheritdoc}
      */
-    public function getWarnings() : array
+    public function getWarnings()
     {
         return $this->warnings;
     }

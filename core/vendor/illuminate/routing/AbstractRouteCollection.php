@@ -13,7 +13,6 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Matcher\Dumper\CompiledUrlMatcherDumper;
 use Symfony\Component\Routing\RouteCollection as SymfonyRouteCollection;
-use Traversable;
 
 abstract class AbstractRouteCollection implements Countable, IteratorAggregate, RouteCollectionInterface
 {
@@ -95,7 +94,7 @@ abstract class AbstractRouteCollection implements Countable, IteratorAggregate, 
      */
     protected function getRouteForMethods($request, array $methods)
     {
-        if ($request->isMethod('OPTIONS')) {
+        if ($request->method() === 'OPTIONS') {
             return (new Route('OPTIONS', $request->path(), function () use ($methods) {
                 return new Response('', 200, ['Allow' => implode(',', $methods)]);
             }))->bind($request);
@@ -205,7 +204,7 @@ abstract class AbstractRouteCollection implements Countable, IteratorAggregate, 
 
         if (
             ! is_null($name)
-            && str_ends_with($name, '.')
+            && Str::endsWith($name, '.')
             && ! is_null($symfonyRoutes->get($name))
         ) {
             $name = null;
@@ -239,7 +238,8 @@ abstract class AbstractRouteCollection implements Countable, IteratorAggregate, 
      *
      * @return \ArrayIterator
      */
-    public function getIterator(): Traversable
+    #[\ReturnTypeWillChange]
+    public function getIterator()
     {
         return new ArrayIterator($this->getRoutes());
     }
@@ -249,7 +249,8 @@ abstract class AbstractRouteCollection implements Countable, IteratorAggregate, 
      *
      * @return int
      */
-    public function count(): int
+    #[\ReturnTypeWillChange]
+    public function count()
     {
         return count($this->getRoutes());
     }

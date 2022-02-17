@@ -58,26 +58,20 @@ class ConditionalRules
     /**
      * Get the rules.
      *
-     * @param  array  $data
      * @return array
      */
-    public function rules(array $data = [])
+    public function rules()
     {
-        return is_string($this->rules)
-                    ? explode('|', $this->rules)
-                    : value($this->rules, new Fluent($data));
+        return is_string($this->rules) ? explode('|', $this->rules) : $this->rules;
     }
 
     /**
      * Get the default rules.
      *
-     * @param  array  $data
      * @return array
      */
-    public function defaultRules(array $data = [])
+    public function defaultRules()
     {
-        return is_string($this->defaultRules)
-                    ? explode('|', $this->defaultRules)
-                    : value($this->defaultRules, new Fluent($data));
+        return is_string($this->defaultRules) ? explode('|', $this->defaultRules) : $this->defaultRules;
     }
 }

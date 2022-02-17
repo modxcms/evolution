@@ -35,7 +35,7 @@ class RedirectController extends Controller
 
         $url = $url->toRoute($route, $parameters, false);
 
-        if (! str_starts_with($destination, '/') && str_starts_with($url, '/')) {
+        if (! Str::startsWith($destination, '/') && Str::startsWith($url, '/')) {
             $url = Str::after($url, '/');
         }
 

@@ -358,9 +358,9 @@ class Grammar extends BaseGrammar
     {
         $between = $where['not'] ? 'not between' : 'between';
 
-        $min = $this->parameter(is_array($where['values']) ? reset($where['values']) : $where['values'][0]);
+        $min = $this->parameter(reset($where['values']));
 
-        $max = $this->parameter(is_array($where['values']) ? end($where['values']) : $where['values'][1]);
+        $max = $this->parameter(end($where['values']));
 
         return $this->wrap($where['column']).' '.$between.' '.$min.' and '.$max;
     }
@@ -376,9 +376,9 @@ class Grammar extends BaseGrammar
     {
         $between = $where['not'] ? 'not between' : 'between';
 
-        $min = $this->wrap(is_array($where['values']) ? reset($where['values']) : $where['values'][0]);
+        $min = $this->wrap(reset($where['values']));
 
-        $max = $this->wrap(is_array($where['values']) ? end($where['values']) : $where['values'][1]);
+        $max = $this->wrap(end($where['values']));
 
         return $this->wrap($where['column']).' '.$between.' '.$min.' and '.$max;
     }
@@ -660,13 +660,14 @@ class Grammar extends BaseGrammar
      * Compile the "having" portions of the query.
      *
      * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $havings
      * @return string
      */
-    protected function compileHavings(Builder $query)
+    protected function compileHavings(Builder $query, $havings)
     {
-        return 'having '.$this->removeLeadingBoolean(collect($query->havings)->map(function ($having) {
-            return $having['boolean'].' '.$this->compileHaving($having);
-        })->implode(' '));
+        $sql = implode(' ', array_map([$this, 'compileHaving'], $havings));
+
+        return 'having '.$this->removeLeadingBoolean($sql);
     }
 
     /**
@@ -681,17 +682,9 @@ class Grammar extends BaseGrammar
         // without doing any more processing on it. Otherwise, we will compile the
         // clause into SQL based on the components that make it up from builder.
         if ($having['type'] === 'Raw') {
-            return $having['sql'];
+            return $having['boolean'].' '.$having['sql'];
         } elseif ($having['type'] === 'between') {
             return $this->compileHavingBetween($having);
-        } elseif ($having['type'] === 'Null') {
-            return $this->compileHavingNull($having);
-        } elseif ($having['type'] === 'NotNull') {
-            return $this->compileHavingNotNull($having);
-        } elseif ($having['type'] === 'bit') {
-            return $this->compileHavingBit($having);
-        } elseif ($having['type'] === 'Nested') {
-            return $this->compileNestedHavings($having);
         }
 
         return $this->compileBasicHaving($having);
@@ -709,7 +702,7 @@ class Grammar extends BaseGrammar
 
         $parameter = $this->parameter($having['value']);
 
-        return $column.' '.$having['operator'].' '.$parameter;
+        return $having['boolean'].' '.$column.' '.$having['operator'].' '.$parameter;
     }
 
     /**
@@ -728,59 +721,7 @@ class Grammar extends BaseGrammar
 
         $max = $this->parameter(last($having['values']));
 
-        return $column.' '.$between.' '.$min.' and '.$max;
-    }
-
-    /**
-     * Compile a having null clause.
-     *
-     * @param  array  $having
-     * @return string
-     */
-    protected function compileHavingNull($having)
-    {
-        $column = $this->wrap($having['column']);
-
-        return $column.' is null';
-    }
-
-    /**
-     * Compile a having not null clause.
-     *
-     * @param  array  $having
-     * @return string
-     */
-    protected function compileHavingNotNull($having)
-    {
-        $column = $this->wrap($having['column']);
-
-        return $column.' is not null';
-    }
-
-    /**
-     * Compile a having clause involving a bit operator.
-     *
-     * @param  array  $having
-     * @return string
-     */
-    protected function compileHavingBit($having)
-    {
-        $column = $this->wrap($having['column']);
-
-        $parameter = $this->parameter($having['value']);
-
-        return '('.$column.' '.$having['operator'].' '.$parameter.') != 0';
-    }
-
-    /**
-     * Compile a nested having clause.
-     *
-     * @param  array  $having
-     * @return string
-     */
-    protected function compileNestedHavings($having)
-    {
-        return '('.substr($this->compileHavings($having['query']), 7).')';
+        return $having['boolean'].' '.$column.' '.$between.' '.$min.' and '.$max;
     }
 
     /**
@@ -1219,6 +1160,49 @@ class Grammar extends BaseGrammar
     }
 
     /**
+     * Wrap a value in keyword identifiers.
+     *
+     * @param  \Illuminate\Database\Query\Expression|string  $value
+     * @param  bool  $prefixAlias
+     * @return string
+     */
+    public function wrap($value, $prefixAlias = false)
+    {
+        if ($this->isExpression($value)) {
+            return $this->getValue($value);
+        }
+
+        // If the value being wrapped has a column alias we will need to separate out
+        // the pieces so we can wrap each of the segments of the expression on its
+        // own, and then join these both back together using the "as" connector.
+        if (stripos($value, ' as ') !== false) {
+            return $this->wrapAliasedValue($value, $prefixAlias);
+        }
+
+        // If the given value is a JSON selector we will wrap it differently than a
+        // traditional value. We will need to split this path and wrap each part
+        // wrapped, etc. Otherwise, we will simply wrap the value as a string.
+        if ($this->isJsonSelector($value)) {
+            return $this->wrapJsonSelector($value);
+        }
+
+        return $this->wrapSegments(explode('.', $value));
+    }
+
+    /**
+     * Wrap the given JSON selector.
+     *
+     * @param  string  $value
+     * @return string
+     *
+     * @throws \RuntimeException
+     */
+    protected function wrapJsonSelector($value)
+    {
+        throw new RuntimeException('This database engine does not support JSON operations.');
+    }
+
+    /**
      * Wrap the given JSON selector for boolean values.
      *
      * @param  string  $value
@@ -1268,34 +1252,18 @@ class Grammar extends BaseGrammar
     {
         $value = preg_replace("/([\\\\]+)?\\'/", "''", $value);
 
-        $jsonPath = collect(explode($delimiter, $value))
-            ->map(function ($segment) {
-                return $this->wrapJsonPathSegment($segment);
-            })
-            ->join('.');
-
-        return "'$".(str_starts_with($jsonPath, '[') ? '' : '.').$jsonPath."'";
+        return '\'$."'.str_replace($delimiter, '"."', $value).'"\'';
     }
 
     /**
-     * Wrap the given JSON path segment.
+     * Determine if the given string is a JSON selector.
      *
-     * @param  string  $segment
-     * @return string
+     * @param  string  $value
+     * @return bool
      */
-    protected function wrapJsonPathSegment($segment)
+    protected function isJsonSelector($value)
     {
-        if (preg_match('/(\[[^\]]+\])+$/', $segment, $parts)) {
-            $key = Str::beforeLast($segment, $parts[0]);
-
-            if (! empty($key)) {
-                return '"'.$key.'"'.$parts[0];
-            }
-
-            return $parts[0];
-        }
-
-        return '"'.$segment.'"';
+        return Str::contains($value, '->');
     }
 
     /**

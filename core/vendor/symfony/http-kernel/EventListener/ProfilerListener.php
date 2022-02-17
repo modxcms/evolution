@@ -31,17 +31,17 @@ use Symfony\Component\HttpKernel\Profiler\Profiler;
  */
 class ProfilerListener implements EventSubscriberInterface
 {
-    private $profiler;
-    private $matcher;
-    private bool $onlyException;
-    private bool $onlyMainRequests;
-    private ?\Throwable $exception = null;
+    protected $profiler;
+    protected $matcher;
+    protected $onlyException;
+    protected $onlyMainRequests;
+    protected $exception;
     /** @var \SplObjectStorage<Request, Profile> */
-    private \SplObjectStorage $profiles;
-    private $requestStack;
-    private ?string $collectParameter;
+    protected $profiles;
+    protected $requestStack;
+    protected $collectParameter;
     /** @var \SplObjectStorage<Request, Request|null> */
-    private \SplObjectStorage $parents;
+    protected $parents;
 
     /**
      * @param bool $onlyException    True if the profiler only collects data when an exception occurs, false otherwise

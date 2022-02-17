@@ -164,7 +164,7 @@ class BelongsToMany extends Relation
      */
     protected function resolveTableName($table)
     {
-        if (! str_contains($table, '\\') || ! class_exists($table)) {
+        if (! Str::contains($table, '\\') || ! class_exists($table)) {
             return $table;
         }
 
@@ -595,13 +595,12 @@ class BelongsToMany extends Relation
      * Get the first related model record matching the attributes or instantiate it.
      *
      * @param  array  $attributes
-     * @param  array  $values
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function firstOrNew(array $attributes = [], array $values = [])
+    public function firstOrNew(array $attributes)
     {
-        if (is_null($instance = $this->related->where($attributes)->first())) {
-            $instance = $this->related->newInstance(array_merge($attributes, $values));
+        if (is_null($instance = $this->where($attributes)->first())) {
+            $instance = $this->related->newInstance($attributes);
         }
 
         return $instance;
@@ -611,15 +610,14 @@ class BelongsToMany extends Relation
      * Get the first related record matching the attributes or create it.
      *
      * @param  array  $attributes
-     * @param  array  $values
      * @param  array  $joining
      * @param  bool  $touch
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function firstOrCreate(array $attributes = [], array $values = [], array $joining = [], $touch = true)
+    public function firstOrCreate(array $attributes, array $joining = [], $touch = true)
     {
-        if (is_null($instance = $this->related->where($attributes)->first())) {
-            $instance = $this->create(array_merge($attributes, $values), $joining, $touch);
+        if (is_null($instance = $this->where($attributes)->first())) {
+            $instance = $this->create($attributes, $joining, $touch);
         }
 
         return $instance;
@@ -636,8 +634,8 @@ class BelongsToMany extends Relation
      */
     public function updateOrCreate(array $attributes, array $values = [], array $joining = [], $touch = true)
     {
-        if (is_null($instance = $this->related->where($attributes)->first())) {
-            return $this->create(array_merge($attributes, $values), $joining, $touch);
+        if (is_null($instance = $this->where($attributes)->first())) {
+            return $this->create($values, $joining, $touch);
         }
 
         $instance->fill($values);
@@ -1059,7 +1057,7 @@ class BelongsToMany extends Relation
             // To get the pivots attributes we will just take any of the attributes which
             // begin with "pivot_" and add those to this arrays, as well as unsetting
             // them from the parent's models since they exist in a different table.
-            if (str_starts_with($key, 'pivot_')) {
+            if (strpos($key, 'pivot_') === 0) {
                 $values[substr($key, 6)] = $value;
 
                 unset($model->$key);
@@ -1153,21 +1151,6 @@ class BelongsToMany extends Relation
         $this->attach($model, $pivotAttributes, $touch);
 
         return $model;
-    }
-
-    /**
-     * Save a new model without raising any events and attach it to the parent model.
-     *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  array  $pivotAttributes
-     * @param  bool  $touch
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function saveQuietly(Model $model, array $pivotAttributes = [], $touch = true)
-    {
-        return Model::withoutEvents(function () use ($model, $pivotAttributes, $touch) {
-            return $this->save($model, $pivotAttributes, $touch);
-        });
     }
 
     /**
@@ -1445,7 +1428,7 @@ class BelongsToMany extends Relation
      */
     public function qualifyPivotColumn($column)
     {
-        return str_contains($column, '.')
+        return Str::contains($column, '.')
                     ? $column
                     : $this->table.'.'.$column;
     }

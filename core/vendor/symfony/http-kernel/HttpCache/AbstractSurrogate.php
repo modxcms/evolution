@@ -40,8 +40,10 @@ abstract class AbstractSurrogate implements SurrogateInterface
 
     /**
      * Returns a new cache strategy instance.
+     *
+     * @return ResponseCacheStrategyInterface
      */
-    public function createCacheStrategy(): ResponseCacheStrategyInterface
+    public function createCacheStrategy()
     {
         return new ResponseCacheStrategy();
     }
@@ -49,7 +51,7 @@ abstract class AbstractSurrogate implements SurrogateInterface
     /**
      * {@inheritdoc}
      */
-    public function hasSurrogateCapability(Request $request): bool
+    public function hasSurrogateCapability(Request $request)
     {
         if (null === $value = $request->headers->get('Surrogate-Capability')) {
             return false;
@@ -72,7 +74,7 @@ abstract class AbstractSurrogate implements SurrogateInterface
     /**
      * {@inheritdoc}
      */
-    public function needsParsing(Response $response): bool
+    public function needsParsing(Response $response)
     {
         if (!$control = $response->headers->get('Surrogate-Control')) {
             return false;
@@ -86,7 +88,7 @@ abstract class AbstractSurrogate implements SurrogateInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(HttpCache $cache, string $uri, string $alt, bool $ignoreErrors): string
+    public function handle(HttpCache $cache, string $uri, string $alt, bool $ignoreErrors)
     {
         $subRequest = Request::create($uri, Request::METHOD_GET, [], $cache->getRequest()->cookies->all(), [], $cache->getRequest()->server->all());
 

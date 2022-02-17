@@ -457,12 +457,10 @@ trait BuildsQueries
      * Pass the query to a given callback.
      *
      * @param  callable  $callback
-     * @return $this
+     * @return $this|mixed
      */
     public function tap($callback)
     {
-        $callback($this);
-
-        return $this;
+        return $this->when(true, $callback);
     }
 }

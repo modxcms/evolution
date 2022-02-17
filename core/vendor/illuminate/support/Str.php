@@ -189,18 +189,12 @@ class Str
      *
      * @param  string  $haystack
      * @param  string|string[]  $needles
-     * @param  bool  $ignoreCase
      * @return bool
      */
-    public static function contains($haystack, $needles, $ignoreCase = false)
+    public static function contains($haystack, $needles)
     {
-        if ($ignoreCase) {
-            $haystack = mb_strtolower($haystack);
-            $needles = array_map('mb_strtolower', (array) $needles);
-        }
-
         foreach ((array) $needles as $needle) {
-            if ($needle !== '' && str_contains($haystack, $needle)) {
+            if ($needle !== '' && mb_strpos($haystack, $needle) !== false) {
                 return true;
             }
         }
@@ -213,16 +207,10 @@ class Str
      *
      * @param  string  $haystack
      * @param  string[]  $needles
-     * @param  bool  $ignoreCase
      * @return bool
      */
-    public static function containsAll($haystack, array $needles, $ignoreCase = false)
+    public static function containsAll($haystack, array $needles)
     {
-        if ($ignoreCase) {
-            $haystack = mb_strtolower($haystack);
-            $needles = array_map('mb_strtolower', $needles);
-        }
-
         foreach ($needles as $needle) {
             if (! static::contains($haystack, $needle)) {
                 return false;
@@ -244,49 +232,13 @@ class Str
         foreach ((array) $needles as $needle) {
             if (
                 $needle !== '' && $needle !== null
-                && str_ends_with($haystack, $needle)
+                && substr($haystack, -strlen($needle)) === (string) $needle
             ) {
                 return true;
             }
         }
 
         return false;
-    }
-
-    /**
-     * Extracts an excerpt from text that matches the first instance of a phrase.
-     *
-     * @param  string  $text
-     * @param  string  $phrase
-     * @param  array  $options
-     * @return string|null
-     */
-    public static function excerpt($text, $phrase = '', $options = [])
-    {
-        $radius = $options['radius'] ?? 100;
-        $omission = $options['omission'] ?? '...';
-
-        preg_match('/^(.*?)('.preg_quote((string) $phrase).')(.*)$/iu', (string) $text, $matches);
-
-        if (empty($matches)) {
-            return null;
-        }
-
-        $start = ltrim($matches[1]);
-
-        $start = str(mb_substr($start, max(mb_strlen($start, 'UTF-8') - $radius, 0), $radius, 'UTF-8'))->ltrim()->unless(
-            fn ($startWithRadius) => $startWithRadius->exactly($start),
-            fn ($startWithRadius) => $startWithRadius->prepend($omission),
-        );
-
-        $end = rtrim($matches[3]);
-
-        $end = str(mb_substr($end, 0, $radius, 'UTF-8'))->rtrim()->unless(
-            fn ($endWithRadius) => $endWithRadius->exactly($end),
-            fn ($endWithRadius) => $endWithRadius->append($omission),
-        );
-
-        return $start->append($matches[2], $end)->toString();
     }
 
     /**
@@ -326,7 +278,7 @@ class Str
             // If the given value is an exact match we can of course return true right
             // from the beginning. Otherwise, we will translate asterisks and do an
             // actual pattern match against the two strings to see if they match.
-            if ($pattern === $value) {
+            if ($pattern == $value) {
                 return true;
             }
 
@@ -683,8 +635,6 @@ class Str
      */
     public static function replaceFirst($search, $replace, $subject)
     {
-        $search = (string) $search;
-
         if ($search === '') {
             return $subject;
         }
@@ -878,7 +828,7 @@ class Str
     public static function startsWith($haystack, $needles)
     {
         foreach ((array) $needles as $needle) {
-            if ((string) $needle !== '' && str_starts_with($haystack, $needle)) {
+            if ((string) $needle !== '' && strncmp($haystack, $needle, strlen($needle)) === 0) {
                 return true;
             }
         }
