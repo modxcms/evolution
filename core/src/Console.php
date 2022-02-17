@@ -6,6 +6,7 @@ use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Console\Events;
 use Illuminate\Http\Request;
 use Symfony\Component\Console\Application as SymfonyApplication;
+use Symfony\Component\Console\Input\InputDefinition;
 
 class Console extends Artisan
 {
@@ -30,7 +31,7 @@ class Console extends Artisan
     /**
      * @{inheritDoc}
      */
-    protected function getDefaultInputDefinition()
+    protected function getDefaultInputDefinition(): InputDefinition
     {
         return SymfonyApplication::getDefaultInputDefinition();
     }
