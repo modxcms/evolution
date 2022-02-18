@@ -75,10 +75,12 @@ abstract class AbstractSessionListener implements EventSubscriberInterface, Rese
                 }
 
                 /*
-                 * For supporting sessions in php runtime with runners like roadrunner or swoole the session
-                 * cookie need read from the cookie bag and set on the session storage.
+                 * For supporting sessions in php runtime with runners like roadrunner or swoole, the session
+                 * cookie needs to be read from the cookie bag and set on the session storage.
+                 *
+                 * Do not set it when a native php session is active.
                  */
-                if ($sess && !$sess->isStarted()) {
+                if ($sess && !$sess->isStarted() && \PHP_SESSION_ACTIVE !== session_status()) {
                     $sessionId = $request->cookies->get($sess->getName(), '');
                     $sess->setId($sessionId);
                 }
@@ -93,7 +95,7 @@ abstract class AbstractSessionListener implements EventSubscriberInterface, Rese
 
     public function onKernelResponse(ResponseEvent $event)
     {
-        if (!$event->isMainRequest()) {
+        if (!$event->isMainRequest() || (!$this->container->has('initialized_session') && !$event->getRequest()->hasSession())) {
             return;
         }
 
@@ -140,18 +142,20 @@ abstract class AbstractSessionListener implements EventSubscriberInterface, Rese
              */
             $sessionName = $session->getName();
             $sessionId = $session->getId();
-            $sessionCookiePath = $this->sessionOptions['cookie_path'] ?? '/';
-            $sessionCookieDomain = $this->sessionOptions['cookie_domain'] ?? null;
-            $sessionCookieSecure = $this->sessionOptions['cookie_secure'] ?? false;
-            $sessionCookieHttpOnly = $this->sessionOptions['cookie_httponly'] ?? true;
-            $sessionCookieSameSite = $this->sessionOptions['cookie_samesite'] ?? Cookie::SAMESITE_LAX;
+            $sessionOptions = $this->getSessionOptions($this->sessionOptions);
+            $sessionCookiePath = $sessionOptions['cookie_path'] ?? '/';
+            $sessionCookieDomain = $sessionOptions['cookie_domain'] ?? null;
+            $sessionCookieSecure = $sessionOptions['cookie_secure'] ?? false;
+            $sessionCookieHttpOnly = $sessionOptions['cookie_httponly'] ?? true;
+            $sessionCookieSameSite = $sessionOptions['cookie_samesite'] ?? Cookie::SAMESITE_LAX;
 
             SessionUtils::popSessionCookie($sessionName, $sessionId);
 
             $request = $event->getRequest();
             $requestSessionCookieId = $request->cookies->get($sessionName);
 
-            if ($requestSessionCookieId && $session->isEmpty()) {
+            $isSessionEmpty = $session->isEmpty() && empty($_SESSION); // checking $_SESSION to keep compatibility with native sessions
+            if ($requestSessionCookieId && $isSessionEmpty) {
                 $response->headers->clearCookie(
                     $sessionName,
                     $sessionCookiePath,
@@ -160,9 +164,9 @@ abstract class AbstractSessionListener implements EventSubscriberInterface, Rese
                     $sessionCookieHttpOnly,
                     $sessionCookieSameSite
                 );
-            } elseif ($sessionId !== $requestSessionCookieId) {
+            } elseif ($sessionId !== $requestSessionCookieId && !$isSessionEmpty) {
                 $expire = 0;
-                $lifetime = $this->sessionOptions['cookie_lifetime'] ?? null;
+                $lifetime = $sessionOptions['cookie_lifetime'] ?? null;
                 if ($lifetime) {
                     $expire = time() + $lifetime;
                 }
@@ -280,4 +284,23 @@ abstract class AbstractSessionListener implements EventSubscriberInterface, Rese
      * @return SessionInterface|null
      */
     abstract protected function getSession();
+
+    private function getSessionOptions(array $sessionOptions): array
+    {
+        $mergedSessionOptions = [];
+
+        foreach (session_get_cookie_params() as $key => $value) {
+            $mergedSessionOptions['cookie_'.$key] = $value;
+        }
+
+        foreach ($sessionOptions as $key => $value) {
+            // do the same logic as in the NativeSessionStorage
+            if ('cookie_secure' === $key && 'auto' === $value) {
+                continue;
+            }
+            $mergedSessionOptions[$key] = $value;
+        }
+
+        return $mergedSessionOptions;
+    }
 }

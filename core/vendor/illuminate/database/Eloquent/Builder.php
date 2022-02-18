@@ -7,7 +7,6 @@ use Closure;
 use Exception;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Concerns\BuildsQueries;
-use Illuminate\Database\Concerns\ExplainsQueries;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -26,7 +25,7 @@ use ReflectionMethod;
  */
 class Builder
 {
-    use Concerns\QueriesRelationships, ExplainsQueries, ForwardsCalls;
+    use Concerns\QueriesRelationships, ForwardsCalls;
     use BuildsQueries {
         sole as baseSole;
     }
@@ -96,6 +95,7 @@ class Builder
         'doesntExist',
         'dump',
         'exists',
+        'explain',
         'getBindings',
         'getConnection',
         'getGrammar',
@@ -865,9 +865,7 @@ class Builder
      */
     protected function ensureOrderForCursorPagination($shouldReverse = false)
     {
-        $orders = collect($this->query->orders);
-
-        if ($orders->count() === 0) {
+        if (empty($this->query->orders) && empty($this->query->unionOrders)) {
             $this->enforceOrderBy();
         }
 
@@ -877,6 +875,10 @@ class Builder
 
                 return $order;
             })->toArray();
+        }
+
+        if ($this->query->unionOrders) {
+            return collect($this->query->unionOrders);
         }
 
         return collect($this->query->orders);

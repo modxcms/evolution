@@ -4,7 +4,7 @@
             <form name="userform" method="post" action="index.php" enctype="multipart/form-data">
                 <input type="hidden" name="a" value="136">
                 <input type="hidden" name="mode" value="<?= $modx->getManagerApi()->action ?>">
-                <input type="hidden" name="id" value="<?= isset($_GET['id']) ? $_GET['id'] : '' ?>">
+                <input type="hidden" name="id" value="<?= isset($_GET['id']) ? (int)$_GET['id'] : '' ?>">
 
                 <h1>
                     <i class="fa fa-user-tag"></i>@if(isset($groups->name)){{$groups->name}} <small>({{$groups->id}})</small> @else {{ ManagerTheme::getLexicon('groups_permission_title') }}@endif

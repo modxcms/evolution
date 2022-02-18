@@ -571,7 +571,8 @@ class Grammar extends BaseGrammar
         $not = $where['not'] ? 'not ' : '';
 
         return $not.$this->compileJsonContains(
-            $where['column'], $this->parameter($where['value'])
+            $where['column'],
+            $this->parameter($where['value'])
         );
     }
 
@@ -610,7 +611,9 @@ class Grammar extends BaseGrammar
     protected function whereJsonLength(Builder $query, $where)
     {
         return $this->compileJsonLength(
-            $where['column'], $where['operator'], $this->parameter($where['value'])
+            $where['column'],
+            $where['operator'],
+            $this->parameter($where['value'])
         );
     }
 
@@ -627,6 +630,18 @@ class Grammar extends BaseGrammar
     protected function compileJsonLength($column, $operator, $value)
     {
         throw new RuntimeException('This database engine does not support JSON length operations.');
+    }
+
+    /**
+     * Compile a "where fulltext" clause.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $where
+     * @return string
+     */
+    public function whereFullText(Builder $query, $where)
+    {
+        throw new RuntimeException('This database engine does not support fulltext search operations.');
     }
 
     /**

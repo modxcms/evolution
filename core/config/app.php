@@ -1,6 +1,5 @@
 <?php
 return [
-    'timezone' => 'UTC',
     'env' => 'production',
     'debug' => false,
     /*

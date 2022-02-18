@@ -18,8 +18,7 @@ class SessionServiceProvider extends IlluminateSessionServiceProvider
     {
         parent::registerSessionManager();
         $this->app->alias('session', SessionManager::class);
-
-        register_shutdown_function([$this, 'handleExitWithSession']);
+        //register_shutdown_function([$this, 'handleExitWithSession']);
     }
 
     /**

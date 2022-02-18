@@ -12,16 +12,18 @@
 
 namespace Composer\Autoload;
 
+use Composer\Pcre\Preg;
+
 /**
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @internal
  */
 class PhpFileCleaner
 {
-    /** @var array<array{name: string, length: int, pattern: string}> */
+    /** @var array<array{name: string, length: int, pattern: non-empty-string}> */
     private static $typeConfig;
 
-    /** @var string */
+    /** @var non-empty-string */
     private static $restPattern;
 
     /**
@@ -118,6 +120,7 @@ class PhpFileCleaner
                     }
                     if ($this->peek('*')) {
                         $this->skipComment();
+                        continue;
                     }
                 }
 
@@ -125,7 +128,7 @@ class PhpFileCleaner
                     $type = self::$typeConfig[$char];
                     if (
                         \substr($this->contents, $this->index, $type['length']) === $type['name']
-                        && \preg_match($type['pattern'], $this->contents, $match, 0, $this->index - 1)
+                        && Preg::isMatch($type['pattern'], $this->contents, $match, 0, $this->index - 1)
                     ) {
                         $clean .= $match[0];
 
@@ -263,16 +266,12 @@ class PhpFileCleaner
     }
 
     /**
-     * @param string $regex
+     * @param non-empty-string $regex
      * @param ?array<int, string> $match
      * @return bool
      */
     private function match($regex, array &$match = null)
     {
-        if (\preg_match($regex, $this->contents, $match, 0, $this->index)) {
-            return true;
-        }
-
-        return false;
+        return Preg::isMatch($regex, $this->contents, $match, 0, $this->index);
     }
 }

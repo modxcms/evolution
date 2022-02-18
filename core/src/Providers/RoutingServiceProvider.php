@@ -23,9 +23,7 @@ class RoutingServiceProvider extends IlluminateRoutingServiceProvider
                 $group->group(EVO_CORE_PATH . 'custom/routes.php');
             }
 
-            $group->group(function() {
-                Route::fallbackToParser();
-            });
+            Route::fallbackToParser();
         }
 
         if ($this->app->isBackend()) {
