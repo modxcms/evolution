@@ -1,5 +1,6 @@
 <?php namespace EvolutionCMS;
 
+use Illuminate\View\ViewException;
 use Illuminate\Contracts\Container\Container;
 use AgelxNash\Modx\Evo\Database\Exceptions\ConnectException;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
@@ -609,6 +610,12 @@ class ExceptionHandler
             exit;
         }
 
+        if ($exception instanceof ViewException) {
+            $trace = $exception->getPrevious()->getTrace();
+        } else {
+            $trace = $exception->getTrace();
+        }
+
         $this->messageQuit(
             $exception->getMessage(),
             '',
@@ -619,7 +626,7 @@ class ExceptionHandler
             '',
             $exception->getLine(),
             '',
-            $exception->getTrace()
+            $trace
         );
     }
 }
