@@ -41,7 +41,7 @@ Official Website:
 https://evo.im/
 
 Telegram group:
-https://t.me/evo_cms
+https://t.me/evolutioncms
 
 English Forum:
 https://forum.evo.im
