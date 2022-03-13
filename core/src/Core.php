@@ -4640,14 +4640,57 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 break;
         }
 
-        if (empty($mode)) {
-            $strTime = $dateTime->format($dateFormat . ' H:i:s');
-        } elseif ($mode === 'dateOnly') {
-            $strTime = $dateTime->format($dateFormat);
-        } elseif ($mode === 'formatOnly') {
-            $strTime = $dateFormat;
-        } elseif ($mode === 'timeOnly') {
-            $strTime = $dateTime->toTimeString();
+        if (extension_loaded('intl')) {
+            // https://www.php.net/manual/en/class.intldateformatter.php
+            // https://www.php.net/manual/en/datetime.createfromformat.php
+            $dateFormat = str_replace(
+                ['%Y', '%m', '%d', '%I', '%H', '%M', '%S', '%p'],
+                ['Y', 'MM', 'dd', 'h', 'HH', 'mm', 'ss', 'a'],
+                $dateFormat
+            );
+            if (empty($mode)) {
+		$formatter = new IntlDateFormatter(
+                    $this->getConfig('manager_language'),
+                    IntlDateFormatter::FULL,
+                    IntlDateFormatter::FULL,
+                    null,
+                    null,
+                    $dateFormat . " HH:mm:ss"
+                );
+                $strTime = $formatter->format($timestamp);
+            } elseif ($mode === 'dateOnly') {
+                $formatter = new IntlDateFormatter(
+                    $this->getConfig('manager_language'),
+                    IntlDateFormatter::FULL,
+                    IntlDateFormatter::NONE,
+                    null,
+                    null,
+                    $dateFormat
+                );
+                $strTime = $formatter->format($timestamp);
+            } elseif ($mode === 'timeOnly') {
+                $formatter = new IntlDateFormatter(
+                    $this->getConfig('manager_language'),
+                    IntlDateFormatter::NONE,
+                    IntlDateFormatter::MEDIUM,
+                    null,
+                    null,
+                    "HH:mm:ss"
+                );
+                $strTime = $formatter->format($timestamp);
+            } elseif ($mode === 'formatOnly') {
+                $strTime = $dateFormat;
+            }
+        } else {
+            if (empty($mode)) {
+                $strTime = strftime($dateFormat . " %H:%M:%S", $timestamp);
+            } elseif ($mode === 'dateOnly') {
+                $strTime = strftime($dateFormat, $timestamp);
+            } elseif ($mode === 'formatOnly') {
+                $strTime = $dateFormat;
+            } elseif ($mode === 'timeOnly') {
+                $strTime = $dateFormat;
+            }
         }
 
         return $strTime;
