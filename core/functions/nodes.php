@@ -31,18 +31,21 @@ if (!function_exists('makeHTML')) {
             $_SESSION['tree_sortdir'] = 'ASC';
         }
 
+        $sc = evo()->getDatabase()->getFullTableName('site_content');
+
         switch ($_SESSION['tree_sortby']) {
             case 'createdon':
             case 'editedon':
             case 'publishedon':
             case 'pub_date':
             case 'unpub_date':
-                $sortby = 'CASE WHEN ' . $_SESSION['tree_sortby'] . ' IS NULL THEN 1 ELSE 0 END, ' . $_SESSION['tree_sortby'];
-
+                $sortby = 'CASE WHEN ' . $sc . '.' . $_SESSION['tree_sortby'] . ' IS NULL THEN 1 ELSE 0 END, ' . $sc . '.' . $_SESSION['tree_sortby'];
                 break;
             default:
-                $sortby = 'site_content.' . $_SESSION['tree_sortby'];
+                $sortby = $sc . '.' . $_SESSION['tree_sortby'];
         };
+
+        $orderBy = $sortby . ' ' . ($_SESSION['tree_sortdir'] ?? 'ASC');
 
         // get document groups for current user
         if (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) {
@@ -71,7 +74,7 @@ if (!function_exists('makeHTML')) {
             ->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document')
             ->leftJoin('site_templates', 'site_content.template', '=', 'site_templates.id')
             ->where('parent', (int)$parent)
-            ->orderBy($sortby, ($_SESSION['tree_sortdir'] ?? 'ASC'));
+            ->orderByRaw($orderBy);
 
         // Folder sorting gets special setup ;) Add menuindex and pagetitle
         if ($_SESSION['tree_sortby'] === 'isfolder') {
