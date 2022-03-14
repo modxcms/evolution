@@ -37,19 +37,12 @@ if (!function_exists('makeHTML')) {
             case 'publishedon':
             case 'pub_date':
             case 'unpub_date':
-                $sortby = 'CASE WHEN sc.' . $_SESSION['tree_sortby'] . ' IS NULL THEN 1 ELSE 0 END, sc.' . $_SESSION['tree_sortby'];
+                $sortby = 'CASE WHEN ' . $_SESSION['tree_sortby'] . ' IS NULL THEN 1 ELSE 0 END, ' . $_SESSION['tree_sortby'];
 
                 break;
             default:
-                $sortby = 'sc.' . $_SESSION['tree_sortby'];
+                $sortby = 'site_content.' . $_SESSION['tree_sortby'];
         };
-
-        $orderby = $sortby . ' ' . $_SESSION['tree_sortdir'];
-
-        // Folder sorting gets special setup ;) Add menuindex and pagetitle
-        if ($_SESSION['tree_sortby'] === 'isfolder') {
-            $orderby .= ', menuindex ASC, pagetitle';
-        }
 
         // get document groups for current user
         if (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) {
@@ -77,7 +70,14 @@ if (!function_exists('makeHTML')) {
         )
             ->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document')
             ->leftJoin('site_templates', 'site_content.template', '=', 'site_templates.id')
-            ->where('parent', (int)$parent)->orderBy('menuindex', 'ASC')->orderBy('pagetitle', 'ASC');
+            ->where('parent', (int)$parent)
+            ->orderBy($sortby, ($_SESSION['tree_sortdir'] ?? 'ASC'));
+
+        // Folder sorting gets special setup ;) Add menuindex and pagetitle
+        if ($_SESSION['tree_sortby'] === 'isfolder') {
+            $result = $result->orderBy('menuindex', 'ASC')->orderBy('pagetitle', 'ASC');
+        }
+           // orderBy('menuindex', 'ASC')->orderBy('pagetitle', 'ASC');
 //'privatemgr',\DB::raw('MAX(IF(1='.$mgrRole.' OR privatemgr=0 '.$docgrp_cond.', 1, 0)) AS hasAccess'),
         if (!$showProtected) {
             if (!$docgrp) {
