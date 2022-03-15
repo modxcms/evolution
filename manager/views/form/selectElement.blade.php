@@ -1,6 +1,15 @@
+@php
+    if(isset($fromFile[$name])) {
+        $disabled = 1;
+        $comment = '<b>' . ManagerTheme::getLexicon('setting_from_file') . '</b>' . (!empty($comment) ? '<br>' . $comment : '');
+        $value = $fromFile[$name];
+    }
+@endphp
+
 @if(!empty($options) || !empty($first))
     <select class="form-control {{ $class ?? '' }}" name="{{ $name }}" id="{{ $id ??  $name }}"
         {!! $attributes ?? '' !!}
+        @if(!empty($disabled)) disabled @endif
     >
         @if(!empty($first))
             <option value="{{ $first['value'] ?? '' }}">{{ $first['text'] ?? '' }}</option>

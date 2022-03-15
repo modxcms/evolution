@@ -19,10 +19,10 @@
                     'attributes' => 'id="udPermsOff"'
                 ]
             ],
-            'comment' => ManagerTheme::getLexicon('udperms_message')
+            'comment' => ManagerTheme::getLexicon('udperms_message'),
+            'fromFile' => $fileSetting ?? [],
         ])
 
-        <div class="split my-1"></div>
 
         <div class="udPerms" @if(!$settings['use_udperms']) style="display: none;" @endif>
             @include('manager::form.radio', [
@@ -34,10 +34,9 @@
                     1 => ManagerTheme::getLexicon('yes'),
                     0 => ManagerTheme::getLexicon('no')
                 ],
-                'comment' => ManagerTheme::getLexicon('udperms_allowroot_message')
+                'comment' => ManagerTheme::getLexicon('udperms_allowroot_message'),
+                'fromFile' => $fileSetting ?? [],
             ])
-
-            <div class="split my-1"></div>
         </div>
 
         @include('manager::form.radio', [
@@ -51,10 +50,10 @@
                 'everytime_eval' => ManagerTheme::getLexicon('allow_eval_everytime_eval'),
                 'dont_eval' => ManagerTheme::getLexicon('allow_eval_dont_eval'),
             ],
-            'comment' => ManagerTheme::getLexicon('allow_eval_msg')
+            'comment' => ManagerTheme::getLexicon('allow_eval_msg'),
+            'fromFile' => $fileSetting ?? [],
         ])
 
-        <div class="split my-1"></div>
 
         @include('manager::form.input', [
             'name' => 'safe_functions_at_eval',
@@ -62,19 +61,19 @@
             'small' => '[(safe_functions_at_eval)]',
             'value' => $settings['safe_functions_at_eval'],
             'attributes' => 'onchange="documentDirty=true;"',
-            'comment' => ManagerTheme::getLexicon('safe_functions_at_eval_msg')
+            'comment' => ManagerTheme::getLexicon('safe_functions_at_eval_msg'),
+            'fromFile' => $fileSetting ?? [],
         ])
 
-        <div class="split my-1"></div>
 
         @include('manager::form.textarea', [
             'name' => 'check_files_onlogin',
             'label' => ManagerTheme::getLexicon('check_files_onlogin_title'),
             'small' => '[(check_files_onlogin)]',
-            'value' => $settings['check_files_onlogin']
+            'value' => $settings['check_files_onlogin'],
+            'fromFile' => $fileSetting ?? [],
         ])
 
-        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'validate_referer',
@@ -85,10 +84,10 @@
                 1 =>  ManagerTheme::getLexicon('yes'),
                 0 => ManagerTheme::getLexicon('no')
             ],
-            'comment' => ManagerTheme::getLexicon('validate_referer_message')
+            'comment' => ManagerTheme::getLexicon('validate_referer_message'),
+            'fromFile' => $fileSetting ?? [],
         ])
 
-        <div class="split my-1"></div>
 
         @include('manager::form.input', [
             'name' => 'rss_url_security',
@@ -96,10 +95,10 @@
             'small' => '[(rss_url_security)]',
             'value' => $settings['rss_url_security'],
             'attributes' => 'onchange="documentDirty=true;" maxlength="350"',
-            'comment' => ManagerTheme::getLexicon('rss_url_security_message')
+            'comment' => ManagerTheme::getLexicon('rss_url_security_message'),
+            'fromFile' => $fileSetting ?? [],
         ])
 
-        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'error_reporting',
@@ -113,10 +112,10 @@
                 99 => ManagerTheme::getLexicon('a17_error_reporting_opt99'),
                 199 => ManagerTheme::getLexicon('a17_error_reporting_opt199'),
             ],
-            'comment' => ManagerTheme::getLexicon('a17_error_reporting_msg')
+            'comment' => ManagerTheme::getLexicon('a17_error_reporting_msg'),
+            'fromFile' => $fileSetting ?? [],
         ])
 
-        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'send_errormail',
@@ -129,10 +128,10 @@
                 2 => 'error + warning',
                 1 => 'error + warning + information',
             ],
-            'comment' => str_replace('[+emailsender+]', $settings['emailsender'], ManagerTheme::getLexicon('mutate_settings.dynamic.php8'))
+            'comment' => str_replace('[+emailsender+]', $settings['emailsender'], ManagerTheme::getLexicon('mutate_settings.dynamic.php8')),
+            'fromFile' => $fileSetting ?? [],
         ])
 
-        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'enable_bindings',
@@ -143,10 +142,10 @@
                 1 =>  ManagerTheme::getLexicon('yes'),
                 0 =>  ManagerTheme::getLexicon('no'),
             ],
-            'comment' => ManagerTheme::getLexicon('enable_bindings_message') . '<br><br>' . ManagerTheme::getLexicon('check_files_onlogin_message')
+            'comment' => ManagerTheme::getLexicon('enable_bindings_message') . '<br><br>' . ManagerTheme::getLexicon('check_files_onlogin_message'),
+            'fromFile' => $fileSetting ?? [],
         ])
 
-        <div class="split my-1"></div>
 
         @include('manager::form.input', [
             'name' => 'failed_login_attempts',
@@ -154,10 +153,10 @@
             'small' => '[(failed_login_attempts)]',
             'value' => $settings['failed_login_attempts'],
             'attributes' => 'onchange="documentDirty=true;"',
-            'comment' => ManagerTheme::getLexicon('failed_login_message')
+            'comment' => ManagerTheme::getLexicon('failed_login_message'),
+            'fromFile' => $fileSetting ?? [],
         ])
 
-        <div class="split my-1"></div>
 
         @include('manager::form.input', [
             'name' => 'blocked_minutes',
@@ -165,10 +164,10 @@
             'small' => '[(blocked_minutes)]',
             'value' => $settings['blocked_minutes'],
             'attributes' => 'onchange="documentDirty=true;"',
-            'comment' => ManagerTheme::getLexicon('blocked_minutes_message')
+            'comment' => ManagerTheme::getLexicon('blocked_minutes_message'),
+            'fromFile' => $fileSetting ?? [],
         ])
 
-        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'pwd_hash_algo',
@@ -176,10 +175,10 @@
             'small' => '[(pwd_hash_algo)]',
             'value' => $settings['pwd_hash_algo'],
             'options' => $passwordsHash,
-            'comment' => ManagerTheme::getLexicon('pwd_hash_algo_message')
+            'comment' => ManagerTheme::getLexicon('pwd_hash_algo_message'),
+            'fromFile' => $fileSetting ?? [],
         ])
 
-        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'use_captcha',
@@ -197,10 +196,10 @@
                     'attributes' => 'id="captchaOff"'
                 ]
             ],
-            'comment' => ManagerTheme::getLexicon('captcha_message')
+            'comment' => ManagerTheme::getLexicon('captcha_message'),
+            'fromFile' => $fileSetting ?? [],
         ])
 
-        <div class="split my-1"></div>
 
         <div class="captchaRow" @if(!$settings['use_captcha']) style="display: none;" @endif>
             @include('manager::form.textarea', [
@@ -217,7 +216,8 @@
                         ],
                         'options' => $langKeys,
                         'as' => 'values',
-                        'ucwords' => true
+                        'ucwords' => true,
+                        'fromFile' => $fileSetting ?? [],
                     ]),
                 'small' => '[(captcha_words)]',
                 'value' => $settings['captcha_words'],
@@ -226,9 +226,12 @@
                         'type' => 'hidden',
                         'name' => 'captcha_words_default',
                         'id' => 'captcha_words_default_hidden',
-                        'value' => addslashes(ManagerTheme::getLexicon('captcha_words_default'))
-                    ])
+                        'value' => addslashes(ManagerTheme::getLexicon('captcha_words_default')),
+                        'fromFile' => $fileSetting ?? [],
+                    ]),
+                'fromFile' => $fileSetting ?? [],
             ])
+
 
             <div class="split my-1"></div>
         </div>

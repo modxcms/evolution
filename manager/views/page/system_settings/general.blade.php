@@ -3,7 +3,7 @@
     <h2 class="tab">{{ ManagerTheme::getLexicon('settings_site') }}</h2>
     <script type="text/javascript">tpSettings.addTabPage(document.getElementById('tabPage2'));</script>
     <div class="container container-body">
-        @if(! isset($fileSetting['site_status']))
+
             @include('manager::form.radio', [
                 'name' => 'site_status',
                 'label' => ManagerTheme::getLexicon('sitestatus_title'),
@@ -12,118 +12,88 @@
                 'options' => [
                     1 =>  ManagerTheme::getLexicon('online'),
                     0 => ManagerTheme::getLexicon('offline'),
-                ]
+                ],
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['enable_robot_indexing']))
-            @include('manager::form.radio', [
-                'name' => 'enable_robot_indexing',
-                'label' => ManagerTheme::getLexicon('site_indexing_title'),
-                'small' => '[(enable_robot_indexing)]',
-                'value' => $settings['enable_robot_indexing'],
-                'comment' => ManagerTheme::getLexicon('site_indexing_message'),
-                'options' => [
-                    0 => ManagerTheme::getLexicon('ignore'),
-                    1 => ManagerTheme::getLexicon('indexing_is_allowed'),
-                    2 => ManagerTheme::getLexicon('indexing_is_prohibited'),
-                ]
-            ])
-
-            <div class="split my-1"></div>
-        @endif
-
-        @if(! isset($fileSetting['site_name']))
             @include('manager::form.input', [
                 'name' => 'site_name',
                 'label' => ManagerTheme::getLexicon('sitename_title'),
                 'small' => '[(site_name)]',
                 'value' => $settings['site_name'],
                 'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
-                'comment' => ManagerTheme::getLexicon('sitename_message')
+                'comment' => ManagerTheme::getLexicon('sitename_message'),
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['site_start']))
             @include('manager::form.input', [
                 'name' => 'site_start',
                 'label' => ManagerTheme::getLexicon('sitestart_title'),
                 'small' => '[(site_start)]',
                 'value' => $settings['site_start'],
                 'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
-                'comment' => ManagerTheme::getLexicon('sitestart_message')
+                'comment' => ManagerTheme::getLexicon('sitestart_message'),
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['error_page']))
             @include('manager::form.input', [
                 'name' => 'error_page',
                 'label' => ManagerTheme::getLexicon('errorpage_title'),
                 'small' => '[(error_page)]',
                 'value' => $settings['error_page'],
                 'attributes' => 'onchange="documentDirty=true;" maxlength="10"',
-                'comment' => ManagerTheme::getLexicon('errorpage_message')
+                'comment' => ManagerTheme::getLexicon('errorpage_message'),
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['unauthorized_page']))
             @include('manager::form.input', [
                 'name' => 'unauthorized_page',
                 'label' => ManagerTheme::getLexicon('unauthorizedpage_title'),
                 'small' => '[(unauthorized_page)]',
                 'value' => $settings['unauthorized_page'],
                 'attributes' => 'onchange="documentDirty=true;" maxlength="10"',
-                'comment' => ManagerTheme::getLexicon('unauthorizedpage_message')
+                'comment' => ManagerTheme::getLexicon('unauthorizedpage_message'),
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
+
+             @include('manager::form.input', [
+                  'name' => 'ControllerNamespace',
+                  'label' => ManagerTheme::getLexicon('controller_namespace'),
+                  'small' => '[(ControllerNamespace)]',
+                  'value' => (isset($settings['ControllerNamespace']))? $settings['ControllerNamespace'] : '',
+                  'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
+                  'comment' => ManagerTheme::getLexicon('controller_namespace_message'),
+                  'fromFile' => $fileSetting ?? [],
+             ])
 
 
              @include('manager::form.input', [
-                        'name' => 'ControllerNamespace',
-                        'label' => ManagerTheme::getLexicon('controller_namespace'),
-                        'small' => '[(ControllerNamespace)]',
-                        'value' => (isset($settings['ControllerNamespace']))? $settings['ControllerNamespace'] : '',
-                        'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
-                        'comment' => ManagerTheme::getLexicon('controller_namespace_message')
-                  ])
+                  'name' => 'UpgradeRepository',
+                  'label' => ManagerTheme::getLexicon('update_repository'),
+                  'small' => '[(UpgradeRepository)]',
+                  'value' => (isset($settings['UpgradeRepository']))? $settings['UpgradeRepository'] : '',
+                  'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
+                  'comment' => ManagerTheme::getLexicon('update_repository_message'),
+                  'fromFile' => $fileSetting ?? [],
+             ])
 
-             <div class="split my-1"></div>
 
-             @include('manager::form.input', [
-                        'name' => 'UpgradeRepository',
-                        'label' => ManagerTheme::getLexicon('update_repository'),
-                        'small' => '[(UpgradeRepository)]',
-                        'value' => (isset($settings['UpgradeRepository']))? $settings['UpgradeRepository'] : '',
-                        'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
-                        'comment' => ManagerTheme::getLexicon('update_repository_message')
-                  ])
-
-             <div class="split my-1"></div>
-
-        @if(! isset($fileSetting['site_unavailable_page']))
             @include('manager::form.input', [
                 'name' => 'site_unavailable_page',
                 'label' => ManagerTheme::getLexicon('siteunavailable_page_title'),
                 'small' => '[(site_unavailable_page)]',
                 'value' => $settings['site_unavailable_page'],
                 'attributes' => 'onchange="documentDirty=true;" maxlength="10"',
-                'comment' => ManagerTheme::getLexicon('siteunavailable_page_message')
+                'comment' => ManagerTheme::getLexicon('siteunavailable_page_message'),
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['site_unavailable_message']))
             @include('manager::form.textarea', [
                 'name' => 'site_unavailable_message',
                 'id' => 'site_unavailable_message_textarea',
@@ -153,13 +123,11 @@
                 'value' => (ManagerTheme::getLexicon('site_unavailable_message') ? ManagerTheme::getLexicon('site_unavailable_message') : ManagerTheme::getLexicon('siteunavailable_message_default')),
                 'attributes' => 'onchange="documentDirty=true;"',
                 'rows' => 4,
-                'comment' => ManagerTheme::getLexicon('siteunavailable_message')
+                'comment' => ManagerTheme::getLexicon('siteunavailable_message'),
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['default_template']))
             @include('manager::form.row', [
                 'name' => 'default_template',
                 'label' => ManagerTheme::getLexicon('defaulttemplate_title'),
@@ -168,7 +136,8 @@
                     'name' => 'default_template',
                     'value' => $settings['default_template'],
                     'options' => $templates['items'],
-                    'attributes' => 'onchange="documentDirty=true;wrap=document.getElementById(\'template_reset_options_wrapper\');if(this.options[this.selectedIndex].value!=' . $settings['default_template'] . '){wrap.style.display=\'block\';}else{wrap.style.display=\'none\';}" size="1"'
+                    'attributes' => 'onchange="documentDirty=true;wrap=document.getElementById(\'template_reset_options_wrapper\');if(this.options[this.selectedIndex].value!=' . $settings['default_template'] . '){wrap.style.display=\'block\';}else{wrap.style.display=\'none\';}" size="1"',
+                    'fromFile' => $fileSetting ?? [],
                     ]) .
                     '<div id="template_reset_options_wrapper" style="display:none;">' .
                         ManagerTheme::view('form.radio', [
@@ -176,7 +145,8 @@
                             'options' => [
                                 1 => ManagerTheme::getLexicon('template_reset_all'),
                                 2 => sprintf(ManagerTheme::getLexicon('template_reset_specific'), $templates['oldTmpName'])
-                            ]
+                            ],
+                            'fromFile' => $fileSetting ?? [],
                         ]) .
                     '</div>' .
                     ManagerTheme::view('form.inputElement', [
@@ -184,13 +154,11 @@
                         'name' => 'old_template',
                         'value' => $templates['oldTmpId']
                     ]),
-                'comment' => ManagerTheme::getLexicon('defaulttemplate_message')
+                'comment' => ManagerTheme::getLexicon('defaulttemplate_message'),
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['auto_template_logic']))
             @include('manager::form.radio', [
                 'name' => 'auto_template_logic',
                 'label' => ManagerTheme::getLexicon('defaulttemplate_logic_title'),
@@ -200,13 +168,11 @@
                     'system' => ManagerTheme::getLexicon('defaulttemplate_logic_system_message'),
                     'parent' => ManagerTheme::getLexicon('defaulttemplate_logic_parent_message'),
                     'sibling' => ManagerTheme::getLexicon('defaulttemplate_logic_sibling_message')
-                ]
+                ],
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['chunk_processor']))
             @include('manager::form.radio', [
                 'name' => 'chunk_processor',
                 'label' => ManagerTheme::getLexicon('chunk_processor'),
@@ -215,13 +181,11 @@
                 'options' => [
                     '' => 'DocumentParser',
                     'DLTemplate' => 'DLTemplate'
-                ]
+                ],
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['enable_filter']))
             @include('manager::form.radio', [
                 'name' => 'enable_filter',
                 'label' => ManagerTheme::getLexicon('enable_filter_title'),
@@ -237,13 +201,11 @@
                         'disabled' => $phxEnabled
                     ]
                 ],
-                'comment' => ManagerTheme::getLexicon('enable_filter_message')
+                'comment' => ManagerTheme::getLexicon('enable_filter_message'),
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['enable_at_syntax']))
             @include('manager::form.radio', [
                 'name' => 'enable_at_syntax',
                 'label' => ManagerTheme::getLexicon('enable_at_syntax_title'),
@@ -258,13 +220,11 @@
                     <li><a href="https://github.com/modxcms/evolution/wiki/@@IF-@@ELSEIF-@@ELSE-@@ENDIF" target="_blank">@@IF @@ELSEIF @@ELSE @@ENDIF</a></li>
                     <li>&lt;@LITERAL&gt; @{{string}} [*string*] [[string]] &lt;@ENDLITERAL&gt;</li>
                     <li><!--@- Do not output -@--></li>
-                </ul>'
+                </ul>',
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['publish_default']))
             @include('manager::form.radio', [
                 'name' => 'publish_default',
                 'label' => ManagerTheme::getLexicon('defaultpublish_title'),
@@ -274,13 +234,11 @@
                     1 => ManagerTheme::getLexicon('yes'),
                     0 => ManagerTheme::getLexicon('no')
                 ],
-                'comment' => ManagerTheme::getLexicon('defaultpublish_message')
+                'comment' => ManagerTheme::getLexicon('defaultpublish_message'),
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['cache_default']))
             @include('manager::form.radio', [
                 'name' => 'cache_default',
                 'label' => ManagerTheme::getLexicon('defaultcache_title'),
@@ -290,13 +248,11 @@
                     1 => ManagerTheme::getLexicon('yes'),
                     0 => ManagerTheme::getLexicon('no')
                 ],
-                'comment' => ManagerTheme::getLexicon('defaultcache_message')
+                'comment' => ManagerTheme::getLexicon('defaultcache_message'),
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['search_default']))
             @include('manager::form.radio', [
                 'name' => 'search_default',
                 'label' => ManagerTheme::getLexicon('defaultsearch_title'),
@@ -306,13 +262,11 @@
                     1 => ManagerTheme::getLexicon('yes'),
                     0 => ManagerTheme::getLexicon('no')
                 ],
-                'comment' => ManagerTheme::getLexicon('defaultsearch_message')
+                'comment' => ManagerTheme::getLexicon('defaultsearch_message'),
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['auto_menuindex']))
             @include('manager::form.radio', [
                 'name' => 'auto_menuindex',
                 'label' => ManagerTheme::getLexicon('defaultmenuindex_title'),
@@ -322,13 +276,11 @@
                     1 => ManagerTheme::getLexicon('yes'),
                     0 => ManagerTheme::getLexicon('no')
                 ],
-                'comment' => ManagerTheme::getLexicon('defaultmenuindex_message')
+                'comment' => ManagerTheme::getLexicon('defaultmenuindex_message'),
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['custom_contenttype']))
             @include('manager::form.row', [
                 'label' => ManagerTheme::getLexicon('custom_contenttype_title'),
                 'for' => 'txt_custom_contenttype',
@@ -351,7 +303,8 @@
                             'name' => 'lst_custom_contenttype',
                             'attributes' => 'size="5"',
                             'options' => explode(',', $settings['custom_contenttype']),
-                            'as' => 'values'
+                            'as' => 'values',
+                            'fromFile' => $fileSetting ?? [],
                         ]) .
                     '</div>
                     <div class="col-auto col-sm-2 mt-1">' .
@@ -367,13 +320,11 @@
                         'name' => 'custom_contenttype',
                         'value' => $settings['custom_contenttype']
                     ]),
-                'comment' => ManagerTheme::getLexicon('custom_contenttype_message')
+                'comment' => ManagerTheme::getLexicon('custom_contenttype_message'),
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['docid_incrmnt_method']))
             @include('manager::form.radio', [
                 'name' => 'docid_incrmnt_method',
                 'label' => ManagerTheme::getLexicon('docid_incrmnt_method_title'),
@@ -383,13 +334,11 @@
                     0 => ManagerTheme::getLexicon('docid_incrmnt_method_0'),
                     1 => ManagerTheme::getLexicon('docid_incrmnt_method_1'),
                     2 => ManagerTheme::getLexicon('docid_incrmnt_method_2')
-                ]
+                ],
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['enable_cache']))
             @include('manager::form.radio', [
                 'name' => 'enable_cache',
                 'label' => ManagerTheme::getLexicon('enable_cache_title'),
@@ -399,13 +348,11 @@
                     1 => ManagerTheme::getLexicon('enabled'),
                     0 => ManagerTheme::getLexicon('disabled'),
                     2 => ManagerTheme::getLexicon('disabled_at_login')
-                ]
+                ],
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['disable_chunk_cache']))
             @include('manager::form.radio', [
                 'name' => 'disable_chunk_cache',
                 'label' => ManagerTheme::getLexicon('disable_chunk_cache_title'),
@@ -414,14 +361,11 @@
                 'options' => [
                     1 => ManagerTheme::getLexicon('yes'),
                     0 => ManagerTheme::getLexicon('no'),
-                ]
+                ],
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-
-        @if(! isset($fileSetting['disable_snippet_cache']))
             @include('manager::form.radio', [
                 'name' => 'disable_snippet_cache',
                 'label' => ManagerTheme::getLexicon('disable_snippet_cache_title'),
@@ -430,14 +374,11 @@
                 'options' => [
                     1 => ManagerTheme::getLexicon('yes'),
                     0 => ManagerTheme::getLexicon('no'),
-                ]
+                ],
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-
-        @if(! isset($fileSetting['disable_chunk_cache']))
             @include('manager::form.radio', [
                 'name' => 'disable_plugins_cache',
                 'label' => ManagerTheme::getLexicon('disable_plugins_cache_title'),
@@ -446,14 +387,11 @@
                 'options' => [
                     1 => ManagerTheme::getLexicon('yes'),
                     0 => ManagerTheme::getLexicon('no'),
-                ]
+                ],
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-
-        @if(! isset($fileSetting['cache_type']))
             @include('manager::form.radio', [
                 'name' => 'cache_type',
                 'label' => ManagerTheme::getLexicon('cache_type_title'),
@@ -462,13 +400,11 @@
                 'options' => [
                     1 => ManagerTheme::getLexicon('cache_type_1'),
                     2 => ManagerTheme::getLexicon('cache_type_2')
-                ]
+                ],
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['minifyphp_incache']))
             @include('manager::form.radio', [
                 'name' => 'minifyphp_incache',
                 'label' => ManagerTheme::getLexicon('minifyphp_incache_title'),
@@ -478,13 +414,11 @@
                     1 => ManagerTheme::getLexicon('enabled'),
                     0 => ManagerTheme::getLexicon('disabled')
                 ],
-                'comment' => ManagerTheme::getLexicon('minifyphp_incache_message')
+                'comment' => ManagerTheme::getLexicon('minifyphp_incache_message'),
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['server_offset_time']))
             @include('manager::form.select', [
                 'name' => 'server_offset_time',
                 'label' => ManagerTheme::getLexicon('serveroffset_title'),
@@ -492,13 +426,11 @@
                 'value' => $settings['server_offset_time'],
                 'options' => $serverTimes,
                 'attributes' => 'onChange="documentDirty=true;" size="1"',
-                'comment' => sprintf(ManagerTheme::getLexicon('serveroffset_message'), evolutionCMS()->toDateFormat(time(), 'timeOnly'), evolutionCMS()->toDateFormat(time() + $settings['server_offset_time'], 'timeOnly'))
+                'comment' => sprintf(ManagerTheme::getLexicon('serveroffset_message'), evolutionCMS()->toDateFormat(time(), 'timeOnly'), evolutionCMS()->toDateFormat(time() + $settings['server_offset_time'], 'timeOnly')),
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['server_protocol']))
             @include('manager::form.radio', [
                 'name' => 'server_protocol',
                 'label' => ManagerTheme::getLexicon('server_protocol_title'),
@@ -508,25 +440,21 @@
                     'http' => ManagerTheme::getLexicon('server_protocol_http'),
                     'https' => ManagerTheme::getLexicon('server_protocol_https')
                 ],
-                'comment' => ManagerTheme::getLexicon('server_protocol_message')
+                'comment' => ManagerTheme::getLexicon('server_protocol_message'),
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['rss_url_news']))
             @include('manager::form.input', [
                 'name' => 'rss_url_news',
                 'label' => ManagerTheme::getLexicon('rss_url_news_title'),
                 'small' => '[(rss_url_news)]',
                 'value' => $settings['rss_url_news'],
-                'attributes' => 'onchange="documentDirty=true;" maxlength="350"'
+                'attributes' => 'onchange="documentDirty=true;" maxlength="350"',
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
-        @if(! isset($fileSetting['track_visitors']))
             @include('manager::form.radio', [
                 'name' => 'track_visitors',
                 'label' => ManagerTheme::getLexicon('track_visitors_title'),
@@ -536,11 +464,10 @@
                     1 => ManagerTheme::getLexicon('yes'),
                     0 => ManagerTheme::getLexicon('no')
                 ],
-                'comment' => ManagerTheme::getLexicon('track_visitors_message')
+                'comment' => ManagerTheme::getLexicon('track_visitors_message'),
+                'fromFile' => $fileSetting ?? [],
             ])
 
-            <div class="split my-1"></div>
-        @endif
 
         {!! get_by_key($tabEvents, 'OnSiteSettingsRender') !!}
     </div>
