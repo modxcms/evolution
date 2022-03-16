@@ -1,10 +1,3 @@
-@php
-    if(isset($fromFile[$name])) {
-        $disabled = 1;
-        $comment = '<b>' . ManagerTheme::getLexicon('setting_from_file') . '</b>' . (!empty($comment) ? '<br>' . $comment : '');
-        $value = $fromFile[$name];
-    }
-@endphp
 <div class="row form-row @if(isset($type))form-element-{{ $type }}@endif">
     <label for="{{ $for ?? $name }}" class="control-label col-5 col-md-3 col-lg-2">
         {!! $label ?? '' !!}

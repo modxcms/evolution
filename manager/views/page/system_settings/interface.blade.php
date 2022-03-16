@@ -14,10 +14,10 @@
             'ucwords' => false,
             'str_to_upper' => true,
             'attributes' => 'onChange="documentDirty=true;" size="1"',
-            'comment' => ManagerTheme::getLexicon('language_message'),
-            'fromFile' => [],
+            'comment' => ManagerTheme::getLexicon('language_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.select', [
             'name' => 'modx_charset',
@@ -26,10 +26,10 @@
             'value' => $settings['modx_charset'],
             'attributes' => 'onChange="documentDirty=true;" size="1"',
             'options' => include EVO_CORE_PATH . '/factory/charsets.php',
-            'comment' => ManagerTheme::getLexicon('charset_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('charset_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.select', [
             'name' => 'manager_theme',
@@ -39,10 +39,10 @@
             'attributes' => 'onChange="documentDirty=true; document.forms[\'settings\'].theme_refresher.value = Date.parse(new Date());" size="1"',
             'options' => $themes,
             'ucwords' => true,
-            'comment' => '<input type="hidden" name="theme_refresher" value="" />',
-            'fromFile' => $fileSetting ?? [],
+            'comment' => '<input type="hidden" name="theme_refresher" value="" />'
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'manager_theme_mode',
@@ -55,10 +55,10 @@
                 3 => ManagerTheme::getLexicon('manager_theme_mode3'),
                 4 => ManagerTheme::getLexicon('manager_theme_mode4')
             ],
-            'comment' => ManagerTheme::getLexicon('manager_theme_mode_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('manager_theme_mode_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.row', [
             'label' => ManagerTheme::getLexicon('login_logo_title'),
@@ -70,15 +70,13 @@
                         ManagerTheme::view('form.inputElement', [
                             'name' => 'login_logo',
                             'value' => $settings['login_logo'],
-                            'attributes' => 'onChange="documentDirty=true;"',
-                            'fromFile' => $fileSetting ?? [],
+                            'attributes' => 'onChange="documentDirty=true;"'
                         ]) .
                         '<div class="input-group-btn">' .
                             ManagerTheme::view('form.inputElement', [
                                 'type' => 'button',
                                 'value' => ManagerTheme::getLexicon('insert'),
-                                'attributes' => 'onclick="BrowseServer(\'login_logo\')"',
-                                'fromFile' => $fileSetting ?? [],
+                                'attributes' => 'onclick="BrowseServer(\'login_logo\')"'
                             ]) .
                         '</div>
                     </div>
@@ -87,10 +85,10 @@
                     <img name="login_logo" style="max-height: 48px" src="' .
                     ($settings['login_logo'] ? MODX_SITE_URL . $settings['login_logo'] : '') . '" />
                 </div>',
-            'comment' => ManagerTheme::getLexicon('login_logo_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('login_logo_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.row', [
             'label' => ManagerTheme::getLexicon('login_bg_title'),
@@ -102,15 +100,13 @@
                         ManagerTheme::view('form.inputElement', [
                             'name' => 'login_bg',
                             'value' => $settings['login_bg'],
-                            'attributes' => 'onChange="documentDirty=true;"',
-                            'fromFile' => $fileSetting ?? [],
+                            'attributes' => 'onChange="documentDirty=true;"'
                         ]) .
                         '<div class="input-group-btn">' .
                             ManagerTheme::view('form.inputElement', [
                                 'type' => 'button',
                                 'value' => ManagerTheme::getLexicon('insert'),
-                                'attributes' => 'onclick="BrowseServer(\'login_bg\')"',
-                                'fromFile' => $fileSetting ?? [],
+                                'attributes' => 'onclick="BrowseServer(\'login_bg\')"'
                             ]) .
                         '</div>
                     </div>
@@ -119,10 +115,10 @@
                     <img name="login_bg" style="max-height: 48px" src="' .
                     ($settings['login_bg'] ? MODX_SITE_URL . $settings['login_bg'] : '') . '" />
                 </div>',
-            'comment' => ManagerTheme::getLexicon('login_bg_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('login_bg_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'login_form_position',
@@ -133,10 +129,10 @@
                 'left' => ManagerTheme::getLexicon('login_form_position_left'),
                 'center' => ManagerTheme::getLexicon('login_form_position_center'),
                 'right' => ManagerTheme::getLexicon('login_form_position_right')
-            ],
-            'fromFile' => $fileSetting ?? [],
+            ]
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'login_form_style',
@@ -146,10 +142,10 @@
             'options' => [
                 'dark' => ManagerTheme::getLexicon('login_form_style_dark'),
                 'light' => ManagerTheme::getLexicon('login_form_style_light')
-            ],
-            'fromFile' => $fileSetting ?? [],
+            ]
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'manager_menu_position',
@@ -159,10 +155,10 @@
             'options' => [
                 'top' => ManagerTheme::getLexicon('manager_menu_position_top'),
                 'left' => ManagerTheme::getLexicon('manager_menu_position_left')
-            ],
-            'fromFile' => $fileSetting ?? [],
+            ]
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'show_picker',
@@ -173,10 +169,10 @@
                 1 => ManagerTheme::getLexicon('yes'),
                 0 => ManagerTheme::getLexicon('no')
             ],
-            'comment' => ManagerTheme::getLexicon('settings_show_picker_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('settings_show_picker_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'warning_visibility',
@@ -187,10 +183,10 @@
                 0 => ManagerTheme::getLexicon('administrators'),
                 1 => ManagerTheme::getLexicon('everybody')
             ],
-            'comment' => ManagerTheme::getLexicon('warning_visibility_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('warning_visibility_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'tree_page_click',
@@ -201,10 +197,10 @@
                 27 => ManagerTheme::getLexicon('edit_resource'),
                 3 => ManagerTheme::getLexicon('doc_data_title')
             ],
-            'comment' => ManagerTheme::getLexicon('tree_page_click_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('tree_page_click_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'use_breadcrumbs',
@@ -215,10 +211,10 @@
                 1 => ManagerTheme::getLexicon('yes'),
                 0 => ManagerTheme::getLexicon('no')
             ],
-            'comment' => ManagerTheme::getLexicon('use_breadcrumbs_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('use_breadcrumbs_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'remember_last_tab',
@@ -229,10 +225,10 @@
                 1 => ManagerTheme::getLexicon('yes'),
                 0 => ManagerTheme::getLexicon('no')
             ],
-            'comment' => ManagerTheme::getLexicon('remember_last_tab_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('remember_last_tab_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'global_tabs',
@@ -242,10 +238,10 @@
             'options' => [
                 1 => ManagerTheme::getLexicon('yes'),
                 0 => ManagerTheme::getLexicon('no')
-            ],
-            'fromFile' => $fileSetting ?? [],
+            ]
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.select', [
             'name' => 'group_tvs',
@@ -254,10 +250,10 @@
             'value' => $settings['group_tvs'],
             'options' => explode(',', ManagerTheme::getLexicon('settings_group_tv_options')),
             'attributes' => 'onChange="documentDirty=true;" size="1"',
-            'comment' => ManagerTheme::getLexicon('settings_group_tv_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('settings_group_tv_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'show_newresource_btn',
@@ -268,10 +264,10 @@
                 1 => ManagerTheme::getLexicon('yes'),
                 0 => ManagerTheme::getLexicon('no')
             ],
-            'comment' => ManagerTheme::getLexicon('show_newresource_btn_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('show_newresource_btn_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'show_fullscreen_btn',
@@ -282,10 +278,10 @@
                 1 => ManagerTheme::getLexicon('yes'),
                 0 => ManagerTheme::getLexicon('no')
             ],
-            'comment' => ManagerTheme::getLexicon('show_fullscreen_btn_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('show_fullscreen_btn_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.select', [
             'name' => 'resource_tree_node_name',
@@ -302,20 +298,20 @@
                 'publishedon' => '[*publishedon*]'
             ],
             'attributes' => 'onChange="documentDirty=true;" size="1"',
-            'comment' => ManagerTheme::getLexicon('setting_resource_tree_node_name_desc') . '<br /><b>' . ManagerTheme::getLexicon('setting_resource_tree_node_name_desc_add') . '</b>',
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('setting_resource_tree_node_name_desc') . '<br /><b>' . ManagerTheme::getLexicon('setting_resource_tree_node_name_desc_add') . '</b>'
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.input', [
             'name' => 'session_timeout',
             'label' => ManagerTheme::getLexicon('session_timeout'),
             'small' => '[(session_timeout)]',
             'value' => $settings['session_timeout'],
-            'comment' => ManagerTheme::getLexicon('session_timeout_msg'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('session_timeout_msg')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'tree_show_protected',
@@ -326,10 +322,10 @@
                 1 => ManagerTheme::getLexicon('yes'),
                 0 => ManagerTheme::getLexicon('no')
             ],
-            'comment' => ManagerTheme::getLexicon('tree_show_protected_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('tree_show_protected_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.input', [
             'name' => 'datepicker_offset',
@@ -337,10 +333,10 @@
             'small' => '[(datepicker_offset)]',
             'value' => $settings['datepicker_offset'],
             'attributes' => 'onChange="documentDirty=true;" maxlength="50"',
-            'comment' => ManagerTheme::getLexicon('datepicker_offset_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('datepicker_offset_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.select', [
             'name' => 'datetime_format',
@@ -350,10 +346,10 @@
             'attributes' => 'onChange="documentDirty=true;" size="1"',
             'options' =>  ['dd-mm-YYYY', 'mm/dd/YYYY', 'YYYY/mm/dd'],
             'as' => 'values',
-            'comment' => ManagerTheme::getLexicon('datetime_format_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('datetime_format_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.input', [
             'name' => 'number_of_logs',
@@ -361,10 +357,10 @@
             'small' => '[(number_of_logs)]',
             'value' => $settings['number_of_logs'],
             'attributes' => 'onChange="documentDirty=true;" maxlength="50"',
-            'comment' => ManagerTheme::getLexicon('nologentries_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('nologentries_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.input', [
             'name' => 'mail_check_timeperiod',
@@ -372,10 +368,10 @@
             'small' => '[(mail_check_timeperiod)]',
             'value' => $settings['mail_check_timeperiod'],
             'attributes' => 'onChange="documentDirty=true;" maxlength="50"',
-            'comment' => ManagerTheme::getLexicon('mail_check_timeperiod_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('mail_check_timeperiod_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.input', [
             'name' => 'number_of_messages',
@@ -383,10 +379,10 @@
             'small' => '[(number_of_messages)]',
             'value' => $settings['number_of_messages'],
             'attributes' => 'onChange="documentDirty=true;" maxlength="50"',
-            'comment' => ManagerTheme::getLexicon('nomessages_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('nomessages_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.input', [
             'name' => 'number_of_results',
@@ -394,10 +390,10 @@
             'small' => '[(number_of_results)]',
             'value' => $settings['number_of_results'],
             'attributes' => 'onChange="documentDirty=true;" maxlength="50"',
-            'comment' => ManagerTheme::getLexicon('noresults_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('noresults_message')
         ])
 
+        <div class="split my-1"></div>
 
         <?php
         // invoke OnRichTextEditorRegister event
@@ -425,9 +421,10 @@
                         'attributes' => 'id="editorRowOff"'
                     ]
                 ],
-                'comment' => ManagerTheme::getLexicon('use_editor_message'),
-                'fromFile' => $fileSetting ?? [],
+                'comment' => ManagerTheme::getLexicon('use_editor_message')
             ])
+
+            <div class="split my-1"></div>
 
             <div class="editorRow" @if(empty($settings['use_editor'])) style="display: none;" @endif>
 
@@ -443,10 +440,10 @@
                     ],
                     'options' => $evtOut,
                     'as' => 'values',
-                    'comment' => ManagerTheme::getLexicon('which_editor_message'),
-                    'fromFile' => $fileSetting ?? [],
+                    'comment' => ManagerTheme::getLexicon('which_editor_message')
                 ])
 
+                <div class="split my-1"></div>
 
                 @include('manager::form.select', [
                     'name' => 'fe_editor_lang',
@@ -460,10 +457,10 @@
                     'options' => $langKeys,
                     'as' => 'values',
                     'ucwords' => true,
-                    'comment' => ManagerTheme::getLexicon('fe_editor_lang_message'),
-                    'fromFile' => $fileSetting ?? [],
+                    'comment' => ManagerTheme::getLexicon('fe_editor_lang_message')
                 ])
 
+                <div class="split my-1"></div>
 
                 @include('manager::form.input', [
                     'name' => 'editor_css_path',
@@ -471,11 +468,10 @@
                     'small' => '[(editor_css_path)]',
                     'value' => $settings['editor_css_path'],
                     'attributes' => 'onChange="documentDirty=true;" maxlength="255"',
-                    'comment' => ManagerTheme::getLexicon('editor_css_path_message'),
-                    'fromFile' => $fileSetting ?? [],
+                    'comment' => ManagerTheme::getLexicon('editor_css_path_message')
                 ])
 
-
+                <div class="split my-1"></div>
             </div>
         </div>
 

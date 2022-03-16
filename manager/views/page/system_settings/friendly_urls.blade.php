@@ -19,10 +19,10 @@
                     'attributes' => 'id="furlRowOff"'
                 ],
             ],
-            'comment' => ManagerTheme::getLexicon('friendlyurls_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('friendlyurls_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'xhtml_urls',
@@ -39,10 +39,10 @@
                     'attributes' => 'id="furlRowOff"'
                 ],
             ],
-            'comment' => ManagerTheme::getLexicon('xhtml_urls_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('xhtml_urls_message')
         ])
 
+        <div class="split my-1"></div>
 
         <div class="furlRow" @if(!$settings['friendly_urls']) style="display: none" @endif>
 
@@ -52,10 +52,10 @@
                 'small' => '[(friendly_url_prefix)]',
                 'value' => $settings['friendly_url_prefix'],
                 'attributes' => 'onchange="documentDirty=true;" maxlength="50"',
-                'comment' => ManagerTheme::getLexicon('friendlyurlsprefix_message'),
-                'fromFile' => $fileSetting ?? [],
+                'comment' => ManagerTheme::getLexicon('friendlyurlsprefix_message')
             ])
 
+            <div class="split my-1"></div>
 
             @include('manager::form.input', [
                 'name' => 'friendly_url_suffix',
@@ -63,10 +63,10 @@
                 'small' => '[(friendly_url_suffix)]',
                 'value' => $settings['friendly_url_suffix'],
                 'attributes' => 'onchange="documentDirty=true;" maxlength="50"',
-                'comment' => ManagerTheme::getLexicon('friendlyurlsuffix_message'),
-                'fromFile' => $fileSetting ?? [],
+                'comment' => ManagerTheme::getLexicon('friendlyurlsuffix_message')
             ])
 
+            <div class="split my-1"></div>
 
             @include('manager::form.radio', [
                 'name' => 'make_folders',
@@ -77,10 +77,10 @@
                     1 => ManagerTheme::getLexicon('yes'),
                     0 => ManagerTheme::getLexicon('no'),
                 ],
-                'comment' => ManagerTheme::getLexicon('make_folders_message'),
-                'fromFile' => $fileSetting ?? [],
+                'comment' => ManagerTheme::getLexicon('make_folders_message')
             ])
 
+            <div class="split my-1"></div>
 
             @include('manager::form.radio', [
                 'name' => 'seostrict',
@@ -91,10 +91,10 @@
                     1 => ManagerTheme::getLexicon('yes'),
                     0 => ManagerTheme::getLexicon('no'),
                 ],
-                'comment' => ManagerTheme::getLexicon('seostrict_message'),
-                'fromFile' => $fileSetting ?? [],
+                'comment' => ManagerTheme::getLexicon('seostrict_message')
             ])
 
+            <div class="split my-1"></div>
 
             @include('manager::form.radio', [
                 'name' => 'full_aliaslisting',
@@ -105,10 +105,10 @@
                     1 => ManagerTheme::getLexicon('yes'),
                     0 => ManagerTheme::getLexicon('no'),
                 ],
-                'comment' => ManagerTheme::getLexicon('full_aliaslisting_title'),
-                'fromFile' => $fileSetting ?? [],
+                'comment' => ManagerTheme::getLexicon('full_aliaslisting_title')
             ])
 
+            <div class="split my-1"></div>
 
             @include('manager::form.radio', [
                 'name' => 'aliaslistingfolder',
@@ -119,10 +119,10 @@
                     1 => ManagerTheme::getLexicon('yes'),
                     0 => ManagerTheme::getLexicon('no'),
                 ],
-                'comment' => ManagerTheme::getLexicon('aliaslistingfolder_title'),
-                'fromFile' => $fileSetting ?? [],
+                'comment' => ManagerTheme::getLexicon('aliaslistingfolder_title')
             ])
 
+            <div class="split my-1"></div>
 
             @include('manager::form.radio', [
                 'name' => 'friendly_alias_urls',
@@ -133,10 +133,10 @@
                     1 => ManagerTheme::getLexicon('yes'),
                     0 => ManagerTheme::getLexicon('no'),
                 ],
-                'comment' => ManagerTheme::getLexicon('friendly_alias_message'),
-                'fromFile' => $fileSetting ?? [],
+                'comment' => ManagerTheme::getLexicon('friendly_alias_message')
             ])
 
+            <div class="split my-1"></div>
 
             @include('manager::form.radio', [
                 'name' => 'use_alias_path',
@@ -147,10 +147,10 @@
                     1 => ManagerTheme::getLexicon('yes'),
                     0 => ManagerTheme::getLexicon('no'),
                 ],
-                'comment' => ManagerTheme::getLexicon('use_alias_path_message'),
-                'fromFile' => $fileSetting ?? [],
+                'comment' => ManagerTheme::getLexicon('use_alias_path_message')
             ])
 
+            <div class="split my-1"></div>
 
             @include('manager::form.radio', [
                 'name' => 'allow_duplicate_alias',
@@ -161,10 +161,10 @@
                     1 => ManagerTheme::getLexicon('yes'),
                     0 => ManagerTheme::getLexicon('no'),
                 ],
-                'comment' => ManagerTheme::getLexicon('duplicate_alias_message'),
-                'fromFile' => $fileSetting ?? [],
+                'comment' => ManagerTheme::getLexicon('duplicate_alias_message')
             ])
 
+            <div class="split my-1"></div>
 
             @include('manager::form.radio', [
                 'name' => 'automatic_alias',
@@ -175,10 +175,10 @@
                     1 => ManagerTheme::getLexicon('yes'),
                     0 => ManagerTheme::getLexicon('no'),
                 ],
-                'comment' => ManagerTheme::getLexicon('automatic_alias_message'),
-                'fromFile' => $fileSetting ?? [],
+                'comment' => ManagerTheme::getLexicon('automatic_alias_message')
             ])
 
+            <div class="split my-1"></div>
 
             {!! get_by_key($tabEvents, 'OnFriendlyURLSettingsRender') !!}
         </div>

@@ -10,10 +10,10 @@
             'small' => '[(emailsender)]',
             'value' => $settings['emailsender'],
             'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
-            'comment' => ManagerTheme::getLexicon('emailsender_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('emailsender_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'email_sender_method',
@@ -24,10 +24,10 @@
                 1 => ManagerTheme::getLexicon('auto'),
                 0 => ManagerTheme::getLexicon('use_emailsender')
             ],
-            'comment' => ManagerTheme::getLexicon('email_sender_method_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('email_sender_method_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'email_method',
@@ -44,10 +44,10 @@
                     'attributes' => 'id="useSmtp"'
                 ]
             ],
-            'comment' => ManagerTheme::getLexicon('email_sender_method_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('email_sender_method_message')
         ])
 
+        <div class="split my-1"></div>
 
         <div class="smtpRow" @if($settings['email_method'] == 'mail') style="display: none;" @endif>
             @include('manager::form.radio', [
@@ -58,10 +58,10 @@
                 'options' => [
                     1 => ManagerTheme::getLexicon('yes'),
                     0 => ManagerTheme::getLexicon('no')
-                ],
-                'fromFile' => $fileSetting ?? [],
+                ]
             ])
 
+            <div class="split my-1"></div>
 
             @include('manager::form.radio', [
                 'name' => 'smtp_autotls',
@@ -71,10 +71,10 @@
                 'options' => [
                     1 => ManagerTheme::getLexicon('yes'),
                     0 => ManagerTheme::getLexicon('no')
-                ],
-                'fromFile' => $fileSetting ?? [],
+                ]
             ])
 
+            <div class="split my-1"></div>
 
             @include('manager::form.select', [
                 'name' => 'smtp_secure',
@@ -86,50 +86,50 @@
                     'none' => ManagerTheme::getLexicon('no'),
                     'ssl' => 'SSL',
                     'tls' => 'TLS',
-                ],
-                'fromFile' => $fileSetting ?? [],
+                ]
             ])
 
+            <div class="split my-1"></div>
 
             @include('manager::form.input', [
                 'name' => 'smtp_host',
                 'label' => ManagerTheme::getLexicon('smtp_host_title'),
                 'small' => '[(smtp_host)]',
                 'value' => $settings['smtp_host'],
-                'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
-                'fromFile' => $fileSetting ?? [],
+                'attributes' => 'onchange="documentDirty=true;" maxlength="255"'
             ])
 
+            <div class="split my-1"></div>
 
             @include('manager::form.input', [
                 'name' => 'smtp_port',
                 'label' => ManagerTheme::getLexicon('smtp_port_title'),
                 'small' => '[(smtp_port)]',
                 'value' => $settings['smtp_port'],
-                'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
-                'fromFile' => $fileSetting ?? [],
+                'attributes' => 'onchange="documentDirty=true;" maxlength="255"'
             ])
 
+            <div class="split my-1"></div>
 
             @include('manager::form.input', [
                 'name' => 'smtp_username',
                 'label' => ManagerTheme::getLexicon('smtp_username_title'),
                 'small' => '[(smtp_username)]',
                 'value' => $settings['smtp_username'],
-                'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
-                'fromFile' => $fileSetting ?? [],
+                'attributes' => 'onchange="documentDirty=true;" maxlength="255"'
             ])
 
+            <div class="split my-1"></div>
 
             @include('manager::form.input', [
                 'name' => 'smtppw',
                 'label' => ManagerTheme::getLexicon('smtp_password_title'),
                 'small' => '[(smtppw)]',
                 'value' => '********************',
-                'attributes' => 'onchange="documentDirty=true;" maxlength="255" autocomplete="off"',
-                'fromFile' => $fileSetting ?? [],
+                'attributes' => 'onchange="documentDirty=true;" maxlength="255" autocomplete="off"'
             ])
 
+            <div class="split my-1"></div>
         </div>
 
         @include('manager::form.input', [
@@ -148,24 +148,22 @@
                     ],
                     'options' => $langKeys,
                     'as' => 'values',
-                    'ucwords' => true,
-                    'fromFile' => $fileSetting ?? [],
+                    'ucwords' => true
                 ]) .
                 ManagerTheme::view('form.inputElement', [
                     'type' => 'hidden',
                     'name' => 'emailsubject_default',
                     'id' => 'emailsubject_default_hidden',
-                    'value' => addslashes(ManagerTheme::getLexicon('emailsubject_default')),
-                    'fromFile' => $fileSetting ?? [],
+                    'value' => addslashes(ManagerTheme::getLexicon('emailsubject_default'))
                 ])
             ,
             'small' => '[(emailsubject)]',
             'value' => $settings['emailsubject'],
             'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
-            'comment' => ManagerTheme::getLexicon('emailsubject_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('emailsubject_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.textarea', [
             'name' => 'websignupemail_message',
@@ -183,25 +181,23 @@
                     ],
                     'options' => $langKeys,
                     'as' => 'values',
-                    'ucwords' => true,
-                    'fromFile' => $fileSetting ?? [],
+                    'ucwords' => true
                 ]) .
                 ManagerTheme::view('form.inputElement', [
                     'type' => 'hidden',
                     'name' => 'system_email_websignup_default',
                     'id' => 'system_email_websignup_hidden',
-                    'value' => addslashes(ManagerTheme::getLexicon('system_email_websignup')),
-                    'fromFile' => $fileSetting ?? [],
+                    'value' => addslashes(ManagerTheme::getLexicon('system_email_websignup'))
                 ])
             ,
             'small' => '[(websignupemail_message)]',
             'value' => $settings['websignupemail_message'],
             'rows' => 5,
             'attributes' => 'onchange="documentDirty=true;"',
-            'comment' => ManagerTheme::getLexicon('websignupemail_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('websignupemail_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.textarea', [
             'name' => 'webpwdreminder_message',
@@ -219,25 +215,23 @@
                     ],
                     'options' => $langKeys,
                     'as' => 'values',
-                    'ucwords' => true,
-                    'fromFile' => $fileSetting ?? [],
+                    'ucwords' => true
                 ]) .
                 ManagerTheme::view('form.inputElement', [
                     'type' => 'hidden',
                     'name' => 'system_email_webreminder_default',
                     'id' => 'system_email_webreminder_hidden',
-                    'value' => addslashes(ManagerTheme::getLexicon('system_email_webreminder')),
-                    'fromFile' => $fileSetting ?? [],
+                    'value' => addslashes(ManagerTheme::getLexicon('system_email_webreminder'))
                 ])
             ,
             'small' => '[(webpwdreminder_message)]',
             'value' => $settings['webpwdreminder_message'],
             'rows' => 5,
             'attributes' => 'onchange="documentDirty=true;"',
-            'comment' => ManagerTheme::getLexicon('webpwdreminder_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('webpwdreminder_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.radio', [
             'name' => 'allow_multiple_emails',
@@ -248,10 +242,10 @@
                 1 => ManagerTheme::getLexicon('yes'),
                 0 => ManagerTheme::getLexicon('no')
             ],
-            'comment' => ManagerTheme::getLexicon('allow_multiple_emails_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('allow_multiple_emails_message')
         ])
 
+        <div class="split my-1"></div>
 
         {!! get_by_key($tabEvents, 'OnUserSettingsRender') !!}
     </div>

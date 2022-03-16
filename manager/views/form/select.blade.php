@@ -1,11 +1,3 @@
-@php
-    if(isset($fromFile[$name])) {
-        $disabled = 1;
-        $comment = '<b>' . ManagerTheme::getLexicon('setting_from_file') . '</b>' . (!empty($comment) ? '<br>' . $comment : '');
-        $value = $fromFile[$name];
-    }
-@endphp
-
 <div class="row form-row form-element-select">
     <label for="{{ $for ?? $name }}" class="control-label col-5 col-md-3 col-lg-2">
         {!! $label ?? '' !!}
@@ -21,7 +13,6 @@
             <div class="clearfix">
                 <select class="form-control" name="{{ $name }}" id="{{ $id ?? $name }}"
                     {!! $attributes ?? '' !!}
-                    @if(!empty($disabled)) disabled @endif
                 >
                     @if(!empty($first))
                         <option value="{{ $first['value'] ?? '' }}">{{ $first['text'] ?? '' }}</option>

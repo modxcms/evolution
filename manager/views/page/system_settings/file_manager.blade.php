@@ -14,23 +14,21 @@
                     ManagerTheme::view('form.inputElement', [
                         'name' => 'filemanager_path',
                         'value' => $settings['filemanager_path'],
-                        'attributes' => 'onChange="documentDirty=true;" maxlength="255"',
-                        'fromFile' => [],
+                        'attributes' => 'onChange="documentDirty=true;" maxlength="255"'
                     ]) .
                     '<div class="input-group-btn">' .
                         ManagerTheme::view('form.inputElement', [
                             'type' => 'button',
                             'name' => 'reset_filemanager_path',
                             'value' => ManagerTheme::getLexicon('reset'),
-                            'attributes' => 'onclick="reset_path(\'filemanager_path\');"',
-                            'fromFile' => [],
+                            'attributes' => 'onclick="reset_path(\'filemanager_path\');"'
                         ]) .
                     '</div>
                 </div>',
-            'comment' => ManagerTheme::getLexicon('filemanager_path_message'),
-            'fromFile' => [],
+            'comment' => ManagerTheme::getLexicon('filemanager_path_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.input', [
             'name' => 'upload_files',
@@ -38,10 +36,10 @@
             'small' => '[(upload_files)]',
             'value' => $settings['upload_files'],
             'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
-            'comment' => ManagerTheme::getLexicon('uploadable_files_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('uploadable_files_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.input', [
             'name' => 'upload_images',
@@ -49,10 +47,10 @@
             'small' => '[(upload_images)]',
             'value' => $settings['upload_images'],
             'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
-            'comment' => ManagerTheme::getLexicon('uploadable_images_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('uploadable_images_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.input', [
             'name' => 'upload_media',
@@ -60,10 +58,10 @@
             'small' => '[(upload_media)]',
             'value' => $settings['upload_media'],
             'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
-            'comment' => ManagerTheme::getLexicon('uploadable_media_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('uploadable_media_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.input', [
             'name' => 'upload_maxsize',
@@ -71,10 +69,10 @@
             'small' => '[(upload_maxsize)]',
             'value' => $settings['upload_maxsize'],
             'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
-            'comment' => ManagerTheme::getLexicon('upload_maxsize_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('upload_maxsize_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.input', [
             'name' => 'new_file_permissions',
@@ -82,10 +80,10 @@
             'small' => '[(new_file_permissions)]',
             'value' => $settings['new_file_permissions'],
             'attributes' => 'onchange="documentDirty=true;" maxlength="4"',
-            'comment' => ManagerTheme::getLexicon('new_file_permissions_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('new_file_permissions_message')
         ])
 
+        <div class="split my-1"></div>
 
         @include('manager::form.input', [
             'name' => 'new_folder_permissions',
@@ -93,10 +91,10 @@
             'small' => '[(new_folder_permissions)]',
             'value' => $settings['new_folder_permissions'],
             'attributes' => 'onchange="documentDirty=true;" maxlength="4"',
-            'comment' => ManagerTheme::getLexicon('new_folder_permissions_message'),
-            'fromFile' => $fileSetting ?? [],
+            'comment' => ManagerTheme::getLexicon('new_folder_permissions_message')
         ])
 
+        <div class="split my-1"></div>
 
         {!! get_by_key($tabEvents, 'OnFileManagerSettingsRender') !!}
     </div>
