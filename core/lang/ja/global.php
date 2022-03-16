@@ -1502,5 +1502,6 @@ $_lang["role_no_tv"] = 'このロールにはテンプレート変数がまだ�
 $_lang["role_notassigned_tv"] = '割り当て可能なテンプレート変数です。';
 $_lang["role_tv_msg"] = '以下のテンプレート変数にこのロールが割り当てられました。';
 $_lang["tmplvar_roles_access_msg"] = 'このテンプレート変数へアクセス/処理を許可されているロールを選択';
+$_lang["setting_from_file"] = 'Parameter value is defined in core/custom/confic/cms/settings';
 
 return $_lang;
