@@ -1490,4 +1490,6 @@ $_lang["role_notassigned_tv"] = 'Эти параметры доступны дл
 $_lang["role_tv_msg"] = 'Ниже выводятся параметры, назначенные этой роли.';
 $_lang["tmplvar_roles_access_msg"] = 'Укажите роли, которые могут использовать этот Параметр (TV)';
 
+$_lang["setting_from_file"] = '<strong class="text-danger">Значение параметра задано в core/custom/config/cms/settings</strong>';
+
 return $_lang;

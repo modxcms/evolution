@@ -1455,5 +1455,6 @@ $_lang['site_indexing_message'] = 'Керування метатегом robots 
 $_lang["ignore"] = 'Не враховувати';
 $_lang["indexing_is_allowed"] = 'Індексацію дозволено';
 $_lang["indexing_is_prohibited"] = 'Індексацію заборонено';
+$_lang["setting_from_file"] = '<strong class="text-danger">Значение параметра задано в core/custom/config/cms/settings</strong>';
 
 return $_lang;

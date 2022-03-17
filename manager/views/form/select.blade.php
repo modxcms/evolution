@@ -12,7 +12,8 @@
         @if(!empty($options) || !empty($first))
             <div class="clearfix">
                 <select class="form-control" name="{{ $name }}" id="{{ $id ?? $name }}"
-                    {!! $attributes ?? '' !!}
+                        {!! $attributes ?? '' !!}
+                        @if(!empty($disabled)) disabled @endif
                 >
                     @if(!empty($first))
                         <option value="{{ $first['value'] ?? '' }}">{{ $first['text'] ?? '' }}</option>
@@ -24,15 +25,15 @@
                                     @foreach($option['optgroup']['options'] as $k => $opt)
                                         @if(is_string($opt))
                                             <option value="{{ $k }}"
-                                                @if(isset($value) && $value == $k)
-                                                selected="selected"
-                                                @endif
+                                                    @if(isset($value) && $value == $k)
+                                                    selected="selected"
+                                                    @endif
                                             >{{ $opt }}</option>
                                         @else
                                             <option value="{{ $opt['value'] ?? $k }}"
-                                                @if(isset($value) && $value == $opt['value'])
-                                                selected="selected"
-                                                @endif
+                                                    @if(isset($value) && $value == $opt['value'])
+                                                    selected="selected"
+                                                    @endif
                                             >{{ $opt['text'] ?? $opt['value'] }}</option>
                                         @endif
                                     @endforeach
@@ -41,29 +42,29 @@
                                 @if(!empty($as))
                                     @if($as == 'keys')
                                         <option value="{{ $key }}"
-                                            @if(isset($value) && $value == $key)
-                                            selected="selected"
-                                            @endif
+                                                @if(isset($value) && $value == $key)
+                                                selected="selected"
+                                                @endif
                                         >{{ $key }}</option>
                                     @elseif($as == 'values')
                                         <option value="{{ $option }}"
-                                            @if(isset($value) && $value == $option)
-                                            selected="selected"
-                                            @endif
+                                                @if(isset($value) && $value == $option)
+                                                selected="selected"
+                                                @endif
                                         >@if(!empty($ucwords)){{ ucwords(str_replace("_", " ", $option)) }}@elseif(isset($str_to_upper) && $str_to_upper == true){{ strtoupper($option) }}@else{{ $option }}@endif</option>
                                     @endif
                                 @else
                                     <option value="{{ $key }}"
-                                        @if(isset($value) && $value == $key)
-                                        selected="selected"
-                                        @endif
+                                            @if(isset($value) && $value == $key)
+                                            selected="selected"
+                                            @endif
                                     >@if(!empty($ucwords)){{ ucwords(str_replace("_", " ", $option)) }}@elseif(isset($str_to_upper) && $str_to_upper == true){{ strtoupper($option) }}@else{{ $option }}@endif</option>
                                 @endif
                             @else
                                 <option value="{{ $option['value'] }}"
-                                    @if(isset($value) && $value == $option['value'])
-                                    selected="selected"
-                                    @endif
+                                        @if(isset($value) && $value == $option['value'])
+                                        selected="selected"
+                                        @endif
                                 >{{ $option['text'] ?? $option['value'] }}</option>
                             @endif
                         @endforeach

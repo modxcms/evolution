@@ -1,13 +1,21 @@
 <?php namespace EvolutionCMS\Controllers;
 
-use EvolutionCMS\Models;
 use EvolutionCMS\Interfaces\ManagerTheme;
+use EvolutionCMS\Models;
+use function extension_loaded;
+use function is_array;
 
 class SystemSettings extends AbstractController implements ManagerTheme\PageControllerInterface
 {
+    /**
+     * @var string
+     */
     protected $view = 'page.system_settings';
 
-    protected $tabEvents = [
+    /**
+     * @var array
+     */
+    protected array $tabEvents = [
         'OnMiscSettingsRender',
         'OnFriendlyURLSettingsRender',
         'OnSiteSettingsRender',
@@ -18,11 +26,17 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
     ];
 
     /**
+     * @var array
+     */
+    protected array $disabledSettings = [];
+
+    /**
      * {@inheritdoc}
      */
     public function canView(): bool
     {
-        return $this->managerTheme->getCore()->hasPermission('settings');
+        return $this->managerTheme->getCore()
+            ->hasPermission('settings');
     }
 
     /**
@@ -36,7 +50,7 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
             return sprintf($this->managerTheme->getLexicon('lock_settings_msg'), $out->username);
         }
 
-        return $out;
+        return null;
     }
 
     /**
@@ -48,6 +62,7 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
             'passwordsHash' => $this->parameterPasswordHash(),
             'gdAvailable' => $this->parameterCheckGD(),
             'settings' => $this->parameterSettings(),
+            'disabledSettings' => $this->disabledSettings(),
             'displayStyle' => ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block',
             'fileBrowsers' => $this->parameterFileBrowsers(),
             'themes' => $this->parameterThemes(),
@@ -58,23 +73,26 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
             'templates' => $this->parameterTemplates(),
             'tabEvents' => $this->parameterTabEvents(),
             'actionButtons' => $this->parameterActionButtons(),
-            'fileSetting' => app('config')->get('cms.settings')
         ];
     }
 
-    protected function parameterTemplates()
+    /**
+     * @return array
+     */
+    protected function parameterTemplates(): array
     {
         $templatesFromDb = Models\SiteTemplate::query()
-            ->select('site_templates.templatename','site_templates.id','categories.category')
-            ->leftJoin('categories','site_templates.category','=','categories.id')
+            ->select('site_templates.templatename', 'site_templates.id', 'categories.category')
+            ->leftJoin('categories', 'site_templates.category', '=', 'categories.id')
             ->orderBy('categories.category', 'ASC')
-            ->orderBy('site_templates.templatename', 'ASC')->get();
+            ->orderBy('site_templates.templatename', 'ASC')
+            ->get();
         $templates = [];
         $currentCategory = '';
         $templates['oldTmpId'] = 0;
         $templates['oldTmpName'] = '';
         $i = 0;
-        foreach ($templatesFromDb->toArray() as $row){
+        foreach ($templatesFromDb->toArray() as $row) {
             $thisCategory = $row['category'];
             if ($row['category'] == null) {
                 $thisCategory = $this->managerTheme->getLexicon('no_category');
@@ -82,18 +100,18 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
             if ($thisCategory != $currentCategory) {
                 $i++;
                 $templates['items'][$i] = [
-                    'optgroup'    => [
-                        'name'    => $thisCategory,
+                    'optgroup' => [
+                        'name' => $thisCategory,
                         'options' => []
                     ]
                 ];
             }
             if ($row['id'] == get_by_key($this->managerTheme->getCore()->config, 'default_template')) {
-                $templates['oldTmpId']   = $row['id'];
+                $templates['oldTmpId'] = $row['id'];
                 $templates['oldTmpName'] = $row['templatename'];
             }
             $templates['items'][$i]['optgroup']['options'][] = [
-                'text'  => $row['templatename'],
+                'text' => $row['templatename'],
                 'value' => $row['id']
             ];
             $currentCategory = $thisCategory;
@@ -107,12 +125,12 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
      *
      * @return array
      */
-    protected function parameterLang()
+    protected function parameterLang(): array
     {
         $lang_keys_select = [];
         $dir = dir(EVO_CORE_PATH . 'lang');
         while ($file = $dir->read()) {
-            if(is_dir(EVO_CORE_PATH.'lang/'.$file) && ($file != '.' && $file != '..')) {
+            if (is_dir(EVO_CORE_PATH . 'lang/' . $file) && ($file != '.' && $file != '..')) {
                 $lang_keys_select[$file] = $file;
             }
         }
@@ -121,7 +139,10 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
         return $lang_keys_select;
     }
 
-    protected function parameterServerTimes()
+    /**
+     * @return array
+     */
+    protected function parameterServerTimes(): array
     {
         $serverTimes = [];
         for ($i = -24; $i < 25; $i++) {
@@ -135,7 +156,10 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
         return $serverTimes;
     }
 
-    protected function parameterThemes()
+    /**
+     * @return array
+     */
+    protected function parameterThemes(): array
     {
         $themes = [];
         $dir = dir(MODX_MANAGER_PATH . 'media/style/');
@@ -154,7 +178,10 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
         return $themes;
     }
 
-    protected function parameterFileBrowsers()
+    /**
+     * @return array
+     */
+    protected function parameterFileBrowsers(): array
     {
         $out = [];
         foreach (glob(MODX_MANAGER_PATH . 'media/browser/*', GLOB_ONLYDIR) as $dir) {
@@ -165,19 +192,23 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
         return $out;
     }
 
-    protected function parameterSettings()
+    /**
+     * @return array
+     */
+    protected function parameterSettings(): array
     {
         // reload system settings from the database.
         // this will prevent user-defined settings from being saved as system setting
         $out = array_merge(
-            $this->managerTheme->getCore()->getFactorySettings(),
+            $this->managerTheme->getCore()
+                ->getFactorySettings(),
             Models\SystemSetting::all()
                 ->pluck('setting_value', 'setting_name')
                 ->toArray(),
             $this->managerTheme->getCore()->config
         );
 
-        $out['filemanager_path'] =  str_replace(
+        $out['filemanager_path'] = str_replace(
             MODX_BASE_PATH,
             '[(base_path)]',
             get_by_key($out, 'filemanager_path')
@@ -189,21 +220,44 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
             get_by_key($out, 'rb_base_dir')
         );
 
-        if (! $this->parameterCheckGD()) {
+        if (!$this->parameterCheckGD()) {
             $out['use_captcha'] = 0;
+        }
+
+        foreach (config('cms.settings', []) as $key => $value) {
+            if (isset($out[$key])) {
+                $out[$key] = $value;
+                $this->disabledSettings[$key] = true;
+            }
         }
 
         return $out;
     }
 
-    protected function parameterCheckGD()
+    /**
+     * @return array
+     */
+    protected function disabledSettings(): array
     {
-        return \extension_loaded('gd');
+        return $this->disabledSettings;
     }
 
+    /**
+     * @return bool
+     */
+    protected function parameterCheckGD(): bool
+    {
+        return extension_loaded('gd');
+    }
+
+    /**
+     * @return array[]
+     */
     protected function parameterPasswordHash(): array
     {
-        $managerApi = $this->managerTheme->getCore()->getManagerApi();
+        $managerApi = $this->managerTheme->getCore()
+            ->getManagerApi();
+
         return [
             'BLOWFISH_Y' => [
                 'value' => 'BLOWFISH_Y',
@@ -238,7 +292,10 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
         ];
     }
 
-    protected function parameterTabEvents()
+    /**
+     * @return array
+     */
+    protected function parameterTabEvents(): array
     {
         $out = [];
 
@@ -249,17 +306,25 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
         return $out;
     }
 
-    private function callEvent($name)
+    /**
+     * @param string $name
+     * @return array|bool|string
+     */
+    private function callEvent(string $name)
     {
-        $out = $this->managerTheme->getCore()->invokeEvent($name);
-        if (\is_array($out)) {
+        $out = $this->managerTheme->getCore()
+            ->invokeEvent($name);
+        if (is_array($out)) {
             $out = implode('', $out);
         }
 
         return $out;
     }
 
-    protected function parameterActionButtons()
+    /**
+     * @return int[]
+     */
+    protected function parameterActionButtons(): array
     {
         return [
             'save' => 1,
