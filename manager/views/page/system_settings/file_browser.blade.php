@@ -19,7 +19,9 @@
                     'attributes' => 'id="rbRowOff"'
                 ]
             ],
-            'comment' => __('global.rb_message')
+            'comment' => (isset($disabledSettings['use_browser']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.rb_message'),
+            'disabled' => $disabledSettings['use_browser'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -33,7 +35,9 @@
                 'attributes' => 'onChange="documentDirty=true;" size="1"',
                 'options' => $fileBrowsers,
                 'as' => 'values',
-                'comment' => __('global.which_browser_default_msg')
+                'comment' => (isset($disabledSettings['which_browser']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.which_browser_default_msg'),
+                'disabled' => $disabledSettings['which_browser'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -47,7 +51,9 @@
                     1 => __('global.yes'),
                     0 => __('global.no')
                 ],
-                'comment' => __('global.rb_webuser_message')
+                'comment' => (isset($disabledSettings['rb_webuser']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.rb_webuser_message'),
+                'disabled' => $disabledSettings['rb_webuser'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -62,17 +68,20 @@
                         view('manager::form.inputElement', [
                             'name' => 'rb_base_dir',
                             'value' => $settings['rb_base_dir'],
-                            'attributes' => 'onchange="documentDirty=true;" maxlength="255"'
+                            'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
+                            'disabled' => $disabledSettings['rb_base_dir'] ?? null
                         ]) .
                         '<div class="input-group-btn">' .
                             view('manager::form.inputElement', [
                                 'type' => 'button',
                                 'value' => __('global.reset'),
-                                'attributes' => 'onclick="reset_path(\'rb_base_dir\');"'
+                                'attributes' => 'onclick="reset_path(\'rb_base_dir\');"',
+                                'disabled' => $disabledSettings['rb_base_dir'] ?? null
                             ]) .
                         '</div>
                     </div>',
-                'comment' => __('global.rb_base_dir_message')
+                'comment' => (isset($disabledSettings['rb_base_dir']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.rb_base_dir_message')
             ])
 
             <div class="split my-1"></div>
@@ -83,7 +92,9 @@
                 'small' => '[(rb_base_url)]',
                 'value' => $settings['rb_base_url'],
                 'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
-                'comment' => __('global.rb_base_url_message')
+                'comment' => (isset($disabledSettings['rb_base_url']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.rb_base_url_message'),
+                'disabled' => $disabledSettings['rb_base_url'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -97,7 +108,9 @@
                     1 => __('global.yes'),
                     0 => __('global.no')
                 ],
-                'comment' => __('global.clean_uploaded_filename_message')
+                'comment' => (isset($disabledSettings['clean_uploaded_filename']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.clean_uploaded_filename_message'),
+                'disabled' => $disabledSettings['clean_uploaded_filename'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -111,7 +124,9 @@
                     1 => __('global.yes'),
                     0 => __('global.no')
                 ],
-                'comment' => __('global.settings_strip_image_paths_message')
+                'comment' => (isset($disabledSettings['strip_image_paths']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.settings_strip_image_paths_message'),
+                'disabled' => $disabledSettings['strip_image_paths'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -122,7 +137,9 @@
                 'small' => '[(maxImageWidth)]',
                 'value' => $settings['maxImageWidth'],
                 'attributes' => 'onchange="documentDirty=true;" maxlength="4"',
-                'comment' => __('global.maxImageWidth_message')
+                'comment' => (isset($disabledSettings['maxImageWidth']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.maxImageWidth_message'),
+                'disabled' => $disabledSettings['maxImageWidth'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -133,7 +150,9 @@
                 'small' => '[(maxImageHeight)]',
                 'value' => $settings['maxImageHeight'],
                 'attributes' => 'onchange="documentDirty=true;" maxlength="4"',
-                'comment' => __('global.maxImageHeight_message')
+                'comment' => (isset($disabledSettings['maxImageHeight']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.maxImageHeight_message'),
+                'disabled' => $disabledSettings['maxImageHeight'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -147,7 +166,9 @@
                     1 => __('global.yes'),
                     0 => __('global.no')
                 ],
-                'comment' => __('global.clientResize_message')
+                'comment' => (isset($disabledSettings['clientResize']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.clientResize_message'),
+                'disabled' => $disabledSettings['clientResize'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -161,7 +182,9 @@
                     1 => __('global.yes'),
                     0 => __('global.no')
                 ],
-                'comment' => __('global.noThumbnailsRecreation_message')
+                'comment' => (isset($disabledSettings['noThumbnailsRecreation']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.noThumbnailsRecreation_message'),
+                'disabled' => $disabledSettings['noThumbnailsRecreation'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -172,7 +195,9 @@
                 'small' => '[(thumbWidth)]',
                 'value' => $settings['thumbWidth'],
                 'attributes' => 'onchange="documentDirty=true;" maxlength="4"',
-                'comment' => __('global.thumbWidth_message')
+                'comment' => (isset($disabledSettings['thumbWidth']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.thumbWidth_message'),
+                'disabled' => $disabledSettings['thumbWidth'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -183,7 +208,9 @@
                 'small' => '[(thumbHeight)]',
                 'value' => $settings['thumbHeight'],
                 'attributes' => 'onchange="documentDirty=true;" maxlength="4"',
-                'comment' => __('global.thumbHeight_message')
+                'comment' => (isset($disabledSettings['thumbHeight']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.thumbHeight_message'),
+                'disabled' => $disabledSettings['thumbHeight'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -194,7 +221,9 @@
                 'small' => '[(thumbsDir)]',
                 'value' => $settings['thumbsDir'],
                 'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
-                'comment' => __('global.thumbsDir_message')
+                'comment' => (isset($disabledSettings['thumbsDir']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.thumbsDir_message'),
+                'disabled' => $disabledSettings['thumbsDir'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -205,7 +234,9 @@
                 'small' => '[(jpegQuality)]',
                 'value' => $settings['jpegQuality'],
                 'attributes' => 'onchange="documentDirty=true;" maxlength="4"',
-                'comment' => __('global.jpegQuality_message')
+                'comment' => (isset($disabledSettings['jpegQuality']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.jpegQuality_message'),
+                'disabled' => $disabledSettings['jpegQuality'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -218,7 +249,9 @@
                 'options' => [
                     1 => __('global.yes'),
                     0 => __('global.no')
-                ]
+                ],
+                'comment' => (isset($disabledSettings['denyZipDownload']) ? __('global.setting_from_file') . '<br>' : ''),
+                'disabled' => $disabledSettings['denyZipDownload'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -231,7 +264,9 @@
                 'options' => [
                     1 => __('global.yes'),
                     0 => __('global.no')
-                ]
+                ],
+                'comment' => (isset($disabledSettings['denyExtensionRename']) ? __('global.setting_from_file') . '<br>' : ''),
+                'disabled' => $disabledSettings['denyExtensionRename'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -244,7 +279,9 @@
                 'options' => [
                     1 => __('global.yes'),
                     0 => __('global.no')
-                ]
+                ],
+                'comment' => (isset($disabledSettings['showHiddenFiles']) ? __('global.setting_from_file') . '<br>' : ''),
+                'disabled' => $disabledSettings['showHiddenFiles'] ?? null
             ])
 
             <div class="split my-1"></div>

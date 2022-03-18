@@ -14,7 +14,9 @@
             'ucwords' => false,
             'str_to_upper' => true,
             'attributes' => 'onChange="documentDirty=true;" size="1"',
-            'comment' => __('global.language_message')
+            'comment' => (isset($disabledSettings['manager_language']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.language_message'),
+            'disabled' => $disabledSettings['manager_language'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -26,7 +28,9 @@
             'value' => $settings['modx_charset'],
             'attributes' => 'onChange="documentDirty=true;" size="1"',
             'options' => include EVO_CORE_PATH . '/factory/charsets.php',
-            'comment' => __('global.charset_message')
+            'comment' => (isset($disabledSettings['modx_charset']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.charset_message'),
+            'disabled' => $disabledSettings['modx_charset'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -39,7 +43,9 @@
             'attributes' => 'onChange="documentDirty=true; document.forms[\'settings\'].theme_refresher.value = Date.parse(new Date());" size="1"',
             'options' => $themes,
             'ucwords' => true,
-            'comment' => '<input type="hidden" name="theme_refresher" value="" />'
+            'comment' => (isset($disabledSettings['manager_theme']) ? __('global.setting_from_file') . '<br>' : '') .
+                '<input type="hidden" name="theme_refresher" value="" />',
+            'disabled' => $disabledSettings['manager_theme'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -55,7 +61,9 @@
                 3 => __('global.manager_theme_mode3'),
                 4 => __('global.manager_theme_mode4')
             ],
-            'comment' => __('global.manager_theme_mode_message')
+            'comment' => (isset($disabledSettings['manager_theme_mode']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.manager_theme_mode_message'),
+            'disabled' => $disabledSettings['manager_theme_mode'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -70,13 +78,15 @@
                         view('manager::form.inputElement', [
                             'name' => 'login_logo',
                             'value' => $settings['login_logo'],
-                            'attributes' => 'onChange="documentDirty=true;"'
+                            'attributes' => 'onChange="documentDirty=true;"',
+                            'disabled' => $disabledSettings['login_logo'] ?? null
                         ]) .
                         '<div class="input-group-btn">' .
                             view('manager::form.inputElement', [
                                 'type' => 'button',
                                 'value' => __('global.insert'),
-                                'attributes' => 'onclick="BrowseServer(\'login_logo\')"'
+                                'attributes' => 'onclick="BrowseServer(\'login_logo\')"',
+                                'disabled' => $disabledSettings['login_logo'] ?? null
                             ]) .
                         '</div>
                     </div>
@@ -85,7 +95,8 @@
                     <img name="login_logo" style="max-height: 48px" src="' .
                     ($settings['login_logo'] ? MODX_SITE_URL . $settings['login_logo'] : '') . '" />
                 </div>',
-            'comment' => __('global.login_logo_message')
+            'comment' => (isset($disabledSettings['login_logo']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.login_logo_message')
         ])
 
         <div class="split my-1"></div>
@@ -100,13 +111,15 @@
                         view('manager::form.inputElement', [
                             'name' => 'login_bg',
                             'value' => $settings['login_bg'],
-                            'attributes' => 'onChange="documentDirty=true;"'
+                            'attributes' => 'onChange="documentDirty=true;"',
+                            'disabled' => $disabledSettings['login_bg'] ?? null
                         ]) .
                         '<div class="input-group-btn">' .
                             view('manager::form.inputElement', [
                                 'type' => 'button',
                                 'value' => __('global.insert'),
-                                'attributes' => 'onclick="BrowseServer(\'login_bg\')"'
+                                'attributes' => 'onclick="BrowseServer(\'login_bg\')"',
+                                'disabled' => $disabledSettings['login_bg'] ?? null
                             ]) .
                         '</div>
                     </div>
@@ -115,7 +128,8 @@
                     <img name="login_bg" style="max-height: 48px" src="' .
                     ($settings['login_bg'] ? MODX_SITE_URL . $settings['login_bg'] : '') . '" />
                 </div>',
-            'comment' => __('global.login_bg_message')
+            'comment' => (isset($disabledSettings['login_bg']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.login_bg_message')
         ])
 
         <div class="split my-1"></div>
@@ -129,7 +143,9 @@
                 'left' => __('global.login_form_position_left'),
                 'center' => __('global.login_form_position_center'),
                 'right' => __('global.login_form_position_right')
-            ]
+            ],
+            'comment' => (isset($disabledSettings['login_form_position']) ? __('global.setting_from_file') . '<br>' : ''),
+            'disabled' => $disabledSettings['login_form_position'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -142,7 +158,9 @@
             'options' => [
                 'dark' => __('global.login_form_style_dark'),
                 'light' => __('global.login_form_style_light')
-            ]
+            ],
+            'comment' => (isset($disabledSettings['login_form_style']) ? __('global.setting_from_file') . '<br>' : ''),
+            'disabled' => $disabledSettings['login_form_style'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -155,7 +173,9 @@
             'options' => [
                 'top' => __('global.manager_menu_position_top'),
                 'left' => __('global.manager_menu_position_left')
-            ]
+            ],
+            'comment' => (isset($disabledSettings['manager_menu_position']) ? __('global.setting_from_file') . '<br>' : ''),
+            'disabled' => $disabledSettings['manager_menu_position'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -169,7 +189,9 @@
                 1 => __('global.yes'),
                 0 => __('global.no')
             ],
-            'comment' => __('global.settings_show_picker_message')
+            'comment' => (isset($disabledSettings['show_picker']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.settings_show_picker_message'),
+            'disabled' => $disabledSettings['show_picker'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -183,7 +205,9 @@
                 0 => __('global.administrators'),
                 1 => __('global.everybody')
             ],
-            'comment' => __('global.warning_visibility_message')
+            'comment' => (isset($disabledSettings['warning_visibility']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.warning_visibility_message'),
+            'disabled' => $disabledSettings['warning_visibility'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -197,7 +221,9 @@
                 27 => __('global.edit_resource'),
                 3 => __('global.doc_data_title')
             ],
-            'comment' => __('global.tree_page_click_message')
+            'comment' => (isset($disabledSettings['tree_page_click']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.tree_page_click_message'),
+            'disabled' => $disabledSettings['tree_page_click'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -211,7 +237,9 @@
                 1 => __('global.yes'),
                 0 => __('global.no')
             ],
-            'comment' => __('global.use_breadcrumbs_message')
+            'comment' => (isset($disabledSettings['use_breadcrumbs']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.use_breadcrumbs_message'),
+            'disabled' => $disabledSettings['use_breadcrumbs'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -225,7 +253,9 @@
                 1 => __('global.yes'),
                 0 => __('global.no')
             ],
-            'comment' => __('global.remember_last_tab_message')
+            'comment' => (isset($disabledSettings['remember_last_tab']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.remember_last_tab_message'),
+            'disabled' => $disabledSettings['remember_last_tab'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -238,7 +268,9 @@
             'options' => [
                 1 => __('global.yes'),
                 0 => __('global.no')
-            ]
+            ],
+            'comment' => (isset($disabledSettings['global_tabs']) ? __('global.setting_from_file') . '<br>' : ''),
+            'disabled' => $disabledSettings['global_tabs'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -250,7 +282,9 @@
             'value' => $settings['group_tvs'],
             'options' => explode(',', __('global.settings_group_tv_options')),
             'attributes' => 'onChange="documentDirty=true;" size="1"',
-            'comment' => __('global.settings_group_tv_message')
+            'comment' => (isset($disabledSettings['group_tvs']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.settings_group_tv_message'),
+            'disabled' => $disabledSettings['group_tvs'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -264,7 +298,9 @@
                 1 => __('global.yes'),
                 0 => __('global.no')
             ],
-            'comment' => __('global.show_newresource_btn_message')
+            'comment' => (isset($disabledSettings['show_newresource_btn']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.show_newresource_btn_message'),
+            'disabled' => $disabledSettings['show_newresource_btn'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -278,7 +314,9 @@
                 1 => __('global.yes'),
                 0 => __('global.no')
             ],
-            'comment' => __('global.show_fullscreen_btn_message')
+            'comment' => (isset($disabledSettings['show_fullscreen_btn']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.show_fullscreen_btn_message'),
+            'disabled' => $disabledSettings['show_fullscreen_btn'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -298,7 +336,9 @@
                 'publishedon' => '[*publishedon*]'
             ],
             'attributes' => 'onChange="documentDirty=true;" size="1"',
-            'comment' => __('global.setting_resource_tree_node_name_desc') . '<br /><b>' . __('global.setting_resource_tree_node_name_desc_add') . '</b>'
+            'comment' => (isset($disabledSettings['resource_tree_node_name']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.setting_resource_tree_node_name_desc') . '<br /><b>' . __('global.setting_resource_tree_node_name_desc_add') . '</b>',
+            'disabled' => $disabledSettings['resource_tree_node_name'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -308,7 +348,9 @@
             'label' => __('global.session_timeout'),
             'small' => '[(session_timeout)]',
             'value' => $settings['session_timeout'],
-            'comment' => __('global.session_timeout_msg')
+            'comment' => (isset($disabledSettings['session_timeout']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.session_timeout_msg'),
+            'disabled' => $disabledSettings['session_timeout'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -322,7 +364,9 @@
                 1 => __('global.yes'),
                 0 => __('global.no')
             ],
-            'comment' => __('global.tree_show_protected_message')
+            'comment' => (isset($disabledSettings['tree_show_protected']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.tree_show_protected_message'),
+            'disabled' => $disabledSettings['tree_show_protected'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -333,7 +377,9 @@
             'small' => '[(datepicker_offset)]',
             'value' => $settings['datepicker_offset'],
             'attributes' => 'onChange="documentDirty=true;" maxlength="50"',
-            'comment' => __('global.datepicker_offset_message')
+            'comment' => (isset($disabledSettings['datepicker_offset']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.datepicker_offset_message'),
+            'disabled' => $disabledSettings['datepicker_offset'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -346,7 +392,9 @@
             'attributes' => 'onChange="documentDirty=true;" size="1"',
             'options' =>  ['dd-mm-YYYY', 'mm/dd/YYYY', 'YYYY/mm/dd'],
             'as' => 'values',
-            'comment' => __('global.datetime_format_message')
+            'comment' => (isset($disabledSettings['datetime_format']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.datetime_format_message'),
+            'disabled' => $disabledSettings['datetime_format'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -357,7 +405,9 @@
             'small' => '[(number_of_logs)]',
             'value' => $settings['number_of_logs'],
             'attributes' => 'onChange="documentDirty=true;" maxlength="50"',
-            'comment' => __('global.nologentries_message')
+            'comment' => (isset($disabledSettings['number_of_logs']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.nologentries_message'),
+            'disabled' => $disabledSettings['number_of_logs'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -368,7 +418,9 @@
             'small' => '[(mail_check_timeperiod)]',
             'value' => $settings['mail_check_timeperiod'],
             'attributes' => 'onChange="documentDirty=true;" maxlength="50"',
-            'comment' => __('global.mail_check_timeperiod_message')
+            'comment' => (isset($disabledSettings['mail_check_timeperiod']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.mail_check_timeperiod_message'),
+            'disabled' => $disabledSettings['mail_check_timeperiod'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -379,7 +431,9 @@
             'small' => '[(number_of_messages)]',
             'value' => $settings['number_of_messages'],
             'attributes' => 'onChange="documentDirty=true;" maxlength="50"',
-            'comment' => __('global.nomessages_message')
+            'comment' => (isset($disabledSettings['number_of_messages']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.nomessages_message'),
+            'disabled' => $disabledSettings['number_of_messages'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -390,14 +444,16 @@
             'small' => '[(number_of_results)]',
             'value' => $settings['number_of_results'],
             'attributes' => 'onChange="documentDirty=true;" maxlength="50"',
-            'comment' => __('global.noresults_message')
+            'comment' => (isset($disabledSettings['number_of_results']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.noresults_message'),
+            'disabled' => $disabledSettings['number_of_results'] ?? null
         ])
 
         <div class="split my-1"></div>
 
         <?php
         // invoke OnRichTextEditorRegister event
-        $evtOut = EvolutionCMS()->invokeEvent('OnRichTextEditorRegister');
+        $evtOut = app()->invokeEvent('OnRichTextEditorRegister');
         if (!is_array($evtOut)) {
             $evtOut = array();
             $use_editor = 0;
@@ -421,7 +477,9 @@
                         'attributes' => 'id="editorRowOff"'
                     ]
                 ],
-                'comment' => __('global.use_editor_message')
+                'comment' => (isset($disabledSettings['use_editor']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.use_editor_message'),
+                'disabled' => $disabledSettings['use_editor'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -434,13 +492,15 @@
                     'small' => '[(which_editor)]',
                     'value' => $settings['which_editor'],
                     'attributes' => 'onChange="documentDirty=true;" size="1"',
-                    'first' => [
+                        'first' => [
                         'value' => 'none',
                         'text' => __('global.none')
                     ],
                     'options' => $evtOut,
                     'as' => 'values',
-                    'comment' => __('global.which_editor_message')
+                    'comment' => (isset($disabledSettings['which_editor']) ? __('global.setting_from_file') . '<br>' : '') .
+                        __('global.which_editor_message'),
+                    'disabled' => $disabledSettings['which_editor'] ?? null
                 ])
 
                 <div class="split my-1"></div>
@@ -457,7 +517,9 @@
                     'options' => $langKeys,
                     'as' => 'values',
                     'ucwords' => true,
-                    'comment' => __('global.fe_editor_lang_message')
+                    'comment' => (isset($disabledSettings['fe_editor_lang']) ? __('global.setting_from_file') . '<br>' : '') .
+                        __('global.fe_editor_lang_message'),
+                    'disabled' => $disabledSettings['fe_editor_lang'] ?? null
                 ])
 
                 <div class="split my-1"></div>
@@ -468,7 +530,9 @@
                     'small' => '[(editor_css_path)]',
                     'value' => $settings['editor_css_path'],
                     'attributes' => 'onChange="documentDirty=true;" maxlength="255"',
-                    'comment' => __('global.editor_css_path_message')
+                    'comment' => (isset($disabledSettings['editor_css_path']) ? __('global.setting_from_file') . '<br>' : '') .
+                        __('global.editor_css_path_message'),
+                    'disabled' => $disabledSettings['editor_css_path'] ?? null
                 ])
 
                 <div class="split my-1"></div>

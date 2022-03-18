@@ -19,7 +19,8 @@
                     'attributes' => 'id="furlRowOff"'
                 ],
             ],
-            'comment' => __('global.friendlyurls_message'),
+            'comment' => (isset($disabledSettings['friendly_urls']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.friendlyurls_message'),
             'disabled' => $disabledSettings['friendly_urls'] ?? null
         ])
 
@@ -40,7 +41,8 @@
                     'attributes' => 'id="furlRowOff"'
                 ],
             ],
-            'comment' => __('global.xhtml_urls_message'),
+            'comment' => (isset($disabledSettings['xhtml_urls']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.xhtml_urls_message'),
             'disabled' => $disabledSettings['xhtml_urls'] ?? null
         ])
 
@@ -54,7 +56,8 @@
                 'small' => '[(friendly_url_prefix)]',
                 'value' => $settings['friendly_url_prefix'],
                 'attributes' => 'onchange="documentDirty=true;" maxlength="50"',
-                'comment' => __('global.friendlyurlsprefix_message'),
+                'comment' => (isset($disabledSettings['friendly_url_prefix']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.friendlyurlsprefix_message'),
                 'disabled' => $disabledSettings['friendly_url_prefix'] ?? null
             ])
 
@@ -66,7 +69,8 @@
                 'small' => '[(friendly_url_suffix)]',
                 'value' => $settings['friendly_url_suffix'],
                 'attributes' => 'onchange="documentDirty=true;" maxlength="50"',
-                'comment' => __('global.friendlyurlsuffix_message'),
+                'comment' => (isset($disabledSettings['friendly_url_suffix']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.friendlyurlsuffix_message'),
                 'disabled' => $disabledSettings['friendly_url_suffix'] ?? null
             ])
 
@@ -81,7 +85,8 @@
                     1 => __('global.yes'),
                     0 => __('global.no'),
                 ],
-                'comment' => __('global.make_folders_message'),
+                'comment' => (isset($disabledSettings['make_folders']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.make_folders_message'),
                 'disabled' => $disabledSettings['make_folders'] ?? null
             ])
 
@@ -96,7 +101,8 @@
                     1 => __('global.yes'),
                     0 => __('global.no'),
                 ],
-                'comment' => __('global.seostrict_message'),
+                'comment' => (isset($disabledSettings['seostrict']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.seostrict_message'),
                 'disabled' => $disabledSettings['seostrict'] ?? null
             ])
 
@@ -111,7 +117,8 @@
                     1 => __('global.yes'),
                     0 => __('global.no'),
                 ],
-                'comment' => __('global.full_aliaslisting_title'),
+                'comment' => (isset($disabledSettings['full_aliaslisting']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.full_aliaslisting_title'),
                 'disabled' => $disabledSettings['full_aliaslisting'] ?? null
             ])
 
@@ -126,7 +133,8 @@
                     1 => __('global.yes'),
                     0 => __('global.no'),
                 ],
-                'comment' => __('global.aliaslistingfolder_title'),
+                'comment' => (isset($disabledSettings['aliaslistingfolder']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.aliaslistingfolder_title'),
                 'disabled' => $disabledSettings['aliaslistingfolder'] ?? null
             ])
 
@@ -141,7 +149,8 @@
                     1 => __('global.yes'),
                     0 => __('global.no'),
                 ],
-                'comment' => __('global.friendly_alias_message'),
+                'comment' => (isset($disabledSettings['friendly_alias_urls']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.friendly_alias_message'),
                 'disabled' => $disabledSettings['friendly_alias_urls'] ?? null
             ])
 
@@ -156,7 +165,8 @@
                     1 => __('global.yes'),
                     0 => __('global.no'),
                 ],
-                'comment' => __('global.use_alias_path_message'),
+                'comment' => (isset($disabledSettings['use_alias_path']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.use_alias_path_message'),
                 'disabled' => $disabledSettings['use_alias_path'] ?? null
             ])
 
@@ -171,7 +181,8 @@
                     1 => __('global.yes'),
                     0 => __('global.no'),
                 ],
-                'comment' => __('global.duplicate_alias_message'),
+                'comment' => (isset($disabledSettings['allow_duplicate_alias']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.duplicate_alias_message'),
                 'disabled' => $disabledSettings['allow_duplicate_alias'] ?? null
             ])
 
@@ -186,7 +197,8 @@
                     1 => __('global.yes'),
                     0 => __('global.no'),
                 ],
-                'comment' => __('global.automatic_alias_message'),
+                'comment' => (isset($disabledSettings['automatic_alias']) ? __('global.setting_from_file') . '<br>' : '') .
+                    __('global.automatic_alias_message'),
                 'disabled' => $disabledSettings['automatic_alias'] ?? null
             ])
 

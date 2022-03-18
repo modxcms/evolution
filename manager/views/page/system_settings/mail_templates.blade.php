@@ -10,7 +10,9 @@
             'small' => '[(emailsender)]',
             'value' => $settings['emailsender'],
             'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
-            'comment' => __('global.emailsender_message')
+            'comment' => (isset($disabledSettings['emailsender']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.emailsender_message'),
+            'disabled' => $disabledSettings['emailsender'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -24,7 +26,9 @@
                 1 => __('global.auto'),
                 0 => __('global.use_emailsender')
             ],
-            'comment' => __('global.email_sender_method_message')
+            'comment' => (isset($disabledSettings['email_sender_method']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.email_sender_method_message'),
+            'disabled' => $disabledSettings['email_sender_method'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -44,7 +48,9 @@
                     'attributes' => 'id="useSmtp"'
                 ]
             ],
-            'comment' => __('global.email_sender_method_message')
+            'comment' => (isset($disabledSettings['email_method']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.email_sender_method_message'),
+            'disabled' => $disabledSettings['email_method'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -58,7 +64,9 @@
                 'options' => [
                     1 => __('global.yes'),
                     0 => __('global.no')
-                ]
+                ],
+                'comment' => (isset($disabledSettings['smtp_auth']) ? __('global.setting_from_file') . '<br>' : ''),
+                'disabled' => $disabledSettings['smtp_auth'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -71,7 +79,9 @@
                 'options' => [
                     1 => __('global.yes'),
                     0 => __('global.no')
-                ]
+                ],
+                'comment' => (isset($disabledSettings['smtp_autotls']) ? __('global.setting_from_file') . '<br>' : ''),
+                'disabled' => $disabledSettings['smtp_autotls'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -86,7 +96,9 @@
                     'none' => __('global.no'),
                     'ssl' => 'SSL',
                     'tls' => 'TLS',
-                ]
+                ],
+                'comment' => (isset($disabledSettings['smtp_secure']) ? __('global.setting_from_file') . '<br>' : ''),
+                'disabled' => $disabledSettings['smtp_secure'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -96,7 +108,9 @@
                 'label' => __('global.smtp_host_title'),
                 'small' => '[(smtp_host)]',
                 'value' => $settings['smtp_host'],
-                'attributes' => 'onchange="documentDirty=true;" maxlength="255"'
+                'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
+                'comment' => (isset($disabledSettings['smtp_host']) ? __('global.setting_from_file') . '<br>' : ''),
+                'disabled' => $disabledSettings['smtp_host'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -106,7 +120,9 @@
                 'label' => __('global.smtp_port_title'),
                 'small' => '[(smtp_port)]',
                 'value' => $settings['smtp_port'],
-                'attributes' => 'onchange="documentDirty=true;" maxlength="255"'
+                'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
+                'comment' => (isset($disabledSettings['smtp_port']) ? __('global.setting_from_file') . '<br>' : ''),
+                'disabled' => $disabledSettings['smtp_port'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -116,7 +132,9 @@
                 'label' => __('global.smtp_username_title'),
                 'small' => '[(smtp_username)]',
                 'value' => $settings['smtp_username'],
-                'attributes' => 'onchange="documentDirty=true;" maxlength="255"'
+                'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
+                'comment' => (isset($disabledSettings['smtp_username']) ? __('global.setting_from_file') . '<br>' : ''),
+                'disabled' => $disabledSettings['smtp_username'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -126,7 +144,9 @@
                 'label' => __('global.smtp_password_title'),
                 'small' => '[(smtppw)]',
                 'value' => '********************',
-                'attributes' => 'onchange="documentDirty=true;" maxlength="255" autocomplete="off"'
+                'attributes' => 'onchange="documentDirty=true;" maxlength="255" autocomplete="off"',
+                'comment' => (isset($disabledSettings['smtppw']) ? __('global.setting_from_file') . '<br>' : ''),
+                'disabled' => $disabledSettings['smtppw'] ?? null
             ])
 
             <div class="split my-1"></div>
@@ -148,7 +168,8 @@
                     ],
                     'options' => $langKeys,
                     'as' => 'values',
-                    'ucwords' => true
+                    'ucwords' => true,
+                    'disabled' => $disabledSettings['emailsubject'] ?? null
                 ]) .
                 view('manager::form.inputElement', [
                     'type' => 'hidden',
@@ -160,7 +181,9 @@
             'small' => '[(emailsubject)]',
             'value' => $settings['emailsubject'],
             'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
-            'comment' => __('global.emailsubject_message')
+            'comment' => (isset($disabledSettings['emailsubject']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.emailsubject_message'),
+            'disabled' => $disabledSettings['emailsubject'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -181,7 +204,8 @@
                     ],
                     'options' => $langKeys,
                     'as' => 'values',
-                    'ucwords' => true
+                    'ucwords' => true,
+                    'disabled' => $disabledSettings['websignupemail_message'] ?? null
                 ]) .
                 view('manager::form.inputElement', [
                     'type' => 'hidden',
@@ -194,7 +218,9 @@
             'value' => $settings['websignupemail_message'],
             'rows' => 5,
             'attributes' => 'onchange="documentDirty=true;"',
-            'comment' => __('global.websignupemail_message')
+            'comment' => (isset($disabledSettings['websignupemail_message']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.websignupemail_message'),
+            'disabled' => $disabledSettings['websignupemail_message'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -215,7 +241,8 @@
                     ],
                     'options' => $langKeys,
                     'as' => 'values',
-                    'ucwords' => true
+                    'ucwords' => true,
+                    'disabled' => $disabledSettings['webpwdreminder_message'] ?? null
                 ]) .
                 view('manager::form.inputElement', [
                     'type' => 'hidden',
@@ -228,7 +255,9 @@
             'value' => $settings['webpwdreminder_message'],
             'rows' => 5,
             'attributes' => 'onchange="documentDirty=true;"',
-            'comment' => __('global.webpwdreminder_message')
+            'comment' => (isset($disabledSettings['webpwdreminder_message']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.webpwdreminder_message'),
+            'disabled' => $disabledSettings['webpwdreminder_message'] ?? null
         ])
 
         <div class="split my-1"></div>
@@ -242,7 +271,9 @@
                 1 => __('global.yes'),
                 0 => __('global.no')
             ],
-            'comment' => __('global.allow_multiple_emails_message')
+            'comment' => (isset($disabledSettings['allow_multiple_emails']) ? __('global.setting_from_file') . '<br>' : '') .
+                __('global.allow_multiple_emails_message'),
+            'disabled' => $disabledSettings['allow_multiple_emails'] ?? null
         ])
 
         <div class="split my-1"></div>
