@@ -14,9 +14,7 @@
             'ucwords' => false,
             'str_to_upper' => true,
             'attributes' => 'onChange="documentDirty=true;" size="1"',
-            'comment' => (isset($disabledSettings['manager_language']) ? __('global.setting_from_file') . '<br>' : '') .
-                __('global.language_message'),
-            'disabled' => $disabledSettings['manager_language'] ?? null
+            'comment' => __('global.language_message')
         ])
 
         <div class="split my-1"></div>

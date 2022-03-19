@@ -68,20 +68,17 @@
                         view('manager::form.inputElement', [
                             'name' => 'rb_base_dir',
                             'value' => $settings['rb_base_dir'],
-                            'attributes' => 'onchange="documentDirty=true;" maxlength="255"',
-                            'disabled' => $disabledSettings['rb_base_dir'] ?? null
+                            'attributes' => 'onchange="documentDirty=true;" maxlength="255"'
                         ]) .
                         '<div class="input-group-btn">' .
                             view('manager::form.inputElement', [
                                 'type' => 'button',
                                 'value' => __('global.reset'),
-                                'attributes' => 'onclick="reset_path(\'rb_base_dir\');"',
-                                'disabled' => $disabledSettings['rb_base_dir'] ?? null
+                                'attributes' => 'onclick="reset_path(\'rb_base_dir\');"'
                             ]) .
                         '</div>
                     </div>',
-                'comment' => (isset($disabledSettings['rb_base_dir']) ? __('global.setting_from_file') . '<br>' : '') .
-                    __('global.rb_base_dir_message')
+                'comment' => __('global.rb_base_dir_message')
             ])
 
             <div class="split my-1"></div>

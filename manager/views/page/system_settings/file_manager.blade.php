@@ -14,21 +14,18 @@
                     view('manager::form.inputElement', [
                         'name' => 'filemanager_path',
                         'value' => $settings['filemanager_path'],
-                        'attributes' => 'onChange="documentDirty=true;" maxlength="255"',
-                        //'disabled' => $disabledSettings['filemanager_path'] ?? null
+                        'attributes' => 'onChange="documentDirty=true;" maxlength="255"'
                     ]) .
                     '<div class="input-group-btn">' .
                         view('manager::form.inputElement', [
                             'type' => 'button',
                             'name' => 'reset_filemanager_path',
                             'value' => __('global.reset'),
-                            'attributes' => 'onclick="reset_path(\'filemanager_path\');"',
-                            //'disabled' => $disabledSettings['filemanager_path'] ?? null
+                            'attributes' => 'onclick="reset_path(\'filemanager_path\');"'
                         ]) .
                     '</div>
                 </div>',
-            'comment' => (isset($disabledSettings['filemanager_path']) ? __('global.setting_from_file') . '<br>' : '') .
-                __('global.filemanager_path_message')
+            'comment' => __('global.filemanager_path_message')
         ])
 
         <div class="split my-1"></div>

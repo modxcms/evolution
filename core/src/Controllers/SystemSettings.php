@@ -208,6 +208,13 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
             $this->managerTheme->getCore()->config
         );
 
+        foreach (config('cms.settings', []) as $key => $value) {
+            if (isset($out[$key])) {
+                $out[$key] = $value;
+                $this->disabledSettings[$key] = true;
+            }
+        }
+
         $out['filemanager_path'] = str_replace(
             MODX_BASE_PATH,
             '[(base_path)]',
@@ -222,13 +229,6 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
 
         if (!$this->parameterCheckGD()) {
             $out['use_captcha'] = 0;
-        }
-
-        foreach (config('cms.settings', []) as $key => $value) {
-            if (isset($out[$key])) {
-                $out[$key] = $value;
-                $this->disabledSettings[$key] = true;
-            }
         }
 
         return $out;
