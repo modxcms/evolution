@@ -70,6 +70,7 @@ class Database extends Manager
     public function query($sql, $watchError = true)
     {
         try {
+            $start = microtime(true);
             $pdo = \DB::connection()->getPdo();
             $out = [];
             if (\is_array($sql)) {
@@ -80,6 +81,7 @@ class Database extends Manager
                 $out = $pdo->prepare($this->replaceFullTableName($sql));
             }
             $out->execute();
+            \DB::connection()->logQuery($sql, [], (microtime(true) - $start));
             $this->conn = $pdo;
             $this->saveAffectedRows($out);
             return $out;
