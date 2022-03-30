@@ -27,20 +27,20 @@ class DataGrid implements DataGridInterface
     public $cssStyle;
     public $cssClass;
 
-    public $columnHeaderStyle;
-    public $columnHeaderClass;
-    public $itemStyle;
-    public $itemClass;
+    public $columnHeaderStyle = '';
+    public $columnHeaderClass = '';
+    public $itemStyle = '';
+    public $itemClass = '';
     public $altItemStyle;
     public $altItemClass;
 
     public $fields;
     public $columns;
-    public $colWidths;
-    public $colAligns;
-    public $colWraps;
-    public $colColors;
-    public $colTypes;            // coltype1, coltype2, etc or coltype1:format1, e.g. date:%Y %m
+    public $colWidths = '';
+    public $colAligns = '';
+    public $colWraps = '';
+    public $colColors = '';
+    public $colTypes = '';            // coltype1, coltype2, etc or coltype1:format1, e.g. date:%Y %m
     // data type: integer,float,currency,date
 
     public $header;
@@ -48,8 +48,8 @@ class DataGrid implements DataGridInterface
     public $cellPadding;
     public $cellSpacing;
 
-    public $rowAlign;            // vertical alignment: top, middle, bottom
-    public $rowIdField;
+    public $rowAlign = '';            // vertical alignment: top, middle, bottom
+    public $rowIdField = '';
 
     public $pagerStyle;
     public $pagerClass;
@@ -262,11 +262,11 @@ class DataGrid implements DataGridInterface
         for ($c = 0; $c < $this->_colcount; $c++) {
             $colStyle = $Style;
             $fld = trim($this->_fieldnames[$c]);
-            $width = isset($this->_colwidths[$c]) ? $this->_colwidths[$c] : null;
-            $align = isset($this->_colaligns[$c]) ? $this->_colaligns[$c] : null;
-            $color = isset($this->_colcolors[$c]) ? $this->_colcolors[$c] : null;
-            $type = isset($this->_coltypes[$c]) ? $this->_coltypes[$c] : null;
-            $nowrap = isset($this->_colwraps[$c]) ? $this->_colwraps[$c] : null;
+            $width = isset($this->_colwidths[$c]) ? $this->_colwidths[$c] : '';
+            $align = isset($this->_colaligns[$c]) ? $this->_colaligns[$c] : '';
+            $color = isset($this->_colcolors[$c]) ? $this->_colcolors[$c] : '';
+            $type = isset($this->_coltypes[$c]) ? $this->_coltypes[$c] : '';
+            $nowrap = isset($this->_colwraps[$c]) ? $this->_colwraps[$c] : '';
             $value = get_by_key($row, ($this->_isDataset && $fld ? $fld : $c), '');
             if ($color && $Style) {
                 $colStyle = substr($colStyle, 0, -1) . ";background-color:$color;'";
