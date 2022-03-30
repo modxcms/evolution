@@ -432,11 +432,11 @@
                 <script type="text/javascript">docSettings.addTabPage(document.getElementById("tabSource"));</script>
                 <?php
                 $buffer = "";
-                $filename = MODX_BASE_PATH . "assets/cache/docid_" . $id . ".pageCache.php";
-                $handle = @fopen($filename, "r");
-                if (!$handle) {
+                $filename = $modx->bootstrapPath() . "/docid_{$id}.pageCache.php";
+                if (!file_exists($filename)) {
                     $buffer = '<div class="container container-body">' . ManagerTheme::getLexicon('page_data_notcached') . '</div>';
                 } else {
+                    $handle = @fopen($filename, "r");
                     while (!feof($handle)) {
                         $buffer .= fgets($handle, 4096);
                     }
