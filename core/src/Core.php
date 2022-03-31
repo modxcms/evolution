@@ -3085,21 +3085,26 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getChildIds($id, $depth = 10, $children = array())
     {
-        static $cached = [];
+        static $cached = array();
 
         $cacheKey = md5(print_r(func_get_args(), true));
         if (isset($cached[$cacheKey])) {
             return $cached[$cacheKey];
         }
-        $cached[$cacheKey] = [];
+        $cached[$cacheKey] = array();
 
         if ($this->getConfig('aliaslistingfolder') == 1) {
-            $id = is_array($id) ? $id : [$id];
-            $res = \EvolutionCMS\Models\SiteContent::select(['id', 'alias', 'isfolder', 'parent'])
-                ->whereIn('parent', $id)
-                ->get()->toArray();
 
-            $idx = [];
+            $res = \EvolutionCMS\Models\SiteContent::destroy()
+                ->selectRaw("id,alias,isfolder,parent")
+                ->where([
+                        ['parent', 'IN', $id],
+                        ['deleted', '=', '0']
+                    ]
+                )->get()->toArray();
+
+
+            $idx = array();
             foreach ($res as $row) {
                 $pAlias = '';
                 if (isset(UrlProcessor::getFacadeRoot()->aliasListing[$row['parent']])) {
@@ -3116,16 +3121,18 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 }
             }
             $depth--;
+            $idx = implode(',', $idx);
             if ($idx && $depth) {
                 $children = $this->getChildIds($idx, $depth, $children);
             }
             $cached[$cacheKey] = $children;
 
             return $children;
+
         }
 
         // Initialise a static array to index parents->children
-        static $documentMap_cache = [];
+        static $documentMap_cache = array();
         if (!$documentMap_cache) {
             foreach ($this->documentMap as $document) {
                 foreach ($document as $p => $c) {
