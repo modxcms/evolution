@@ -3095,7 +3095,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         if ($this->getConfig('aliaslistingfolder') == 1) {
             $id = is_array($id) ? $id : [$id];
-            $res = \EvolutionCMS\Models\SiteContent::select(['id', 'alias', 'isfolder', 'parent'])
+            $res = \EvolutionCMS\Models\SiteContent::withTrashed()->select(['id', 'alias', 'isfolder', 'parent'])
                 ->whereIn('parent', $id)
                 ->get()->toArray();
 
