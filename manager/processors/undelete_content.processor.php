@@ -14,7 +14,10 @@ if ($id == 0) {
 $document = \EvolutionCMS\Models\SiteContent::withTrashed()->findOrFail($id);
 
 $pid = ($document->parent == 0 ? $id : $document->parent);
-
+$parentDeleted = $document->parent > 0 && empty(\EvolutionCMS\Models\SiteContent::find($document->parent));
+if ($parentDeleted) {
+    $modx->webAlertAndQuit($_lang["error_parent_deleted"]);
+}
 $sd = isset($_REQUEST['dir']) ? '&dir=' . $_REQUEST['dir'] : '&dir=DESC';
 $sb = isset($_REQUEST['sort']) ? '&sort=' . $_REQUEST['sort'] : '&sort=createdon';
 $pg = isset($_REQUEST['page']) ? '&page=' . (int)$_REQUEST['page'] : '';

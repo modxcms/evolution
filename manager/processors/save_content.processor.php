@@ -344,6 +344,10 @@ switch ($actionToTake) {
             "id" => $id
         ));
 
+        $parentDeleted = $parentId > 0 && empty(\EvolutionCMS\Models\SiteContent::find($parentId));
+        if ($parentDeleted) {
+            $resourceArray['deleted'] = 1;
+        }
         // deny publishing if not permitted
         if (!EvolutionCMS()->hasPermission('publish_document')) {
             $pub_date = 0;
@@ -385,7 +389,7 @@ switch ($actionToTake) {
             $new_groups = array();
             foreach ($document_groups as $value_pair) {
                 // first, split the pair (this is a new document, so ignore the second value
-                list($group) = explode(',', $value_pair); // @see actions/mutate_content.dynamic.php @ line 1138 (permissions list)
+                [$group] = explode(',', $value_pair); // @see actions/mutate_content.dynamic.php @ line 1138 (permissions list)
                 $new_groups[] = ['document_group'=>(int)$group, 'document'=>$key];
             }
             $saved = true;
@@ -516,7 +520,10 @@ switch ($actionToTake) {
                 "mode" => "upd",
                 "id" => $id
             ));
-
+            $parentDeleted = $parentId > 0 && empty(\EvolutionCMS\Models\SiteContent::find($parentId));
+            if ($parentDeleted) {
+                $resourceArray['deleted'] = 1;
+            }
             $resource = \EvolutionCMS\Models\SiteContent::withTrashed()->find($id);
             foreach($resourceArray as $key=>$value){
                 $resource->{$key} = $value;
@@ -557,7 +564,7 @@ switch ($actionToTake) {
                 $new_groups = array();
                 // process the new input
                 foreach ($document_groups as $value_pair) {
-                    list($group, $link_id) = explode(',', $value_pair); // @see actions/mutate_content.dynamic.php @ line 1138 (permissions list)
+                    [$group, $link_id] = explode(',', $value_pair); // @see actions/mutate_content.dynamic.php @ line 1138 (permissions list)
                     $new_groups[$group] = $link_id;
                 }
 

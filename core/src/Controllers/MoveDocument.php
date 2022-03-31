@@ -78,21 +78,26 @@ class MoveDocument extends AbstractController implements ManagerTheme\PageContro
                 $newParentID = $newParent;
             }
         }
+        if ($newParentID > 0) {
+            $parentDocument = $this->getDocument($newParentID);
+            if ($parentDocument->deleted) {
+                $this->managerTheme->alertAndQuit('error_parent_deleted');
+            };
+            $children = allChildren($document->getKey());
+            if (\in_array($parentDocument->getKey(), $children, true)) {
+                $this->managerTheme->alertAndQuit('You cannot move a document to a child document!', false);
+            }
 
-        $parentDocument = $this->getDocument($newParentID);
-
-        $children = allChildren($document->getKey());
-        if (\in_array($parentDocument->getKey(), $children, true)) {
-            $this->managerTheme->alertAndQuit('You cannot move a document to a child document!', false);
+            $parentDocument->isfolder = true;
+            $parentDocument->save();
+            if ($document->ancestor && $document->ancestor->children()->count() <= 1) {
+                $document->ancestor->isfolder = false;
+                $document->ancestor->save();
+            }
+            $document->parent = $parentDocument->getKey();
+        } else {
+            $document->parent = 0;
         }
-
-        $parentDocument->isfolder = true;
-        $parentDocument->save();
-        if ($document->ancestor && $document->ancestor->children()->count() <= 1) {
-            $document->ancestor->isfolder = false;
-            $document->ancestor->save();
-        }
-        $document->parent = $parentDocument->getKey();
         $document->save();
 
         // Set the item name for logger
@@ -101,7 +106,7 @@ class MoveDocument extends AbstractController implements ManagerTheme\PageContro
         $this->managerTheme->getCore()->invokeEvent('onAfterMoveDocument', [
             'id_document' => $document->getKey(),
             'old_parent'  => $document->parent,
-            'new_parent'  => $parentDocument->getKey()
+            'new_parent'  => $newParentID
         ]);
 
         // empty cache & sync site

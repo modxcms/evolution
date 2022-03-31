@@ -24,7 +24,7 @@
     }
 
     // Get the document content
-    $resources = \EvolutionCMS\Models\SiteContent::query()->select('site_content.*')->distinct()
+    $resources = \EvolutionCMS\Models\SiteContent::withTrashed()->select('site_content.*')->distinct()
         ->leftJoin('document_groups', 'document_groups.document', '=', 'site_content.id')
         ->where('site_content.id', $id);
     if ($_SESSION['mgrRole'] != 1) {

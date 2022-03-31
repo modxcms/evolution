@@ -334,7 +334,7 @@ if (isset($action)) {
 
                         if (!is_null($snippet)) {
                             $row = $snippet->toArray();
-                            
+
                             $contextmenu = array(
                                 'header' => array(
                                     'innerHTML' => '<i class="' . $_style['icon_code'] . '"></i> ' . entities($row['name'], EvolutionCMS()->getConfig('modx_charset'))
@@ -562,8 +562,7 @@ if (isset($action)) {
                 if ($id && $parent >= 0) {
 
                     // find older parent
-                    $parentOld = (int)SiteContent::find($id)->parent;
-
+                    $parentOld = (int)SiteContent::withTrashed()->find($id)->parent;
                     $eventOut = EvolutionCMS()->invokeEvent('onBeforeMoveDocument', [
                         'id_document' => $id,
                         'old_parent' => $parentOld,
@@ -579,8 +578,10 @@ if (isset($action)) {
                             $parent = $eventParent;
                         }
                     }
-
-                    if (empty($json['errors'])) {
+                    $parentDeleted = $parent > 0 && empty(SiteContent::find($parent));
+                    if ($parentDeleted) {
+                        $json['errors'] = $_lang['error_parent_deleted'];
+                    } elseif (empty($json['errors'])) {
                         // check privileges user for move docs
                         if (!empty(EvolutionCMS()->config['tree_show_protected']) && $role != 1) {
                             $docs = \EvolutionCMS\Models\DocumentGroup::query()->whereIn('document', [$id, $parent, $parentOld]);
@@ -606,21 +607,21 @@ if (isset($action)) {
                             $json['errors'] = $_lang["error_no_privileges"];
                         } else {
                             // set new parent
-                            SiteContent::where('id', $id)->update([
+                            SiteContent::withTrashed()->where('id', $id)->update([
                                 'parent' => $parent,
                             ]);
 
                             if ($parent > 0) {
                                 // set parent isfolder = 1
-                                SiteContent::where('id', $parent)->update([
+                                SiteContent::withTrashed()->where('id', $parent)->update([
                                     'isfolder' => 1,
                                 ]);
                             }
 
                             if ($parent != $parentOld && $parentOld > 0) {
                                 // check children docs and set parent isfolder
-                                SiteContent::where('id', $parentOld)->update([
-                                    'isfolder' => SiteContent::where('parent', $parentOld)->count() > 0 ? 1 : 0,
+                                SiteContent::withTrashed()->where('id', $parentOld)->update([
+                                    'isfolder' => SiteContent::withTrashed()->where('parent', $parentOld)->count() > 0 ? 1 : 0,
                                 ]);
                             }
 
@@ -628,7 +629,7 @@ if (isset($action)) {
                             if (!empty($menuindex)) {
                                 $menuindex = explode(',', $menuindex);
                                 foreach ($menuindex as $key => $value) {
-                                    SiteContent::where('id', $value)->update([
+                                    SiteContent::withTrashed()->where('id', $value)->update([
                                         'menuindex' => $key,
                                     ]);
                                 }
@@ -636,7 +637,7 @@ if (isset($action)) {
                                 // TODO: max(*) menuindex
                             }
 
-                            if (!$json['errors']) {
+                            if (empty($json['errors'])) {
                                 $json['success'] = $_lang["actioncomplete"];
 
                                 EvolutionCMS()->invokeEvent('onAfterMoveDocument', [
