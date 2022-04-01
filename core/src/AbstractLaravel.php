@@ -150,7 +150,7 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
             throw new \Exception('Unable to load the "app" configuration file.');
         }
 
-        if (defined('IN_INSTALL_MODE')) {
+        if (defined('IN_INSTALL_MODE') && IN_INSTALL_MODE) {
             $this['env'] = 'install';
         } else {
             $this['env'] = $this['config']->get('app.env',  'production');
@@ -213,6 +213,12 @@ abstract class AbstractLaravel extends Container implements ApplicationContract
      */
     public function environment(...$environments)
     {
+        if (count($environments) > 0) {
+            $patterns = is_array($environments[0]) ? $environments[0] : $environments;
+
+            return Str::is($patterns, $this['env']);
+        }
+
         return $this['env'];
     }
 
