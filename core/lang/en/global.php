@@ -1180,6 +1180,7 @@ $_lang["web_access_permissions_user_groups"] = 'User groups';
 $_lang["web_permissions"] = 'Permissions';
 $_lang["web_user_management_msg"] = 'Choose the User you wish to edit. Users are those Users who are allowed to log into the web site and manager';
 $_lang["web_user_management_title"] = 'Users';
+$_lang["web_user_management_select_role"] = 'All roles';
 $_lang["web_user_title"] = 'Create/edit User';
 $_lang["web_users"] = 'Users';
 $_lang["weblink"] = 'Weblink';
