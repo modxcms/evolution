@@ -13,11 +13,15 @@ $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
 
 // get and save search string
 if($op == 'reset') {
-    $query = '';
-    $_PAGE['vs']['search'] = '';
+	$query = '';
+	$query_role = 0;
+	$_PAGE['vs']['search'] = '';
+	$_PAGE['vs']['role'] = '';
 } else {
-    $query = isset($_REQUEST['search']) ? $_REQUEST['search'] : (isset($_PAGE['vs']['search']) ? $_PAGE['vs']['search'] : '');
-    $_PAGE['vs']['search'] = $query;
+	$query = isset($_REQUEST['search']) ? $_REQUEST['search'] : (isset($_PAGE['vs']['search']) ? $_PAGE['vs']['search'] : '');
+	$query_role = isset($_REQUEST['role']) ? $_REQUEST['role'] : (isset($_PAGE['vs']['role']) ? $_PAGE['vs']['role'] : '');
+	$_PAGE['vs']['search'] = $query;
+	$_PAGE['vs']['role'] = $query_role;
 }
 
 // get & save listmode
@@ -30,6 +34,13 @@ $cm = new \EvolutionCMS\Support\ContextMenu("cntxm", 150);
 $cm->addItem($_lang["edit"], "js:menuAction(1)", $_style["icon_edit"], (!EvolutionCMS()->hasPermission('edit_user') ? 1 : 0));
 $cm->addItem($_lang["delete"], "js:menuAction(2)", $_style["icon_trash"], (!EvolutionCMS()->hasPermission('delete_user') ? 1 : 0));
 echo $cm->render();
+
+// roles
+$role_options = '';
+$roles = \EvolutionCMS\Models\UserRole::query()->select('id', 'name')->get()->toArray();
+foreach($roles as $row) {
+	$role_options .= '<option value="'.$row['id'].'" '.($row['id'] == $query_role ? 'selected' : '').'>'.$row['name'].'</option>';
+}
 
 ?>
 <script language="JavaScript" type="text/javascript">
@@ -111,6 +122,10 @@ echo $cm->render();
                 </div>
                 <div class="col-sm-6 ">
                     <div class="input-group float-right w-auto">
+                        <select class="form-control form-control-sm" name="role">
+                            <option value=""><?= $_lang['web_user_management_select_role'] ?></option>
+                            <?= $role_options ?>
+                        </select>
                         <input class="form-control form-control-sm" name="search" type="text" value="<?= $query ?>" placeholder="<?= $_lang["search"] ?>" />
                         <div class="input-group-append">
                             <a class="btn btn-secondary btn-sm" href="javascript:;" title="<?= $_lang["search"] ?>" onclick="searchResource();return false;"><i class="<?= $_style['icon_search'] ?>"></i></a>
@@ -126,6 +141,7 @@ echo $cm->render();
                     $managerUsers = \EvolutionCMS\Models\User::query()
                         ->select('users.id', 'users.username', 'user_attributes.fullname', 'user_attributes.email', 'user_attributes.blocked', 'user_attributes.thislogin', 'user_attributes.logincount', 'user_attributes.blockeduntil', 'user_attributes.blockedafter')
                         ->join('user_attributes', 'user_attributes.internalKey', '=', 'users.id')
+                        ->join('user_roles', 'user_roles.id', '=', 'user_attributes.role')
                         ->orderBy('users.username', 'ASC');
                     $where = "";
                     if (!empty($query)) {
@@ -135,7 +151,11 @@ echo $cm->render();
                                 ->orWhere('user_attributes.email', 'LIKE', '%'.$query.'%');
                         });
                     }
-
+                    if (!empty($query_role)) {
+                        $managerUsers = $managerUsers->where(function ($q) use ($query_role) {
+                            $q->where('user_attributes.role', '=', $query_role);
+                        });
+                    }
                     $grd = new \EvolutionCMS\Support\DataGrid('', $managerUsers, EvolutionCMS()->getConfig('number_of_results')); // set page size to 0 t show all items
                     $grd->noRecordMsg = $_lang["no_records_found"];
                     $grd->cssClass = "table data";
