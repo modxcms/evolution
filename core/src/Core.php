@@ -69,7 +69,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     /**
      * @var array
      */
-    public $pluginEvent = array();
+    public $pluginEvent = [];
 
     /**
      * @var array
@@ -505,7 +505,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function sendErrorPage($noEvent = false)
     {
-        $this->systemCacheKey = 'notfound';
+        $this->setSystemCacheKey('notfound');
         if (!$noEvent) {
             // invoke OnPageNotFound event
             $this->invokeEvent('OnPageNotFound');
@@ -523,7 +523,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     {
         // invoke OnPageUnauthorized event
         $_REQUEST['refurl'] = $this->documentIdentifier;
-        $this->systemCacheKey = 'unauth';
+        $this->setSystemCacheKey('unauth');
         if (!$noEvent) {
             $this->invokeEvent('OnPageUnauthorized');
         }
@@ -633,8 +633,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $hash = $id;
         $tmp = null;
         $params = array();
-        if (!empty($this->systemCacheKey)) {
-            $hash = $this->systemCacheKey;
+        $cacheKey = $this->getSystemCacheKey();
+        if (!empty($cacheKey)) {
+            $hash = $cacheKey;
         } else {
             if (!empty($_GET)) {
                 // Sort GET parameters so that the order of parameters on the HTTP request don't affect the generated cache ID.
@@ -643,7 +644,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $hash .= '_' . md5(http_build_query($params));
             }
         }
-        $evtOut = $this->invokeEvent("OnMakePageCacheKey", array("hash" => $hash, "id" => $id, 'params' => $params));
+        $evtOut = $this->invokeEvent("OnMakePageCacheKey", array("hash" => &$hash, "id" => $id, 'params' => $params));
         if (is_array($evtOut) && count($evtOut) > 0) {
             $tmp = array_pop($evtOut);
         }
@@ -1381,7 +1382,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $docid = $str;
         }
         if (preg_match('@^[1-9]\d*$@', $docid)) {
-            unset($this->systemCacheKey);
+            $this->setSystemCacheKey('');
             $value = $this->getField($key, $docid);
         } else {
             $value = '';
@@ -1684,6 +1685,22 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $content = str_ireplace($tags, $tags, $content); // Change to capital letters
 
         return $content;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSystemCacheKey(): string
+    {
+        return $this->systemCacheKey;
+    }
+
+    /**
+     * @param  string  $systemCacheKey
+     */
+    public function setSystemCacheKey(string $systemCacheKey): void
+    {
+        $this->systemCacheKey = $systemCacheKey;
     }
 
     /**
@@ -2740,7 +2757,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $this->documentIdentifier = $this->getDocumentIdentifier($this->documentMethod);
         } else {
             header('HTTP/1.0 503 Service Unavailable');
-            $this->systemCacheKey = 'unavailable';
+            $this->setSystemCacheKey('unavailable');
             if (!$this->config['site_unavailable_page']) {
                 // display offline message
                 $this->documentContent = $this->getConfig('site_unavailable_message');
