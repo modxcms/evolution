@@ -6,6 +6,7 @@ namespace EvolutionCMS\Controllers;
 
 use EvolutionCMS\Interfaces\ManagerTheme;
 use EvolutionCMS\Models\Category;
+use EvolutionCMS\Models\SiteModule;
 use EvolutionCMS\Support\ContextMenu;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -47,7 +48,7 @@ class Modules extends AbstractController implements ManagerTheme\PageControllerI
     {
         $this->parameters = [
             'contextMenu' => $this->getContextMenu(),
-            'categories' => $this->getCategories(),
+            'modules' => $this->getModules()
         ];
 
         return true;
@@ -82,6 +83,14 @@ class Modules extends AbstractController implements ManagerTheme\PageControllerI
             'menu' => $cm->render(),
             'script' => $cm->getClientScriptObject()
         ];
+    }
+
+    protected function getModules() : Collection
+    {
+        return SiteModule::query()
+            ->orderBy('name', 'ASC')
+            ->lockedView()
+            ->get();
     }
 
     /**
