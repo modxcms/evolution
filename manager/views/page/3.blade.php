@@ -60,9 +60,9 @@
     }
 
     // Get Template name
-    $templatename = \EvolutionCMS\Models\User::find($content['template']);
+    $templatename = \EvolutionCMS\Models\SiteTemplate::query()->where('id', '=', $content['template'])->get()->toArray();
     if(!is_null($templatename)){
-        $templatename = $templatename->username;
+        $templatename = $templatename[0]['templatename'];
     }
 
     // Set the item name for logger
@@ -389,7 +389,7 @@
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_template') }}:</td>
-                        <td><?= entities($templatename, EvolutionCMS()->getConfig('modx_charset')) ?></td>
+                        <td><?= $content['template'] == 0 ? "(<i>" . ManagerTheme::getLexicon('not_set') . "</i>)" : entities($templatename, EvolutionCMS()->getConfig('modx_charset')) ?></td>
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_editor') }}:</td>
