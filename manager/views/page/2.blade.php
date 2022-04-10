@@ -146,7 +146,7 @@
             );
             $ph['now'] = $formatter->format($now);
         } else {
-            $ph['now'] = strftime('%H:%M:%S', $now);
+            $ph['now'] = date('H:i:s', $now);
         }
         $timetocheck = ($now - (60 * 20)); //+$server_offset_time;
         $html = '
@@ -190,7 +190,7 @@
                 );
                 $lasthit = $formatter->format($modx->timestamp($activeUser['lasthit']));
             } else {
-                $lasthit = strftime('%H:%M:%S', $modx->timestamp($activeUser['lasthit']));
+                $lasthit = date('H:i:s', $modx->timestamp($activeUser['lasthit']));
             }
             $userList[] = array(
                 $idle,
