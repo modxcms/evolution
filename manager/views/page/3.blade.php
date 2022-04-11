@@ -78,6 +78,7 @@
     $childs = \EvolutionCMS\Models\SiteContent::query()->select('site_content.*')->distinct()
         ->leftJoin('document_groups', 'document_groups.document', '=', 'site_content.id')
         ->where('site_content.parent', $id);
+
     if ($_SESSION['mgrRole'] != 1) {
         if (is_array($_SESSION['mgrDocgroups']) && count($_SESSION['mgrDocgroups']) > 0) {
             $childs = $resources->where(function ($q) {
@@ -93,13 +94,14 @@
 
     $sort = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : 'createdon';
     $dir = isset($_REQUEST['dir']) ? $_REQUEST['dir'] : 'DESC';
+    $pg = isset($_REQUEST['page']) ? (int)$_REQUEST['page'] - 1 : 0;
 
     // Get child documents (with paging)
 
     $filter_sort = '';
     $filter_dir = '';
     if ($numRecords > 0) {
-        $childs = $childs->orderBy($sort, $dir)->get();
+        $childs = $childs->orderBy($sort, $dir)->offset($pg * MAX_DISPLAY_RECORDS_NUM)->limit(MAX_DISPLAY_RECORDS_NUM)->get();
 
         $filter_sort = '<select size="1" name="sort" class="form-control form-control-sm" onchange="document.location=\'index.php?a=3&id=' . $id . '&dir=' . $dir . '&sort=\'+this.options[this.selectedIndex].value">' . '<option value="createdon"' . (($sort == 'createdon') ? ' selected' : '') . '>' . ManagerTheme::getLexicon('createdon') . '</option>' . '<option value="pub_date"' . (($sort == 'pub_date') ? ' selected' : '') . '>' . ManagerTheme::getLexicon('page_data_publishdate') . '</option>' . '<option value="pagetitle"' . (($sort == 'pagetitle') ? ' selected' : '') . '>' . ManagerTheme::getLexicon('pagetitle') . '</option>' . '<option value="menuindex"' . (($sort == 'menuindex') ? ' selected' : '') . '>' . ManagerTheme::getLexicon('resource_opt_menu_index') . '</option>' . //********  resource_opt_is_published - //
             '<option value="published"' . (($sort == 'published') ? ' selected' : '') . '>' . ManagerTheme::getLexicon('resource_opt_is_published') . '</option>' . //********//
