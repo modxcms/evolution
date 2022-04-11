@@ -916,7 +916,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
                                 }
                             }
                         ?>
-						<td colspan="2" align="center"><img name="iphoto" src="<?php echo $out;  ?>" /></td>
+						<td colspan="2" align="center"><img name="iphoto" src="<?php echo $modx->getPhpCompat()->htmlspecialchars($out);  ?>" /></td>
 					</tr>
 				</table>
 			</div>
