@@ -26,6 +26,12 @@ class TracyServiceProvider extends ServiceProvider
         Debugger::$showLocation = $this->isShowLocation();
         Debugger::$maxDepth = 20;
         Debugger::$maxLength = 200;
+        if($this->app['config']->get('tracy.editor')) {
+            Debugger::$editor = $this->app['config']->get('tracy.editor');
+        }
+        if($this->app['config']->get('tracy.editorMapping')) {
+            Debugger::$editorMapping = $this->app['config']->get('tracy.editorMapping');
+        }
 
         $this->registerErrorTpl();
         $this->registerPanels($this->listPanels());
