@@ -988,7 +988,7 @@ class browser extends uploader
                 'name'       => stripcslashes($name),
                 'size'       => $stat['size'],
                 'mtime'      => $stat['mtime'],
-                'date'       => @strftime($this->dateTimeSmall, $stat['mtime']),
+                'date'       => date($this->dateTimeSmall, $stat['mtime']),
                 'readable'   => is_readable($file),
                 'writable'   => file::isWritable($file),
                 'bigIcon'    => $bigIcon,
