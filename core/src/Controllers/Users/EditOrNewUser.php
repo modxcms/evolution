@@ -154,8 +154,9 @@ class EditOrNewUser extends AbstractController implements ManagerTheme\PageContr
             $a = ($userData['stay'] == '2') ? "88&id={$user->getKey()}" : "87";
             $this->parameters['url'] = "index.php?a={$a}&r=2&stay=" . $userData['stay'];
         } else {
-            $this->parameters['url'] = "index.php?a=99&r=2";
+            $this->parameters['url'] = "index.php?a=88&id={$user->getKey()}";
         }
+        $this->parameters['cancel_url'] = "index.php?a=99";
         if ($userData['passwordnotifymethod'] == 'e') {
             $websignupemail_message = EvolutionCMS()->getConfig('websignupemail_message');
             $site_url = EvolutionCMS()->getConfig('site_url');
