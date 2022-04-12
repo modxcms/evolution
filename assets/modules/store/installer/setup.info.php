@@ -157,7 +157,7 @@ if (is_dir($pluginPath) && is_readable($pluginPath)) {
 
 }
 
-// setup modules - array : name, description, type - 0:file or 1:content, file or content,properties, guid,enable_sharedparams
+// setup modules - array : name, description, type - 0:file or 1:content, file or content, properties, guid, enable_sharedparams, icon
 $mm = &$moduleModules;
 if (is_dir($modulePath) && is_readable($modulePath)) {
     $d = dir($modulePath);
@@ -176,7 +176,8 @@ if (is_dir($modulePath) && is_readable($modulePath)) {
                 $params['guid'] ?? '',
                 (int)($params['shareparams'] ?? 0),
                 $params['modx_category'] ?? '',
-                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
+                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false,
+                $params['icon'] ?? ''
             );
         }
     }
