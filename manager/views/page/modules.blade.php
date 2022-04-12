@@ -31,10 +31,10 @@
                             <td class="tableItem text-center" style="width: 34px;">
                                 @if(evo()->hasAnyPermissions(['edit_module', 'exec_module']))
                                     <a class="tableRowIcon" href="javascript:;" onclick="return showContentMenu({{ $module->getKey() }}, event);" title="{{ __('global.click_to_context') }}">
-                                        <i class="fa fa-cube"></i>
+                                        <i class="{!! !empty($module->icon) ? $module->icon : 'fa fa-cube' !!}"></i>
                                     </a>
                                 @else
-                                    <i class="fa fa-cube"></i>
+                                    <i class="{!! !empty($module->icon) ? $module->icon : 'fa fa-cube' !!}"></i>
                                 @endif
                             </td>
                             <td class="tableItem">
