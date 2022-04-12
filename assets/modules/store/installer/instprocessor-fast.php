@@ -35,7 +35,7 @@ $moduleChunks = array(); // chunks - array : name, description, type - 0:file or
 $moduleTemplates = array(); // templates - array : name, description, type - 0:file or 1:content, file or content
 $moduleSnippets = array(); // snippets - array : name, description, type - 0:file or 1:content, file or content,properties
 $modulePlugins = array(); // plugins - array : name, description, type - 0:file or 1:content, file or content,properties, events,guid
-$moduleModules = array(); // modules - array : name, description, type - 0:file or 1:content, file or content,properties, guid
+$moduleModules = array(); // modules - array : name, description, type - 0:file or 1:content, file or content, properties, guid, icon
 $moduleTemplates = array(); // templates - array : name, description, type - 0:file or 1:content, file or content,properties
 $moduleTVs = array(); // template variables - array : name, description, type - 0:file or 1:content, file or content,properties
 
@@ -279,6 +279,7 @@ if (count($moduleModules) > 0) {
         $guid = $moduleModule[4];
         $shared = $moduleModule[5];
         $category = $moduleModule[6];
+        $icon = $moduleModule[8];
         if (!file_exists($filecontent))
             echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_module'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
         else {
@@ -292,12 +293,12 @@ if (count($moduleModules) > 0) {
             $moduleDb = \EvolutionCMS\Models\SiteModule::query()->where('name', $name)->first();
             if (!is_null($moduleDb)) {
                 $properties = propUpdate($properties, $moduleDb->properties);
-                \EvolutionCMS\Models\SiteModule::query()->where('name', $name)->update(['modulecode' => $module, 'description' => $desc, 'properties' => $properties, 'enable_sharedparams' => $shared]);
+                \EvolutionCMS\Models\SiteModule::query()->where('name', $name)->update(['modulecode' => $module, 'description' => $desc, 'properties' => $properties, 'enable_sharedparams' => $shared, 'icon' => $icon]);
 
                 echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
             } else {
                 $properties = parseProperties($properties, true);
-                \EvolutionCMS\Models\SiteModule::query()->create(['name' => $name, 'guid' => $guid, 'category' => $category, 'modulecode' => $module, 'description' => $desc, 'properties' => $properties, 'enable_sharedparams' => $shared]);
+                \EvolutionCMS\Models\SiteModule::query()->create(['name' => $name, 'guid' => $guid, 'category' => $category, 'modulecode' => $module, 'description' => $desc, 'properties' => $properties, 'enable_sharedparams' => $shared, 'icon' => $icon]);
                 echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
             }
         }
@@ -464,7 +465,6 @@ if (count($moduleSnippets) > 0) {
 }
 
 // install data
-
 if (is_file($installPath . '/' . $moduleSQLDataFile)) {
     echo "<p>" . $_lang['installing_demo_site'];
     $sqlParser->process($installPath . '/' . $moduleSQLDataFile);

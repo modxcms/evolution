@@ -44,7 +44,7 @@ $moduleChunks = array (); // chunks - array : name, description, type - 0:file o
 $moduleTemplates = array (); // templates - array : name, description, type - 0:file or 1:content, file or content
 $moduleSnippets = array (); // snippets - array : name, description, type - 0:file or 1:content, file or content,properties
 $modulePlugins = array (); // plugins - array : name, description, type - 0:file or 1:content, file or content,properties, events,guid
-$moduleModules = array (); // modules - array : name, description, type - 0:file or 1:content, file or content,properties, guid
+$moduleModules = array (); // modules - array : name, description, type - 0:file or 1:content, file or content, properties, guid, icon
 $moduleTemplates = array (); // templates - array : name, description, type - 0:file or 1:content, file or content,properties
 $moduleTVs = array (); // template variables - array : name, description, type - 0:file or 1:content, file or content,properties
 
@@ -63,7 +63,7 @@ echo '<!DOCTYPE html>
 
 
 if (!@include ($modulePath.'/action.' . $action . '.php')) {
-    die ('Invalid install action attempted. [action=' . $action . ']');
+	die ('Invalid install action attempted. [action=' . $action . ']');
 }
 
 echo "</div><!-- // content --></div><!-- // contentarea --><br /></body></html>";

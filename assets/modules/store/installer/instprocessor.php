@@ -176,7 +176,7 @@ if (isset ($_POST['tv']) || $installData) {
                             $tRow = EvolutionCms()->getDatabase()->getRow($ts,'assoc');
                             $templateId = $tRow['id'];
                             EvolutionCms()->getDatabase()->query("INSERT INTO `" . $table_prefix . "site_tmplvar_templates` (tmplvarid, templateid) VALUES('$id', '$templateId');");
-                       }
+                        }
                     }
                 }
             }
@@ -242,16 +242,17 @@ if (isset ($_POST['chunk']) || $installData) {
 if (isset ($_POST['module']) || $installData) {
     echo "<h3>" . $_lang['modules'] . ":</h3> ";
     $selModules = $_POST['module'];
-    foreach ($moduleModules as $k=>$moduleModule) {
+    foreach ($moduleModules as $k => $moduleModule) {
         $installSample = in_array('sample', $moduleModule[7]) && $installData == 1;
-        if($installSample || in_array($k, $selModules)) {
-            $name = EvolutionCms()->getDatabase()->escape($moduleModule[0]);
-            $desc = EvolutionCms()->getDatabase()->escape($moduleModule[1]);
+        if ($installSample || in_array($k, $selModules)) {
+            $name = evo()->getDatabase()->escape($moduleModule[0]);
+            $desc = evo()->getDatabase()->escape($moduleModule[1]);
             $filecontent = $moduleModule[2];
             $properties = $moduleModule[3];
-            $guid = EvolutionCms()->getDatabase()->escape($moduleModule[4]);
-            $shared = EvolutionCms()->getDatabase()->escape($moduleModule[5]);
-            $category = EvolutionCms()->getDatabase()->escape($moduleModule[6]);
+            $guid = evo()->getDatabase()->escape($moduleModule[4]);
+            $shared = evo()->getDatabase()->escape($moduleModule[5]);
+            $category = evo()->getDatabase()->escape($moduleModule[6]);
+            $icon = evo()->getDatabase()->escape($moduleModule[8]);
             if (!file_exists($filecontent))
                 echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_module'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
             else {
@@ -262,19 +263,19 @@ if (isset ($_POST['module']) || $installData) {
                 $module = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
                 // remove installer docblock
                 $module = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $module, 1);
-                $module = EvolutionCms()->getDatabase()->escape($module);
-                $rs = EvolutionCms()->getDatabase()->query("SELECT * FROM `" . $table_prefix . "site_modules` WHERE name='$name'");
-                if (EvolutionCms()->getDatabase()->getRecordCount($rs)) {
-                    $row = EvolutionCms()->getDatabase()->getRow($rs,'assoc');
-                    $props = EvolutionCms()->getDatabase()->escape(propUpdate($properties,$row['properties']));
-                    if (!@ EvolutionCms()->getDatabase()->query("UPDATE `" . $table_prefix . "site_modules` SET modulecode='$module', description='$desc', properties='$props', enable_sharedparams='$shared' WHERE name='$name';")) {
+                $module = evo()->getDatabase()->escape($module);
+                $rs = evo()->getDatabase()->query("SELECT * FROM `" . $table_prefix . "site_modules` WHERE name='$name'");
+                if (evo()->getDatabase()->getRecordCount($rs)) {
+                    $row = evo()->getDatabase()->getRow($rs,'assoc');
+                    $props = evo()->getDatabase()->escape(propUpdate($properties,$row['properties']));
+                    if (!@ evo()->getDatabase()->query("UPDATE `" . $table_prefix . "site_modules` SET modulecode='$module', description='$desc', properties='$props', enable_sharedparams='$shared', icon='$icon' WHERE name='$name';")) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
-                    $properties = EvolutionCms()->getDatabase()->escape(parseProperties($properties, true));
-                    if (!@ EvolutionCms()->getDatabase()->query("INSERT INTO `" . $table_prefix . "site_modules` (name,description,modulecode,properties,guid,enable_sharedparams,category) VALUES('$name','$desc','$module','$properties','$guid','$shared', '$category');")) {
+                    $properties = evo()->getDatabase()->escape(parseProperties($properties, true));
+                    if (!@ evo()->getDatabase()->query("INSERT INTO `" . $table_prefix . "site_modules` (name, description, modulecode, properties, guid, enable_sharedparams, category, icon) VALUES('$name', '$desc', '$module', '$properties', '$guid', '$shared', '$category', '$icon');")) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
                     }
@@ -531,7 +532,7 @@ function parseProperties($propertyString, $json=false) {
             }
 
         }
-    // new json-format
+        // new json-format
     } else if(!empty($jsonFormat)){
         $property = $jsonFormat;
     }
