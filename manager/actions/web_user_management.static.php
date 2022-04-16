@@ -7,8 +7,8 @@ if (!$modx->hasPermission('edit_user')) {
 }
 
 $query = [
-    'search' => isset($_REQUEST['search']) ? $_REQUEST['search'] : '',
-    'role' => isset($_REQUEST['role']) ? $_REQUEST['role'] : '',
+    'search' => isset($_REQUEST['search']) && is_scalar($_REQUEST['search']) ? $_REQUEST['search'] : '',
+    'role' => isset($_REQUEST['role']) && is_scalar($_REQUEST['role']) ? $_REQUEST['role'] : '',
 ];
 
 $page = isset($_REQUEST['page']) ? (int)$_REQUEST['page'] - 1 : 0;
@@ -35,7 +35,7 @@ $cm->addItem(ManagerTheme::getLexicon('delete'), "js:menuAction(2)", $_style["ic
 echo $cm->render();
 
 // roles
-$role_options = '';
+$role_options = '<option value="0"' . ($query['role'] == '0' ? ' selected' : '') . '>' . ManagerTheme::getLexicon('no_user_role') . '</option>';
 $roles = \EvolutionCMS\Models\UserRole::query()->select('id', 'name')->get()->toArray();
 foreach ($roles as $row) {
     $role_options .= '<option value="'.$row['id'].'" '.($query['role'] != '' && $row['id'] == $query['role'] ? 'selected' : '').'>'.$row['name'].'</option>';
@@ -43,12 +43,12 @@ foreach ($roles as $row) {
 
 // prepare data
 $managerUsers = \EvolutionCMS\Models\User::query()
-    ->select('users.id', 'users.username', 'user_attributes.fullname', 'user_attributes.email', 'user_attributes.blocked', 'user_attributes.thislogin', 'user_attributes.logincount', 'user_attributes.blockeduntil', 'user_attributes.blockedafter')
+    ->select('users.id', 'users.username', 'user_attributes.fullname', 'user_attributes.email', 'user_attributes.blocked', 'user_attributes.thislogin', 'user_attributes.logincount', 'user_attributes.blockeduntil', 'user_attributes.blockedafter', 'user_roles.name')
     ->join('user_attributes', 'user_attributes.internalKey', '=', 'users.id')
-    ->join('user_roles', 'user_roles.id', '=', 'user_attributes.role')
+    ->leftJoin('user_roles', 'user_roles.id', '=', 'user_attributes.role')
     ->orderBy('users.username', 'ASC');
 
-if (!empty($query['search'])) {
+if ($query['search'] != '') {
     $val = $query['search'];
     $managerUsers = $managerUsers->where(function ($q) use ($val) {
         $q->where('users.username', 'LIKE', $val.'%')
@@ -56,7 +56,7 @@ if (!empty($query['search'])) {
             ->orWhere('user_attributes.email', 'LIKE', '%'.$val.'%');
     });
 }
-if (!empty($query['role'])) {
+if ($query['role'] != '') {
     $val = $query['role'];
     $managerUsers = $managerUsers->where(function ($q) use ($val) {
         $q->where('user_attributes.role', '=', $val);
@@ -121,10 +121,11 @@ if ($numRecords > 0) {
         }
 
         $listDocs[] = [
-            'icon' => '<a class="gridRowIcon" href="javascript:;" onclick="return showContentMenu(' . $el['id'] . ',event);" title="' . ManagerTheme::getLexicon('click_to_context') . '"><i class="' . $_style["icon_web_user"] . '"></i></a>',
+            'icon' => '<a class="gridRowIcon" href="javascript:;" onclick="return showContentMenu(' . $el['id'] . ',event);" title="' . ManagerTheme::getLexicon('click_to_context') . '"><i class="' . $_style[empty($el['name']) ? 'icon_no_user_role' : 'icon_web_user'] . '"></i></a>',
             'name' => '<a href="index.php?a=88&id=' . $el['id'] . '" title="' . ManagerTheme::getLexicon('click_to_edit_title') . '">' . $el['username'] . '</a>',
             'user_full_name' => $el['fullname'],
             'email' => $el['email'],
+            'role' => $el['name'] ?: ManagerTheme::getLexicon('no_user_role'),
             'user_prevlogin' => $el['thislogin'] ? $modx->toDateFormat($el['thislogin']) : '-',
             'user_logincount' => $el['logincount'],
             'user_block' => $el['blocked'] ? ManagerTheme::getLexicon('yes').' <i class="fa fa-question-circle help" data-toggle="tooltip" data-placement="top" title="'.$blocked_title.'"></i>' : '-',

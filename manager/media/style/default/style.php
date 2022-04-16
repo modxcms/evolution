@@ -125,6 +125,7 @@ $_style['icon_user']              = 'fa fa-user-circle-o';
 $_style['icon_users']             = 'fa fa-users';
 $_style['icon_user_access']       = 'fa fa-universal-access';
 $_style['icon_user_secret']       = 'fa fa-user-secret';
+$_style['icon_no_user_role']      = 'fa fa-user-o';
 $_style['icon_web_user']          = 'fa fa-user';
 $_style['icon_web_user_access']   = 'fa fa-male';
 $_style['icon_word']              = 'fa fa-file-word-o';
