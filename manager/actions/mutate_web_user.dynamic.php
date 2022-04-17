@@ -500,7 +500,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 					?>
 
                     <?php
-                        $tvs = SiteTmplvar::select('site_tmplvars.*', 'user_role_vars.rank as tvrank', 'user_role_vars.rank', 'site_tmplvars.id', 'site_tmplvars.rank', 'user_values.value')
+                        $tvs = SiteTmplvar::select('site_tmplvars.*', 'user_role_vars.rank as tvrank', 'user_role_vars.roleid', 'site_tmplvars.id', 'site_tmplvars.rank', 'user_values.value')
                             ->join('user_role_vars', 'user_role_vars.tmplvarid', '=', 'site_tmplvars.id')
                             ->leftJoin('user_values', function($query) use ($user) {
                                 $query->on('user_values.userid', '=', \DB::raw($user));
@@ -577,7 +577,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
                                             '',
                                             $row,
                                             $tvsArray ?? [],
-                                            $role
+                                            $row['roleid']
                                         ) ?>
                                     </div>
                                 </td>
