@@ -46,6 +46,9 @@ class EditOrNewUser extends AbstractController implements ManagerTheme\PageContr
         if (isset($userData['blockeduntil']) && !is_numeric($userData['blockeduntil'])) {
             $userData['blockeduntil'] = strtotime($userData['blockeduntil']);
         }
+        if (isset($userData['blockedafter']) && !is_numeric($userData['blockedafter'])) {
+            $userData['blockedafter'] = strtotime($userData['blockedafter']);
+        }
         try {
             if ($userData['mode'] == 87) {
                 $user = \UserManager::create($userData);
