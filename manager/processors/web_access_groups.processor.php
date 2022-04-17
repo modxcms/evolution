@@ -102,9 +102,8 @@ switch ($operation) {
     case "remove_document_group_from_user_group" :
         $updategroupaccess = true;
         $coupling = (int)$_REQUEST['coupling'];
-        $document_group = (int)$_REQUEST['document_group'];
         $context = (int)($_REQUEST['context'] ?? 0) == 0 ? 0 : 1;
-        \EvolutionCMS\Models\MembergroupAccess::where('membergroup', $coupling)->where('documentgroup', $document_group)->where('context', $context)->delete();
+        \EvolutionCMS\Models\MembergroupAccess::where('id', $coupling)->delete();
         break;
     default :
         EvolutionCMS()->webAlertAndQuit("No operation set in request.");

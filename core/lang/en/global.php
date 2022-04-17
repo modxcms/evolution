@@ -28,6 +28,7 @@ $_lang["access_permissions_docs_message"] = 'Select which Resource Groups this R
 $_lang["access_permissions_group_link"] = 'Create a new group link';
 $_lang["access_permissions_introtext"] = 'Manage the User Groups and Resource Groups used for access permissions. To add a user to a User Group, edit the user and select the groups (s)he should be a member of. To add a Resource to a User Group, edit the Resource and select the groups it should belong to.';
 $_lang["access_permissions_link_to_group"] = 'to Resource Group';
+$_lang["access_permissions_context"] = 'in context';
 $_lang["access_permissions_link_user_group"] = 'Link User Group';
 $_lang["access_permissions_links"] = 'User/Resource Group links';
 $_lang["access_permissions_links_tab"] = 'Specify which User Groups are given access (i.e. can edit or create children) to the Resource Groups. To link a Resource Group to a User Group, select the appropriate groups from the drop down menus, and click on \'Submit\'. To remove the link for a certain group, press \'Remove\'. This will immediately remove the link.';
