@@ -3,7 +3,6 @@
 use AgelxNash\Modx\Evo\Database\Exceptions\InvalidFieldException;
 use AgelxNash\Modx\Evo\Database\Exceptions\TableNotDefinedException;
 use AgelxNash\Modx\Evo\Database\Exceptions\UnknownFetchTypeException;
-use Carbon\Carbon;
 use EvolutionCMS\Models\ActiveUser;
 use EvolutionCMS\Models\ActiveUserLock;
 use EvolutionCMS\Models\ActiveUserSession;
@@ -565,15 +564,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param string $context
      * @return bool
      */
-    public function isLoggedIn($context = '')
+    public function isLoggedIn($context = 'mgr')
     {
-        if (empty($context)) {
-            $mgr = 'mgrValidated';
-            $web = 'webValidated';
-            return is_cli() || (isset($_SESSION[$mgr]) && !empty($_SESSION[$mgr])) || (isset($_SESSION[$web]) && !empty($_SESSION[$web]));
-        }
+        $_ = 'mgrValidated';
 
-        $_ = $context.'Validated';
         return is_cli() || (isset($_SESSION[$_]) && !empty($_SESSION[$_]));
     }
 
@@ -694,41 +688,40 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         else {
             $docObj = unserialize($a[0]); // rebuild document object
             // check page security
-            if ((!isset($_SESSION['mgrRole']) || $_SESSION['mgrRole'] != 1)) {
-                if ($docObj['privatemgr'] && isset ($docObj['__MODxDocGroups__'])) {
-                    $pass = false;
-                    $usrGrps = $this->getUserDocGroups();
-                    $docGrps = explode(',', $docObj['__MODxDocGroups__']);
-                    // check is user has access to doc groups
-                    if (is_array($usrGrps)) {
-                        foreach ($usrGrps as $k => $v) {
-                            if (!in_array($v, $docGrps)) {
-                                continue;
-                            }
-                            $pass = true;
-                            break;
+            if ($this->isFrontend() && $docObj['privateweb'] && isset ($docObj['__MODxDocGroups__'])) {
+                $pass = false;
+                $usrGrps = $this->getUserDocGroups();
+                $docGrps = explode(',', $docObj['__MODxDocGroups__']);
+                // check is user has access to doc groups
+                if (is_array($usrGrps)) {
+                    foreach ($usrGrps as $k => $v) {
+                        if (!in_array($v, $docGrps)) {
+                            continue;
                         }
-                    }
-                    // diplay error pages if user has no access to cached doc
-                    if (!$pass) {
-                        if ($this->getConfig('unauthorized_page')) {
-                            // check if file is not public
-                            $documentGroups = DocumentGroup::where('document', $id);
-                            $total = $documentGroups->count();
-                        } else {
-                            $total = 0;
-                        }
-
-                        if ($total > 0) {
-                            $this->sendUnauthorizedPage();
-                        } else {
-                            $this->sendErrorPage();
-                        }
-
-                        exit; // stop here
+                        $pass = true;
+                        break;
                     }
                 }
+                // diplay error pages if user has no access to cached doc
+                if (!$pass) {
+                    if ($this->getConfig('unauthorized_page')) {
+                        // check if file is not public
+                        $documentGroups = DocumentGroup::where('document', $id);
+                        $total = $documentGroups->count();
+                    } else {
+                        $total = 0;
+                    }
+
+                    if ($total > 0) {
+                        $this->sendUnauthorizedPage();
+                    } else {
+                        $this->sendErrorPage();
+                    }
+
+                    exit; // stop here
+                }
             }
+
             // Grab the Scripts
             if (isset($docObj['__MODxSJScripts__'])) {
                 $this->sjscripts = $docObj['__MODxSJScripts__'];
@@ -807,7 +800,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         $this->documentOutput = $this->cleanUpMODXTags($this->documentOutput);
 
-        $this->documentOutput = UrlProcessor::rewriteUrls($this->documentOutput);
+        $this->documentOutput = $this->rewriteUrls($this->documentOutput);
 
         // send out content-type and content-disposition headers
         if (IN_PARSER_MODE == "true") {
@@ -815,7 +808,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             header('Content-Type: ' . $type . '; charset=' . $this->getConfig('modx_charset'));
             //            if (($this->documentIdentifier == $this->config['error_page']) || $redirect_error)
             //                header('HTTP/1.0 404 Not Found');
-            if (!$this->checkPreview() && isset($this->documentObject['content_dispo']) && $this->documentObject['content_dispo']) {
+            if (!$this->checkPreview() && $this->documentObject['content_dispo'] == 1) {
                 if ($this->documentObject['alias']) {
                     $name = $this->documentObject['alias'];
                 } else {
@@ -2453,12 +2446,14 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      */
     public function getDocumentObject($method, $identifier, $isPrepareResponse = false)
     {
-        $documentObject = false;
-        $cacheKey = $this->makePageCacheKey($identifier);
+        $cacheKey = md5(print_r(func_get_args(), true));
+        if (isset($this->tmpCache[__FUNCTION__][$cacheKey])) {
+            return $this->tmpCache[__FUNCTION__][$cacheKey];
+        }
 
         // allow alias to be full path
         if ($method === 'alias') {
-            $identifier = $this->cleanDocumentIdentifier($identifier);
+            $identifier = UrlProcessor::getFacadeRoot()->cleanDocumentIdentifier($identifier);
             $method = $this->documentMethod;
         }
         if ($method === 'alias' && $this->getConfig('use_alias_path') && array_key_exists($identifier,
@@ -2475,23 +2470,47 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (is_array($out) && is_array($out[0])) {
             $documentObject = $out[0];
         } else {
-            $cachedData = Cache::get($cacheKey);
-            if (!is_null($cachedData)) {
-                $documentObject = $cachedData;
-            }
-        }
-
-        if ($documentObject === false) {
+            // get document groups for current user
+            $docgrp = $this->getUserDocGroups();
+            // get document
             $documentObject = SiteContent::query()
-                ->where('site_content.' . $method, $identifier)
-                ->first();
-
-            if (is_null($documentObject)) {
-                $this->sendErrorPage();
-                exit;
+                ->leftJoin('document_groups', 'document_groups.document', '=', 'site_content.id')
+                ->where('site_content.' . $method, $identifier);
+            if ($this->isFrontend()) {
+                $documentObject->where('privateweb', 0);
+            } else {
+                $documentObject->where(function($query) use ($docgrp) {
+                    $query->whereRaw("1 = {$_SESSION['mgrRole']} OR site_content.privatemgr=0");
+                    if ($docgrp) {
+                        $query->orWhereIn('document_groups.document_group', $docgrp);
+                    }
+                });
             }
-
-            # this is now the document :) #
+            $documentObject = $documentObject->first();
+            if (is_null($documentObject)) {
+                $seclimit = 0;
+                if ($this->getConfig('unauthorized_page')) {
+                    // method may still be alias, while identifier is not full path alias, e.g. id not found above
+                    if ($method === 'alias') {
+                        $seclimit = DocumentGroup::query()
+                            ->join('site_content')
+                            ->where('document_groups.document', 'sc.id')
+                            ->where('site_content.alias', \DB::Raw($identifier))
+                            ->exists();
+                    } else {
+                        $seclimit = DocumentGroup::query()
+                            ->where('document', \DB::Raw($identifier))
+                            ->exists();
+                    }
+                    if ($seclimit) {
+                        // match found but not publicly accessible, send the visitor to the unauthorized_page
+                        $this->sendUnauthorizedPage();
+                    } else {
+                        $this->sendErrorPage();
+                    }
+                }
+            }
+            //this is now the document :)
             $documentObject = $documentObject->toArray();
 
             if ($isPrepareResponse === 'prepareResponse') {
@@ -2541,42 +2560,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $documentObject = $out[0];
             }
         }
-        if ($documentObject['privatemgr'] == 1 && (!isset($_SESSION['mgrRole']) || $_SESSION['mgrRole'] != 1)) {
-            $checkRole = false;
-            if (!isset($documentObject['__user_groups'])) {
-                if ($method !== 'alias') {
-                    $documentObject['__user_groups'] = \EvolutionCMS\Models\DocumentGroup::where('document', $identifier)->pluck('document_group')->toArray();
-                } else {
-                    $documentObject['__user_groups'] = \EvolutionCMS\Models\DocumentGroup::query()->select('document_groups.document_group')
-                        ->join('site_content', function ($join) use ($identifier) {
-                            $join->on('document_groups.document', '=', 'site_content.id');
-                            $join->on('site_content.alias', '=', $identifier);
-                        })->pluck('document_group')->toArray();
-                }
-            }
-            $docgrp = $this->getUserDocGroups();
-
-            if (is_array($docgrp)) {
-                foreach ($docgrp as $group) {
-                    if (in_array($group, $documentObject['__user_groups'])) {
-                        $checkRole = true;
-                        break;
-                    }
-                }
-            }
-            // method may still be alias, while identifier is not full path alias, e.g. id not found above
-            if ($this->getConfig('unauthorized_page') && $checkRole === false) {
-                // match found but not publicly accessible, send the visitor to the unauthorized_page
-                $this->sendUnauthorizedPage();
-                exit; // stop here
-            }
-            if ($checkRole === false) {
-                $this->sendErrorPage();
-                exit;
-            }
-        }
-
-        Cache::forever($cacheKey, $documentObject);
+        $this->tmpCache[__FUNCTION__][$cacheKey] = $documentObject;
 
         return $documentObject;
     }
@@ -2898,6 +2882,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function prepareResponse()
     {
         // we now know the method and identifier, let's check the cache
+
         if ($this->getConfig('enable_cache') == 2 && $this->isLoggedIn()) {
             $this->setConfig('enable_cache', 0);
         }
@@ -3035,6 +3020,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         exit;
     }
 
+    /**
+     * @deprecated use TemplateProcessor::getTemplateCodeFromDB()
+     */
+    public function _getTemplateCodeFromDB($templateID)
+    {
+        return TemplateProcessor::getTemplateCodeFromDB($templateID);
+    }
 
     /**
      * Returns an array of all parent record IDs for the id passed.
@@ -4351,7 +4343,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         return UrlProcessor::makeUrl((int)$id, $alias, $args, $scheme);
     }
 
-
+    /**
+     * @deprecated use UrlProcessor::getAliasListing()
+     */
+    public function getAliasListing($id)
+    {
+        return UrlProcessor::getAliasListing($id);
+    }
 
     /**
      * Returns the Evolution CMS version information as version, branch, release date and full application name.
@@ -4636,17 +4634,16 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         $timestamp = (int)$timestamp;
-        $dateTime = Carbon::createFromTimestamp(EvolutionCMS()->timestamp($timestamp));
 
         switch ($this->getConfig('datetime_format')) {
             case 'YYYY/mm/dd':
-                $dateFormat = 'Y/m/d';
+                $dateFormat = '%Y/%m/%d';
                 break;
             case 'dd-mm-YYYY':
-                $dateFormat = 'd-m-Y';
+                $dateFormat = '%d-%m-%Y';
                 break;
             case 'mm/dd/YYYY':
-                $dateFormat = 'm/d/Y';
+                $dateFormat = '%m/%d/%Y';
                 break;
         }
 
@@ -6360,6 +6357,15 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         return $this->getService('ExceptionHandler')->messageQuit($msg, $query, $is_error, $nr, $file, $source, $text, $line, $output);
     }
 
+    /**
+     * @param $backtrace
+     * @return string
+     * @deprecated
+     */
+    public function get_backtrace($backtrace)
+    {
+        return $this->getService('ExceptionHandler')->getBacktrace($backtrace);
+    }
 
     /**
      * @return string

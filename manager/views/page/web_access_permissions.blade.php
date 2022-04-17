@@ -172,7 +172,11 @@
                                     <option value="{{ $documentGroup->getKey() }}"> {{ $documentGroup->name }}</option>
                                 @endforeach
                             </select>
-
+                            {{ ManagerTheme::getLexicon('access_permissions_context') }}
+                            <select name="context">
+                                <option value="0">mgr</option>
+                                <option value="1">web</option>
+                            </select>
                             <input class="btn btn-success" type="submit" value="{{ ManagerTheme::getLexicon('submit') }}">
                         </form>
                     </div>

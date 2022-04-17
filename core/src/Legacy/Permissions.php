@@ -79,10 +79,6 @@ class Permissions
         if ($query->count() > 0) {
             $permissionsok = true;
         }
-        $limit = $modx->getDatabase()->getValue($rs);
-        if ($limit == 1) {
-            $permissionsok = true;
-        }
 
         return $permissionsok;
     }

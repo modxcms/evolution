@@ -13,16 +13,18 @@ use Illuminate\Database\Eloquent;
  */
 class MembergroupAccess extends Eloquent\Model
 {
-	protected $table = 'membergroup_access';
-	public $timestamps = false;
+    protected $table = 'membergroup_access';
+    public $timestamps = false;
 
-	protected $casts = [
-		'membergroup' => 'int',
-		'documentgroup' => 'int'
-	];
+    protected $casts = [
+        'membergroup'   => 'int',
+        'documentgroup' => 'int',
+        'context'       => 'int'
+    ];
 
-	protected $fillable = [
-		'membergroup',
-		'documentgroup'
-	];
+    protected $fillable = [
+        'membergroup',
+        'documentgroup',
+        'context'
+    ];
 }
