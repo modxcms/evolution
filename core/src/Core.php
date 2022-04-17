@@ -4178,10 +4178,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return false;
         }
 
-        // get document groups for current user
-        if ($docgrp = $this->getUserDocGroups()) {
-            $docgrp = implode(",", $docgrp);
-        }
         $fields = array_filter(array_map('trim', explode(',', $fields)));
         foreach ($fields as $key => $value) {
             if (stristr($value, '.') === false) {
@@ -4194,15 +4190,17 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if ($active == 1) {
             $pageInfo = $pageInfo->where('site_content.published', 1)->where('site_content.deleted', 0);
         }
-        if ($docgrp = $this->getUserDocGroups() && $_SESSION['mgrRole'] != 1) {
-            if ($this->isFrontend()) {
-                $pageInfo = $pageInfo->where('site_content.privatemgr', 0);
-            } else {
-                $pageInfo = $pageInfo->where(function ($query) use ($docgrp) {
-                    $query->where('site_content.privatemgr', '=', 0)
-                        ->orWhereIn('document_groups.document_group', $docgrp);
-                });
-            }
+        if ($this->isFrontend()) {
+            $pageInfo = $pageInfo->where('site_content.privateweb', 0);
+        } else {
+            $docgrp = $this->getUserDocGroups();
+            $pageInfo = $pageInfo->where(function ($query) use ($docgrp) {
+                $query->whereRaw('1 = ' . $_SESSION['mgrRole']);
+                $query->orWhere('site_content.privatemgr', '=', 0);
+                if (!empty($docgrp)) {
+                    $query->orWhereIn('document_groups.document_group', $docgrp);
+                }
+            });
         }
         $pageInfo = $pageInfo->first();
         if (!is_null($pageInfo)) {
