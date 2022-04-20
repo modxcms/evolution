@@ -89,6 +89,7 @@ class Modules extends AbstractController implements ManagerTheme\PageControllerI
     {
         return SiteModule::query()
             ->orderBy('name', 'ASC')
+            ->withoutProtected()
             ->lockedView()
             ->get();
     }
@@ -100,7 +101,7 @@ class Modules extends AbstractController implements ManagerTheme\PageControllerI
     {
         return Category::with('modules')
             ->whereHas('modules', function (Builder $builder) {
-                return $builder->lockedView();
+                return $builder->withoutProtected()->lockedView();
             })
             ->orderBy('rank', 'ASC')
             ->get();
