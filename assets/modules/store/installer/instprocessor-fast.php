@@ -15,7 +15,7 @@ require_once($modulePath . "/lang/en.inc.php");
 if (!isset($modx_branch)) $modx_branch = '';
 if (!isset($modx_version)) $modx_version = '';
 if (!isset($modx_release_date)) $modx_release_date = '';
-if (!isset($installPath)) $installPath = '';
+if (!isset($installPath)) $installPath = MODX_BASE_PATH . 'assets/cache/store/install/install';
 // start session
 //session_start();
 $_SESSION['test'] = 1;
