@@ -152,14 +152,11 @@ class SystemInfo extends AbstractController implements ManagerTheme\PageControll
             ],
             'servertime' => [
                 'is_lexicon' => true,
-                'data' => now()->format('H:i:s')
+                'data' => date('H:i:s', time())
             ],
             'localtime' => [
                 'is_lexicon' => true,
-                'data' => $this->managerTheme->getCore()->getConfig('server_offset_time') == 0 ? now()->format('H:i:s') :
-                    ($this->managerTheme->getCore()->getConfig('server_offset_time') > 0 ?
-                        now()->addSeconds($this->managerTheme->getCore()->getConfig('server_offset_time'))->format('H:i:s') :
-                        now()->subSeconds(abs($this->managerTheme->getCore()->getConfig('server_offset_time')))->format('H:i:s'))
+                'data' => date('H:i:s', time() + $this->managerTheme->getCore()->getConfig('server_offset_time'))
             ],
             'serveroffset' => [
                 'is_lexicon' => true,
