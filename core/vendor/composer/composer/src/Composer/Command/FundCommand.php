@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -19,6 +19,7 @@ use Composer\Package\CompletePackageInterface;
 use Composer\Pcre\Preg;
 use Composer\Repository\CompositeRepository;
 use Composer\Semver\Constraint\MatchAllConstraint;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -32,7 +33,7 @@ class FundCommand extends BaseCommand
     /**
      * @return void
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('fund')
             ->setDescription('Discover how to help fund the maintenance of your dependencies.')
@@ -42,12 +43,9 @@ class FundCommand extends BaseCommand
         ;
     }
 
-    /**
-     * @return int
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $composer = $this->getComposer();
+        $composer = $this->requireComposer();
 
         $repo = $composer->getRepositoryManager()->getLocalRepository();
         $remoteRepos = new CompositeRepository($composer->getRepositoryManager()->getRepositories());
@@ -116,7 +114,7 @@ class FundCommand extends BaseCommand
                         $prev = $line;
                     }
 
-                    $io->write(sprintf('    %s', $url));
+                    $io->write(sprintf('    <href=%s>%s</>', OutputFormatter::escape($url), $url));
                 }
             }
 
@@ -136,7 +134,7 @@ class FundCommand extends BaseCommand
      * @param mixed[] $fundings
      * @return mixed[]
      */
-    private function insertFundingData(array $fundings, CompletePackageInterface $package)
+    private function insertFundingData(array $fundings, CompletePackageInterface $package): array
     {
         foreach ($package->getFunding() as $fundingOption) {
             list($vendor, $packageName) = explode('/', $package->getPrettyName());

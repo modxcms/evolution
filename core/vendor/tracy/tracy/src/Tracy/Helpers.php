@@ -314,8 +314,9 @@ class Helpers
 	{
 		return empty($_SERVER['HTTP_X_REQUESTED_WITH'])
 			&& empty($_SERVER['HTTP_X_TRACY_AJAX'])
+			&& isset($_SERVER['HTTP_HOST'])
 			&& !self::isCli()
-			&& !preg_match('#^Content-Type: (?!text/html)#im', implode("\n", headers_list()));
+			&& !preg_match('#^Content-Type: *+(?!text/html)#im', implode("\n", headers_list()));
 	}
 
 
@@ -402,7 +403,7 @@ class Helpers
 
 	private static function doEncodeString(string $s, bool $utf8, bool $showWhitespaces): string
 	{
-		static $specials = [
+		$specials = [
 			true => [
 				"\r" => '<i>\r</i>',
 				"\n" => "<i>\\n</i>\n",
@@ -571,17 +572,12 @@ XX
 
 	public static function detectColors(): bool
 	{
-		return (self::isCli())
+		return self::isCli()
 			&& getenv('NO_COLOR') === false // https://no-color.org
 			&& (getenv('FORCE_COLOR')
-				|| @stream_isatty(STDOUT) // @ may trigger error 'cannot cast a filtered stream on this system'
-				|| (defined('PHP_WINDOWS_VERSION_BUILD')
-					&& (function_exists('sapi_windows_vt100_support') && sapi_windows_vt100_support(STDOUT))
-						|| getenv('ConEmuANSI') === 'ON' // ConEmu
-						|| getenv('ANSICON') !== false // ANSICON
-						|| getenv('term') === 'xterm' // MSYS
-						|| getenv('term') === 'xterm-256color' // MSYS
-					)
+				|| (function_exists('sapi_windows_vt100_support')
+					? sapi_windows_vt100_support(STDOUT)
+					: @stream_isatty(STDOUT)) // @ may trigger error 'cannot cast a filtered stream on this system'
 			);
 	}
 
@@ -594,5 +590,31 @@ XX
 		}
 
 		return $res;
+	}
+
+
+	public static function traverseValue($val, callable $callback, array &$skip = [], ?string $refId = null): void
+	{
+		if (is_object($val)) {
+			$id = spl_object_id($val);
+			if (!isset($skip[$id])) {
+				$skip[$id] = true;
+				$callback($val);
+				self::traverseValue((array) $val, $callback, $skip);
+			}
+
+		} elseif (is_array($val)) {
+			if ($refId) {
+				if (isset($skip[$refId])) {
+					return;
+				}
+				$skip[$refId] = true;
+			}
+
+			foreach ($val as $k => $v) {
+				$refId = ($r = \ReflectionReference::fromArrayElement($val, $k)) ? $r->getId() : null;
+				self::traverseValue($v, $callback, $skip, $refId);
+			}
+		}
 	}
 }

@@ -55,11 +55,11 @@ class CliDumper extends AbstractDumper
     protected $collapseNextHash = false;
     protected $expandNextHash = false;
 
-    private array $displayOptions = [
+    private $displayOptions = [
         'fileLinkFormat' => null,
     ];
 
-    private bool $handlesHrefGracefully;
+    private $handlesHrefGracefully;
 
     /**
      * {@inheritdoc}
@@ -125,7 +125,7 @@ class CliDumper extends AbstractDumper
     /**
      * {@inheritdoc}
      */
-    public function dumpScalar(Cursor $cursor, string $type, string|int|float|bool|null $value)
+    public function dumpScalar(Cursor $cursor, string $type, $value)
     {
         $this->dumpKey($cursor);
 
@@ -276,7 +276,7 @@ class CliDumper extends AbstractDumper
     /**
      * {@inheritdoc}
      */
-    public function enterHash(Cursor $cursor, int $type, string|int|null $class, bool $hasChild)
+    public function enterHash(Cursor $cursor, int $type, $class, bool $hasChild)
     {
         if (null === $this->colors) {
             $this->colors = $this->supportsColors();
@@ -317,7 +317,7 @@ class CliDumper extends AbstractDumper
     /**
      * {@inheritdoc}
      */
-    public function leaveHash(Cursor $cursor, int $type, string|int|null $class, bool $hasChild, int $cut)
+    public function leaveHash(Cursor $cursor, int $type, $class, bool $hasChild, int $cut)
     {
         if (empty($cursor->attr['cut_hash'])) {
             $this->dumpEllipsis($cursor, $hasChild, $cut);
@@ -434,15 +434,19 @@ class CliDumper extends AbstractDumper
      * @param string $style The type of style being applied
      * @param string $value The value being styled
      * @param array  $attr  Optional context information
+     *
+     * @return string
      */
-    protected function style(string $style, string $value, array $attr = []): string
+    protected function style(string $style, string $value, array $attr = [])
     {
         if (null === $this->colors) {
             $this->colors = $this->supportsColors();
         }
 
-        $this->handlesHrefGracefully ??= 'JetBrains-JediTerm' !== getenv('TERMINAL_EMULATOR')
-            && (!getenv('KONSOLE_VERSION') || (int) getenv('KONSOLE_VERSION') > 201100);
+        if (null === $this->handlesHrefGracefully) {
+            $this->handlesHrefGracefully = 'JetBrains-JediTerm' !== getenv('TERMINAL_EMULATOR')
+                && (!getenv('KONSOLE_VERSION') || (int) getenv('KONSOLE_VERSION') > 201100);
+        }
 
         if (isset($attr['ellipsis'], $attr['ellipsis-type'])) {
             $prefix = substr($value, 0, -$attr['ellipsis']);
@@ -506,7 +510,10 @@ class CliDumper extends AbstractDumper
         return $value;
     }
 
-    protected function supportsColors(): bool
+    /**
+     * @return bool
+     */
+    protected function supportsColors()
     {
         if ($this->outputStream !== static::$defaultOutput) {
             return $this->hasColorSupport($this->outputStream);
@@ -578,8 +585,10 @@ class CliDumper extends AbstractDumper
      *
      * Reference: Composer\XdebugHandler\Process::supportsColor
      * https://github.com/composer/xdebug-handler
+     *
+     * @param mixed $stream A CLI output stream
      */
-    private function hasColorSupport(mixed $stream): bool
+    private function hasColorSupport($stream): bool
     {
         if (!\is_resource($stream) || 'stream' !== get_resource_type($stream)) {
             return false;

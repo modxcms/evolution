@@ -156,16 +156,16 @@ composer.json you can use `--with` and provide a custom version constraint:
 php composer.phar update --with vendor/package:2.0.1
 ```
 
-The custom constraint has to be a subset of the existing constraint you have,
-and this feature is only available for your root package dependencies.
-
-If you only want to update the package(s) for which you provide custom constraints
-using `--with`, you can skip `--with` and just use constraints with the partial
-update syntax:
+Note that with the above all packages will be updated. If you only want to
+update the package(s) for which you provide custom constraints using `--with`,
+you can skip `--with` and instead use constraints with the partial update syntax:
 
 ```sh
 php composer.phar update vendor/package:2.0.1 vendor/package2:3.0.*
 ```
+
+The custom constraint has to be a subset of the existing constraint you have,
+and this feature is only available for your root package dependencies.
 
 
 ### Options
@@ -1174,3 +1174,11 @@ useful for plugin authors to identify what is firing when exactly.
 
 If set to `1`, it is the equivalent of passing the `--no-dev` argument to `install` or
 `update`. You can override this for a single command by setting `COMPOSER_NO_DEV=0`.
+
+### COMPOSER_IGNORE_PLATFORM_REQ or COMPOSER_IGNORE_PLATFORM_REQS
+
+If `COMPOSER_IGNORE_PLATFORM_REQS` set to `1`, it is the equivalent of passing the `--ignore-platform-reqs` argument.
+Otherwise, specifying a comma separated list in `COMPOSER_IGNORE_PLATFORM_REQ` will ignore those specific requirements.
+
+For example, if a development workstation will never run database queries, this can be used to ignore the requirement for the database extensions to be available.
+If you set `COMPOSER_IGNORE_PLATFORM_REQ=ext-oci8`, then composer will allow packages to be installed even if the `oci8` PHP extension is not enabled.

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -14,6 +14,7 @@ namespace Composer\Command;
 
 use Composer\Factory;
 use Composer\Json\JsonFile;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -32,7 +33,7 @@ class SearchCommand extends BaseCommand
     /**
      * @return void
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('search')
@@ -55,7 +56,7 @@ EOT
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // init repos
         $platformRepo = new PlatformRepository;
@@ -68,7 +69,7 @@ EOT
             return 1;
         }
 
-        if (!($composer = $this->getComposer(false))) {
+        if (!($composer = $this->tryComposer())) {
             $composer = Factory::create($this->getIO(), array(), $input->hasParameterOption('--no-plugins'));
         }
         $localRepo = $composer->getRepositoryManager()->getLocalRepository();
@@ -106,14 +107,19 @@ EOT
             }
             $nameLength += 1;
             foreach ($results as $result) {
-                $description = isset($result['description']) ? $result['description'] : '';
+                $description = $result['description'] ?? '';
                 $warning = !empty($result['abandoned']) ? '<warning>! Abandoned !</warning> ' : '';
                 $remaining = $width - $nameLength - strlen($warning) - 2;
                 if (strlen($description) > $remaining) {
                     $description = substr($description, 0, $remaining - 3) . '...';
                 }
 
-                $io->write(str_pad($result['name'], $nameLength, ' ') . $warning . $description);
+                $link = $result['url'] ?? null;
+                if ($link !== null) {
+                    $io->write('<href='.OutputFormatter::escape($link).'>'.$result['name'].'</>'. str_repeat(' ', $nameLength - strlen($result['name'])) . $warning . $description);
+                } else {
+                    $io->write(str_pad($result['name'], $nameLength, ' ') . $warning . $description);
+                }
             }
         } elseif ($format === 'json') {
             $io->write(JsonFile::encode($results));

@@ -33,27 +33,29 @@ class TraceableEventDispatcher implements EventDispatcherInterface, ResetInterfa
     protected $stopwatch;
 
     /**
-     * @var \SplObjectStorage<WrappedListener, array{string, string}>|null
+     * @var \SplObjectStorage<WrappedListener, array{string, string}>
      */
-    private ?\SplObjectStorage $callStack = null;
+    private $callStack;
     private $dispatcher;
-    private array $wrappedListeners = [];
-    private array $orphanedEvents = [];
+    private $wrappedListeners;
+    private $orphanedEvents;
     private $requestStack;
-    private string $currentRequestHash = '';
+    private $currentRequestHash = '';
 
     public function __construct(EventDispatcherInterface $dispatcher, Stopwatch $stopwatch, LoggerInterface $logger = null, RequestStack $requestStack = null)
     {
         $this->dispatcher = $dispatcher;
         $this->stopwatch = $stopwatch;
         $this->logger = $logger;
+        $this->wrappedListeners = [];
+        $this->orphanedEvents = [];
         $this->requestStack = $requestStack;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function addListener(string $eventName, callable|array $listener, int $priority = 0)
+    public function addListener(string $eventName, $listener, int $priority = 0)
     {
         $this->dispatcher->addListener($eventName, $listener, $priority);
     }
@@ -69,7 +71,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface, ResetInterfa
     /**
      * {@inheritdoc}
      */
-    public function removeListener(string $eventName, callable|array $listener)
+    public function removeListener(string $eventName, $listener)
     {
         if (isset($this->wrappedListeners[$eventName])) {
             foreach ($this->wrappedListeners[$eventName] as $index => $wrappedListener) {
@@ -95,7 +97,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface, ResetInterfa
     /**
      * {@inheritdoc}
      */
-    public function getListeners(string $eventName = null): array
+    public function getListeners(string $eventName = null)
     {
         return $this->dispatcher->getListeners($eventName);
     }
@@ -103,7 +105,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface, ResetInterfa
     /**
      * {@inheritdoc}
      */
-    public function getListenerPriority(string $eventName, callable|array $listener): ?int
+    public function getListenerPriority(string $eventName, $listener)
     {
         // we might have wrapped listeners for the event (if called while dispatching)
         // in that case get the priority by wrapper
@@ -121,7 +123,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface, ResetInterfa
     /**
      * {@inheritdoc}
      */
-    public function hasListeners(string $eventName = null): bool
+    public function hasListeners(string $eventName = null)
     {
         return $this->dispatcher->hasListeners($eventName);
     }
@@ -166,7 +168,10 @@ class TraceableEventDispatcher implements EventDispatcherInterface, ResetInterfa
         return $event;
     }
 
-    public function getCalledListeners(Request $request = null): array
+    /**
+     * @return array
+     */
+    public function getCalledListeners(Request $request = null)
     {
         if (null === $this->callStack) {
             return [];
@@ -184,7 +189,10 @@ class TraceableEventDispatcher implements EventDispatcherInterface, ResetInterfa
         return $called;
     }
 
-    public function getNotCalledListeners(Request $request = null): array
+    /**
+     * @return array
+     */
+    public function getNotCalledListeners(Request $request = null)
     {
         try {
             $allListeners = $this->getListeners();
@@ -252,8 +260,10 @@ class TraceableEventDispatcher implements EventDispatcherInterface, ResetInterfa
      *
      * @param string $method    The method name
      * @param array  $arguments The method arguments
+     *
+     * @return mixed
      */
-    public function __call(string $method, array $arguments): mixed
+    public function __call(string $method, array $arguments)
     {
         return $this->dispatcher->{$method}(...$arguments);
     }

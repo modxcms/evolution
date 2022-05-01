@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -34,9 +34,9 @@ class GitBitbucketDriver extends VcsDriver
     private $hasIssues = false;
     /** @var ?string */
     private $rootIdentifier;
-    /** @var array<string, string> Map of tag name to identifier */
+    /** @var array<int|string, string> Map of tag name to identifier */
     private $tags;
-    /** @var array<string, string> Map of branch name to identifier */
+    /** @var array<int|string, string> Map of branch name to identifier */
     private $branches;
     /** @var string */
     private $branchesUrl = '';
@@ -59,9 +59,12 @@ class GitBitbucketDriver extends VcsDriver
     /**
      * @inheritDoc
      */
-    public function initialize()
+    public function initialize(): void
     {
-        Preg::match('#^https?://bitbucket\.org/([^/]+)/([^/]+?)(\.git|/?)?$#i', $this->url, $match);
+        if (!Preg::isMatch('#^https?://bitbucket\.org/([^/]+)/([^/]+?)(\.git|/?)?$#i', $this->url, $match)) {
+            throw new \InvalidArgumentException(sprintf('The Bitbucket repository URL %s is invalid. It must be the HTTPS URL of a Bitbucket repository.', $this->url));
+        }
+
         $this->owner = $match[1];
         $this->repository = $match[2];
         $this->originUrl = 'bitbucket.org';
@@ -80,7 +83,7 @@ class GitBitbucketDriver extends VcsDriver
     /**
      * @inheritDoc
      */
-    public function getUrl()
+    public function getUrl(): string
     {
         if ($this->fallbackDriver) {
             return $this->fallbackDriver->getUrl();
@@ -96,7 +99,7 @@ class GitBitbucketDriver extends VcsDriver
      * @return bool
      * @phpstan-impure
      */
-    protected function getRepoData()
+    protected function getRepoData(): bool
     {
         $resource = sprintf(
             'https://api.bitbucket.org/2.0/repositories/%s/%s?%s',
@@ -128,7 +131,7 @@ class GitBitbucketDriver extends VcsDriver
     /**
      * @inheritDoc
      */
-    public function getComposerInformation($identifier)
+    public function getComposerInformation(string $identifier): ?array
     {
         if ($this->fallbackDriver) {
             return $this->fallbackDriver->getComposerInformation($identifier);
@@ -145,7 +148,7 @@ class GitBitbucketDriver extends VcsDriver
                 }
             }
 
-            if ($composer) {
+            if ($composer !== null) {
                 // specials for bitbucket
                 if (!isset($composer['support']['source'])) {
                     $label = array_search(
@@ -202,7 +205,7 @@ class GitBitbucketDriver extends VcsDriver
     /**
      * @inheritDoc
      */
-    public function getFileContent($file, $identifier)
+    public function getFileContent(string $file, string $identifier): ?string
     {
         if ($this->fallbackDriver) {
             return $this->fallbackDriver->getFileContent($file, $identifier);
@@ -229,7 +232,7 @@ class GitBitbucketDriver extends VcsDriver
     /**
      * @inheritDoc
      */
-    public function getChangeDate($identifier)
+    public function getChangeDate(string $identifier): ?\DateTimeImmutable
     {
         if ($this->fallbackDriver) {
             return $this->fallbackDriver->getChangeDate($identifier);
@@ -250,13 +253,13 @@ class GitBitbucketDriver extends VcsDriver
         );
         $commit = $this->fetchWithOAuthCredentials($resource)->decodeJson();
 
-        return new \DateTime($commit['date']);
+        return new \DateTimeImmutable($commit['date']);
     }
 
     /**
      * @inheritDoc
      */
-    public function getSource($identifier)
+    public function getSource(string $identifier): array
     {
         if ($this->fallbackDriver) {
             return $this->fallbackDriver->getSource($identifier);
@@ -268,7 +271,7 @@ class GitBitbucketDriver extends VcsDriver
     /**
      * @inheritDoc
      */
-    public function getDist($identifier)
+    public function getDist(string $identifier): ?array
     {
         if ($this->fallbackDriver) {
             return $this->fallbackDriver->getDist($identifier);
@@ -287,7 +290,7 @@ class GitBitbucketDriver extends VcsDriver
     /**
      * @inheritDoc
      */
-    public function getTags()
+    public function getTags(): array
     {
         if ($this->fallbackDriver) {
             return $this->fallbackDriver->getTags();
@@ -330,7 +333,7 @@ class GitBitbucketDriver extends VcsDriver
     /**
      * @inheritDoc
      */
-    public function getBranches()
+    public function getBranches(): array
     {
         if ($this->fallbackDriver) {
             return $this->fallbackDriver->getBranches();
@@ -380,14 +383,14 @@ class GitBitbucketDriver extends VcsDriver
      *
      * @phpstan-impure
      */
-    protected function fetchWithOAuthCredentials($url, $fetchingRepoData = false)
+    protected function fetchWithOAuthCredentials(string $url, bool $fetchingRepoData = false): Response
     {
         try {
             return parent::getContents($url);
         } catch (TransportException $e) {
             $bitbucketUtil = new Bitbucket($this->io, $this->config, $this->process, $this->httpDownloader);
 
-            if (403 === $e->getCode() || (401 === $e->getCode() && strpos($e->getMessage(), 'Could not authenticate against') === 0)) {
+            if (in_array($e->getCode(), array(403, 404), true) || (401 === $e->getCode() && strpos($e->getMessage(), 'Could not authenticate against') === 0)) {
                 if (!$this->io->hasAuthentication($this->originUrl)
                     && $bitbucketUtil->authorizeOAuth($this->originUrl)
                 ) {
@@ -410,7 +413,7 @@ class GitBitbucketDriver extends VcsDriver
      *
      * @return string
      */
-    protected function generateSshUrl()
+    protected function generateSshUrl(): string
     {
         return 'git@' . $this->originUrl . ':' . $this->owner.'/'.$this->repository.'.git';
     }
@@ -421,7 +424,7 @@ class GitBitbucketDriver extends VcsDriver
      * @return true
      * @throws \RuntimeException
      */
-    protected function attemptCloneFallback()
+    protected function attemptCloneFallback(): bool
     {
         try {
             $this->setupFallbackDriver($this->generateSshUrl());
@@ -442,7 +445,7 @@ class GitBitbucketDriver extends VcsDriver
      * @param  string $url
      * @return void
      */
-    protected function setupFallbackDriver($url)
+    protected function setupFallbackDriver(string $url): void
     {
         $this->fallbackDriver = new GitDriver(
             array('url' => $url),
@@ -458,7 +461,7 @@ class GitBitbucketDriver extends VcsDriver
      * @param  array<array{name: string, href: string}> $cloneLinks
      * @return void
      */
-    protected function parseCloneUrls(array $cloneLinks)
+    protected function parseCloneUrls(array $cloneLinks): void
     {
         foreach ($cloneLinks as $cloneLink) {
             if ($cloneLink['name'] === 'https') {
@@ -472,7 +475,7 @@ class GitBitbucketDriver extends VcsDriver
     /**
      * @return (array{name: string}&mixed[])|null
      */
-    protected function getMainBranchData()
+    protected function getMainBranchData(): ?array
     {
         $resource = sprintf(
             'https://api.bitbucket.org/2.0/repositories/%s/%s?fields=mainbranch',
@@ -491,7 +494,7 @@ class GitBitbucketDriver extends VcsDriver
     /**
      * @inheritDoc
      */
-    public function getRootIdentifier()
+    public function getRootIdentifier(): string
     {
         if ($this->fallbackDriver) {
             return $this->fallbackDriver->getRootIdentifier();
@@ -524,7 +527,7 @@ class GitBitbucketDriver extends VcsDriver
     /**
      * @inheritDoc
      */
-    public static function supports(IOInterface $io, Config $config, $url, $deep = false)
+    public static function supports(IOInterface $io, Config $config, string $url, bool $deep = false): bool
     {
         if (!Preg::isMatch('#^https?://bitbucket\.org/([^/]+)/([^/]+?)(\.git|/?)?$#i', $url)) {
             return false;

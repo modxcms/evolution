@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -34,7 +34,7 @@ class HhvmDetector
     /**
      * @return void
      */
-    public function reset()
+    public function reset(): void
     {
         self::$hhvmVersion = null;
     }
@@ -42,7 +42,7 @@ class HhvmDetector
     /**
      * @return string|null
      */
-    public function getVersion()
+    public function getVersion(): ?string
     {
         if (null !== self::$hhvmVersion) {
             return self::$hhvmVersion ?: null;
@@ -54,7 +54,7 @@ class HhvmDetector
             $this->executableFinder = $this->executableFinder ?: new ExecutableFinder();
             $hhvmPath = $this->executableFinder->find('hhvm');
             if ($hhvmPath !== null) {
-                $this->processExecutor = $this->processExecutor ?: new ProcessExecutor();
+                $this->processExecutor = $this->processExecutor ?? new ProcessExecutor();
                 $exitCode = $this->processExecutor->execute(
                     ProcessExecutor::escape($hhvmPath).
                     ' --php -d hhvm.jit=0 -r "echo HHVM_VERSION;" 2>/dev/null',

@@ -563,7 +563,7 @@ class PendingRequest
      */
     public function get(string $url, $query = null)
     {
-        return $this->send('GET', $url, [
+        return $this->send('GET', $url, func_num_args() === 1 ? [] : [
             'query' => $query,
         ]);
     }
@@ -577,7 +577,7 @@ class PendingRequest
      */
     public function head(string $url, $query = null)
     {
-        return $this->send('HEAD', $url, [
+        return $this->send('HEAD', $url, func_num_args() === 1 ? [] : [
             'query' => $query,
         ]);
     }
@@ -989,11 +989,11 @@ class PendingRequest
     public function runBeforeSendingCallbacks($request, array $options)
     {
         return tap($request, function ($request) use ($options) {
-            $this->beforeSendingCallbacks->each->__invoke(
-                (new Request($request))->withData($options['laravel_data']),
-                $options,
-                $this
-            );
+            $this->beforeSendingCallbacks->each(function ($callback) use ($request, $options) {
+                call_user_func(
+                    $callback, (new Request($request))->withData($options['laravel_data']), $options, $this
+                );
+            });
         });
     }
 

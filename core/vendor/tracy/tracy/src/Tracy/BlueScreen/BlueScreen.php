@@ -15,7 +15,7 @@ namespace Tracy;
  */
 class BlueScreen
 {
-	private const MAX_MESSAGE_LENGTH = 2000;
+	private const MaxMessageLength = 2000;
 
 	/** @var string[] */
 	public $info = [];
@@ -53,6 +53,9 @@ class BlueScreen
 	/** @var array */
 	private $snapshot;
 
+	/** @var \WeakMap<\Fiber|\Generator> */
+	private $fibers;
+
 
 	public function __construct()
 	{
@@ -60,6 +63,7 @@ class BlueScreen
 			? [$m[1] . '/tracy', $m[1] . '/nette', $m[1] . '/latte']
 			: [dirname(__DIR__)];
 		$this->fileGenerators[] = [self::class, 'generateNewPhpFileContents'];
+		$this->fibers = PHP_VERSION_ID < 80000 ? new \SplObjectStorage : new \WeakMap;
 	}
 
 
@@ -96,6 +100,17 @@ class BlueScreen
 	public function addFileGenerator(callable $generator): self
 	{
 		$this->fileGenerators[] = $generator;
+		return $this;
+	}
+
+
+	/**
+	 * @param \Fiber|\Generator $fiber
+	 * @return static
+	 */
+	public function addFiber($fiber): self
+	{
+		$this->fibers[$fiber] = true;
 		return $this;
 	}
 
@@ -143,6 +158,7 @@ class BlueScreen
 
 	private function renderTemplate(\Throwable $exception, string $template, $toScreen = true): void
 	{
+		[$generators, $fibers] = $this->findGeneratorsAndFibers($exception);
 		$headersSent = headers_sent($headersFile, $headersLine);
 		$obStatus = Debugger::$obStatus;
 		$showEnvironment = $this->showEnvironment && (strpos($exception->getMessage(), 'Allowed memory size') === false);
@@ -295,16 +311,21 @@ class BlueScreen
 	/**
 	 * Returns syntax highlighted source code.
 	 */
-	public static function highlightFile(string $file, int $line, int $lines = 15, bool $php = true): ?string
-	{
+	public static function highlightFile(
+		string $file,
+		int $line,
+		int $lines = 15,
+		bool $php = true,
+		int $column = 0
+	): ?string {
 		$source = @file_get_contents($file); // @ file may not exist
 		if ($source === false) {
 			return null;
 		}
 
 		$source = $php
-			? static::highlightPhp($source, $line, $lines)
-			: '<pre class=tracy-code><div>' . static::highlightLine(htmlspecialchars($source, ENT_IGNORE, 'UTF-8'), $line, $lines) . '</div></pre>';
+			? static::highlightPhp($source, $line, $lines, $column)
+			: '<pre class=tracy-code><div>' . static::highlightLine(htmlspecialchars($source, ENT_IGNORE, 'UTF-8'), $line, $lines, $column) . '</div></pre>';
 
 		if ($editor = Helpers::editorUri($file, $line)) {
 			$source = substr_replace($source, ' title="Ctrl-Click to open in editor" data-tracy-href="' . Helpers::escapeHtml($editor) . '"', 4, 0);
@@ -317,7 +338,7 @@ class BlueScreen
 	/**
 	 * Returns syntax highlighted source code.
 	 */
-	public static function highlightPhp(string $source, int $line, int $lines = 15): string
+	public static function highlightPhp(string $source, int $line, int $lines = 15, int $column = 0): string
 	{
 		if (function_exists('ini_set')) {
 			ini_set('highlight.comment', '#998; font-style: italic');
@@ -332,7 +353,7 @@ class BlueScreen
 		$source = explode("\n", highlight_string($source, true));
 		$out = $source[0]; // <code><span color=highlight.html>
 		$source = str_replace('<br />', "\n", $source[1]);
-		$out .= static::highlightLine($source, $line, $lines);
+		$out .= static::highlightLine($source, $line, $lines, $column);
 		$out = str_replace('&nbsp;', ' ', $out);
 		return "<pre class='tracy-code'><div>$out</div></pre>";
 	}
@@ -341,7 +362,7 @@ class BlueScreen
 	/**
 	 * Returns highlighted line in HTML code.
 	 */
-	public static function highlightLine(string $html, int $line, int $lines = 15): string
+	public static function highlightLine(string $html, int $line, int $lines = 15, int $column = 0): string
 	{
 		$source = explode("\n", "\n" . str_replace("\r\n", "\n", $html));
 		$out = '';
@@ -367,10 +388,19 @@ class BlueScreen
 			$s = str_replace(["\r", "\n"], ['', ''], $s);
 			preg_match_all('#<[^>]+>#', $s, $tags);
 			if ($n == $line) {
+				$s = strip_tags($s);
+				if ($column) {
+					$s = preg_replace(
+						'#((?:&.*?;|[^&]){' . ($column - 1) . '})(&.*?;|.)#u',
+						'\1<span class="tracy-column-highlight">\2</span>',
+						$s . ' ',
+						1
+					);
+				}
 				$out .= sprintf(
 					"<span class='tracy-line-highlight'>%{$numWidth}s:    %s\n</span>%s",
 					$n,
-					strip_tags($s),
+					$s,
 					implode('', $tags[0])
 				);
 			} else {
@@ -386,7 +416,7 @@ class BlueScreen
 	/**
 	 * Returns syntax highlighted source code to Terminal.
 	 */
-	public static function highlightPhpCli(string $file, int $line, int $lines = 15): ?string
+	public static function highlightPhpCli(string $file, int $line, int $lines = 15, int $column = 0): ?string
 	{
 		$source = @file_get_contents($file); // @ file may not exist
 		if ($source === false) {
@@ -461,7 +491,7 @@ class BlueScreen
 
 	public function formatMessage(\Throwable $exception): string
 	{
-		$msg = Helpers::encodeString(trim((string) $exception->getMessage()), self::MAX_MESSAGE_LENGTH, false);
+		$msg = Helpers::encodeString(trim((string) $exception->getMessage()), self::MaxMessageLength, false);
 
 		// highlight 'string'
 		$msg = preg_replace(
@@ -561,5 +591,32 @@ class BlueScreen
 		}
 
 		return $res . "class $class\n{\n\$END\$\n}\n";
+	}
+
+
+	private function findGeneratorsAndFibers(object $object): array
+	{
+		$generators = $fibers = [];
+		$add = function ($obj) use (&$generators, &$fibers) {
+			if ($obj instanceof \Generator) {
+				try {
+					new \ReflectionGenerator($obj);
+					$generators[spl_object_id($obj)] = $obj;
+				} catch (\ReflectionException $e) {
+				}
+			} elseif ($obj instanceof \Fiber && $obj->isStarted() && !$obj->isTerminated()) {
+				$fibers[spl_object_id($obj)] = $obj;
+			}
+		};
+
+		foreach ($this->fibers as $obj => $foo) {
+			$add($obj);
+		}
+
+		if (PHP_VERSION_ID >= 80000) {
+			Helpers::traverseValue($object, $add);
+		}
+
+		return [$generators, $fibers];
 	}
 }

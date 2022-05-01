@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -47,7 +47,7 @@ class RunScriptCommand extends BaseCommand
     /**
      * @return void
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('run-script')
@@ -73,23 +73,24 @@ EOT
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($input->getOption('list')) {
             return $this->listScripts($output);
         }
-        if (!$input->getArgument('script')) {
+
+        $script = $input->getArgument('script');
+        if ($script === null) {
             throw new \RuntimeException('Missing required argument "script"');
         }
 
-        $script = $input->getArgument('script');
         if (!in_array($script, $this->scriptEvents)) {
             if (defined('Composer\Script\ScriptEvents::'.str_replace('-', '_', strtoupper($script)))) {
                 throw new \InvalidArgumentException(sprintf('Script "%s" cannot be run with this command', $script));
             }
         }
 
-        $composer = $this->getComposer();
+        $composer = $this->requireComposer();
         $devMode = $input->getOption('dev') || !$input->getOption('no-dev');
         $event = new ScriptEvent($script, $composer, $this->getIO(), $devMode);
         $hasListeners = $composer->getEventDispatcher()->hasEventListeners($event);
@@ -115,9 +116,9 @@ EOT
     /**
      * @return int
      */
-    protected function listScripts(OutputInterface $output)
+    protected function listScripts(OutputInterface $output): int
     {
-        $scripts = $this->getComposer()->getPackage()->getScripts();
+        $scripts = $this->requireComposer()->getPackage()->getScripts();
 
         if (!count($scripts)) {
             return 0;

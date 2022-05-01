@@ -132,6 +132,12 @@
                 }
             }
         },
+        "source": {
+            "$ref": "#/definitions/source"
+        },
+        "dist": {
+            "$ref": "#/definitions/dist"
+        },
         "_comment": {
             "type": ["array", "string"],
             "description": "A key to store comments in"
@@ -490,6 +496,24 @@
                     "description": "A list of domains to use in gitlab mode. This is used for custom GitLab setups, defaults to [\"gitlab.com\"].",
                     "items": {
                         "type": "string"
+                    }
+                },
+                "bitbucket-oauth": {
+                    "type": "object",
+                    "description": "An object of domain name => {\"consumer-key\": \"...\", \"consumer-secret\": \"...\"}.",
+                    "additionalProperties": {
+                        "type": "object",
+                        "required": ["consumer-key", "consumer-secret"],
+                        "properties": {
+                            "consumer-key": {
+                                "type": "string",
+                                "description": "The consumer-key used for OAuth authentication"
+                            },
+                            "consumer-secret": {
+                                "type": "string",
+                                "description": "The consumer-secret used for OAuth authentication"
+                            }
+                        }
                     }
                 },
                 "use-github-api": {
@@ -953,46 +977,52 @@
                     }
                 },
                 "source": {
-                    "type": "object",
-                    "required": ["type", "url", "reference"],
-                    "properties": {
-                        "type": {
-                            "type": "string"
-                        },
-                        "url": {
-                            "type": "string"
-                        },
-                        "reference": {
-                            "type": "string"
-                        },
-                        "mirrors": {
-                            "type": "array"
-                        }
-                    }
+                    "$ref": "#/definitions/source"
                 },
                 "dist": {
-                    "type": "object",
-                    "required": ["type", "url"],
-                    "properties": {
-                        "type": {
-                            "type": "string"
-                        },
-                        "url": {
-                            "type": "string"
-                        },
-                        "reference": {
-                            "type": "string"
-                        },
-                        "shasum": {
-                            "type": "string"
-                        },
-                        "mirrors": {
-                            "type": "array"
-                        }
-                    }
+                    "$ref": "#/definitions/dist"
                 }
             },
             "additionalProperties": true
+        },
+        "source": {
+            "type": "object",
+            "required": ["type", "url", "reference"],
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "reference": {
+                    "type": "string"
+                },
+                "mirrors": {
+                    "type": "array"
+                }
+            }
+        },
+        "dist": {
+            "type": "object",
+            "required": ["type", "url"],
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "reference": {
+                    "type": "string"
+                },
+                "shasum": {
+                    "type": "string"
+                },
+                "mirrors": {
+                    "type": "array"
+                }
+            }
         }
     }
 }

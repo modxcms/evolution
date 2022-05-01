@@ -13,7 +13,7 @@ namespace Symfony\Component\ErrorHandler\Error;
 
 class FatalError extends \Error
 {
-    private array $error;
+    private $error;
 
     /**
      * {@inheritdoc}

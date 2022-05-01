@@ -21,15 +21,15 @@ final class PseudoLocalizationTranslator implements TranslatorInterface
     private const EXPANSION_CHARACTER = '~';
 
     private $translator;
-    private bool $accents;
-    private float $expansionFactor;
-    private bool $brackets;
-    private bool $parseHTML;
+    private $accents;
+    private $expansionFactor;
+    private $brackets;
+    private $parseHTML;
 
     /**
      * @var string[]
      */
-    private array $localizableHTMLAttributes;
+    private $localizableHTMLAttributes;
 
     /**
      * Available options:
@@ -123,7 +123,7 @@ final class PseudoLocalizationTranslator implements TranslatorInterface
             return [[true, true, $originalTrans]];
         }
 
-        $html = mb_convert_encoding($originalTrans, 'HTML-ENTITIES', mb_detect_encoding($originalTrans, null, true) ?: 'UTF-8');
+        $html = mb_encode_numericentity($originalTrans, [0x80, 0xFFFF, 0, 0xFFFF], mb_detect_encoding($originalTrans, null, true) ?: 'UTF-8');
 
         $useInternalErrors = libxml_use_internal_errors(true);
 

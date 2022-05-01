@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -13,30 +13,36 @@
 namespace Composer\Util;
 
 use Composer\Package\PackageInterface;
+use Composer\Package\RootPackageInterface;
 
 class PackageSorter
 {
     /**
      * Sorts packages by dependency weight
      *
-     * Packages of equal weight retain the original order
+     * Packages of equal weight are sorted alphabetically
      *
      * @param  PackageInterface[] $packages
+     * @param  array<string, int> $weights Pre-set weights for some packages to give them more (negative number) or less (positive) weight offsets
      * @return PackageInterface[] sorted array
      */
-    public static function sortPackages(array $packages)
+    public static function sortPackages(array $packages, array $weights = array()): array
     {
         $usageList = array();
 
         foreach ($packages as $package) {
-            foreach (array_merge($package->getRequires(), $package->getDevRequires()) as $link) {
+            $links = $package->getRequires();
+            if ($package instanceof RootPackageInterface) {
+                $links = array_merge($links, $package->getDevRequires());
+            }
+            foreach ($links as $link) {
                 $target = $link->getTarget();
                 $usageList[$target][] = $package->getName();
             }
         }
         $computing = array();
         $computed = array();
-        $computeImportance = function ($name) use (&$computeImportance, &$computing, &$computed, $usageList) {
+        $computeImportance = function ($name) use (&$computeImportance, &$computing, &$computed, $usageList, $weights) {
             // reusing computed importance
             if (isset($computed[$name])) {
                 return $computed[$name];
@@ -48,7 +54,7 @@ class PackageSorter
             }
 
             $computing[$name] = true;
-            $weight = 0;
+            $weight = $weights[$name] ?? 0;
 
             if (isset($usageList[$name])) {
                 foreach ($usageList[$name] as $user) {
@@ -62,39 +68,26 @@ class PackageSorter
             return $weight;
         };
 
-        $weightList = array();
+        $weightedPackages = array();
 
         foreach ($packages as $index => $package) {
-            $weight = $computeImportance($package->getName());
-            $weightList[$index] = $weight;
+            $name = $package->getName();
+            $weight = $computeImportance($name);
+            $weightedPackages[] = array('name' => $name, 'weight' => $weight, 'index' => $index);
         }
 
-        $stable_sort = function (&$array) {
-            static $transform, $restore;
-
-            $i = 0;
-
-            if (!$transform) {
-                $transform = function (&$v, $k) use (&$i) {
-                    $v = array($v, ++$i, $k, $v);
-                };
-
-                $restore = function (&$v) {
-                    $v = $v[3];
-                };
+        usort($weightedPackages, function (array $a, array $b): int {
+            if ($a['weight'] !== $b['weight']) {
+                return $a['weight'] - $b['weight'];
             }
 
-            array_walk($array, $transform);
-            asort($array);
-            array_walk($array, $restore);
-        };
-
-        $stable_sort($weightList);
+            return strnatcasecmp($a['name'], $b['name']);
+        });
 
         $sortedPackages = array();
 
-        foreach (array_keys($weightList) as $index) {
-            $sortedPackages[] = $packages[$index];
+        foreach ($weightedPackages as $pkg) {
+            $sortedPackages[] = $packages[$pkg['index']];
         }
 
         return $sortedPackages;

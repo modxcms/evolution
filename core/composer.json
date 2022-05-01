@@ -80,7 +80,10 @@
       "maxConnections": 6,
       "minConnections": 3
     },
-    "vendor-dir": "vendor"
+    "vendor-dir": "vendor",
+    "allow-plugins": {
+      "wikimedia/composer-merge-plugin": true
+    }
   },
   "extra": {
     "merge-plugin": {

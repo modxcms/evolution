@@ -203,7 +203,7 @@ Each author object can have following properties:
 
 * **name:** The author's name. Usually their real name.
 * **email:** The author's email address.
-* **homepage:** An URL to the author's website.
+* **homepage:** URL to the author's website.
 * **role:** The author's role in the project (e.g. developer or translator)
 
 An example:
@@ -942,8 +942,8 @@ It can be boolean or a package name/URL pointing to a recommended alternative.
 Examples:
 
 Use `"abandoned": true` to indicate this package is abandoned.
-Use `"abandoned": "monolog/monolog"` to indicates this package is abandoned, and the
-recommended alternative is  `monolog/monolog`.
+Use `"abandoned": "monolog/monolog"` to indicate this package is abandoned, and that 
+the recommended alternative is `monolog/monolog`.
 
 Defaults to false.
 

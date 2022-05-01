@@ -18,7 +18,7 @@ use Tracy\Helpers;
  */
 final class Renderer
 {
-	private const TYPE_ARRAY_KEY = 'array';
+	private const TypeArrayKey = 'array';
 
 	/** @var int|bool */
 	public $collapseTop = 14;
@@ -187,7 +187,7 @@ final class Renderer
 	 */
 	private function renderString($str, int $depth, $keyType): string
 	{
-		if ($keyType === self::TYPE_ARRAY_KEY) {
+		if ($keyType === self::TypeArrayKey) {
 			$indent = '<span class="tracy-dump-indent">   ' . str_repeat('|  ', $depth - 1) . ' </span>';
 			return '<span class="tracy-dump-string">'
 				. "<span class='tracy-dump-lq'>'</span>"
@@ -196,7 +196,7 @@ final class Renderer
 				. '</span>';
 
 		} elseif ($keyType !== null) {
-			static $classes = [
+			$classes = [
 				Value::PROP_PUBLIC => 'tracy-dump-public',
 				Value::PROP_PROTECTED => 'tracy-dump-protected',
 				Value::PROP_DYNAMIC => 'tracy-dump-dynamic',
@@ -283,9 +283,10 @@ final class Renderer
 					$ref = new Value(Value::TYPE_REF, $array->id);
 					$this->copySnapshot($ref);
 					return '<span class="tracy-toggle tracy-collapsed" data-tracy-dump=\'' . json_encode($ref) . "'>" . $out . '</span>';
-				}
 
-				return $out . (isset($this->above[$array->id]) ? ' <i>see above</i>' : ' <i>see below</i>');
+				} elseif ($this->hash) {
+					return $out . (isset($this->above[$array->id]) ? ' <i>see above</i>' : ' <i>see below</i>');
+				}
 			}
 		}
 
@@ -312,7 +313,7 @@ final class Renderer
 		foreach ($items as $info) {
 			[$k, $v, $ref] = $info + [2 => null];
 			$out .= $indent
-				. $this->renderVar($k, $depth + 1, self::TYPE_ARRAY_KEY)
+				. $this->renderVar($k, $depth + 1, self::TypeArrayKey)
 				. ' => '
 				. ($ref && $this->hash ? '<span class="tracy-dump-hash">&' . $ref . '</span> ' : '')
 				. ($tmp = $this->renderVar($v, $depth + 1))
@@ -364,9 +365,10 @@ final class Renderer
 				$ref = new Value(Value::TYPE_REF, $object->id);
 				$this->copySnapshot($ref);
 				return '<span class="tracy-toggle tracy-collapsed" data-tracy-dump=\'' . json_encode($ref) . "'>" . $out . '</span>';
-			}
 
-			return $out . (isset($this->above[$object->id]) ? ' <i>see above</i>' : ' <i>see below</i>');
+			} elseif ($this->hash) {
+				return $out . (isset($this->above[$object->id]) ? ' <i>see above</i>' : ' <i>see below</i>');
+			}
 		}
 
 		$collapsed = $object->collapsed ?? ($depth

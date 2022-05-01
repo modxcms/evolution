@@ -80,6 +80,8 @@ class Dumper
 		\SplFileInfo::class => [Exposer::class, 'exposeSplFileInfo'],
 		\SplObjectStorage::class => [Exposer::class, 'exposeSplObjectStorage'],
 		\__PHP_Incomplete_Class::class => [Exposer::class, 'exposePhpIncompleteClass'],
+		\Generator::class => [Exposer::class, 'exposeGenerator'],
+		\Fiber::class => [Exposer::class, 'exposeFiber'],
 		\DOMNode::class => [Exposer::class, 'exposeDOMNode'],
 		\DOMNodeList::class => [Exposer::class, 'exposeDOMNodeList'],
 		\DOMNamedNodeMap::class => [Exposer::class, 'exposeDOMNodeList'],
@@ -105,13 +107,13 @@ class Dumper
 			$dumper = new self($options);
 			fwrite(STDOUT, $dumper->asTerminal($var, $useColors ? self::$terminalColors : []));
 
-		} elseif (preg_match('#^Content-Type: (?!text/html)#im', implode("\n", headers_list()))) { // non-html
-			echo self::toText($var, $options);
-
-		} else { // html
+		} elseif (Helpers::isHtmlMode()) {
 			$options[self::LOCATION] = $options[self::LOCATION] ?? true;
 			self::renderAssets();
 			echo self::toHtml($var, $options);
+
+		} else {
+			echo self::toText($var, $options);
 		}
 
 		return $var;

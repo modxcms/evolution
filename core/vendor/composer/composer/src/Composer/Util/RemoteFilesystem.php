@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -16,7 +16,6 @@ use Composer\Config;
 use Composer\Downloader\MaxFileSizeExceededException;
 use Composer\IO\IOInterface;
 use Composer\Downloader\TransportException;
-use Composer\CaBundle\CaBundle;
 use Composer\Pcre\Preg;
 use Composer\Util\Http\Response;
 use Composer\Util\Http\ProxyManager;
@@ -51,8 +50,6 @@ class RemoteFilesystem
     private $lastProgress;
     /** @var mixed[] */
     private $options = array();
-    /** @var array<string, array{cn: string, fp: string}> */
-    private $peerCertificateMap = array();
     /** @var bool */
     private $disableTls = false;
     /** @var string[] */
@@ -79,7 +76,7 @@ class RemoteFilesystem
      * @param bool        $disableTls
      * @param AuthHelper  $authHelper
      */
-    public function __construct(IOInterface $io, Config $config, array $options = array(), $disableTls = false, AuthHelper $authHelper = null)
+    public function __construct(IOInterface $io, Config $config, array $options = array(), bool $disableTls = false, AuthHelper $authHelper = null)
     {
         $this->io = $io;
 
@@ -94,7 +91,7 @@ class RemoteFilesystem
         // handle the other externally set options normally.
         $this->options = array_replace_recursive($this->options, $options);
         $this->config = $config;
-        $this->authHelper = isset($authHelper) ? $authHelper : new AuthHelper($io, $config);
+        $this->authHelper = $authHelper ?? new AuthHelper($io, $config);
         $this->proxyManager = ProxyManager::getInstance();
     }
 
@@ -109,7 +106,7 @@ class RemoteFilesystem
      *
      * @return bool true
      */
-    public function copy($originUrl, $fileUrl, $fileName, $progress = true, $options = array())
+    public function copy(string $originUrl, string $fileUrl, string $fileName, bool $progress = true, array $options = array())
     {
         return $this->get($originUrl, $fileUrl, $options, $fileName, $progress);
     }
@@ -124,7 +121,7 @@ class RemoteFilesystem
      *
      * @return bool|string The content
      */
-    public function getContents($originUrl, $fileUrl, $progress = true, $options = array())
+    public function getContents(string $originUrl, string $fileUrl, bool $progress = true, array $options = array())
     {
         return $this->get($originUrl, $fileUrl, $options, null, $progress);
     }
@@ -220,9 +217,9 @@ class RemoteFilesystem
      *
      * @return bool|string
      */
-    protected function get($originUrl, $fileUrl, $additionalOptions = array(), $fileName = null, $progress = true)
+    protected function get(string $originUrl, string $fileUrl, array $additionalOptions = array(), string $fileName = null, bool $progress = true)
     {
-        $this->scheme = parse_url($fileUrl, PHP_URL_SCHEME);
+        $this->scheme = parse_url(strtr($fileUrl, '\\', '/'), PHP_URL_SCHEME);
         $this->bytesMax = 0;
         $this->originUrl = $originUrl;
         $this->fileUrl = $fileUrl;
@@ -293,7 +290,7 @@ class RemoteFilesystem
         $errorMessage = '';
         $errorCode = 0;
         $result = false;
-        set_error_handler(function ($code, $msg) use (&$errorMessage) {
+        set_error_handler(function ($code, $msg) use (&$errorMessage): bool {
             if ($errorMessage) {
                 $errorMessage .= "\n";
             }
@@ -331,18 +328,6 @@ class RemoteFilesystem
                 $this->io->writeError('Content-Length mismatch, received '.Platform::strlen($result).' out of '.$contentLength.' bytes: (' . base64_encode($result).')', true, IOInterface::DEBUG);
 
                 throw $e;
-            }
-
-            if (PHP_VERSION_ID < 50600 && !empty($options['ssl']['peer_fingerprint'])) {
-                // Emulate fingerprint validation on PHP < 5.6
-                $params = stream_context_get_params($ctx);
-                $expectedPeerFingerprint = $options['ssl']['peer_fingerprint'];
-                $peerFingerprint = TlsHelper::getCertificateFingerprint($params['options']['ssl']['peer_certificate']);
-
-                // Constant time compare??!
-                if ($expectedPeerFingerprint !== $peerFingerprint) {
-                    throw new TransportException('Peer fingerprint did not match');
-                }
             }
         } catch (\Exception $e) {
             if ($e instanceof TransportException && !empty($http_response_header[0])) {
@@ -460,7 +445,7 @@ class RemoteFilesystem
             }
 
             $errorMessage = '';
-            set_error_handler(function ($code, $msg) use (&$errorMessage) {
+            set_error_handler(function ($code, $msg) use (&$errorMessage): bool {
                 if ($errorMessage) {
                     $errorMessage .= "\n";
                 }
@@ -472,41 +457,6 @@ class RemoteFilesystem
             restore_error_handler();
             if (false === $result) {
                 throw new TransportException('The "'.$this->fileUrl.'" file could not be written to '.$fileName.': '.$errorMessage);
-            }
-        }
-
-        // Handle SSL cert match issues
-        if (false === $result && false !== strpos($errorMessage, 'Peer certificate') && PHP_VERSION_ID < 50600) {
-            // Certificate name error, PHP doesn't support subjectAltName on PHP < 5.6
-            // The procedure to handle sAN for older PHP's is:
-            //
-            // 1. Open socket to remote server and fetch certificate (disabling peer
-            //    validation because PHP errors without giving up the certificate.)
-            //
-            // 2. Verifying the domain in the URL against the names in the sAN field.
-            //    If there is a match record the authority [host/port], certificate
-            //    common name, and certificate fingerprint.
-            //
-            // 3. Retry the original request but changing the CN_match parameter to
-            //    the common name extracted from the certificate in step 2.
-            //
-            // 4. To prevent any attempt at being hoodwinked by switching the
-            //    certificate between steps 2 and 3 the fingerprint of the certificate
-            //    presented in step 3 is compared against the one recorded in step 2.
-            if (CaBundle::isOpensslParseSafe()) {
-                $certDetails = $this->getCertificateCnAndFp($this->fileUrl, $options);
-
-                if ($certDetails) {
-                    $this->peerCertificateMap[$this->getUrlAuthority($this->fileUrl)] = $certDetails;
-
-                    $this->retry = true;
-                }
-            } else {
-                $this->io->writeError('');
-                $this->io->writeError(sprintf(
-                    '<error>Your version of PHP, %s, is affected by CVE-2013-6420 and cannot safely perform certificate validation, we strongly suggest you upgrade.</error>',
-                    PHP_VERSION
-                ));
             }
         }
 
@@ -561,7 +511,7 @@ class RemoteFilesystem
      *
      * @return string|false The response contents or false on failure
      */
-    protected function getRemoteContents($originUrl, $fileUrl, $context, array &$responseHeaders = null, $maxFileSize = null)
+    protected function getRemoteContents(string $originUrl, string $fileUrl, $context, array &$responseHeaders = null, int $maxFileSize = null)
     {
         $result = false;
 
@@ -573,16 +523,15 @@ class RemoteFilesystem
                 // passing `null` to file_get_contents will convert `null` to `0` and return 0 bytes
                 $result = file_get_contents($fileUrl, false, $context);
             }
-        } catch (\Exception $e) {
         } catch (\Throwable $e) {
         }
 
-        if ($maxFileSize !== null && Platform::strlen($result) >= $maxFileSize) {
+        if ($result !== false && $maxFileSize !== null && Platform::strlen($result) >= $maxFileSize) {
             throw new MaxFileSizeExceededException('Maximum allowed download size reached. Downloaded ' . Platform::strlen($result) . ' of allowed ' .  $maxFileSize . ' bytes');
         }
 
         // https://www.php.net/manual/en/reserved.variables.httpresponseheader.php
-        $responseHeaders = isset($http_response_header) ? $http_response_header : array();
+        $responseHeaders = $http_response_header ?? array();
 
         if (null !== $e) {
             throw $e;
@@ -605,7 +554,7 @@ class RemoteFilesystem
      *
      * @throws TransportException
      */
-    protected function callbackGet($notificationCode, $severity, $message, $messageCode, $bytesTransferred, $bytesMax)
+    protected function callbackGet(int $notificationCode, int $severity, ?string $message, int $messageCode, int $bytesTransferred, int $bytesMax)
     {
         switch ($notificationCode) {
             case STREAM_NOTIFY_FAILURE:
@@ -643,7 +592,7 @@ class RemoteFilesystem
      *
      * @return void
      */
-    protected function promptAuthAndRetry($httpStatus, $reason = null, $headers = array())
+    protected function promptAuthAndRetry($httpStatus, ?string $reason = null, array $headers = array())
     {
         $result = $this->authHelper->promptAuthIfNeeded($this->fileUrl, $this->originUrl, $httpStatus, $reason, $headers);
 
@@ -661,49 +610,9 @@ class RemoteFilesystem
      *
      * @return mixed[]
      */
-    protected function getOptionsForUrl($originUrl, $additionalOptions)
+    protected function getOptionsForUrl(string $originUrl, array $additionalOptions)
     {
         $tlsOptions = array();
-
-        // Setup remaining TLS options - the matching may need monitoring, esp. www vs none in CN
-        if ($this->disableTls === false && PHP_VERSION_ID < 50600 && !stream_is_local($this->fileUrl)) {
-            $host = parse_url($this->fileUrl, PHP_URL_HOST);
-
-            if (PHP_VERSION_ID < 50304) {
-                // PHP < 5.3.4 does not support follow_location, for those people
-                // do some really nasty hard coded transformations. These will
-                // still breakdown if the site redirects to a domain we don't
-                // expect.
-
-                if ($host === 'github.com' || $host === 'api.github.com') {
-                    $host = '*.github.com';
-                }
-            }
-
-            $tlsOptions['ssl']['CN_match'] = $host;
-            $tlsOptions['ssl']['SNI_server_name'] = $host;
-
-            $urlAuthority = $this->getUrlAuthority($this->fileUrl);
-
-            if (isset($this->peerCertificateMap[$urlAuthority])) {
-                // Handle subjectAltName on lesser PHP's.
-                $certMap = $this->peerCertificateMap[$urlAuthority];
-
-                $this->io->writeError('', true, IOInterface::DEBUG);
-                $this->io->writeError(sprintf(
-                    'Using <info>%s</info> as CN for subjectAltName enabled host <info>%s</info>',
-                    $certMap['cn'],
-                    $urlAuthority
-                ), true, IOInterface::DEBUG);
-
-                $tlsOptions['ssl']['CN_match'] = $certMap['cn'];
-                $tlsOptions['ssl']['peer_fingerprint'] = $certMap['fp'];
-            } elseif (!CaBundle::isOpensslParseSafe() && $host === 'repo.packagist.org') {
-                // handle subjectAltName for packagist.org's repo domain on very old PHPs
-                $tlsOptions['ssl']['CN_match'] = 'packagist.org';
-            }
-        }
-
         $headers = array();
 
         if (extension_loaded('zlib')) {
@@ -784,94 +693,12 @@ class RemoteFilesystem
     }
 
     /**
-     * Fetch certificate common name and fingerprint for validation of SAN.
-     *
-     * @todo Remove when PHP 5.6 is minimum supported version.
-     *
-     * @param string  $url
-     * @param mixed[] $options
-     *
-     * @return ?array{cn: string, fp: string}
-     */
-    private function getCertificateCnAndFp($url, $options)
-    {
-        if (PHP_VERSION_ID >= 50600) {
-            throw new \BadMethodCallException(sprintf(
-                '%s must not be used on PHP >= 5.6',
-                __METHOD__
-            ));
-        }
-
-        $context = StreamContextFactory::getContext($url, $options, array('options' => array(
-            'ssl' => array(
-                'capture_peer_cert' => true,
-                'verify_peer' => false, // Yes this is fucking insane! But PHP is lame.
-            ), ),
-        ));
-
-        // Ideally this would just use stream_socket_client() to avoid sending a
-        // HTTP request but that does not capture the certificate.
-        if (false === $handle = @fopen($url, 'rb', false, $context)) {
-            return null;
-        }
-
-        // Close non authenticated connection without reading any content.
-        fclose($handle);
-        $handle = null;
-
-        $params = stream_context_get_params($context);
-
-        if (!empty($params['options']['ssl']['peer_certificate'])) {
-            $peerCertificate = $params['options']['ssl']['peer_certificate'];
-
-            if (TlsHelper::checkCertificateHost($peerCertificate, parse_url($url, PHP_URL_HOST), $commonName)) {
-                return array(
-                    'cn' => $commonName,
-                    'fp' => TlsHelper::getCertificateFingerprint($peerCertificate),
-                );
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @param string $url
-     *
-     * @return string
-     */
-    private function getUrlAuthority($url)
-    {
-        $defaultPorts = array(
-            'ftp' => 21,
-            'http' => 80,
-            'https' => 443,
-            'ssh2.sftp' => 22,
-            'ssh2.scp' => 22,
-        );
-
-        $scheme = parse_url($url, PHP_URL_SCHEME);
-
-        if (!isset($defaultPorts[$scheme])) {
-            throw new \InvalidArgumentException(sprintf(
-                'Could not get default port for unknown scheme: %s',
-                $scheme
-            ));
-        }
-
-        $defaultPort = $defaultPorts[$scheme];
-        $port = parse_url($url, PHP_URL_PORT) ?: $defaultPort;
-
-        return parse_url($url, PHP_URL_HOST).':'.$port;
-    }
-
-    /**
      * @param string|false $result
      * @param string[]     $http_response_header
      *
      * @return string|null
      */
-    private function decodeResult($result, $http_response_header)
+    private function decodeResult($result, array $http_response_header): ?string
     {
         // decode gzip
         if ($result && extension_loaded('zlib')) {
@@ -879,12 +706,7 @@ class RemoteFilesystem
             $decode = $contentEncoding && 'gzip' === strtolower($contentEncoding);
 
             if ($decode) {
-                if (PHP_VERSION_ID >= 50400) {
-                    $result = zlib_decode($result);
-                } else {
-                    // work around issue with gzuncompress & co that do not work with all gzip checksums
-                    $result = file_get_contents('compress.zlib://data:application/octet-stream;base64,'.base64_encode($result));
-                }
+                $result = zlib_decode($result);
 
                 if ($result === false) {
                     throw new TransportException('Failed to decode zlib stream');
@@ -900,7 +722,7 @@ class RemoteFilesystem
      *
      * @return string|null
      */
-    private function normalizeResult($result)
+    private function normalizeResult($result): ?string
     {
         if ($result === false) {
             return null;

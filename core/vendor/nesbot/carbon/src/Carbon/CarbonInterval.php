@@ -440,7 +440,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
      *
      * @return int|null
      */
-    public function getFactorWithDefault($source, $target)
+    public static function getFactorWithDefault($source, $target)
     {
         $factor = self::getFactor($source, $target);
 
@@ -1654,8 +1654,14 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
                 \count($intervalValues->getNonZeroValues()) > $parts &&
                 ($count = \count($keys = array_keys($intervalValues->getValuesSequence()))) > 1
             ) {
+                $index = min($count, $previousCount - 1) - 2;
+
+                if ($index < 0) {
+                    break;
+                }
+
                 $intervalValues = $this->copy()->roundUnit(
-                    $keys[min($count, $previousCount - 1) - 2],
+                    $keys[$index],
                     1,
                     $method
                 );
