@@ -36,7 +36,7 @@ class Panel extends AbstractPanel
     protected function logView($view)
     {
         $name = $view->getName();
-        $data = $this->limitCollection(Arr::except($view->getData(), ['__env', 'app']));
+        $data = $this->limitCollection(Arr::except($view->gatherData(), ['__env', 'app']));
         $path = static::editorLink($view->getPath());
         preg_match('/href=\"(.+)\"/', $path, $m);
         $path = (count($m) > 1) ? '(<a href="'.$m[1].'">source</a>)' : '';
