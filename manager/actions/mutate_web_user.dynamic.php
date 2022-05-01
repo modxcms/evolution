@@ -116,7 +116,7 @@ if(EvolutionCMS()->getManagerApi()->hasFormValues()) {
 	$usernamedata['username'] = $userdata['newusername'];
 	$usernamedata['oldusername'] = $_POST['oldusername'];
 	$usersettings = array_merge($usersettings, $userdata);
-	$usersettings['allowed_days'] = is_array($_POST['allowed_days']) ? implode(",", $_POST['allowed_days']) : "";
+	$usersettings['allowed_days'] = is_array($_POST['allowed_days'] ?? []) ? implode(",", $_POST['allowed_days']) : "";
 	extract($usersettings, EXTR_OVERWRITE);
 }
 
