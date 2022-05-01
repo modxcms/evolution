@@ -2512,7 +2512,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
             //this is now the document :)
             $documentObject = $documentObject->toArray();
-
+            unset($documentObject['document_group'], $documentObject['document']);
+            $documentObject['id'] = $identifier;
+            
             if ($isPrepareResponse === 'prepareResponse') {
                 $this->documentObject = &$documentObject;
             }
