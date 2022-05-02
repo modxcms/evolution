@@ -2514,7 +2514,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $documentObject = $documentObject->toArray();
             unset($documentObject['document_group'], $documentObject['document']);
             $documentObject['id'] = $identifier;
-            
+
             if ($isPrepareResponse === 'prepareResponse') {
                 $this->documentObject = &$documentObject;
             }
@@ -3915,11 +3915,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $documentChildren = $documentChildren->where($where);
         }
         if (!is_array($fields)) {
-            $documentChildren = $documentChildren->select(explode(',', $fields));
+            $fields = array_filter(array_map('trim', explode(',', $fields)));
+            $documentChildren = $documentChildren->select($fields);
         }
         // modify field names to use sc. table reference
         if ($sort != '') {
-            $sort = explode(',', $sort);
+            $sort = array_filter(array_map('trim', explode(',', $sort)));
             foreach ($sort as $item)
                 $documentChildren = $documentChildren->orderBy($item, $dir);
         }
@@ -4022,7 +4023,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $documentChildren = $documentChildren->where($where);
         }
         if (!is_array($fields)) {
-            $arr = explode(',', $fields);
+            $arr = array_filter(array_map('trim', explode(',', $fields)));
             $new_arr = [];
             foreach ($arr as $item) {
                 if (stristr($item, '.') === false) {
@@ -4035,7 +4036,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
         // modify field names to use sc. table reference
         if ($sort != '') {
-            $sort = explode(',', $sort);
+            $sort = array_filter(array_map('trim', explode(',', $sort)));
             foreach ($sort as $item)
                 $documentChildren = $documentChildren->orderBy($item, $dir);
         }
