@@ -99,6 +99,11 @@ code { font-size: inherit; font-family: Consolas, 'Courier New', 'Courier', mono
 #documentPane .tab-page > table > tr > td:last-child, #documentPane .tab-page .tmplvars > table > tbody > tr > td:last-child { width: inherit !important }
 #documentPane .tab-page > table > tbody > tr > td:first-child > .warning { display: inline-block; width: calc(100% - 1.1rem); }
 #documentPane .tab-page > table > tbody > tr > td:first-child > [data-tooltip] { margin-top: 0.3rem; vertical-align: top }
+.table, #webUserPane #tv_body table, #webUserPane .tmplvars table, #webUserPane [id*="table-"], #webUserPane [id*="table-tv"] { width: 100%; }
+#webUserPane .tab-page > table > tr > td:first-child, #webUserPane .tab-page > table > tbody > tr > td:first-child, #webUserPane .tab-page .tmplvars > table > tbody > tr > td:first-child, #tmplvarsPane .tab-page > table > tbody > tr > td:first-child, #tmplvarsPane .tab-page > table > tbody > tr > th:first-child, #chunkPane .tab-page > table > tbody > tr > td:first-child, #chunkPane .tab-page > table > tbody > tr > th:first-child, #snipetPane .tab-page > table > tbody > tr > td:first-child, #snipetPane .tab-page > table > tbody > tr > th:first-child, #pluginPane .tab-page > table > tbody > tr > td:first-child, #pluginPane .tab-page > table > tbody > tr > th:first-child, #modulePane .tab-page > table > tbody > tr > td:first-child, #modulePane .tab-page > table > tbody > tr > th:first-child, #docManagerPane .tab-page #dates > table > tbody > tr > td:first-child { width: 200px }
+#webUserPane .tab-page > table > tr > td:last-child, #webUserPane .tab-page .tmplvars > table > tbody > tr > td:last-child { width: inherit !important }
+#webUserPane .tab-page > table > tbody > tr > td:first-child > .warning { display: inline-block; width: calc(100% - 1.1rem); }
+#webUserPane .tab-page > table > tbody > tr > td:first-child > [data-tooltip] { margin-top: 0.3rem; vertical-align: top }
 .table--edit { margin-bottom: 1rem; }
 .table th, .table td { text-align: left; vertical-align: middle; }
 table th { font-weight: 500; }
@@ -107,6 +112,8 @@ table th { font-weight: 500; }
 /* stacked table cells on small screens */
 @media (max-width: 567px) {
 #documentPane #tabGeneral > table > tbody > tr > td, #documentPane #tabGeneral .tmplvars > table > tbody > tr > td, #documentPane #tabSettings > table > tbody > tr > td, #settingsPane > .tab-page > table > tbody > tr > td, #settingsPane > .tab-page > table > tbody > tr > th {display: block !important;width: 100% !important;}
+#settingsPane > .tab-page > table > tbody > tr > th {border-bottom-width: 0;}
+#webUserPane #tabGeneral > table > tbody > tr > td, #webUserPane #tabGeneral .tmplvars > table > tbody > tr > td, #webUserPane #tabSettings > table > tbody > tr > td, #settingsPane > .tab-page > table > tbody > tr > td, #settingsPane > .tab-page > table > tbody > tr > th {display: block !important;width: 100% !important;}
 #settingsPane > .tab-page > table > tbody > tr > th {border-bottom-width: 0;}
 }
 /*
