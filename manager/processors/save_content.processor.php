@@ -10,12 +10,12 @@ if (!$modx->hasPermission('save_document')) {
 // preprocess POST values
 $id = is_numeric($_POST['id']) ? $_POST['id'] : '';
 
-$introtext = $_POST['introtext'];
-$content = $_POST['ta'];
-$pagetitle = $_POST['pagetitle'];
-$description = $_POST['description'];
-$alias = $_POST['alias'];
-$link_attributes = $_POST['link_attributes'];
+$introtext = $_POST['introtext'] ?? '';
+$content = $_POST['ta'] ?? '';
+$pagetitle = $_POST['pagetitle'] ?? '';
+$description = $_POST['description'] ?? '';
+$alias = $_POST['alias'] ?? null;
+$link_attributes = $_POST['link_attributes'] ?? '';
 $isfolder = (int)$_POST['isfolder'];
 $richtext = (int)$_POST['richtext'];
 $published = (int)$_POST['published'];
