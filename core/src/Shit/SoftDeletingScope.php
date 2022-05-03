@@ -8,14 +8,15 @@ class SoftDeletingScope extends Eloquent\SoftDeletingScope
 
     public function apply(Eloquent\Builder $builder, Eloquent\Model $model)
     {
-        $builder->where('deleted', '=', 0);
+        $builder->where($model->getQualifiedDeletedColumn(), '=', 0);
     }
 
     protected function addWithoutTrashed(Eloquent\Builder $builder)
     {
         $builder->macro('withoutTrashed', function (Eloquent\Builder $builder) {
+            $model = $builder->getModel();
             $builder->withoutGlobalScope($this)->where(
-                'deleted', '=', 0
+                $model->getQualifiedDeletedColumn(), '=', 0
             );
 
             return $builder;
@@ -25,8 +26,9 @@ class SoftDeletingScope extends Eloquent\SoftDeletingScope
     protected function addOnlyTrashed(Eloquent\Builder $builder)
     {
         $builder->macro('onlyTrashed', function (Eloquent\Builder $builder) {
+            $model = $builder->getModel();
             $builder->withoutGlobalScope($this)->where(
-                'deleted', '!=', 0
+                $model->getQualifiedDeletedColumn(), '!=', 0
             );
 
             return $builder;

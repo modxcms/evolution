@@ -89,6 +89,8 @@ class SiteContent extends Eloquent\Model
     const CREATED_AT = 'createdon';
     const UPDATED_AT = 'editedon';
     const DELETED_AT = 'deletedon';
+    const DELETED = 'deleted';
+
     protected $dateFormat = 'U';
 
     const CHILDREN_RELATION_NAME = 'children';
@@ -535,6 +537,26 @@ class SiteContent extends Eloquent\Model
     public function getParentIdColumn()
     {
         return 'parent';
+    }
+
+    /**
+     * Get the name of the "deleted" column.
+     *
+     * @return string
+     */
+    public function getDeletedColumn()
+    {
+        return defined('static::DELETED') ? static::DELETED : 'deleted';
+    }
+
+    /**
+     * Get the fully qualified "deleted" column.
+     *
+     * @return string
+     */
+    public function getQualifiedDeletedColumn()
+    {
+        return $this->qualifyColumn($this->getDeletedColumn());
     }
 
     /**
