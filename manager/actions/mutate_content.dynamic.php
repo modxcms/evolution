@@ -135,6 +135,7 @@ if(!isset($_REQUEST['id'])) {
 }
 
 $content['type'] = get_by_key($content, 'type', $defaultContentType, 'is_scalar');
+$content['contentType'] = $content['contentType'] ?? 'text/html';
 
 if(isset ($_POST['which_editor'])) {
     $modx->setConfig('which_editor', get_by_key($_POST, 'which_editor', '', 'is_scalar'));
@@ -1224,9 +1225,6 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <td>
                                             <select name="contentType" class="inputBox" onchange="documentDirty=true;">
                                                 <?php
-                                                if(empty($content['contentType'])) {
-                                                    $content['contentType'] = 'text/html';
-                                                }
                                                 $custom_content_type = EvolutionCMS()->getConfig('custom_contenttype', 'text/html,text/plain,text/xml');
                                                 $ct = explode(",", $custom_content_type);
                                                 for($i = 0; $i < count($ct); $i++) {
