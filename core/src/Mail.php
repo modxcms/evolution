@@ -42,11 +42,15 @@ class Mail extends PHPMailer
                 $this->SMTPAuth = $modx->getConfig('smtp_auth') === '1' ? true : false;
                 $this->SMTPAutoTLS = $modx->getConfig('smtp_autotls') === '0' ? false : true;
                 $this->Username = $modx->getConfig('smtp_username');
-                $this->Password = $modx->getConfig('smtppw');
-                if (10 < strlen($this->Password)) {
-                    $this->Password = substr($this->Password, 0, -7);
-                    $this->Password = str_replace('%', '=', $this->Password);
-                    $this->Password = base64_decode($this->Password);
+                if ($modx['config']->has('cms.settings.smtppw')) {
+                    $this->Password = $modx['config']->get('cms.settings.smtppw');
+                } else {
+                    $this->Password = $modx->getConfig('smtppw');
+                    if (10 < strlen($this->Password)) {
+                        $this->Password = substr($this->Password, 0, -7);
+                        $this->Password = str_replace('%', '=', $this->Password);
+                        $this->Password = base64_decode($this->Password);
+                    }
                 }
                 break;
             case 'mail':
@@ -275,7 +279,7 @@ class Mail extends PHPMailer
         $address = trim($address);
         if (strpos($address, '<') !== false && substr($address, -1) === '>') {
             $address = rtrim($address, '>');
-            list($name, $address) = explode('<', $address);
+            [$name, $address] = explode('<', $address);
         } else {
             $name = '';
         }
