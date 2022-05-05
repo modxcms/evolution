@@ -38,14 +38,14 @@ class Database extends Manager
 
     /**
      * @param $tableName
-     * @param bool $force
+     * @param  bool  $force
      * @return null|string|string[]
      * @throws Exceptions\TableNotDefinedException
      */
     public function replaceFullTableName($tableName, $force = false)
     {
         $tableName = trim($tableName);
-        if ((bool)$force === true) {
+        if ((bool) $force === true) {
             $result = $this->getConnection()->getTablePrefix() . $tableName;
         } elseif (strpos($tableName, '[+prefix+]') !== false) {
             $dbase = trim($this->getConfig('database'), '`');
@@ -59,8 +59,9 @@ class Database extends Manager
         } else {
             $result = $tableName;
         }
-        if ($this->getConfig('driver') == 'pgsql')
+        if ($this->getConfig('driver') == 'pgsql') {
             $result = str_replace('"', "'", $result);
+        }
         return $result;
     }
 
@@ -110,7 +111,7 @@ class Database extends Manager
     }
 
     /**
-     * @param PDOStatement|bool $result
+     * @param  PDOStatement|bool  $result
      * @return int
      */
     protected function saveAffectedRows($result)
@@ -128,16 +129,16 @@ class Database extends Manager
     }
 
     /**
-     * @param PDOStatement|bool $result
+     * @param  PDOStatement|bool  $result
      * @return bool
      */
     public function execute($result)
     {
-        return $this->isResult($result) ? $result->execute() : (bool)$result;
+        return $this->isResult($result) ? $result->execute() : (bool) $result;
     }
 
     /**
-     * @param string $sql
+     * @param  string  $sql
      * @return PDOStatement|bool
      * @throws Exceptions\ConnectException
      */
@@ -179,7 +180,7 @@ class Database extends Manager
      */
     public function isConnected()
     {
-        return ($this->conn instanceof Connection && $this->conn->getDatabaseName());
+        return true;
     }
 
     public function insertFrom(
@@ -189,8 +190,7 @@ class Database extends Manager
         $fromTable = '',
         $where = '',
         $limit = ''
-    )
-    {
+    ) {
         if (is_array($fields)) {
             $onlyKeys = true;
             foreach ($fields as $key => $value) {
@@ -266,7 +266,7 @@ class Database extends Manager
     }
 
     /**
-     * @param PDOStatement $result
+     * @param  PDOStatement  $result
      * {@inheritDoc}
      */
     public function getRow($result, $mode = 'assoc')
@@ -310,8 +310,8 @@ class Database extends Manager
     }
 
     /**
-     * @param string|array $data
-     * @param bool $ignoreAlias
+     * @param  string|array  $data
+     * @param  bool  $ignoreAlias
      * @return string
      */
     protected function prepareFields($data, $ignoreAlias = false)
@@ -333,8 +333,8 @@ class Database extends Manager
     }
 
     /**
-     * @param string|array $data
-     * @param bool $hasArray
+     * @param  string|array  $data
+     * @param  bool  $hasArray
      * @return string
      * @throws Exceptions\TableNotDefinedException
      */
@@ -355,7 +355,7 @@ class Database extends Manager
     }
 
     /**
-     * @param array|string $data
+     * @param  array|string  $data
      * @return string
      * @throws Exceptions\InvalidFieldException
      */
@@ -378,7 +378,7 @@ class Database extends Manager
     }
 
     /**
-     * @param string $data
+     * @param  string  $data
      * @return string
      */
     protected function prepareOrder($data)
@@ -392,7 +392,7 @@ class Database extends Manager
     }
 
     /**
-     * @param string $data
+     * @param  string  $data
      * @return string
      */
     protected function prepareLimit($data)
@@ -406,7 +406,7 @@ class Database extends Manager
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      * @return bool
      */
     protected function arrayOnlyNumeric(array $data)
@@ -463,69 +463,16 @@ class Database extends Manager
     /**
      * {@inheritDoc}
      */
-    /**
-     * @param string $host
-     * @param string $dbase
-     * @param string $uid
-     * @param string $pwd
-     * @return \mysqli
-     */
-    public function connect($host = '', $dbase = '', $uid = '', $pwd = '')
+    public function connect()
     {
-        $uid = $uid ? $uid : EvolutionCMS()->getDatabase()->getConfig('username');
-        $pwd = $pwd ? $pwd : EvolutionCMS()->getDatabase()->getConfig('password');
-        $host = $host ? $host : EvolutionCMS()->getDatabase()->getConfig('host');
-        $host = explode(':', $host, 2);
-        $dbase = $dbase ? $dbase : EvolutionCMS()->getDatabase()->getConfig('database');
-        $dbase = trim($dbase, '`'); // remove the `` chars
-        $charset = EvolutionCMS()->getDatabase()->getConfig('charset');
-        $connection_method = EvolutionCMS()->getDatabase()->getConfig('connection_method');
-        $tstart = EvolutionCMS()->getMicroTime();
-        $safe_count = 0;
-        do {
-            $this->conn = new \mysqli($host[0], $uid, $pwd, $dbase, isset($host[1]) ? $host[1] : null);
-            if ($this->conn->connect_error) {
-                $this->conn = null;
-                if (isset(EvolutionCMS()->config['send_errormail']) && EvolutionCMS()->config['send_errormail'] !== '0') {
-                    if (EvolutionCMS()->config['send_errormail'] <= 2) {
-                        $logtitle = 'Failed to create the database connection!';
-                        $request_uri = EvolutionCMS()->htmlspecialchars($_SERVER['REQUEST_URI']);
-                        $ua = EvolutionCMS()->htmlspecialchars($_SERVER['HTTP_USER_AGENT']);
-                        $referer = EvolutionCMS()->htmlspecialchars($_SERVER['HTTP_REFERER']);
-                        EvolutionCMS()->sendmail(array(
-                            'subject' => 'Missing to create the database connection! from ' . EvolutionCMS()->config['site_name'],
-                            'body' => "{$logtitle}\n{$request_uri}\n{$ua}\n{$referer}",
-                            'type' => 'text'
-                        ));
-                    }
-                }
-                sleep(1);
-                $safe_count++;
-            }
-        } while (!$this->conn && $safe_count < 3);
-        if ($this->conn instanceof \mysqli) {
-            $this->conn->query("{$connection_method} {$charset}");
-            $tend = EvolutionCMS()->getMicroTime();
-            $totaltime = $tend - $tstart;
-            if (EvolutionCMS()->dumpSQL) {
-                EvolutionCMS()->queryCode .= "<fieldset style='text-align:left'><legend>Database connection</legend>" . sprintf("Database connection was created in %2.4f s",
-                        $totaltime) . "</fieldset><br />";
-            }
-            $this->conn->set_charset(EvolutionCMS()->getDatabase()->getConfig('charset'));
-            $this->isConnected = true;
-            EvolutionCMS()->queryTime += $totaltime;
-        } else {
-            EvolutionCMS()->getService('ExceptionHandler')->messageQuit("Failed to create the database connection!");
-            exit;
-        }
-        return $this->conn;
+       return $this->getConnection();
     }
 
     /**
-     * @param string $from
-     * @param string $where
-     * @param string $orderBy
-     * @param string $limit
+     * @param  string  $from
+     * @param  string  $where
+     * @param  string  $orderBy
+     * @param  string  $limit
      * @return bool|mysqli_result
      */
     public function delete($from, $where = '', $orderBy = '', $limit = '')
@@ -565,12 +512,12 @@ class Database extends Manager
 
     /**
      * @param $name
-     * @param \mysqli_result|string $dsq
+     * @param  \mysqli_result|string  $dsq
      * @return array
      */
     public function getColumn($name, $dsq)
     {
-        $col = array();
+        $col = [];
 
         if (!$this->isResult($dsq)) {
             $dsq = $this->query($dsq);
@@ -585,12 +532,12 @@ class Database extends Manager
     }
 
     /**
-     * @param \mysqli_result|string $dsq
+     * @param  \mysqli_result|string  $dsq
      * @return array
      */
     public function getColumnNames($dsq): array
     {
-        $names = array();
+        $names = [];
         if (!$this->isResult($dsq)) {
             $dsq = $this->query($dsq);
         }
@@ -605,7 +552,7 @@ class Database extends Manager
     }
 
     /**
-     * @param \PDOStatement $rs
+     * @param  \PDOStatement  $rs
      * @return mixed
      */
     public function numFields($rs)
@@ -614,15 +561,15 @@ class Database extends Manager
     }
 
     /**
-     * @param \PDOStatement $rs
-     * @param int $col
+     * @param  \PDOStatement  $rs
+     * @param  int  $col
      * @return string|null
      */
     public function fieldName($rs, $col = 0)
     {
         $meta = $rs->getColumnMeta($col);
 
-        return $meta['name'] ?? NULL;
+        return $meta['name'] ?? null;
     }
 
 
@@ -636,12 +583,12 @@ class Database extends Manager
     }
 
     /**
-     * @param string|array $fields
-     * @param string $intotable
-     * @param string $fromfields
-     * @param string $fromtable
-     * @param string $where
-     * @param string $limit
+     * @param  string|array  $fields
+     * @param  string  $intotable
+     * @param  string  $fromfields
+     * @param  string  $fromtable
+     * @param  string  $where
+     * @param  string  $limit
      * @return mixed
      */
     public function insert($fields, $intotable, $fromfields = "*", $fromtable = "", $where = "", $limit = "")
@@ -690,7 +637,7 @@ class Database extends Manager
     }
 
     /**
-     * @param PDOStatement $ds
+     * @param  PDOStatement  $ds
      * @return int
      */
     public function getRecordCount($ds)
@@ -700,9 +647,9 @@ class Database extends Manager
 
 
     /**
-     * @param array|string $fields
+     * @param  array|string  $fields
      * @param $table
-     * @param string $where
+     * @param  string  $where
      * @return bool|mysqli_result
      */
     public function update($fields, $table, $where = "")
@@ -742,12 +689,12 @@ class Database extends Manager
     }
 
     /**
-     * @param string $table
+     * @param  string  $table
      * @return array
      */
     public function getTableMetaData($table)
     {
-        $metadata = array();
+        $metadata = [];
         if (!empty($table) && is_scalar($table)) {
             switch (EvolutionCMS()->getDatabase()->getConfig('driver')) {
                 case 'pgsql':
@@ -776,8 +723,8 @@ class Database extends Manager
     }
 
     /**
-     * @param int $timestamp
-     * @param string $fieldType
+     * @param  int  $timestamp
+     * @param  string  $fieldType
      * @return false|string
      */
     public function prepareDate($timestamp, $fieldType = 'DATETIME')
@@ -809,8 +756,9 @@ class Database extends Manager
             $this->config = $this->getConfig();
             $this->config['table_prefix'] = $this->getConfig('prefix');
         } catch (Exception $e) {
-            if (!is_cli())
+            if (!is_cli()) {
                 throw $e;
+            }
         }
     }
 
