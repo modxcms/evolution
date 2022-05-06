@@ -114,7 +114,7 @@ if($modx->getManagerApi()->hasFormValues()) {
 	$userdata = array_merge($userdata, $_POST);
 	$userdata['dob'] = $modx->toTimeStamp($userdata['dob']);
 	$usernamedata['username'] = $userdata['newusername'];
-	$usernamedata['oldusername'] = $_POST['oldusername'];
+	$usernamedata['oldusername'] = $_POST['oldusername'] ?? '';
 	$usersettings = array_merge($usersettings, $userdata);
 	if (isset($_POST['allowed_days'])) {
         $usersettings['allowed_days'] = is_array($_POST['allowed_days']) ? implode(",",
