@@ -2479,12 +2479,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             if ($this->isFrontend()) {
                 $documentObject->where('privateweb', 0);
             } else {
-                $documentObject->where(function($query) use ($docgrp) {
-                    $query->whereRaw("1 = {$_SESSION['mgrRole']} OR site_content.privatemgr=0");
-                    if ($docgrp) {
-                        $query->orWhereIn('document_groups.document_group', $docgrp);
-                    }
-                });
+                $documentObject->whereRaw("1 = {$_SESSION['mgrRole']} OR site_content.privatemgr=0");
+            }
+            if ($docgrp) {
+                $documentObject->orWhereIn('document_groups.document_group', $docgrp);
             }
             $documentObject = $documentObject->first();
             if (is_null($documentObject)) {
