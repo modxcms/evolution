@@ -327,9 +327,12 @@ class UserLogin implements UserServiceInterface
             $_SESSION[$this->context . 'Permissions'] = $permissionsRole;
         }
         $this->user->attributes->sessionid = $currentsessionid;
-
+        $context = $this->context == 'mgr' ? 0 : 1;
         $_SESSION[$this->context . 'Docgroups'] = \EvolutionCMS\Models\MemberGroup::query()
-            ->join('membergroup_access', 'membergroup_access.membergroup', '=', 'member_groups.user_group')
+            ->join('membergroup_access', function($join) use ($context){
+                $join->on('membergroup_access.membergroup', '=', 'member_groups.user_group');
+                $join->on('membergroup_access.context', '=', \DB::Raw($context));
+            })
             ->where('member_groups.member', $this->user->getKey())->pluck('documentgroup')->toArray();
 
 

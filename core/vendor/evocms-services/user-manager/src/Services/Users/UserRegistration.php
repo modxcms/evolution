@@ -152,7 +152,7 @@ class UserRegistration implements UserServiceInterface
      */
     public function validate(): bool
     {
-        $validator = \Validator::validate($this->userData, $this->validate, $this->messages);
+        $validator = \Validator::make($this->userData, $this->validate, $this->messages);
         $this->validateErrors = $validator->errors()->toArray();
         return !$validator->fails();
     }
