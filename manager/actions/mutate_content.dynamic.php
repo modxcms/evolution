@@ -13,10 +13,10 @@ global $content, $richtexteditorIds, $richtexteditorOptions;
 $richtexteditorIds = array();
 $defaultContentType = 'document';
 // check permissions
-switch(EvolutionCMS()->getManagerApi()->action) {
+switch($modx->getManagerApi()->action) {
     case 27:
-        if(!EvolutionCMS()->hasPermission('edit_document')) {
-            EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
+        if(!$modx->hasPermission('edit_document')) {
+            $modx->webAlertAndQuit($_lang["error_no_privileges"]);
         }
         break;
     case 85:
@@ -24,47 +24,47 @@ switch(EvolutionCMS()->getManagerApi()->action) {
         $defaultContentType = 'reference';
         // no break
     case 4:
-        if(!EvolutionCMS()->hasPermission('new_document')) {
-            EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
+        if(!$modx->hasPermission('new_document')) {
+            $modx->webAlertAndQuit($_lang["error_no_privileges"]);
         } elseif(isset($_REQUEST['pid']) && $_REQUEST['pid'] != '0') {
             // check user has permissions for parent
             $udperms = new EvolutionCMS\Legacy\Permissions();
-            $udperms->user = EvolutionCMS()->getLoginUserID('mgr');
+            $udperms->user = $modx->getLoginUserID('mgr');
             $udperms->document = empty($_REQUEST['pid']) ? 0 : $_REQUEST['pid'];
             $udperms->role = $_SESSION['mgrRole'];
             if(!$udperms->checkPermissions()) {
-                EvolutionCMS()->webAlertAndQuit($_lang["access_permission_denied"]);
+                $modx->webAlertAndQuit($_lang["access_permission_denied"]);
             }
         }
         break;
     default:
-        EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
+        $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 
-if(EvolutionCMS()->getManagerApi()->action == 27) {
+if($modx->getManagerApi()->action == 27) {
     //editing an existing document
     // check permissions on the document
     $udperms = new EvolutionCMS\Legacy\Permissions();
-    $udperms->user = EvolutionCMS()->getLoginUserID('mgr');
+    $udperms->user = $modx->getLoginUserID('mgr');
     $udperms->document = $id;
     $udperms->role = $_SESSION['mgrRole'];
 
     if(!$udperms->checkPermissions()) {
-        EvolutionCMS()->webAlertAndQuit($_lang["access_permission_denied"]);
+        $modx->webAlertAndQuit($_lang["access_permission_denied"]);
     }
 }
 
 // check to see if resource isn't locked
-if($lockedEl = EvolutionCMS()->elementIsLocked(7, $id)) {
-    EvolutionCMS()->webAlertAndQuit(sprintf($_lang['lock_msg'], $lockedEl['username'], $_lang['resource']));
+if($lockedEl = $modx->elementIsLocked(7, $id)) {
+    $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $lockedEl['username'], $_lang['resource']));
 }
 // end check for lock
 
 // Lock resource for other users to edit
-EvolutionCMS()->lockElement(7, $id);
+$modx->lockElement(7, $id);
 
 // get document groups for current user
 if($_SESSION['mgrDocgroups']) {
@@ -82,11 +82,12 @@ if(!empty ($id)) {
                 ->orWhereIn('document_groups.document_group', $_SESSION['mgrDocgroups']);
         });
     }
-    $content = $documentObjectQuery->withTrashed()->first()->toArray();
-    EvolutionCMS()->documentObject = &$content;
-    if(!$content) {
-        EvolutionCMS()->webAlertAndQuit($_lang["access_permission_denied"]);
+    $content = $documentObjectQuery->withTrashed()->first();
+    if (empty($content)) {
+        $modx->webAlertAndQuit($_lang["access_permission_denied"]);
     }
+    $content = $content->toArray();
+    $modx->documentObject = &$content;
     $_SESSION['itemname'] = $content['pagetitle'];
 } else {
     $content = array();
@@ -101,7 +102,7 @@ if(!empty ($id)) {
 }
 
 // restore saved form
-$formRestored = EvolutionCMS()->getManagerApi()->loadFormValues();
+$formRestored = $modx->getManagerApi()->loadFormValues();
 if(isset($_REQUEST['newtemplate'])) {
     $formRestored = true;
 }
@@ -115,18 +116,18 @@ if($formRestored == true) {
     if(empty ($content['pub_date'])) {
         unset ($content['pub_date']);
     } else {
-        $content['pub_date'] = EvolutionCMS()->toTimeStamp($content['pub_date']);
+        $content['pub_date'] = $modx->toTimeStamp($content['pub_date']);
     }
     if(empty ($content['unpub_date'])) {
         unset ($content['unpub_date']);
     } else {
-        $content['unpub_date'] = EvolutionCMS()->toTimeStamp($content['unpub_date']);
+        $content['unpub_date'] = $modx->toTimeStamp($content['unpub_date']);
     }
 }
 
 // increase menu index if this is a new document
 if(!isset($_REQUEST['id'])) {
-    if (EvolutionCMS()->getConfig('auto_menuindex')) {
+    if ($modx->getConfig('auto_menuindex')) {
         $pid = (int)get_by_key($_REQUEST, 'pid', 0, 'is_scalar');
         $content['menuindex'] = SiteContent::withTrashed()->where('parent', $pid)->count();
     } else {
@@ -135,10 +136,9 @@ if(!isset($_REQUEST['id'])) {
 }
 
 $content['type'] = get_by_key($content, 'type', $defaultContentType, 'is_scalar');
-$content['contentType'] = $content['contentType'] ?? 'text/html';
 
 if(isset ($_POST['which_editor'])) {
-    EvolutionCMS()->setConfig('which_editor', get_by_key($_POST, 'which_editor', '', 'is_scalar'));
+    $modx->setConfig('which_editor', get_by_key($_POST, 'which_editor', '', 'is_scalar'));
 }
 
 // Add lock-element JS-Script
@@ -193,7 +193,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
           }
         },
         view: function() {
-          window.open('<?= EvolutionCMS()->getConfig('friendly_urls') ? UrlProcessor::makeUrl($id) : MODX_SITE_URL . 'index.php?id=' . $id ?>', 'previeWin');
+          window.open('<?= $modx->getConfig('friendly_urls') ? UrlProcessor::makeUrl($id) : MODX_SITE_URL . 'index.php?id=' . $id ?>', 'previeWin');
         }
       };
 
@@ -312,7 +312,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
         if(documentDirty === true) {
           if(confirm('<?= $_lang['tmplvar_change_template_msg']?>')) {
             documentDirty = false;
-            document.mutate.a.value = <?= EvolutionCMS()->getManagerApi()->action ?>;
+            document.mutate.a.value = <?= $modx->getManagerApi()->action ?>;
             document.mutate.newtemplate.value = newTemplate;
             document.mutate.submit();
           } else {
@@ -320,7 +320,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
           }
         }
         else {
-          document.mutate.a.value = <?= EvolutionCMS()->getManagerApi()->action ?>;
+          document.mutate.a.value = <?= $modx->getManagerApi()->action ?>;
           document.mutate.newtemplate.value = newTemplate;
           document.mutate.submit();
         }
@@ -350,7 +350,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
         }
 
         documentDirty = false;
-        document.mutate.a.value = <?= EvolutionCMS()->getManagerApi()->action ?>;
+        document.mutate.a.value = <?= $modx->getManagerApi()->action ?>;
         document.mutate.newtemplate.value = newTemplate;
         document.mutate.which_editor.value = newEditor;
         document.mutate.submit();
@@ -483,7 +483,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
       }
 
       <?php
-      if (get_by_key($content, 'type') === 'reference' || EvolutionCMS()->getManagerApi()->action == '72') {
+      if (get_by_key($content, 'type') === 'reference' || $modx->getManagerApi()->action == '72') {
           $ResourceManagerLoaded = true;
       }
       ?>
@@ -503,7 +503,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
     <form name="mutate" id="mutate" class="content" method="post" enctype="multipart/form-data" action="index.php" onsubmit="documentDirty=false;">
         <?php
         // invoke OnDocFormPrerender event
-        $evtOut = EvolutionCMS()->invokeEvent('OnDocFormPrerender', array(
+        $evtOut = $modx->invokeEvent('OnDocFormPrerender', array(
             'id' => $id,
             'template' => $content['template']
         ));
@@ -521,23 +521,23 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
         ?>
         <input type="hidden" name="a" value="5" />
         <input type="hidden" name="id" id="docid" value="<?= (int)get_by_key($content, 'id', 0, 'is_scalar') ?>" />
-        <input type="hidden" name="mode" value="<?= EvolutionCMS()->getManagerApi()->action ?>" />
-        <input type="hidden" name="MAX_FILE_SIZE" value="<?= EvolutionCMS()->getConfig('upload_maxsize') ?>" />
+        <input type="hidden" name="mode" value="<?= $modx->getManagerApi()->action ?>" />
+        <input type="hidden" name="MAX_FILE_SIZE" value="<?= $modx->getConfig('upload_maxsize') ?>" />
         <input type="hidden" name="refresh_preview" value="0" />
         <input type="hidden" name="newtemplate" value="" />
-        <input type="hidden" name="dir" value="<?= entities($dir, EvolutionCMS()->getConfig('modx_charset')) ?>" />
-        <input type="hidden" name="sort" value="<?= entities($sort, EvolutionCMS()->getConfig('modx_charset')) ?>" />
+        <input type="hidden" name="dir" value="<?= entities($dir, $modx->getConfig('modx_charset')) ?>" />
+        <input type="hidden" name="sort" value="<?= entities($sort, $modx->getConfig('modx_charset')) ?>" />
         <input type="hidden" name="page" value="<?= $page ?>" />
 
         <fieldset id="create_edit">
 
             <h1>
                 <i class="<?= $_style['icon_edit'] ?>"></i><?php if(isset($_REQUEST['id'])) {
-                    echo entities(iconv_substr($content['pagetitle'], 0, 50, EvolutionCMS()->getConfig('modx_charset')), EvolutionCMS()->getConfig('modx_charset')) . (iconv_strlen($content['pagetitle'], EvolutionCMS()->getConfig('modx_charset')) > 50 ? '...' : '') . '<small>(' . (int)$_REQUEST['id'] . ')</small>';
+                    echo entities(iconv_substr($content['pagetitle'], 0, 50, $modx->getConfig('modx_charset')), $modx->getConfig('modx_charset')) . (iconv_strlen($content['pagetitle'], $modx->getConfig('modx_charset')) > 50 ? '...' : '') . '<small>(' . (int)$_REQUEST['id'] . ')</small>';
                 } else {
-                    if (EvolutionCMS()->getManagerApi()->action == '4') {
+                    if ($modx->getManagerApi()->action == '4') {
                         echo $_lang['add_resource'];
-                    } else if (EvolutionCMS()->getManagerApi()->action == '72') {
+                    } else if ($modx->getManagerApi()->action == '72') {
                         echo $_lang['add_weblink'];
                     } else {
                         echo $_lang['create_resource_title'];
@@ -549,17 +549,17 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
             <?php
             // breadcrumbs
-            if(EvolutionCMS()->getConfig('use_breadcrumbs')) {
+            if($modx->getConfig('use_breadcrumbs')) {
                 $out = '';
                 $temp = array();
                 $title = isset($content['pagetitle']) ? $content['pagetitle'] : $_lang['create_resource_title'];
 
                 if(isset($_REQUEST['id']) && $content['parent'] != 0) {
                     $bID = (int) $_REQUEST['id'];
-                    $temp = EvolutionCMS()->getParentIds($bID);
+                    $temp = $modx->getParentIds($bID);
                 } else if(isset($_REQUEST['pid'])) {
                     $bID = (int) $_REQUEST['pid'];
-                    $temp = EvolutionCMS()->getParentIds($bID);
+                    $temp = $modx->getParentIds($bID);
                     array_unshift($temp, $bID);
                 }
 
@@ -570,7 +570,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                         $parentsResult = SiteContent::withTrashed()->select('id','pagetitle')->whereIn('id', $temp)->get();
                         foreach ($parentsResult->toArray() as $row) {
                             $out .= '<li class="breadcrumbs__li">
-                                <a href="index.php?a=27&id=' . $row['id'] . '" class="breadcrumbs__a">' . htmlspecialchars($row['pagetitle'], ENT_QUOTES, EvolutionCMS()->getConfig('modx_charset')) . '</a>
+                                <a href="index.php?a=27&id=' . $row['id'] . '" class="breadcrumbs__a">' . htmlspecialchars($row['pagetitle'], ENT_QUOTES, $modx->getConfig('modx_charset')) . '</a>
                                 <span class="breadcrumbs__sep">&gt;</span>
                             </li>';
                         }
@@ -587,16 +587,16 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
                 <div class="tab-pane" id="documentPane">
                     <script type="text/javascript">
-                      var tpSettings = new WebFXTabPane(document.getElementById("documentPane"), <?= EvolutionCMS()->getConfig('remember_last_tab') ? 'true' : 'false' ?> );
+                      var tpSettings = new WebFXTabPane(document.getElementById("documentPane"), <?= $modx->getConfig('remember_last_tab') ? 'true' : 'false' ?> );
                     </script>
 
                     <!-- General -->
                     <?php
-                    $evtOut = EvolutionCMS()->invokeEvent('OnDocFormTemplateRender', array(
+                    $evtOut = $modx->invokeEvent('OnDocFormTemplateRender', array(
                         'id' => $id
                     ));
 
-                    $group_tvs = EvolutionCMS()->getConfig('group_tvs');
+                    $group_tvs = $modx->getConfig('group_tvs');
                     $templateVariables = '';
                     $templateVariablesOutput = '';
 
@@ -615,7 +615,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icon_question_circle"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('resource_title_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="pagetitle" type="text" maxlength="255" value="<?= EvolutionCMS()->getPhpCompat()->htmlspecialchars(stripslashes(get_by_key($content, 'pagetitle', '', 'is_scalar'))) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
+                                        <input name="pagetitle" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes(get_by_key($content, 'pagetitle', '', 'is_scalar'))) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
                                         <script>document.getElementsByName("pagetitle")[0].focus();</script>
                                     </td>
                                 </tr>
@@ -625,7 +625,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icon_question_circle"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('resource_long_title_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="longtitle" type="text" maxlength="255" value="<?= EvolutionCMS()->getPhpCompat()->htmlspecialchars(stripslashes(get_by_key($content, 'longtitle', '', 'is_scalar'))) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
+                                        <input name="longtitle" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes(get_by_key($content, 'longtitle', '', 'is_scalar'))) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -634,7 +634,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icon_question_circle"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('resource_description_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="description" type="text" maxlength="255" value="<?= EvolutionCMS()->getPhpCompat()->htmlspecialchars(stripslashes(get_by_key($content, 'description', '', 'is_scalar'))) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
+                                        <input name="description" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes(get_by_key($content, 'description', '', 'is_scalar'))) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -652,11 +652,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icon_question_circle"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('link_attributes_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="link_attributes" type="text" maxlength="255" value="<?= EvolutionCMS()->getPhpCompat()->htmlspecialchars(stripslashes(get_by_key($content, 'link_attributes', '', 'is_scalar'))) ?>" class="inputBox" onchange="documentDirty=true;" />
+                                        <input name="link_attributes" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes(get_by_key($content, 'link_attributes', '', 'is_scalar'))) ?>" class="inputBox" onchange="documentDirty=true;" />
                                     </td>
                                 </tr>
 
-                                <?php if($content['type'] == 'reference' || EvolutionCMS()->getManagerApi()->action == '72') { // Web Link specific ?>
+                                <?php if($content['type'] == 'reference' || $modx->getManagerApi()->action == '72') { // Web Link specific ?>
 
                                     <tr>
                                         <td><span class="warning"><?=ManagerTheme::getLexicon('weblink');?></span>
@@ -664,7 +664,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         </td>
                                         <td>
                                             <i id="llock" class="<?= $_style["icon_chain"] ?>" onclick="enableLinkSelection(!allowLinkSelection);"></i>
-                                            <input name="ta" id="ta" type="text" maxlength="255" value="<?= (!empty($content['content']) ? entities(stripslashes($content['content']), EvolutionCMS()->getConfig('modx_charset')) : 'http://') ?>" class="inputBox" onchange="documentDirty=true;" /><input type="button" value="<?=ManagerTheme::getLexicon('insert');?>" onclick="BrowseFileServer('ta')" />
+                                            <input name="ta" id="ta" type="text" maxlength="255" value="<?= (!empty($content['content']) ? entities(stripslashes($content['content']), $modx->getConfig('modx_charset')) : 'http://') ?>" class="inputBox" onchange="documentDirty=true;" /><input type="button" value="<?=ManagerTheme::getLexicon('insert');?>" onclick="BrowseFileServer('ta')" />
                                         </td>
                                     </tr>
 
@@ -676,7 +676,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icon_question_circle"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('resource_summary_help');?>" spellcheck="true"></i>
                                     </td>
                                     <td valign="top">
-                                        <textarea id="introtext" name="introtext" class="inputBox" rows="3" cols="" onchange="documentDirty=true;"><?= EvolutionCMS()->getPhpCompat()->htmlspecialchars(stripslashes(get_by_key($content, 'introtext', '', 'is_scalar'))) ?></textarea>
+                                        <textarea id="introtext" name="introtext" class="inputBox" rows="3" cols="" onchange="documentDirty=true;"><?= $modx->getPhpCompat()->htmlspecialchars(stripslashes(get_by_key($content, 'introtext', '', 'is_scalar'))) ?></textarea>
                                     </td>
                                 </tr>
                                 <tr>
@@ -735,7 +735,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icon_question_circle"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('resource_opt_menu_title_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="menutitle" type="text" maxlength="255" value="<?= EvolutionCMS()->getPhpCompat()->htmlspecialchars(stripslashes(get_by_key($content, 'menutitle', '', 'is_scalar'))) ?>" class="inputBox" onchange="documentDirty=true;" />
+                                        <input name="menutitle" type="text" maxlength="255" value="<?= $modx->getPhpCompat()->htmlspecialchars(stripslashes(get_by_key($content, 'menutitle', '', 'is_scalar'))) ?>" class="inputBox" onchange="documentDirty=true;" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -768,30 +768,30 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         $parentlookup = false;
                                         if(isset ($_REQUEST['id'])) {
                                             if($content['parent'] == 0) {
-                                                $parentname = EvolutionCMS()->getConfig('site_name');
+                                                $parentname = $modx->getConfig('site_name');
                                             } else {
                                                 $parentlookup = $content['parent'];
                                             }
                                         } elseif(isset ($_REQUEST['pid'])) {
                                             if($_REQUEST['pid'] == 0) {
-                                                $parentname = EvolutionCMS()->getConfig('site_name');
+                                                $parentname = $modx->getConfig('site_name');
                                             } else {
                                                 $parentlookup = $_REQUEST['pid'];
                                             }
                                         } elseif(isset($_POST['parent'])) {
                                             if($_POST['parent'] == 0) {
-                                                $parentname = EvolutionCMS()->getConfig('site_name');
+                                                $parentname = $modx->getConfig('site_name');
                                             } else {
                                                 $parentlookup = $_POST['parent'];
                                             }
                                         } else {
-                                            $parentname = EvolutionCMS()->getConfig('site_name');
+                                            $parentname = $modx->getConfig('site_name');
                                             $content['parent'] = 0;
                                         }
                                         if($parentlookup !== false && is_numeric($parentlookup)) {
                                             $parentname = SiteContent::withTrashed()->select('pagetitle')->find($parentlookup)->pagetitle;
                                             if(!$parentname) {
-                                                EvolutionCMS()->webAlertAndQuit($_lang["error_no_parent"]);
+                                                $modx->webAlertAndQuit($_lang["error_no_parent"]);
                                             }
                                         }
                                         ?>
@@ -803,7 +803,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 <tr></tr>
                                 <?php
                                 /*
-                                if($content['type'] == 'reference' || EvolutionCMS()->getManagerApi()->action == '72') {
+                                if($content['type'] == 'reference' || $modx->getManagerApi()->action == '72') {
                                     ?>
                                     <tr>
                                         <td colspan="2">
@@ -817,11 +817,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                             <select id="which_editor" name="which_editor" onchange="changeRTE();">
                                                 <?php
                                                 // invoke OnRichTextEditorRegister event
-                                                $evtOut = EvolutionCMS()->invokeEvent("OnRichTextEditorRegister");
+                                                $evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
                                                 if(is_array($evtOut)) {
                                                     for($i = 0; $i < count($evtOut); $i++) {
                                                         $editor = $evtOut[$i];
-                                                        echo "\t\t\t", '<option value="', $editor, '"', (EvolutionCMS()->getConfig('which_editor') == $editor ? ' selected="selected"' : ''), '>', $editor, "</option>\n";
+                                                        echo "\t\t\t", '<option value="', $editor, '"', ($modx->getConfig('which_editor') == $editor ? ' selected="selected"' : ''), '>', $editor, "</option>\n";
                                                     }
                                                 }
                                                 ?>
@@ -832,7 +832,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 }*/
                                 ?>
 
-                                <?php if($content['type'] == 'document' || EvolutionCMS()->getManagerApi()->action == '4') { ?>
+                                <?php if($content['type'] == 'document' || $modx->getManagerApi()->action == '4') { ?>
                                     <tr>
                                         <td colspan="2">
                                             <hr>
@@ -844,11 +844,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                                         <option value="none"><?=ManagerTheme::getLexicon('none');?></option>
                                                         <?php
                                                         // invoke OnRichTextEditorRegister event
-                                                        $evtOut = EvolutionCMS()->invokeEvent("OnRichTextEditorRegister");
+                                                        $evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
                                                         if(is_array($evtOut)) {
                                                             for($i = 0; $i < count($evtOut); $i++) {
                                                                 $editor = $evtOut[$i];
-                                                                echo "\t\t\t", '<option value="', $editor, '"', (EvolutionCMS()->getConfig('which_editor') == $editor ? ' selected="selected"' : ''), '>', $editor, "</option>\n";
+                                                                echo "\t\t\t", '<option value="', $editor, '"', ($modx->getConfig('which_editor') == $editor ? ' selected="selected"' : ''), '>', $editor, "</option>\n";
                                                             }
                                                         }
                                                         ?>
@@ -857,24 +857,24 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                             </div>
                                             <div id="content_body">
                                                 <?php
-                                                if((!empty($content['richtext']) || EvolutionCMS()->getManagerApi()->action == '4') && EvolutionCMS()->getConfig('use_editor')) {
+                                                if((!empty($content['richtext']) || $modx->getManagerApi()->action == '4') && $modx->getConfig('use_editor')) {
                                                     $htmlContent = get_by_key($content, 'content', '', 'is_scalar');
                                                     ?>
                                                     <div class="section-editor clearfix">
-                                                        <textarea id="ta" name="ta" onchange="documentDirty=true;"><?= EvolutionCMS()->getPhpCompat()->htmlspecialchars($htmlContent) ?></textarea>
+                                                        <textarea id="ta" name="ta" onchange="documentDirty=true;"><?= $modx->getPhpCompat()->htmlspecialchars($htmlContent) ?></textarea>
                                                     </div>
                                                     <?php
                                                     // Richtext-[*content*]
                                                     $richtexteditorIds = [
-                                                        EvolutionCMS()->getConfig('which_editor') => ['ta']
+                                                        $modx->getConfig('which_editor') => ['ta']
                                                     ];
                                                     $richtexteditorOptions = [
-                                                        EvolutionCMS()->getConfig('which_editor') => [
+                                                        $modx->getConfig('which_editor') => [
                                                             'ta' => ''
                                                         ]
                                                     ];
                                                 } else {
-                                                    echo "\t" . '<div><textarea class="phptextarea" id="ta" name="ta" rows="20" wrap="soft" onchange="documentDirty=true;">', EvolutionCMS()->getPhpCompat()->htmlspecialchars(get_by_key($content, 'content', '')), '</textarea></div>' . "\n";
+                                                    echo "\t" . '<div><textarea class="phptextarea" id="ta" name="ta" rows="20" wrap="soft" onchange="documentDirty=true;">', $modx->getPhpCompat()->htmlspecialchars(get_by_key($content, 'content', '')), '</textarea></div>' . "\n";
                                                 }
                                                 ?>
                                             </div>
@@ -886,7 +886,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
                             <?php
 
-                            if (($content['type'] == 'document' || EvolutionCMS()->getManagerApi()->action == '4') || ($content['type'] == 'reference' || EvolutionCMS()->getManagerApi()->action == 72)) {
+                            if (($content['type'] == 'document' || $modx->getManagerApi()->action == '4') || ($content['type'] == 'reference' || $modx->getManagerApi()->action == 72)) {
                                 $template = getDefaultTemplate();
                                 if (isset ($_REQUEST['newtemplate'])) {
                                     $template = $_REQUEST['newtemplate'];
@@ -1012,10 +1012,10 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         // Go through and display all Template Variables
                                         if ($row['type'] == 'richtext' || $row['type'] == 'htmlarea') {
                                             // determine TV-options
-                                            $tvOptions = EvolutionCMS()->parseProperties($row['elements']);
+                                            $tvOptions = $modx->parseProperties($row['elements']);
                                             if (!empty($tvOptions)) {
                                                 // Allow different Editor with TV-option {"editor":"CKEditor4"} or &editor=Editor;text;CKEditor4
-                                                $editor = isset($tvOptions['editor']) ? $tvOptions['editor'] : EvolutionCMS()->getConfig('which_editor');
+                                                $editor = isset($tvOptions['editor']) ? $tvOptions['editor'] : $modx->getConfig('which_editor');
                                             };
                                             // Add richtext editor to the list
                                             $richtexteditorIds[$editor][] = "tv" . $row['id'];
@@ -1048,7 +1048,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
                                         $tvDescription = (!empty($row['description'])) ? '<br /><span class="comment">' . $row['description'] . '</span>' : '';
                                         $tvInherited = (substr($tvPBV, 0, 8) == '@INHERIT') ? '<br /><span class="comment inherited">(' . $_lang['tmplvars_inherited'] . ')</span>' : '';
-                                        $tvName = EvolutionCMS()->hasPermission('edit_template') ? '<br/><small class="protectedNode">[*' . $row['name'] . '*]</small>' : '';
+                                        $tvName = $modx->hasPermission('edit_template') ? '<br/><small class="protectedNode">[*' . $row['name'] . '*]</small>' : '';
 
                                         $templateVariablesTmp .= '
                                         <tr>
@@ -1095,7 +1095,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                         <div class="tab-header" id="tv_header">' . $_lang['settings_templvars'] . '</div>
                         <div class="tab-pane" id="paneTemplateVariables">
                             <script type="text/javascript">
-                                tpTemplateVariables = new WebFXTabPane(document.getElementById(\'paneTemplateVariables\'), ' . (EvolutionCMS()->getConfig('remember_last_tab') ? 'true' : 'false') . ');
+                                tpTemplateVariables = new WebFXTabPane(document.getElementById(\'paneTemplateVariables\'), ' . ($modx->getConfig('remember_last_tab') ? 'true' : 'false') . ');
                             </script>';
                                     } else if ($group_tvs == 3) {
                                         $templateVariables .= '
@@ -1109,7 +1109,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                         <script type="text/javascript">tpSettings.addTabPage(document.getElementById(\'templateVariables\'));</script>
                         <div class="tab-pane" id="paneTemplateVariables">
                             <script type="text/javascript">
-                                tpTemplateVariables = new WebFXTabPane(document.getElementById(\'paneTemplateVariables\'), ' . (EvolutionCMS()->getConfig('remember_last_tab') ? 'true' : 'false') . ');
+                                tpTemplateVariables = new WebFXTabPane(document.getElementById(\'paneTemplateVariables\'), ' . ($modx->getConfig('remember_last_tab') ? 'true' : 'false') . ');
                             </script>';
                                     }
                                     if ($templateVariablesOutput) {
@@ -1151,15 +1151,15 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                             <script type="text/javascript">tpSettings.addTabPage(document.getElementById("tabSettings"));</script>
 
                             <table>
-                                <?php $mx_can_pub = EvolutionCMS()->hasPermission('publish_document') ? '' : 'disabled="disabled" ' ?>
+                                <?php $mx_can_pub = $modx->hasPermission('publish_document') ? '' : 'disabled="disabled" ' ?>
                                 <tr>
                                     <td>
                                         <span class="warning"><?=ManagerTheme::getLexicon('resource_opt_published');?></span>
                                         <i class="<?= $_style["icon_question_circle"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('resource_opt_published_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input <?= $mx_can_pub ?>name="publishedcheck" type="checkbox" class="checkbox" <?= (isset($content['published']) && $content['published'] == 1) || (!isset($content['published']) && EvolutionCMS()->getConfig('publish_default')) ? "checked" : '' ?> onclick="changestate(document.mutate.published);" />
-                                        <input type="hidden" name="published" value="<?= (isset($content['published']) && $content['published'] == 1) || (!isset($content['published']) && EvolutionCMS()->getConfig('publish_default')) ? 1 : 0 ?>" />
+                                        <input <?= $mx_can_pub ?>name="publishedcheck" type="checkbox" class="checkbox" <?= (isset($content['published']) && $content['published'] == 1) || (!isset($content['published']) && $modx->getConfig('publish_default')) ? "checked" : '' ?> onclick="changestate(document.mutate.published);" />
+                                        <input type="hidden" name="published" value="<?= (isset($content['published']) && $content['published'] == 1) || (!isset($content['published']) && $modx->getConfig('publish_default')) ? 1 : 0 ?>" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -1168,7 +1168,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icon_question_circle"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('page_data_publishdate_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input type="text" id="pub_date" <?= $mx_can_pub ?>name="pub_date" class="DatePicker" value="<?= ((int)get_by_key($content, 'pub_date', 0, 'is_scalar') === 0 || !isset($content['pub_date']) ? '' : EvolutionCMS()->toDateFormat($content['pub_date'])) ?>" onblur="documentDirty=true;" />
+                                        <input type="text" id="pub_date" <?= $mx_can_pub ?>name="pub_date" class="DatePicker" value="<?= ((int)get_by_key($content, 'pub_date', 0, 'is_scalar') === 0 || !isset($content['pub_date']) ? '' : $modx->toDateFormat($content['pub_date'])) ?>" onblur="documentDirty=true;" />
                                         <a href="javascript:" onclick="document.mutate.pub_date.value=''; return true;" onmouseover="window.status='<?=ManagerTheme::getLexicon('remove_date');?>'; return true;" onmouseout="window.status=''; return true;">
                                             <i class="<?= $_style["icon_calendar_close"] ?>" title="<?=ManagerTheme::getLexicon('remove_date');?>"></i></a>
                                     </td>
@@ -1176,7 +1176,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 <tr>
                                     <td></td>
                                     <td>
-                                        <em> <?= EvolutionCMS()->getConfig('datetime_format') ?> HH:MM:SS</em></td>
+                                        <em> <?= $modx->getConfig('datetime_format') ?> HH:MM:SS</em></td>
                                 </tr>
                                 <tr>
                                     <td>
@@ -1184,7 +1184,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icon_question_circle"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('page_data_unpublishdate_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input type="text" id="unpub_date" <?= $mx_can_pub ?>name="unpub_date" class="DatePicker" value="<?= ((int)get_by_key($content, 'unpub_date', 0, 'is_scalar') === 0 || !isset($content['unpub_date']) ? '' : EvolutionCMS()->toDateFormat($content['unpub_date'])) ?>" onblur="documentDirty=true;" />
+                                        <input type="text" id="unpub_date" <?= $mx_can_pub ?>name="unpub_date" class="DatePicker" value="<?= ((int)get_by_key($content, 'unpub_date', 0, 'is_scalar') === 0 || !isset($content['unpub_date']) ? '' : $modx->toDateFormat($content['unpub_date'])) ?>" onblur="documentDirty=true;" />
                                         <a href="javascript:" onclick="document.mutate.unpub_date.value=''; return true;" onmouseover="window.status='<?=ManagerTheme::getLexicon('remove_date');?>'; return true;" onmouseout="window.status=''; return true;">
                                             <i class="<?= $_style["icon_calendar_close"] ?>" title="<?=ManagerTheme::getLexicon('remove_date');?>"></i></a>
                                     </td>
@@ -1192,7 +1192,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 <tr>
                                     <td></td>
                                     <td>
-                                        <em> <?= EvolutionCMS()->getConfig('datetime_format') ?> HH:MM:SS</em>
+                                        <em> <?= $modx->getConfig('datetime_format') ?> HH:MM:SS</em>
                                     </td>
                                 </tr>
                                 <tr>
@@ -1203,7 +1203,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
                                 <?php
 
-                                if($_SESSION['mgrRole'] == 1 || EvolutionCMS()->getManagerApi()->action != '27' || $_SESSION['mgrInternalKey'] == $content['createdby'] || EvolutionCMS()->hasPermission('change_resourcetype')) {
+                                if($_SESSION['mgrRole'] == 1 || $modx->getManagerApi()->action != '27' || $_SESSION['mgrInternalKey'] == $content['createdby'] || $modx->hasPermission('change_resourcetype')) {
                                     ?>
                                     <tr>
                                         <td>
@@ -1212,8 +1212,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         </td>
                                         <td>
                                             <select name="type" class="inputBox" onchange="documentDirty=true;">
-                                                <option value="document"<?= ($content['type'] === 'document' || EvolutionCMS()->getManagerApi()->action == '85' || EvolutionCMS()->getManagerApi()->action == '4') ? ' selected="selected"' : '' ?> ><?=ManagerTheme::getLexicon('resource_type_webpage');?></option>
-                                                <option value="reference"<?= ($content['type'] === 'reference' || EvolutionCMS()->getManagerApi()->action == '72') ? ' selected="selected"' : '' ?> ><?=ManagerTheme::getLexicon('resource_type_weblink');?></option>
+                                                <option value="document"<?= ($content['type'] === 'document' || $modx->getManagerApi()->action == '85' || $modx->getManagerApi()->action == '4') ? ' selected="selected"' : '' ?> ><?=ManagerTheme::getLexicon('resource_type_webpage');?></option>
+                                                <option value="reference"<?= ($content['type'] === 'reference' || $modx->getManagerApi()->action == '72') ? ' selected="selected"' : '' ?> ><?=ManagerTheme::getLexicon('resource_type_weblink');?></option>
                                             </select>
                                         </td>
                                     </tr>
@@ -1226,6 +1226,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <td>
                                             <select name="contentType" class="inputBox" onchange="documentDirty=true;">
                                                 <?php
+                                                if(empty($content['contentType'])) {
+                                                    $content['contentType'] = 'text/html';
+                                                }
                                                 $custom_content_type = EvolutionCMS()->getConfig('custom_contenttype', 'text/html,text/plain,text/xml');
                                                 $ct = explode(",", $custom_content_type);
                                                 for($i = 0; $i < count($ct); $i++) {
@@ -1255,7 +1258,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     </tr>
                                     <?php
                                 } else {
-                                    if($content['type'] != 'reference' && EvolutionCMS()->getManagerApi()->action != '72') {
+                                    if($content['type'] != 'reference' && $modx->getManagerApi()->action != '72') {
                                         // non-admin managers creating or editing a document resource
                                         ?>
                                         <input type="hidden" name="contentType" value="<?= (isset($content['contentType']) ? $content['contentType'] : "text/html") ?>" />
@@ -1278,8 +1281,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icon_question_circle"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('resource_opt_folder_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="isfoldercheck" type="checkbox" class="checkbox" <?= ((! empty($content['isfolder']) || EvolutionCMS()->getManagerApi()->action == '85') ? "checked" : '') ?> onclick="changestate(document.mutate.isfolder);" />
-                                        <input type="hidden" name="isfolder" value="<?= ((! empty($content['isfolder']) || EvolutionCMS()->getManagerApi()->action == '85') ? 1 : 0) ?>" onchange="documentDirty=true;" />
+                                        <input name="isfoldercheck" type="checkbox" class="checkbox" <?= ((! empty($content['isfolder']) || $modx->getManagerApi()->action == '85') ? "checked" : '') ?> onclick="changestate(document.mutate.isfolder);" />
+                                        <input type="hidden" name="isfolder" value="<?= ((! empty($content['isfolder']) || $modx->getManagerApi()->action == '85') ? 1 : 0) ?>" onchange="documentDirty=true;" />
                                     </td>
                                 </tr>
 
@@ -1299,8 +1302,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icon_question_circle"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('resource_opt_richtext_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="richtextcheck" type="checkbox" class="checkbox" <?= (empty($content['richtext']) && EvolutionCMS()->getManagerApi()->action == '27' ? '' : "checked") ?> onclick="changestate(document.mutate.richtext);" />
-                                        <input type="hidden" name="richtext" value="<?= (empty($content['richtext']) && EvolutionCMS()->getManagerApi()->action == '27' ? 0 : 1) ?>" onchange="documentDirty=true;" />
+                                        <input name="richtextcheck" type="checkbox" class="checkbox" <?= (empty($content['richtext']) && $modx->getManagerApi()->action == '27' ? '' : "checked") ?> onclick="changestate(document.mutate.richtext);" />
+                                        <input type="hidden" name="richtext" value="<?= (empty($content['richtext']) && $modx->getManagerApi()->action == '27' ? 0 : 1) ?>" onchange="documentDirty=true;" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -1318,7 +1321,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icon_question_circle"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('page_data_searchable_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="searchablecheck" type="checkbox" class="checkbox" <?= (isset($content['searchable']) && $content['searchable'] == 1) || (!isset($content['searchable']) && EvolutionCMS()->getConfig('search_default')) ? "checked" : '' ?> onclick="changestate(document.mutate.searchable);" /><input type="hidden" name="searchable" value="<?= ((isset($content['searchable']) && $content['searchable'] == 1) || (!isset($content['searchable']) && EvolutionCMS()->getConfig('search_default')) ? 1 : 0) ?>" onchange="documentDirty=true;" />
+                                        <input name="searchablecheck" type="checkbox" class="checkbox" <?= (isset($content['searchable']) && $content['searchable'] == 1) || (!isset($content['searchable']) && $modx->getConfig('search_default')) ? "checked" : '' ?> onclick="changestate(document.mutate.searchable);" /><input type="hidden" name="searchable" value="<?= ((isset($content['searchable']) && $content['searchable'] == 1) || (!isset($content['searchable']) && $modx->getConfig('search_default')) ? 1 : 0) ?>" onchange="documentDirty=true;" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -1327,8 +1330,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                         <i class="<?= $_style["icon_question_circle"] ?>" data-tooltip="<?=ManagerTheme::getLexicon('page_data_cacheable_help');?>"></i>
                                     </td>
                                     <td>
-                                        <input name="cacheablecheck" type="checkbox" class="checkbox" <?= ((isset($content['cacheable']) && $content['cacheable'] == 1) || (!isset($content['cacheable']) && EvolutionCMS()->getConfig('cache_default')) ? "checked" : '') ?> onclick="changestate(document.mutate.cacheable);" />
-                                        <input type="hidden" name="cacheable" value="<?= ((isset($content['cacheable']) && $content['cacheable'] == 1) || (!isset($content['cacheable']) && EvolutionCMS()->getConfig('cache_default')) ? 1 : 0) ?>" onchange="documentDirty=true;" />
+                                        <input name="cacheablecheck" type="checkbox" class="checkbox" <?= ((isset($content['cacheable']) && $content['cacheable'] == 1) || (!isset($content['cacheable']) && $modx->getConfig('cache_default')) ? "checked" : '') ?> onclick="changestate(document.mutate.cacheable);" />
+                                        <input type="hidden" name="cacheable" value="<?= ((isset($content['cacheable']) && $content['cacheable'] == 1) || (!isset($content['cacheable']) && $modx->getConfig('cache_default')) ? 1 : 0) ?>" onchange="documentDirty=true;" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -1355,11 +1358,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                     <?php
                     /*******************************
                      * Document Access Permissions */
-                    if(EvolutionCMS()->getConfig('use_udperms')) {
+                    if($modx->getConfig('use_udperms')) {
                         $groupsarray = array();
                         $sql = '';
 
-                        $documentId = (EvolutionCMS()->getManagerApi()->action == '27' ? $id : (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']));
+                        $documentId = ($modx->getManagerApi()->action == '27' ? $id : (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']));
                         if($documentId > 0) {
                             // Load up, the permissions from the parent (if new document) or existing document
                             $documentGroups = \EvolutionCMS\Models\DocumentGroup::where('document', $documentId)->get();
@@ -1386,8 +1389,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                             $groupsarray = array_merge($groupsarray, $_POST['docgroups']);
                         }
 
-                        $isManager = EvolutionCMS()->hasPermission('access_permissions');
-                        $isWeb = EvolutionCMS()->hasPermission('web_access_permissions');
+                        $isManager = $modx->hasPermission('access_permissions');
+                        $isWeb = $modx->hasPermission('web_access_permissions');
 
                         // Setup Basic attributes for each Input box
                         $inputAttributes = array(
@@ -1509,7 +1512,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                     <?php
 
                     // invoke OnDocFormRender event
-                    $evtOut = EvolutionCMS()->invokeEvent('OnDocFormRender', array(
+                    $evtOut = $modx->invokeEvent('OnDocFormRender', array(
                         'id' => $id,
                         'template' => (int)get_by_key($content, 'template', 0, 'is_scalar')
                     ));
@@ -1527,11 +1530,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
       storeCurTemplate();
     </script>
 <?php
-if((! empty($content['richtext']) || EvolutionCMS()->getManagerApi()->action == '4' || EvolutionCMS()->getManagerApi()->action == '72') && EvolutionCMS()->getConfig('use_editor')) {
+if((! empty($content['richtext']) || $modx->getManagerApi()->action == '4' || $modx->getManagerApi()->action == '72') && $modx->getConfig('use_editor')) {
     if(is_array($richtexteditorIds)) {
         foreach($richtexteditorIds as $editor => $elements) {
             // invoke OnRichTextEditorInit event
-            $evtOut = EvolutionCMS()->invokeEvent('OnRichTextEditorInit', array(
+            $evtOut = $modx->invokeEvent('OnRichTextEditorInit', array(
                 'editor' => $editor,
                 'elements' => $elements,
                 'options' => $richtexteditorOptions[$editor]
