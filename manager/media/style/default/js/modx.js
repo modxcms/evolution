@@ -1631,7 +1631,7 @@
                 onload: function(e) {
                     var s = this;
                     w.main = e.target.contentWindow || e.target.defaultView;
-                    this.url = w.main.location.href || w.location.hash.substring(1);
+                    this.url = /\/modules\//.test(w.main.location.href) && w.main.location.href || w.main.location.search || w.location.hash.substring(1);
                     this.olduid = this.uid;
                     this.uid = modx.urlToUid(this.url);
 
