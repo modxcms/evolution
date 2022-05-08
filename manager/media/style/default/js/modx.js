@@ -1601,7 +1601,7 @@
         onload: function(e) {
           var s = this;
           w.main = e.target.contentWindow || e.target.defaultView;
-          this.url = modx.normalizeUrl(w.main.location.href);
+          this.url = modx.normalizeUrl(w.main.location.href) || modx.normalizeUrl(w.location.href);
           this.olduid = this.uid;
           this.uid = modx.urlToUid(this.url);
           if (!!w.main.__alertQuit) {
@@ -1651,7 +1651,7 @@
                 }
               }, false);
               w.main.document.addEventListener('keyup', function a(e) {
-                if (typeof e.view.documentDirty !== 'undefined' && e.view.documentDirty && !s.tab.classList.contains('changed')) {
+                if (e.view && e.view.documentDirty && !s.tab.classList.contains('changed')) {
                   s.tab.classList.add('changed');
                   this.removeEventListener(e.type, a, false);
                 }
