@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'd5d3eea795ba8a77eb8b12ea3d7305a85e0da55e',
+        'reference' => 'a9ad4b066560e58e967ef27b7c0e83793bbb0105',
         'name' => 'evocms/core',
         'dev' => true,
     ),
@@ -169,7 +169,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'd5d3eea795ba8a77eb8b12ea3d7305a85e0da55e',
+            'reference' => 'a9ad4b066560e58e967ef27b7c0e83793bbb0105',
             'dev_requirement' => false,
         ),
         'evolution-cms/salo' => array(
@@ -626,7 +626,7 @@
             'type' => 'metapackage',
             'install_path' => NULL,
             'aliases' => array(),
-            'reference' => '2658dd564ed1a63989404083d7ccb9cb10e07701',
+            'reference' => 'c99945852fb9e9de3bc89c90f24b4c8ef47668fd',
             'dev_requirement' => true,
         ),
         'rosell-dk/exec-with-fallback' => array(
