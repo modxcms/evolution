@@ -39,13 +39,16 @@ if (!function_exists('evo_parser')) {
     function evo_parser($content)
     {
         $core = evolutionCMS();
+        $minParserPasses = $core->minParserPasses;
+        $maxParserPasses = $core->maxParserPasses;
+
         $core->minParserPasses = 2;
         $core->maxParserPasses = 10;
 
         $out = \EvolutionCMS\Parser::getInstance($core)->parseDocumentSource($content, $core);
 
-        $core->minParserPasses = -1;
-        $core->maxParserPasses = -1;
+        $core->minParserPasses = $minParserPasses;
+        $core->maxParserPasses = $maxParserPasses;
 
         return $out;
     }

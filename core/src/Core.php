@@ -87,7 +87,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public $mstart = 0;
     public $minParserPasses = 2;
     public $maxParserPasses = 10;
-    public $maxSourcePasses = 10;
     public $documentObject = [];
     public $templateObject;
     public $snippetObjects;
@@ -2631,6 +2630,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     {
         // set the number of times we are to parse the document source
         $this->minParserPasses = !$this->minParserPasses ? 2 : $this->minParserPasses;
+        $this->maxParserPasses = !$this->maxParserPasses ? 10 : $this->maxParserPasses;
+
         $passes = $this->minParserPasses;
         for ($i = 0; $i < $passes; $i++) {
             // get source length if this is the final pass
@@ -2660,7 +2661,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             if ($this->dumpSnippets == 1) {
                 $this->snippetsCode .= '</fieldset><br />';
             }
-            if ($i == ($passes - 1) && $i < ($this->maxSourcePasses - 1)) {
+            if ($i == ($passes - 1) && $i < ($this->maxParserPasses - 1)) {
                 // check if source content was changed
                 if ($st != md5($source)) {
                     $passes++;
