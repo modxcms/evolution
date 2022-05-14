@@ -126,7 +126,7 @@ class SiteModule extends Eloquent\Model
         if ($_SESSION['mgrRole'] != 1 && evolutionCMS()->getConfig('use_udperms')) {
             $builder->leftJoin('site_module_access', 'site_module_access.module', '=', 'site_modules.id')
                 ->leftJoin('member_groups', 'member_groups.user_group', '=', 'site_module_access.usergroup')
-                ->whereNull('member_groups.member')
+                ->whereNull('site_module_access.usergroup')
                 ->orWhere('member_groups.member', '=', (int)evolutionCMS()->getLoginUserID('mgr'));
         }
 

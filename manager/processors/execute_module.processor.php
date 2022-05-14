@@ -5,8 +5,8 @@ use EvolutionCMS\Models\SiteModule;
 if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if (!EvolutionCMS()->hasPermission('exec_module')) {
-    EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
+if (!$modx->hasPermission('exec_module')) {
+    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 if (isset($_GET['id'])) {
     if (is_numeric($_GET['id'])) {
@@ -15,7 +15,7 @@ if (isset($_GET['id'])) {
         $id = $_GET['id'];
     }
 } else {
-    EvolutionCMS()->webAlertAndQuit($_lang["error_no_id"]);
+    $modx->webAlertAndQuit($_lang["error_no_id"]);
 }
 // check if user has access permission, except admins
 if ($_SESSION['mgrRole'] != 1 && is_numeric($id)) {
@@ -25,21 +25,21 @@ if ($_SESSION['mgrRole'] != 1 && is_numeric($id)) {
         ->first();
 
     if (empty($moduleAccess)) {
-        EvolutionCMS()->webAlertAndQuit("You do not sufficient privileges to execute this module.", "index.php?a=106");
+        $modx->webAlertAndQuit("You do not sufficient privileges to execute this module.", "index.php?a=106");
     }
 }
 if (is_numeric($id)) {
     // get module data
-    $content = SiteModule::find($id);
+    $content = \EvolutionCMS\Models\SiteModule::find($id);
     if (is_null($content)) {
-        EvolutionCMS()->webAlertAndQuit("No record found for id {$id}.", "index.php?a=106");
+        $modx->webAlertAndQuit("No record found for id {$id}.", "index.php?a=106");
     }
     $content = $content->toArray();
     if ($content['disabled']) {
-        EvolutionCMS()->webAlertAndQuit("This module is disabled and cannot be executed.", "index.php?a=106");
+        $modx->webAlertAndQuit("This module is disabled and cannot be executed.", "index.php?a=106");
     }
 } else {
-    $content = EvolutionCMS()->modulesFromFile[$id];
+    $content = $modx->modulesFromFile[$id];
     $content['modulecode'] = file_get_contents($content['file']);
     $content["guid"] = '';
 }
@@ -47,7 +47,7 @@ if (is_numeric($id)) {
 $_SESSION['itemname'] = $content['name'];
 
 // load module configuration
-$parameter = EvolutionCMS()->parseProperties($content["properties"], $content["guid"], 'module');
+$parameter = $modx->parseProperties($content["properties"], $content["guid"], 'module');
 
 // Set the item name for logger
 $_SESSION['itemname'] = $content['name'];
