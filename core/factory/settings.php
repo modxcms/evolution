@@ -1,6 +1,6 @@
 <?php
 return [
-    'site_name' => 'My MODX Site',
+    'site_name' => 'My Evolution CMS Site',
     'site_start' => 1,
     'error_page' => 1,
     'unauthorized_page' => 1,
