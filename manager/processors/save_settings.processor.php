@@ -5,7 +5,8 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 if(!$modx->hasPermission('settings')) {
 	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
-$data = $_POST;
+$defaultSettings = config('cms.settings', []);
+$data = $_POST + $defaultSettings;
 
 // lose the POST now, gets rid of quirky issue with Safari 3 - see FS#972
 unset($_POST);
@@ -67,6 +68,10 @@ if (isset($data) && count($data) > 0) {
 	$data['sys_files_checksum'] = $modx->getManagerApi()->getSystemChecksum($data['check_files_onlogin']);
 	$data['mail_check_timeperiod'] = (int)$data['mail_check_timeperiod'] < 60 ? 60 : $data['mail_check_timeperiod']; // updateMail() in mainMenu no faster than every minute
 	foreach ($data as $k => $v) {
+        if (isset($defaultSettings[$k])) {
+            continue;
+        }
+
 		switch ($k) {
             case 'settings_version':{
                 if($modx->getVersionData('version')!=$data['settings_version']){
