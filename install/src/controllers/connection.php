@@ -26,9 +26,14 @@ if ($installMode === 0) {
         // We need to have all connection settings - but prefix may be empty so we have to ignore it
         if (isset($db_config['database'])) {
             $database_name = trim($db_config['database'], '`');
-            if (!$conn = mysqli_connect($db_config['host'], $db_config['username'], $db_config['password'],'', isset($db_config['port']) ? $db_config['port'] : null)) {
-                $upgradeable = (isset($_POST['installmode']) && $_POST['installmode'] === 'new') ? 0 : 2;
-            } elseif (! mysqli_select_db($conn, $database_name)) {
+            try {
+                $conn = mysqli_connect($db_config['host'], $db_config['username'], $db_config['password'],'', isset($db_config['port']) ? $db_config['port'] : null);
+                $result = mysqli_select_db($conn, $database_name);
+            } catch (Exception $e) {
+                $conn = false;
+                $result = false;
+            }
+            if (!$conn || !$result) {
                 $upgradeable = (isset($_POST['installmode']) && $_POST['installmode'] === 'new') ? 0 : 2;
             } else {
                 $upgradeable = 1;

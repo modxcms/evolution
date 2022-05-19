@@ -1,7 +1,6 @@
 <?php
 
 use EvolutionCMS\Facades\Console;
-use Illuminate\Database\Seeder;
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -277,7 +276,7 @@ try {
     $errorData = false;
     // Install Templates
     if ($installLevel === 5 && (isset ($_POST['template']) || $installData)) {
-        $selTemplates = $_POST['template'];
+        $selTemplates = $_POST['template'] ?? [];
         foreach ($moduleTemplates as $k => $moduleTemplate) {
             if (!is_array($moduleTemplate)) {
                 continue;
@@ -349,7 +348,7 @@ try {
 
     // Install Template Variables
     if ($installLevel === 5 && $errorData === false && (isset ($_POST['tv']) || $installData)) {
-        $selTVs = $_POST['tv'];
+        $selTVs = $_POST['tv'] ?? [];
         foreach ($moduleTVs as $k => $moduleTV) {
             $templateVariablesData = array(
                 'name' => $moduleTV[0],
@@ -399,7 +398,7 @@ try {
 
     // Install Chunks
     if ($installLevel === 5 && $errorData === false && (isset ($_POST['chunk']) || $installData)) {
-        $selChunks = $_POST['chunk'];
+        $selChunks = $_POST['chunk'] ?? [];
         foreach ($moduleChunks as $k => $moduleChunk) {
             if (!is_array($moduleChunk)) {
                 continue;
@@ -473,7 +472,7 @@ try {
 
     // Install Modules
     if ($installLevel === 5 && $errorData === false && (isset ($_POST['module']) || $installData)) {
-        $selModules = $_POST['module'];
+        $selModules = $_POST['module'] ?? [];
         foreach ($moduleModules as $k => $moduleModule) {
             if (!is_array($moduleModule)) {
                 continue;
@@ -540,7 +539,7 @@ try {
     }
     // Install Plugins
     if ($installLevel === 5 && $errorData === false && (isset ($_POST['plugin']) || $installData)) {
-        $selPlugs = $_POST['plugin'];
+        $selPlugs = $_POST['plugin'] ?? [];
         foreach ($modulePlugins as $k => $modulePlugin) {
             if (!is_array($modulePlugin)) {
                 continue;
@@ -689,7 +688,7 @@ try {
 
     // Install Snippets
     if ($installLevel === 5 && $errorData === false && (isset ($_POST['snippet']) || $installData)) {
-        $selSnips = $_POST['snippet'];
+        $selSnips = $_POST['snippet'] ?? [];
         foreach ($moduleSnippets as $k => $moduleSnippet) {
             if (!is_array($moduleSnippet)) {
                 continue;
