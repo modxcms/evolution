@@ -46,7 +46,7 @@ switch (true) {
 }
 
 if ($emptyCache) {
-    $modx->clearCache('full');
+    EvolutionCMS()->clearCache('full');
 }
 
 echo $str;

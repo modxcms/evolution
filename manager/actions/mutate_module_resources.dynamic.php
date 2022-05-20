@@ -3,19 +3,19 @@ if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
-if (!$modx->hasPermission('edit_module')) {
-    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if (!EvolutionCMS()->hasPermission('edit_module')) {
+    EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 // initialize page view state - the $_PAGE object
-$modx->getManagerApi()->initPageViewState();
+EvolutionCMS()->getManagerApi()->initPageViewState();
 
 // check to see the  editor isn't locked
-$userActivity = \EvolutionCMS\Models\ActiveUser::query()->where('action', 108)->where('internalKey', '!=', $modx->getLoginUserID('mgr'))->first();
+$userActivity = \EvolutionCMS\Models\ActiveUser::query()->where('action', 108)->where('internalKey', '!=', EvolutionCMS()->getLoginUserID('mgr'))->first();
 if (!is_null($userActivity)) {
-    $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $userActivity->username, 'module'));
+    EvolutionCMS()->webAlertAndQuit(sprintf($_lang['lock_msg'], $userActivity->username, 'module'));
 }
 // end check for lock
 
@@ -84,7 +84,7 @@ switch ($_REQUEST['op']) {
                 \EvolutionCMS\Models\SitePlugin::query()->whereIn('id', $plids)->where('moduleguid', $snids)->update(array('moduleguid' => ''));
             }
             // reset cache
-            $modx->clearCache('full');
+            EvolutionCMS()->clearCache('full');
         }
         \EvolutionCMS\Models\SiteModuleDepobj::query()->whereIn('id', $opids)->delete();
         break;
@@ -93,12 +93,12 @@ switch ($_REQUEST['op']) {
 // load record
 $content = \EvolutionCMS\Models\SiteModule::find($id);
 if (is_null($content)) {
-    $modx->webAlertAndQuit("Module not found for id '{$id}'.");
+    EvolutionCMS()->webAlertAndQuit("Module not found for id '{$id}'.");
 }
 $content = $content->toArray();
 $_SESSION['itemname'] = $content['name'];
 if ($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
-    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+    EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 ?>

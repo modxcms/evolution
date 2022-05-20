@@ -2,13 +2,13 @@
 if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if (!$modx->hasPermission('delete_document')) {
-    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if (!EvolutionCMS()->hasPermission('delete_document')) {
+    EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 if ($id == 0) {
-    $modx->webAlertAndQuit($_lang["error_no_id"]);
+    EvolutionCMS()->webAlertAndQuit($_lang["error_no_id"]);
 }
 
 $document = \EvolutionCMS\Models\SiteContent::withTrashed()->findOrFail($id);
@@ -22,17 +22,17 @@ $add_path = $sd . $sb . $pg;
 
 // check permissions on the document
 $udperms = new EvolutionCMS\Legacy\Permissions();
-$udperms->user = $modx->getLoginUserID('mgr');
+$udperms->user = EvolutionCMS()->getLoginUserID('mgr');
 $udperms->document = $id;
 $udperms->role = $_SESSION['mgrRole'];
 
 if (!$udperms->checkPermissions()) {
-    $modx->webAlertAndQuit($_lang["access_permission_denied"]);
+    EvolutionCMS()->webAlertAndQuit($_lang["access_permission_denied"]);
 }
 
 // get the timestamp on which the document was deleted.
 if (!$document->deletedon) {
-    $modx->webAlertAndQuit("Couldn't find document to determine it's date of deletion!");
+    EvolutionCMS()->webAlertAndQuit("Couldn't find document to determine it's date of deletion!");
 }
 
 $children = $document->getAllChildren($document);
@@ -47,7 +47,7 @@ DB::table($site_content_table)
         'deletedby' => 0,
         'deletedon' => 0]);
 
-$modx->invokeEvent("OnDocFormUnDelete",
+EvolutionCMS()->invokeEvent("OnDocFormUnDelete",
     array(
         "id" => $id,
         "children" => $children
@@ -57,7 +57,7 @@ $modx->invokeEvent("OnDocFormUnDelete",
 $_SESSION['itemname'] = $document->pagetitle;
 
 // empty cache
-$modx->clearCache('full');
+EvolutionCMS()->clearCache('full');
 
 // finished emptying cache - redirect
 $header = "Location: index.php?a=3&id=$pid&r=1" . $add_path;

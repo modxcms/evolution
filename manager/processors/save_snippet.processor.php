@@ -2,8 +2,8 @@
 if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if (!$modx->hasPermission('save_snippet')) {
-    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if (!EvolutionCMS()->hasPermission('save_snippet')) {
+    EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = (int)$_POST['id'];
@@ -12,7 +12,7 @@ $name = trim($_POST['name']);
 $description = $_POST['description'];
 $locked = isset($_POST['locked']) && $_POST['locked'] == 'on' ? 1 : 0;
 $disabled = isset($_POST['disabled']) && $_POST['disabled'] == "on" ? '1' : '0';
-$createdon = $editedon = time() + $modx->config['server_offset_time'];
+$createdon = $editedon = time() + EvolutionCMS()->config['server_offset_time'];
 
 // strip out PHP tags from snippets
 if (strncmp($snippet, "<?", 2) == 0) {
@@ -68,22 +68,22 @@ switch ($_POST['mode']) {
     case '23': // Save new snippet
 
         // invoke OnBeforeSnipFormSave event
-        $modx->invokeEvent("OnBeforeSnipFormSave", array(
+        EvolutionCMS()->invokeEvent("OnBeforeSnipFormSave", array(
             "mode" => "new",
             "id" => $id
         ));
 
         // disallow duplicate names for new snippets
         if (EvolutionCMS\Models\SiteSnippet::where('name','=',$name)->first()) {
-            $modx->getManagerApi()->saveFormValues(23);
-            $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['snippet'], $name), "index.php?a=23");
+            EvolutionCMS()->getManagerApi()->saveFormValues(23);
+            EvolutionCMS()->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['snippet'], $name), "index.php?a=23");
         }
 
         //do stuff to save the new doc
         $newid = EvolutionCMS\Models\SiteSnippet::create(compact('name', 'description','snippet','moduleguid','locked','properties','category','disabled','createdon','editedon'))->getKey();
 
         // invoke OnSnipFormSave event
-        $modx->invokeEvent("OnSnipFormSave", array(
+        EvolutionCMS()->invokeEvent("OnSnipFormSave", array(
             "mode" => "new",
             "id" => $newid
         ));
@@ -92,7 +92,7 @@ switch ($_POST['mode']) {
         $_SESSION['itemname'] = $name;
 
         // empty cache
-        $modx->clearCache('full');
+        EvolutionCMS()->clearCache('full');
 
         // finished emptying cache - redirect
         if ($_POST['stay'] != '') {
@@ -106,15 +106,15 @@ switch ($_POST['mode']) {
         break;
     case '22': // Save existing snippet
         // invoke OnBeforeSnipFormSave event
-        $modx->invokeEvent("OnBeforeSnipFormSave", array(
+        EvolutionCMS()->invokeEvent("OnBeforeSnipFormSave", array(
             "mode" => "upd",
             "id" => $id
         ));
 
         // disallow duplicate names for snippets
         if (EvolutionCMS\Models\SiteSnippet::where('id','!=',$id)->where('name','=',$name)->first()) {
-            $modx->getManagerApi()->saveFormValues(22);
-            $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['snippet'], $name), "index.php?a=22&id={$id}");
+            EvolutionCMS()->getManagerApi()->saveFormValues(22);
+            EvolutionCMS()->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['snippet'], $name), "index.php?a=22&id={$id}");
         }
 
         //do stuff to save the edited doc
@@ -123,7 +123,7 @@ switch ($_POST['mode']) {
         $siteSnippet->update(compact('name', 'description','snippet','moduleguid','locked','properties','category','disabled','editedon'));
 
         // invoke OnSnipFormSave event
-        $modx->invokeEvent("OnSnipFormSave", array(
+        EvolutionCMS()->invokeEvent("OnSnipFormSave", array(
             "mode" => "upd",
             "id" => $id
         ));
@@ -132,7 +132,7 @@ switch ($_POST['mode']) {
         $_SESSION['itemname'] = $name;
 
         // empty cache
-        $modx->clearCache('full');
+        EvolutionCMS()->clearCache('full');
 
         // finished emptying cache - redirect
         if ($_POST['stay'] != '') {
@@ -140,11 +140,11 @@ switch ($_POST['mode']) {
             $header = "Location: index.php?a=" . $a . "&r=2&stay=" . $_POST['stay'];
             header($header);
         } else {
-            $modx->unlockElement(4, $id);
+            EvolutionCMS()->unlockElement(4, $id);
             $header = "Location: index.php?a=76&r=2";
             header($header);
         }
         break;
     default:
-        $modx->webAlertAndQuit("No operation set in request.");
+        EvolutionCMS()->webAlertAndQuit("No operation set in request.");
 }

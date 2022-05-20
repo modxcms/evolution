@@ -7,9 +7,9 @@ class DATEPICKER {
         $modx = evolutionCMS();
 
         $load_script = file_get_contents(__DIR__.'/datepicker.tpl');
-        if(!isset($modx->config['lang_code'])) $modx->config['lang_code'] = $this->getLangCode();
-		$modx->config['datetime_format_lc'] = isset($modx->config['datetime_format']) ? strtolower($modx->config['datetime_format']) : 'dd-mm-yyyy';
-        return $modx->mergeSettingsContent($load_script);
+        if(!isset(EvolutionCMS()->config['lang_code'])) EvolutionCMS()->config['lang_code'] = $this->getLangCode();
+		EvolutionCMS()->config['datetime_format_lc'] = isset(EvolutionCMS()->config['datetime_format']) ? strtolower(EvolutionCMS()->config['datetime_format']) : 'dd-mm-yyyy';
+        return EvolutionCMS()->mergeSettingsContent($load_script);
     }
 
     /**

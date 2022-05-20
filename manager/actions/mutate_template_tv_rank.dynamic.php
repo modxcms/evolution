@@ -2,8 +2,8 @@
 if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if (!$modx->hasPermission('save_template')) {
-    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if (!EvolutionCMS()->hasPermission('save_template')) {
+    EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
@@ -32,7 +32,7 @@ if (isset($_POST['listSubmitted'])) {
         }
     }
     // empty cache
-    $modx->clearCache('full');
+    EvolutionCMS()->clearCache('full');
 }
 $templateVars = \EvolutionCMS\Models\SiteTmplvarTemplate::query()
     ->select('site_tmplvars.name', 'site_tmplvars.caption', 'site_tmplvars.id', 'site_tmplvar_templates.templateid', 'site_tmplvar_templates.rank', 'site_templates.templatename')

@@ -16,10 +16,10 @@ if (count($SystemAlertMsgQueque) > 0) {
   });
 </script>
 @if(ManagerTheme::isLoadDatePicker())
-    {!! $modx->getManagerApi()->loadDatePicker($modx->getConfig('mgr_date_picker_path')) !!}
+    {!! EvolutionCMS()->getManagerApi()->loadDatePicker(EvolutionCMS()->getConfig('mgr_date_picker_path')) !!}
 @endif
 
 @include('manager::partials.debug')
-{!! $modx->getRegisteredClientScripts() !!}
+{!! EvolutionCMS()->getRegisteredClientScripts() !!}
 </body>
 </html>

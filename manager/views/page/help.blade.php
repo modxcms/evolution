@@ -7,7 +7,7 @@
     <div class="sectionBody">
         <div class="tab-pane" id="helpPane">
             <script>
-                var tp = new WebFXTabPane(document.getElementById('helpPane'), {{ (int)$modx->getConfig('remember_last_tab', 0) }});
+                var tp = new WebFXTabPane(document.getElementById('helpPane'), {{ (int)EvolutionCMS()->getConfig('remember_last_tab', 0) }});
             </script>
 
             @foreach($pages as $k => $v)

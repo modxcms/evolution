@@ -20,22 +20,22 @@
     <form name="settings" method="post" action="index.php">
         <input type="hidden" name="a" value="30">
         <!-- this field is used to check site settings have been entered/ updated after install or upgrade -->
-        <input type="hidden" name="site_id" value="{{ get_by_key($modx->config, 'site_id') }}" />
-        <input type="hidden" name="settings_version" value="{{ $modx->getVersionData('version') }}" />
+        <input type="hidden" name="site_id" value="{{ get_by_key(EvolutionCMS()->config, 'site_id') }}" />
+        <input type="hidden" name="settings_version" value="{{ EvolutionCMS()->getVersionData('version') }}" />
         <h1>
             <i class="{{ $_style['icon_sliders'] }}"></i>{{ ManagerTheme::getLexicon('settings_title') }}
         </h1>
 
         @include('manager::partials.actionButtons', $actionButtons)
 
-        @if(!get_by_key($modx->config, 'settings_version') || get_by_key($modx->config, 'settings_version') !== $modx->getVersionData('version'))
+        @if(!get_by_key(EvolutionCMS()->config, 'settings_version') || get_by_key(EvolutionCMS()->config, 'settings_version') !== EvolutionCMS()->getVersionData('version'))
             <div class="container">
                 <p class="alert alert-warning">{!! ManagerTheme::getLexicon('settings_after_install') !!}</p>
             </div>
         @endif
         <div class="tab-pane" id="settingsPane">
             <script>
-              tpSettings = new WebFXTabPane(document.getElementById('settingsPane'), {{ get_by_key($modx->config, 'remember_last_tab') ? 1 : 0 }});
+              tpSettings = new WebFXTabPane(document.getElementById('settingsPane'), {{ get_by_key(EvolutionCMS()->config, 'remember_last_tab') ? 1 : 0 }});
             </script>
             @include('manager::page.system_settings.general')
             @include('manager::page.system_settings.friendly_urls')

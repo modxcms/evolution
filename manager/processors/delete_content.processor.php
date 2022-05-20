@@ -2,13 +2,13 @@
 if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if (!$modx->hasPermission('delete_document')) {
-    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if (!EvolutionCMS()->hasPermission('delete_document')) {
+    EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if ($id == 0) {
-    $modx->webAlertAndQuit($_lang["error_no_id"]);
+    EvolutionCMS()->webAlertAndQuit($_lang["error_no_id"]);
 }
 
 /*******ищем родителя чтобы к нему вернуться********/
@@ -25,18 +25,18 @@ $add_path = $sd . $sb . $pg;
 
 // check permissions on the document
 $udperms = new EvolutionCMS\Legacy\Permissions();
-$udperms->user = $modx->getLoginUserID('mgr');
+$udperms->user = EvolutionCMS()->getLoginUserID('mgr');
 $udperms->document = $id;
 $udperms->role = $_SESSION['mgrRole'];
 
 if (!$udperms->checkPermissions()) {
-    $modx->webAlertAndQuit($_lang["access_permission_denied"]);
+    EvolutionCMS()->webAlertAndQuit($_lang["access_permission_denied"]);
 }
 
 $children = $document->getAllChildren($document);
 
 // invoke OnBeforeDocFormDelete event
-$modx->invokeEvent("OnBeforeDocFormDelete",
+EvolutionCMS()->invokeEvent("OnBeforeDocFormDelete",
     array(
         "id" => $id,
         "children" => $children
@@ -46,20 +46,20 @@ $documentDeleteIds = $children;
 array_unshift($documentDeleteIds, $id);
 
 foreach ($documentDeleteIds as $deleteId) {
-    if ($modx->getConfig('site_start') == $deleteId) {
-        $modx->webAlertAndQuit("Document is 'Site start' and cannot be deleted!");
+    if (EvolutionCMS()->getConfig('site_start') == $deleteId) {
+        EvolutionCMS()->webAlertAndQuit("Document is 'Site start' and cannot be deleted!");
     }
 
-    if ($modx->getConfig('site_unavailable_page') == $deleteId) {
-        $modx->webAlertAndQuit("Document is used as the 'Site unavailable page' and cannot be deleted!");
+    if (EvolutionCMS()->getConfig('site_unavailable_page') == $deleteId) {
+        EvolutionCMS()->webAlertAndQuit("Document is used as the 'Site unavailable page' and cannot be deleted!");
     }
 
-    if ($modx->getConfig('error_page') == $deleteId) {
-        $modx->webAlertAndQuit("Document is used as the 'Site error page' and cannot be deleted!");
+    if (EvolutionCMS()->getConfig('error_page') == $deleteId) {
+        EvolutionCMS()->webAlertAndQuit("Document is used as the 'Site error page' and cannot be deleted!");
     }
 
-    if ($modx->getConfig('unauthorized_page') == $deleteId) {
-        $modx->webAlertAndQuit("Document is used as the 'Site unauthorized page' and cannot be deleted!");
+    if (EvolutionCMS()->getConfig('unauthorized_page') == $deleteId) {
+        EvolutionCMS()->webAlertAndQuit("Document is used as the 'Site unauthorized page' and cannot be deleted!");
     }
 }
 
@@ -67,11 +67,11 @@ $site_content_table = (new \EvolutionCMS\Models\SiteContent())->getTable();
 DB::table($site_content_table)
     ->whereIn('id', $documentDeleteIds)
     ->update(['deleted' => 1,
-        'deletedby'=>$modx->getLoginUserID('mgr'),
+        'deletedby'=>EvolutionCMS()->getLoginUserID('mgr'),
         'deletedon'=>time()]);
 
 // invoke OnDocFormDelete event
-$modx->invokeEvent("OnDocFormDelete",
+EvolutionCMS()->invokeEvent("OnDocFormDelete",
     array(
         "id" => $id,
         "children" => $children
@@ -81,7 +81,7 @@ $modx->invokeEvent("OnDocFormDelete",
 $_SESSION['itemname'] = $document->pagetitle;
 
 // empty cache
-$modx->clearCache('full');
+EvolutionCMS()->clearCache('full');
 
 // finished emptying cache - redirect
 $header = "Location: index.php?a=3&id=$pid&r=1" . $add_path;

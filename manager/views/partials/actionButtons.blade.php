@@ -1,7 +1,7 @@
 <?php
 // actions buttons templates
 $action = isset($_REQUEST['a']) ? $_REQUEST['a'] : '';
-if ($modx->getConfig('global_tabs') && !isset($_SESSION['stay'])) {
+if (EvolutionCMS()->getConfig('global_tabs') && !isset($_SESSION['stay'])) {
     $_REQUEST['stay'] = 2;
 }
 if (isset($_REQUEST['stay'])) {
