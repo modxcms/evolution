@@ -15,7 +15,7 @@ if (!function_exists('getDefaultTemplate')) {
                 if (!isset($_GET['pid']) || empty($_GET['pid'])) {
                     if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
                         $site_start = $modx->getConfig('site_start');
-                        $where = ['isfolder' => 0, 'id' => $site_start];//"sc.isfolder=0 AND sc.id!='{$site_start}'";
+                        $where = ['isfolder' => 0, 'site_content.id' => $site_start];//"sc.isfolder=0 AND sc.id!='{$site_start}'";
 
                         $sibl = $modx->getDocumentChildren($_REQUEST['id'], 1, 0, 'template,menuindex', $where, 'menuindex', 'ASC', 1);
                         if (isset($sibl[0]['template']) && $sibl[0]['template'] !== '') {
