@@ -325,7 +325,7 @@ class uploader
 
             $property = \EvolutionCMS\Models\SitePlugin::query()->where('name', 'TransAlias')->where('disabled', 0)->first();
             if (!is_null($property)) {
-                $properties = $modx->parseProperties($property->properties, 'TransAlias', 'plugin');
+                $properties = EvolutionCMS()->parseProperties($property->properties, 'TransAlias', 'plugin');
             } else {
                 $properties = NULL;
             }

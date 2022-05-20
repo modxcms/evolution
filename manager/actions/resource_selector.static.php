@@ -2,8 +2,8 @@
 if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if (!$modx->hasPermission('edit_module')) {
-    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if (!EvolutionCMS()->hasPermission('edit_module')) {
+    EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $mxla = ManagerTheme::getLang();
@@ -165,7 +165,7 @@ include_once MODX_MANAGER_PATH . "includes/header.inc.php";
 
 <form name="selector" method="get">
     <input type="hidden" name="id" value="<?= $id ?>" />
-    <input type="hidden" name="a" value="<?= $modx->getManagerApi()->action ?>" />
+    <input type="hidden" name="a" value="<?= EvolutionCMS()->getManagerApi()->action ?>" />
     <input type="hidden" name="listmode" value="<?= $_REQUEST['listmode'] ?>" />
     <input type="hidden" name="op" value="" />
     <input type="hidden" name="rt" value="<?= $rt ?>" />

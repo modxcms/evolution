@@ -28,7 +28,7 @@
         <div class="alert alert-info">{{ ManagerTheme::getLexicon('access_permissions_introtext') }}</div>
     </div>
 
-    @if($modx->getConfig('use_udperms') !== true)
+    @if(EvolutionCMS()->getConfig('use_udperms') !== true)
         <div class="container">
             <div class="alert alert-danger">{{ ManagerTheme::getLexicon('access_permissions_off') }}</div>
         </div>

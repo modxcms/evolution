@@ -2,14 +2,14 @@
 if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if (!$modx->hasPermission('file_manager')) {
-    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if (!EvolutionCMS()->hasPermission('file_manager')) {
+    EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 $token_check = checkToken();
 $newToken = makeToken();
 
 // settings
-$theme_image_path = MODX_MANAGER_URL . 'media/style/' . $modx->getConfig('manager_theme') . '/images/';
+$theme_image_path = MODX_MANAGER_URL . 'media/style/' . EvolutionCMS()->getConfig('manager_theme') . '/images/';
 $excludes = array(
     '.',
     '..',
@@ -35,26 +35,26 @@ $protected_path[] = MODX_MANAGER_PATH;
 $protected_path[] = MODX_BASE_PATH . 'temp/backup';
 $protected_path[] = MODX_BASE_PATH . 'assets/backup';
 
-if (!$modx->hasPermission('save_plugin')) {
+if (!EvolutionCMS()->hasPermission('save_plugin')) {
     $protected_path[] = MODX_BASE_PATH . 'assets/plugins';
 }
-if (!$modx->hasPermission('save_snippet')) {
+if (!EvolutionCMS()->hasPermission('save_snippet')) {
     $protected_path[] = MODX_BASE_PATH . 'assets/snippets';
 }
-if (!$modx->hasPermission('save_template')) {
+if (!EvolutionCMS()->hasPermission('save_template')) {
     $protected_path[] = MODX_BASE_PATH . 'assets/templates';
 }
-if (!$modx->hasPermission('save_module')) {
+if (!EvolutionCMS()->hasPermission('save_module')) {
     $protected_path[] = MODX_BASE_PATH . 'assets/modules';
 }
-if (!$modx->hasPermission('empty_cache')) {
+if (!EvolutionCMS()->hasPermission('empty_cache')) {
     $protected_path[] = MODX_BASE_PATH . 'assets/cache';
 }
-if (!$modx->hasPermission('import_static')) {
+if (!EvolutionCMS()->hasPermission('import_static')) {
     $protected_path[] = MODX_BASE_PATH . 'temp/import';
     $protected_path[] = MODX_BASE_PATH . 'assets/import';
 }
-if (!$modx->hasPermission('export_static')) {
+if (!EvolutionCMS()->hasPermission('export_static')) {
     $protected_path[] = MODX_BASE_PATH . 'temp/export';
     $protected_path[] = MODX_BASE_PATH . 'assets/export';
 }
@@ -89,7 +89,7 @@ if (isset($_REQUEST['path']) && !empty($_REQUEST['path'])) {
 $startpath = rtrim($startpath, '/');
 
 if (!is_readable($startpath)) {
-    $modx->webAlertAndQuit($_lang["not_readable_dir"]);
+    EvolutionCMS()->webAlertAndQuit($_lang["not_readable_dir"]);
 }
 
 // Raymond: get web start path for showing pictures
@@ -253,7 +253,7 @@ if (substr($webstart_path, 0, 1) == '/') {
             }
 
             if (in_array($startpath, $protected_path)) {
-                $modx->webAlertAndQuit($_lang["files.dynamic.php2"]);
+                EvolutionCMS()->webAlertAndQuit($_lang["files.dynamic.php2"]);
             }
 
             $tpl = '<i class="[+image+] FilesTopFolder"></i>[+subject+]';
@@ -301,7 +301,7 @@ if (substr($webstart_path, 0, 1) == '/') {
         <?php
         // check to see user isn't trying to move below the document_root
         if (substr(strtolower(str_replace('//', '/', $startpath . "/")), 0, $len) != strtolower(str_replace('//', '/', $filemanager_path . '/'))) {
-            $modx->webAlertAndQuit($_lang["files_access_denied"]);
+            EvolutionCMS()->webAlertAndQuit($_lang["files_access_denied"]);
         }
 
         // Unzip .zip files - by Raymond
@@ -499,7 +499,7 @@ if (get_by_key($_REQUEST, 'mode') == "edit" || get_by_key($_REQUEST, 'mode') == 
         // Log the change
         logFileChange('view', $filename);
         if ($buffer === false) {
-            $modx->webAlertAndQuit("Error opening file for reading.");
+            EvolutionCMS()->webAlertAndQuit("Error opening file for reading.");
         }
         ?>
         <form action="index.php" method="post" name="editFile">
@@ -533,7 +533,7 @@ if (get_by_key($_REQUEST, 'mode') == "edit" || get_by_key($_REQUEST, 'mode') == 
         default:
             $contentType = 'htmlmixed';
     };
-    $evtOut = $modx->invokeEvent('OnRichTextEditorInit', array(
+    $evtOut = EvolutionCMS()->invokeEvent('OnRichTextEditorInit', array(
         'editor' => 'Codemirror',
         'elements' => array(
             'content',

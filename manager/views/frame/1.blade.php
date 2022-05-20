@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html dir="{{ ManagerTheme::getTextDir() }}" lang="{{ ManagerTheme::getLang() }}" xml:lang="{{ ManagerTheme::getLang() }}">
 <head>
-    <title>{{ $modx->getConfig('site_name') }} - (Evolution CMS Manager)</title>
+    <title>{{ EvolutionCMS()->getConfig('site_name') }} - (Evolution CMS Manager)</title>
     <meta http-equiv="Content-Type" content="text/html; charset={{ ManagerTheme::getCharset() }}" />
     <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
     <meta name="theme-color" content="#1d2023" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link rel="stylesheet" type="text/css" href="{{ $css }}" />
-    @if($modx->getConfig('show_picker'))
+    @if(EvolutionCMS()->getConfig('show_picker'))
         <link rel="stylesheet" href="media/style/common/spectrum/spectrum.css" />
         <link rel="stylesheet" type="text/css" href="{{ ManagerTheme::getThemeUrl() }}css/color.switcher.css" />
     @endif
@@ -32,22 +32,22 @@
             user: {
                 role: {{ (int)$user['role'] }},
                 username: '{{ $user['username'] }}',
-                groups: {!! json_encode($modx->getUserDocGroups()) !!}
+                groups: {!! json_encode(EvolutionCMS()->getUserDocGroups()) !!}
             },
             config: {
-                mail_check_timeperiod: {{ $modx->getConfig('mail_check_timeperiod') }},
-                menu_height: {{ (int)$modx->getConfig('manager_menu_height') }},
+                mail_check_timeperiod: {{ EvolutionCMS()->getConfig('mail_check_timeperiod') }},
+                menu_height: {{ (int)EvolutionCMS()->getConfig('manager_menu_height') }},
                 tree_width: {{ (int)$MODX_widthSideBar }},
                 tree_min_width: {{ (int)$tree_min_width }},
-                session_timeout: {{ (int)$modx->getConfig('session_timeout') }},
-                site_start: {{ (int)$modx->getConfig('site_start') }},
-                tree_page_click: {{ $modx->getConfig('tree_page_click') }},
+                session_timeout: {{ (int)EvolutionCMS()->getConfig('session_timeout') }},
+                site_start: {{ (int)EvolutionCMS()->getConfig('site_start') }},
+                tree_page_click: {{ EvolutionCMS()->getConfig('tree_page_click') }},
                 theme: '{{ ManagerTheme::getTheme() }}',
                 theme_mode: '{{ ManagerTheme::getThemeStyle() }}',
                 which_browser: '{{ $user['which_browser'] }}',
-                layout: {{ (int)$modx->getConfig('manager_layout') }},
+                layout: {{ (int)EvolutionCMS()->getConfig('manager_layout') }},
                 textdir: '{{ ManagerTheme::getTextDir() }}',
-                global_tabs: {{ (int)$modx->getConfig('global_tabs') }}
+                global_tabs: {{ (int)EvolutionCMS()->getConfig('global_tabs') }}
 
             },
             lang: {
@@ -111,20 +111,20 @@
                 tree_preview_resource:    '<?= addslashes('<i class="' . $_style['icon_eye'] . '"></i>') ?>'
             },
             permission: {
-                assets_images: <?= $modx->hasPermission('assets_images') ? 1 : 0 ?>,
-                delete_document: <?= $modx->hasPermission('delete_document') ? 1 : 0 ?>,
-                edit_chunk: <?= $modx->hasPermission('edit_chunk') ? 1 : 0 ?>,
-                edit_plugin: <?= $modx->hasPermission('edit_plugin') ? 1 : 0 ?>,
-                edit_snippet: <?= $modx->hasPermission('edit_snippet') ? 1 : 0 ?>,
-                edit_template: <?= $modx->hasPermission('edit_template') ? 1 : 0 ?>,
-                new_document: <?= $modx->hasPermission('new_document') ? 1 : 0 ?>,
-                publish_document: <?= $modx->hasPermission('publish_document') ? 1 : 0 ?>,
-                dragndropdocintree: <?= ($modx->hasPermission('new_document') && $modx->hasPermission('edit_document') && $modx->hasPermission('save_document') ? 1 : 0) ?>
+                assets_images: <?= EvolutionCMS()->hasPermission('assets_images') ? 1 : 0 ?>,
+                delete_document: <?= EvolutionCMS()->hasPermission('delete_document') ? 1 : 0 ?>,
+                edit_chunk: <?= EvolutionCMS()->hasPermission('edit_chunk') ? 1 : 0 ?>,
+                edit_plugin: <?= EvolutionCMS()->hasPermission('edit_plugin') ? 1 : 0 ?>,
+                edit_snippet: <?= EvolutionCMS()->hasPermission('edit_snippet') ? 1 : 0 ?>,
+                edit_template: <?= EvolutionCMS()->hasPermission('edit_template') ? 1 : 0 ?>,
+                new_document: <?= EvolutionCMS()->hasPermission('new_document') ? 1 : 0 ?>,
+                publish_document: <?= EvolutionCMS()->hasPermission('publish_document') ? 1 : 0 ?>,
+                dragndropdocintree: <?= (EvolutionCMS()->hasPermission('new_document') && EvolutionCMS()->hasPermission('edit_document') && EvolutionCMS()->hasPermission('save_document') ? 1 : 0) ?>
 
             },
             plugins: {
-                ElementsInTree: <?= isset($modx->pluginCache['ElementsInTree']) ? 1 : 0 ?>,
-                EVOmodal: <?= isset($modx->pluginCache['EVO.modal']) ? 1 : 0 ?>
+                ElementsInTree: <?= isset(EvolutionCMS()->pluginCache['ElementsInTree']) ? 1 : 0 ?>,
+                EVOmodal: <?= isset(EvolutionCMS()->pluginCache['EVO.modal']) ? 1 : 0 ?>
 
             },
             extend: function() {
@@ -160,14 +160,14 @@
         ?>
     </script>
     <script src="{{ ManagerTheme::getThemeUrl() }}js/modx.min.js?v={{ ManagerTheme::getCore()->getVersionData('version') }}"></script>
-    @if($modx->getConfig('show_picker'))
+    @if(EvolutionCMS()->getConfig('show_picker'))
     <script src="media/script/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="media/script/spectrum/spectrum.evo.min.js" type="text/javascript"></script>
     <script src="{{ ManagerTheme::getThemeUrl() }}js/color.switcher.js" type="text/javascript"></script>
     @endif
     <?php
     // invoke OnManagerTopPrerender event
-    $evtOut = $modx->invokeEvent('OnManagerTopPrerender', $_REQUEST);
+    $evtOut = EvolutionCMS()->invokeEvent('OnManagerTopPrerender', $_REQUEST);
     if (is_array($evtOut)) {
         echo implode("\n", $evtOut);
     }
@@ -194,11 +194,11 @@
                                 <div class="mask"></div>
                             </form>
                         </li>
-                        @if($modx->getConfig('show_newresource_btn') && $modx->hasPermission('new_document'))
+                        @if(EvolutionCMS()->getConfig('show_newresource_btn') && EvolutionCMS()->hasPermission('new_document'))
                             <li id="newresource" class="dropdown newresource">
                                 <a href="javascript:;" class="dropdown-toggle" onclick="return false;" title="{{ ManagerTheme::getLexicon('add_resource') }}"><i class="{{ $_style['icon_plus'] }}"></i></a>
                                 <ul class="dropdown-menu">
-                                    @if($modx->hasPermission('new_document'))
+                                    @if(EvolutionCMS()->hasPermission('new_document'))
                                     <li>
                                         <a onclick="" href="index.php?a=4" target="main">
                                             <i class="{{ $_style['icon_document'] }}"></i>{{ ManagerTheme::getLexicon('add_resource') }}
@@ -210,16 +210,16 @@
                                         </a>
                                     </li>
                                     @endif
-                                    @if($modx->getConfig('use_browser') && $modx->hasPermission('assets_images'))
+                                    @if(EvolutionCMS()->getConfig('use_browser') && EvolutionCMS()->hasPermission('assets_images'))
                                         <li>
-                                            <a onclick="" href="media/browser/{{ $modx->getConfig('which_browser') }}/browse.php?&type=images" target="main">
+                                            <a onclick="" href="media/browser/{{ EvolutionCMS()->getConfig('which_browser') }}/browse.php?&type=images" target="main">
                                                 <i class="{{ $_style['icon_camera'] }}"></i>{{ ManagerTheme::getLexicon('images_management') }}
                                             </a>
                                         </li>
                                     @endif
-                                    @if($modx->getConfig('use_browser') && $modx->hasPermission('assets_files'))
+                                    @if(EvolutionCMS()->getConfig('use_browser') && EvolutionCMS()->hasPermission('assets_files'))
                                         <li>
-                                            <a onclick="" href="media/browser/{{ $modx->getConfig('which_browser') }}/browse.php?&type=files" target="main">
+                                            <a onclick="" href="media/browser/{{ EvolutionCMS()->getConfig('which_browser') }}/browse.php?&type=files" target="main">
                                                 <i class="{{ $_style['icon_files'] }}"></i>{{ ManagerTheme::getLexicon('files_management') }}
                                             </a>
                                         </li>
@@ -234,9 +234,9 @@
                         </li>
                         <li id="account" class="dropdown account">
                             <a href="javascript:;" class="dropdown-toggle" onclick="return false;">
-                                <span class="username"><?= entities($user['username'], $modx->getConfig('modx_charset')) ?></span>
+                                <span class="username"><?= entities($user['username'], EvolutionCMS()->getConfig('modx_charset')) ?></span>
                                 @if($user['photo'])
-                                <span class="icon photo" style="background-image: url(<?= MODX_SITE_URL . entities($user['photo'], $modx->getConfig('modx_charset')) ?>);"></span>
+                                <span class="icon photo" style="background-image: url(<?= MODX_SITE_URL . entities($user['photo'], EvolutionCMS()->getConfig('modx_charset')) ?>);"></span>
                                 @else
                                 <span class="icon"><i class="{{ $_style['icon_user'] }}"></i></span>
                                 @endif
@@ -244,7 +244,7 @@
                             </a>
                             <ul class="dropdown-menu">
 
-                                @if($modx->hasPermission('change_password'))
+                                @if(EvolutionCMS()->hasPermission('change_password'))
                                 <li>
                                     <a onclick="" href="index.php?a=28" target="main">
                                         <i class="{{ $_style['icon_lock'] }}"></i>{{ ManagerTheme::getLexicon('change_password') }}
@@ -258,32 +258,32 @@
                                 </li>
                             </ul>
                         </li>
-                        @if($modx->hasPermission('settings') || $modx->hasPermission('view_eventlog') || $modx->hasPermission('logs') || $modx->hasPermission('help'))
+                        @if(EvolutionCMS()->hasPermission('settings') || EvolutionCMS()->hasPermission('view_eventlog') || EvolutionCMS()->hasPermission('logs') || EvolutionCMS()->hasPermission('help'))
                         <li id="system" class="dropdown">
                             <a href="javascript:;" class="dropdown-toggle" title="{{ ManagerTheme::getLexicon('system') }}" onclick="return false;"><i class="{{ $_style['icon_cogs'] }}"></i></a>
                             <ul class="dropdown-menu">
-                                @if($modx->hasPermission('settings'))
+                                @if(EvolutionCMS()->hasPermission('settings'))
                                 <li>
                                     <a href="index.php?a=17" target="main">
                                         <i class="{{ $_style['icon_sliders'] }}"></i>{{ ManagerTheme::getLexicon('edit_settings') }}
                                     </a>
                                 </li>
                                 @endif
-                                @if($modx->hasPermission('view_eventlog'))
+                                @if(EvolutionCMS()->hasPermission('view_eventlog'))
                                 <li>
                                     <a href="index.php?a=70" target="main">
                                         <i class="{{ $_style['icon_calendar'] }}"></i>{{ ManagerTheme::getLexicon('site_schedule') }}
                                     </a>
                                 </li>
                                 @endif
-                                @if($modx->hasPermission('view_eventlog'))
+                                @if(EvolutionCMS()->hasPermission('view_eventlog'))
                                 <li>
                                     <a href="index.php?a=114" target="main">
                                         <i class="{{ $_style['icon_info_triangle'] }}"></i>{{ ManagerTheme::getLexicon('eventlog_viewer') }}
                                     </a>
                                 </li>
                                 @endif
-                                @if($modx->hasPermission('logs'))
+                                @if(EvolutionCMS()->hasPermission('logs'))
                                 <li>
                                     <a href="index.php?a=13" target="main">
                                         <i class="{{ $_style['icon_user_secret'] }}"></i>{{ ManagerTheme::getLexicon('view_logging') }}
@@ -295,7 +295,7 @@
                                     </a>
                                 </li>
                                 @endif
-                                @if($modx->hasPermission('help'))
+                                @if(EvolutionCMS()->hasPermission('help'))
                                 <li>
                                     <a href="index.php?a=9" target="main">
                                         <i class="{{ $_style['icon_question_circle'] }}"></i>{{ ManagerTheme::getLexicon('help') }}
@@ -304,14 +304,14 @@
                                 @endif
 
                                 <?php
-                                $style = $modx->getConfig('settings_version') !== $modx->getVersionData('version') ? 'style="color:#ffff8a;"' : '';
+                                $style = EvolutionCMS()->getConfig('settings_version') !== EvolutionCMS()->getVersionData('version') ? 'style="color:#ffff8a;"' : '';
                                 $version = 'Evolution CMS';
-                                    echo '<li><span class="dropdown-item" title="' . $modx->getPhpCompat()->entities($modx->getConfig('site_name')) . ' &ndash; ' . $modx->getVersionData('full_appname') . '" ' . $style . '>' . $version . ' ' . $modx->getConfig('settings_version') . '</span></li>';
+                                    echo '<li><span class="dropdown-item" title="' . EvolutionCMS()->getPhpCompat()->entities(EvolutionCMS()->getConfig('site_name')) . ' &ndash; ' . EvolutionCMS()->getVersionData('full_appname') . '" ' . $style . '>' . $version . ' ' . EvolutionCMS()->getConfig('settings_version') . '</span></li>';
                                 ?>
                             </ul>
                         </li>
                         @endif
-                        @if($modx->getConfig('show_fullscreen_btn'))
+                        @if(EvolutionCMS()->getConfig('show_fullscreen_btn'))
                             <li id="fullscreen">
                                 <a href="javascript:;" onclick="toggleFullScreen();" id="toggleFullScreen" title="{{ ManagerTheme::getLexicon('toggle_fullscreen') }}">
                                     <i class="{{ $_style['icon_expand'] }}"></i>
@@ -325,7 +325,7 @@
     </div>
     <div id="tree">@include('manager::frame.tree')</div>
     <div id="main">
-        @if($modx->getConfig('global_tabs'))
+        @if(EvolutionCMS()->getConfig('global_tabs'))
             <div class="tab-row-container evo-tab-row">
                 <div class="tab-row"><h2 id="evo-tab-home" class="tab selected" data-target="evo-tab-page-home"><i class="{{ $_style['icon_home'] }}"></i></h2></div>
             </div>
@@ -357,10 +357,10 @@
         );
         foreach ($sortParams as $param) {
             if (isset($_REQUEST[$param])) {
-                $modx->getManagerApi()->saveLastUserSetting($param, $_REQUEST[$param]);
+                EvolutionCMS()->getManagerApi()->saveLastUserSetting($param, $_REQUEST[$param]);
                 $_SESSION[$param] = $_REQUEST[$param];
             } else if (!isset($_SESSION[$param])) {
-                $_SESSION[$param] = $modx->getManagerApi()->getLastUserSetting($param);
+                $_SESSION[$param] = EvolutionCMS()->getManagerApi()->getLastUserSetting($param);
             }
         }
         ?>
@@ -432,26 +432,26 @@ if(!function_exists('constructLink')) {
     <div id="mx_contextmenu" class="dropdown" onselectstart="return false;">
         <div id="nameHolder">&nbsp;</div>
         <?php
-        constructLink(3, $_style['icon_document'], ManagerTheme::getLexicon('create_resource_here'), $modx->hasPermission('new_document')); // new Resource
-        constructLink(2, $_style['icon_edit'] , ManagerTheme::getLexicon('edit_resource'), $modx->hasPermission('edit_document')); // edit
-        constructLink(5, $_style['icon_move'], ManagerTheme::getLexicon('move_resource'), $modx->hasPermission('save_document')); // move
-        constructLink(7, $_style['icon_clone'], ManagerTheme::getLexicon('resource_duplicate'), $modx->hasPermission('new_document')); // duplicate
-        constructLink(11, $_style['icon_sort_num_asc'], ManagerTheme::getLexicon('sort_menuindex'), !!($modx->hasPermission('edit_document') && $modx->hasPermission('save_document'))); // sort menu index
+        constructLink(3, $_style['icon_document'], ManagerTheme::getLexicon('create_resource_here'), EvolutionCMS()->hasPermission('new_document')); // new Resource
+        constructLink(2, $_style['icon_edit'] , ManagerTheme::getLexicon('edit_resource'), EvolutionCMS()->hasPermission('edit_document')); // edit
+        constructLink(5, $_style['icon_move'], ManagerTheme::getLexicon('move_resource'), EvolutionCMS()->hasPermission('save_document')); // move
+        constructLink(7, $_style['icon_clone'], ManagerTheme::getLexicon('resource_duplicate'), EvolutionCMS()->hasPermission('new_document')); // duplicate
+        constructLink(11, $_style['icon_sort_num_asc'], ManagerTheme::getLexicon('sort_menuindex'), !!(EvolutionCMS()->hasPermission('edit_document') && EvolutionCMS()->hasPermission('save_document'))); // sort menu index
         ?>
         <div class="seperator"></div>
         <?php
-        constructLink(9, $_style['icon_check'], ManagerTheme::getLexicon('publish_resource'), $modx->hasPermission('publish_document')); // publish
-        constructLink(10, $_style['icon_close'], ManagerTheme::getLexicon('unpublish_resource'), $modx->hasPermission('publish_document')); // unpublish
-        constructLink(4, $_style['icon_trash'], ManagerTheme::getLexicon('delete_resource'), $modx->hasPermission('delete_document')); // delete
-        constructLink(8, $_style['icon_undo'], ManagerTheme::getLexicon('undelete_resource'), $modx->hasPermission('delete_document')); // undelete
+        constructLink(9, $_style['icon_check'], ManagerTheme::getLexicon('publish_resource'), EvolutionCMS()->hasPermission('publish_document')); // publish
+        constructLink(10, $_style['icon_close'], ManagerTheme::getLexicon('unpublish_resource'), EvolutionCMS()->hasPermission('publish_document')); // unpublish
+        constructLink(4, $_style['icon_trash'], ManagerTheme::getLexicon('delete_resource'), EvolutionCMS()->hasPermission('delete_document')); // delete
+        constructLink(8, $_style['icon_undo'], ManagerTheme::getLexicon('undelete_resource'), EvolutionCMS()->hasPermission('delete_document')); // undelete
         ?>
         <div class="seperator"></div>
         <?php
-        constructLink(6, $_style['icon_chain'], ManagerTheme::getLexicon('create_weblink_here'), $modx->hasPermission('new_document')); // new Weblink
+        constructLink(6, $_style['icon_chain'], ManagerTheme::getLexicon('create_weblink_here'), EvolutionCMS()->hasPermission('new_document')); // new Weblink
         ?>
         <div class="seperator"></div>
         <?php
-        constructLink(1, $_style['icon_info'], ManagerTheme::getLexicon('resource_overview'), $modx->hasPermission('view_document')); // view
+        constructLink(1, $_style['icon_info'], ManagerTheme::getLexicon('resource_overview'), EvolutionCMS()->hasPermission('view_document')); // view
         constructLink(12, $_style['icon_eye'], ManagerTheme::getLexicon('preview_resource'), 1); // preview
         ?>
 
@@ -460,7 +460,7 @@ if(!function_exists('constructLink')) {
     <script type="text/javascript">
 
         if (document.getElementById('treeMenu')) {
-            @if($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin'))
+            @if(EvolutionCMS()->hasPermission('edit_template') || EvolutionCMS()->hasPermission('edit_snippet') || EvolutionCMS()->hasPermission('edit_chunk') || EvolutionCMS()->hasPermission('edit_plugin'))
 
             document.getElementById('treeMenu_openelements').onclick = function(e) {
                 e.preventDefault();
@@ -478,37 +478,37 @@ if(!function_exists('constructLink')) {
                 }
             };
             @endif
-            @if($modx->getConfig('use_browser') && $modx->hasPermission('assets_images'))
+            @if(EvolutionCMS()->getConfig('use_browser') && EvolutionCMS()->hasPermission('assets_images'))
 
             document.getElementById('treeMenu_openimages').onclick = function(e) {
                 e.preventDefault();
                 if (modx.config.global_tabs && !e.shiftKey) {
-                    modx.tabs({url: '{{ MODX_MANAGER_URL }}media/browser/{{ $modx->getConfig('which_browser') }}/browse.php?filemanager=media/browser/{{ $modx->getConfig('which_browser') }}/browse.php&type=images', title: '{{ ManagerTheme::getLexicon('images_management') }}'});
+                    modx.tabs({url: '{{ MODX_MANAGER_URL }}media/browser/{{ EvolutionCMS()->getConfig('which_browser') }}/browse.php?filemanager=media/browser/{{ EvolutionCMS()->getConfig('which_browser') }}/browse.php&type=images', title: '{{ ManagerTheme::getLexicon('images_management') }}'});
                 } else {
                     var randomNum = '{{ ManagerTheme::getLexicon('files_files') }}';
                     if (e.shiftKey) {
                         randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
                     }
                     modx.openWindow({
-                        url: '{{ MODX_MANAGER_URL }}media/browser/{{ $modx->getConfig('which_browser') }}/browse.php?&type=images',
+                        url: '{{ MODX_MANAGER_URL }}media/browser/{{ EvolutionCMS()->getConfig('which_browser') }}/browse.php?&type=images',
                         title: randomNum
                     });
                 }
             };
             @endif
-            @if($modx->getConfig('use_browser') && $modx->hasPermission('assets_files'))
+            @if(EvolutionCMS()->getConfig('use_browser') && EvolutionCMS()->hasPermission('assets_files'))
 
             document.getElementById('treeMenu_openfiles').onclick = function(e) {
                 e.preventDefault();
                 if (modx.config.global_tabs && !e.shiftKey) {
-                    modx.tabs({url: '{{ MODX_MANAGER_URL }}media/browser/{{ $modx->getConfig('which_browser') }}/browse.php?filemanager=media/browser/{{ $modx->getConfig('which_browser') }}/browse.php&type=files', title: '{{ ManagerTheme::getLexicon('files_files') }}'});
+                    modx.tabs({url: '{{ MODX_MANAGER_URL }}media/browser/{{ EvolutionCMS()->getConfig('which_browser') }}/browse.php?filemanager=media/browser/{{ EvolutionCMS()->getConfig('which_browser') }}/browse.php&type=files', title: '{{ ManagerTheme::getLexicon('files_files') }}'});
                 } else {
                     var randomNum = '{{ ManagerTheme::getLexicon('files_files') }}';
                     if (e.shiftKey) {
                         randomNum += ' #' + Math.floor((Math.random() * 999999) + 1);
                     }
                     modx.openWindow({
-                        url: '{{ MODX_MANAGER_URL }}media/browser/{{ $modx->getConfig('which_browser') }}/browse.php?&type=files',
+                        url: '{{ MODX_MANAGER_URL }}media/browser/{{ EvolutionCMS()->getConfig('which_browser') }}/browse.php?&type=files',
                         title: randomNum
                     });
                 }
@@ -518,7 +518,7 @@ if(!function_exists('constructLink')) {
         }
 
     </script>
-    @if($modx->getConfig('show_fullscreen_btn'))
+    @if(EvolutionCMS()->getConfig('show_fullscreen_btn'))
         <script>
             function toggleFullScreen()
             {
@@ -548,9 +548,9 @@ if(!function_exists('constructLink')) {
             });
         </script>
     @endif
-    {!! $modx->invokeEvent('OnManagerFrameLoader', ['action' => ManagerTheme::getActionId()]); !!}
+    {!! EvolutionCMS()->invokeEvent('OnManagerFrameLoader', ['action' => ManagerTheme::getActionId()]); !!}
 </div>
-@if($modx->getConfig('show_picker'))
+@if(EvolutionCMS()->getConfig('show_picker'))
     <div class="evocp-box">
         <div class="evocp-icon"><i class="evocpicon {{ $_style['icon_brush'] }}" aria-hidden="true" ></i></div>
         <div class="evocp-frame">

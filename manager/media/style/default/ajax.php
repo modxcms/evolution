@@ -23,15 +23,15 @@ if (!empty($config['root']) && file_exists($config['root'] . '/index.php')) {
     exit;
 }
 
-$modx->getSettings();
+EvolutionCMS()->getSettings();
 
 if (!isset($_SESSION['mgrValidated']) || !isset($_SERVER['HTTP_X_REQUESTED_WITH']) || (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') || ($_SERVER['REQUEST_METHOD'] != 'POST')) {
-    $modx->sendErrorPage();
+    EvolutionCMS()->sendErrorPage();
 }
 
-$modx->ManagerTheme->setRequest();
+EvolutionCMS()->ManagerTheme->setRequest();
 
-$modx->sid = session_id();
+EvolutionCMS()->sid = session_id();
 
 $_lang = ManagerTheme::getLexicon();
 $_style = ManagerTheme::getStyle();
@@ -42,8 +42,8 @@ $role = isset($_SESSION['mgrRole']) && $_SESSION['mgrRole'] == 1 ? 1 : 0;
 $docGroups = isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups']) ? implode(',', $_SESSION['mgrDocgroups']) : '';
 
 // set limit sql query
-$limit = $modx->getConfig('number_of_results');
-header('Content-Type: text/html; charset=' . $modx->getConfig('modx_charset'), true);
+$limit = EvolutionCMS()->getConfig('number_of_results');
+header('Content-Type: text/html; charset=' . EvolutionCMS()->getConfig('modx_charset'), true);
 
 if (isset($action)) {
     switch ($action) {
@@ -79,7 +79,7 @@ if (isset($action)) {
                     foreach ($sortParams as $param) {
                         if (isset($_REQUEST[$param])) {
                             $_SESSION[$param] = $_REQUEST[$param];
-                            $modx->getManagerApi()->saveLastUserSetting($param, $_REQUEST[$param]);
+                            EvolutionCMS()->getManagerApi()->saveLastUserSetting($param, $_REQUEST[$param]);
                         }
                     }
 
@@ -134,7 +134,7 @@ if (isset($action)) {
                             $sql = $sql->where('templatename', 'LIKE', '%' . $filter . '%');
                         }
 
-                        if ($modx->hasPermission('new_template')) {
+                        if (EvolutionCMS()->hasPermission('new_template')) {
                             $output .= '<li><a id="a_19" href="index.php?a=19" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_template'] . '</a></li>';
                         }
 
@@ -159,7 +159,7 @@ if (isset($action)) {
                             $sql = $sql->where('site_tmplvars.name', 'LIKE', '%' . $filter . '%');
                         }
 
-                        if ($modx->hasPermission('edit_template') && $modx->hasPermission('edit_snippet') && $modx->hasPermission('edit_chunk') && $modx->hasPermission('edit_plugin')) {
+                        if (EvolutionCMS()->hasPermission('edit_template') && EvolutionCMS()->hasPermission('edit_snippet') && EvolutionCMS()->hasPermission('edit_chunk') && EvolutionCMS()->hasPermission('edit_plugin')) {
                             $output .= '<li><a id="a_300" href="index.php?a=300" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_tmplvars'] . '</a></li>';
                         }
 
@@ -173,7 +173,7 @@ if (isset($action)) {
                             $sql = $sql->where('name', 'LIKE', '%' . $filter . '%');
                         }
 
-                        if ($modx->hasPermission('new_chunk')) {
+                        if (EvolutionCMS()->hasPermission('new_chunk')) {
                             $output .= '<li><a id="a_77" href="index.php?a=77" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_htmlsnippet'] . '</a></li>';
                         }
 
@@ -187,7 +187,7 @@ if (isset($action)) {
                             $sql = $sql->where('name', 'LIKE', '%' . $filter . '%');
                         }
 
-                        if ($modx->hasPermission('new_snippet')) {
+                        if (EvolutionCMS()->hasPermission('new_snippet')) {
                             $output .= '<li><a id="a_23" href="index.php?a=23" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_snippet'] . '</a></li>';
                         }
 
@@ -201,7 +201,7 @@ if (isset($action)) {
                             $sql = $sql->where('name', 'LIKE', '%' . $filter . '%');
                         }
 
-                        if ($modx->hasPermission('new_plugin')) {
+                        if (EvolutionCMS()->hasPermission('new_plugin')) {
                             $output .= '<li><a id="a_101" href="index.php?a=101" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_plugin'] . '</a></li>';
                         }
 
@@ -223,7 +223,7 @@ if (isset($action)) {
                             continue;
                         }
 
-                        $items .= '<li class="item ' . ($row['disabled'] ? 'disabled' : '') . ($row['locked'] ? ' locked' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main" data-parent-id="a_76__elements_' . $elements . '">' . entities($row['name'], $modx->getConfig('modx_charset')) . ' <small>(' . $row['id'] . ')</small></a></li>' . "\n";
+                        $items .= '<li class="item ' . ($row['disabled'] ? 'disabled' : '') . ($row['locked'] ? ' locked' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main" data-parent-id="a_76__elements_' . $elements . '">' . entities($row['name'], EvolutionCMS()->getConfig('modx_charset')) . ' <small>(' . $row['id'] . ')</small></a></li>' . "\n";
                     }
                 }
 
@@ -252,12 +252,12 @@ if (isset($action)) {
             if ($filter != '') {
                 $sql = $sql->where('manager_users.username', 'LIKE', '%' . $filter . '%');
             }
-            if (!$modx->hasPermission('save_role')) {
+            if (!EvolutionCMS()->hasPermission('save_role')) {
                 $sql = $sql->where('user_attributes.role', '!=', \DB::raw(1));
             }
 
 
-            if ($modx->hasPermission('new_user')) {
+            if (EvolutionCMS()->hasPermission('new_user')) {
                 $output .= '<li><a id="a_11" href="index.php?a=11" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_user'] . '</a></li>';
             }
 
@@ -266,7 +266,7 @@ if (isset($action)) {
                     $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                 }
                 foreach ($sql->take($limit)->get() as $row) {
-                    $items .= '<li class="item ' . ($row->blocked ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row->id . '" href="index.php?a=' . $a . '&id=' . $row->id . '" target="main">' . entities($row->username, $modx->getConfig('modx_charset')) . ' <small>(' . $row->id . ')</small></a></li>';
+                    $items .= '<li class="item ' . ($row->blocked ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row->id . '" href="index.php?a=' . $a . '&id=' . $row->id . '" target="main">' . entities($row->username, EvolutionCMS()->getConfig('modx_charset')) . ' <small>(' . $row->id . ')</small></a></li>';
                 }
             }
 
@@ -295,7 +295,7 @@ if (isset($action)) {
                 $sql = $sql->where('users.username', 'LIKE', '%' . $filter . '%');
             }
 
-            if ($modx->hasPermission('new_user')) {
+            if (EvolutionCMS()->hasPermission('new_user')) {
                 $output .= '<li><a id="a_87" href="index.php?a=87" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_web_user'] . '</a></li>';
             }
 
@@ -304,7 +304,7 @@ if (isset($action)) {
                     $output .= '<li class="item-input"><input type="text" name="filter" class="dropdown-item form-control form-control-sm" autocomplete="off" /></li>';
                 }
                 foreach ($sql->take($limit)->get() as $row) {
-                    $items .= '<li class="item ' . ($row->blocked ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row->id . '" href="index.php?a=' . $a . '&id=' . $row->id . '" target="main">' . entities($row->username, $modx->getConfig('modx_charset')) . ' <small>(' . $row->id . ')</small></a></li>';
+                    $items .= '<li class="item ' . ($row->blocked ? 'disabled' : '') . '"><a id="a_' . $a . '__id_' . $row->id . '" href="index.php?a=' . $a . '&id=' . $row->id . '" target="main">' . entities($row->username, EvolutionCMS()->getConfig('modx_charset')) . ' <small>(' . $row->id . ')</small></a></li>';
                 }
             }
 
@@ -337,7 +337,7 @@ if (isset($action)) {
                             
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="' . $_style['icon_code'] . '"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
+                                    'innerHTML' => '<i class="' . $_style['icon_code'] . '"></i> ' . entities($row['name'], EvolutionCMS()->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="' . $_style['icon_edit'] . '"></i> ' . $_lang['edit'],
@@ -347,17 +347,17 @@ if (isset($action)) {
                             if (!empty($row['description'])) {
                                 $contextmenu['seperator'] = '';
                                 $contextmenu['description'] = array(
-                                    'innerHTML' => '<i class="' . $_style['icon_info'] . '"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
+                                    'innerHTML' => '<i class="' . $_style['icon_info'] . '"></i> ' . entities($row['description'], EvolutionCMS()->getConfig('modx_charset'))
                                 );
                             }
                         } else {
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="' . $_style['icon_code'] . '"></i> ' . entities($name, $modx->getConfig('modx_charset'))
+                                    'innerHTML' => '<i class="' . $_style['icon_code'] . '"></i> ' . entities($name, EvolutionCMS()->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="' . $_style['icon_add'] . '"></i> ' . $_lang['new_snippet'],
-                                    'url' => "index.php?a=23&itemname=" . entities($name, $modx->getConfig('modx_charset'))
+                                    'url' => "index.php?a=23&itemname=" . entities($name, EvolutionCMS()->getConfig('modx_charset'))
                                 )
                             );
                         }
@@ -372,7 +372,7 @@ if (isset($action)) {
                             $row = $chunk->toArray();
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="' . $_style['icon_chunk'] . '"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
+                                    'innerHTML' => '<i class="' . $_style['icon_chunk'] . '"></i> ' . entities($row['name'], EvolutionCMS()->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="' . $_style['icon_edit'] . '"></i> ' . $_lang['edit'],
@@ -382,17 +382,17 @@ if (isset($action)) {
                             if (!empty($row['description'])) {
                                 $contextmenu['seperator'] = '';
                                 $contextmenu['description'] = array(
-                                    'innerHTML' => '<i class="' . $_style['icon_info'] . '"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
+                                    'innerHTML' => '<i class="' . $_style['icon_info'] . '"></i> ' . entities($row['description'], EvolutionCMS()->getConfig('modx_charset'))
                                 );
                             }
                         } else {
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="' . $_style['icon_chunk'] . '"></i> ' . entities($name, $modx->getConfig('modx_charset'))
+                                    'innerHTML' => '<i class="' . $_style['icon_chunk'] . '"></i> ' . entities($name, EvolutionCMS()->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="' . $_style['icon_add'] . '"></i> ' . $_lang['new_htmlsnippet'],
-                                    'url' => "index.php?a=77&itemname=" . entities($name, $modx->getConfig('modx_charset'))
+                                    'url' => "index.php?a=77&itemname=" . entities($name, EvolutionCMS()->getConfig('modx_charset'))
                                 )
                             );
                         }
@@ -407,7 +407,7 @@ if (isset($action)) {
                             $row = $chunk->toArray();
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerText' => entities($row['name'], $modx->getConfig('modx_charset'))
+                                    'innerText' => entities($row['name'], EvolutionCMS()->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="' . $_style['icon_edit'] . '"></i> ' . $_lang['edit'],
@@ -417,7 +417,7 @@ if (isset($action)) {
                             if (!empty($row['description'])) {
                                 $contextmenu['seperator'] = '';
                                 $contextmenu['description'] = array(
-                                    'innerHTML' => '<i class="' . $_style['icon_info'] . '"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
+                                    'innerHTML' => '<i class="' . $_style['icon_info'] . '"></i> ' . entities($row['description'], EvolutionCMS()->getConfig('modx_charset'))
                                 );
                             }
                         } else {
@@ -428,7 +428,7 @@ if (isset($action)) {
                                 $row = $snippets->toArray();
                                 $contextmenu = array(
                                     'header' => array(
-                                        'innerHTML' => '<i class="' . $_style['icon_code'] . '"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
+                                        'innerHTML' => '<i class="' . $_style['icon_code'] . '"></i> ' . entities($row['name'], EvolutionCMS()->getConfig('modx_charset'))
                                     ),
                                     'item' => array(
                                         'innerHTML' => '<i class="' . $_style['icon_edit'] . '"></i> ' . $_lang['edit'],
@@ -438,21 +438,21 @@ if (isset($action)) {
                                 if (!empty($row['description'])) {
                                     $contextmenu['seperator'] = '';
                                     $contextmenu['description'] = array(
-                                        'innerHTML' => '<i class="' . $_style['icon_info'] . '"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
+                                        'innerHTML' => '<i class="' . $_style['icon_info'] . '"></i> ' . entities($row['description'], EvolutionCMS()->getConfig('modx_charset'))
                                     );
                                 }
                             } else {
                                 $contextmenu = array(
                                     'header' => array(
-                                        'innerHTML' => '<i class="' . $_style['icon_code'] . '"></i> ' . entities($name, $modx->getConfig('modx_charset'))
+                                        'innerHTML' => '<i class="' . $_style['icon_code'] . '"></i> ' . entities($name, EvolutionCMS()->getConfig('modx_charset'))
                                     ),
                                     'item' => array(
                                         'innerHTML' => '<i class="' . $_style['icon_add'] . '"></i> ' . $_lang['new_htmlsnippet'],
-                                        'url' => "index.php?a=77&itemname=" . entities($name, $modx->getConfig('modx_charset'))
+                                        'url' => "index.php?a=77&itemname=" . entities($name, EvolutionCMS()->getConfig('modx_charset'))
                                     ),
                                     'item2' => array(
                                         'innerHTML' => '<i class="' . $_style['icon_add'] . '"></i> ' . $_lang['new_snippet'],
-                                        'url' => "index.php?a=23&itemname=" . entities($name, $modx->getConfig('modx_charset'))
+                                        'url' => "index.php?a=23&itemname=" . entities($name, EvolutionCMS()->getConfig('modx_charset'))
                                     )
                                 );
                             }
@@ -514,7 +514,7 @@ if (isset($action)) {
                             $row = $tv->toArray();
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="' . $_style['icon_tv'] . '"></i> ' . entities($row['name'], $modx->getConfig('modx_charset'))
+                                    'innerHTML' => '<i class="' . $_style['icon_tv'] . '"></i> ' . entities($row['name'], EvolutionCMS()->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="' . $_style['icon_edit'] . '"></i> ' . $_lang['edit'],
@@ -524,17 +524,17 @@ if (isset($action)) {
                             if (!empty($row['description'])) {
                                 $contextmenu['seperator'] = '';
                                 $contextmenu['description'] = array(
-                                    'innerHTML' => '<i class="' . $_style['icon_info'] . '"></i> ' . entities($row['description'], $modx->getConfig('modx_charset'))
+                                    'innerHTML' => '<i class="' . $_style['icon_info'] . '"></i> ' . entities($row['description'], EvolutionCMS()->getConfig('modx_charset'))
                                 );
                             }
                         } else {
                             $contextmenu = array(
                                 'header' => array(
-                                    'innerHTML' => '<i class="' . $_style['icon_tv'] . '"></i> ' . entities($name, $modx->getConfig('modx_charset'))
+                                    'innerHTML' => '<i class="' . $_style['icon_tv'] . '"></i> ' . entities($name, EvolutionCMS()->getConfig('modx_charset'))
                                 ),
                                 'item' => array(
                                     'innerHTML' => '<i class="' . $_style['icon_add'] . '"></i> ' . $_lang['new_tmplvars'],
-                                    'url' => "index.php?a=300&itemname=" . entities($name, $modx->getConfig('modx_charset'))
+                                    'url' => "index.php?a=300&itemname=" . entities($name, EvolutionCMS()->getConfig('modx_charset'))
                                 )
                             );
                         }
@@ -553,7 +553,7 @@ if (isset($action)) {
         {
             $json = array();
 
-            if ($modx->hasPermission('new_document') && $modx->hasPermission('edit_document') && $modx->hasPermission('save_document')) {
+            if (EvolutionCMS()->hasPermission('new_document') && EvolutionCMS()->hasPermission('edit_document') && EvolutionCMS()->hasPermission('save_document')) {
                 $id = !empty($_REQUEST['id']) ? (int)$_REQUEST['id'] : '';
                 $parent = isset($_REQUEST['parent']) ? (int)$_REQUEST['parent'] : 0;
                 $menuindex = isset($_REQUEST['menuindex']) && is_scalar($_REQUEST['menuindex']) ? $_REQUEST['menuindex'] : 0;
@@ -564,7 +564,7 @@ if (isset($action)) {
                     // find older parent
                     $parentOld = (int)SiteContent::find($id)->parent;
 
-                    $eventOut = $modx->invokeEvent('onBeforeMoveDocument', [
+                    $eventOut = EvolutionCMS()->invokeEvent('onBeforeMoveDocument', [
                         'id_document' => $id,
                         'old_parent' => $parentOld,
                         'new_parent' => $parent,
@@ -582,7 +582,7 @@ if (isset($action)) {
 
                     if (empty($json['errors'])) {
                         // check privileges user for move docs
-                        if (!empty($modx->config['tree_show_protected']) && $role != 1) {
+                        if (!empty(EvolutionCMS()->config['tree_show_protected']) && $role != 1) {
                             $docs = \EvolutionCMS\Models\DocumentGroup::query()->whereIn('document', [$id, $parent, $parentOld]);
                             if ($docs->count() > 0) {
                                 $document_groups = array();
@@ -602,7 +602,7 @@ if (isset($action)) {
                             }
                         }
 
-                        if ($parent == 0 && $parent != $parentOld && !$modx->config['udperms_allowroot'] && $role != 1) {
+                        if ($parent == 0 && $parent != $parentOld && !EvolutionCMS()->config['udperms_allowroot'] && $role != 1) {
                             $json['errors'] = $_lang["error_no_privileges"];
                         } else {
                             // set new parent
@@ -639,7 +639,7 @@ if (isset($action)) {
                             if (!$json['errors']) {
                                 $json['success'] = $_lang["actioncomplete"];
 
-                                $modx->invokeEvent('onAfterMoveDocument', [
+                                EvolutionCMS()->invokeEvent('onAfterMoveDocument', [
                                     'id_document' => $id,
                                     'old_parent' => $parentOld,
                                     'new_parent' => $parent,
@@ -663,7 +663,7 @@ if (isset($action)) {
             $type = isset($_REQUEST['type']) ? (int)$_REQUEST['type'] : 0;
             $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
-            $output = !!$modx->elementIsLocked($type, $id, true);
+            $output = !!EvolutionCMS()->elementIsLocked($type, $id, true);
 
             if (!$output) {
                 $searchQuery = SiteContent::query()->where('site_content.id', $id);

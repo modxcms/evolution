@@ -5,8 +5,8 @@ if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 
 // get the settings from the database.
 $settings = array();
-if ($modx && count($modx->config) > 0) {
-    $settings = $modx->config;
+if ($modx && count(EvolutionCMS()->config) > 0) {
+    $settings = EvolutionCMS()->config;
 } else {
     $settings = \EvolutionCMS\Models\SystemSetting::all()->pluck('setting_value', 'setting_name');
 }

@@ -2,48 +2,48 @@
 if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-switch ($modx->getManagerApi()->action) {
+switch (EvolutionCMS()->getManagerApi()->action) {
     case 107:
-        if (!$modx->hasPermission('new_module')) {
-            $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+        if (!EvolutionCMS()->hasPermission('new_module')) {
+            EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
         }
         break;
     case 108:
-        if (!$modx->hasPermission('edit_module')) {
-            $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+        if (!EvolutionCMS()->hasPermission('edit_module')) {
+            EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
         }
         break;
     default:
-        $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+        EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 // check to see the module editor isn't locked
-if ($lockedEl = $modx->elementIsLocked(6, $id)) {
-    $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $lockedEl['username'], $_lang['module']));
+if ($lockedEl = EvolutionCMS()->elementIsLocked(6, $id)) {
+    EvolutionCMS()->webAlertAndQuit(sprintf($_lang['lock_msg'], $lockedEl['username'], $_lang['module']));
 }
 // end check for lock
 
 // Lock snippet for other users to edit
-$modx->lockElement(6, $id);
+EvolutionCMS()->lockElement(6, $id);
 
 if (isset($_GET['id'])) {
     $content = \EvolutionCMS\Models\SiteModule::find($id);
     if (is_null($content)) {
-        $modx->webAlertAndQuit("Module not found for id '{$id}'.");
+        EvolutionCMS()->webAlertAndQuit("Module not found for id '{$id}'.");
     }
     $content = $content->toArray();
     $content['properties'] = str_replace("&", "&amp;", $content['properties']);
     $_SESSION['itemname'] = $content['name'];
     if ($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
-        $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+        EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
     }
 } else {
     $_SESSION['itemname'] = $_lang["new_module"];
     $content['wrap'] = '1';
 }
-if ($modx->getManagerApi()->hasFormValues()) {
-    $modx->getManagerApi()->loadFormValues();
+if (EvolutionCMS()->getManagerApi()->hasFormValues()) {
+    EvolutionCMS()->getManagerApi()->loadFormValues();
 }
 
 $content = array_merge($content, $_POST);
@@ -417,20 +417,20 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 <form name="mutate" method="post" action="index.php" id="mutate" class="module">
     <?php
     // invoke OnModFormPrerender event
-    $evtOut = $modx->invokeEvent('OnModFormPrerender', array('id' => $id));
+    $evtOut = EvolutionCMS()->invokeEvent('OnModFormPrerender', array('id' => $id));
     if (is_array($evtOut)) {
         echo implode('', $evtOut);
     }
 
     // Prepare internal params & info-tab via parseDocBlock
     $modulecode = isset($content['modulecode']) ? $content['modulecode'] : '';
-    $docBlock = $modx->parseDocBlockFromString($modulecode);
-    $docBlockList = $modx->convertDocBlockIntoList($docBlock);
+    $docBlock = EvolutionCMS()->parseDocBlockFromString($modulecode);
+    $docBlockList = EvolutionCMS()->convertDocBlockIntoList($docBlock);
     $internal = array();
     ?>
     <input type="hidden" name="a" value="109">
     <input type="hidden" name="id" value="<?= (isset($content['id'])) ? $content['id'] : "" ?>">
-    <input type="hidden" name="mode" value="<?= $modx->getManagerApi()->action ?>">
+    <input type="hidden" name="mode" value="<?= EvolutionCMS()->getManagerApi()->action ?>">
 
     <h1>
         <i class="<?= ((isset($content['icon']) && $content['icon'] != '') ? $content['icon'] : $_style['icon_module']) ?>"></i><?= (isset($content['name']) ? $content['name'] . '<small>(' . $content['id'] . ')</small>' : $_lang['new_module']) ?>
@@ -445,7 +445,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
     <div class="tab-pane" id="modulePane">
         <script type="text/javascript">
-            tp = new WebFXTabPane(document.getElementById("modulePane"), <?= ($modx->getConfig('remember_last_tab') === true ? 'true' : 'false') ?>);
+            tp = new WebFXTabPane(document.getElementById("modulePane"), <?= (EvolutionCMS()->getConfig('remember_last_tab') === true ? 'true' : 'false') ?>);
         </script>
 
         <!-- General -->
@@ -462,9 +462,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 if (!isset($content['name'])) $content['name'] = '';
                                 ?>
                                 <input name="name" type="text" maxlength="100"
-                                       value="<?= $modx->getPhpCompat()->htmlspecialchars($content['name']) ?>"
+                                       value="<?= EvolutionCMS()->getPhpCompat()->htmlspecialchars($content['name']) ?>"
                                        class="form-control form-control-lg" onchange="documentDirty=true;"/>
-                                <?php if ($modx->hasPermission('save_role')): ?>
+                                <?php if (EvolutionCMS()->hasPermission('save_role')): ?>
                                     <label class="custom-control"
                                            title="<?= $_lang['lock_module'] . "\n" . $_lang['lock_module_msg'] ?>"
                                            tooltip>
@@ -494,7 +494,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 <?php
                                 include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
                                 foreach (getCategories() as $n => $v) {
-                                    echo "\t\t\t" . '<option value="' . $v['id'] . '"' . ((isset($content['category']) && $content['category'] == $v['id']) ? ' selected="selected"' : '') . '>' . $modx->getPhpCompat()->htmlspecialchars($v['category']) . "</option>\n";
+                                    echo "\t\t\t" . '<option value="' . $v['id'] . '"' . ((isset($content['category']) && $content['category'] == $v['id']) ? ' selected="selected"' : '') . '>' . EvolutionCMS()->getPhpCompat()->htmlspecialchars($v['category']) . "</option>\n";
                                 }
                                 ?>
                             </select>
@@ -543,7 +543,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                     <div class="form-row">
                         <label for="parse_docblock">
                             <input name="parse_docblock" id="parse_docblock" type="checkbox"
-                                   value="1"<?= ($modx->getManagerApi()->action == 107 ? ' checked="checked"' : '') ?> /> <?= $_lang['parse_docblock'] ?>
+                                   value="1"<?= (EvolutionCMS()->getManagerApi()->action == 107 ? ' checked="checked"' : '') ?> /> <?= $_lang['parse_docblock'] ?>
                         </label>
                         <small class="form-text text-muted"><?= $_lang['parse_docblock_msg'] ?></small>
                     </div>
@@ -566,7 +566,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
                 ?>
                 <textarea dir="ltr" class="phptextarea" name="post" rows="20" wrap="soft"
-                          onchange="documentDirty=true;"><?= $modx->getPhpCompat()->htmlspecialchars($strOut) ?></textarea>
+                          onchange="documentDirty=true;"><?= EvolutionCMS()->getPhpCompat()->htmlspecialchars($strOut) ?></textarea>
             </div>
             <!-- PHP text editor end -->
         </div>
@@ -596,7 +596,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                         <label class="col-md-3 col-lg-2"><?= $_lang['guid'] ?></label>
                         <div class="col-md-9 col-lg-10">
                             <input name="guid" type="text" maxlength="32"
-                                   value="<?= ($modx->getManagerApi()->action == 107 ? createGUID() : $content['guid']) ?>"
+                                   value="<?= (EvolutionCMS()->getManagerApi()->action == 107 ? createGUID() : $content['guid']) ?>"
                                    class="form-control" onchange="documentDirty=true;"/>
                             <small class="form-text text-muted"><?= $_lang['import_params_msg'] ?></small>
                         </div>
@@ -623,7 +623,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
             </div>
             <!-- HTML text editor end -->
         </div>
-        <?php if ($modx->getManagerApi()->action == '108'): ?>
+        <?php if (EvolutionCMS()->getManagerApi()->action == '108'): ?>
             <!-- Dependencies -->
             <div class="tab-page" id="tabDepend">
                 <h2 class="tab"><?= $_lang['settings_dependencies'] ?></h2>
@@ -685,12 +685,12 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
             <h2 class="tab"><?= $_lang['access_permissions'] ?></h2>
             <script type="text/javascript">tp.addTabPage(document.getElementById("tabPermissions"));</script>
             <div class="container container-body">
-                <?php if ($modx->getConfig('use_udperms')) : ?>
+                <?php if (EvolutionCMS()->getConfig('use_udperms')) : ?>
                     <?php
                     // fetch user access permissions for the module
                     $groupsarray = \EvolutionCMS\Models\SiteModuleAccess::query()->where('module', $id)->pluck('usergroup')->toArray();
 
-                    if ($modx->hasPermission('access_permissions')) {
+                    if (EvolutionCMS()->hasPermission('access_permissions')) {
                         ?>
                         <!-- User Group Access Permissions -->
                         <script type="text/javascript">
@@ -722,7 +722,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                     foreach ($membergroupNames->toArray() as $row) {
                         $groupsarray = is_numeric($id) && $id > 0 ? $groupsarray : array();
                         $checked = in_array($row['id'], $groupsarray);
-                        if ($modx->hasPermission('access_permissions')) {
+                        if (EvolutionCMS()->hasPermission('access_permissions')) {
                             if ($checked) {
                                 $notPublic = true;
                             }
@@ -733,7 +733,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                             }
                         }
                     }
-                    if ($modx->hasPermission('access_permissions')) {
+                    if (EvolutionCMS()->hasPermission('access_permissions')) {
 
                         $chks = '<label><input type="checkbox" name="chkallgroups"' . (!$notPublic ? ' checked="checked"' : '') . ' onclick="makePublic(true)" /><span class="warning"> ' . $_lang['all_usr_groups'] . '</span></label><br />' . "\n" . $chks;
                     }
@@ -755,7 +755,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
         <input type="submit" name="save" style="display:none;">
         <?php
         // invoke OnModFormRender event
-        $evtOut = $modx->invokeEvent('OnModFormRender', array('id' => $id));
+        $evtOut = EvolutionCMS()->invokeEvent('OnModFormRender', array('id' => $id));
         if (is_array($evtOut)) {
             echo implode('', $evtOut);
         }

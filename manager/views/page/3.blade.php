@@ -71,7 +71,7 @@
     /**
      * "View Children" tab setup
      */
-    $maxpageSize = $modx->getConfig('number_of_results');
+    $maxpageSize = EvolutionCMS()->getConfig('number_of_results');
     define('MAX_DISPLAY_RECORDS_NUM', $maxpageSize);
 
     // Get child document count
@@ -124,9 +124,9 @@
         $table = new \EvolutionCMS\Support\MakeTable();
         $table->setTableClass($tableClass);
         $table->setColumnHeaderClass($columnHeaderClass);
-        //	$modx->getMakeTable()->setRowHeaderClass($rowHeaderClass);
-        //	$modx->getMakeTable()->setRowRegularClass($rowRegularClass);
-        //	$modx->getMakeTable()->setRowAlternateClass($rowAlternateClass);
+        //	EvolutionCMS()->getMakeTable()->setRowHeaderClass($rowHeaderClass);
+        //	EvolutionCMS()->getMakeTable()->setRowRegularClass($rowRegularClass);
+        //	EvolutionCMS()->getMakeTable()->setRowAlternateClass($rowAlternateClass);
 
         // Table header
         $listTableHeader = array(
@@ -171,16 +171,16 @@
         foreach ($resource as $k => $children) {
 
             switch ($children['id']) {
-                case $modx->getConfig('site_start')            :
+                case EvolutionCMS()->getConfig('site_start')            :
                     $icon = '<i class="' . $_style['icon_home'] . '"></i>';
                     break;
-                case $modx->getConfig('error_page')            :
+                case EvolutionCMS()->getConfig('error_page')            :
                     $icon = '<i class="' . $_style['icon_info_triangle'] . '"></i>';
                     break;
-                case $modx->getConfig('site_unavailable_page') :
+                case EvolutionCMS()->getConfig('site_unavailable_page') :
                     $icon = '<i class="' . $_style['icon_clock'] . '"></i>';
                     break;
-                case $modx->getConfig('unauthorized_page')     :
+                case EvolutionCMS()->getConfig('unauthorized_page')     :
                     $icon = '<i class="' . $_style['icon_info'] . '"></i>';
                     break;
                 default:
@@ -202,10 +202,10 @@
             $class = ($children['deleted'] ? 'text-danger text-decoration-through' : (!$children['published'] ? ' font-italic text-muted' : ' publish'));
             //$class .= ($children['hidemenu'] ? ' text-muted' : ' text-primary');
             //$class .= ($children['isfolder'] ? ' font-weight-bold' : '');
-            if ($modx->hasPermission('edit_document')) {
-                $title = '<span class="doc-item' . $private . '">' . $icon . '<a href="index.php?a=27&amp;id=' . $children['id'] . $add_path . '">' . '<span class="' . $class . '">' . entities($children['pagetitle'], $modx->getConfig('modx_charset')) . '</span></a></span>';
+            if (EvolutionCMS()->hasPermission('edit_document')) {
+                $title = '<span class="doc-item' . $private . '">' . $icon . '<a href="index.php?a=27&amp;id=' . $children['id'] . $add_path . '">' . '<span class="' . $class . '">' . entities($children['pagetitle'], EvolutionCMS()->getConfig('modx_charset')) . '</span></a></span>';
             } else {
-                $title = '<span class="doc-item' . $private . '">' . $icon . '<span class="' . $class . '">' . entities($children['pagetitle'], $modx->getConfig('modx_charset')) . '</span></span>';
+                $title = '<span class="doc-item' . $private . '">' . $icon . '<span class="' . $class . '">' . entities($children['pagetitle'], EvolutionCMS()->getConfig('modx_charset')) . '</span></span>';
             }
 
             $icon_pub_unpub = (!$children['published']) ? '<a href="index.php?a=61&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('publish_resource') . '"><i class="' . $_style['icon_check'] . '"></i></a>' : '<a href="index.php?a=62&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('unpublish_resource') . '"><i class="' . $_style['icon_close'] . '" ></i></a>';
@@ -215,11 +215,11 @@
             $listDocs[] = array(
                 'docid' => '<div class="text-right">' . $children['id'] . '</div>',
                 'title' => $title,
-                'createdon' => '<div class="text-right">' . ($modx->toDateFormat($children['createdon'] + $modx->timestamp(0), 'dateOnly')) . '</div>',
-                'pub_date' => '<div class="text-right">' . ($children['pub_date'] ? ($modx->toDateFormat($children['pub_date'] + $modx->timestamp(0), 'dateOnly')) : '') . '</div>',
+                'createdon' => '<div class="text-right">' . (EvolutionCMS()->toDateFormat($children['createdon'] + EvolutionCMS()->timestamp(0), 'dateOnly')) . '</div>',
+                'pub_date' => '<div class="text-right">' . ($children['pub_date'] ? (EvolutionCMS()->toDateFormat($children['pub_date'] + EvolutionCMS()->timestamp(0), 'dateOnly')) : '') . '</div>',
                 'status' => '<div class="text-nowrap">' . ($children['published'] == 0 ? '<span class="unpublishedDoc">' . ManagerTheme::getLexicon('page_data_unpublished') . '</span>' : '<span class="publishedDoc">' . ManagerTheme::getLexicon('page_data_published') . '</span>') . '</div>',
-                'edit' => '<div class="actions text-center text-nowrap">' . ($modx->hasPermission('edit_document') ? '<a href="index.php?a=27&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('edit') . '"><i class="' . $_style['icon_edit'] . '"></i></a><a href="index.php?a=51&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('move') . '"><i
-				class="' . $_style['icon_move'] . '"></i></a>' . $icon_pub_unpub : '') . ($modx->hasPermission('delete_document') ? $icon_del_undel : '') . '</div>'
+                'edit' => '<div class="actions text-center text-nowrap">' . (EvolutionCMS()->hasPermission('edit_document') ? '<a href="index.php?a=27&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('edit') . '"><i class="' . $_style['icon_edit'] . '"></i></a><a href="index.php?a=51&amp;id=' . $children['id'] . $add_path . '" title="' . ManagerTheme::getLexicon('move') . '"><i
+				class="' . $_style['icon_move'] . '"></i></a>' . $icon_pub_unpub : '') . (EvolutionCMS()->hasPermission('delete_document') ? $icon_del_undel : '') . '</div>'
             );
         }
 
@@ -265,7 +265,7 @@
                 }
             },
             view: function () {
-                window.open('<?= ($modx->getConfig('friendly_urls')) ? UrlProcessor::makeUrl($id) : MODX_SITE_URL . 'index.php?id=' . $id ?>', 'previeWin');
+                window.open('<?= (EvolutionCMS()->getConfig('friendly_urls')) ? UrlProcessor::makeUrl($id) : MODX_SITE_URL . 'index.php?id=' . $id ?>', 'previeWin');
             }
         };
 
@@ -273,7 +273,7 @@
     <script type="text/javascript" src="media/script/tablesort.js"></script>
 
     <h1>
-        <i class="{{ $_style['icon_info'] }}"></i><?= entities(iconv_substr($content['pagetitle'], 0, 50, $modx->getConfig('modx_charset')), $modx->getConfig('modx_charset')) . (iconv_strlen($content['pagetitle'], $modx->getConfig('modx_charset')) > 50 ? '...' : '') . ' <small>(' . (int)$_REQUEST['id'] . ')</small>' ?>
+        <i class="{{ $_style['icon_info'] }}"></i><?= entities(iconv_substr($content['pagetitle'], 0, 50, EvolutionCMS()->getConfig('modx_charset')), EvolutionCMS()->getConfig('modx_charset')) . (iconv_strlen($content['pagetitle'], EvolutionCMS()->getConfig('modx_charset')) > 50 ? '...' : '') . ' <small>(' . (int)$_REQUEST['id'] . ')</small>' ?>
     </h1>
 
     <?= $_style['actionbuttons']['static']['document'] ?>
@@ -281,7 +281,7 @@
 
     <div class="tab-pane" id="childPane">
         <script type="text/javascript">
-            docSettings = new WebFXTabPane(document.getElementById("childPane"), <?= ($modx->getConfig('remember_last_tab') ? 'true' : 'false') ?> );
+            docSettings = new WebFXTabPane(document.getElementById("childPane"), <?= (EvolutionCMS()->getConfig('remember_last_tab') ? 'true' : 'false') ?> );
         </script>
 
         <!-- General -->
@@ -300,16 +300,16 @@
                     <tr>
                         <td width="200" valign="top">{{ ManagerTheme::getLexicon('long_title') }}:</td>
                         <td>
-                            <small><?= $content['longtitle'] != '' ? entities($content['longtitle'], $modx->getConfig('modx_charset')) : "(<i>" . ManagerTheme::getLexicon('not_set') . "</i>)" ?></small>
+                            <small><?= $content['longtitle'] != '' ? entities($content['longtitle'], EvolutionCMS()->getConfig('modx_charset')) : "(<i>" . ManagerTheme::getLexicon('not_set') . "</i>)" ?></small>
                         </td>
                     </tr>
                     <tr>
                         <td valign="top">{{ ManagerTheme::getLexicon('resource_description') }}:</td>
-                        <td><?= $content['description'] != '' ? entities($content['description'], $modx->getConfig('modx_charset')) : "(<i>" . ManagerTheme::getLexicon('not_set') . "</i>)" ?></td>
+                        <td><?= $content['description'] != '' ? entities($content['description'], EvolutionCMS()->getConfig('modx_charset')) : "(<i>" . ManagerTheme::getLexicon('not_set') . "</i>)" ?></td>
                     </tr>
                     <tr>
                         <td valign="top">{{ ManagerTheme::getLexicon('resource_summary') }}:</td>
-                        <td><?= $content['introtext'] != '' ? entities($content['introtext'], $modx->getConfig('modx_charset')) : "(<i>" . ManagerTheme::getLexicon('not_set') . "</i>)" ?></td>
+                        <td><?= $content['introtext'] != '' ? entities($content['introtext'], EvolutionCMS()->getConfig('modx_charset')) : "(<i>" . ManagerTheme::getLexicon('not_set') . "</i>)" ?></td>
                     </tr>
                     <tr>
                         <td valign="top">{{ ManagerTheme::getLexicon('type') }}:</td>
@@ -317,7 +317,7 @@
                     </tr>
                     <tr>
                         <td valign="top">{{ ManagerTheme::getLexicon('resource_alias') }}:</td>
-                        <td><?= $content['alias'] != '' ? entities($content['alias'], $modx->getConfig('modx_charset')) : "(<i>" . ManagerTheme::getLexicon('not_set') . "</i>)" ?></td>
+                        <td><?= $content['alias'] != '' ? entities($content['alias'], EvolutionCMS()->getConfig('modx_charset')) : "(<i>" . ManagerTheme::getLexicon('not_set') . "</i>)" ?></td>
                     </tr>
                     <tr>
                         <td colspan="2">&nbsp;</td>
@@ -327,15 +327,15 @@
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_created') }}:</td>
-                        <td><?= $modx->toDateFormat($content['createdon'] + $modx->timestamp(0)) ?>
-                            (<b><?= entities($createdbyname, $modx->getConfig('modx_charset')) ?></b>)
+                        <td><?= EvolutionCMS()->toDateFormat($content['createdon'] + EvolutionCMS()->timestamp(0)) ?>
+                            (<b><?= entities($createdbyname, EvolutionCMS()->getConfig('modx_charset')) ?></b>)
                         </td>
                     </tr>
                     <?php if($editedbyname != '') { ?>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_edited') }}:</td>
-                        <td><?= $modx->toDateFormat($content['editedon'] + $modx->timestamp(0)) ?>
-                            (<b><?= entities($editedbyname, $modx->getConfig('modx_charset')) ?></b>)
+                        <td><?= EvolutionCMS()->toDateFormat($content['editedon'] + EvolutionCMS()->timestamp(0)) ?>
+                            (<b><?= entities($editedbyname, EvolutionCMS()->getConfig('modx_charset')) ?></b>)
                         </td>
                     </tr>
                     <?php } ?>
@@ -351,11 +351,11 @@
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_publishdate') }}:</td>
-                        <td><?= $content['pub_date'] == 0 ? "(<i>" . ManagerTheme::getLexicon('not_set') . "</i>)" : $modx->toDateFormat($content['pub_date']) ?></td>
+                        <td><?= $content['pub_date'] == 0 ? "(<i>" . ManagerTheme::getLexicon('not_set') . "</i>)" : EvolutionCMS()->toDateFormat($content['pub_date']) ?></td>
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_unpublishdate') }}:</td>
-                        <td><?= $content['unpub_date'] == 0 ? "(<i>" . ManagerTheme::getLexicon('not_set') . "</i>)" : $modx->toDateFormat($content['unpub_date']) ?></td>
+                        <td><?= $content['unpub_date'] == 0 ? "(<i>" . ManagerTheme::getLexicon('not_set') . "</i>)" : EvolutionCMS()->toDateFormat($content['unpub_date']) ?></td>
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_cacheable') }}:</td>
@@ -367,7 +367,7 @@
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('resource_opt_menu_index') }}:</td>
-                        <td><?= entities($content['menuindex'], $modx->getConfig('modx_charset')) ?></td>
+                        <td><?= entities($content['menuindex'], EvolutionCMS()->getConfig('modx_charset')) ?></td>
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('resource_opt_show_menu') }}:</td>
@@ -389,7 +389,7 @@
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_template') }}:</td>
-                        <td><?= entities($templatename, $modx->getConfig('modx_charset')) ?></td>
+                        <td><?= entities($templatename, EvolutionCMS()->getConfig('modx_charset')) ?></td>
                     </tr>
                     <tr>
                         <td>{{ ManagerTheme::getLexicon('page_data_editor') }}:</td>
@@ -411,7 +411,7 @@
                 <div class="form-group clearfix">
                     <?php if($numRecords > 0) : ?>
                     <div class="float-xs-left">
-                        <span class="publishedDoc"><?= $numRecords . ' ' . ManagerTheme::getLexicon('resources_in_container') ?> (<strong><?= entities($content['pagetitle'], $modx->getConfig('modx_charset')) ?></strong>)</span>
+                        <span class="publishedDoc"><?= $numRecords . ' ' . ManagerTheme::getLexicon('resources_in_container') ?> (<strong><?= entities($content['pagetitle'], EvolutionCMS()->getConfig('modx_charset')) ?></strong>)</span>
                     </div>
                     <?php endif; ?>
                     <div class="float-right">
@@ -425,7 +425,7 @@
             </div>
         </div><!-- end tab-page -->
 
-    @if($modx->getConfig('cache_type'))
+    @if(EvolutionCMS()->getConfig('cache_type'))
         <!-- Page Source -->
             <div class="tab-page" id="tabSource">
                 <h2 class="tab">{{ ManagerTheme::getLexicon('page_data_source') }}</h2>
@@ -441,7 +441,7 @@
                         $buffer .= fgets($handle, 4096);
                     }
                     fclose($handle);
-                    $buffer = '<div class="navbar navbar-editor">' . ManagerTheme::getLexicon('page_data_cached') . '</div><div class="section-editor clearfix"><textarea rows="20" wrap="soft">' . $modx->getPhpCompat()->htmlspecialchars($buffer) . "</textarea></div>\n";
+                    $buffer = '<div class="navbar navbar-editor">' . ManagerTheme::getLexicon('page_data_cached') . '</div><div class="section-editor clearfix"><textarea rows="20" wrap="soft">' . EvolutionCMS()->getPhpCompat()->htmlspecialchars($buffer) . "</textarea></div>\n";
                 }
                 echo $buffer;
                 ?>

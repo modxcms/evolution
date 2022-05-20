@@ -94,7 +94,7 @@
 
         <div class="tab-pane" id="templatesPane">
             <script>
-                var tp = new WebFXTabPane(document.getElementById('templatesPane'), {{ get_by_key($modx->config, 'remember_last_tab') ? 1 : 0 }});
+                var tp = new WebFXTabPane(document.getElementById('templatesPane'), {{ get_by_key(EvolutionCMS()->config, 'remember_last_tab') ? 1 : 0 }});
             </script>
 
             <div class="tab-page" id="tabTemplate">
@@ -106,7 +106,7 @@
                         @include('manager::form.row', [
                             'for' => 'templatename',
                             'label' => ManagerTheme::getLexicon('template_name'),
-                            'small' => ($data->getKey() == get_by_key($modx->config, 'default_template') ? '<b class="text-danger">' . mb_strtolower(rtrim(ManagerTheme::getLexicon('defaulttemplate_title'), ':'), ManagerTheme::getCharset()) . '</b>' : ''),
+                            'small' => ($data->getKey() == get_by_key(EvolutionCMS()->config, 'default_template') ? '<b class="text-danger">' . mb_strtolower(rtrim(ManagerTheme::getLexicon('defaulttemplate_title'), ':'), ManagerTheme::getCharset()) . '</b>' : ''),
                             'element' => '<div class="form-control-name clearfix">' .
                                 ManagerTheme::view('form.inputElement', [
                                     'name' => 'templatename',
@@ -114,7 +114,7 @@
                                     'class' => 'form-control-lg',
                                     'attributes' => 'onchange="documentDirty=true;"'
                                 ]) .
-                                ($modx->hasPermission('save_role')
+                                (EvolutionCMS()->hasPermission('save_role')
                                 ? '<label class="custom-control" data-tooltip="' . ManagerTheme::getLexicon('lock_template') . "\n" . ManagerTheme::getLexicon('lock_template_msg') .'">' .
                                  ManagerTheme::view('form.inputElement', [
                                     'type' => 'checkbox',
@@ -185,7 +185,7 @@
                         </div>
                     </div>
 
-                    @if($modx->hasPermission('save_role'))
+                    @if(EvolutionCMS()->hasPermission('save_role'))
                         <div class="form-group">
                             <label>
                                 @include('manager::form.inputElement', [
@@ -229,7 +229,7 @@
                         <p>{{ ManagerTheme::getLexicon('template_tv_msg') }}</p>
                     @endif
 
-                    @if($modx->hasPermission('save_template') && $data->tvs->count() > 1 && $data->getKey())
+                    @if(EvolutionCMS()->hasPermission('save_template') && $data->tvs->count() > 1 && $data->getKey())
                         <div class="form-group">
                             <a class="btn btn-primary"
                                href="?a=117&id={{ $data->getKey() }}">{{ ManagerTheme::getLexicon('template_tv_edit') }}</a>

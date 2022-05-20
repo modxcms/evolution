@@ -380,7 +380,7 @@
 
         <div class="tab-pane" id="snipetPane">
             <script>
-              var tpSnippet = new WebFXTabPane(document.getElementById('snipetPane'), {{ get_by_key($modx->config, 'remember_last_tab') ? 1 : 0 }});
+              var tpSnippet = new WebFXTabPane(document.getElementById('snipetPane'), {{ get_by_key(EvolutionCMS()->config, 'remember_last_tab') ? 1 : 0 }});
             </script>
 
             <!-- General -->
@@ -399,7 +399,7 @@
                                 'class' => 'form-control-lg',
                                 'attributes' => 'onchange="documentDirty=true;" maxlength="100"'
                             ]) .
-                            ($modx->hasPermission('save_role')
+                            (EvolutionCMS()->hasPermission('save_role')
                             ? '<label class="custom-control" data-tooltip="' . ManagerTheme::getLexicon('lock_snippet') . "\n" . ManagerTheme::getLexicon('lock_snippet_msg') .'">' .
                              ManagerTheme::view('form.inputElement', [
                                 'type' => 'checkbox',
@@ -442,7 +442,7 @@
                         'attributes' => 'onchange="documentDirty=true;" maxlength="45"'
                     ])
 
-                    @if($modx->hasPermission('save_role'))
+                    @if(EvolutionCMS()->hasPermission('save_role'))
                         @if($_SESSION['mgrRole'] === 1)
                             <div class="form-row">
                                 <label for="disabled">

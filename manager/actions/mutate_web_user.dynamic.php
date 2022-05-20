@@ -7,19 +7,19 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 }
 
 
-switch($modx->getManagerApi()->action) {
+switch(EvolutionCMS()->getManagerApi()->action) {
 	case 88:
-		if(!$modx->hasPermission('edit_user')) {
-			$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+		if(!EvolutionCMS()->hasPermission('edit_user')) {
+			EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 		}
 		break;
 	case 87:
-		if(!$modx->hasPermission('new_user')) {
-			$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+		if(!EvolutionCMS()->hasPermission('new_user')) {
+			EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 		}
 		break;
 	default:
-		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+		EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $user = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
@@ -28,11 +28,11 @@ $user = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 // check to see the snippet editor isn't locked
 $username = \EvolutionCMS\Models\ActiveUser::query()->where('action', 12)
     ->where('id', $user)
-    ->where('internalKey', '!=', $modx->getLoginUserID('mgr'))
+    ->where('internalKey', '!=', EvolutionCMS()->getLoginUserID('mgr'))
     ->first();
 if(!is_null($username)) {
     $username = $username->username;
-	$modx->webAlertAndQuit(sprintf($_lang["lock_msg"], $username, "web user"));
+	EvolutionCMS()->webAlertAndQuit(sprintf($_lang["lock_msg"], $username, "web user"));
 }
 // end check for lock
 $userdata = [
@@ -72,12 +72,12 @@ $usernamedata = [
     'username' => ''
 ];
 
-if($modx->getManagerApi()->action == '88') {
+if(EvolutionCMS()->getManagerApi()->action == '88') {
 	// get user attributes
 	$userdatatmp = \EvolutionCMS\Models\UserAttribute::query()->where('internalKey', $user)->first();
     $userdatatmp = $userdatatmp->makeVisible('role')->toArray();
 	if(!$userdatatmp) {
-		$modx->webAlertAndQuit("No user returned!");
+		EvolutionCMS()->webAlertAndQuit("No user returned!");
 	}
 	$userdata = array_merge($userdata, $userdatatmp);
 	unset($userdatatmp);
@@ -88,7 +88,7 @@ if($modx->getManagerApi()->action == '88') {
 	// get user name
 	$usernamedata = \EvolutionCMS\Models\User::find($user)->toArray();
 	if(!$usernamedata) {
-		$modx->webAlertAndQuit("No user returned while getting username!");
+		EvolutionCMS()->webAlertAndQuit("No user returned while getting username!");
 	}
 	$_SESSION['itemname'] = $usernamedata['username'];
 } else {
@@ -97,22 +97,22 @@ if($modx->getManagerApi()->action == '88') {
 
 // avoid doubling htmlspecialchars (already encoded in DB)
 foreach($userdata as $key => $val) {
-	$userdata[$key] = html_entity_decode($val, ENT_NOQUOTES, $modx->getConfig('modx_charset'));
+	$userdata[$key] = html_entity_decode($val, ENT_NOQUOTES, EvolutionCMS()->getConfig('modx_charset'));
 };
 $usernamedata['username'] = html_entity_decode(
     get_by_key($usernamedata, 'username', ''),
     ENT_NOQUOTES,
-    $modx->getConfig('modx_charset')
+    EvolutionCMS()->getConfig('modx_charset')
 );
 
 // restore saved form
 $formRestored = false;
-if($modx->getManagerApi()->hasFormValues()) {
-	$modx->getManagerApi()->loadFormValues();
+if(EvolutionCMS()->getManagerApi()->hasFormValues()) {
+	EvolutionCMS()->getManagerApi()->loadFormValues();
     unset($_POST['a']);
 	// restore post values
 	$userdata = array_merge($userdata, $_POST);
-	$userdata['dob'] = $modx->toTimeStamp($userdata['dob']);
+	$userdata['dob'] = EvolutionCMS()->toTimeStamp($userdata['dob']);
 	$usernamedata['username'] = $userdata['newusername'];
 	$usernamedata['oldusername'] = $_POST['oldusername'];
 	$usersettings = array_merge($usersettings, $userdata);
@@ -250,15 +250,15 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 <form name="userform" method="post" action="index.php">
 	<?php
 	// invoke OnWUsrFormPrerender event
-	$evtOut = $modx->invokeEvent("OnWUsrFormPrerender", array("id" => $user));
+	$evtOut = EvolutionCMS()->invokeEvent("OnWUsrFormPrerender", array("id" => $user));
 	if(is_array($evtOut)) {
 		echo implode("", $evtOut);
 	}
 	?>
     <input type="hidden" name="a" value="89">
-	<input type="hidden" name="mode" value="<?php echo $modx->getManagerApi()->action; ?>" />
+	<input type="hidden" name="mode" value="<?php echo EvolutionCMS()->getManagerApi()->action; ?>" />
 	<input type="hidden" name="id" value="<?php echo $user ?>" />
-	<input type="hidden" name="blockedmode" value="<?php echo ($userdata['blocked'] == 1 || ($userdata['blockeduntil'] > time() && $userdata['blockeduntil'] != 0) || ($userdata['blockedafter'] < time() && $userdata['blockedafter'] != 0) || $userdata['failedlogins'] > $modx->getConfig('failed_login_attempts')) ? "1" : "0" ?>" />
+	<input type="hidden" name="blockedmode" value="<?php echo ($userdata['blocked'] == 1 || ($userdata['blockeduntil'] > time() && $userdata['blockeduntil'] != 0) || ($userdata['blockedafter'] < time() && $userdata['blockedafter'] != 0) || $userdata['failedlogins'] > EvolutionCMS()->getConfig('failed_login_attempts')) ? "1" : "0" ?>" />
 
 	<h1>
         <i class="<?= $_style['icon_web_user'] ?>"></i><?= ($usernamedata['username'] ? $usernamedata['username'] . '<small>(' . $usernamedata['id'] . ')</small>' : $_lang['web_user_title']) ?>
@@ -271,7 +271,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 
 		<div class="tab-pane" id="webUserPane">
 			<script type="text/javascript">
-				tpUser = new WebFXTabPane(document.getElementById("webUserPane"), <?php echo $modx->getConfig('remember_last_tab') == 1 ? 'true' : 'false'; ?> );
+				tpUser = new WebFXTabPane(document.getElementById("webUserPane"), <?php echo EvolutionCMS()->getConfig('remember_last_tab') == 1 ? 'true' : 'false'; ?> );
 			</script>
 			<div class="tab-page" id="tabGeneral">
 				<h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
@@ -286,26 +286,26 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 					</tr>
 					<?php } ?>
 					<?php if(!empty($userdata['id'])) { ?>
-						<tr id="showname" style="display: <?php echo ($modx->getManagerApi()->action == '88' && (!isset($usernamedata['oldusername']) || $usernamedata['oldusername'] == $usernamedata['username'])) ? $displayStyle : 'none'; ?> ">
+						<tr id="showname" style="display: <?php echo (EvolutionCMS()->getManagerApi()->action == '88' && (!isset($usernamedata['oldusername']) || $usernamedata['oldusername'] == $usernamedata['username'])) ? $displayStyle : 'none'; ?> ">
                             <th><?php echo $_lang['username']; ?>:</th>
                             <td>&nbsp;</td>
-                            <td><i class="<?php echo $_style["icon_web_user"] ?>"></i>&nbsp;<b><?php echo $modx->getPhpCompat()->htmlspecialchars(!empty($usernamedata['oldusername']) ? $usernamedata['oldusername'] : $usernamedata['username']); ?></b> - <span class="comment"><a href="javascript:;" onClick="changeName();return false;"><?php echo $_lang["change_name"]; ?></a></span>
-                            	<input type="hidden" name="oldusername" value="<?php echo $modx->getPhpCompat()->htmlspecialchars(!empty($usernamedata['oldusername']) ? $usernamedata['oldusername'] : $usernamedata['username']); ?>" />
+                            <td><i class="<?php echo $_style["icon_web_user"] ?>"></i>&nbsp;<b><?php echo EvolutionCMS()->getPhpCompat()->htmlspecialchars(!empty($usernamedata['oldusername']) ? $usernamedata['oldusername'] : $usernamedata['username']); ?></b> - <span class="comment"><a href="javascript:;" onClick="changeName();return false;"><?php echo $_lang["change_name"]; ?></a></span>
+                            	<input type="hidden" name="oldusername" value="<?php echo EvolutionCMS()->getPhpCompat()->htmlspecialchars(!empty($usernamedata['oldusername']) ? $usernamedata['oldusername'] : $usernamedata['username']); ?>" />
 							</td>
 						</tr>
 					<?php } ?>
-					<tr id="editname" style="display:<?php echo $modx->getManagerApi()->action == '87' || (isset($usernamedata['oldusername']) && $usernamedata['oldusername'] != $usernamedata['username']) ? $displayStyle : 'none'; ?>">
+					<tr id="editname" style="display:<?php echo EvolutionCMS()->getManagerApi()->action == '87' || (isset($usernamedata['oldusername']) && $usernamedata['oldusername'] != $usernamedata['username']) ? $displayStyle : 'none'; ?>">
 						<th><?php echo $_lang['username']; ?>:</th>
 						<td>&nbsp;</td>
-						<td><input type="text" name="newusername" class="inputBox" value="<?php echo $modx->getPhpCompat()->htmlspecialchars(isset($_POST['newusername']) ? $_POST['newusername'] : $usernamedata['username']); ?>" onChange='documentDirty=true;' maxlength="100" /></td>
+						<td><input type="text" name="newusername" class="inputBox" value="<?php echo EvolutionCMS()->getPhpCompat()->htmlspecialchars(isset($_POST['newusername']) ? $_POST['newusername'] : $usernamedata['username']); ?>" onChange='documentDirty=true;' maxlength="100" /></td>
 					</tr>
 					<tr>
-						<th><?php echo $modx->getManagerApi()->action == '87' ? $_lang['password'] . ":" : $_lang['change_password_new'] . ":"; ?></th>
+						<th><?php echo EvolutionCMS()->getManagerApi()->action == '87' ? $_lang['password'] . ":" : $_lang['change_password_new'] . ":"; ?></th>
 						<td>&nbsp;</td>
-						<td><input name="newpasswordcheck" type="checkbox" onClick="changestate(document.userform.newpassword);changePasswordState(document.userform.newpassword);"<?php echo $modx->getManagerApi()->action == "87" ? " checked disabled" : ""; ?>>
-							<input type="hidden" name="newpassword" value="<?php echo $modx->getManagerApi()->action == "87" ? 1 : 0; ?>" onChange="documentDirty=true;" />
+						<td><input name="newpasswordcheck" type="checkbox" onClick="changestate(document.userform.newpassword);changePasswordState(document.userform.newpassword);"<?php echo EvolutionCMS()->getManagerApi()->action == "87" ? " checked disabled" : ""; ?>>
+							<input type="hidden" name="newpassword" value="<?php echo EvolutionCMS()->getManagerApi()->action == "87" ? 1 : 0; ?>" onChange="documentDirty=true;" />
 							<br />
-							<span style="display:<?php echo $modx->getManagerApi()->action == "87" ? "block" : "none"; ?>" id="passwordBlock">
+							<span style="display:<?php echo EvolutionCMS()->getManagerApi()->action == "87" ? "block" : "none"; ?>" id="passwordBlock">
 							<fieldset style="width:300px">
 								<legend><?php echo $_lang['password_gen_method']; ?></legend>
 								<input type=radio name="passwordgenmethod" value="g" <?php echo get_by_key($_POST, 'passwordgenmethod') === 'spec' ? '' : 'checked="checked"'; ?> />
@@ -337,36 +337,36 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
                     <tr>
                         <th><?php echo $_lang['user_full_name']; ?>:</th>
                         <td>&nbsp;</td>
-                        <td><input type="text" name="fullname" class="inputBox" value="<?php echo $modx->getPhpCompat()->htmlspecialchars(isset($_POST['fullname']) ? $_POST['fullname'] : $userdata['fullname']); ?>" onChange="documentDirty=true;" /></td>
+                        <td><input type="text" name="fullname" class="inputBox" value="<?php echo EvolutionCMS()->getPhpCompat()->htmlspecialchars(isset($_POST['fullname']) ? $_POST['fullname'] : $userdata['fullname']); ?>" onChange="documentDirty=true;" /></td>
                     </tr>
                     <tr>
                         <th><?php echo $_lang['user_first_name']; ?>:</th>
                         <td>&nbsp;</td>
-                        <td><input type="text" name="first_name" class="inputBox" value="<?php echo $modx->getPhpCompat()->htmlspecialchars($userdata['first_name']); ?>" onChange="documentDirty=true;" /></td>
+                        <td><input type="text" name="first_name" class="inputBox" value="<?php echo EvolutionCMS()->getPhpCompat()->htmlspecialchars($userdata['first_name']); ?>" onChange="documentDirty=true;" /></td>
                     </tr>
                     <tr>
                         <th><?php echo $_lang['user_middle_name']; ?>:</th>
                         <td>&nbsp;</td>
-                        <td><input type="text" name="middle_name" class="inputBox" value="<?php echo $modx->getPhpCompat()->htmlspecialchars($userdata['middle_name']); ?>" onChange="documentDirty=true;" /></td>
+                        <td><input type="text" name="middle_name" class="inputBox" value="<?php echo EvolutionCMS()->getPhpCompat()->htmlspecialchars($userdata['middle_name']); ?>" onChange="documentDirty=true;" /></td>
                     </tr>
                     <tr>
                         <th><?php echo $_lang['user_last_name']; ?>:</th>
                         <td>&nbsp;</td>
-                        <td><input type="text" name="last_name" class="inputBox" value="<?php echo $modx->getPhpCompat()->htmlspecialchars($userdata['last_name']); ?>" onChange="documentDirty=true;" /></td>
+                        <td><input type="text" name="last_name" class="inputBox" value="<?php echo EvolutionCMS()->getPhpCompat()->htmlspecialchars($userdata['last_name']); ?>" onChange="documentDirty=true;" /></td>
                     </tr>
 
 					<tr>
 						<th><?php echo $_lang['user_email']; ?>:</th>
 						<td>&nbsp;</td>
 						<td><input type="text" name="email" class="inputBox" value="<?php echo isset($_POST['email']) ? $_POST['email'] : $userdata['email']; ?>" onChange="documentDirty=true;" />
-							<input type="hidden" name="oldemail" value="<?php echo $modx->getPhpCompat()->htmlspecialchars(!empty($userdata['oldemail']) ? $userdata['oldemail'] : $userdata['email']); ?>" /></td>
+							<input type="hidden" name="oldemail" value="<?php echo EvolutionCMS()->getPhpCompat()->htmlspecialchars(!empty($userdata['oldemail']) ? $userdata['oldemail'] : $userdata['email']); ?>" /></td>
 					</tr>
                     <tr>
                         <th><?php echo $_lang['user_role']; ?>:</th>
                         <td>&nbsp;</td>
                         <td><?php
                             $roles = \EvolutionCMS\Models\UserRole::query()->select('name', 'id');
-                            if(!$modx->hasPermission('save_role')){
+                            if(!EvolutionCMS()->hasPermission('save_role')){
                                 $roles = $roles->where('id', '!=', 1);
                             }
                             ?>
@@ -374,7 +374,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
                                 <option value="0" <?php $userdata['role'] == 0 ? "selected='selected'" : '' ?>><?php echo $_lang['no_user_role']; ?></option>
                                 <?php
                                 foreach($roles->get()->toArray() as $row) {
-                                    if($modx->getManagerApi()->action == '11') {
+                                    if(EvolutionCMS()->getManagerApi()->action == '11') {
                                         $selectedtext = $row['id'] == '1' ? ' selected="selected"' : '';
                                     } else {
                                         $selectedtext = $row['id'] == $userdata['role'] ? "selected='selected'" : '';
@@ -404,12 +404,12 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 					<tr>
 						<th><?php echo $_lang['user_street']; ?>:</th>
 						<td>&nbsp;</td>
-						<td><input type="text" name="street" class="inputBox" value="<?php echo $modx->getPhpCompat()->htmlspecialchars($userdata['street']); ?>" onChange="documentDirty=true;" /></td>
+						<td><input type="text" name="street" class="inputBox" value="<?php echo EvolutionCMS()->getPhpCompat()->htmlspecialchars($userdata['street']); ?>" onChange="documentDirty=true;" /></td>
 					</tr>
 					<tr>
 						<th><?php echo $_lang['user_city']; ?>:</th>
 						<td>&nbsp;</td>
-						<td><input type="text" name="city" class="inputBox" value="<?php echo $modx->getPhpCompat()->htmlspecialchars($userdata['city']); ?>" onChange="documentDirty=true;" /></td>
+						<td><input type="text" name="city" class="inputBox" value="<?php echo EvolutionCMS()->getPhpCompat()->htmlspecialchars($userdata['city']); ?>" onChange="documentDirty=true;" /></td>
 					</tr>
 					<tr>
 						<th><?php echo $_lang['user_state']; ?>:</th>
@@ -437,7 +437,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 					<tr>
 						<th><?php echo $_lang['user_dob']; ?>:</th>
 						<td>&nbsp;</td>
-						<td><input type="text" id="dob" name="dob" class="DatePicker" value="<?php echo isset($_POST['dob']) ? $_POST['dob'] : ($userdata['dob'] ? $modx->toDateFormat($userdata['dob']) : ""); ?>" onBlur='documentDirty=true;' readonly />
+						<td><input type="text" id="dob" name="dob" class="DatePicker" value="<?php echo isset($_POST['dob']) ? $_POST['dob'] : ($userdata['dob'] ? EvolutionCMS()->toDateFormat($userdata['dob']) : ""); ?>" onBlur='documentDirty=true;' readonly />
 							<i onClick="document.userform.dob.value=''; return true;" class="clearDate <?php echo $_style["icon_calendar_close"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></td>
 					</tr>
 					<tr>
@@ -453,14 +453,14 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 					<tr>
 						<th><?php echo $_lang['comment']; ?>:</th>
 						<td>&nbsp;</td>
-						<td><textarea type="text" name="comment" class="inputBox" rows="5" onChange="documentDirty=true;"><?php echo $modx->getPhpCompat()->htmlspecialchars(isset($_POST['comment']) ? $_POST['comment'] : $userdata['comment']); ?></textarea></td>
+						<td><textarea type="text" name="comment" class="inputBox" rows="5" onChange="documentDirty=true;"><?php echo EvolutionCMS()->getPhpCompat()->htmlspecialchars(isset($_POST['comment']) ? $_POST['comment'] : $userdata['comment']); ?></textarea></td>
 					</tr>
 					<tr>
 						<th><?php echo $_lang['user_verification']; ?>:</th>
 						<td>&nbsp;</td>
-						<td><input type="checkbox" name="verified" value="1" <?php echo ($userdata['verified'] == 1 || $modx->getManagerApi()->action == 87 ? 'checked ' : ''); ?><?php echo ($modx->getManagerApi()->action == 87 ? 'disabled' : ''); ?>></td>
+						<td><input type="checkbox" name="verified" value="1" <?php echo ($userdata['verified'] == 1 || EvolutionCMS()->getManagerApi()->action == 87 ? 'checked ' : ''); ?><?php echo (EvolutionCMS()->getManagerApi()->action == 87 ? 'disabled' : ''); ?>></td>
 					</tr>
-					<?php if($modx->getManagerApi()->action == '88') { ?>
+					<?php if(EvolutionCMS()->getManagerApi()->action == '88') { ?>
 						<tr>
 							<th><?php echo $_lang['user_logincount']; ?>:</th>
 							<td>&nbsp;</td>
@@ -469,7 +469,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 						<tr>
 							<th><?php echo $_lang['user_prevlogin']; ?>:</th>
 							<td>&nbsp;</td>
-							<td><?php echo $modx->toDateFormat($userdata['thislogin'] + $modx->getConfig('server_offset_time')) ?></td>
+							<td><?php echo EvolutionCMS()->toDateFormat($userdata['thislogin'] + EvolutionCMS()->getConfig('server_offset_time')) ?></td>
 						</tr>
 						<tr>
 							<th><?php echo $_lang['user_failedlogincount']; ?>:</th>
@@ -486,13 +486,13 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 						<tr>
 							<th><?php echo $_lang['user_blockeduntil']; ?>:</th>
 							<td>&nbsp;</td>
-							<td><input type="text" id="blockeduntil" name="blockeduntil" class="DatePicker" value="<?php echo isset($_POST['blockeduntil']) ? $_POST['blockeduntil'] : ($userdata['blockeduntil'] ? $modx->toDateFormat($userdata['blockeduntil']) : ""); ?>" onBlur='documentDirty=true;' readonly />
+							<td><input type="text" id="blockeduntil" name="blockeduntil" class="DatePicker" value="<?php echo isset($_POST['blockeduntil']) ? $_POST['blockeduntil'] : ($userdata['blockeduntil'] ? EvolutionCMS()->toDateFormat($userdata['blockeduntil']) : ""); ?>" onBlur='documentDirty=true;' readonly />
 								<i onClick="document.userform.blockeduntil.value=''; return true;" class="clearDate <?php echo $_style["icon_calendar_close"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></td>
 						</tr>
 						<tr>
 							<th><?php echo $_lang['user_blockedafter']; ?>:</th>
 							<td>&nbsp;</td>
-							<td><input type="text" id="blockedafter" name="blockedafter" class="DatePicker" value="<?php echo isset($_POST['blockedafter']) ? $_POST['blockedafter'] : ($userdata['blockedafter'] ? $modx->toDateFormat($userdata['blockedafter']) : ""); ?>" onBlur='documentDirty=true;' readonly />
+							<td><input type="text" id="blockedafter" name="blockedafter" class="DatePicker" value="<?php echo isset($_POST['blockedafter']) ? $_POST['blockedafter'] : ($userdata['blockedafter'] ? EvolutionCMS()->toDateFormat($userdata['blockedafter']) : ""); ?>" onBlur='documentDirty=true;' readonly />
 								<i onClick="document.userform.blockedafter.value=''; return true;" class="clearDate <?php echo $_style["icon_calendar_close"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></td>
 						</tr>
 						<?php
@@ -514,7 +514,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
                             ->toArray();
 
                         $richtexteditorIds = $richtexteditorOptions = [];
-                        $richtextEditor = $modx->getConfig('which_editor');
+                        $richtextEditor = EvolutionCMS()->getConfig('which_editor');
 
                         foreach ($tvs as $row) {
                             $tvValue = '';
@@ -536,7 +536,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
                             }
 
                             if ($row['type'] == 'richtext') {
-                                $tvOptions = $modx->parseProperties($row['elements']);
+                                $tvOptions = EvolutionCMS()->parseProperties($row['elements']);
 
                                 if (!empty($tvOptions) && !empty($tvOptions['editor'])) {
                                     $editor = $tvOptions['editor'];
@@ -586,10 +586,10 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
                             <?php
                         }
 
-                        if ($modx->getConfig('use_editor')) {
+                        if (EvolutionCMS()->getConfig('use_editor')) {
                             foreach ($richtexteditorIds as $editor => $elements) {
                                 // invoke OnRichTextEditorInit event
-                                $evtOut = $modx->invokeEvent('OnRichTextEditorInit', [
+                                $evtOut = EvolutionCMS()->invokeEvent('OnRichTextEditorInit', [
                                     'editor'   => $editor,
                                     'elements' => $elements,
                                     'options'  => $richtexteditorOptions[$editor]
@@ -726,20 +726,20 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
                             <small>[(manager_theme_mode)]</small>
                         </td>
                         <td>
-                            <label><input type="radio" name="manager_theme_mode" value="" <?= $modx->getConfig('manager_theme_mode') === 0 ? 'checked="checked"' : "" ?> />
+                            <label><input type="radio" name="manager_theme_mode" value="" <?= EvolutionCMS()->getConfig('manager_theme_mode') === 0 ? 'checked="checked"' : "" ?> />
                                 <?= $_lang['option_default'] ?></label>
                             <br />
 
-                            <label><input type="radio" name="manager_theme_mode" value="1" <?= $modx->getConfig('manager_theme_mode') === 1 ? 'checked="checked"' : "" ?> />
+                            <label><input type="radio" name="manager_theme_mode" value="1" <?= EvolutionCMS()->getConfig('manager_theme_mode') === 1 ? 'checked="checked"' : "" ?> />
                                 <?= $_lang['manager_theme_mode1'] ?></label>
                             <br />
-                            <label><input type="radio" name="manager_theme_mode" value="2" <?= $modx->getConfig('manager_theme_mode') === 2 ? 'checked="checked"' : "" ?> />
+                            <label><input type="radio" name="manager_theme_mode" value="2" <?= EvolutionCMS()->getConfig('manager_theme_mode') === 2 ? 'checked="checked"' : "" ?> />
                                 <?= $_lang['manager_theme_mode2'] ?></label>
                             <br />
-                            <label><input type="radio" name="manager_theme_mode" value="3" <?= $modx->getConfig('manager_theme_mode') === 3 ? 'checked="checked"' : "" ?> />
+                            <label><input type="radio" name="manager_theme_mode" value="3" <?= EvolutionCMS()->getConfig('manager_theme_mode') === 3 ? 'checked="checked"' : "" ?> />
                                 <?= $_lang['manager_theme_mode3'] ?></label>
                             <br />
-                            <label><input type="radio" name="manager_theme_mode" value="4" <?= ($modx->getConfig('manager_theme_mode') === 4) ? 'checked="checked"' : "" ?> />
+                            <label><input type="radio" name="manager_theme_mode" value="4" <?= (EvolutionCMS()->getConfig('manager_theme_mode') === 4) ? 'checked="checked"' : "" ?> />
                                 <?= $_lang['manager_theme_mode4'] ?></label>
                         </td>
                     </tr>
@@ -773,7 +773,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
                     </tr>
                     <tr>
                         <th><?php echo $_lang["filemanager_path_title"] ?></th>
-                        <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="filemanager_path" value="<?php echo $modx->getPhpCompat()->htmlspecialchars(isset($usersettings['filemanager_path']) ? $usersettings['filemanager_path'] : ""); ?>"></td>
+                        <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="filemanager_path" value="<?php echo EvolutionCMS()->getPhpCompat()->htmlspecialchars(isset($usersettings['filemanager_path']) ? $usersettings['filemanager_path'] : ""); ?>"></td>
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
@@ -823,7 +823,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
                         <td>&nbsp;</td>
                         <td class='comment'><?php echo $_lang["upload_maxsize_message"] ?></td>
                     </tr>
-                    <tr id='editorRow0' style="display: <?php echo $modx->getConfig('use_editor') === true ? $displayStyle : 'none'; ?>">
+                    <tr id='editorRow0' style="display: <?php echo EvolutionCMS()->getConfig('use_editor') === true ? $displayStyle : 'none'; ?>">
                         <th><?php echo $_lang["which_editor_title"] ?></th>
                         <td><select name="which_editor" onChange="documentDirty=true;">
                                 <option value=""></option>
@@ -831,7 +831,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 
                                 $edt = isset ($usersettings["which_editor"]) ? $usersettings["which_editor"] : '';
                                 // invoke OnRichTextEditorRegister event
-                                $evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
+                                $evtOut = EvolutionCMS()->invokeEvent("OnRichTextEditorRegister");
                                 echo "<option value='none'" . ($edt == 'none' ? " selected='selected'" : "") . ">" . $_lang["none"] . "</option>\n";
                                 if(is_array($evtOut)) {
                                     for($i = 0; $i < count($evtOut); $i++) {
@@ -842,38 +842,38 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
                                 ?>
                             </select></td>
                     </tr>
-                    <tr id='editorRow1' style="display: <?php echo $modx->getConfig('use_editor') === true ? $displayStyle : 'none'; ?>">
+                    <tr id='editorRow1' style="display: <?php echo EvolutionCMS()->getConfig('use_editor') === true ? $displayStyle : 'none'; ?>">
                         <td>&nbsp;</td>
                         <td class='comment'><?php echo $_lang["which_editor_message"] ?></td>
                     </tr>
-                    <tr id='editorRow14' class="row3" style="display: <?php echo $modx->getConfig('use_editor') === true ? $displayStyle : 'none'; ?>">
+                    <tr id='editorRow14' class="row3" style="display: <?php echo EvolutionCMS()->getConfig('use_editor') === true ? $displayStyle : 'none'; ?>">
                         <th><?php echo $_lang["editor_css_path_title"] ?></th>
                         <td><input onChange="documentDirty=true;" type='text' maxlength='255' name="editor_css_path" value="<?php echo isset($usersettings["editor_css_path"]) ? $usersettings["editor_css_path"] : ""; ?>" /></td>
                     </tr>
-                    <tr id='editorRow15' class='row3' style="display: <?php echo $modx->getConfig('use_editor') === true ? $displayStyle : 'none'; ?>">
+                    <tr id='editorRow15' class='row3' style="display: <?php echo EvolutionCMS()->getConfig('use_editor') === true ? $displayStyle : 'none'; ?>">
                         <td>&nbsp;</td>
                         <td class='comment'><?php echo $_lang["editor_css_path_message"] ?></td>
                     </tr>
-                    <tr id='rbRow1' class='row3' style="display: <?php echo $modx->getConfig('use_browser') === true ? $displayStyle : 'none'; ?>">
+                    <tr id='rbRow1' class='row3' style="display: <?php echo EvolutionCMS()->getConfig('use_browser') === true ? $displayStyle : 'none'; ?>">
                         <th><?php echo $_lang["rb_base_dir_title"] ?></th>
                         <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="rb_base_dir" value="<?php echo isset($usersettings["rb_base_dir"]) ? $usersettings["rb_base_dir"] : ""; ?>" /></td>
                     </tr>
-                    <tr id='rbRow2' class='row3' style="display: <?php echo $modx->getConfig('use_browser') === true ? $displayStyle : 'none'; ?>">
+                    <tr id='rbRow2' class='row3' style="display: <?php echo EvolutionCMS()->getConfig('use_browser') === true ? $displayStyle : 'none'; ?>">
                         <td>&nbsp;</td>
                         <td class='comment'><?php echo $_lang["rb_base_dir_message"] ?></td>
                     </tr>
-                    <tr id='rbRow4' class='row3' style="display: <?php echo $modx->getConfig('use_browser') === true ? $displayStyle : 'none'; ?>">
+                    <tr id='rbRow4' class='row3' style="display: <?php echo EvolutionCMS()->getConfig('use_browser') === true ? $displayStyle : 'none'; ?>">
                         <th><?php echo $_lang["rb_base_url_title"] ?></th>
                         <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="rb_base_url" value="<?php echo isset($usersettings["rb_base_url"]) ? $usersettings["rb_base_url"] : ""; ?>" /></td>
                     </tr>
-                    <tr id='rbRow5' class='row3' style="display: <?php echo $modx->getConfig('use_browser') === true ? $displayStyle : 'none'; ?>">
+                    <tr id='rbRow5' class='row3' style="display: <?php echo EvolutionCMS()->getConfig('use_browser') === true ? $displayStyle : 'none'; ?>">
                         <td>&nbsp;</td>
                         <td class='comment'><?php echo $_lang["rb_base_url_message"] ?></td>
                     </tr>
                 </table>
                 <?php
                 // invoke OnInterfaceSettingsRender event
-                $evtOut = $modx->invokeEvent("OnInterfaceSettingsRender");
+                $evtOut = EvolutionCMS()->invokeEvent("OnInterfaceSettingsRender");
                 if(is_array($evtOut)) {
                     echo implode("", $evtOut);
                 }
@@ -888,7 +888,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 					<tr>
 						<th><?php echo $_lang["user_photo"] ?></th>
                         <td>
-						<input onChange="documentDirty=true;" type='text' maxlength='255' name="photo" id="photo" value="<?php echo $modx->getPhpCompat()->htmlspecialchars(isset($_POST['photo']) ? $_POST['photo'] : $userdata['photo']); ?>" />
+						<input onChange="documentDirty=true;" type='text' maxlength='255' name="photo" id="photo" value="<?php echo EvolutionCMS()->getPhpCompat()->htmlspecialchars(isset($_POST['photo']) ? $_POST['photo'] : $userdata['photo']); ?>" />
                             <button type="button"  onClick="BrowseServer('photo');" /><?php echo $_lang['insert']; ?></button>
                         </td>
 					</tr>
@@ -921,11 +921,11 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 				</table>
 			</div>
 			<?php
-			if($modx->getConfig('use_udperms')) {
+			if(EvolutionCMS()->getConfig('use_udperms')) {
 
 			$groupsarray = array();
 
-			if($modx->getManagerApi()->action == '88') { // only do this bit if the user is being edited
+			if(EvolutionCMS()->getManagerApi()->action == '88') { // only do this bit if the user is being edited
 				$groupsarray = \EvolutionCMS\Models\MemberGroup::query()->where('member', $user)->pluck('user_group')->toArray();
 			}
 			// retain selected user groups between post
@@ -947,7 +947,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 			</div>
 			<?php
 			// invoke OnWUsrFormRender event
-			$evtOut = $modx->invokeEvent("OnWUsrFormRender", array(
+			$evtOut = EvolutionCMS()->invokeEvent("OnWUsrFormRender", array(
 				"id" => $user
 			));
 			if(is_array($evtOut)) {

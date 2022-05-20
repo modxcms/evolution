@@ -2,13 +2,13 @@
 if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if(!$modx->hasPermission('delete_template')) {
-	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if(!EvolutionCMS()->hasPermission('delete_template')) {
+	EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if($id == 0) {
-	$modx->webAlertAndQuit($_lang["error_no_id"]);
+	EvolutionCMS()->webAlertAndQuit($_lang["error_no_id"]);
 }
 
 $forced = isset($_GET['force']) ? $_GET['force'] : 0;
@@ -59,7 +59,7 @@ $name = EvolutionCMS\Models\SiteTmplvar::findOrFail($id)->name;
 $_SESSION['itemname'] = $name;
 
 // invoke OnBeforeTVFormDelete event
-$modx->invokeEvent("OnBeforeTVFormDelete", array(
+EvolutionCMS()->invokeEvent("OnBeforeTVFormDelete", array(
 	"id" => $id
 ));
 
@@ -67,12 +67,12 @@ $modx->invokeEvent("OnBeforeTVFormDelete", array(
 EvolutionCMS\Models\SiteTmplvar::destroy($id);
 
 // invoke OnTVFormDelete event
-$modx->invokeEvent("OnTVFormDelete", array(
+EvolutionCMS()->invokeEvent("OnTVFormDelete", array(
 	"id" => $id
 ));
 
 // empty cache
-$modx->clearCache('full');
+EvolutionCMS()->clearCache('full');
 
 // finished emptying cache - redirect
 $header = "Location: index.php?a=76&r=2";

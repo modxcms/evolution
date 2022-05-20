@@ -2,8 +2,8 @@
 if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if (!$modx->hasPermission('logs')) {
-    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if (!EvolutionCMS()->hasPermission('logs')) {
+    EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $logs = \EvolutionCMS\Models\ManagerLog::query()->select('internalKey', 'username', 'action', 'itemid', 'itemname')->distinct()->get()->toArray();
@@ -122,7 +122,7 @@ $logs = \EvolutionCMS\Models\ManagerLog::query()->select('internalKey', 'usernam
                     <div class="col-sm-4 col-md-3 col-lg-2"><b><?= $_lang["mgrlog_results"] ?></b></div>
                     <div class="col-sm-8 col-md-5 col-lg-4">
                         <input type="text" name="nrresults" class="form-control"
-                               value="<?= isset($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $modx->getConfig('number_of_logs') ?>"/>
+                               value="<?= isset($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : EvolutionCMS()->getConfig('number_of_logs') ?>"/>
                     </div>
                 </div>
 
@@ -168,12 +168,12 @@ if (isset($_REQUEST['log_submit'])) {
     }
     // date stuff
     if ($_REQUEST['datefrom'] != "") {
-        $logs = $logs->where('timestamp', '>', $modx->toTimeStamp($_REQUEST['datefrom']));
+        $logs = $logs->where('timestamp', '>', EvolutionCMS()->toTimeStamp($_REQUEST['datefrom']));
 
-        $sqladd[] = "timestamp>" . $modx->toTimeStamp($_REQUEST['datefrom']);
+        $sqladd[] = "timestamp>" . EvolutionCMS()->toTimeStamp($_REQUEST['datefrom']);
     }
     if ($_REQUEST['dateto'] != "") {
-        $logs = $logs->where('timestamp', '<', $modx->toTimeStamp($_REQUEST['dateto']));
+        $logs = $logs->where('timestamp', '<', EvolutionCMS()->toTimeStamp($_REQUEST['dateto']));
     }
 
     // If current position is not set, set it to zero
@@ -184,7 +184,7 @@ if (isset($_REQUEST['log_submit'])) {
     }
 
     // Number of result to display on the page, will be in the LIMIT of the sql query also
-    $int_num_result = is_numeric($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $modx->getConfig('number_of_logs');
+    $int_num_result = is_numeric($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : EvolutionCMS()->getConfig('number_of_logs');
 
     $extargv = "&a=13&searchuser=" . get_by_key($_REQUEST, 'searchuser') . "&action=" . get_by_key($_REQUEST, 'action') . "&itemid=" . get_by_key($_REQUEST, 'itemid') . "&itemname=" . get_by_key($_REQUEST, 'itemname') . "&message=" . get_by_key($_REQUEST, 'message') . "&dateto=" . $_REQUEST['dateto'] . "&datefrom=" . $_REQUEST['datefrom'] . "&nrresults=" . $int_num_result . "&log_submit=" . $_REQUEST['log_submit']; // extra argv here (could be anything depending on your page)
 
@@ -273,7 +273,7 @@ if ($limit < 1) {
                         <td class="text-nowrap"><?= '[' . $logentry['action'] . '] ' . $logentry['message'] ?></td>
                         <td class="text-xs-right"><?= $logentry['itemid'] ?></td>
                         <td><?= $item ?></td>
-                        <td class="text-nowrap"><?= $modx->toDateFormat($logentry['timestamp'] + $modx->getConfig('server_offset_time')) ?></td>
+                        <td class="text-nowrap"><?= EvolutionCMS()->toDateFormat($logentry['timestamp'] + EvolutionCMS()->getConfig('server_offset_time')) ?></td>
                         <td class="text-nowrap"><?= $logentry['ip'] ?></td>
                         <td class="text-nowrap"><?= $logentry['useragent'] ?></td>
                     </tr>

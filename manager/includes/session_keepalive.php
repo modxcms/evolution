@@ -7,13 +7,13 @@
 define('IN_MANAGER_MODE', true);
 define('MODX_API_MODE', true);
 include_once('../../index.php');
-$modx->getSettings();
-$modx->invokeEvent('OnManagerPageInit');
+EvolutionCMS()->getSettings();
+EvolutionCMS()->invokeEvent('OnManagerPageInit');
 $ok = false;
 
 if (isset($_SESSION['mgrToken']) && $_GET['tok'] == $_SESSION['mgrToken']) {
     $ok = true;
-    $modx->updateValidatedUserSession();
+    EvolutionCMS()->updateValidatedUserSession();
 }
 
 header('Content-type: application/json');

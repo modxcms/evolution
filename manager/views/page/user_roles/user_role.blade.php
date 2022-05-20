@@ -3,7 +3,7 @@
 
     <form name="userform" method="post" action="index.php" enctype="multipart/form-data">
         <input type="hidden" name="a" value="36">
-        <input type="hidden" name="mode" value="<?= $modx->getManagerApi()->action ?>">
+        <input type="hidden" name="mode" value="<?= EvolutionCMS()->getManagerApi()->action ?>">
         <input type="hidden" name="id" value="<?= isset($_GET['id']) ? (int)$_GET['id'] : '' ?>">
 
         <h1>
@@ -14,7 +14,7 @@
 
         <div class="tab-pane" id="rolePane">
             <script>
-                var tp = new WebFXTabPane(document.getElementById('rolePane'), {{ get_by_key($modx->config, 'remember_last_tab') ? 1 : 0 }});
+                var tp = new WebFXTabPane(document.getElementById('rolePane'), {{ get_by_key(EvolutionCMS()->config, 'remember_last_tab') ? 1 : 0 }});
             </script>
 
             <div class="tab-page" id="roleMain">

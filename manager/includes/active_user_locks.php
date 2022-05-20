@@ -7,12 +7,12 @@
 define('IN_MANAGER_MODE', true);
 define('MODX_API_MODE', true);
 include_once('../../index.php');
-$modx = EvolutionCMS();
-$modx->invokeEvent('OnManagerPageInit');
+
+EvolutionCMS()->invokeEvent('OnManagerPageInit');
 $ok = false;
 
-if ($modx->elementIsLocked($_GET['type'], $_GET['id'], true)) {
-    $modx->lockElement($_GET['type'], $_GET['id']);
+if (EvolutionCMS()->elementIsLocked($_GET['type'], $_GET['id'], true)) {
+    EvolutionCMS()->lockElement($_GET['type'], $_GET['id']);
     $ok = true;
 }
 

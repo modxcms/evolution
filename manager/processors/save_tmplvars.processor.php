@@ -2,8 +2,8 @@
 if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if (!$modx->hasPermission('save_template')) {
-    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if (!EvolutionCMS()->hasPermission('save_template')) {
+    EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = (int)$_POST['id'];
@@ -19,7 +19,7 @@ $params = $_POST['params'];
 $locked = isset($_POST['locked']) && $_POST['locked'] == 'on' ? 1 : 0;
 $origin = isset($_REQUEST['or']) ? (int)$_REQUEST['or'] : 76;
 $originId = isset($_REQUEST['oid']) ? (int)$_REQUEST['oid'] : null;
-$currentdate = time() + $modx->config['server_offset_time'];
+$currentdate = time() + EvolutionCMS()->config['server_offset_time'];
 $properties = getProperties($type);
 
 //Kyle Jaebker - added category support
@@ -42,21 +42,21 @@ switch ($_POST['mode']) {
     case '300':
 
         // invoke OnBeforeTVFormSave event
-        $modx->invokeEvent("OnBeforeTVFormSave", array(
+        EvolutionCMS()->invokeEvent("OnBeforeTVFormSave", array(
             "mode" => "new",
             "id" => $id
         ));
 
         // disallow duplicate names for new tvs
         if (EvolutionCMS\Models\SiteTmplvar::where('name', '=', $name)->first()) {
-            $modx->getManagerApi()->saveFormValues(300);
-            $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['tv'], $name), "index.php?a=300");
+            EvolutionCMS()->getManagerApi()->saveFormValues(300);
+            EvolutionCMS()->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['tv'], $name), "index.php?a=300");
         }
         // disallow reserved names
         if (in_array($name, array('id', 'type', 'contentType', 'pagetitle', 'longtitle', 'description', 'alias', 'link_attributes', 'published', 'pub_date', 'unpub_date', 'parent', 'isfolder', 'introtext', 'content', 'richtext', 'template', 'menuindex', 'searchable', 'cacheable', 'createdby', 'createdon', 'editedby', 'editedon', 'deleted', 'deletedon', 'deletedby', 'publishedon', 'publishedby', 'menutitle', 'hide_from_tree', 'privateweb', 'privatemgr', 'content_dispo', 'hidemenu', 'alias_visible', 'id', 'oldusername', 'oldemail', 'newusername', 'fullname', 'first_name', 'middle_name', 'last_name', 'verified', 'newpassword', 'newpasswordcheck', 'passwordgenmethod', 'passwordnotifymethod', 'specifiedpassword', 'confirmpassword', 'email', 'phone', 'mobilephone', 'fax', 'dob', 'country', 'street', 'city', 'state', 'zip', 'gender', 'photo', 'comment', 'role', 'failedlogincount', 'blocked', 'blockeduntil', 'blockedafter', 'user_groups', 'mode', 'blockedmode', 'stay', 'save', 'theme_refresher', 'username'))) {
             $_POST['name'] = '';
-            $modx->getManagerApi()->saveFormValues(300);
-            $modx->webAlertAndQuit(sprintf($_lang['reserved_name_warning'], $_lang['tv'], $name), "index.php?a=300");
+            EvolutionCMS()->getManagerApi()->saveFormValues(300);
+            EvolutionCMS()->webAlertAndQuit(sprintf($_lang['reserved_name_warning'], $_lang['tv'], $name), "index.php?a=300");
         }
 
         // Add new TV
@@ -85,7 +85,7 @@ switch ($_POST['mode']) {
         saveVarRoles($newid);
 
         // invoke OnTVFormSave event
-        $modx->invokeEvent("OnTVFormSave", array(
+        EvolutionCMS()->invokeEvent("OnTVFormSave", array(
             "mode" => "new",
             "id" => $newid
         ));
@@ -94,7 +94,7 @@ switch ($_POST['mode']) {
         $_SESSION['itemname'] = $caption;
 
         // empty cache
-        $modx->clearCache('full');
+        EvolutionCMS()->clearCache('full');
 
         // finished emptying cache - redirect
         if ($_POST['stay'] != '') {
@@ -108,20 +108,20 @@ switch ($_POST['mode']) {
         break;
     case '301':
         // invoke OnBeforeTVFormSave event
-        $modx->invokeEvent("OnBeforeTVFormSave", array(
+        EvolutionCMS()->invokeEvent("OnBeforeTVFormSave", array(
             "mode" => "upd",
             "id" => $id
         ));
 
         // disallow duplicate names for tvs
         if (EvolutionCMS\Models\SiteTmplvar::where('name', '=', $name)->where('id', '!=', $id)->first()) {
-            $modx->getManagerApi()->saveFormValues(300);
-            $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['tv'], $name), "index.php?a=301&id={$id}");
+            EvolutionCMS()->getManagerApi()->saveFormValues(300);
+            EvolutionCMS()->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['tv'], $name), "index.php?a=301&id={$id}");
         }
         // disallow reserved names
         if (in_array($name, array('id', 'type', 'contentType', 'pagetitle', 'longtitle', 'description', 'alias', 'link_attributes', 'published', 'pub_date', 'unpub_date', 'parent', 'isfolder', 'introtext', 'content', 'richtext', 'template', 'menuindex', 'searchable', 'cacheable', 'createdby', 'createdon', 'editedby', 'editedon', 'deleted', 'deletedon', 'deletedby', 'publishedon', 'publishedby', 'menutitle', 'hide_from_tree', 'privateweb', 'privatemgr', 'content_dispo', 'hidemenu', 'alias_visible', 'id', 'oldusername', 'oldemail', 'newusername', 'fullname', 'first_name', 'middle_name', 'last_name', 'verified', 'newpassword', 'newpasswordcheck', 'passwordgenmethod', 'passwordnotifymethod', 'specifiedpassword', 'confirmpassword', 'email', 'phone', 'mobilephone', 'fax', 'dob', 'country', 'street', 'city', 'state', 'zip', 'gender', 'photo', 'comment', 'role', 'failedlogincount', 'blocked', 'blockeduntil', 'blockedafter', 'user_groups', 'mode', 'blockedmode', 'stay', 'save', 'theme_refresher', 'username'))) {
-            $modx->getManagerApi()->saveFormValues(300);
-            $modx->webAlertAndQuit(sprintf($_lang['reserved_name_warning'], $_lang['tv'], $name), "index.php?a=301&id={$id}");
+            EvolutionCMS()->getManagerApi()->saveFormValues(300);
+            EvolutionCMS()->webAlertAndQuit(sprintf($_lang['reserved_name_warning'], $_lang['tv'], $name), "index.php?a=301&id={$id}");
         }
 
         // update TV
@@ -149,7 +149,7 @@ switch ($_POST['mode']) {
         saveVarRoles($id);
 
         // invoke OnTVFormSave event
-        $modx->invokeEvent("OnTVFormSave", array(
+        EvolutionCMS()->invokeEvent("OnTVFormSave", array(
             "mode" => "upd",
             "id" => $id
         ));
@@ -158,7 +158,7 @@ switch ($_POST['mode']) {
         $_SESSION['itemname'] = $caption;
 
         // empty cache
-        $modx->clearCache('full');
+        EvolutionCMS()->clearCache('full');
 
         // finished emptying cache - redirect
         if ($_POST['stay'] != '') {
@@ -166,14 +166,14 @@ switch ($_POST['mode']) {
             $header = "Location: index.php?a=" . $a . "&r=2&stay=" . $_POST['stay'] . "&or=" . $origin . "&oid=" . $originId;
             header($header);
         } else {
-            $modx->unlockElement(2, $id);
+            EvolutionCMS()->unlockElement(2, $id);
             $header = "Location: index.php?a=" . $origin . "&r=2" . (empty($originId) ? '' : '&id=' . $originId);
             header($header);
         }
 
         break;
     default:
-        $modx->webAlertAndQuit("No operation set in request.");
+        EvolutionCMS()->webAlertAndQuit("No operation set in request.");
 }
 
 function getProperties($type) {

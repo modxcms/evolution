@@ -5,7 +5,7 @@ if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 
 // START HACK
 if (isset ($modx)) {
-    $user_id = $modx->getLoginUserID();
+    $user_id = EvolutionCMS()->getLoginUserID();
 } else {
     $user_id = $_SESSION['mgrInternalKey'];
 }
@@ -15,7 +15,7 @@ if (!empty($user_id)) {
     // Raymond: grab the user settings from the database.
     $userSettings = \EvolutionCMS\Models\UserSetting::query()
         ->select('setting_name', 'setting_value')
-        ->where('user', $modx->getLoginUserID())->get()->toArray();
+        ->where('user', EvolutionCMS()->getLoginUserID())->get()->toArray();
 
     $which_browser_default = $which_browser;
     foreach ($userSettings as $row) {
@@ -23,8 +23,8 @@ if (!empty($user_id)) {
             $row['setting_value'] = $which_browser_default;
         }
         $settings[$row['setting_name']] = $row['setting_value'];
-        if (isset($modx->config)) {
-            $modx->config[$row['setting_name']] = $row['setting_value'];
+        if (isset(EvolutionCMS()->config)) {
+            EvolutionCMS()->config[$row['setting_name']] = $row['setting_value'];
         }
     }
     extract($settings, EXTR_OVERWRITE);

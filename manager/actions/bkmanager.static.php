@@ -2,28 +2,28 @@
 if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if (!$modx->hasPermission('bk_manager')) {
-    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if (!EvolutionCMS()->hasPermission('bk_manager')) {
+    EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$dbase = $modx->getDatabase()->getConfig('database');
+$dbase = EvolutionCMS()->getDatabase()->getConfig('database');
 
-if (!$modx->getConfig('snapshot_path')) {
+if (!EvolutionCMS()->getConfig('snapshot_path')) {
     if (is_dir(MODX_BASE_PATH . 'temp/backup/')) {
-        $modx->setConfig('snapshot_path', MODX_BASE_PATH . 'temp/backup/');
+        EvolutionCMS()->setConfig('snapshot_path', MODX_BASE_PATH . 'temp/backup/');
     } else {
-        $modx->setConfig('snapshot_path', MODX_BASE_PATH . 'assets/backup/');
+        EvolutionCMS()->setConfig('snapshot_path', MODX_BASE_PATH . 'assets/backup/');
     }
 }
 
-$tempFile = $modx->getConfig('snapshot_path') . 'temp.php';
+$tempFile = EvolutionCMS()->getConfig('snapshot_path') . 'temp.php';
 if (file_exists($tempFile)) {
     unlink($tempFile);
 }
 
 // Backup Manager by Raymond:
 $mode = isset($_POST['mode']) ? $_POST['mode'] : '';
-$driver = $modx->getDatabase()->getConfig('driver');
+$driver = EvolutionCMS()->getDatabase()->getConfig('driver');
 
 if ($mode == 'restore1') {
 
@@ -44,7 +44,7 @@ if ($mode == 'restore1') {
                 $tempfile_path = MODX_BASE_PATH . 'assets/backup/temp.php';
                 file_put_contents($tempfile_path,  file_get_contents($_FILES['sqlfile']['tmp_name']));
 
-                $dump_request = 'PGPASSWORD="'.$modx->getDatabase()->getConfig('password').'" psql --host '.$modx->getDatabase()->getConfig('host').' --username ' . $modx->getDatabase()->getConfig('username') . ' --dbname ' . $dbase . ' < '.$tempfile_path;
+                $dump_request = 'PGPASSWORD="'.EvolutionCMS()->getDatabase()->getConfig('password').'" psql --host '.EvolutionCMS()->getDatabase()->getConfig('host').' --username ' . EvolutionCMS()->getDatabase()->getConfig('username') . ' --dbname ' . $dbase . ' < '.$tempfile_path;
                 exec($dump_request, $data, $data_second);
                 unlink($tempfile_path);
                 break;
@@ -57,13 +57,13 @@ if ($mode == 'restore1') {
     header('Location: index.php?r=9&a=93');
     exit;
 } elseif ($mode == 'restore2') {
-    $path = $modx->getConfig('snapshot_path') . $_POST['filename'];
+    $path = EvolutionCMS()->getConfig('snapshot_path') . $_POST['filename'];
     if (file_exists($path)) {
 
         switch ($driver) {
             case 'pgsql':
 
-                $dump_request = 'PGPASSWORD="'.$modx->getDatabase()->getConfig('password').'" psql --host '.$modx->getDatabase()->getConfig('host').' --username ' . $modx->getDatabase()->getConfig('username') . ' --dbname ' . $dbase . ' < '.$path;
+                $dump_request = 'PGPASSWORD="'.EvolutionCMS()->getDatabase()->getConfig('password').'" psql --host '.EvolutionCMS()->getDatabase()->getConfig('host').' --username ' . EvolutionCMS()->getDatabase()->getConfig('username') . ' --dbname ' . $dbase . ' < '.$path;
                 exec($dump_request, $data, $data_second);
 
 
@@ -83,7 +83,7 @@ if ($mode == 'restore1') {
 } elseif ($mode == 'backup') {
     $tables = isset($_POST['chk']) ? $_POST['chk'] : '';
     if (!is_array($tables)) {
-        $modx->webAlertAndQuit("Please select a valid table from the list below.");
+        EvolutionCMS()->webAlertAndQuit("Please select a valid table from the list below.");
     }
 
     /*
@@ -102,7 +102,7 @@ if ($mode == 'restore1') {
             }
             $table_str = ' -t ' . implode(' -t ', $tables);
 
-            $dump_request = 'pg_dump postgresql://' . $modx->getDatabase()->getConfig('username') . ':'.$modx->getDatabase()->getConfig('password').'@'.$modx->getDatabase()->getConfig('host').'/' . $dbase . ' --clean --inserts --no-owner --no-privileges '. $table_str .'> ' . $tempfile_path;
+            $dump_request = 'pg_dump postgresql://' . EvolutionCMS()->getDatabase()->getConfig('username') . ':'.EvolutionCMS()->getDatabase()->getConfig('password').'@'.EvolutionCMS()->getDatabase()->getConfig('host').'/' . $dbase . ' --clean --inserts --no-owner --no-privileges '. $table_str .'> ' . $tempfile_path;
 
             exec($dump_request, $data, $data_second);
             dumpSql($tempfile_path);
@@ -117,43 +117,43 @@ if ($mode == 'restore1') {
             if ($dumpfinished) {
                 exit;
             } else {
-                $modx->webAlertAndQuit('Unable to Backup Database');
+                EvolutionCMS()->webAlertAndQuit('Unable to Backup Database');
             }
             break;
     }
 
 // MySQLdumper class can be found below
 } elseif ($mode == 'snapshot') {
-    if (!is_dir(rtrim($modx->getConfig('snapshot_path'), '/'))) {
-        mkdir(rtrim($modx->getConfig('snapshot_path'), '/'));
-        @chmod(rtrim($modx->getConfig('snapshot_path'), '/'), 0777);
+    if (!is_dir(rtrim(EvolutionCMS()->getConfig('snapshot_path'), '/'))) {
+        mkdir(rtrim(EvolutionCMS()->getConfig('snapshot_path'), '/'));
+        @chmod(rtrim(EvolutionCMS()->getConfig('snapshot_path'), '/'), 0777);
     }
-    if (!is_file("{$modx->getConfig('snapshot_path')}.htaccess")) {
+    if (!is_file("{EvolutionCMS()->getConfig('snapshot_path')}.htaccess")) {
         $htaccess = "order deny,allow\ndeny from all\n";
-        file_put_contents("{$modx->getConfig('snapshot_path')}.htaccess", $htaccess);
+        file_put_contents("{EvolutionCMS()->getConfig('snapshot_path')}.htaccess", $htaccess);
     }
-    if (!is_writable(rtrim($modx->getConfig('snapshot_path'), '/'))) {
-        $modx->webAlertAndQuit(parsePlaceholder($_lang["bkmgr_alert_mkdir"], array('snapshot_path' => $modx->getConfig('snapshot_path'))));
+    if (!is_writable(rtrim(EvolutionCMS()->getConfig('snapshot_path'), '/'))) {
+        EvolutionCMS()->webAlertAndQuit(parsePlaceholder($_lang["bkmgr_alert_mkdir"], array('snapshot_path' => EvolutionCMS()->getConfig('snapshot_path'))));
     }
     $dumpfinished = false;
     $today = date('Y-m-d_H-i-s');
     global $path;
-    $path = "{$modx->getConfig('snapshot_path')}{$today}.sql";
+    $path = "{EvolutionCMS()->getConfig('snapshot_path')}{$today}.sql";
     switch ($driver) {
         case 'pgsql':
 //            $lf = "\n";
-//            $version = $modx->getVersionData();
-//            $output = "# " . addslashes($modx->getPhpCompat()->entities($modx->getConfig('site_name'))) . " Database Dump{$lf}";
+//            $version = EvolutionCMS()->getVersionData();
+//            $output = "# " . addslashes(EvolutionCMS()->getPhpCompat()->entities(EvolutionCMS()->getConfig('site_name'))) . " Database Dump{$lf}";
 //            $output .= "# Evolution CMS Version:{$version['version']}{$lf}";
 //            $output .= "# {$lf}";
-//            $output .= "# Host: {$modx->getDatabase()->getConfig('host')}{$lf}";
-//            $output .= "# Generation Time: " . $modx->toDateFormat(time()) . $lf;
-//            $output .= "# Server version: " . $modx->getDatabase()->getVersion() . $lf;
+//            $output .= "# Host: {EvolutionCMS()->getDatabase()->getConfig('host')}{$lf}";
+//            $output .= "# Generation Time: " . EvolutionCMS()->toDateFormat(time()) . $lf;
+//            $output .= "# Server version: " . EvolutionCMS()->getDatabase()->getVersion() . $lf;
 //            $output .= "# PHP Version: " . phpversion() . $lf;
-//            $output .= "# Database: `{$modx->getDatabase()->getConfig('database')}`{$lf}";
+//            $output .= "# Database: `{EvolutionCMS()->getDatabase()->getConfig('database')}`{$lf}";
 //            $output .= "# Description: " . trim($_REQUEST['backup_title']) . "{$lf}";
 //            $output .= "#";
-            $dump_request = 'pg_dump postgresql://' . $modx->getDatabase()->getConfig('username') . ':'.$modx->getDatabase()->getConfig('password').'@'.$modx->getDatabase()->getConfig('host').'/' . $dbase . ' --clean --inserts --no-owner --no-privileges > ' . $path;
+            $dump_request = 'pg_dump postgresql://' . EvolutionCMS()->getDatabase()->getConfig('username') . ':'.EvolutionCMS()->getDatabase()->getConfig('password').'@'.EvolutionCMS()->getDatabase()->getConfig('host').'/' . $dbase . ' --clean --inserts --no-owner --no-privileges > ' . $path;
 
             exec($dump_request, $data, $data_second);
             if ($data_second == 0) {
@@ -163,9 +163,9 @@ if ($mode == 'restore1') {
             }
             break;
         default:
-            $sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '" . $modx->getDatabase()->escape($modx->getDatabase()->getConfig('prefix')) . "%'";
-            $rs = $modx->getDatabase()->query($sql);
-            $tables = $modx->getDatabase()->getColumn('Name', $rs);
+            $sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '" . EvolutionCMS()->getDatabase()->escape(EvolutionCMS()->getDatabase()->getConfig('prefix')) . "%'";
+            $rs = EvolutionCMS()->getDatabase()->query($sql);
+            $tables = EvolutionCMS()->getDatabase()->getColumn('Name', $rs);
 
             @set_time_limit(120); // set timeout limit to 2 minutes
             $dumper = new EvolutionCMS\Support\MysqlDumper($dbase);
@@ -174,7 +174,7 @@ if ($mode == 'restore1') {
             $dumper->setDroptables(true);
             $dumpfinished = $dumper->createDump('snapshot');
 
-            $pattern = "{$modx->getConfig('snapshot_path')}*.sql";
+            $pattern = "{EvolutionCMS()->getConfig('snapshot_path')}*.sql";
             $files = glob($pattern, GLOB_NOCHECK);
             $total = ($files[0] !== $pattern) ? count($files) : 0;
             arsort($files);
@@ -193,7 +193,7 @@ if ($mode == 'restore1') {
         header("Location: index.php?a=93");
         exit;
     } else {
-        $modx->webAlertAndQuit('Unable to Backup Database');
+        EvolutionCMS()->webAlertAndQuit('Unable to Backup Database');
     }
 } else {
     include_once MODX_MANAGER_PATH . "includes/header.inc.php";  // start normal header
@@ -314,24 +314,24 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                                 </thead>
                                 <tbody>
                                 <?php
-                                $prefix = $modx->getDatabase()->escape($modx->getDatabase()->getConfig('prefix'));
+                                $prefix = EvolutionCMS()->getDatabase()->escape(EvolutionCMS()->getDatabase()->getConfig('prefix'));
 
-                                switch ($modx->getDatabase()->getConfig()['driver']) {
+                                switch (EvolutionCMS()->getDatabase()->getConfig()['driver']) {
                                     case 'pgsql':
                                         $sql = "SELECT *, tablename as Name
                  FROM pg_catalog.pg_tables WHERE 
             schemaname != 'information_schema' AND tablename LIKE '%" . $prefix . "%'";
 
-                                        $array = $modx->getDatabase()->makeArray(
-                                            $modx->getDatabase()->query($sql)
+                                        $array = EvolutionCMS()->getDatabase()->makeArray(
+                                            EvolutionCMS()->getDatabase()->query($sql)
                                         );
                                         break;
 
                                     case 'mysql':
-                                        $sql = 'SHOW TABLE STATUS FROM `' . $modx->getDatabase()->getConfig('database') . '` LIKE "' . $prefix . '%"';
+                                        $sql = 'SHOW TABLE STATUS FROM `' . EvolutionCMS()->getDatabase()->getConfig('database') . '` LIKE "' . $prefix . '%"';
 
-                                        $array = $modx->getDatabase()->makeArray(
-                                            $modx->getDatabase()->query($sql)
+                                        $array = EvolutionCMS()->getDatabase()->makeArray(
+                                            EvolutionCMS()->getDatabase()->query($sql)
                                         );
                                         break;
                                     default:
@@ -358,22 +358,22 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 
                                     // Enable record deletion for certain tables (TRUNCATE TABLE) if they're not already empty
                                     $truncateable = array(
-                                        $modx->getDatabase()->getConfig('prefix') . 'event_log',
-                                        $modx->getDatabase()->getConfig('prefix') . 'manager_log',
+                                        EvolutionCMS()->getDatabase()->getConfig('prefix') . 'event_log',
+                                        EvolutionCMS()->getDatabase()->getConfig('prefix') . 'manager_log',
                                     );
-                                    if ($modx->hasPermission('settings') && in_array($db_status['Name'], $truncateable) && $db_status['Rows'] > 0) {
+                                    if (EvolutionCMS()->hasPermission('settings') && in_array($db_status['Name'], $truncateable) && $db_status['Rows'] > 0) {
                                         echo '<td class="text-xs-right"><a class="text-danger" href="index.php?a=54&mode=93&u=' . $db_status['Name'] . '" title="' . $_lang['truncate_table'] . '">' . nicesize($db_status['Data_length'] + $db_status['Data_free']) . '</a>' . '</td>' . "\n";
                                     } else {
                                         echo '<td class="text-xs-right">' . nicesize($db_status['Data_length'] + $db_status['Data_free']) . '</td>' . "\n";
                                     }
 
-                                    if ($modx->hasPermission('settings')) {
+                                    if (EvolutionCMS()->hasPermission('settings')) {
                                         echo '<td class="text-xs-right">' . ($db_status['Data_free'] > 0 ? '<a class="text-danger" href="index.php?a=54&mode=93&t=' . $db_status['Name'] . '" title="' . $_lang['optimize_table'] . '">' . nicesize($db_status['Data_free']) . '</a>' : '-') . '</td>' . "\n";
                                     } else {
                                         echo '<td class="text-xs-right">' . ($db_status['Data_free'] > 0 ? nicesize($db_status['Data_free']) : '-') . '</td>' . "\n";
                                     }
 
-                                    echo '<td class="text-xs-right">' . nicesize($db_status['Data_length'] - $db_status['Data_free']) . '</td>' . "\n" . '<td class="text-xs-right">' . $modx->nicesize($db_status['Index_length']) . '</td>' . "\n" . '<td class="text-xs-right">' . $modx->nicesize($db_status['Index_length'] + $db_status['Data_length'] + $db_status['Data_free']) . '</td>' . "\n" . "</tr>";
+                                    echo '<td class="text-xs-right">' . nicesize($db_status['Data_length'] - $db_status['Data_free']) . '</td>' . "\n" . '<td class="text-xs-right">' . EvolutionCMS()->nicesize($db_status['Index_length']) . '</td>' . "\n" . '<td class="text-xs-right">' . EvolutionCMS()->nicesize($db_status['Index_length'] + $db_status['Data_length'] + $db_status['Data_free']) . '</td>' . "\n" . "</tr>";
 
                                     $total += $db_status['Index_length'] + $db_status['Data_length'];
                                     $totaloverhead += $db_status['Data_free'];
@@ -494,7 +494,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
             <div class="container container-body">
                 <?= $ph['result_msg_snapshot'] ?>
                 <div class="element-edit-message-tab alert alert-warning">
-                    <?= parsePlaceholder($_lang["bkmgr_snapshot_msg"], array('snapshot_path' => "snapshot_path={$modx->getConfig('snapshot_path')}")) ?>
+                    <?= parsePlaceholder($_lang["bkmgr_snapshot_msg"], array('snapshot_path' => "snapshot_path={EvolutionCMS()->getConfig('snapshot_path')}")) ?>
                 </div>
                 <form method="post" name="snapshot" action="index.php">
                     <input type="hidden" name="a" value="93"/>
@@ -518,7 +518,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                     <input type="hidden" name="mode" value="restore2"/>
                     <input type="hidden" name="filename" value=""/>
                     <?php
-                    $pattern = "{$modx->getConfig('snapshot_path')}*.sql";
+                    $pattern = "{EvolutionCMS()->getConfig('snapshot_path')}*.sql";
                     $files = glob($pattern, GLOB_NOCHECK);
                     $total = ($files[0] !== $pattern) ? count($files) : 0;
                     $detailFields = array(

@@ -2,14 +2,14 @@
 if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if(!$modx->hasPermission('delete_document')) {
-	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if(!EvolutionCMS()->hasPermission('delete_document')) {
+	EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $ids = \EvolutionCMS\Models\SiteContent::query()->withTrashed()->where('deleted',1)->pluck('id')->toArray();
 
 // invoke OnBeforeEmptyTrash event
-$modx->invokeEvent("OnBeforeEmptyTrash",
+EvolutionCMS()->invokeEvent("OnBeforeEmptyTrash",
 						array(
 							"ids"=>$ids
 						));
@@ -24,13 +24,13 @@ $modx->invokeEvent("OnBeforeEmptyTrash",
 \EvolutionCMS\Models\SiteContent::query()->where('deleted', 1)->forceDelete();
 
 	// invoke OnEmptyTrash event
-	$modx->invokeEvent("OnEmptyTrash",
+	EvolutionCMS()->invokeEvent("OnEmptyTrash",
 						array(
 							"ids"=>$ids
 						));
 
 	// empty cache
-	$modx->clearCache('full');
+	EvolutionCMS()->clearCache('full');
 
 	// finished emptying cache - redirect
 	$header="Location: index.php?a=2&r=1";

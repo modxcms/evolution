@@ -2,8 +2,8 @@
 if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if (!$modx->hasPermission('save_chunk')) {
-    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if (!EvolutionCMS()->hasPermission('save_chunk')) {
+    EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = (int)$_POST['id'];
@@ -12,7 +12,7 @@ $name = trim($_POST['name']);
 $description = $_POST['description'];
 $locked = isset($_POST['locked']) && $_POST['locked'] == 'on' ? 1 : 0;
 $disabled = isset($_POST['disabled']) && $_POST['disabled'] == "on" ? '1' : '0';
-$createdon = $editedon = time() + $modx->config['server_offset_time'];
+$createdon = $editedon = time() + EvolutionCMS()->config['server_offset_time'];
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
@@ -38,22 +38,22 @@ switch ($_POST['mode']) {
     case '77':
 
         // invoke OnBeforeChunkFormSave event
-        $modx->invokeEvent("OnBeforeChunkFormSave", array(
+        EvolutionCMS()->invokeEvent("OnBeforeChunkFormSave", array(
             "mode" => "new",
             "id" => $id
         ));
 
         // disallow duplicate names for new chunks
         if (EvolutionCMS\Models\SiteHtmlsnippet::where('name','=',$name)->first()) {
-            $modx->getManagerApi()->saveFormValues(77);
-            $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['chunk'], $name), "index.php?a=77");
+            EvolutionCMS()->getManagerApi()->saveFormValues(77);
+            EvolutionCMS()->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['chunk'], $name), "index.php?a=77");
         }
 
         //do stuff to save the new doc
         $id = EvolutionCMS\Models\SiteHtmlsnippet::create(compact('name', 'description','snippet','locked','category','editor_type','editor_name','disabled','createdon','editedon'))->getKey();
 
         // invoke OnChunkFormSave event
-        $modx->invokeEvent("OnChunkFormSave", array(
+        EvolutionCMS()->invokeEvent("OnChunkFormSave", array(
             "mode" => "new",
             "id" => $id
         ));
@@ -62,7 +62,7 @@ switch ($_POST['mode']) {
         $_SESSION['itemname'] = $name;
 
         // empty cache
-        $modx->clearCache('full');
+        EvolutionCMS()->clearCache('full');
 
         // finished emptying cache - redirect
         if ($_POST['stay'] != '') {
@@ -76,15 +76,15 @@ switch ($_POST['mode']) {
         break;
     case '78':
         // invoke OnBeforeChunkFormSave event
-        $modx->invokeEvent("OnBeforeChunkFormSave", array(
+        EvolutionCMS()->invokeEvent("OnBeforeChunkFormSave", array(
             "mode" => "upd",
             "id" => $id
         ));
 
         // disallow duplicate names for chunks
         if (EvolutionCMS\Models\SiteHtmlsnippet::where('id','!=',$id)->where('name','=',$name)->first()) {
-            $modx->getManagerApi()->saveFormValues(78);
-            $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['chunk'], $name), "index.php?a=78&id={$id}");
+            EvolutionCMS()->getManagerApi()->saveFormValues(78);
+            EvolutionCMS()->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['chunk'], $name), "index.php?a=78&id={$id}");
         }
 
         //do stuff to save the edited doc
@@ -93,7 +93,7 @@ switch ($_POST['mode']) {
         $chunk->update(compact('name', 'description','snippet','locked','category','editor_type','editor_name','disabled','editedon'));
 
         // invoke OnChunkFormSave event
-        $modx->invokeEvent("OnChunkFormSave", array(
+        EvolutionCMS()->invokeEvent("OnChunkFormSave", array(
             "mode" => "upd",
             "id" => $id
         ));
@@ -102,7 +102,7 @@ switch ($_POST['mode']) {
         $_SESSION['itemname'] = $name;
 
         // empty cache
-        $modx->clearCache('full');
+        EvolutionCMS()->clearCache('full');
 
         // finished emptying cache - redirect
         if ($_POST['stay'] != '') {
@@ -110,11 +110,11 @@ switch ($_POST['mode']) {
             $header = "Location: index.php?a=" . $a . "&r=2&stay=" . $_POST['stay'];
             header($header);
         } else {
-            $modx->unlockElement(3, $id);
+            EvolutionCMS()->unlockElement(3, $id);
             $header = "Location: index.php?a=76&r=2";
             header($header);
         }
         break;
     default:
-        $modx->webAlertAndQuit("No operation set in request.");
+        EvolutionCMS()->webAlertAndQuit("No operation set in request.");
 }

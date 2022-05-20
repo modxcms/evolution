@@ -2,8 +2,8 @@
 if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if (!$modx->hasPermission('exec_module')) {
-    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if (!EvolutionCMS()->hasPermission('exec_module')) {
+    EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 if (isset($_GET['id'])) {
     if (is_numeric($_GET['id'])) {
@@ -12,13 +12,13 @@ if (isset($_GET['id'])) {
         $id = $_GET['id'];
     }
 } else {
-    $modx->webAlertAndQuit($_lang["error_no_id"]);
+    EvolutionCMS()->webAlertAndQuit($_lang["error_no_id"]);
 }
 // check if user has access permission, except admins
 if ($_SESSION['mgrRole'] != 1 && is_numeric($id)) {
     $moduleAccess = \EvolutionCMS\Models\SiteModuleAccess::query()
         ->leftJoin('member_groups', 'member_groups.user_group', '=', 'site_module_access.usergroup')
-        ->where('site_module_access.module', $id)->where('member', $modx->getLoginUserID('mgr'));
+        ->where('site_module_access.module', $id)->where('member', EvolutionCMS()->getLoginUserID('mgr'));
 
 
     //initialize permission to -1, if it stays -1 no permissions
@@ -38,21 +38,21 @@ if ($_SESSION['mgrRole'] != 1 && is_numeric($id)) {
     }
 
     if ($permissionAccessInt == 0) {
-        $modx->webAlertAndQuit("You do not sufficient privileges to execute this module.", "index.php?a=106");
+        EvolutionCMS()->webAlertAndQuit("You do not sufficient privileges to execute this module.", "index.php?a=106");
     }
 }
 if (is_numeric($id)) {
     // get module data
     $content = \EvolutionCMS\Models\SiteModule::find($id);
     if (is_null($content)) {
-        $modx->webAlertAndQuit("No record found for id {$id}.", "index.php?a=106");
+        EvolutionCMS()->webAlertAndQuit("No record found for id {$id}.", "index.php?a=106");
     }
     $content = $content->toArray();
     if ($content['disabled']) {
-        $modx->webAlertAndQuit("This module is disabled and cannot be executed.", "index.php?a=106");
+        EvolutionCMS()->webAlertAndQuit("This module is disabled and cannot be executed.", "index.php?a=106");
     }
 } else {
-    $content = $modx->modulesFromFile[$id];
+    $content = EvolutionCMS()->modulesFromFile[$id];
     $content['modulecode'] = file_get_contents($content['file']);
     $content["guid"] = '';
 }
@@ -60,7 +60,7 @@ if (is_numeric($id)) {
 $_SESSION['itemname'] = $content['name'];
 
 // load module configuration
-$parameter = $modx->parseProperties($content["properties"], $content["guid"], 'module');
+$parameter = EvolutionCMS()->parseProperties($content["properties"], $content["guid"], 'module');
 
 // Set the item name for logger
 $_SESSION['itemname'] = $content['name'];
