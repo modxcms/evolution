@@ -2475,14 +2475,16 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $documentObject = SiteContent::query()
                 ->leftJoin('document_groups', 'document_groups.document', '=', 'site_content.id')
                 ->where('site_content.' . $method, $identifier);
-            if ($this->isFrontend()) {
-                $documentObject->where('privateweb', 0);
-            } else {
-                $documentObject->whereRaw("1 = {$_SESSION['mgrRole']} OR site_content.privatemgr=0");
-            }
-            if ($docgrp) {
-                $documentObject->orWhereIn('document_groups.document_group', $docgrp);
-            }
+            $documentObject->where(function($query) use ($docgrp){
+                if ($this->isFrontend()) {
+                    $query->where('privateweb', 0);
+                } else {
+                    $query->whereRaw("1 = {$_SESSION['mgrRole']} OR site_content.privatemgr=0");
+                }
+                if ($docgrp) {
+                    $query->orWhereIn('document_groups.document_group', $docgrp);
+                }
+            });
             $documentObject = $documentObject->first();
             if (is_null($documentObject)) {
                 $seclimit = 0;
