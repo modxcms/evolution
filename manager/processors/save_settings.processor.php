@@ -119,9 +119,6 @@ if (isset($data) && count($data) > 0) {
 				$mail_check_timeperiod = $data['mail_check_timeperiod'];
 				$v = (int)$v < ($data['mail_check_timeperiod']/60+1) ? ($data['mail_check_timeperiod']/60+1) : $v; // updateMail() in mainMenu pings as per mail_check_timeperiod, so +1min is minimum
 				break;
-            case 'manager_theme_mode':
-                setcookie('MODX_themeMode', $v);
-                break;
 			default:
 			break;
 		}
