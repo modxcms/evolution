@@ -44,40 +44,40 @@ class SiteModule extends Eloquent\Model
     use Traits\Models\ManagerActions,
         Traits\Models\TimeMutator;
 
-	const CREATED_AT = 'createdon';
-	const UPDATED_AT = 'editedon';
+    const CREATED_AT = 'createdon';
+    const UPDATED_AT = 'editedon';
     protected $dateFormat = 'U';
 
-	protected $casts = [
-		'editor_type' => 'int',
-		'disabled' => 'int',
-		'category' => 'int',
-		'wrap' => 'int',
-		'locked' => 'int',
-		'enable_resource' => 'int',
-		'createdon' => 'int',
-		'editedon' => 'int',
-		'enable_sharedparams' => 'int'
-	];
+    protected $casts = [
+        'editor_type' => 'int',
+        'disabled' => 'int',
+        'category' => 'int',
+        'wrap' => 'int',
+        'locked' => 'int',
+        'enable_resource' => 'int',
+        'createdon' => 'int',
+        'editedon' => 'int',
+        'enable_sharedparams' => 'int'
+    ];
 
-	protected $fillable = [
-		'name',
-		'description',
-		'editor_type',
-		'disabled',
-		'category',
-		'wrap',
-		'locked',
-		'icon',
-		'enable_resource',
-		'resourcefile',
-		'guid',
-		'enable_sharedparams',
-		'properties',
-		'modulecode'
-	];
+    protected $fillable = [
+        'name',
+        'description',
+        'editor_type',
+        'disabled',
+        'category',
+        'wrap',
+        'locked',
+        'icon',
+        'enable_resource',
+        'resourcefile',
+        'guid',
+        'enable_sharedparams',
+        'properties',
+        'modulecode'
+    ];
 
-	protected $managerActionsMap = [
+    protected $managerActionsMap = [
         'actions.cancel' => 76,
         'actions.new' => 107,
         'id' => [
@@ -90,7 +90,7 @@ class SiteModule extends Eloquent\Model
         ]
     ];
 
-    public function categories() : Eloquent\Relations\BelongsTo
+    public function categories(): Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Category::class, 'category', 'id');
     }
@@ -121,6 +121,18 @@ class SiteModule extends Eloquent\Model
             $builder->where('locked', '=', 0) : $builder;
     }
 
+    public function scopeWithoutProtected(Eloquent\Builder $builder)
+    {
+        if ($_SESSION['mgrRole'] != 1 && evolutionCMS()->getConfig('use_udperms')) {
+            $builder->leftJoin('site_module_access', 'site_module_access.module', '=', 'site_modules.id')
+                ->leftJoin('member_groups', 'member_groups.user_group', '=', 'site_module_access.usergroup')
+                ->whereNull('site_module_access.usergroup')
+                ->orWhere('member_groups.member', '=', (int)evolutionCMS()->getLoginUserID('mgr'));
+        }
+
+        return $builder;
+    }
+
     public static function getLockedElements()
     {
         return evolutionCMS()->getLockedElements(6);
@@ -131,7 +143,7 @@ class SiteModule extends Eloquent\Model
         return array_key_exists($this->getKey(), self::getLockedElements());
     }
 
-    public function getAlreadyEditInfoAttribute() :? array
+    public function getAlreadyEditInfoAttribute(): ?array
     {
         return $this->isAlreadyEdit ? self::getLockedElements()[$this->getKey()] : null;
     }
