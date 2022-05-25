@@ -47,44 +47,48 @@
     mainmenu: {
       id: 'mainMenu',
       init: function() {
-        //console.log('modx.mainMenu.init()');
         var mm = d.getElementById('mainMenu'), timer;
-        mm.delegateEventListener('click', 'a', function(e) {
-          if (this.classList.contains('dropdown-toggle')) {
-            if (mm.classList.contains('show') && (this.classList.contains('selected') || !modx.isMobile && this.parentElement.classList.contains('hover'))) {
-              this.classList.remove('selected');
+        mm.addEventListener('click', function(e) {
+          var a = e.target.closest('a');
+          if (!a) {
+            return;
+          }
+          if (a.classList.contains('dropdown-toggle')) {
+            if (mm.classList.contains('show') && (a.classList.contains('selected') || !modx.isMobile && a.parentElement.classList.contains('hover'))) {
+              a.classList.remove('selected');
               mm.classList.remove('show');
             } else {
               mm.querySelectorAll('.nav > li > a:not(:hover)').forEach(function(el) {
                 el.classList.remove('selected');
               });
-              this.classList.add('selected');
+              a.classList.add('selected');
               mm.classList.add('show');
             }
             e.stopPropagation();
             e.target.dataset.toggle = '#mainMenu';
             modx.hideDropDown(e);
           }
-          if (this.closest('ul').classList.contains('dropdown-menu') && !this.closest('li').classList.contains('dropdown-back')) {
+          if (a.closest('ul').classList.contains('dropdown-menu') && !a.closest('li').classList.contains('dropdown-back')) {
             mm.querySelectorAll('.nav > .active').forEach(function(el) {
               el.classList.remove('active');
             });
             mm.querySelectorAll('.nav li.selected').forEach(function(el) {
               el.classList.remove('selected');
             });
-            this.closest('.nav > li').classList.add('active');
-            if (this.offsetParent.id) {
-              d.getElementById(this.offsetParent.id.substr(7)).classList.add('selected');
+            a.closest('.nav > li').classList.add('active');
+            if (a.offsetParent.id) {
+              d.getElementById(a.offsetParent.id.substr(7)).classList.add('selected');
             }
-            if ((modx.isMobile || w.innerWidth < modx.minWidth) && this.classList.contains('toggle')) {
-              this.parentNode.classList.add('selected');
+            if ((modx.isMobile || w.innerWidth < modx.minWidth) && e.target.classList.contains('toggle')) {
+              a.parentNode.classList.add('selected');
               e.stopPropagation();
               e.preventDefault();
             }
           }
         });
-        mm.delegateEventListener('click', '.nav li', function() {
-          if ((modx.isMobile || w.innerWidth < modx.minWidth)) {
+        mm.addEventListener('click', function(e) {
+          let li = e.target.closest('.nav li');
+          if (li && modx.isMobile) {
             mm.querySelectorAll('.nav ul.selected').forEach(function(el) {
               el.classList.remove('selected');
             });
@@ -174,7 +178,7 @@
                         }
                         ul.classList.add('show');
                         if (modx.isMobile) {
-                          if (e.target.classList.contains('toggle')) {
+                          if (e.target.classList.contains('dropdown-toggle')) {
                             self.parentNode.classList.add('selected');
                           }
                         } else {
@@ -585,6 +589,9 @@
             }
           }, false);
           w.addEventListener('touchmove', function(e) {
+            if (d.getElementById('mainMenu').classList.contains('show')) {
+              return;
+            }
             var touch = e.changedTouches[0];
             tree.style.transition = 'none';
             tree.style.WebkitTransition = 'none';
@@ -753,11 +760,11 @@
         } else {
           var roles = this.dataset.roles + (this.parentNode.parentNode.id !== 'treeRoot' ? this.parentNode.parentNode.previousSibling.dataset.roles : '');
           var checked_group = false;
-          if (roles != '') {
+          if(roles != '') {
             checked_group = roles.split(',').map(Number).filter(function(role) {
               return ~modx.user.groups.indexOf(parseInt(role));
             }).length;
-          } else {
+          }else {
             checked_group = true;
           }
           var draggable = roles && modx.user.role !== 1 ? checked_group : true;
@@ -898,11 +905,11 @@
       ondragupdate: function(a, id, parent, menuindex) {
         var roles = a.dataset.roles + (a.parentNode.parentNode.id !== 'treeRoot' ? a.parentNode.parentNode.previousSibling.dataset.roles : '');
         var checked_group = false;
-        if (roles != '') {
+        if(roles != '') {
           checked_group = roles.split(',').map(Number).filter(function(role) {
             return ~modx.user.groups.indexOf(parseInt(role));
           }).length;
-        } else {
+        }else {
           var checked_group = true;
         }
         if (!(roles && modx.user.role !== 1 ? checked_group : true)) {
@@ -916,7 +923,7 @@
           parent: parent,
           menuindex: menuindex
         }, function(r) {
-          if (r && r.errors) alert(r.errors);
+          if (r && r.errors) modx.alert(r.errors);
           modx.tree.restoreTree();
         }, 'json');
         var b = modx.normalizeUrl(w.main.frameElement.contentWindow.location.href);
@@ -1290,7 +1297,7 @@
                 modx.tabs({url: modx.MODX_MANAGER_URL + '?a=62&id=' + this.itemToChange, title: this.selectedObjectName + '<small>(' + this.itemToChange + ')</small>'});
               }
             } else {
-              alert('Document is linked to site_start variable and cannot be unpublished!');
+              modx.alert('Document is linked to site_start variable and cannot be unpublished!');
             }
             break;
           case 11:
@@ -1300,7 +1307,7 @@
             w.open(d.getElementById('node' + this.itemToChange).firstChild.dataset.href, 'previeWin');
             break;
           default:
-            alert('Unknown operation command.');
+            modx.alert('Unknown operation command.');
         }
       },
       setSelected: function(a) {
@@ -1524,7 +1531,8 @@
       }
     },
     tabs: function(a) {
-      function Tabs(a) {
+      function Tabs(a)
+      {
         var s = this;
         this.url = a.url.replace(new RegExp(modx.MODX_MANAGER_URL, 'g'), '');
         this.title = a.title || '';
@@ -1561,13 +1569,15 @@
             this.show();
             if (~this.closeactions.indexOf(this.action)) {
               this.setDocPublished();
-              modx.get(this.url, function() {
+              modx.get(this.url, function(r) {
+                /__alertQuit\(\)/.test(r) && modx.alert(r.match(/\<body\>(.*?)\<\/body\>/s)[0]);
                 modx.tree.restoreTree();
               });
             }
           }
         } else if (~this.closeactions.indexOf(this.action)) {
-          modx.get(this.url, function() {
+          modx.get(this.url, function(r) {
+            /__alertQuit\(\)/.test(r) && modx.alert(r.match(/\<body\>(.*?)\<\/body\>/s)[0]);
             modx.tree.restoreTree();
           });
         } else {
@@ -1592,7 +1602,6 @@
           } else {
             this.page.innerHTML = '<iframe class="tabframes" src="' + this.url + '" name="' + this.name + '" width="100%" height="100%" scrolling="auto" frameborder="0"></iframe>';
           }
-
           d.getElementById('main').appendChild(this.page);
           //console.time('load-tab');
           this.page.firstElementChild.onload = function(e) {
@@ -1635,13 +1644,7 @@
             w.onpopstate = function() {
               history.go(1);
             };
-            modx.popup({
-              type: 'warning',
-              title: 'Evolution CMS :: Alert',
-              position: 'top center alertQuit',
-              content: message,
-              wrap: 'body'
-            });
+            modx.alert(message);
             modx.getLockedElements(modx.getActionFromUrl(this.url), modx.main.getQueryVariable('id', this.url), function(data) {
               if (!!data || ~s.closeactions.indexOf(modx.getActionFromUrl(s.url))) {
                 s.page.close();
@@ -2027,12 +2030,7 @@
                 o.uid = modx.urlToUid(a.url);
                 o.event = e;
                 if (!!e.target.contentWindow.__alertQuit) {
-                  modx.popup({
-                    type: 'warning',
-                    title: 'Evolution CMS :: Alert',
-                    position: 'top center alertQuit',
-                    content: e.target.contentWindow.document.body.querySelector('p').innerHTML
-                  });
+                  modx.alert(e.target.contentWindow.document.body.querySelector('p').innerHTML);
                   e.target.contentWindow.document.body.innerHTML = '';
                   e.target.contentWindow.alert = function() {};
                 } else {
@@ -2092,6 +2090,15 @@
         }
         return o;
       }
+    },
+    alert: function(m, t) {
+      modx.popup({
+        type: t || 'warning',
+        title: 'Evolution CMS :: Alert',
+        position: 'top center alertQuit',
+        content: m,
+        wrap: 'body'
+      });
     },
     getWindowDimension: function() {
       var a = 0,
@@ -2618,23 +2625,3 @@
     };
   }
 })();
-
-!function(o, e) {
-  var n = window.Element.prototype,
-      i = n.matches;
-  i || ['webkit', 'ms', 'moz'].some(function(e) {
-    var t = e + 'MatchesSelector';
-    if (n.hasOwnProperty(t)) return i = n[t], !0;
-  }), e.prototype.delegateEventListener = function(e, n, r) {
-    this.addEventListener(e, function(e) {
-      var t = function(e, t, n) {
-        for (var r = e.target; ;) {
-          if (i.call(r, t)) return r;
-          if (r === n || r === o.body) return !1;
-          r = r.parentNode;
-        }
-      }(e, n, e.currentTarget);
-      t && r.call(t, e);
-    });
-  };
-}(window.document, window.EventTarget || window.Element);
