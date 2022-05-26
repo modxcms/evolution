@@ -19,7 +19,7 @@
 $modx_lang_attribute = 'ja'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = '<p>Evolution CMSは <a href="http://evo.im/" target="_blank">PHP アプリケーション フレームワーク・コンテンツ管理システム</a>です。GPL に基づいて使用が許諾されます。</p>';
+$_lang["about_msg"] = '<p>Evolution CMSは <a href="https://evo.im/" target="_blank">PHP アプリケーション フレームワーク・コンテンツ管理システム</a>です。GPL に基づいて使用が許諾されます。</p>';
 $_lang["about_title"] = 'Evolution について';
 $_lang["access_permission_denied"] = 'このリソースにアクセスする権限がありません。';
 $_lang["access_permission_parent_denied"] = 'ここにリソースを作成する権限がありません。';
@@ -201,7 +201,7 @@ $_lang["create_weblink_here"] = 'ウェブリンクを作成';
 $_lang["createdon"] = '作成日時';
 $_lang["create_new"] = '新しく作成';
 $_lang["credits"] = '著作権表示/謝辞';
-$_lang["credits_shouts_msg"] = '<p>EVOは<a href="http://evo.im/" target="_blank">evo.im</a>で管理とメンテナンスがされています。</p>';
+$_lang["credits_shouts_msg"] = '<p>EVOは<a href="https://evo.im/" target="_blank">evo.im</a>で管理とメンテナンスがされています。</p>';
 $_lang["custom_contenttype_message"] = 'リソースが使用するコンテントタイプに独自のタイプを追加できます。新しいタイプを追加するにはテキストボックスに入力して「追加」ボタンをクリックします。';
 $_lang["custom_contenttype_title"] = 'カスタムコンテントタイプ';
 $_lang["database_charset"] = 'データベース文字コード';

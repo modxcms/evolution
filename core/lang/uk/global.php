@@ -197,7 +197,7 @@ $_lang["create_weblink_here"] = 'Дочірнє веб-посилання';
 $_lang["createdon"] = 'Дата створення';
 $_lang["create_new"] = 'Створити';
 $_lang["credits"] = 'EVO використовує';
-$_lang["credits_shouts_msg"] = '<p>EVO підтримується на сайті<a href="http://evo.im/" target="_blank">evo.im</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>EVO підтримується на сайті<a href="https://evo.im/" target="_blank">evo.im</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Тут ви можете додати типи вмісту (Content-Type) для сайту. Для цього введіть тип вмісту і натисніть \'Добавити\'.';
 $_lang["custom_contenttype_title"] = 'Типи вмісту (Content-Type):';
 $_lang["database_charset"] = 'Кодування бази даних';

@@ -198,7 +198,7 @@ $_lang["create_weblink_here"] = 'Дочерняя веб-ссылка';
 $_lang["createdon"] = 'Дата создания';
 $_lang["create_new"] = 'Создать';
 $_lang["credits"] = 'Evolution CMS использует';
-$_lang["credits_shouts_msg"] = '<p>Evolution CMS поддерживается на сайте <a href="http://evo.im/" target="_blank">evo.im</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>Evolution CMS поддерживается на сайте <a href="https://evo.im/" target="_blank">evo.im</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Здесь вы можете добавить типы содержимого (Content-Type) для сайта. Для этого введите тип содержимого и нажмите \'Добавить\'.';
 $_lang["custom_contenttype_title"] = 'Типы содержимого (Content-Type):';
 $_lang["database_charset"] = 'Кодировка базы данных';

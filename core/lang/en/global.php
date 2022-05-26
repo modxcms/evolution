@@ -16,7 +16,7 @@
 $modx_lang_attribute = 'en'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = 'Evolution CMS is a <a href="http://evo.im/" target="_blank">PHP Application Framework and Content Management System</a> licensed under the <a href="../assets/docs/license.txt">GNU GPL</a>.';
+$_lang["about_msg"] = 'Evolution CMS is a <a href="https://evo.im/" target="_blank">PHP Application Framework and Content Management System</a> licensed under the <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'About Evolution CMS';
 $_lang["access_permission_denied"] = 'You do not have the correct permissions for this Resource.';
 $_lang["access_permission_parent_denied"] = 'You do not have permission to create or move a Resource here! Please choose another location.';
@@ -197,7 +197,7 @@ $_lang["create_weblink_here"] = 'Create Weblink here';
 $_lang["createdon"] = 'Creation date';
 $_lang["create_new"] = 'Create new';
 $_lang["credits"] = 'Credits';
-$_lang["credits_shouts_msg"] = '<p>Evolution CMS is managed and maintained at <a href="http://evo.im/" target="_blank">evo.im</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>Evolution CMS is managed and maintained at <a href="https://evo.im/" target="_blank">evo.im</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Add custom content types for Resources. To add a new entry, enter the content type in the text box then click the \'Add\' button.';
 $_lang["custom_contenttype_title"] = 'Custom content types';
 $_lang["database_charset"] = 'Database Charset';
