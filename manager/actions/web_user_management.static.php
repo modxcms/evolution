@@ -2,12 +2,12 @@
 if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if(!$modx->hasPermission('edit_user')) {
-	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if(!EvolutionCMS()->hasPermission('edit_user')) {
+	EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // initialize page view state - the $_PAGE object
-$modx->getManagerApi()->initPageViewState();
+EvolutionCMS()->getManagerApi()->initPageViewState();
 
 $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
 
@@ -27,8 +27,8 @@ $_PAGE['vs']['lm'] = $listmode;
 
 // context menu
 $cm = new \EvolutionCMS\Support\ContextMenu("cntxm", 150);
-$cm->addItem($_lang["edit"], "js:menuAction(1)", $_style["icon_edit"], (!$modx->hasPermission('edit_user') ? 1 : 0));
-$cm->addItem($_lang["delete"], "js:menuAction(2)", $_style["icon_trash"], (!$modx->hasPermission('delete_user') ? 1 : 0));
+$cm->addItem($_lang["edit"], "js:menuAction(1)", $_style["icon_edit"], (!EvolutionCMS()->hasPermission('edit_user') ? 1 : 0));
+$cm->addItem($_lang["delete"], "js:menuAction(2)", $_style["icon_trash"], (!EvolutionCMS()->hasPermission('delete_user') ? 1 : 0));
 echo $cm->render();
 
 ?>
@@ -137,7 +137,7 @@ echo $cm->render();
                     }
 
 
-					$grd = new \EvolutionCMS\Support\DataGrid('', $managerUsers, $modx->getConfig('number_of_results')); // set page size to 0 t show all items
+					$grd = new \EvolutionCMS\Support\DataGrid('', $managerUsers, EvolutionCMS()->getConfig('number_of_results')); // set page size to 0 t show all items
 					$grd->noRecordMsg = $_lang["no_records_found"];
 					$grd->cssClass = "table data";
 					$grd->columnHeaderClass = "tableHeader";
@@ -148,7 +148,7 @@ echo $cm->render();
 					$grd->columns = $_lang["icon"] . " ," . $_lang["name"] . " ," . $_lang["user_full_name"] . " ," . $_lang["email"] . " ," . $_lang["user_prevlogin"] . " ," . $_lang["user_logincount"] . " ," . $_lang["user_block"];
 					$grd->colWidths = "1%,,,,1%,1%,1%";
 					$grd->colAligns = "center,,,,right' nowrap='nowrap,right,center";
-					$grd->colTypes = "template:<a class='gridRowIcon' href='javascript:;' onclick='return showContentMenu([+id+],event);' title='" . $_lang["click_to_context"] . "'><i class='" . $_style["icon_web_user"] . "'></i></a>||template:<a href='index.php?a=88&id=[+id+]' title='" . $_lang["click_to_edit_title"] . "'>[+value+]</a>||template:[+fullname+]||template:[+email+]||date: " . $modx->toDateFormat('[+thislogin+]', 'formatOnly') .
+					$grd->colTypes = "template:<a class='gridRowIcon' href='javascript:;' onclick='return showContentMenu([+id+],event);' title='" . $_lang["click_to_context"] . "'><i class='" . $_style["icon_web_user"] . "'></i></a>||template:<a href='index.php?a=88&id=[+id+]' title='" . $_lang["click_to_edit_title"] . "'>[+value+]</a>||template:[+fullname+]||template:[+email+]||date: " . EvolutionCMS()->toDateFormat('[+thislogin+]', 'formatOnly') .
 					" %H:%M";
 					if($listmode == '1') {
 						$grd->pageSize = 0;

@@ -2,8 +2,8 @@
 if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if(!$modx->hasPermission('settings')) {
-	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if(!EvolutionCMS()->hasPermission('settings')) {
+	EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 $defaultSettings = config('cms.settings', []);
 $data = $_POST + $defaultSettings;
@@ -50,8 +50,9 @@ if($data['friendly_urls']==='1' && strpos($_SERVER['SERVER_SOFTWARE'],'IIS')===f
 	}
 }
 
-if (file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->getConfig('manager_theme') . '/css/styles.min.css')) {
-    unlink(MODX_MANAGER_PATH . 'media/style/' . $modx->getConfig('manager_theme') . '/css/styles.min.css');
+
+if (file_exists(MODX_MANAGER_PATH . 'media/style/' . EvolutionCMS()->config['manager_theme'] . '/css/styles.min.css')) {
+    unlink(MODX_MANAGER_PATH . 'media/style/' . EvolutionCMS()->config['manager_theme'] . '/css/styles.min.css');
 }
 
 $data['filemanager_path'] = str_replace('[(base_path)]',MODX_BASE_PATH,$data['filemanager_path']);
@@ -65,7 +66,7 @@ if (isset($data) && count($data) > 0) {
             $data['lang_code'] = $data['manager_language'];
 		}
 	}
-	$data['sys_files_checksum'] = $modx->getManagerApi()->getSystemChecksum($data['check_files_onlogin']);
+	$data['sys_files_checksum'] = EvolutionCMS()->getManagerApi()->getSystemChecksum($data['check_files_onlogin']);
 	$data['mail_check_timeperiod'] = (int)$data['mail_check_timeperiod'] < 60 ? 60 : $data['mail_check_timeperiod']; // updateMail() in mainMenu no faster than every minute
 	foreach ($data as $k => $v) {
         if (isset($defaultSettings[$k])) {
@@ -74,9 +75,9 @@ if (isset($data) && count($data) > 0) {
 
 		switch ($k) {
             case 'settings_version':{
-                if($modx->getVersionData('version')!=$data['settings_version']){
-                    $modx->logEvent(17,2,'<pre>'.var_export($data['settings_version'],true).'</pre>','fake settings_version');
-                    $v = $modx->getVersionData('version');
+                if(EvolutionCMS()->getVersionData('version')!=$data['settings_version']){
+                    EvolutionCMS()->logEvent(17,2,'<pre>'.var_export($data['settings_version'],true).'</pre>','fake settings_version');
+                    $v = EvolutionCMS()->getVersionData('version');
                 }
                 break;
             }
@@ -124,7 +125,7 @@ if (isset($data) && count($data) > 0) {
 		}
 		$v = is_array($v) ? implode(",", $v) : $v;
 
-		$modx->config[$k] = $v;
+		EvolutionCMS()->config[$k] = $v;
 
 		if(!empty($k)) {
 		    \EvolutionCMS\Models\SystemSetting::query()->updateOrCreate(['setting_name'=>$k],['setting_value'=>$v]);
@@ -146,7 +147,7 @@ if (isset($data) && count($data) > 0) {
 	}
 
 	// empty cache
-	$modx->clearCache('full');
+	EvolutionCMS()->clearCache('full');
 }
 $header="Location: index.php?a=7&r=10";
 header($header);

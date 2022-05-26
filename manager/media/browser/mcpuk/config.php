@@ -19,18 +19,18 @@
 $modx = evolutionCMS();
 $_CONFIG = array(
     'disabled' => false,
-    'denyZipDownload' => $modx->getConfig('denyZipDownload'),
-    'denyExtensionRename' => $modx->getConfig('denyExtensionRename'),
-    'showHiddenFiles' => $modx->getConfig('showHiddenFiles'),
+    'denyZipDownload' => EvolutionCMS()->getConfig('denyZipDownload'),
+    'denyExtensionRename' => EvolutionCMS()->getConfig('denyExtensionRename'),
+    'showHiddenFiles' => EvolutionCMS()->getConfig('showHiddenFiles'),
     'theme' => "evo",
-    'uploadURL'           => rtrim($modx->getConfig('rb_base_url'), '/'),
-    'uploadDir'           => rtrim($modx->getConfig('rb_base_dir'), '/'),
+    'uploadURL'           => rtrim(EvolutionCMS()->getConfig('rb_base_url'), '/'),
+    'uploadDir'           => rtrim(EvolutionCMS()->getConfig('rb_base_dir'), '/'),
     'siteURL' => MODX_SITE_URL,
-    'assetsURL'           => rtrim($modx->getConfig('rb_base_url'), '/'),
-    'dirPerms'            => intval($modx->getConfig('new_folder_permissions'), 8),
-    'filePerms'           => intval($modx->getConfig('new_file_permissions'), 8),
-    'maxfilesize'         => (int)$modx->getConfig('upload_maxsize'),
-    'noThumbnailsRecreation' => $modx->getConfig('noThumbnailsRecreation'),
+    'assetsURL'           => rtrim(EvolutionCMS()->getConfig('rb_base_url'), '/'),
+    'dirPerms'            => intval(EvolutionCMS()->getConfig('new_folder_permissions'), 8),
+    'filePerms'           => intval(EvolutionCMS()->getConfig('new_file_permissions'), 8),
+    'maxfilesize'         => (int)EvolutionCMS()->getConfig('upload_maxsize'),
+    'noThumbnailsRecreation' => EvolutionCMS()->getConfig('noThumbnailsRecreation'),
 
     'access' => array(
 
@@ -54,13 +54,13 @@ $_CONFIG = array(
     'types' => array(
 
         // CKEditor & FCKEditor types
-        'files'  => str_replace(',', ' ', $modx->getConfig('upload_files')),
-        'images' => str_replace(',', ' ', $modx->getConfig('upload_images')),
+        'files'  => str_replace(',', ' ', EvolutionCMS()->getConfig('upload_files')),
+        'images' => str_replace(',', ' ', EvolutionCMS()->getConfig('upload_images')),
 
         // TinyMCE types
-        'file'   => str_replace(',', ' ', $modx->getConfig('upload_files')),
-        'media'  => str_replace(',', ' ', $modx->getConfig('upload_media')),
-        'image'  => str_replace(',', ' ', $modx->getConfig('upload_images')),
+        'file'   => str_replace(',', ' ', EvolutionCMS()->getConfig('upload_files')),
+        'media'  => str_replace(',', ' ', EvolutionCMS()->getConfig('upload_media')),
+        'image'  => str_replace(',', ' ', EvolutionCMS()->getConfig('upload_images')),
     ),
     'dirnameChangeChars' => array(
         ' ' => "_",
@@ -68,18 +68,18 @@ $_CONFIG = array(
     ),
     'mime_magic' => "",
 
-    'maxImageWidth' => $modx->getConfig('maxImageWidth'),
-    'maxImageHeight' => $modx->getConfig('maxImageHeight'),
-    'clientResize'   => $modx->getConfig('clientResize') && $modx->getConfig('maxImageWidth') && $modx->getConfig('maxImageHeight') ? array('maxWidth'  => $modx->getConfig('maxImageWidth'),
-                                                                                                                                            'maxHeight' => $modx->getConfig('maxImageHeight'),
-                                                                                                                                            'quality'   => $modx->getConfig('jpegQuality') / 100
+    'maxImageWidth' => EvolutionCMS()->getConfig('maxImageWidth'),
+    'maxImageHeight' => EvolutionCMS()->getConfig('maxImageHeight'),
+    'clientResize'   => EvolutionCMS()->getConfig('clientResize') && EvolutionCMS()->getConfig('maxImageWidth') && EvolutionCMS()->getConfig('maxImageHeight') ? array('maxWidth'  => EvolutionCMS()->getConfig('maxImageWidth'),
+                                                                                                                                            'maxHeight' => EvolutionCMS()->getConfig('maxImageHeight'),
+                                                                                                                                            'quality'   => EvolutionCMS()->getConfig('jpegQuality') / 100
     ) : array(),
 
-    'thumbWidth' => $modx->getConfig('thumbWidth'),
-    'thumbHeight' => $modx->getConfig('thumbHeight'),
-    'thumbsDir' => $modx->getConfig('thumbsDir'),
+    'thumbWidth' => EvolutionCMS()->getConfig('thumbWidth'),
+    'thumbHeight' => EvolutionCMS()->getConfig('thumbHeight'),
+    'thumbsDir' => EvolutionCMS()->getConfig('thumbsDir'),
 
-    'jpegQuality' => $modx->getConfig('jpegQuality'),
+    'jpegQuality' => EvolutionCMS()->getConfig('jpegQuality'),
 
     'cookieDomain' => "",
     'cookiePath' => "",
@@ -97,6 +97,6 @@ $_CONFIG = array(
     //'_sessionPath' => "/my/path",
 );
 
-$modx->invokeEvent('OnFileBrowserInit', [
+EvolutionCMS()->invokeEvent('OnFileBrowserInit', [
     'config' => &$_CONFIG,
 ]);

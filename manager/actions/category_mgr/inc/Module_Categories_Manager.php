@@ -3,7 +3,7 @@
  * Class for MODx Categories Manager
  */
 if (!is_object($modx)
-    || $modx->isBackend() === false) {
+    || EvolutionCMS()->isBackend() === false) {
     die('Please use the MODx Backend.');
 }
 

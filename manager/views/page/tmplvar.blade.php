@@ -516,7 +516,7 @@
                                 'class' => 'form-control-lg',
                                 'attributes' => 'onchange="documentDirty=true;" maxlength="50"'
                             ]) .
-                            ($modx->hasPermission('save_role')
+                            (EvolutionCMS()->hasPermission('save_role')
                             ? '<label class="custom-control" data-tooltip="' . ManagerTheme::getLexicon('lock_tmplvars') . "\n" . ManagerTheme::getLexicon('lock_tmplvars_msg') .'">' .
                              ManagerTheme::view('form.inputElement', [
                                 'type' => 'checkbox',
@@ -715,7 +715,7 @@
                 </div>
             </div>
 
-            @if(get_by_key($modx->config, 'use_udperms') == 1 && $modx->hasPermission('access_permissions'))
+            @if(get_by_key(EvolutionCMS()->config, 'use_udperms') == 1 && EvolutionCMS()->hasPermission('access_permissions'))
                 <div class="tab-page" id="tabAccess">
                     <h2 class="tab">{{ ManagerTheme::getLexicon('access_permissions') }}</h2>
                     <script>tpTmplvars.addTabPage(document.getElementById('tabAccess'));</script>
@@ -767,7 +767,7 @@
                         $chks = '';
                         foreach ($documentGroupNames as $row) {
                             $checked = in_array($row['id'], $groupsArray);
-                            if ($modx->hasPermission('access_permissions')) {
+                            if (EvolutionCMS()->hasPermission('access_permissions')) {
                                 if ($checked) {
                                     $notPublic = true;
                                 }
@@ -779,7 +779,7 @@
                             }
                         }
 
-                        if ($modx->hasPermission('access_permissions')) {
+                        if (EvolutionCMS()->hasPermission('access_permissions')) {
                             $chks = "<li><label><input type='checkbox' name='chkalldocs' " . (empty($notPublic) ? "checked='checked'" : '') . " onclick=\"makePublic(true)\" /> <span class='warning'>" . ManagerTheme::getLexicon('all_doc_groups') . "</span></label></li>" . $chks;
                         }
 

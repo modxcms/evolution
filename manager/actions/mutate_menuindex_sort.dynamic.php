@@ -2,8 +2,8 @@
 if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if (!$modx->hasPermission('edit_document') || !$modx->hasPermission('save_document')) {
-    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if (!EvolutionCMS()->hasPermission('edit_document') || !EvolutionCMS()->hasPermission('save_document')) {
+    EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : null;
@@ -14,12 +14,12 @@ $updateMsg = '';
 
 // check permissions on the document
 $udperms = new EvolutionCMS\Legacy\Permissions();
-$udperms->user = $modx->getLoginUserID('mgr');
+$udperms->user = EvolutionCMS()->getLoginUserID('mgr');
 $udperms->document = $id;
 $udperms->role = $_SESSION['mgrRole'];
 
 if (!$udperms->checkPermissions()) {
-    $modx->webAlertAndQuit($_lang["access_permission_denied"]);
+    EvolutionCMS()->webAlertAndQuit($_lang["access_permission_denied"]);
 }
 
 if (isset($_POST['listSubmitted'])) {
@@ -77,7 +77,7 @@ if ($id !== null) {
     }
 }
 
-$pagetitle = empty($id) ? $modx->getConfig('site_name') : $pagetitle;
+$pagetitle = empty($id) ? EvolutionCMS()->getConfig('site_name') : $pagetitle;
 ?>
 
 <script type="text/javascript">
@@ -153,14 +153,14 @@ $pagetitle = empty($id) ? $modx->getConfig('site_name') : $pagetitle;
 </script>
 
 <h1>
-    <i class="<?= $_style['icon_sort_num_asc'] ?>"></i><?= ($pagetitle ? $modx->getPhpCompat()->entities($pagetitle) . '<small>(' . $id . ')</small>' : $_lang['sort_menuindex']) ?>
+    <i class="<?= $_style['icon_sort_num_asc'] ?>"></i><?= ($pagetitle ? EvolutionCMS()->getPhpCompat()->entities($pagetitle) . '<small>(' . $id . ')</small>' : $_lang['sort_menuindex']) ?>
 </h1>
 
 <?= ManagerTheme::getStyle('actionbuttons.dynamic.save') ?>
 
 <div class="tab-page">
     <div class="container container-body">
-        <b><?= $modx->getPhpCompat()->entities($pagetitle) ?> (<?= $id ?>)</b>
+        <b><?= EvolutionCMS()->getPhpCompat()->entities($pagetitle) ?> (<?= $id ?>)</b>
         <?php
         if ($ressourcelist) {
             ?>

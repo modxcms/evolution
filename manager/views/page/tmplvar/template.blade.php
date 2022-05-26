@@ -16,7 +16,7 @@
         @if(!empty($item->locked))
             <em>({{ ManagerTheme::getLexicon('locked') }})</em>
         @endif
-        @if($item->getKey() == get_by_key($modx->config, 'default_template'))
+        @if($item->getKey() == get_by_key(EvolutionCMS()->config, 'default_template'))
             <em>({{ ManagerTheme::getLexicon('defaulttemplate_title') }})</em>
         @endif
     </label>

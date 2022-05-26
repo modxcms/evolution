@@ -2,13 +2,13 @@
 if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if(!$modx->hasPermission('delete_template')) {
-    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if(!EvolutionCMS()->hasPermission('delete_template')) {
+    EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if($id == 0) {
-    $modx->webAlertAndQuit($_lang["error_no_id"]);
+    EvolutionCMS()->webAlertAndQuit($_lang["error_no_id"]);
 }
 
 // delete the template, but first check it doesn't have any documents using it
@@ -41,7 +41,7 @@ if($limit > 0) {
 }
 
 if($id == $default_template) {
-    $modx->webAlertAndQuit("This template is set as the default template. Please choose a different default template in the MODX configuration before deleting this template.");
+    EvolutionCMS()->webAlertAndQuit("This template is set as the default template. Please choose a different default template in the MODX configuration before deleting this template.");
 }
 
 // Set the item name for logger
@@ -49,7 +49,7 @@ $name = EvolutionCMS\Models\SiteTemplate::where('id',$id)->first()->templatename
 $_SESSION['itemname'] = $name;
 
 // invoke OnBeforeTempFormDelete event
-$modx->invokeEvent("OnBeforeTempFormDelete", array(
+EvolutionCMS()->invokeEvent("OnBeforeTempFormDelete", array(
     "id" => $id
 ));
 
@@ -58,12 +58,12 @@ EvolutionCMS\Models\SiteTemplate::where('id', $id)->delete();
 
 EvolutionCMS\Models\SiteTmplvarTemplate::where('templateid',$id)->delete();
 // invoke OnTempFormDelete event
-$modx->invokeEvent("OnTempFormDelete", array(
+EvolutionCMS()->invokeEvent("OnTempFormDelete", array(
     "id" => $id
 ));
 
 // empty cache
-$modx->clearCache('full');
+EvolutionCMS()->clearCache('full');
 
 // finished emptying cache - redirect
 $header = "Location: index.php?a=76&r=2";

@@ -3,8 +3,8 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 $modx = EvolutionCMS();
-if (!$modx->hasPermission('save_document')) {
-    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
+if (!EvolutionCMS()->hasPermission('save_document')) {
+    EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // preprocess POST values
@@ -39,7 +39,7 @@ $aliasvisible = (int)$_POST['alias_visible'];
 
 /************* webber ********/
 $sd=isset($_POST['dir']) && strtolower($_POST['dir']) === 'asc' ? '&dir=ASC' : '&dir=DESC';
-$sb=isset($_POST['sort'])?'&sort='.entities($_POST['sort'], $modx->getConfig('modx_charset')):'&sort=pub_date';
+$sb=isset($_POST['sort'])?'&sort='.entities($_POST['sort'], EvolutionCMS()->getConfig('modx_charset')):'&sort=pub_date';
 $pg=isset($_POST['page'])?'&page='.(int)$_POST['page']:'';
 $add_path=$sd.$sb.$pg;
 
@@ -61,11 +61,11 @@ if ($_POST['mode'] == '73' || $_POST['mode'] == '27') {
 }
 
 // friendly url alias checks
-if ($modx->getConfig('friendly_urls')) {
+if (EvolutionCMS()->getConfig('friendly_urls')) {
     // auto assign alias
-    if (!$alias && $modx->getConfig('automatic_alias')) {
-        $alias = strtolower($modx->stripAlias(trim($pagetitle)));
-        if(!$modx->getConfig('allow_duplicate_alias')) {
+    if (!$alias && EvolutionCMS()->getConfig('automatic_alias')) {
+        $alias = strtolower(EvolutionCMS()->stripAlias(trim($pagetitle)));
+        if(!EvolutionCMS()->getConfig('allow_duplicate_alias')) {
 
             if (\EvolutionCMS\Models\SiteContent::withTrashed()
                     ->where('id', '<>', $id)
@@ -103,55 +103,55 @@ if ($modx->getConfig('friendly_urls')) {
     }
 
     // check for duplicate alias name if not allowed
-    elseif ($alias && !$modx->getConfig('allow_duplicate_alias')) {
-        $alias = $modx->stripAlias($alias);
+    elseif ($alias && !EvolutionCMS()->getConfig('allow_duplicate_alias')) {
+        $alias = EvolutionCMS()->stripAlias($alias);
         $docid = \EvolutionCMS\Models\SiteContent::withTrashed()->select('id')
             ->where('id', '<>', $id)
             ->where('alias', $alias);
-        if ($modx->getConfig('use_alias_path')) {
+        if (EvolutionCMS()->getConfig('use_alias_path')) {
             // only check for duplicates on the same level if alias_path is on
             $docid = $docid->where('parent', $parent);
         }
         $docid = $docid->first();
         if (!is_null($docid)) {
             if ($actionToTake == 'edit') {
-                $modx->getManagerApi()->saveFormValues(27);
-                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid->id, $alias), "index.php?a=27&id={$id}");
+                EvolutionCMS()->getManagerApi()->saveFormValues(27);
+                EvolutionCMS()->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid->id, $alias), "index.php?a=27&id={$id}");
             } else {
-                $modx->getManagerApi()->saveFormValues(4);
-                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid->id, $alias), "index.php?a=4");
+                EvolutionCMS()->getManagerApi()->saveFormValues(4);
+                EvolutionCMS()->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid->id, $alias), "index.php?a=4");
             }
         }
     }
 
     // strip alias of special characters
     elseif ($alias) {
-        $alias = $modx->stripAlias($alias);
+        $alias = EvolutionCMS()->stripAlias($alias);
         $docid = \EvolutionCMS\Models\SiteContent::withTrashed()->select('id')
             ->where('id', '<>', $id)
             ->where('alias', $alias)->where('parent', $parent)->first();
         if (!is_null($docid)) {
             if ($actionToTake == 'edit') {
-                $modx->getManagerApi()->saveFormValues(27);
-                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid->id, $alias), "index.php?a=27&id={$id}");
+                EvolutionCMS()->getManagerApi()->saveFormValues(27);
+                EvolutionCMS()->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid->id, $alias), "index.php?a=27&id={$id}");
             } else {
-                $modx->getManagerApi()->saveFormValues(4);
-                $modx->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid->id, $alias), "index.php?a=4");
+                EvolutionCMS()->getManagerApi()->saveFormValues(4);
+                EvolutionCMS()->webAlertAndQuit(sprintf($_lang["duplicate_alias_found"], $docid->id, $alias), "index.php?a=4");
             }
         }
     }
 }
 elseif ($alias) {
-    $alias = $modx->stripAlias($alias);
+    $alias = EvolutionCMS()->stripAlias($alias);
 }
 
 // determine published status
-$currentdate = $modx->timestamp((int)get_by_key($_SERVER, 'REQUEST_TIME', 0));
+$currentdate = EvolutionCMS()->timestamp((int)get_by_key($_SERVER, 'REQUEST_TIME', 0));
 
 if (empty ($pub_date)) {
     $pub_date = 0;
 } else {
-    $pub_date = $modx->toTimeStamp($pub_date);
+    $pub_date = EvolutionCMS()->toTimeStamp($pub_date);
 
     if ($pub_date < $currentdate) {
         $published = 1;
@@ -164,7 +164,7 @@ if (empty ($pub_date)) {
 if (empty ($unpub_date)) {
     $unpub_date = 0;
 } else {
-    $unpub_date = $modx->toTimeStamp($unpub_date);
+    $unpub_date = EvolutionCMS()->toTimeStamp($unpub_date);
     if ($unpub_date < $currentdate) {
         $published = 0;
     }
@@ -184,11 +184,11 @@ if($_SESSION['mgrRole'] != 1 && is_array($document_groups)) {
 
         if($count == 0) {
             if ($actionToTake == 'edit') {
-                $modx->getManagerApi()->saveFormValues(27);
-                $modx->webAlertAndQuit(sprintf($_lang["resource_permissions_error"]), "index.php?a=27&id={$id}");
+                EvolutionCMS()->getManagerApi()->saveFormValues(27);
+                EvolutionCMS()->webAlertAndQuit(sprintf($_lang["resource_permissions_error"]), "index.php?a=27&id={$id}");
             } else {
-                $modx->getManagerApi()->saveFormValues(4);
-                $modx->webAlertAndQuit(sprintf($_lang["resource_permissions_error"]), "index.php?a=4");
+                EvolutionCMS()->getManagerApi()->saveFormValues(4);
+                EvolutionCMS()->webAlertAndQuit(sprintf($_lang["resource_permissions_error"]), "index.php?a=4");
             }
         }
     }
@@ -259,26 +259,26 @@ foreach ($tvs->toArray() as $row) {
 if ($actionToTake != "new") {
     $existingDocument = \EvolutionCMS\Models\SiteContent::withTrashed()->find($id);
     if (is_null($existingDocument)) {
-        $modx->webAlertAndQuit($_lang["error_no_results"]);
+        EvolutionCMS()->webAlertAndQuit($_lang["error_no_results"]);
     }
     $existingDocument = $existingDocument->toArray();
 }
 
 // check to see if the user is allowed to save the document in the place he wants to save it in
-if ($modx->getConfig('use_udperms') == 1) {
+if (EvolutionCMS()->getConfig('use_udperms') == 1) {
     if (!isset($existingDocument) || $existingDocument['parent'] != $parent) {
         $udperms = new EvolutionCMS\Legacy\Permissions();
-        $udperms->user = $modx->getLoginUserID('mgr');
+        $udperms->user = EvolutionCMS()->getLoginUserID('mgr');
         $udperms->document = $parent;
         $udperms->role = $_SESSION['mgrRole'];
 
         if (!$udperms->checkPermissions()) {
             if ($actionToTake == 'edit') {
-                $modx->getManagerApi()->saveFormValues(27);
-                $modx->webAlertAndQuit(sprintf($_lang['access_permission_parent_denied'], $docid, $alias), "index.php?a=27&id={$id}");
+                EvolutionCMS()->getManagerApi()->saveFormValues(27);
+                EvolutionCMS()->webAlertAndQuit(sprintf($_lang['access_permission_parent_denied'], $docid, $alias), "index.php?a=27&id={$id}");
             } else {
-                $modx->getManagerApi()->saveFormValues(4);
-                $modx->webAlertAndQuit(sprintf($_lang['access_permission_parent_denied'], $docid, $alias), "index.php?a=4");
+                EvolutionCMS()->getManagerApi()->saveFormValues(4);
+                EvolutionCMS()->webAlertAndQuit(sprintf($_lang['access_permission_parent_denied'], $docid, $alias), "index.php?a=4");
             }
         }
     }
@@ -302,7 +302,7 @@ $resourceArray = array
     "menuindex"        => $menuindex ,
     "searchable"       => $searchable ,
     "cacheable"        => $cacheable ,
-    "editedby"         => $modx->getLoginUserID('mgr') ,
+    "editedby"         => EvolutionCMS()->getLoginUserID('mgr') ,
     "editedon"         => $currentdate ,
     "pub_date"         => $pub_date ,
     "unpub_date"       => $unpub_date ,
@@ -316,10 +316,10 @@ $resourceArray = array
 
 switch ($actionToTake) {
         case 'new' :
-            $resourceArray['createdby'] = $modx->getLoginUserID('mgr');
+            $resourceArray['createdby'] = EvolutionCMS()->getLoginUserID('mgr');
             $resourceArray['createdon'] = $currentdate;
             // invoke OnBeforeDocFormSave event
-            switch($modx->config['docid_incrmnt_method'])
+            switch(EvolutionCMS()->config['docid_incrmnt_method'])
             {
             case '1':
                 $id = \EvolutionCMS\Models\SiteContent::withTrashed()
@@ -339,20 +339,20 @@ switch ($actionToTake) {
                 $id = '';
             }
 
-        $modx->invokeEvent("OnBeforeDocFormSave", array (
+        EvolutionCMS()->invokeEvent("OnBeforeDocFormSave", array (
             "mode" => "new",
             "id" => $id
         ));
 
         // deny publishing if not permitted
-        if (!$modx->hasPermission('publish_document')) {
+        if (!EvolutionCMS()->hasPermission('publish_document')) {
             $pub_date = 0;
             $unpub_date = 0;
             $published = 0;
         }
 
         $publishedon = ($published ? $currentdate : 0);
-        $publishedby = ($published ? $modx->getLoginUserID('mgr') : 0);
+        $publishedby = ($published ? EvolutionCMS()->getLoginUserID('mgr') : 0);
 
         if ((!empty($pub_date))&&($published)){
             $publishedon=$pub_date;
@@ -381,7 +381,7 @@ switch ($actionToTake) {
 
 
         // document access permissions
-        if ($modx->getConfig('use_udperms') == 1 && is_array($document_groups)) {
+        if (EvolutionCMS()->getConfig('use_udperms') == 1 && is_array($document_groups)) {
             $new_groups = array();
             foreach ($document_groups as $value_pair) {
                 // first, split the pair (this is a new document, so ignore the second value
@@ -393,9 +393,9 @@ switch ($actionToTake) {
                 \EvolutionCMS\Models\DocumentGroup::query()->insert($new_groups);
             }
         } else {
-            $isManager = $modx->hasPermission('access_permissions');
-            $isWeb     = $modx->hasPermission('web_access_permissions');
-            if($modx->getConfig('use_udperms') && !($isManager || $isWeb) && $parent != 0) {
+            $isManager = EvolutionCMS()->hasPermission('access_permissions');
+            $isWeb     = EvolutionCMS()->hasPermission('web_access_permissions');
+            if(EvolutionCMS()->getConfig('use_udperms') && !($isManager || $isWeb) && $parent != 0) {
                 // inherit document access permissions
                 $groupsParent = \EvolutionCMS\Models\DocumentGroup::select('document_group','document')
                     ->where('document', $parent)->get();
@@ -413,7 +413,7 @@ switch ($actionToTake) {
         }
 
         // invoke OnDocFormSave event
-        $modx->invokeEvent("OnDocFormSave", array (
+        EvolutionCMS()->invokeEvent("OnDocFormSave", array (
             "mode" => "new",
             "id" => $key
         ));
@@ -427,7 +427,7 @@ switch ($actionToTake) {
 
         if ($syncsite == 1) {
             // empty cache
-            $modx->clearCache('full');
+            EvolutionCMS()->clearCache('full');
         }
 
         // redirect/stay options
@@ -457,23 +457,23 @@ switch ($actionToTake) {
             $oldparent = $existingDocument['parent'];
             $doctype = $existingDocument['type'];
 
-            if ($id == $modx->getConfig('site_start') && $published == 0) {
-                $modx->getManagerApi()->saveFormValues(27);
-                $modx->webAlertAndQuit("Document is linked to site_start variable and cannot be unpublished!");
+            if ($id == EvolutionCMS()->getConfig('site_start') && $published == 0) {
+                EvolutionCMS()->getManagerApi()->saveFormValues(27);
+                EvolutionCMS()->webAlertAndQuit("Document is linked to site_start variable and cannot be unpublished!");
             }
-            $today = $modx->timestamp((int)get_by_key($_SERVER, 'REQUEST_TIME', 0));
-            if ($id == $modx->getConfig('site_start') && ($pub_date > $today || $unpub_date != "0")) {
-                $modx->getManagerApi()->saveFormValues(27);
-                $modx->webAlertAndQuit("Document is linked to site_start variable and cannot have publish or unpublish dates set!");
+            $today = EvolutionCMS()->timestamp((int)get_by_key($_SERVER, 'REQUEST_TIME', 0));
+            if ($id == EvolutionCMS()->getConfig('site_start') && ($pub_date > $today || $unpub_date != "0")) {
+                EvolutionCMS()->getManagerApi()->saveFormValues(27);
+                EvolutionCMS()->webAlertAndQuit("Document is linked to site_start variable and cannot have publish or unpublish dates set!");
             }
             if ($parent == $id) {
-                $modx->getManagerApi()->saveFormValues(27);
-                $modx->webAlertAndQuit("Document can not be it's own parent!");
+                EvolutionCMS()->getManagerApi()->saveFormValues(27);
+                EvolutionCMS()->webAlertAndQuit("Document can not be it's own parent!");
             }
 
-            $parents = $modx->getParentIds($parent);
+            $parents = EvolutionCMS()->getParentIds($parent);
             if (in_array($id, $parents)) {
-                $modx->webAlertAndQuit("Document descendant can not be it's parent!");
+                EvolutionCMS()->webAlertAndQuit("Document descendant can not be it's parent!");
             }
 
             // check to see document is a folder
@@ -486,7 +486,7 @@ switch ($actionToTake) {
             $was_published = $existingDocument['published'];
 
             // keep original publish state, if change is not permitted
-            if (!$modx->hasPermission('publish_document')) {
+            if (!EvolutionCMS()->hasPermission('publish_document')) {
                 $published = $was_published;
                 $pub_date = 'pub_date';
                 $unpub_date = 'unpub_date';
@@ -495,10 +495,10 @@ switch ($actionToTake) {
             // if it was changed from unpublished to published
             if (!$was_published && $published) {
                 $publishedon = $currentdate;
-                $publishedby = $modx->getLoginUserID('mgr');
+                $publishedby = EvolutionCMS()->getLoginUserID('mgr');
                 }elseif ((!empty($pub_date)&& $pub_date<=$currentdate && $published)) {
                 $publishedon = $pub_date;
-                $publishedby = $modx->getLoginUserID('mgr');
+                $publishedby = EvolutionCMS()->getLoginUserID('mgr');
                    }elseif ($was_published && !$published) {
                 $publishedon = 0;
                 $publishedby = 0;
@@ -512,7 +512,7 @@ switch ($actionToTake) {
             $resourceArray['publishedby'] = $publishedby;
 
             // invoke OnBeforeDocFormSave event
-            $modx->invokeEvent("OnBeforeDocFormSave", array (
+            EvolutionCMS()->invokeEvent("OnBeforeDocFormSave", array (
                 "mode" => "upd",
                 "id" => $id
             ));
@@ -553,7 +553,7 @@ switch ($actionToTake) {
             }
 
             // set document permissions
-            if ($modx->getConfig('use_udperms') == 1 && is_array($document_groups)) {
+            if (EvolutionCMS()->getConfig('use_udperms') == 1 && is_array($document_groups)) {
                 $new_groups = array();
                 // process the new input
                 foreach ($document_groups as $value_pair) {
@@ -562,8 +562,8 @@ switch ($actionToTake) {
                 }
 
                 // grab the current set of permissions on this document the user can access
-                $isManager = $modx->hasPermission('access_permissions');
-                $isWeb     = $modx->hasPermission('web_access_permissions');
+                $isManager = EvolutionCMS()->hasPermission('access_permissions');
+                $isWeb     = EvolutionCMS()->hasPermission('web_access_permissions');
                 $documentGroups = \EvolutionCMS\Models\DocumentGroup::query()->select('document_groups.id','document_groups.document_group')
                     ->leftJoin('documentgroup_names','document_groups.document_group','=','documentgroup_names.id')
                     ->where(function ($query) use ($isWeb, $isManager) {
@@ -621,7 +621,7 @@ switch ($actionToTake) {
 
 
             // invoke OnDocFormSave event
-            $modx->invokeEvent("OnDocFormSave", array (
+            EvolutionCMS()->invokeEvent("OnDocFormSave", array (
                 "mode" => "upd",
                 "id" => $id
             ));
@@ -636,14 +636,14 @@ switch ($actionToTake) {
 
             if ($syncsite == 1) {
                 // empty cache
-                $modx->clearCache('full');
+                EvolutionCMS()->clearCache('full');
             }
 
             if ($_POST['refresh_preview'] == '1')
                 $header = "Location: ".MODX_SITE_URL."index.php?id=$id&z=manprev";
             else {
                 if ($_POST['stay'] != '2' && $id > 0) {
-                    $modx->unlockElement(7, $id);
+                    EvolutionCMS()->unlockElement(7, $id);
                 }
                 if ($_POST['stay'] != '') {
                     $id = $_REQUEST['id'];
@@ -667,5 +667,5 @@ switch ($actionToTake) {
             }
             break;
         default :
-            $modx->webAlertAndQuit("No operation set in request.");
+            EvolutionCMS()->webAlertAndQuit("No operation set in request.");
 }

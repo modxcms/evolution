@@ -16,7 +16,7 @@
 $modx_lang_attribute = 'de'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = 'EVO ist ein <a href="http://evo.im/" target="_blank">PHP Application Framework und Content Management System</a> lizensiert unter der <a href="../assets/docs/license.txt">GNU GPL</a>.';
+$_lang["about_msg"] = 'EVO ist ein <a href="https://evo.im/" target="_blank">PHP Application Framework und Content Management System</a> lizensiert unter der <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Über Evolution';
 $_lang["access_permission_denied"] = 'Sie haben nicht die notwendige Zugriffsberechtigung für diese Ressource.';
 $_lang["access_permission_parent_denied"] = 'Sie haben nicht die notwendige Zugriffsberechtigung, um eine Ressource an dieser Stelle zu erstellen oder hierher zu verschieben.';
@@ -194,7 +194,7 @@ $_lang["create_weblink_here"] = 'Web-Link hier erstellen';
 $_lang["createdon"] = 'Erstellungsdatum';
 $_lang["create_new"] = 'Neu anlegen';
 $_lang["credits"] = 'Danksagungen';
-$_lang["credits_shouts_msg"] = '<p>EVO wird ständig weiterentwickelt und verwaltet unter <a href="http://evo.im/" target="_blank">evo.im</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>EVO wird ständig weiterentwickelt und verwaltet unter <a href="https://evo.im/" target="_blank">evo.im</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Hier können Sie eigene Inhalts-Typen hinzufügen. Geben Sie hierzu den Typ ein und klicken dann auf hinzufügen.';
 $_lang["custom_contenttype_title"] = 'Eigene Inhaltstypen';
 $_lang["database_charset"] = 'Datenbank-Zeichensatz';

@@ -28,7 +28,7 @@
                     <div class="col-md-3 col-lg-2">{{ ManagerTheme::getLexicon('search_criteria_top') }}</div>
                     <div class="col-md-9 col-lg-10">
                         <input name="searchfields" type="text"
-                                value="{{ entities(get_by_key($_REQUEST, 'searchfields', '', 'is_scalar'), $modx->getConfig('modx_charset')) }}" />
+                                value="{{ entities(get_by_key($_REQUEST, 'searchfields', '', 'is_scalar'), EvolutionCMS()->getConfig('modx_charset')) }}" />
                         <small class="form-text">{{ ManagerTheme::getLexicon('search_criteria_top_msg') }}</small>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                     <div class="col-md-3 col-lg-2">URL</div>
                     <div class="col-md-9 col-lg-10">
                         <input name="url" type="text"
-                                value="{{ entities(get_by_key($_REQUEST, 'url', '', 'is_scalar'), $modx->getConfig('modx_charset')) }}" />
+                                value="{{ entities(get_by_key($_REQUEST, 'url', '', 'is_scalar'), EvolutionCMS()->getConfig('modx_charset')) }}" />
                         <small class="form-text">{{ ManagerTheme::getLexicon('search_criteria_url_msg') }}</small>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
                     <div class="col-md-3 col-lg-2">{{ ManagerTheme::getLexicon('search_criteria_content') }}</div>
                     <div class="col-md-9 col-lg-10">
                         <input name="content" type="text"
-                                value="{{ entities(get_by_key($_REQUEST, 'content', '', 'is_scalar'), $modx->getConfig('modx_charset')) }}" />
+                                value="{{ entities(get_by_key($_REQUEST, 'content', '', 'is_scalar'), EvolutionCMS()->getConfig('modx_charset')) }}" />
                         <small class="form-text">{{ ManagerTheme::getLexicon('search_criteria_content_msg') }}</small>
                     </div>
                 </div>

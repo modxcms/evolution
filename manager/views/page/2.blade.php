@@ -4,7 +4,7 @@
     <?php
     unset($_SESSION['itemname']); // clear this, because it's only set for logging purposes
 
-    if($modx->hasPermission('settings') && $modx->getConfig('settings_version') !== $modx->getVersionData('version')) {
+    if(EvolutionCMS()->hasPermission('settings') && EvolutionCMS()->getConfig('settings_version') !== EvolutionCMS()->getVersionData('version')) {
         // seems to be a new install - send the user to the configuration page
         exit('<script type="text/javascript">document.location.href="index.php?a=17";</script>');
     }
@@ -12,48 +12,48 @@
     // set placeholders
     $ph = $_lang;
 
-    $iconTpl = $modx->getChunk('manager#welcome\WrapIcon');
+    $iconTpl = EvolutionCMS()->getChunk('manager#welcome\WrapIcon');
     // setup icons
-    if($modx->hasPermission('new_user') || $modx->hasPermission('edit_user')) {
+    if(EvolutionCMS()->hasPermission('new_user') || EvolutionCMS()->hasPermission('edit_user')) {
         $icon = '<i class="'. $_style['icon_user'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '" alt="[%user_management_title%]"> </i>[%user_management_title%]';
         $ph['SecurityIcon'] = sprintf($iconTpl,$icon, 75);
     }
-    if($modx->hasPermission('new_user') || $modx->hasPermission('edit_user')) {
+    if(EvolutionCMS()->hasPermission('new_user') || EvolutionCMS()->hasPermission('edit_user')) {
         $icon = '<i class="'. $_style['icon_web_user'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '" alt="[%web_user_management_title%]"> </i>[%web_user_management_title%]';
         $ph['WebUserIcon'] = sprintf($iconTpl,$icon, 99);
     }
-    if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module')) {
+    if(EvolutionCMS()->hasPermission('new_module') || EvolutionCMS()->hasPermission('edit_module')) {
         $icon = '<i class="'. $_style['icon_modules'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '" alt="[%manage_modules%]"> </i>[%modules%]';
         $ph['ModulesIcon'] = sprintf($iconTpl,$icon, 106);
     }
-    if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags')) {
+    if(EvolutionCMS()->hasPermission('new_template') || EvolutionCMS()->hasPermission('edit_template') || EvolutionCMS()->hasPermission('new_snippet') || EvolutionCMS()->hasPermission('edit_snippet') || EvolutionCMS()->hasPermission('new_plugin') || EvolutionCMS()->hasPermission('edit_plugin') || EvolutionCMS()->hasPermission('manage_metatags')) {
         $icon = '<i class="'. $_style['icon_elements'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '" alt="[%element_management%]"> </i>[%elements%]';
         $ph['ResourcesIcon'] = sprintf($iconTpl,$icon, 76);
     }
-    if($modx->hasPermission('bk_manager')) {
+    if(EvolutionCMS()->hasPermission('bk_manager')) {
         $icon = '<i class="'. $_style['icon_database'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '" alt="[%bk_manager%]"> </i>[%backup%]';
         $ph['BackupIcon'] = sprintf($iconTpl,$icon, 93);
     }
-    if($modx->hasPermission('help')) {
+    if(EvolutionCMS()->hasPermission('help')) {
         $icon = '<i class="'. $_style['icon_question_circle'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '" alt="[%help%]" /> </i>[%help%]';
         $ph['HelpIcon'] = sprintf($iconTpl,$icon, 9);
     }
 
-    if($modx->hasPermission('new_document')) {
+    if(EvolutionCMS()->hasPermission('new_document')) {
         $icon = '<i class="'. $_style['icon_document'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>[%add_resource%]';
         $ph['ResourceIcon'] = sprintf($iconTpl,$icon, 4);
         $icon = '<i class="'. $_style['icon_chain'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>[%add_weblink%]';
         $ph['WeblinkIcon'] = sprintf($iconTpl,$icon, 72);
     }
-    if($modx->hasPermission('assets_images')) {
+    if(EvolutionCMS()->hasPermission('assets_images')) {
         $icon = '<i class="'. $_style['icon_camera'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>[%images_management%]';
         $ph['ImagesIcon'] = sprintf($iconTpl,$icon, 72);
     }
-    if($modx->hasPermission('assets_files')) {
+    if(EvolutionCMS()->hasPermission('assets_files')) {
         $icon = '<i class="'. $_style['icon_files'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>[%files_management%]';
         $ph['FilesIcon'] = sprintf($iconTpl,$icon, 72);
     }
-    if($modx->hasPermission('change_password')) {
+    if(EvolutionCMS()->hasPermission('change_password')) {
         $icon = '<i class="'. $_style['icon_lock'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>[%change_password%]';
         $ph['PasswordIcon'] = sprintf($iconTpl,$icon, 28);
     }
@@ -61,7 +61,7 @@
     $ph['LogoutIcon'] = sprintf($iconTpl,$icon, 8);
 
     // do some config checks
-    if($modx->getConfig('warning_visibility') || $_SESSION['mgrRole'] == 1) {
+    if(EvolutionCMS()->getConfig('warning_visibility') || $_SESSION['mgrRole'] == 1) {
         include_once(MODX_MANAGER_PATH . 'includes/config_check.inc.php');
         if($config_check_results != $_lang['configcheck_ok']) {
             $ph['config_check_results'] = $config_check_results;
@@ -77,7 +77,7 @@
     if(isset($_SESSION['show_logout_reminder'])) {
         switch($_SESSION['show_logout_reminder']['type']) {
             case 'logout_reminder':
-                $date = $modx->toDateFormat($_SESSION['show_logout_reminder']['lastHit'], 'dateOnly');
+                $date = EvolutionCMS()->toDateFormat($_SESSION['show_logout_reminder']['lastHit'], 'dateOnly');
                 $ph['logout_reminder_msg'] = str_replace('[+date+]', $date, $_lang['logout_reminder_msg']);
                 break;
         }
@@ -91,7 +91,7 @@
 
     $ph['show_multiple_sessions'] = 'none';
 
-    $ph['RecentInfo'] = $modx->getChunk('manager#welcome\RecentInfo');
+    $ph['RecentInfo'] = EvolutionCMS()->getChunk('manager#welcome\RecentInfo');
 
     $tpl = '
 <table class="table data">
@@ -117,10 +117,10 @@
 	</tr>
 </table>';
 
-    $ph['UserInfo'] = $modx->parseText($tpl, array(
-        'username' => $modx->getLoginUserName(),
+    $ph['UserInfo'] = EvolutionCMS()->parseText($tpl, array(
+        'username' => EvolutionCMS()->getLoginUserName(),
         'role' => $_SESSION['mgrPermissions']['name'],
-        'lastlogin' => $modx->toDateFormat($modx->timestamp($_SESSION['mgrLastlogin'])),
+        'lastlogin' => EvolutionCMS()->toDateFormat(EvolutionCMS()->timestamp($_SESSION['mgrLastlogin'])),
         'logincount' => $_SESSION['mgrLogincount'] + 1,
     ));
 
@@ -132,7 +132,7 @@
     if($activeUsers->count() < 1) {
         $html = '<p>[%no_active_users_found%]</p>';
     } else {
-        $now = $modx->timestamp($_SERVER['REQUEST_TIME']);
+        $now = EvolutionCMS()->timestamp($_SERVER['REQUEST_TIME']);
         if (extension_loaded('intl')) {
             // https://www.php.net/manual/en/class.intldateformatter.php
             // https://www.php.net/manual/en/datetime.createfromformat.php
@@ -188,9 +188,9 @@
                     null,
                     "hh:mm:ss"
                 );
-                $lasthit = $formatter->format($modx->timestamp($activeUser['lasthit']));
+                $lasthit = $formatter->format(EvolutionCMS()->timestamp($activeUser['lasthit']));
             } else {
-                $lasthit = strftime('%H:%M:%S', $modx->timestamp($activeUser['lasthit']));
+                $lasthit = strftime('%H:%M:%S', EvolutionCMS()->timestamp($activeUser['lasthit']));
             }
             $userList[] = array(
                 $idle,
@@ -219,8 +219,8 @@
     // include rss feeds for important forum topics
     // Here you can set the urls to retrieve the RSS from. Simply add a $urls line following the numbering progress in the square brakets.
 
-    $urls['modx_news_content'] = $modx->getConfig('rss_url_news');
-    $urls['modx_security_notices_content'] = $modx->getConfig('rss_url_security');
+    $urls['modx_news_content'] = EvolutionCMS()->getConfig('rss_url_news');
+    $urls['modx_security_notices_content'] = EvolutionCMS()->getConfig('rss_url_security');
 
     // How many items per Feed?
     $itemsNumber = '3';
@@ -254,7 +254,7 @@
             $href = rel2abs($item['link'], 'https://github.com');
             $title = $item['title'];
             $pubdate = $item['pubdate'];
-            $pubdate = $modx->toDateFormat(strtotime($pubdate));
+            $pubdate = EvolutionCMS()->toDateFormat(strtotime($pubdate));
             $description = strip_tags($item['description']);
             if (strlen($description) > 199) {
                 $description = substr($description, 0, 200);
@@ -269,8 +269,8 @@
     $ph['modx_security_notices_content'] = $feedData['modx_security_notices_content'];
     $ph['modx_news_content'] = $feedData['modx_news_content'];
 
-    $ph['theme'] = $modx->getConfig('manager_theme');
-    $ph['site_name'] = $modx->getPhpCompat()->entities($modx->getConfig('site_name'));
+    $ph['theme'] = EvolutionCMS()->getConfig('manager_theme');
+    $ph['site_name'] = EvolutionCMS()->getPhpCompat()->entities(EvolutionCMS()->getConfig('site_name'));
     $ph['home'] = $_lang['home'];
     $ph['logo_slogan'] = $_lang['logo_slogan'];
     $ph['welcome_title'] = $_lang['welcome_title'];
@@ -289,13 +289,13 @@
     $ph['modx_news'] = $_lang['modx_news_tab'];
     $ph['modx_news_title'] = $_lang['modx_news_title'];
 
-    $modx->toPlaceholders($ph);
+    EvolutionCMS()->toPlaceholders($ph);
 
-    $script = $modx->getChunk('manager#welcome\StartUpScript');
-    $modx->regClientScript($script);
+    $script = EvolutionCMS()->getChunk('manager#welcome\StartUpScript');
+    EvolutionCMS()->regClientScript($script);
 
     // invoke event OnManagerWelcomePrerender
-    $evtOut = $modx->invokeEvent('OnManagerWelcomePrerender');
+    $evtOut = EvolutionCMS()->invokeEvent('OnManagerWelcomePrerender');
     if(is_array($evtOut)) {
         $output = implode('', $evtOut);
         $ph['OnManagerWelcomePrerender'] = $output;
@@ -309,7 +309,7 @@
         'title' => '[%welcome_title%]',
         'body' => '
             <div class="wm_buttons card-body">' .
-            ($modx->hasPermission("new_document") ? '
+            (EvolutionCMS()->hasPermission("new_document") ? '
                 <span class="wm_button">
                     <a target="main" href="index.php?a=4">
                         <i class="'. $_style['icon_document'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
@@ -323,7 +323,7 @@
                     </a>
                 </span>
                 ' : '') .
-            ($modx->hasPermission("assets_images") ? '
+            (EvolutionCMS()->hasPermission("assets_images") ? '
                 <span class="wm_button">
                     <a target="main" href="media/browser/mcpuk/browse.php?filemanager=media/browser/mcpuk/browse.php&type=images">
                         <i class="'. $_style['icon_camera'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
@@ -331,7 +331,7 @@
                     </a>
                 </span>
                 ' : '') .
-            ($modx->hasPermission("assets_files") ? '
+            (EvolutionCMS()->hasPermission("assets_files") ? '
                 <span class="wm_button">
                     <a target="main" href="media/browser/mcpuk/browse.php?filemanager=media/browser/mcpuk/browse.php&type=files">
                         <i class="'. $_style['icon_files'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
@@ -339,7 +339,7 @@
                     </a>
                 </span>
                 ' : '') .
-            ($modx->hasPermission("bk_manager") ? '
+            (EvolutionCMS()->hasPermission("bk_manager") ? '
                 <span class="wm_button">
                     <a target="main" href="index.php?a=93">
                         <i class="'. $_style['icon_database'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
@@ -347,7 +347,7 @@
                     </a>
                 </span>
                 ' : '') .
-            ($modx->hasPermission("change_password") ? '
+            (EvolutionCMS()->hasPermission("change_password") ? '
                 <span class="wm_button">
                     <a target="main" href="index.php?a=28">
                         <i class="'. $_style['icon_lock'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
@@ -366,7 +366,7 @@
                 <table>
                     <tr>
                         <td width="150">[%yourinfo_username%]</td>
-                        <td><b>' . $modx->getLoginUserName() . '</b></td>
+                        <td><b>' . EvolutionCMS()->getLoginUserName() . '</b></td>
                     </tr>
                     <tr>
                         <td>[%yourinfo_role%]</td>
@@ -380,7 +380,7 @@
                         <td>[%yourinfo_total_logins%]</td>
                         <td><b>[[$_SESSION[\'mgrLogincount\']:math(\'%s+1\')]]</b></td>
                     </tr>' .
-            ($modx->hasPermission("change_password") ? '
+            (EvolutionCMS()->hasPermission("change_password") ? '
 
                     ' : '') . '
                 </table>
@@ -406,7 +406,7 @@
         'body' => '<div class="widget-stage">[+RecentInfo+]</div>',
         'hide'=>'0'
     );
-    if ($modx->getConfig('rss_url_news')) {
+    if (EvolutionCMS()->getConfig('rss_url_news')) {
         $widgets['news'] = array(
             'menuindex' => '40',
             'id' => 'news',
@@ -417,7 +417,7 @@
             'hide'=>'0'
         );
     }
-    if ($modx->getConfig('rss_url_security')) {
+    if (EvolutionCMS()->getConfig('rss_url_security')) {
         $widgets['security'] = array(
             'menuindex' => '50',
             'id' => 'security',
@@ -430,7 +430,7 @@
     }
 
     // invoke OnManagerWelcomeHome event
-    $sitewidgets = $modx->invokeEvent("OnManagerWelcomeHome", array('widgets' => $widgets));
+    $sitewidgets = EvolutionCMS()->invokeEvent("OnManagerWelcomeHome", array('widgets' => $widgets));
     if(is_array($sitewidgets)) {
         $newwidgets = array();
         foreach($sitewidgets as $widget){
@@ -443,11 +443,11 @@
         return $a['menuindex'] - $b['menuindex'];
     });
 
-    $tpl = $modx->getChunk('manager#welcome\Widget');
+    $tpl = EvolutionCMS()->getChunk('manager#welcome\Widget');
     $output = '';
     foreach($widgets as $widget) {
         if ((bool)get_by_key($widget, 'hide', false) !== true) {
-            $output .= $modx->parseText($tpl, $widget);
+            $output .= EvolutionCMS()->parseText($tpl, $widget);
         }
     }
     $ph['widgets'] = $output;

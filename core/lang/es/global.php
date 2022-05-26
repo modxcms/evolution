@@ -16,7 +16,7 @@
 $modx_lang_attribute = 'es'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = 'EVO es un <a href="http://evo.im/" target="_blank">Sistema de Administración de Contenido y Esquema de PHP</a> bajo licencia <a href="../assets/docs/license.txt">GNU GPL</a>.';
+$_lang["about_msg"] = 'EVO es un <a href="https://evo.im/" target="_blank">Sistema de Administración de Contenido y Esquema de PHP</a> bajo licencia <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Acerca de Evolution';
 $_lang["access_permission_denied"] = 'No tienes los permisos correctos para este documento.';
 $_lang["access_permission_parent_denied"] = '¡No tienes permiso para crear o mover un documento aquí! Por favor elije otro lugar.';
@@ -194,7 +194,7 @@ $_lang["create_weblink_here"] = 'Crear enlace web aquí';
 $_lang["createdon"] = 'Fecha de creación';
 $_lang["create_new"] = 'Create new';
 $_lang["credits"] = 'Créditos';
-$_lang["credits_shouts_msg"] = '<p>EVO es administrado y mantenido en <a href="http://evo.im/" target="_blank">evo.im</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>EVO es administrado y mantenido en <a href="https://evo.im/" target="_blank">evo.im</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Aquí puedes añadir tipos de contenido personalizados para ser usados en tus documentos. Para añadir una nueva entrada, ingresa el tipo de contenido y presione el botón de \'Añadir\'.';
 $_lang["custom_contenttype_title"] = 'Tipos de contenido personalizados:';
 $_lang["database_charset"] = 'Conjunto de Caracteres de la Base de Datos';

@@ -800,7 +800,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         $this->documentOutput = $this->cleanUpMODXTags($this->documentOutput);
 
-        $this->documentOutput = $this->rewriteUrls($this->documentOutput);
+        $this->documentOutput = UrlProcessor::rewriteUrls($this->documentOutput);
 
         // send out content-type and content-disposition headers
         if (IN_PARSER_MODE == "true") {
@@ -3013,13 +3013,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         exit;
     }
 
-    /**
-     * @deprecated use TemplateProcessor::getTemplateCodeFromDB()
-     */
-    public function _getTemplateCodeFromDB($templateID)
-    {
-        return TemplateProcessor::getTemplateCodeFromDB($templateID);
-    }
 
     /**
      * Returns an array of all parent record IDs for the id passed.
@@ -4343,13 +4336,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         return UrlProcessor::makeUrl((int)$id, $alias, $args, $scheme);
     }
 
-    /**
-     * @deprecated use UrlProcessor::getAliasListing()
-     */
-    public function getAliasListing($id)
-    {
-        return UrlProcessor::getAliasListing($id);
-    }
+
 
     /**
      * Returns the Evolution CMS version information as version, branch, release date and full application name.
@@ -6357,15 +6344,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         return $this->getService('ExceptionHandler')->messageQuit($msg, $query, $is_error, $nr, $file, $source, $text, $line, $output);
     }
 
-    /**
-     * @param $backtrace
-     * @return string
-     * @deprecated
-     */
-    public function get_backtrace($backtrace)
-    {
-        return $this->getService('ExceptionHandler')->getBacktrace($backtrace);
-    }
 
     /**
      * @return string

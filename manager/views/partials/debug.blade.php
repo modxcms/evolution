@@ -1,4 +1,4 @@
-@if($modx->getConfig('enable_debug'))
+@if(EvolutionCMS()->getConfig('enable_debug'))
     <script language="javascript">
         //document.onload = removeDebug();
 
@@ -34,7 +34,7 @@
             </tr>
             <tr>
                 <td width="70">Time taken</td>
-                <td width="80">{{ printf ('%6.5f s', microtime(true) - $modx->tstart) }}</td>
+                <td width="80">{{ printf ('%6.5f s', microtime(true) - EvolutionCMS()->tstart) }}</td>
             </tr>
         </table>
     </div>

@@ -592,14 +592,9 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         if ($this->managerTheme->getCore()->hasPermission('exec_module')) {
             if ($_SESSION['mgrRole'] != 1 && $this->managerTheme->getCore()->getConfig('use_udperms') === true) {
                 $modules = SiteModule::select('site_modules.id', 'site_modules.name', 'site_modules.icon', 'member_groups.member')
-                    ->leftjoin('site_module_access', 'site_modules.id', '=', 'site_module_access.module')
-                    ->leftjoin('member_groups', 'member_groups.user_group', '=', 'site_module_access.usergroup')
-                    ->where(function ($query) {
-                        $query->whereNull('member_groups.member')
-                            ->orWhere('member_groups.member', '=', $this->managerTheme->getCore()->getLoginUserID('mgr'));
-                    })
-                    ->where('site_modules.disabled', '!=', 1)
-                    ->where('site_modules.locked', '!=', 1)
+                    ->withoutProtected()
+                    ->lockedView()
+                    ->where('site_modules.disabled', 0)
                     ->orderBy('site_modules.name')->get()->toArray();
 
             } else {

@@ -9,18 +9,18 @@
  * MODX version:   1.0.3
  */
 $style_path = 'media/style/' . ManagerTheme::getTheme() . '/images/';
-$modx->config['mgr_date_picker_path'] = 'media/calendar/datepicker.inc.php';
+EvolutionCMS()->config['mgr_date_picker_path'] = 'media/calendar/datepicker.inc.php';
 
 if(!empty($_GET['a']) && $_GET['a'] == 2) {
-    $modx->config['enable_filter'] = 1;
+    EvolutionCMS()->config['enable_filter'] = 1;
 
-    $modx->addSnippet('hasPermission','return $modx->hasPermission($key);');
+    EvolutionCMS()->addSnippet('hasPermission','return EvolutionCMS()->hasPermission($key);');
 
-    if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags'))
+    if(EvolutionCMS()->hasPermission('new_template') || EvolutionCMS()->hasPermission('edit_template') || EvolutionCMS()->hasPermission('new_snippet') || EvolutionCMS()->hasPermission('edit_snippet') || EvolutionCMS()->hasPermission('new_plugin') || EvolutionCMS()->hasPermission('edit_plugin') || EvolutionCMS()->hasPermission('manage_metatags'))
         $hasAnyPermission = 1;
     else $hasAnyPermission = 0;
-    $modx->addSnippet('hasAnyPermission','global $hasAnyPermission; return $hasAnyPermission;');
-    $modx->addSnippet('getLoginUserName','return $modx->getLoginUserName();');
+    EvolutionCMS()->addSnippet('hasAnyPermission','global $hasAnyPermission; return $hasAnyPermission;');
+    EvolutionCMS()->addSnippet('getLoginUserName','return EvolutionCMS()->getLoginUserName();');
     $code = 'global $_lang;return $_SESSION["nrtotalmessages"] ? sprintf($_lang["welcome_messages"], $_SESSION["nrtotalmessages"], \'<span style="color:red;">\' . $_SESSION["nrnewmessages"] . "</span>") : $_lang["messages_no_messages"];';
 }
 
@@ -134,7 +134,7 @@ $_style['tx']                     = $style_path.'misc/_tx_.gif';
 
 // actions buttons templates
 $action = isset($_REQUEST['a']) ? $_REQUEST['a'] : '';
-if (!empty($modx->config['global_tabs']) && !isset($_SESSION['stay'])) {
+if (!empty(EvolutionCMS()->config['global_tabs']) && !isset($_SESSION['stay'])) {
     $_REQUEST['stay'] = 2;
 }
 if (isset($_REQUEST['stay'])) {
@@ -150,52 +150,52 @@ switch($action) {
 	case '4':
 	case '27':
 	case '72':
-		if($modx->hasPermission('new_document')) {
+		if(EvolutionCMS()->hasPermission('new_document')) {
 			$addnew = 1;
 		}
 		break;
 	case '16':
 	case '19':
-		if($modx->hasPermission('new_template')) {
+		if(EvolutionCMS()->hasPermission('new_template')) {
 			$addnew = 1;
 		}
 		break;
 	case '300':
 	case '301':
-		if($modx->hasPermission('new_snippet') && $modx->hasPermission('new_chunk') && $modx->hasPermission('new_plugin')) {
+		if(EvolutionCMS()->hasPermission('new_snippet') && EvolutionCMS()->hasPermission('new_chunk') && EvolutionCMS()->hasPermission('new_plugin')) {
 			$addnew = 1;
 		}
 		break;
 	case '77':
 	case '78':
-		if($modx->hasPermission('new_chunk')) {
+		if(EvolutionCMS()->hasPermission('new_chunk')) {
 			$addnew = 1;
 		}
 		break;
 	case '22':
 	case '23':
-		if($modx->hasPermission('new_snippet')) {
+		if(EvolutionCMS()->hasPermission('new_snippet')) {
 			$addnew = 1;
 		}
 		break;
 	case '101':
 	case '102':
-		if($modx->hasPermission('new_plugin')) {
+		if(EvolutionCMS()->hasPermission('new_plugin')) {
 			$addnew = 1;
 		}
 		break;
 	case '106':
 	case '107':
 	case '108':
-		if($modx->hasPermission('new_module')) {
+		if(EvolutionCMS()->hasPermission('new_module')) {
 			$addnew = 1;
 		}
-		if($modx->hasPermission('exec_module')) {
+		if(EvolutionCMS()->hasPermission('exec_module')) {
 			$run = 1;
 		}
 		break;
 	case '88':
-		if($modx->hasPermission('new_user')) {
+		if(EvolutionCMS()->hasPermission('new_user')) {
 			$addnew = 1;
 		}
 		break;

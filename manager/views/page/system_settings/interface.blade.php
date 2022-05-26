@@ -397,7 +397,7 @@
 
         <?php
         // invoke OnRichTextEditorRegister event
-        $evtOut = $modx->invokeEvent('OnRichTextEditorRegister');
+        $evtOut = EvolutionCMS()->invokeEvent('OnRichTextEditorRegister');
         if (!is_array($evtOut)) {
             $evtOut = array();
             $use_editor = 0;

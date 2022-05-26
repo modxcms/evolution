@@ -423,7 +423,7 @@
 
         <div class="tab-pane" id="pluginPane">
             <script>
-              var tpSnippet = new WebFXTabPane(document.getElementById('pluginPane'), {{ get_by_key($modx->config, 'remember_last_tab') ? 1 : 0 }});
+              var tpSnippet = new WebFXTabPane(document.getElementById('pluginPane'), {{ get_by_key(EvolutionCMS()->config, 'remember_last_tab') ? 1 : 0 }});
             </script>
 
             <!-- General -->
@@ -442,7 +442,7 @@
                                 'class' => 'form-control-lg',
                                 'attributes' => 'onchange="documentDirty=true;" maxlength="100"'
                             ]) .
-                            ($modx->hasPermission('save_role')
+                            (EvolutionCMS()->hasPermission('save_role')
                             ? '<label class="custom-control" data-tooltip="' . ManagerTheme::getLexicon('lock_plugin') . "\n" . ManagerTheme::getLexicon('lock_plugin_msg') .'">' .
                              ManagerTheme::view('form.inputElement', [
                                 'type' => 'checkbox',
@@ -485,7 +485,7 @@
                         'attributes' => 'onchange="documentDirty=true;" maxlength="45"'
                     ])
 
-                    @if($modx->hasPermission('save_role'))
+                    @if(EvolutionCMS()->hasPermission('save_role'))
                         <div class="form-row">
                             <label for="disabled">
                                 @include('manager::form.inputElement', [
