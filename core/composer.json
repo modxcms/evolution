@@ -9,7 +9,7 @@
     "templating",
     "core"
   ],
-  "homepage": "http://evo.im/",
+  "homepage": "https://evo.im/",
   "license": "GPL-2.0+",
   "authors": [
     {
@@ -21,7 +21,7 @@
     {
       "name": "Dmytro Lukianenko",
       "email": "dmi3yy@gmail.com",
-      "homepage": "http://dmi3yy.com",
+      "homepage": "https://dmi3yy.com",
       "role": "Developer"
     }
   ],
@@ -134,7 +134,7 @@
     "email": "dmi3yy@evo.im",
     "issues": "https://github.com/evolution-cms/evolution/issues/",
     "source": "https://github.com/evolution-cms/evolution/",
-    "docs": "http://docs.evo.im",
+    "docs": "https://docs.evo.im",
     "telegram": "https://t.me/evolutioncms"
   }
 }

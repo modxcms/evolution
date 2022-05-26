@@ -583,7 +583,7 @@
     <!-- copyrights -->
     <div class="copyrights">
         <p class="loginLicense"></p>
-        <div class="gpl">&copy; 2005-2021 by the <a href="http://evo.im/" target="_blank">Evolution CMS</a>. <strong>Evolution CMS</strong>&trade; is licensed under the GPL.</div>
+        <div class="gpl">&copy; 2005-2021 by the <a href="https://evo.im/" target="_blank">Evolution CMS</a>. <strong>Evolution CMS</strong>&trade; is licensed under the GPL.</div>
     </div>
 </div>
 

@@ -35,7 +35,7 @@ class SiteContentTableSeeder extends Seeder
 <p>You have successfully installed Evolution CMS.</p>
 
 <h3>Getting Help</h3>
-<p>The <a href="http://evo.im/" target="_blank">Evolution CMS Community</a> provides a great starting point to learn all things Evolution CMS, or you can also <a href="http://evo.im/">see some great learning resources</a> (books, tutorials, blogs and screencasts).</p>
+<p>The <a href="https://evo.im/" target="_blank">Evolution CMS Community</a> provides a great starting point to learn all things Evolution CMS, or you can also <a href="https://evo.im/">see some great learning resources</a> (books, tutorials, blogs and screencasts).</p>
 <p>Welcome to Evolution CMS!</p>
 ',
                 'richtext' => 1,
