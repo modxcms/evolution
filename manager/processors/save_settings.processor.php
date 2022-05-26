@@ -5,7 +5,8 @@ if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
 if(!EvolutionCMS()->hasPermission('settings')) {
 	EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
-$data = $_POST;
+$defaultSettings = config('cms.settings', []);
+$data = $_POST + $defaultSettings;
 
 // lose the POST now, gets rid of quirky issue with Safari 3 - see FS#972
 unset($_POST);
@@ -49,6 +50,7 @@ if($data['friendly_urls']==='1' && strpos($_SERVER['SERVER_SOFTWARE'],'IIS')===f
 	}
 }
 
+
 if (file_exists(MODX_MANAGER_PATH . 'media/style/' . EvolutionCMS()->config['manager_theme'] . '/css/styles.min.css')) {
     unlink(MODX_MANAGER_PATH . 'media/style/' . EvolutionCMS()->config['manager_theme'] . '/css/styles.min.css');
 }
@@ -67,6 +69,10 @@ if (isset($data) && count($data) > 0) {
 	$data['sys_files_checksum'] = EvolutionCMS()->getManagerApi()->getSystemChecksum($data['check_files_onlogin']);
 	$data['mail_check_timeperiod'] = (int)$data['mail_check_timeperiod'] < 60 ? 60 : $data['mail_check_timeperiod']; // updateMail() in mainMenu no faster than every minute
 	foreach ($data as $k => $v) {
+        if (isset($defaultSettings[$k])) {
+            continue;
+        }
+
 		switch ($k) {
             case 'settings_version':{
                 if(EvolutionCMS()->getVersionData('version')!=$data['settings_version']){

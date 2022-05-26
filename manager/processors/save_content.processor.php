@@ -203,6 +203,7 @@ $tvs = \EvolutionCMS\Models\SiteTmplvar::query()->distinct()
     })->leftjoin('site_tmplvar_access', 'site_tmplvar_access.tmplvarid', '=', 'site_tmplvars.id')
     ->where('site_tmplvar_templates.templateid', $template)->orderBy('site_tmplvars.rank');
 if($_SESSION['mgrRole']!= 1){
+    $tvs = $tvs->leftJoin('document_groups', 'site_tmplvar_contentvalues.contentid', '=', 'document_groups.document');
     $tvs = $tvs->where(function ($query) {
         $query->whereNull('site_tmplvar_access.documentgroup')
             ->orWhereIn('document_groups.document_group', $_SESSION['mgrDocgroups']);

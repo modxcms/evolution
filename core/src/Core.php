@@ -3924,6 +3924,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             if (!$docgrp) {
                 $documentChildren = $documentChildren->where('privatemgr', 0);
             } else {
+                $documentChildren = $documentChildren->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document');
                 $documentChildren = $documentChildren->where(function ($query) use ($docgrp) {
                     $query->where('privatemgr', 0)
                         ->orWhereIn('document_groups.document_group', $docgrp);
@@ -3934,6 +3935,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 if (!$docgrp) {
                     $documentChildren = $documentChildren->where('privatemgr', 0);
                 } else {
+                    $documentChildren = $documentChildren->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document');
                     $documentChildren = $documentChildren->where(function ($query) use ($docgrp) {
                         $query->where('privatemgr', 0)
                             ->orWhereIn('document_groups.document_group', $docgrp);

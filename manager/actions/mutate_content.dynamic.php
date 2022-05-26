@@ -917,6 +917,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 $tvs = $tvs->where('site_tmplvar_templates.templateid', $template);
 
                                 if ($_SESSION['mgrRole'] != 1) {
+                                    $tvs = $tvs->leftJoin('document_groups', 'site_tmplvar_contentvalues.contentid', '=', 'document_groups.document');
                                     $tvs = $tvs->where(function ($query) {
                                         $query->whereNull('site_tmplvar_access.documentgroup')
                                             ->orWhereIn('document_groups.document_group', $_SESSION['mgrDocgroups']);
