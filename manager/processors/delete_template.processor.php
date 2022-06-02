@@ -39,7 +39,7 @@ if($limit > 0) {
     include_once MODX_MANAGER_PATH . "includes/footer.inc.php";
     exit;
 }
-
+$default_template = $modx->getConfig('default_template');
 if($id == $default_template) {
     EvolutionCMS()->webAlertAndQuit("This template is set as the default template. Please choose a different default template in the MODX configuration before deleting this template.");
 }
