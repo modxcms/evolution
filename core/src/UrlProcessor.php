@@ -102,15 +102,13 @@ class UrlProcessor
         if ($this->core->getConfig('friendly_urls')) {
             $aliases = $this->getAliases();
             $isFolder = $this->getIsFolders();
-            if ($this->core->getConfig('full_aliaslisting') == 1) {
-                preg_match_all($this->tagPattern, $input, $match);
-                $this->generateAliasListingAll($match['1'], $aliases, $isFolder);
-            } else {
+            preg_match_all($this->tagPattern, $input, $match);
+            if ($this->core->getConfig('full_aliaslisting') != 1) {
                 if (!$this->core->getConfig('aliaslistingfolder')) {
-                    preg_match_all($this->tagPattern, $input, $match);
                     $this->generateAliasListingFolder($match['1'], $aliases, $isFolder);
+                } else {
+                    $this->generateAliasListingAll($match['1'], $aliases, $isFolder);
                 }
-
             }
             $output = $this->replaceUrl($input, $aliases, $isFolder);
         } else {
@@ -503,7 +501,7 @@ class UrlProcessor
         $out = false;
         if ($alias !== '') {
             $query = $this->core->getDatabase()->query(
-                "SELECT 
+                "SELECT
                     `sc`.`id` AS `hidden_id`,
                     `children`.`id` AS `child_id`,
                     children.alias AS `child_alias`,
