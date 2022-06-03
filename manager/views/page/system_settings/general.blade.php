@@ -136,7 +136,7 @@
                 ])
             ,
             'small' => '[(site_unavailable_message)]',
-            'value' => (__('global.site_unavailable_message') ? __('global.site_unavailable_message') : __('global.siteunavailable_message_default')),
+            'value' => ($settings['site_unavailable_message'] ? $settings['site_unavailable_message'] : __('global.siteunavailable_message_default')),
             'attributes' => 'onchange="documentDirty=true;"',
             'rows' => 4,
             'comment' => (isset($disabledSettings['site_unavailable_message']) ? __('global.setting_from_file') . '<br>' : '') .

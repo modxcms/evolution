@@ -60,11 +60,11 @@ function confirmLangChange(el, lkey, elupd){
     if(proceed) {
         //document.getElementById(elupd).value = '';
         lang = el.options[el.selectedIndex].value;
-        var myAjax = new Ajax('index.php?a=118', {
-            method: 'post',
-            data: 'action=get&lang='+lang+'&key='+lkey
-        }).request();
-        myAjax.addEvent('onComplete', function(resp){
+        $.post('index.php?a=118', {
+            action: 'get',
+            lang: lang,
+            key: lkey
+        }, function(resp){
             document.getElementById(elupd).value = resp;
         });
     }
