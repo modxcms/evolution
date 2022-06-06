@@ -126,7 +126,8 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
                 'edit_template',
                 'edit_chunk',
                 'edit_snippet',
-                'edit_plugin'
+                'edit_plugin',
+                'edit_document'
             ]);
 
         $this->managerTheme->getCore()->setConfig(
