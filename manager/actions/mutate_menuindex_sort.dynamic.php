@@ -6,7 +6,7 @@ if (!EvolutionCMS()->hasPermission('edit_document') || !EvolutionCMS()->hasPermi
     EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : null;
+$id = isset($_REQUEST['id']) ? (int) $_REQUEST['id'] : null;
 $reset = isset($_POST['reset']) && $_POST['reset'] == 'true' ? 1 : 0;
 $items = isset($_POST['list']) ? $_POST['list'] : '';
 $ressourcelist = '';
@@ -30,7 +30,7 @@ if (isset($_POST['listSubmitted'])) {
             $docid = ltrim($value, 'item_');
             $key = $reset ? 0 : $key;
             if (is_numeric($docid)) {
-                \EvolutionCMS\Models\SiteContent::where('id', $docid)->update(array('menuindex' => $key));
+                \EvolutionCMS\Models\SiteContent::where('id', $docid)->withTrashed()->update(['menuindex' => $key]);
             }
         }
     }
@@ -41,15 +41,20 @@ $pagetitle = '';
 $ressourcelist = '';
 if ($id !== null) {
 
-    $pagetitle = \EvolutionCMS\Models\SiteContent::query()->find($id)->pagetitle;
+    $pagetitle = \EvolutionCMS\Models\SiteContent::query()->withTrashed()->find($id)->pagetitle;
 
-    $mgrRole = (isset ($_SESSION['mgrRole']) && (string)$_SESSION['mgrRole'] === '1') ? '1' : '0';
+    $mgrRole = (isset ($_SESSION['mgrRole']) && (string) $_SESSION['mgrRole'] === '1') ? '1' : '0';
     $resources = \EvolutionCMS\Models\SiteContent::query()
-        ->select('site_content.id', 'site_content.pagetitle', 'site_content.parent', 'site_content.menuindex', 'site_content.published', 'site_content.hidemenu', 'site_content.deleted', 'site_content.isfolder')
+        ->withTrashed()
+        ->select('site_content.id', 'site_content.pagetitle', 'site_content.parent', 'site_content.menuindex',
+            'site_content.published', 'site_content.hidemenu', 'site_content.deleted', 'site_content.isfolder')
         ->leftJoin('document_groups', 'document_groups.document', '=', 'site_content.id')
         ->where('site_content.parent', $id)
         ->orderBy('menuindex', 'ASC')
-        ->groupBy(['site_content.id', 'site_content.pagetitle', 'site_content.parent', 'site_content.menuindex', 'site_content.published', 'site_content.hidemenu', 'site_content.deleted', 'site_content.isfolder']);
+        ->groupBy([
+            'site_content.id', 'site_content.pagetitle', 'site_content.parent', 'site_content.menuindex',
+            'site_content.published', 'site_content.hidemenu', 'site_content.deleted', 'site_content.isfolder'
+        ]);
     if ($mgrRole != 1) {
         if (is_array($_SESSION['mgrDocgroups']) && count($_SESSION['mgrDocgroups']) > 0) {
             $resources = $resources->where(function ($q) {
