@@ -126,8 +126,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
                 'edit_template',
                 'edit_chunk',
                 'edit_snippet',
-                'edit_plugin',
-                'edit_document'
+                'edit_plugin'
             ]);
 
         $this->managerTheme->getCore()->setConfig(
@@ -606,9 +605,9 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
                     $this->sitemenu['module' . $row['id']] = [
                         'module' . $row['id'],
                         'modules',
-                        ($row['icon'] != '' ? '<i class="' . $row['icon'] . '"></i>' : '<i class="' . $this->managerTheme->getStyle('icon_module') . '"></i>') . $row['name'],
+                        ($row['icon'] != '' ? '<i class="' . $row['icon'] . '"></i>' : '<i class="' . $this->managerTheme->getStyle('icon_module') . '"></i>') . e($row['name']),
                         'index.php?a=112&id=' . $row['id'],
-                        $row['name'],
+                        e($row['name']),
                         '',
                         '',
                         'main',
