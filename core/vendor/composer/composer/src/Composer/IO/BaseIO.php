@@ -114,12 +114,12 @@ abstract class BaseIO implements IOInterface
      */
     public function loadConfiguration(Config $config)
     {
-        $bitbucketOauth = $config->get('bitbucket-oauth') ?: array();
-        $githubOauth = $config->get('github-oauth') ?: array();
-        $gitlabOauth = $config->get('gitlab-oauth') ?: array();
-        $gitlabToken = $config->get('gitlab-token') ?: array();
-        $httpBasic = $config->get('http-basic') ?: array();
-        $bearerToken = $config->get('bearer') ?: array();
+        $bitbucketOauth = $config->get('bitbucket-oauth');
+        $githubOauth = $config->get('github-oauth');
+        $gitlabOauth = $config->get('gitlab-oauth');
+        $gitlabToken = $config->get('gitlab-token');
+        $httpBasic = $config->get('http-basic');
+        $bearerToken = $config->get('bearer');
 
         // reload oauth tokens from config if available
 
@@ -141,8 +141,8 @@ abstract class BaseIO implements IOInterface
         }
 
         foreach ($gitlabToken as $domain => $token) {
-            $username = is_array($token) && array_key_exists("username", $token) ? $token["username"] : $token;
-            $password = is_array($token) && array_key_exists("token", $token) ? $token["token"] : 'private-token';
+            $username = is_array($token) ? $token["username"] : $token;
+            $password = is_array($token) ? $token["token"] : 'private-token';
             $this->checkAndSetAuthentication($domain, $username, $password);
         }
 
@@ -156,7 +156,7 @@ abstract class BaseIO implements IOInterface
         }
 
         // setup process timeout
-        ProcessExecutor::setTimeout((int) $config->get('process-timeout'));
+        ProcessExecutor::setTimeout($config->get('process-timeout'));
     }
 
     public function emergency($message, array $context = array()): void

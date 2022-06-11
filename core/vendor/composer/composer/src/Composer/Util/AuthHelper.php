@@ -37,7 +37,7 @@ class AuthHelper
 
     /**
      * @param string      $origin
-     * @param string|bool $storeAuth
+     * @param 'prompt'|bool $storeAuth
      *
      * @return void
      */
@@ -79,11 +79,12 @@ class AuthHelper
      * @param  int         $statusCode HTTP status code that triggered this call
      * @param  string|null $reason     a message/description explaining why this was called
      * @param  string[]    $headers
-     * @return array|null  containing retry (bool) and storeAuth (string|bool) keys, if retry is true the request should be
+     * @param  int         $retryCount the amount of retries already done on this URL
+     * @return array       containing retry (bool) and storeAuth (string|bool) keys, if retry is true the request should be
      *                                retried, if storeAuth is true then on a successful retry the authentication should be persisted to auth.json
-     * @phpstan-return ?array{retry: bool, storeAuth: string|bool}
+     * @phpstan-return array{retry: bool, storeAuth: 'prompt'|bool}
      */
-    public function promptAuthIfNeeded(string $url, string $origin, int $statusCode, ?string $reason = null, array $headers = array()): ?array
+    public function promptAuthIfNeeded(string $url, string $origin, int $statusCode, ?string $reason = null, array $headers = array(), int $retryCount = 0): array
     {
         $storeAuth = false;
 
@@ -137,6 +138,7 @@ class AuthHelper
             $message = "\n".'Could not fetch '.$url.', enter your ' . $origin . ' credentials ' .($statusCode === 401 ? 'to access private repos' : 'to go over the API rate limit');
             $gitLabUtil = new GitLab($this->io, $this->config, null);
 
+            $auth = null;
             if ($this->io->hasAuthentication($origin)) {
                 $auth = $this->io->getAuthentication($origin);
                 if (in_array($auth['password'], array('gitlab-ci-token', 'private-token', 'oauth2'), true)) {
@@ -148,6 +150,12 @@ class AuthHelper
                 && (!$this->io->isInteractive() || !$gitLabUtil->authorizeOAuthInteractively(parse_url($url, PHP_URL_SCHEME), $origin, $message))
             ) {
                 throw new TransportException('Could not authenticate against '.$origin, 401);
+            }
+
+            if ($auth !== null && $this->io->hasAuthentication($origin)) {
+                if ($auth === $this->io->getAuthentication($origin)) {
+                    throw new TransportException("Invalid credentials for '" . $url . "', aborting.", $statusCode);
+                }
             }
         } elseif ($origin === 'bitbucket.org' || $origin === 'api.bitbucket.org') {
             $askForOAuthToken = true;
@@ -178,7 +186,7 @@ class AuthHelper
         } else {
             // 404s are only handled for github
             if ($statusCode === 404) {
-                return null;
+                return ['retry' => false, 'storeAuth' => false];
             }
 
             // fail if the console is not interactive
@@ -193,8 +201,15 @@ class AuthHelper
 
                 throw new TransportException($message, $statusCode);
             }
+
             // fail if we already have auth
             if ($this->io->hasAuthentication($origin)) {
+                // if two or more requests are started together for the same host, and the first
+                // received authentication already, we let the others retry before failing them
+                if ($retryCount === 0) {
+                    return array('retry' => true, 'storeAuth' => false);
+                }
+
                 throw new TransportException("Invalid credentials for '" . $url . "', aborting.", $statusCode);
             }
 

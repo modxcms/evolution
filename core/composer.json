@@ -26,7 +26,7 @@
     }
   ],
   "require": {
-    "php": ">=7.3",
+    "php": ">=7.4",
     "ext-SimpleXML": "*",
     "ext-dom": "*",
     "ext-iconv": "*",
@@ -68,7 +68,7 @@
     "evolutioncms-services/user-manager": "1.*",
     "evolutioncms-services/document-manager": "1.*",
     "evolution-cms/salo": "1.*",
-    "dragonmantank/cron-expression": "^3.3"
+    "simplepie/simplepie": "1.*"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master"

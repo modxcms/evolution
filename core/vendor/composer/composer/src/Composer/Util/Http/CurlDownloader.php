@@ -17,6 +17,7 @@ use Composer\Downloader\MaxFileSizeExceededException;
 use Composer\IO\IOInterface;
 use Composer\Downloader\TransportException;
 use Composer\Pcre\Preg;
+use Composer\Util\Platform;
 use Composer\Util\StreamContextFactory;
 use Composer\Util\AuthHelper;
 use Composer\Util\Url;
@@ -27,7 +28,7 @@ use React\Promise\Promise;
  * @internal
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Nicolas Grekas <p@tchwork.com>
- * @phpstan-type Attributes array{retryAuthFailure: bool, redirects: int, retries: int, storeAuth: bool}
+ * @phpstan-type Attributes array{retryAuthFailure: bool, redirects: int<0, max>, retries: int<0, max>, storeAuth: 'prompt'|bool}
  * @phpstan-type Job array{url: string, origin: string, attributes: Attributes, options: mixed[], progress: mixed[], curlHandle: resource, filename: string|null, headerHandle: resource, bodyHandle: resource, resolve: callable, reject: callable}
  */
 class CurlDownloader
@@ -152,7 +153,7 @@ class CurlDownloader
      * @param mixed[]  $options
      * @param null|string  $copyTo
      *
-     * @param array{retryAuthFailure?: bool, redirects?: int, retries?: int, storeAuth?: bool} $attributes
+     * @param array{retryAuthFailure?: bool, redirects?: int<0, max>, retries?: int<0, max>, storeAuth?: 'prompt'|bool} $attributes
      *
      * @return int internal job id
      */
@@ -176,6 +177,7 @@ class CurlDownloader
         if (false === $headerHandle) {
             throw new \RuntimeException('Failed to open a temp stream to store curl headers');
         }
+
 
         if ($copyTo) {
             $errorMessage = '';
@@ -363,7 +365,7 @@ class CurlDownloader
                         ) && $job['attributes']['retries'] < $this->maxRetries
                     ) {
                         $this->io->writeError('Retrying ('.($job['attributes']['retries'] + 1).') ' . Url::sanitize($job['url']) . ' due to curl error '. $errno, true, IOInterface::DEBUG);
-                        $this->restartJob($job, $job['url'], array('retries' => $job['attributes']['retries'] + 1));
+                        $this->restartJobWithDelay($job, $job['url'], array('retries' => $job['attributes']['retries'] + 1));
                         continue;
                     }
 
@@ -393,8 +395,19 @@ class CurlDownloader
                     $response = new CurlResponse(array('url' => $progress['url']), $statusCode, $headers, $contents, $progress);
                     $this->io->writeError('['.$statusCode.'] '.Url::sanitize($progress['url']), true, IOInterface::DEBUG);
                 } else {
+                    $maxFileSize = $job['options']['max_file_size'] ?? null;
                     rewind($job['bodyHandle']);
-                    $contents = stream_get_contents($job['bodyHandle']);
+                    if ($maxFileSize !== null) {
+                        $contents = stream_get_contents($job['bodyHandle'], $maxFileSize);
+                        // Gzipped responses with missing Content-Length header cannot be detected during the file download
+                        // because $progress['size_download'] refers to the gzipped size downloaded, not the actual file size
+                        if ($contents !== false && Platform::strlen($contents) >= $maxFileSize) {
+                            throw new MaxFileSizeExceededException('Maximum allowed download size reached. Downloaded ' . Platform::strlen($contents) . ' of allowed ' .  $maxFileSize . ' bytes');
+                        }
+                    } else {
+                        $contents = stream_get_contents($job['bodyHandle']);
+                    }
+
                     $response = new CurlResponse(array('url' => $progress['url']), $statusCode, $headers, $contents, $progress);
                     $this->io->writeError('['.$statusCode.'] '.Url::sanitize($progress['url']), true, IOInterface::DEBUG);
                 }
@@ -427,14 +440,14 @@ class CurlDownloader
                         && $job['attributes']['retries'] < $this->maxRetries
                     ) {
                         $this->io->writeError('Retrying ('.($job['attributes']['retries'] + 1).') ' . Url::sanitize($job['url']) . ' due to status code '. $statusCode, true, IOInterface::DEBUG);
-                        $this->restartJob($job, $job['url'], array('retries' => $job['attributes']['retries'] + 1));
+                        $this->restartJobWithDelay($job, $job['url'], array('retries' => $job['attributes']['retries'] + 1));
                         continue;
                     }
 
                     throw $this->failResponse($job, $response, $response->getStatusMessage());
                 }
 
-                if ($job['attributes']['storeAuth']) {
+                if ($job['attributes']['storeAuth'] !== false) {
                     $this->authHelper->storeAuth($job['origin'], $job['attributes']['storeAuth']);
                 }
 
@@ -524,13 +537,13 @@ class CurlDownloader
     }
 
     /**
-     * @param  Job                                        $job
-     * @return array{retry: bool, storeAuth: string|bool}
+     * @param  Job                                          $job
+     * @return array{retry: bool, storeAuth: 'prompt'|bool}
      */
     private function isAuthenticatedRetryNeeded(array $job, Response $response): array
     {
         if (in_array($response->getStatusCode(), array(401, 403)) && $job['attributes']['retryAuthFailure']) {
-            $result = $this->authHelper->promptAuthIfNeeded($job['url'], $job['origin'], $response->getStatusCode(), $response->getStatusMessage(), $response->getHeaders());
+            $result = $this->authHelper->promptAuthIfNeeded($job['url'], $job['origin'], $response->getStatusCode(), $response->getStatusMessage(), $response->getHeaders(), $job['attributes']['retries']);
 
             if ($result['retry']) {
                 return $result;
@@ -562,7 +575,7 @@ class CurlDownloader
 
         if ($needsAuthRetry) {
             if ($job['attributes']['retryAuthFailure']) {
-                $result = $this->authHelper->promptAuthIfNeeded($job['url'], $job['origin'], 401);
+                $result = $this->authHelper->promptAuthIfNeeded($job['url'], $job['origin'], 401, null, array(), $job['attributes']['retries']);
                 if ($result['retry']) {
                     return $result;
                 }
@@ -578,7 +591,7 @@ class CurlDownloader
      * @param  Job    $job
      * @param  string $url
      *
-     * @param  array{retryAuthFailure?: bool, redirects?: int, storeAuth?: bool} $attributes
+     * @param  array{retryAuthFailure?: bool, redirects?: int<0, max>, storeAuth?: 'prompt'|bool, retries?: int<1, max>} $attributes
      *
      * @return void
      */
@@ -595,6 +608,25 @@ class CurlDownloader
     }
 
     /**
+     * @param  Job    $job
+     * @param  string $url
+     *
+     * @param  array{retryAuthFailure?: bool, redirects?: int<0, max>, storeAuth?: 'prompt'|bool, retries: int<1, max>} $attributes
+     *
+     * @return void
+     */
+    private function restartJobWithDelay(array $job, string $url, array $attributes): void
+    {
+        if ($attributes['retries'] >= 3) {
+            usleep(500000); // half a second delay for 3rd retry and beyond
+        } elseif ($attributes['retries'] >= 2) {
+            usleep(100000); // 100ms delay for 2nd retry
+        } // no sleep for the first retry
+
+        $this->restartJob($job, $url, $attributes);
+    }
+
+    /**
      * @param  Job                $job
      * @param  string             $errorMessage
      * @return TransportException
@@ -606,7 +638,7 @@ class CurlDownloader
         }
 
         $details = '';
-        if (in_array(strtolower($response->getHeader('content-type')), array('application/json', 'application/json; charset=utf-8'), true)) {
+        if (in_array(strtolower((string) $response->getHeader('content-type')), array('application/json', 'application/json; charset=utf-8'), true)) {
             $details = ':'.PHP_EOL.substr($response->getBody(), 0, 200).(strlen($response->getBody()) > 200 ? '...' : '');
         }
 

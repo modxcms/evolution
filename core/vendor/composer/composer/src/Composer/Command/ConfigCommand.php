@@ -214,8 +214,8 @@ EOT
     {
         // Open file in editor
         if (true === $input->getOption('editor')) {
-            $editor = escapeshellcmd(Platform::getEnv('EDITOR'));
-            if (!$editor) {
+            $editor = Platform::getEnv('EDITOR');
+            if (false === $editor || '' === $editor) {
                 if (Platform::isWindows()) {
                     $editor = 'notepad';
                 } else {
@@ -226,6 +226,8 @@ EOT
                         }
                     }
                 }
+            } else {
+                $editor = escapeshellcmd($editor);
             }
 
             $file = $input->getOption('auth') ? $this->authConfigFile->getPath() : $this->configFile->getPath();
@@ -303,7 +305,7 @@ EOT
             }
 
             if (is_array($value)) {
-                $value = json_encode($value);
+                $value = JsonFile::encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             }
 
             $sourceOfConfigValue = '';
@@ -795,6 +797,13 @@ EOT
             }
 
             $this->configSource->addProperty($settingKey, count($values) > 1 ? $values : $values[0]);
+
+            return 0;
+        }
+
+        // handle unsetting other top level properties
+        if ($input->getOption('unset')) {
+            $this->configSource->removeProperty($settingKey);
 
             return 0;
         }

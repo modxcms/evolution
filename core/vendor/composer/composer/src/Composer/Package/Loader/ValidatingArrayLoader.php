@@ -258,9 +258,9 @@ class ValidatingArrayLoader implements LoaderInterface
                         continue;
                     }
                     if ($err = self::hasPackageNamingError($package, true)) {
-                        $this->errors[] = $linkType.'.'.$err;
+                        $this->warnings[] = $linkType.'.'.$err;
                     } elseif (!Preg::isMatch('{^[A-Za-z0-9_./-]+$}', $package)) {
-                        $this->warnings[] = $linkType.'.'.$package.' : invalid key, package names must be strings containing only [A-Za-z0-9_./-]';
+                        $this->errors[] = $linkType.'.'.$package.' : invalid key, package names must be strings containing only [A-Za-z0-9_./-]';
                     }
                     if (!is_string($constraint)) {
                         $this->errors[] = $linkType.'.'.$package.' : invalid value, must be a string containing a version constraint';
@@ -456,7 +456,7 @@ class ValidatingArrayLoader implements LoaderInterface
             return null;
         }
 
-        if (!Preg::isMatch('{^[a-z0-9](?:[_.-]?[a-z0-9]+)*/[a-z0-9](?:(?:[_.]?|-{0,2})[a-z0-9]+)*$}iD', $name)) {
+        if (!Preg::isMatch('{^[a-z0-9](?:[_.-]?[a-z0-9]++)*+/[a-z0-9](?:(?:[_.]|-{1,2})?[a-z0-9]++)*+$}iD', $name)) {
             return $name.' is invalid, it should have a vendor name, a forward slash, and a package name. The vendor and package name can be words separated by -, . or _. The complete name should match "^[a-z0-9]([_.-]?[a-z0-9]+)*/[a-z0-9](([_.]?|-{0,2})[a-z0-9]+)*$".';
         }
 
