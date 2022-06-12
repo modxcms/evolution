@@ -754,8 +754,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * - converts URL tags [~...~] to URLs
      *
      * @param boolean $noEvent Default: false
+     * @param boolean $postParse Default: true
      */
-    public function outputContent($noEvent = false)
+    public function outputContent($noEvent = false, $postParse = true)
     {
         $this->documentOutput = $this->documentContent;
 
@@ -773,7 +774,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         // check for non-cached snippet output
-        if (Str::contains($this->documentOutput, '[!')) {
+        if ($postParse && Str::contains($this->documentOutput, '[!')) {
             $this->recentUpdate = $_SERVER['REQUEST_TIME'] + $this->getConfig('server_offset_time', 0);
 
             $this->documentOutput = str_replace('[!', '[[', $this->documentOutput);
@@ -796,10 +797,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $this->documentOutput = preg_replace("/(<\/body>)/i", $js . "\n\\1", $this->documentOutput);
         }
         // End fix by sirlancelot
+        if ($postParse) {
+            $this->documentOutput = $this->cleanUpMODXTags($this->documentOutput);
 
-        $this->documentOutput = $this->cleanUpMODXTags($this->documentOutput);
-
-        $this->documentOutput = $this->rewriteUrls($this->documentOutput);
+            $this->documentOutput = $this->rewriteUrls($this->documentOutput);
+        }
 
         // send out content-type and content-disposition headers
         if (IN_PARSER_MODE == "true") {
@@ -831,7 +833,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $stats = $this->getTimerStats($this->tstart);
 
         $out =& $this->documentOutput;
-        if (Str::contains($out, '[^')) {
+        if ($postParse && Str::contains($out, '[^')) {
             $out = str_replace(
                 array('[^q^]', '[^qt^]', '[^p^]', '[^t^]', '[^s^]', '[^m^]')
                 , array($stats['queries'], $stats['queryTime'], $stats['phpTime'], $stats['totalTime'], $stats['source'], $stats['phpMemory'])
@@ -850,10 +852,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         $this->documentOutput = removeSanitizeSeed($this->documentOutput);
 
-        if (Str::contains($this->documentOutput, '\{')) {
-            $this->documentOutput = $this->RecoveryEscapedTags($this->documentOutput);
-        } elseif (Str::contains($this->documentOutput, '\[')) {
-            $this->documentOutput = $this->RecoveryEscapedTags($this->documentOutput);
+        if ($postParse) {
+            if (Str::contains($this->documentOutput, '\{')) {
+                $this->documentOutput = $this->RecoveryEscapedTags($this->documentOutput);
+            } elseif (Str::contains($this->documentOutput, '\[')) {
+                $this->documentOutput = $this->RecoveryEscapedTags($this->documentOutput);
+            }
         }
 
         echo $this->documentOutput;
@@ -2968,8 +2972,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             // invoke OnLoadWebDocument event
             $this->invokeEvent('OnLoadWebDocument');
 
-            // Parse document source
-            $this->documentContent = $this->parseDocumentSource($templateCode);
+            if (!$template) {
+                // Parse document source
+                $this->documentContent = $this->parseDocumentSource($this->documentContent);
+            }
 
             $this->documentGenerated = 1;
         } else {
@@ -2982,12 +2988,15 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
         }
 
-        register_shutdown_function(array(
-            &$this,
-            'postProcess'
-        )); // tell PHP to call postProcess when it shuts down
-        $this->outputContent();
-        $this->postProcess();
+        if ($template) {
+            $this->outputContent(false, false);
+        } else {
+            register_shutdown_function([
+                &$this,
+                'postProcess'
+            ]); // tell PHP to call postProcess when it shuts down
+            $this->outputContent();
+        }
     }
 
     public function _sendErrorForUnpubPage()
