@@ -851,8 +851,12 @@ class SystemEventnamesTableSeeder extends Seeder
                 'service' => 1,
                 'groupname' => 'Log Event',
             ),
+            145 => 
+            array (
+                'name' => 'OnLoadSettings',
+                'service' => 1,
+                'groupname' => 'System Settings',
+            ),
         ));
-        
-        
     }
 }

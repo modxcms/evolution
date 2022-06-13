@@ -6204,6 +6204,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         // now merge user settings into evo-configuration
         $this->getUserSettings();
+        $this->invokeEvent('OnLoadSettings', ['config' => &$this->config]);
     }
 
     /**
