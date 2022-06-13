@@ -118,7 +118,6 @@
       "functions/nodes.php",
       "functions/preload.php",
       "functions/processors.php",
-      "functions/rss.php",
       "functions/tv.php",
       "functions/utils.php"
     ]
