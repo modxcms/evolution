@@ -583,7 +583,12 @@ class UrlProcessor
                     }
                 }
 
-                $alias = $alPath . $f_url_prefix . $alias . $f_url_suffix;
+                if ($al['alias_visible'] == 1) {
+                    $alias = $alPath . $f_url_prefix . $alias . $f_url_suffix;
+                } else {
+                    $alias = $alPath;
+                }
+
                 $url = $alias . $args;
             } else {
                 $url = 'index.php?id=' . $id . $args;
