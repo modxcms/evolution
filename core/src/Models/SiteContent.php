@@ -2063,6 +2063,23 @@ class SiteContent extends Eloquent\Model
         return $query->where('published', '1')->where('deleted', '0');
     }
 
+    public function scopeWithoutProtected($query)
+    {
+        $query->leftJoin('document_groups', 'document_groups.document', '=', 'site_content.id');
+        $query->where(function($query){
+            $docgrp = EvolutionCMS()->getUserDocGroups();
+            if (EvolutionCMS()->isFrontend()) {
+                $query->where('privateweb', 0);
+            } else {
+                $query->whereRaw("1 = {$_SESSION['mgrRole']} OR site_content.privatemgr=0");
+            }
+            if ($docgrp) {
+                $query->orWhereIn('document_groups.document_group', $docgrp);
+            }
+        });
+
+        return $query;
+    }
 
     public function scopeWithTVs($query, $tvList = array(), $sep = ':', $tree = false)
     {

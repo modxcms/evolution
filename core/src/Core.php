@@ -2473,22 +2473,10 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         if (is_array($out) && is_array($out[0])) {
             $documentObject = $out[0];
         } else {
-            // get document groups for current user
-            $docgrp = $this->getUserDocGroups();
             // get document
             $documentObject = SiteContent::query()
-                ->leftJoin('document_groups', 'document_groups.document', '=', 'site_content.id')
+                ->withoutProtected()
                 ->where('site_content.' . $method, $identifier);
-            $documentObject->where(function($query) use ($docgrp){
-                if ($this->isFrontend()) {
-                    $query->where('privateweb', 0);
-                } else {
-                    $query->whereRaw("1 = {$_SESSION['mgrRole']} OR site_content.privatemgr=0");
-                }
-                if ($docgrp) {
-                    $query->orWhereIn('document_groups.document_group', $docgrp);
-                }
-            });
             $documentObject = $documentObject->first();
             if (is_null($documentObject)) {
                 $seclimit = 0;
@@ -3776,12 +3764,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param string $dir Sort direction, ASC and DESC is possible
      *                    Default: ASC
      * @param string $fields Default: id, pagetitle, description, parent, alias, menutitle
+     * @param boolean $checkAccess Default: true
      * @return array
      * @throws InvalidFieldException
      * @throws TableNotDefinedException
      * @throws UnknownFetchTypeException
      */
-    public function getAllChildren($id = 0, $sort = 'menuindex', $dir = 'ASC', $fields = 'id, pagetitle, description, parent, alias, menutitle')
+    public function getAllChildren($id = 0, $sort = 'menuindex', $dir = 'ASC', $fields = 'id, pagetitle, description, parent, alias, menutitle', $checkAccess = true)
     {
         $cacheKey = md5(print_r(func_get_args(), true));
         if (isset($this->tmpCache[__FUNCTION__][$cacheKey])) {
@@ -3791,24 +3780,14 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         // modify field names to use sc. table reference
         $fields = 'site_content.' . implode(',site_content.', array_filter(array_map('trim', explode(',', $fields))));
         $sort = 'site_content.' . implode(',site_content.', array_filter(array_map('trim', explode(',', $sort))));
-        // get document groups for current user
-        $docgrp = $this->getUserDocGroups();
         $content = SiteContent::query()
+            ->withTrashed()
             ->select(explode(',', $fields))
             ->where('site_content.parent', $id)
             ->groupBy('site_content.id')
             ->orderBy($sort, $dir);
-        if ($this->isFrontend()) {
-            $content = $content->where('site_content.privateweb', 0);
-        } else {
-            if ($_SESSION['mgrRole'] != 1 && is_array($docgrp) && count($docgrp) > 0) {
-                $content->where(function ($query) use ($docgrp) {
-                    $query->where('site_content.privatemgr', 0)
-                        ->orWhereIn('document_groups.document_group', $docgrp);
-                });
-            } elseif ($_SESSION['mgrRole'] != 1) {
-                $content = $content->where('site_content.privatemgr', 0);
-            }
+        if ($checkAccess) {
+            $content->withoutProtected();
         }
         // build query
         $resourceArray = $content->get()->toArray();
@@ -3826,12 +3805,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param string $dir Sort direction, ASC and DESC is possible
      *                    Default: ASC
      * @param string $fields Default: id, pagetitle, description, parent, alias, menutitle
+     * @param boolean $checkAccess Default: true
      * @return array
      * @throws InvalidFieldException
      * @throws TableNotDefinedException
      * @throws UnknownFetchTypeException
      */
-    public function getActiveChildren($id = 0, $sort = 'menuindex', $dir = 'ASC', $fields = 'id, pagetitle, description, parent, alias, menutitle')
+    public function getActiveChildren($id = 0, $sort = 'menuindex', $dir = 'ASC', $fields = 'id, pagetitle, description, parent, alias, menutitle', $checkAccess = true)
     {
         $cacheKey = md5(print_r(func_get_args(), true));
         if (isset($this->tmpCache[__FUNCTION__][$cacheKey])) {
@@ -3841,25 +3821,14 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         // modify field names to use sc. table reference
         $fields = 'site_content.' . implode(',site_content.', array_filter(array_map('trim', explode(',', $fields))));
         $sort = 'site_content.' . implode(',site_content.', array_filter(array_map('trim', explode(',', $sort))));
-        // get document groups for current user
-        $docgrp = $this->getUserDocGroups();
         $content = SiteContent::query()
             ->select(explode(',', $fields))
             ->where('site_content.parent', $id)
             ->active()
             ->groupBy('site_content.id')
             ->orderBy($sort, $dir);
-        if ($this->isFrontend()) {
-            $content = $content->where('site_content.privateweb', 0);
-        } else {
-            if ($_SESSION['mgrRole'] != 1 && is_array($docgrp) && count($docgrp) > 0) {
-                $content->where(function ($query) use ($docgrp) {
-                    $query->where('site_content.privatemgr', 0)
-                        ->orWhereIn('document_groups.document_group', $docgrp);
-                });
-            } elseif ($_SESSION['mgrRole'] != 1) {
-                $content = $content->where('site_content.privatemgr', 0);
-            }
+        if ($checkAccess) {
+            $content->withoutProtected();
         }
         // build query
         $resourceArray = $content->get()->toArray();
@@ -3885,7 +3854,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * - Sort direction, ASC and DESC is possible. Default: 'ASC'.
      * @param string $limit {string}
      * - Should be a valid SQL LIMIT clause without the 'LIMIT ' i.e. just include the numbers as a string. Default: Empty string (no limit).
-     *
+     * @param boolean $checkAccess Default: true
      * @return array|mixed {array; false} - Result array, or false. - Result array, or false.
      * @throws InvalidFieldException
      * @throws TableNotDefinedException
@@ -3903,7 +3872,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $where = '',
         $sort = 'menuindex',
         $dir = 'ASC',
-        $limit = ''
+        $limit = '',
+        $checkAccess = true
     )
     {
         $cacheKey = md5(print_r(func_get_args(), true));
@@ -3911,7 +3881,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return $this->tmpCache[__FUNCTION__][$cacheKey];
         }
 
-        $documentChildren = SiteContent::query()->where('site_content.parent', $parentid);
+        $documentChildren = SiteContent::query()->withTrashed()->where('site_content.parent', $parentid);
         if ($published !== 'all') {
             $documentChildren = $documentChildren->where('site_content.published', $published);
         }
@@ -3935,33 +3905,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $documentChildren = $documentChildren->orderBy($item, $dir);
         }
 
-        // get document groups for current user
-        $docgrp = $this->getUserDocGroups();
-
-        // build query
-
-        if ($this->isFrontend()) {
-            if (!$docgrp) {
-                $documentChildren = $documentChildren->where('privatemgr', 0);
-            } else {
-                $documentChildren = $documentChildren->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document');
-                $documentChildren = $documentChildren->where(function ($query) use ($docgrp) {
-                    $query->where('privatemgr', 0)
-                        ->orWhereIn('document_groups.document_group', $docgrp);
-                });
-            }
-        } else {
-            if ($_SESSION['mgrRole'] != 1) {
-                if (!$docgrp) {
-                    $documentChildren = $documentChildren->where('privatemgr', 0);
-                } else {
-                    $documentChildren = $documentChildren->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document');
-                    $documentChildren = $documentChildren->where(function ($query) use ($docgrp) {
-                        $query->where('privatemgr', 0)
-                            ->orWhereIn('document_groups.document_group', $docgrp);
-                    });
-                }
-            }
+        if ($checkAccess) {
+            $documentChildren->withoutProtected();
         }
 
         if (is_numeric($limit)) {
@@ -3992,7 +3937,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * - Sorting direction. Default: 'ASC'.
      * @param string $limit {string}
      * - SQL LIMIT (without 'LIMIT '). An empty string means no limit. Default: ''.
-     *
+     * @param boolean $checkAccess Default: true
      * @return array|bool|mixed {array; false} - Result array with documents, or false. - Result array with documents, or false.
      * @throws InvalidFieldException
      * @throws TableNotDefinedException
@@ -4010,7 +3955,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         $where = '',
         $sort = 'menuindex',
         $dir = 'ASC',
-        $limit = ''
+        $limit = '',
+        $checkAccess = true
     )
     {
 
@@ -4019,7 +3965,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             return $this->tmpCache[__FUNCTION__][$cacheKey];
         }
 
-        $documentChildren = SiteContent::query()->whereIn('site_content.id', $ids);
+        $documentChildren = SiteContent::query()->withTrashed()->whereIn('site_content.id', $ids);
         if ($published !== 'all') {
             $documentChildren = $documentChildren->where('site_content.published', $published);
         }
@@ -4051,33 +3997,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
                 $documentChildren = $documentChildren->orderBy($item, $dir);
         }
 
-        // get document groups for current user
-        $docgrp = $this->getUserDocGroups();
-
-        // build query
-
-        if ($this->isFrontend()) {
-            if (!$docgrp) {
-                $documentChildren = $documentChildren->where('privateweb', 0);
-            } else {
-                $documentChildren = $documentChildren->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document');
-                $documentChildren = $documentChildren->where(function ($query) use ($docgrp) {
-                    $query->where('privateweb', 0)
-                        ->orWhereIn('document_groups.document_group', $docgrp);
-                });
-            }
-        } else {
-            if (isset($_SESSION['mgrRole']) && $_SESSION['mgrRole'] != 1) {
-                if (!$docgrp) {
-                    $documentChildren = $documentChildren->where('privatemgr', 0);
-                } else {
-                    $documentChildren = $documentChildren->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document');
-                    $documentChildren = $documentChildren->where(function ($query) use ($docgrp) {
-                        $query->where('privatemgr', 0)
-                            ->orWhereIn('document_groups.document_group', $docgrp);
-                    });
-                }
-            }
+        if ($checkAccess) {
+            $documentChildren->withoutProtected();
         }
 
         if (is_numeric($limit)) {
@@ -4100,6 +4021,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * - Document publication status. Once the parameter equals 'all', the result will be returned regardless of whether the documents are published or they are not. Default: false.
      * @param int $deleted {0; 1; 'all'}
      * - Document removal status. Once the parameter equals 'all', the result will be returned regardless of whether the documents are deleted or they are not. Default: 0.
+     * @param boolean $checkAccess Default: true
      * @return bool {array; false} - Result array with fields or false.
      * - Result array with fields or false.
      * @throws InvalidFieldException
@@ -4110,13 +4032,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @desc Returns required fields of a document.
      *
      */
-    public function getDocument($id = 0, $fields = '*', $published = 1, $deleted = 0)
+    public function getDocument($id = 0, $fields = '*', $published = 1, $deleted = 0, bool $checkAccess = true)
     {
         if ($id == 0) {
             return false;
         }
 
-        $docs = $this->getDocuments(array($id), $published, $deleted, $fields, '', '', '', 1);
+        $docs = $this->getDocuments(array($id), $published, $deleted, $fields, '', '', '', 1, $checkAccess);
 
         if ($docs != false) {
             return $docs[0];
@@ -4174,12 +4096,13 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      *                     Default: 1
      * @param string $fields List of fields
      *                       Default: id, pagetitle, description, alias
+     * @param boolean $checkAccess Default: true
      * @return boolean|array
      * @throws InvalidFieldException
      * @throws TableNotDefinedException
      * @throws \AgelxNash\Modx\Evo\Database\Exceptions\Exception
      */
-    public function getPageInfo($pageid = -1, $active = 1, $fields = 'site_content.id, site_content.pagetitle, site_content.description, site_content.alias')
+    public function getPageInfo($pageid = -1, $active = 1, $fields = 'site_content.id, site_content.pagetitle, site_content.description, site_content.alias', $checkAccess = true)
     {
 
         $cacheKey = md5(print_r(func_get_args(), true));
@@ -4198,22 +4121,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
         }
         $pageInfo = SiteContent::query()->select($fields)
-            ->leftJoin('document_groups', 'document_groups.document', '=', 'site_content.id')
             ->where('site_content.id', $pageid);
         if ($active == 1) {
             $pageInfo = $pageInfo->where('site_content.published', 1)->where('site_content.deleted', 0);
         }
-        if ($this->isFrontend()) {
-            $pageInfo = $pageInfo->where('site_content.privateweb', 0);
-        } else {
-            $docgrp = $this->getUserDocGroups();
-            $pageInfo = $pageInfo->where(function ($query) use ($docgrp) {
-                $query->whereRaw('1 = ' . $_SESSION['mgrRole']);
-                $query->orWhere('site_content.privatemgr', '=', 0);
-                if (!empty($docgrp)) {
-                    $query->orWhereIn('document_groups.document_group', $docgrp);
-                }
-            });
+        if ($checkAccess) {
+            $pageInfo->withoutProtected();
         }
         $pageInfo = $pageInfo->first();
         if (!is_null($pageInfo)) {
@@ -4236,17 +4149,18 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      *                     Default: 1
      * @param string $fields List of fields
      *                       Default: id, pagetitle, description, alias
+     * @param boolean $checkAccess true
      * @return boolean|array
      * @throws InvalidFieldException
      * @throws TableNotDefinedException
      * @throws \AgelxNash\Modx\Evo\Database\Exceptions\Exception
      */
-    public function getParent($pid = -1, $active = 1, $fields = 'id, pagetitle, description, alias, parent')
+    public function getParent($pid = -1, $active = 1, $fields = 'id, pagetitle, description, alias, parent', $checkAccess = true)
     {
         if ($pid == -1) {
             $pid = $this->documentObject['parent'];
 
-            return ($pid == 0) ? false : $this->getPageInfo($pid, $active, $fields);
+            return ($pid == 0) ? false : $this->getPageInfo($pid, $active, $fields, $checkAccess);
         }
 
         if ($pid == 0) {
@@ -4254,11 +4168,11 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         // first get the child document
-        $child = $this->getPageInfo($pid, $active, "parent");
+        $child = $this->getPageInfo($pid, $active, "parent", $checkAccess);
         // now return the child's parent
         $pid = ($child['parent']) ? $child['parent'] : 0;
 
-        return ($pid == 0) ? false : $this->getPageInfo($pid, $active, $fields);
+        return ($pid == 0) ? false : $this->getPageInfo($pid, $active, $fields, $checkAccess);
     }
 
     /**
@@ -4785,14 +4699,15 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      *                      Default: rank
      * @param string $tvsortdir How to sort each element of the result array i.e. how to sort the TVs (direction)
      *                      Default: ASC
+     * @param boolean $checkAccess Default: true
      * @return array|bool
      * @throws InvalidFieldException
      * @throws TableNotDefinedException
      * @throws UnknownFetchTypeException
      */
-    public function getDocumentChildrenTVars($parentid = 0, $tvidnames = array(), $published = 1, $docsort = "menuindex", $docsortdir = "ASC", $tvfields = "*", $tvsort = "rank", $tvsortdir = "ASC")
+    public function getDocumentChildrenTVars($parentid = 0, $tvidnames = array(), $published = 1, $docsort = "menuindex", $docsortdir = "ASC", $tvfields = "*", $tvsort = "rank", $tvsortdir = "ASC", $checkAccess = true)
     {
-        $docs = $this->getDocumentChildren($parentid, $published, 0, '*', '', $docsort, $docsortdir);
+        $docs = $this->getDocumentChildren($parentid, $published, 0, '*', '', $docsort, $docsortdir, '', $checkAccess);
         if (!$docs) {
             return false;
         }
@@ -4822,10 +4737,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $query = (is_numeric($tvidnames[0]) ? "tv.id" : "tv.name") . " IN ('" . implode("','", $tvidnames) . "')";
         }
 
-        $this->getUserDocGroups();
-
         foreach ($docs as $doc) {
-
             $docid = $doc['id'];
 
             $rs = $this->db->select("{$fields}, IF(tvc.value!='',tvc.value,tv.default_text) as value ", "[+prefix+]site_tmplvars tv
@@ -4872,9 +4784,9 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      *
      * @desc Returns an array where each element represents one child doc and contains the result from getTemplateVarOutput().
      */
-    public function getDocumentChildrenTVarOutput($parentid = 0, $tvidnames = array(), $published = 1, $sortBy = 'menuindex', $sortDir = 'ASC', $where = '', $resultKey = 'id')
+    public function getDocumentChildrenTVarOutput($parentid = 0, $tvidnames = array(), $published = 1, $sortBy = 'menuindex', $sortDir = 'ASC', $where = '', $resultKey = 'id', $checkAccess = true)
     {
-        $docs = $this->getDocumentChildren($parentid, $published, 0, 'id', $where, $sortBy, $sortDir);
+        $docs = $this->getDocumentChildren($parentid, $published, 0, 'id', $where, $sortBy, $sortDir, '', $checkAccess);
 
         if (!$docs) {
             return false;
@@ -4928,15 +4840,16 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param string|type $docid Docid. Defaults to empty string which indicates the current document.
      * @param int $published Whether published or unpublished documents are in the result
      *                        Default: 1
+     * @param boolean $checkAccess Default: true
      * @return bool
      */
-    public function getTemplateVar($idname = "", $fields = "*", $docid = "", $published = 1)
+    public function getTemplateVar($idname = "", $fields = "*", $docid = "", $published = 1, $checkAccess = true)
     {
         if ($idname == "") {
             return false;
         }
 
-        $result = $this->getTemplateVars(array($idname), $fields, $docid, $published, "", ""); //remove sorting for speed
+        $result = $this->getTemplateVars(array($idname), $fields, $docid, $published, "", "", $checkAccess); //remove sorting for speed
         return ($result != false) ? $result[0] : false;
     }
 
@@ -4948,7 +4861,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param int|string $published {0; 1; 'all'} - Document publication status. Once the parameter equals 'all', the result will be returned regardless of whether the ducuments are published or they are not. Default: 1.
      * @param string $sort {comma separated string} - Fields of the TV table to sort by. Default: 'rank'.
      * @param string $dir {'ASC'; 'DESC'} - How to sort the result array (direction). Default: 'ASC'.
-     *
+     * @param boolean $checkAccess Default: true
      * @return array|bool Result array, or false.
      * @throws InvalidFieldException
      * @throws TableNotDefinedException
@@ -4960,7 +4873,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * Elements representing a TV consist of an array representing a db row including the fields specified in $fields.
      *
      */
-    public function getTemplateVars($idnames = array(), $fields = '*', $docid = '', $published = 1, $sort = 'rank', $dir = 'ASC')
+    public function getTemplateVars($idnames = array(), $fields = '*', $docid = '', $published = 1, $sort = 'rank', $dir = 'ASC', $checkAccess = true)
     {
         static $cached = array();
         $cacheKey = md5(print_r(func_get_args(), true));
@@ -4978,7 +4891,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $docid = $this->documentIdentifier;
             $docRow = $this->documentObject;
         } else {
-            $docRow = $this->getDocument($docid, '*', $published);
+            $docRow = $this->getDocument($docid, '*', $published, 0, $checkAccess);
 
             if (!$docRow) {
                 $cached[$cacheKey] = false;
