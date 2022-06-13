@@ -50,19 +50,17 @@ function updateContentType(){
  * @param string default_str default value of string for loaded manager language - allows some level of confirmation of change from default
  */
 function confirmLangChange(el, lkey, elupd){
-    lang_current = document.getElementById(elupd).value;
-    lang_default = document.getElementById(lkey+'_hidden').value;
-    changed = lang_current != lang_default;
-    proceed = true;
+    var lang = el.options[el.selectedIndex].value;
+    var lang_default = document.getElementById(lkey+'_hidden').value;
+    var changed = lang_current != lang_default;
+    var proceed = true;
     if(changed) {
         proceed = confirm(lang_chg);
     }
     if(proceed) {
-        //document.getElementById(elupd).value = '';
-        lang = el.options[el.selectedIndex].value;
         $.post('index.php?a=118', {
             action: 'get',
-            lang: lang,
+            lang: lang !== '' ? lang : lang_default,
             key: lkey
         }, function(resp){
             document.getElementById(elupd).value = resp;

@@ -132,7 +132,7 @@
                     'type' => 'hidden',
                     'name' => 'siteunavailable_message_default',
                     'id' => 'siteunavailable_message_default_hidden',
-                    'value' => addslashes(__('global.siteunavailable_message_default'))
+                    'value' => $settings['manager_language']
                 ])
             ,
             'small' => '[(site_unavailable_message)]',
