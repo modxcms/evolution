@@ -52,7 +52,7 @@ function updateContentType(){
 function confirmLangChange(el, lkey, elupd){
     var lang = el.options[el.selectedIndex].value;
     var lang_default = document.getElementById(lkey+'_hidden').value;
-    var changed = lang_current != lang_default;
+    var changed = lang != lang_default;
     var proceed = true;
     if(changed) {
         proceed = confirm(lang_chg);
