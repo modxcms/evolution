@@ -2071,7 +2071,8 @@ class SiteContent extends Eloquent\Model
             if (EvolutionCMS()->isFrontend()) {
                 $query->where('privateweb', 0);
             } else {
-                $query->whereRaw("1 = {$_SESSION['mgrRole']} OR site_content.privatemgr=0");
+                $query->whereRaw("1 = {$_SESSION['mgrRole']}");
+                $query->orWhere('site_content.privatemgr', 0);
             }
             if ($docgrp) {
                 $query->orWhereIn('document_groups.document_group', $docgrp);
