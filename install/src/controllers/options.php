@@ -45,6 +45,8 @@ switch($installMode){
         $_POST['database_connection_charset'] = $database_connection_charset;
         $_POST['database_connection_method'] = $database_connection_method;
         $_POST['databasehost'] = $db_config['host'];
+        $_POST['database_type'] = $db_config['driver'];
+        $_POST['database_collation'] = $database_collation;
         $_SESSION['databaseloginname'] = $db_config['username'];
         $_SESSION['databaseloginpassword'] = $db_config['password'];
         break;
@@ -62,10 +64,10 @@ $ph['database_collation'] = $_POST['database_collation'];
 $ph['database_connection_charset'] = $_POST['database_connection_charset'];
 $ph['database_connection_method'] = $_POST['database_connection_method'];
 $ph['databasehost'] = $_POST['databasehost'];
-$ph['cmsadmin'] = trim($_POST['cmsadmin']);
-$ph['cmsadminemail'] = trim($_POST['cmsadminemail']);
-$ph['cmspassword'] = trim($_POST['cmspassword']);
-$ph['cmspasswordconfirm'] = trim($_POST['cmspasswordconfirm']);
+$ph['cmsadmin'] = trim($_POST['cmsadmin'] ?? '');
+$ph['cmsadminemail'] = trim($_POST['cmsadminemail'] ?? '');
+$ph['cmspassword'] = trim($_POST['cmspassword'] ?? '');
+$ph['cmspasswordconfirm'] = trim($_POST['cmspasswordconfirm'] ?? '');
 
 $ph['checked'] = isset ($_POST['installdata']) && $_POST['installdata'] == '1' ? 'checked' : '';
 

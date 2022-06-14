@@ -330,7 +330,7 @@ if (is_writable("../assets/cache")) {
     f_owc("../assets/cache/installProc.inc.php", '<?php $installStartTime = ' . time() . '; ?>');
 }
 
-if ($installMode > 0 && $_POST['installdata'] == "1") {
+if ($installMode > 0 && isset($_POST['installdata']) && $_POST['installdata'] == "1") {
     echo '<p class="notes"><strong>' . $_lang['sample_web_site'] . ':</strong> ' . $_lang['sample_web_site_note'] . '</p>';
 }
 
