@@ -40,7 +40,6 @@ class ComposerStaticInite94ab7aab7928ca33af80901518072d1
         '850cf87a4646948c81a18db623cd783d' => __DIR__ . '/../..' . '/functions/nodes.php',
         '47888c4fce27f59ac1f379f35c64700a' => __DIR__ . '/../..' . '/functions/preload.php',
         '721e8ed78efe5b07c82130c5cc7a50a7' => __DIR__ . '/../..' . '/functions/processors.php',
-        '0a51ea336021f9e7f0d02af816c13f8d' => __DIR__ . '/../..' . '/functions/rss.php',
         '2bb55d8335813ffd1a5fe37235c4b40d' => __DIR__ . '/../..' . '/functions/tv.php',
         '0c8c4e4d96abc93b354afd18efb554f7' => __DIR__ . '/../..' . '/functions/utils.php',
     );
@@ -396,8 +395,8 @@ class ComposerStaticInite94ab7aab7928ca33af80901518072d1
         ),
         'Illuminate\\Support\\' => 
         array (
-            0 => __DIR__ . '/..' . '/illuminate/macroable',
-            1 => __DIR__ . '/..' . '/illuminate/collections',
+            0 => __DIR__ . '/..' . '/illuminate/collections',
+            1 => __DIR__ . '/..' . '/illuminate/macroable',
             2 => __DIR__ . '/..' . '/illuminate/support',
         ),
         'Illuminate\\Session\\' => 

@@ -1,11 +1,11 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
+        'pretty_version' => '3.x-dev',
+        'version' => '3.9999999.9999999.9999999-dev',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => NULL,
+        'reference' => '34212aaccfcc556cd222ccd06674b7096362b663',
         'name' => 'evocms/core',
         'dev' => false,
     ),
@@ -164,12 +164,12 @@
             'dev_requirement' => false,
         ),
         'evocms/core' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
+            'pretty_version' => '3.x-dev',
+            'version' => '3.9999999.9999999.9999999-dev',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => NULL,
+            'reference' => '34212aaccfcc556cd222ccd06674b7096362b663',
             'dev_requirement' => false,
         ),
         'evolution-cms/salo' => array(
@@ -470,12 +470,12 @@
             'dev_requirement' => false,
         ),
         'phpmailer/phpmailer' => array(
-            'pretty_version' => 'v6.6.0',
-            'version' => '6.6.0.0',
+            'pretty_version' => 'v6.6.2',
+            'version' => '6.6.2.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpmailer/phpmailer',
             'aliases' => array(),
-            'reference' => 'e43bac82edc26ca04b36143a48bde1c051cfd5b1',
+            'reference' => 'b52ed06864fdda81b82ec8bf564cf15d45ed4f95',
             'dev_requirement' => false,
         ),
         'phpoption/phpoption' => array(
@@ -583,8 +583,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0',
-                1 => '1.0.0 || 2.0.0 || 3.0.0',
+                0 => '1.0.0 || 2.0.0 || 3.0.0',
+                1 => '1.0|2.0',
             ),
         ),
         'psr/simple-cache' => array(
