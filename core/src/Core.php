@@ -2888,6 +2888,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $this->documentContent = '';
         }
 
+        $template = false;
         if ($this->documentContent == '') {
 
             // get document object from DB
