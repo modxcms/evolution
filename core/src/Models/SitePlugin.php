@@ -80,6 +80,8 @@ class SitePlugin extends Eloquent\Model
         'id' => [
             'actions.edit' => 102,
             'actions.save' => 103,
+            'actions.enable' => 103,
+            'actions.disable' => 103,
             'actions.delete' => 104,
             'actions.duplicate' => 105
         ]

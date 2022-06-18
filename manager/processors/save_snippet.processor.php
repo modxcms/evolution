@@ -6,6 +6,36 @@ if (!EvolutionCMS()->hasPermission('save_snippet')) {
     EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
+if (isset($_GET['disabled'])) {
+    $disabled = $_GET['disabled'] == 1 ? 1 : 0;
+    $id = (int)($_REQUEST['id'] ?? 0);
+    // Set the item name for logger
+    try {
+        $snippet = EvolutionCMS\Models\SiteSnippet::findOrFail($id);
+        // invoke OnBeforeChunkFormSave event
+        $modx->invokeEvent("OnBeforeSnipFormSave", array(
+            "mode" => "upd",
+            "id" => $id
+        ));
+        $_SESSION['itemname'] = $snippet->name;
+        $snippet->update(['disabled' => $disabled]);
+        // invoke OnChunkFormSave event
+        $modx->invokeEvent("OnSnipFormSave", array(
+            "mode" => "upd",
+            "id" => $id
+        ));
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        $modx->webAlertAndQuit($_lang["error_no_id"]);
+    }
+    // empty cache
+    $modx->clearCache('full');
+
+    // finished emptying cache - redirect
+    $header="Location: index.php?a=76&tab=3&r=2";
+    header($header);
+    exit;
+}
+
 $id = (int)$_POST['id'];
 $snippet = trim($_POST['post']);
 $name = trim($_POST['name']);

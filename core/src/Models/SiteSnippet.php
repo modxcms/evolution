@@ -78,6 +78,8 @@ class SiteSnippet extends Eloquent\Model
         'id' => [
             'actions.edit' => 22,
             'actions.save' => 24,
+            'actions.enable' => 24,
+            'actions.disable' => 24,
             'actions.delete' => 25,
             'actions.duplicate' => 98
         ]

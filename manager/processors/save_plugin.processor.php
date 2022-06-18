@@ -6,6 +6,36 @@ if (!EvolutionCMS()->hasPermission('save_plugin')) {
     EvolutionCMS()->webAlertAndQuit($_lang['error_no_privileges']);
 }
 
+if (isset($_GET['disabled'])) {
+    $disabled = $_GET['disabled'] == 1 ? 1 : 0;
+    $id = (int)($_REQUEST['id'] ?? 0);
+    // Set the item name for logger
+    try {
+        $plugin = EvolutionCMS\Models\SitePlugin::findOrFail($id);
+        // invoke OnBeforeChunkFormSave event
+        $modx->invokeEvent("OnBeforePluginFormSave", array(
+            "mode" => "upd",
+            "id" => $id
+        ));
+        $_SESSION['itemname'] = $plugin->name;
+        $plugin->update(['disabled' => $disabled]);
+        // invoke OnChunkFormSave event
+        $modx->invokeEvent("OnPluginFormSave", array(
+            "mode" => "upd",
+            "id" => $id
+        ));
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        $modx->webAlertAndQuit($_lang["error_no_id"]);
+    }
+    // empty cache
+    $modx->clearCache('full');
+
+    // finished emptying cache - redirect
+    $header="Location: index.php?a=76&tab=4&r=2";
+    header($header);
+    exit;
+}
+
 $id = (int)$_POST['id'];
 $name = trim($_POST['name']);
 $description = $_POST['description'];

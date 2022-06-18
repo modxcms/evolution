@@ -36,6 +36,19 @@
                             <i class="{{ $_style['icon_edit'] }}"></i>
                         </a>
                     </li>
+                    @if($item->disabled)
+                        <li>
+                            <a href="{{ $item->makeUrl('actions.enable', false, ['disabled' => 0]) }}" title="{{ ManagerTheme::getLexicon('enable') }}">
+                                <i class="{{ $_style['icon_enable'] }}"></i>
+                            </a>
+                        </li>
+                    @else
+                        <li>
+                        <a href="{{ $item->makeUrl('actions.disable', false, ['disabled' => 1]) }}" title="{{ ManagerTheme::getLexicon('disable') }}">
+                            <i class="{{ $_style['icon_disable'] }}"></i>
+                        </a>
+                        </li>
+                    @endif
                     <li>
                         <a href="{{ $item->makeUrl('actions.duplicate') }}" title="{{ ManagerTheme::getLexicon('resource_duplicate') }}" onclick="return confirm('{{ ManagerTheme::getLexicon('confirm_duplicate_record') }}')">
                             <i class="{{ $_style['icon_clone'] }}"></i>

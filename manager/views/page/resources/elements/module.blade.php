@@ -56,6 +56,19 @@
                                 <i class="{{ $_style['icon_edit'] }}"></i>
                             </a>
                         </li>
+                        @if($item->disabled)
+                            <li>
+                                <a href="{{ $item->makeUrl('actions.enable', false, ['disabled' => 0]) }}" title="{{ ManagerTheme::getLexicon('enable') }}">
+                                    <i class="{{ $_style['icon_enable'] }}"></i>
+                                </a>
+                            </li>
+                        @else
+                            <li>
+                                <a href="{{ $item->makeUrl('actions.disable', false, ['disabled' => 1]) }}" title="{{ ManagerTheme::getLexicon('disable') }}">
+                                    <i class="{{ $_style['icon_disable'] }}"></i>
+                                </a>
+                            </li>
+                        @endif
                     @endif
                     @if(evolutionCMS()->hasPermission('new_module') && evolutionCMS()->hasPermission('save_module'))
                         <li>

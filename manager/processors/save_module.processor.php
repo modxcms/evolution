@@ -10,6 +10,36 @@ if (!EvolutionCMS()->hasPermission('save_module')) {
     $use_udperms = 1;
 }
 
+if (isset($_GET['disabled'])) {
+    $disabled = $_GET['disabled'] == 1 ? 1 : 0;
+    $id = (int)($_REQUEST['id'] ?? 0);
+    // Set the item name for logger
+    try {
+        $module = EvolutionCMS\Models\SiteModule::findOrFail($id);
+        // invoke OnBeforeChunkFormSave event
+        $modx->invokeEvent("OnBeforeModFormSave", array(
+            "mode" => "upd",
+            "id" => $id
+        ));
+        $_SESSION['itemname'] = $module->name;
+        $module->update(['disabled' => $disabled]);
+        // invoke OnChunkFormSave event
+        $modx->invokeEvent("OnModFormSave", array(
+            "mode" => "upd",
+            "id" => $id
+        ));
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        $modx->webAlertAndQuit($_lang["error_no_id"]);
+    }
+    // empty cache
+    $modx->clearCache('full');
+
+    // finished emptying cache - redirect
+    $header="Location: index.php?a=76&tab=5&r=2";
+    header($header);
+    exit;
+}
+
 $id = (int)$_POST['id'];
 $name = trim($_POST['name']);
 $description = $_POST['description'];

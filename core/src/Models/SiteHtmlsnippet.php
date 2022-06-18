@@ -71,6 +71,8 @@ class SiteHtmlsnippet extends Eloquent\Model
         'id' => [
             'actions.edit' => 78,
             'actions.save' => 79,
+            'actions.enable' => 79,
+            'actions.disable' => 79,
             'actions.delete' => 80,
             'actions.duplicate' => 97
         ]
