@@ -564,10 +564,15 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
      * @param string $context
      * @return bool
      */
-    public function isLoggedIn($context = 'mgr')
+    public function isLoggedIn($context = '')
     {
-        $_ = 'mgrValidated';
+        if (empty($context)) {
+            $mgr = 'mgrValidated';
+            $web = 'webValidated';
+            return is_cli() || (isset($_SESSION[$mgr]) && !empty($_SESSION[$mgr])) || (isset($_SESSION[$web]) && !empty($_SESSION[$web]));
+        }
 
+        $_ = $context.'Validated';
         return is_cli() || (isset($_SESSION[$_]) && !empty($_SESSION[$_]));
     }
 
