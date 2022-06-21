@@ -25,7 +25,7 @@ $tpl = '<tr>
                 <li><b>[%type%]</b>: [+doctype+]</li>
                 <li><b>[%resource_alias%]</b>: [+alias+]</li>
                 <li><b>[%page_data_cacheable%]</b>: [+cacheable:is(1):then([%yes%]):else([%no%])+]</li>
-                <li><b>[%resource_opt_show_menu%]</b>: [+hidemenu:is(0):then([%yes%]):else([%no%])+]</li>
+                <li><b>[%resource_opt_show_menu%]</b>: [+hidemenu+]</li>
                 <li><b>[%page_data_template%]</b>: [+template:templatename:htmlentities+]</li>
             </ul>
         </div>
@@ -40,7 +40,7 @@ foreach ($contents->get()->toArray() as $ph) {
     $docid = $ph['id'];
     $_ = EvolutionCMS()->getUserInfo($ph['editedby']);
     if(isset($_['username']))
-    $ph['username'] = $_['username'];
+        $ph['username'] = $_['username'];
 
     if ($ph['deleted'] == 1) {
         $ph['status'] = 'deleted text-danger';
@@ -87,17 +87,14 @@ foreach ($contents->get()->toArray() as $ph) {
     }
 
     $ph['publish_btn'] = str_replace('[+id+]', $docid, $publish_btn);
-
     $ph['info_btn'] = str_replace('[+id+]', $docid, '<a title="[%resource_overview%]" data-toggle="collapse" data-target=".collapse[+id+]"><i class="'. $_style['icon_info'] . $_style['icon_size_fix'] . '"></i></a>');
-
     $ph['longtitle'] = $ph['longtitle'] == '' ? '(<i>[%not_set%]</i>)' : entities($ph['longtitle']);
     $ph['description'] = $ph['description'] == '' ? '(<i>[%not_set%]</i>)' : entities($ph['description']);
     $ph['introtext'] = $ph['introtext'] == '' ? '(<i>[%not_set%]</i>)' : entities($ph['introtext']);
     $ph['alias'] = $ph['alias'] == '' ? '(<i>[%not_set%]</i>)' : entities($ph['alias']);
-
     $ph['edit_date'] = EvolutionCMS()->toDateFormat(EvolutionCMS()->timestamp($ph['editedon']));
-
     $ph['doctype'] = $ph['type'] == 'reference' ? '[%weblink%]' : '[%resource%]';
+    $ph['hidemenu'] = $ph['hidemenu'] == 1 ? '[%no%]' : '[%yes%]';
 
     $output[] = EvolutionCMS()->parseText($tpl, $ph);
 }
