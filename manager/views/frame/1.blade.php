@@ -35,6 +35,7 @@
                 groups: {!! json_encode($modx->getUserDocGroups()) !!}
             },
             config: {
+                manager_title: '{{ $modx->getConfig('site_name') }} - (Evolution CMS Manager)',
                 mail_check_timeperiod: {{ $modx->getConfig('mail_check_timeperiod') }},
                 menu_height: {{ (int)$modx->getConfig('manager_menu_height') }},
                 tree_width: {{ (int)$MODX_widthSideBar }},
@@ -48,7 +49,6 @@
                 layout: {{ (int)$modx->getConfig('manager_layout') }},
                 textdir: '{{ ManagerTheme::getTextDir() }}',
                 global_tabs: {{ (int)$modx->getConfig('global_tabs') }}
-
             },
             lang: {
                 already_deleted: "{{ ManagerTheme::getLexicon('already_deleted') }}",
@@ -120,12 +120,10 @@
                 new_document: <?= $modx->hasPermission('new_document') ? 1 : 0 ?>,
                 publish_document: <?= $modx->hasPermission('publish_document') ? 1 : 0 ?>,
                 dragndropdocintree: <?= ($modx->hasPermission('new_document') && $modx->hasPermission('edit_document') && $modx->hasPermission('save_document') ? 1 : 0) ?>
-
             },
             plugins: {
                 ElementsInTree: <?= isset($modx->pluginCache['ElementsInTree']) ? 1 : 0 ?>,
                 EVOmodal: <?= isset($modx->pluginCache['EVO.modal']) ? 1 : 0 ?>
-
             },
             extend: function() {
                 for (var i = 1; i < arguments.length; i++) {

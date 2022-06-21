@@ -32,7 +32,7 @@
             <div class="btnCell">
                 <ul class="elements_buttonbar">
                     <li>
-                        <a href="{{ $item->makeUrl('actions.edit') }}" title="{{ ManagerTheme::getLexicon('edit_resource') }}">
+                        <a href="{{ $item->makeUrl('actions.edit') }}" target="main" title="{{ ManagerTheme::getLexicon('edit_resource') }}">
                             <i class="{{ $_style['icon_edit'] }}"></i>
                         </a>
                     </li>

@@ -11,11 +11,11 @@
                 </div>
             @endif
             <div class="mainCell elements_description">
-                <span @if($item->disabled)class="disabledPlugin" @endif>
+                <span class="rTableRowTitle @if($item->disabled) disabledPlugin @endif">
                     @if(empty($action))
                         <span class="man_el_name">
                     @else
-                        <a class="man_el_name site_modules" data-type="site_modules" data-id="{{ $item->id }}" data-catid="{{ $item->category }}" href="{{ $item->makeUrl($action) }}">
+                        <a class="man_el_name site_modules" target="main" data-type="site_modules" data-id="{{ $item->id }}" data-catid="{{ $item->category }}" href="{{ $item->makeUrl($action) }}">
                     @endif
                         @if(empty($item->icon))
                             <i class="{{ $_style['icon_module'] }}"></i>
@@ -45,30 +45,32 @@
                 <ul class="elements_buttonbar">
                     @if(evolutionCMS()->hasPermission('exec_module'))
                         <li>
-                            <a href="{{ $item->makeUrl('actions.run') }}" title="{{ ManagerTheme::getLexicon('run_module') }}">
+                            <a href="{{ $item->makeUrl('actions.run') }}" target="main" title="{{ ManagerTheme::getLexicon('run_module') }}">
                                 <i class="{{ $_style['icon_play'] }}"></i>
                             </a>
                         </li>
                     @endif
                     @if(evolutionCMS()->hasPermission('edit_module'))
                         <li>
-                            <a href="{{ $item->makeUrl('actions.edit') }}" title="{{ ManagerTheme::getLexicon('edit_resource') }}">
+                            <a href="{{ $item->makeUrl('actions.edit') }}" target="main" title="{{ ManagerTheme::getLexicon('edit_resource') }}">
                                 <i class="{{ $_style['icon_edit'] }}"></i>
                             </a>
                         </li>
-                        @if($item->disabled)
-                            <li>
-                                <a href="{{ $item->makeUrl('actions.enable', false, ['disabled' => 0]) }}" title="{{ ManagerTheme::getLexicon('enable') }}">
-                                    <i class="{{ $_style['icon_enable'] }}"></i>
-                                </a>
-                            </li>
-                        @else
-                            <li>
-                                <a href="{{ $item->makeUrl('actions.disable', false, ['disabled' => 1]) }}" title="{{ ManagerTheme::getLexicon('disable') }}">
-                                    <i class="{{ $_style['icon_disable'] }}"></i>
-                                </a>
-                            </li>
-                        @endif
+                        <li>
+                            <a href="javascript:;"
+                               onclick="actionDisableElement(this)"
+                               title="@if($item->disabled) {{ ManagerTheme::getLexicon('enable') }} @else {{ ManagerTheme::getLexicon('disable') }} @endif"
+                               data-disabled="{{ $item->disabled }}"
+                               data-enable-href="{{ $item->makeUrl('actions.enable', false, ['disabled' => 0]) }}"
+                               data-enable-title="{{ ManagerTheme::getLexicon('enable') }}"
+                               data-enable-icon="{{ $_style['icon_enable'] }}"
+                               data-disable-href="{{ $item->makeUrl('actions.disable', false, ['disabled' => 1]) }}"
+                               data-disable-title="{{ ManagerTheme::getLexicon('disable') }}"
+                               data-disable-icon="{{ $_style['icon_disable'] }}"
+                            >
+                                <i class="@if($item->disabled) {{ $_style['icon_enable'] }} @else {{ $_style['icon_disable'] }} @endif"></i>
+                            </a>
+                        </li>
                     @endif
                     @if(evolutionCMS()->hasPermission('new_module') && evolutionCMS()->hasPermission('save_module'))
                         <li>
