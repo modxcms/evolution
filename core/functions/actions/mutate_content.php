@@ -792,7 +792,7 @@ if (! function_exists('renderFormElement')) {
                     $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform',
                         $tvsArray));
                     foreach($index_list as $item => $itemvalue) {
-                        list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
+                        list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : array_merge(explode("==", $itemvalue), ['']);
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
                         }
