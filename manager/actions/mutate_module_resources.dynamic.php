@@ -164,7 +164,7 @@ if ($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
 
     var actions = {
         close: function () {
-            document.location.href = 'index.php?a=106';
+            document.location.href = 'index.php?a=76';
         }
     }
 </script>

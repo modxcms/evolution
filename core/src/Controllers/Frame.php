@@ -394,7 +394,8 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         $tab = $this->menuElementTv($tab);
         $tab = $this->menuElementChunks($tab);
         $tab = $this->menuElementSnippets($tab);
-        $this->menuElementPlugins($tab);
+        $tab = $this->menuElementPlugins($tab);
+        $tab = $this->menuElementModules($tab);
 
         return $this;
     }
@@ -514,6 +515,29 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         return $tab;
     }
 
+    protected function menuElementModules($tab)
+    {
+        if (!$this->managerTheme->getCore()->hasPermission('edit_module')) {
+            return $tab;
+        }
+
+        $this->sitemenu['element_modules'] = [
+            'element_modules',
+            'elements',
+            '<i class="' . $this->managerTheme->getStyle('icon_module') . '"></i>' . $this->managerTheme->getLexicon('manage_modules') . '<i class="' . $this->managerTheme->getStyle('icon_angle_right') . ' toggle"></i>',
+            'index.php?a=76&tab=' . $tab++,
+            $this->managerTheme->getLexicon('manage_modules'),
+            '',
+            'new_module,edit_module',
+            'main',
+            0,
+            60,
+            'dropdown-toggle'
+        ];
+
+        return $tab;
+    }
+
     function menuFiles()
     {
         if (!$this->managerTheme->getCore()->hasPermission('file_manager')) {
@@ -569,20 +593,6 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
         if (!$flag) {
             return $this;
         }
-
-        $this->sitemenu['new_module'] = [
-            'new_module',
-            'modules',
-            '<i class="' . $this->managerTheme->getStyle('icon_modules') . '"></i>' . $this->managerTheme->getLexicon('module_management'),
-            'index.php?a=106',
-            $this->managerTheme->getLexicon('module_management'),
-            '',
-            'new_module,edit_module',
-            'main',
-            1,
-            0,
-            ''
-        ];
 
         return $this;
     }

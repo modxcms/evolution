@@ -4,8 +4,8 @@ global $use_udperms;
 if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
     die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
-if (!EvolutionCMS()->hasPermission('save_module')) {
-    EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
+if (!$modx->hasPermission('save_module')) {
+    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }else {
     $use_udperms = 1;
 }
@@ -35,7 +35,7 @@ if (isset($_GET['disabled'])) {
     $modx->clearCache('full');
 
     // finished emptying cache - redirect
-    $header="Location: index.php?a=76&tab=5&r=2";
+    $header="Location: index.php?a=76&r=2";
     header($header);
     exit;
 }
@@ -55,7 +55,7 @@ $properties = $_POST['properties'];
 $enable_sharedparams = (isset($_POST['enable_sharedparams']) && $_POST['enable_sharedparams'] == 'on') == 'on' ? 1 : 0;
 $guid = $_POST['guid'];
 $parse_docblock = (isset($_POST['parse_docblock']) && $_POST['parse_docblock'] == 'on') == "1" ? '1' : '0';
-$currentdate = time() + EvolutionCMS()->config['server_offset_time'];
+$currentdate = time() + $modx->config['server_offset_time'];
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
@@ -75,7 +75,7 @@ if ($name == "") {
 }
 
 if ($parse_docblock) {
-    $parsed = EvolutionCMS()->parseDocBlockFromString($modulecode, true);
+    $parsed = $modx->parseDocBlockFromString($modulecode, true);
     $name = isset($parsed['name']) ? $parsed['name'] : $name;
     $properties = isset($parsed['properties']) ? $parsed['properties'] : $properties;
     $guid = isset($parsed['guid']) ? $parsed['guid'] : $guid;
@@ -95,7 +95,7 @@ if ($parse_docblock) {
 switch ($_POST['mode']) {
     case '107':
         // invoke OnBeforeModFormSave event
-        EvolutionCMS()->invokeEvent("OnBeforeModFormSave", array(
+        $modx->invokeEvent("OnBeforeModFormSave", array(
                 "mode" => "new",
                 "id" => $id
             ));
@@ -103,8 +103,8 @@ switch ($_POST['mode']) {
         // disallow duplicate names for new modules
         $count = \EvolutionCMS\Models\SiteModule::query()->where('name', $name)->count();
         if ($count > 0) {
-            EvolutionCMS()->getManagerApi()->saveFormValues(107);
-            EvolutionCMS()->webAlertAndQuit(sprintf($_lang['duplicate_name_found_module'], $name), "index.php?a=107");
+            $modx->getManagerApi()->saveFormValues(107);
+            $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_module'], $name), "index.php?a=107");
         }
 
         // save the new module
@@ -130,7 +130,7 @@ switch ($_POST['mode']) {
         saveUserGroupAccessPermissons();
 
         // invoke OnModFormSave event
-        EvolutionCMS()->invokeEvent("OnModFormSave", array(
+        $modx->invokeEvent("OnModFormSave", array(
                 "mode" => "new",
                 "id" => $newid
             ));
@@ -139,7 +139,7 @@ switch ($_POST['mode']) {
         $_SESSION['itemname'] = $name;
 
         // empty cache
-        EvolutionCMS()->clearCache('full');
+        $modx->clearCache('full');
 
         // finished emptying cache - redirect
         if ($_POST['stay'] != '') {
@@ -147,13 +147,13 @@ switch ($_POST['mode']) {
             $header = "Location: index.php?a=" . $a . "&r=2&stay=" . $_POST['stay'];
             header($header);
         } else {
-            $header = "Location: index.php?a=106&r=2";
+            $header = "Location: index.php?a=76&r=2";
             header($header);
         }
         break;
     case '108':
         // invoke OnBeforeModFormSave event
-        EvolutionCMS()->invokeEvent("OnBeforeModFormSave", array(
+        $modx->invokeEvent("OnBeforeModFormSave", array(
                 "mode" => "upd",
                 "id" => $id
             ));
@@ -162,8 +162,8 @@ switch ($_POST['mode']) {
         $count = \EvolutionCMS\Models\SiteModule::query()->where('name', $name)->where('id', '!=', $id)->count();
 
         if ($count > 0) {
-            EvolutionCMS()->getManagerApi()->saveFormValues(108);
-            EvolutionCMS()->webAlertAndQuit(sprintf($_lang['duplicate_name_found_module'], $name), "index.php?a=108&id={$id}");
+            $modx->getManagerApi()->saveFormValues(108);
+            $modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_module'], $name), "index.php?a=108&id={$id}");
         }
 
         // save the edited module
@@ -188,7 +188,7 @@ switch ($_POST['mode']) {
         saveUserGroupAccessPermissons();
 
         // invoke OnModFormSave event
-        EvolutionCMS()->invokeEvent("OnModFormSave", array(
+        $modx->invokeEvent("OnModFormSave", array(
                 "mode" => "upd",
                 "id" => $id
             ));
@@ -197,7 +197,7 @@ switch ($_POST['mode']) {
         $_SESSION['itemname'] = $name;
 
         // empty cache
-        EvolutionCMS()->clearCache('full');
+        $modx->clearCache('full');
 
         // finished emptying cache - redirect
         if ($_POST['stay'] != '') {
@@ -205,11 +205,11 @@ switch ($_POST['mode']) {
             $header = "Location: index.php?a=" . $a . "&r=2&stay=" . $_POST['stay'];
             header($header);
         } else {
-            EvolutionCMS()->unlockElement(6, $id);
-            $header = "Location: index.php?a=106&r=2";
+            $modx->unlockElement(6, $id);
+            $header = "Location: index.php?a=76&r=2";
             header($header);
         }
         break;
     default:
-        EvolutionCMS()->webAlertAndQuit("No operation set in request.");
+        $modx->webAlertAndQuit("No operation set in request.");
 }

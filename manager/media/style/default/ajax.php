@@ -206,6 +206,22 @@ if (isset($action)) {
                         }
 
                         break;
+
+                    case 'element_modules':
+                        $a = 108;
+                        $sql = \EvolutionCMS\Models\SiteModule::query()
+                            ->select('id', 'name', 'locked', 'disabled')
+                            ->orderBy('name', 'ASC');
+
+                        if ($filter != '') {
+                            $sql = $sql->where('name', 'LIKE', '%' . $filter . '%');
+                        }
+
+                        if ($modx->hasPermission('new_module')) {
+                            $output .= '<li><a id="a_107" href="index.php?a=107" target="main"><i class="' . $_style['icon_add'] . '"></i>' . $_lang['new_module'] . '</a></li>';
+                        }
+
+                        break;
                 }
 
                 if ($sql->count() > 0) {

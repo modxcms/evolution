@@ -86,7 +86,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
         },
         cancel: function () {
             documentDirty = false;
-            document.location.href = 'index.php?a=106';
+            document.location.href = 'index.php?a=76';
         },
         run: function () {
             document.location.href = "index.php?id=<?= (isset($_REQUEST['id'])) ? $_REQUEST['id'] : "" ?>&a=112";

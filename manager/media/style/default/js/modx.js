@@ -1540,7 +1540,7 @@
         this.timer = null;
         this.olduid = '';
         this.closeactions = [6, 61, 62, 63, 94];
-        this.saveAndCloseActions = [75, 76, 86, 99, 106];
+        this.saveAndCloseActions = [75, 86, 99, 106];
         this.reload = typeof a.reload !== 'undefined' ? a.reload : 1;
         this.action = modx.getActionFromUrl(a.url);
         this.getTab = modx.main.getQueryVariable('tab', a.url);
@@ -1661,6 +1661,9 @@
             } else if (this.olduid !== this.uid && d.getElementById('evo-tab-' + this.uid)) {
               this.close(e);
               d.getElementById('evo-tab-' + this.uid).show();
+              if (parseInt(modx.main.getQueryVariable('r', this.url)) === 2) {
+                w.main.location.href = this.url;
+              }
             } else {
               this.title = w.main.document.body.querySelectorAll('h1')[0] && w.main.document.body.querySelectorAll('h1')[0].innerHTML || this.title;
               this.txt = modx.title(this.title);
