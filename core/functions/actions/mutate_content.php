@@ -705,9 +705,9 @@ if (! function_exists('renderFormElement')) {
         $properties = []
     ) {
         $modx = evolutionCMS();
-        global $_style;
-        global $_lang;
-        global $content;
+        if ($content === null) {
+            global $content;
+        }
 
         if (substr($default_text, 0, 6) === '@@EVAL' && $field_value === $default_text) {
             $eval_str = trim(substr($default_text, 7));
@@ -719,7 +719,6 @@ if (! function_exists('renderFormElement')) {
         $cimode = strpos($field_type, ':');
         if ($cimode === false) {
             switch ($field_type) {
-
                 case "text": // handler for regular text boxes
                 case "rawtext"; // non-htmlentity converted text boxes
                     $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '" ' . $field_style . ' tvtype="' . $field_type . '" onchange="documentDirty=true;" style="width:100%" />';
@@ -756,8 +755,8 @@ if (! function_exists('renderFormElement')) {
                     if ($field_value == '') {
                         $field_value = 0;
                     }
-                    $field_html .= '<input id="tv' . $field_id . '" name="tv' . $field_id . '" class="DatePicker" type="text" value="' . ($field_value == 0 || !isset($field_value) ? "" : $field_value) . '" onblur="documentDirty=true;" />';
-                    $field_html .= ' <a onclick="document.forms[\'mutate\'].elements[\'tv' . $field_id . '\'].value=\'\';document.forms[\'mutate\'].elements[\'tv' . $field_id . '\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><i class="' . $_style["icon_calendar_close"] . '"></i></a>';
+                    $field_html .= '<input id="tv' . $field_id . '" name="tv' . $field_id . '" class="DatePicker" type="text" value="' . ( !isset($field_value) || $field_value == 0 ? "" : $field_value) . '" onblur="documentDirty=true;" />';
+                    $field_html .= ' <a onclick="document.forms[\'mutate\'].elements[\'tv' . $field_id . '\'].value=\'\';document.forms[\'mutate\'].elements[\'tv' . $field_id . '\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><i class="' . ManagerTheme::getStyle("icon_calendar_close") . '"></i></a>';
 
                     break;
                 case "dropdown": // handler for select boxes
@@ -765,7 +764,7 @@ if (! function_exists('renderFormElement')) {
                     $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform',
                         $tvsArray));
                     foreach($index_list as $item => $itemvalue) {
-                        list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
+                        list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : array_merge(explode("==", $itemvalue), ['']);
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
                         }
@@ -778,7 +777,7 @@ if (! function_exists('renderFormElement')) {
                     $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform',
                         $tvsArray));
                     foreach($index_list as $item => $itemvalue) {
-                        list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
+                        list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : array_merge(explode("==", $itemvalue), ['']);
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
                         }
@@ -834,7 +833,7 @@ if (! function_exists('renderFormElement')) {
                             $value = isset($item[1]) ? $item[1] : $name;
                         } else {
                             $item = trim($item);
-                            list($name, $value) = (strpos($item, '==') !== false) ? explode('==', $item, 2) : array(
+                            list($name, $value) = (strpos($item, '==') !== false) ? array_merge(explode('==', $item, 2), ['']) : array(
                                 $item,
                                 $item
                             );
@@ -857,7 +856,7 @@ if (! function_exists('renderFormElement')) {
                         $tvsArray));
                     static $i = 0;
                     foreach($index_list as $item => $itemvalue) {
-                        list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
+                        list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : array_merge(explode("==", $itemvalue), ['']);
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
                         }

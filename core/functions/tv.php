@@ -729,7 +729,7 @@ if (!function_exists('renderFormElement')) {
                         if ((is_array($itemvalue))) {
                             list($item, $itemvalue) = $itemvalue;
                         } else {
-                            list($item, $itemvalue) = explode('==', $itemvalue);
+                            list($item, $itemvalue) = array_merge(explode('==', $itemvalue), ['']);
                         }
                         if ($itemvalue == '') {
                             $itemvalue = $item;
@@ -753,7 +753,7 @@ if (!function_exists('renderFormElement')) {
                         if (is_array($itemvalue)) {
                             list($item, $itemvalue) = $itemvalue;
                         } else {
-                            list($item, $itemvalue) = explode('==', $itemvalue);
+                            list($item, $itemvalue) = array_merge(explode('==', $itemvalue), ['']);
                         }
                         if ($itemvalue == '') {
                             $itemvalue = $item;
@@ -777,7 +777,7 @@ if (!function_exists('renderFormElement')) {
                         if (is_array($itemvalue)) {
                             list($item, $itemvalue) = $itemvalue;
                         } else {
-                            list($item, $itemvalue) = explode('==', $itemvalue);
+                            list($item, $itemvalue) = array_merge(explode('==', $itemvalue), ['']);
                         }
                         if ($itemvalue == '') {
                             $itemvalue = $item;
@@ -830,7 +830,7 @@ if (!function_exists('renderFormElement')) {
                         } else {
                             $item = trim($item);
                             if (strpos($item, '==') !== false) {
-                                list($name, $value) = explode('==', $item, 2);
+                                list($name, $value) = array_merge(explode('==', $item, 2), ['']);
                             } else {
                                 list($name, $value) = array($item, $item);
                             }
@@ -863,7 +863,7 @@ if (!function_exists('renderFormElement')) {
                         if (is_array($itemvalue)) {
                             list($item, $itemvalue) = $itemvalue;
                         } else {
-                            list($item, $itemvalue) = explode('==', $itemvalue);
+                            list($item, $itemvalue) = array_merge(explode('==', $itemvalue), ['']);
                         }
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
