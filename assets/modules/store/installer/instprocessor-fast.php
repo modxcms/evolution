@@ -26,7 +26,7 @@ $moduleRelease = $modx_release_date;
 $moduleSQLBaseFile = "setup.sql";
 $moduleSQLDataFile = "setup.data.sql";
 
-if (is_file($installPath . '/' . $moduleSQLBaseFile)) {
+if (!empty($installPath) && is_file($installPath . '/' . $moduleSQLBaseFile)) {
     $moduleSQLDataFile = $moduleSQLBaseFile;
 }
 
