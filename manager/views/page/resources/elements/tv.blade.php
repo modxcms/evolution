@@ -31,6 +31,7 @@
             </div>
             <div class="btnCell">
                 <ul class="elements_buttonbar">
+                    @if(evolutionCMS()->hasAnyPermissions(['new_template', 'edit_template', 'new_role', 'edit_role']))
                     <li>
                         <a href="{{ $item->makeUrl('actions.edit') }}" target="main" title="{{ ManagerTheme::getLexicon('edit_resource') }}">
                             <i class="{{ $_style['icon_edit'] }}"></i>
@@ -46,6 +47,7 @@
                             <i class="{{ $_style['icon_trash'] }}"></i>
                         </a>
                     </li>
+                    @endif
                 </ul>
             </div>
         </div>

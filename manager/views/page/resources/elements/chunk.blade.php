@@ -31,6 +31,7 @@
             </div>
             <div class="btnCell">
                 <ul class="elements_buttonbar">
+                    @if(evolutionCMS()->hasPermission('edit_chunk'))
                     <li>
                         <a href="{{ $item->makeUrl('actions.edit') }}" target="main" title="{{ ManagerTheme::getLexicon('edit_resource') }}">
                             <i class="{{ $_style['icon_edit'] }}"></i>
@@ -51,16 +52,21 @@
                             <i class="@if($item->disabled) {{ $_style['icon_enable'] }} @else {{ $_style['icon_disable'] }} @endif"></i>
                         </a>
                     </li>
+                    @endif
+                    @if(evolutionCMS()->hasPermission('new_chunk'))
                     <li>
                         <a href="{{ $item->makeUrl('actions.duplicate') }}" target="main" title="{{ ManagerTheme::getLexicon('resource_duplicate') }}" onclick="return confirm('{{ ManagerTheme::getLexicon('confirm_duplicate_record') }}')">
                             <i class="{{ $_style['icon_clone'] }}"></i>
                         </a>
                     </li>
+                    @endif
+                    @if(evolutionCMS()->hasPermission('delete_chunk'))
                     <li>
                         <a href="{{ $item->makeUrl('actions.delete') }}" target="main" title="{{ ManagerTheme::getLexicon('delete') }}" onclick="return confirm('{{ ManagerTheme::getLexicon('confirm_delete_htmlsnippet') }}')">
                             <i class="{{ $_style['icon_trash'] }}"></i>
                         </a>
                     </li>
+                    @endif
                 </ul>
             </div>
         </div>
