@@ -390,27 +390,27 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
 
     protected function menuElements()
     {
-        $tab = $this->menuElementTemplates(0);
-        $tab = $this->menuElementTv($tab);
-        $tab = $this->menuElementChunks($tab);
-        $tab = $this->menuElementSnippets($tab);
-        $tab = $this->menuElementPlugins($tab);
-        $tab = $this->menuElementModules($tab);
+        $this->menuElementTemplates();
+        $this->menuElementTv();
+        $this->menuElementChunks();
+        $this->menuElementSnippets();
+        $this->menuElementPlugins();
+        $this->menuElementModules();
 
         return $this;
     }
 
-    protected function menuElementTemplates($tab)
+    protected function menuElementTemplates()
     {
         if (!$this->managerTheme->getCore()->hasPermission('edit_template')) {
-            return $tab;
+            return;
         }
 
         $this->sitemenu['element_templates'] = [
             'element_templates',
             'elements',
             '<i class="' . $this->managerTheme->getStyle('icon_template') . '"></i>' . $this->managerTheme->getLexicon('manage_templates') . '<i class="' . $this->managerTheme->getStyle('icon_angle_right') . ' toggle"></i>',
-            'index.php?a=76&tab=' . $tab++,
+            'index.php?a=76&tab=0',
             $this->managerTheme->getLexicon('manage_templates'),
             '',
             'new_template,edit_template',
@@ -419,21 +419,19 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             10,
             'dropdown-toggle'
         ];
-
-        return $tab;
     }
 
-    protected function menuElementTv($tab)
+    protected function menuElementTv()
     {
         if (!$this->managerTheme->getCore()->hasPermission('edit_template') || !$this->managerTheme->getCore()->hasPermission('edit_snippet') || !$this->managerTheme->getCore()->hasPermission('edit_chunk') || !$this->managerTheme->getCore()->hasPermission('edit_plugin')) {
-            return $tab;
+            return;
         }
 
         $this->sitemenu['element_tplvars'] = [
             'element_tplvars',
             'elements',
             '<i class="' . $this->managerTheme->getStyle('icon_tv') . '"></i>' . $this->managerTheme->getLexicon('tmplvars') . '<i class="' . $this->managerTheme->getStyle('icon_angle_right') . ' toggle"></i>',
-            'index.php?a=76&tab=' . $tab++,
+            'index.php?a=76&tab=1',
             $this->managerTheme->getLexicon('tmplvars'),
             '',
             'new_template,edit_template',
@@ -442,21 +440,19 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             20,
             'dropdown-toggle'
         ];
-
-        return $tab;
     }
 
-    protected function menuElementChunks($tab)
+    protected function menuElementChunks()
     {
         if (!$this->managerTheme->getCore()->hasPermission('edit_chunk')) {
-            return $tab;
+            return;
         }
 
         $this->sitemenu['element_htmlsnippets'] = [
             'element_htmlsnippets',
             'elements',
             '<i class="' . $this->managerTheme->getStyle('icon_chunk') . '"></i>' . $this->managerTheme->getLexicon('manage_htmlsnippets') . '<i class="' . $this->managerTheme->getStyle('icon_angle_right') . ' toggle"></i>',
-            'index.php?a=76&tab=' . $tab++,
+            'index.php?a=76&tab=2',
             $this->managerTheme->getLexicon('manage_htmlsnippets'),
             '',
             'new_chunk,edit_chunk',
@@ -465,21 +461,19 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             30,
             'dropdown-toggle'
         ];
-
-        return $tab;
     }
 
-    protected function menuElementSnippets($tab)
+    protected function menuElementSnippets()
     {
         if (!$this->managerTheme->getCore()->hasPermission('edit_snippet')) {
-            return $tab;
+            return;
         }
 
         $this->sitemenu['element_snippets'] = [
             'element_snippets',
             'elements',
             '<i class="' . $this->managerTheme->getStyle('icon_code') . '"></i>' . $this->managerTheme->getLexicon('manage_snippets') . '<i class="' . $this->managerTheme->getStyle('icon_angle_right') . ' toggle"></i>',
-            'index.php?a=76&tab=' . $tab++,
+            'index.php?a=76&tab=3',
             $this->managerTheme->getLexicon('manage_snippets'),
             '',
             'new_snippet,edit_snippet',
@@ -488,21 +482,19 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             40,
             'dropdown-toggle'
         ];
-
-        return $tab;
     }
 
-    protected function menuElementPlugins($tab)
+    protected function menuElementPlugins()
     {
         if (!$this->managerTheme->getCore()->hasPermission('edit_plugin')) {
-            return $tab;
+            return;
         }
 
         $this->sitemenu['element_plugins'] = [
             'element_plugins',
             'elements',
             '<i class="' . $this->managerTheme->getStyle('icon_plugin') . '"></i>' . $this->managerTheme->getLexicon('manage_plugins') . '<i class="' . $this->managerTheme->getStyle('icon_angle_right') . ' toggle"></i>',
-            'index.php?a=76&tab=' . $tab++,
+            'index.php?a=76&tab=4',
             $this->managerTheme->getLexicon('manage_plugins'),
             '',
             'new_plugin,edit_plugin',
@@ -511,21 +503,19 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             50,
             'dropdown-toggle'
         ];
-
-        return $tab;
     }
 
-    protected function menuElementModules($tab)
+    protected function menuElementModules()
     {
         if (!$this->managerTheme->getCore()->hasPermission('edit_module')) {
-            return $tab;
+            return;
         }
 
         $this->sitemenu['element_modules'] = [
             'element_modules',
             'elements',
             '<i class="' . $this->managerTheme->getStyle('icon_module') . '"></i>' . $this->managerTheme->getLexicon('manage_modules') . '<i class="' . $this->managerTheme->getStyle('icon_angle_right') . ' toggle"></i>',
-            'index.php?a=76&tab=' . $tab++,
+            'index.php?a=76&tab=5',
             $this->managerTheme->getLexicon('manage_modules'),
             '',
             'new_module,edit_module',
@@ -534,8 +524,6 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             60,
             'dropdown-toggle'
         ];
-
-        return $tab;
     }
 
     function menuFiles()
