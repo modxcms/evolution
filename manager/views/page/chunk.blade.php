@@ -142,23 +142,21 @@
                         'attributes' => 'onchange="documentDirty=true;" maxlength="45"'
                     ])
 
-                    @if($_SESSION['mgrRole'] === 1)
-                        <div class="form-row">
-                            <label for="disabled">
-                                @include('manager::form.inputElement', [
-                                    'type' => 'checkbox',
-                                    'name' => 'disabled',
-                                    'value' => 'on',
-                                    'checked' => ($data->disabled === 1)
-                                ])
-                                @if($data->disabled == 1)
-                                    <span class="text-danger">{{ ManagerTheme::getLexicon('disabled') }}</span>
-                                @else
-                                    {{ ManagerTheme::getLexicon('disabled') }}
-                                @endif
-                            </label>
-                        </div>
-                    @endif
+                    <div class="form-row">
+                        <label for="disabled">
+                            @include('manager::form.inputElement', [
+                                'type' => 'checkbox',
+                                'name' => 'disabled',
+                                'value' => 'on',
+                                'checked' => ($data->disabled === 1)
+                            ])
+                            @if($data->disabled == 1)
+                                <span class="text-danger">{{ ManagerTheme::getLexicon('disabled') }}</span>
+                            @else
+                                {{ ManagerTheme::getLexicon('disabled') }}
+                            @endif
+                        </label>
+                    </div>
                 </div>
 
                 <!-- HTML text editor start -->
