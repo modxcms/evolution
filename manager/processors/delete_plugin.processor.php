@@ -35,5 +35,5 @@ EvolutionCMS()->invokeEvent("OnPluginFormDelete",
 EvolutionCMS()->clearCache('full');
 
 // finished emptying cache - redirect
-$header="Location: index.php?a=76&r=2";
+$header="Location: index.php?a=76&r=2&tab=4";
 header($header);

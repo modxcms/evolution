@@ -34,5 +34,5 @@ EvolutionCMS()->invokeEvent("OnSnipFormDelete",
 EvolutionCMS()->clearCache('full');
 
 // finished emptying cache - redirect
-$header="Location: index.php?a=76&r=2";
+$header="Location: index.php?a=76&r=2&tab=3";
 header($header);
