@@ -370,7 +370,7 @@ if (! function_exists('getTVDisplayFormat')) {
                 $o = '';
                 $countValue = count($value);
                 for ($i = 0; $i < $countValue; $i++) {
-                    list($name, $url) = is_array($value[$i]) ? $value[$i] : explode("==", $value[$i]);
+                    list($name, $url) = is_array($value[$i]) ? $value[$i] : array_merge(explode("==", $value[$i]), ['']);
                     if (!$url) {
                         $url = $name;
                     }
