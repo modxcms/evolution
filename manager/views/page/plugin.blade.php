@@ -423,7 +423,7 @@
 
         <div class="tab-pane" id="pluginPane">
             <script>
-              var tpSnippet = new WebFXTabPane(document.getElementById('pluginPane'), {{ get_by_key(EvolutionCMS()->config, 'remember_last_tab') ? 1 : 0 }});
+              var tpSnippet = new WebFXTabPane(document.getElementById('pluginPane'), {{ get_by_key($modx->config, 'remember_last_tab') ? 1 : 0 }});
             </script>
 
             <!-- General -->
@@ -442,7 +442,7 @@
                                 'class' => 'form-control-lg',
                                 'attributes' => 'onchange="documentDirty=true;" maxlength="100"'
                             ]) .
-                            (EvolutionCMS()->hasPermission('save_role')
+                            ($modx->hasPermission('save_role')
                             ? '<label class="custom-control" data-tooltip="' . ManagerTheme::getLexicon('lock_plugin') . "\n" . ManagerTheme::getLexicon('lock_plugin_msg') .'">' .
                              ManagerTheme::view('form.inputElement', [
                                 'type' => 'checkbox',
@@ -485,36 +485,34 @@
                         'attributes' => 'onchange="documentDirty=true;" maxlength="45"'
                     ])
 
-                    @if(EvolutionCMS()->hasPermission('save_role'))
-                        <div class="form-row">
-                            <label for="disabled">
-                                @include('manager::form.inputElement', [
-                                    'type' => 'checkbox',
-                                    'name' => 'disabled',
-                                    'value' => 'on',
-                                    'checked' => ($data->disabled === 1)
-                                ])
-                                @if($data->disabled == 1)
-                                    <span class="text-danger">{{ ManagerTheme::getLexicon('plugin_disabled') }}</span>
-                                @else
-                                    {{ ManagerTheme::getLexicon('plugin_disabled') }}
-                                @endif
-                            </label>
-                        </div>
+                    <div class="form-row">
+                        <label for="disabled">
+                            @include('manager::form.inputElement', [
+                                'type' => 'checkbox',
+                                'name' => 'disabled',
+                                'value' => 'on',
+                                'checked' => ($data->disabled === 1)
+                            ])
+                            @if($data->disabled == 1)
+                                <span class="text-danger">{{ ManagerTheme::getLexicon('plugin_disabled') }}</span>
+                            @else
+                                {{ ManagerTheme::getLexicon('plugin_disabled') }}
+                            @endif
+                        </label>
+                    </div>
 
-                        <div class="form-row">
-                            <label>
-                                @include('manager::form.inputElement', [
-                                    'type' => 'checkbox',
-                                    'name' => 'parse_docblock',
-                                    'value' => 1,
-                                    'checked' => ($action == 101)
-                                ])
-                                {{ ManagerTheme::getLexicon('parse_docblock') }}
-                            </label>
-                            <small class="form-text text-muted">{!! ManagerTheme::getLexicon('parse_docblock_msg') !!}</small>
-                        </div>
-                    @endif
+                    <div class="form-row">
+                        <label>
+                            @include('manager::form.inputElement', [
+                                'type' => 'checkbox',
+                                'name' => 'parse_docblock',
+                                'value' => 1,
+                                'checked' => ($action == 101)
+                            ])
+                            {{ ManagerTheme::getLexicon('parse_docblock') }}
+                        </label>
+                        <small class="form-text text-muted">{!! ManagerTheme::getLexicon('parse_docblock_msg') !!}</small>
+                    </div>
                 </div>
 
                 <!-- PHP text editor start -->
