@@ -1,12 +1,6 @@
 CHANGELOG
 =========
 
-6.1
----
-
- * Report overridden `@final` constants and properties
- * Read environment variable `SYMFONY_IDE` to configure file link format
-
 5.4
 ---
 

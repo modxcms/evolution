@@ -19,8 +19,8 @@ use Symfony\Component\VarDumper\Dumper\ContextProvider\ContextProviderInterface;
  */
 class ContextualizedDumper implements DataDumperInterface
 {
-    private DataDumperInterface $wrappedDumper;
-    private array $contextProviders;
+    private $wrappedDumper;
+    private $contextProviders;
 
     /**
      * @param ContextProviderInterface[] $contextProviders

@@ -24,7 +24,7 @@ class ClassStub extends ConstStub
      * @param string   $identifier A PHP identifier, e.g. a class, method, interface, etc. name
      * @param callable $callable   The callable targeted by the identifier when it is ambiguous or not a real PHP identifier
      */
-    public function __construct(string $identifier, callable|array|string $callable = null)
+    public function __construct(string $identifier, $callable = null)
     {
         $this->value = $identifier;
 
@@ -50,7 +50,7 @@ class ClassStub extends ConstStub
             if (\is_array($r)) {
                 try {
                     $r = new \ReflectionMethod($r[0], $r[1]);
-                } catch (\ReflectionException) {
+                } catch (\ReflectionException $e) {
                     $r = new \ReflectionClass($r[0]);
                 }
             }
@@ -71,7 +71,7 @@ class ClassStub extends ConstStub
                     $this->value .= $s;
                 }
             }
-        } catch (\ReflectionException) {
+        } catch (\ReflectionException $e) {
             return;
         } finally {
             if (0 < $i = strrpos($this->value, '\\')) {
@@ -87,7 +87,7 @@ class ClassStub extends ConstStub
         }
     }
 
-    public static function wrapCallable(mixed $callable)
+    public static function wrapCallable($callable)
     {
         if (\is_object($callable) || !\is_callable($callable)) {
             return $callable;

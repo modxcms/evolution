@@ -13,7 +13,7 @@ namespace Symfony\Component\ErrorHandler\Error;
 
 class FatalError extends \Error
 {
-    private array $error;
+    private $error;
 
     /**
      * {@inheritdoc}
@@ -73,6 +73,7 @@ class FatalError extends \Error
         ] as $property => $value) {
             if (null !== $value) {
                 $refl = new \ReflectionProperty(\Error::class, $property);
+                $refl->setAccessible(true);
                 $refl->setValue($this, $value);
             }
         }
