@@ -2,7 +2,9 @@
 
 use EvolutionCMS\Models;
 use EvolutionCMS\Interfaces\ManagerTheme;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Finder;
 
 class Tmplvar extends AbstractController implements ManagerTheme\PageControllerInterface
@@ -10,41 +12,87 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
     protected $view = 'page.tmplvar';
 
     protected $standartTypes = [
-        'text' => 'Text',
-        'rawtext' => 'Raw Text (deprecated)',
-        'textarea' => 'Textarea',
-        'rawtextarea' => 'Raw Textarea (deprecated)',
-        'textareamini' => 'Textarea (Mini)',
-        'richtext' => 'RichText',
-        'dropdown' => 'DropDown List Menu',
-        'listbox' => 'Listbox (Single-Select)',
+        'text'             => 'Text',
+        'rawtext'          => 'Raw Text (deprecated)',
+        'textarea'         => 'Textarea',
+        'rawtextarea'      => 'Raw Textarea (deprecated)',
+        'textareamini'     => 'Textarea (Mini)',
+        'richtext'         => 'RichText',
+        'dropdown'         => 'DropDown List Menu',
+        'listbox'          => 'Listbox (Single-Select)',
         'listbox-multiple' => 'Listbox (Multi-Select)',
-        'option' => 'Radio Options',
-        'checkbox' => 'Check Box',
-        'image' => 'Image',
-        'file' => 'File',
-        'url' => 'URL',
-        'email' => 'Email',
-        'number' => 'Number',
-        'date' => 'Date'
+        'option'           => 'Radio Options',
+        'checkbox'         => 'Check Box',
+        'image'            => 'Image',
+        'file'             => 'File',
+        'url'              => 'URL',
+        'email'            => 'Email',
+        'number'           => 'Number',
+        'date'             => 'Date'
     ];
 
     protected $displayWidgets = [
-        'datagrid' => 'Data Grid',
-        'richtext' => 'RichText',
-        'viewport' => 'View Port',
+        'datagrid'      => 'Data Grid',
+        'richtext'      => 'RichText',
+        'viewport'      => 'View Port',
         'custom_widget' => 'Custom Widget'
     ];
 
     protected $displayFormats = [
         'htmlentities' => 'HTML Entities',
-        'date' => 'Date Formatter',
-        'unixtime' => 'Unixtime',
-        'delim' => 'Delimited List',
-        'htmltag' => 'HTML Generic Tag',
-        'hyperlink' => 'Hyperlink',
-        'image' => 'Image',
-        'string' => 'String Formatter'
+        'date'         => 'Date Formatter',
+        'unixtime'     => 'Unixtime',
+        'delim'        => 'Delimited List',
+        'htmltag'      => 'HTML Generic Tag',
+        'hyperlink'    => 'Hyperlink',
+        'image'        => 'Image',
+        'string'       => 'String Formatter'
+    ];
+
+    protected $defaultProperties = [
+        'text'             => [],
+        'textarea'         => [],
+        'textareamini'     => [],
+        'richtext'         => [],
+        'dropdown'         => [],
+        'listbox'          => [],
+        'listbox-multiple' => [],
+        'option'           => [],
+        'checkbox'         => [],
+        'image'            => [],
+        'file'             => [],
+        'url'              => [],
+        'email'            => [],
+        'number'           => [
+            'step' => [
+                [
+                    'label'   => 'step',
+                    'type'    => 'text',
+                    'value'   => '1',
+                    'default' => '1',
+                    'desc'    => ''
+                ]
+            ],
+            'min'  => [
+                [
+                    'label'   => 'min',
+                    'type'    => 'text',
+                    'value'   => '',
+                    'default' => '',
+                    'desc'    => ''
+                ]
+            ],
+            'max'  => [
+                [
+                    'label'   => 'max',
+                    'type'    => 'text',
+                    'value'   => '',
+                    'default' => '',
+                    'desc'    => ''
+                ]
+            ]
+        ],
+        'date'             => []
     ];
 
     protected $events = [
@@ -75,10 +123,10 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
      */
     public function canView(): bool
     {
-        if($this->getIndex() == 300) {
+        if ($this->getIndex() == 300) {
             return $this->managerTheme->getCore()->hasPermission('new_template');
         }
-        if($this->getIndex() == 301) {
+        if ($this->getIndex() == 301) {
             return $this->managerTheme->getCore()->hasPermission('edit_template');
         }
 
@@ -88,7 +136,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
     /**
      * {@inheritdoc}
      */
-    public function process() : bool
+    public function process(): bool
     {
         $this->object = $this->parameterData();
         $this->parameters = [
@@ -103,9 +151,10 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
             'events'            => $this->parameterEvents(),
             'actionButtons'     => $this->parameterActionButtons(),
             'groupsArray'       => $this->getGroupsArray(),
+            'defaultProperties' => json_encode($this->defaultProperties),
             // :TODO delete
-            'origin'            => isset($_REQUEST['or']) ? (int)$_REQUEST['or'] : 76,
-            'originId'          => isset($_REQUEST['oid']) ? (int)$_REQUEST['oid'] : null
+            'origin'            => isset($_REQUEST['or']) ? (int) $_REQUEST['or'] : 76,
+            'originId'          => isset($_REQUEST['oid']) ? (int) $_REQUEST['oid'] : null
         ];
 
         return true;
@@ -121,7 +170,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
         /** @var Models\SiteTmplvar $data */
         $data = Models\SiteTmplvar::with('templates')
             ->firstOrNew(['id' => $id], [
-                'category' => (int)get_by_key($_REQUEST, 'catid', 0)
+                'category' => (int) get_by_key($_REQUEST, 'catid', 0)
             ]);
 
         if ($id > 0) {
@@ -133,9 +182,9 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
             $data->name = $_REQUEST['itemname'];
         } else {
             $_SESSION['itemname'] = $this->managerTheme->getLexicon('new_template');
-            $data->category = isset($_REQUEST['catid']) ? (int)$_REQUEST['catid'] : 0;
+            $data->category = isset($_REQUEST['catid']) ? (int) $_REQUEST['catid'] : 0;
         }
-
+        $data->properties = json_decode($data->properties, true) ?? [];
         $values = $this->managerTheme->loadValuesFromSession($_POST);
         if ($values) {
             $data->fill($values);
@@ -183,10 +232,17 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
         foreach ($finder as $ctv) {
             $filename = $ctv->getFilename();
             $customTvs['custom_tv:' . $filename] = $filename;
+            $propertiesFile = 'assets/tvs/' . $filename . '/' . $filename . '.properties.php';
+            if (Storage::exists($propertiesFile)) {
+                $cfg = require MODX_BASE_PATH . $propertiesFile;
+                if (is_array($cfg)) {
+                    $this->defaultProperties['custom_tv:' . $filename] = $cfg;
+                }
+            }
         }
 
         return [
-            'name' => 'Custom Type',
+            'name'    => 'Custom Type',
             'options' => $customTvs
         ];
     }
@@ -258,7 +314,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
             $out = implode('', $out);
         }
 
-        return (string)$out;
+        return (string) $out;
     }
 
     protected function parameterActionButtons()
@@ -286,7 +342,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
     private function getGroupsArray()
     {
         $id = $this->getElementId();
-        return Models\SiteTmplvarAccess::where('tmplvarid',$id)->get()->pluck('documentgroup')->toArray();
+        return Models\SiteTmplvarAccess::where('tmplvarid', $id)->get()->pluck('documentgroup')->toArray();
     }
 
     public function isSelectedTemplate(Models\SiteTemplate $item)
