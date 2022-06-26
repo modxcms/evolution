@@ -24,7 +24,7 @@ $tpl = '<tr>
                 <li><b>[%resource_summary%]</b>: [+introtext+]</li>
                 <li><b>[%type%]</b>: [+doctype+]</li>
                 <li><b>[%resource_alias%]</b>: [+alias+]</li>
-                <li><b>[%page_data_cacheable%]</b>: [+cacheable:is(1):then([%yes%]):else([%no%])+]</li>
+                <li><b>[%page_data_cacheable%]</b>: [+cacheable+]</li>
                 <li><b>[%resource_opt_show_menu%]</b>: [+hidemenu+]</li>
                 <li><b>[%page_data_template%]</b>: [+template:templatename:htmlentities+]</li>
             </ul>
@@ -87,7 +87,9 @@ foreach ($contents->get()->toArray() as $ph) {
     }
 
     $ph['publish_btn'] = str_replace('[+id+]', $docid, $publish_btn);
+
     $ph['info_btn'] = str_replace('[+id+]', $docid, '<a title="[%resource_overview%]" data-toggle="collapse" data-target=".collapse[+id+]"><i class="'. $_style['icon_info'] . $_style['icon_size_fix'] . '"></i></a>');
+
     $ph['longtitle'] = $ph['longtitle'] == '' ? '(<i>[%not_set%]</i>)' : entities($ph['longtitle']);
     $ph['description'] = $ph['description'] == '' ? '(<i>[%not_set%]</i>)' : entities($ph['description']);
     $ph['introtext'] = $ph['introtext'] == '' ? '(<i>[%not_set%]</i>)' : entities($ph['introtext']);
@@ -95,6 +97,7 @@ foreach ($contents->get()->toArray() as $ph) {
     $ph['edit_date'] = EvolutionCMS()->toDateFormat(EvolutionCMS()->timestamp($ph['editedon']));
     $ph['doctype'] = $ph['type'] == 'reference' ? '[%weblink%]' : '[%resource%]';
     $ph['hidemenu'] = $ph['hidemenu'] == 1 ? '[%no%]' : '[%yes%]';
+    $ph['cacheable'] = $ph['cacheable'] == 1 ? '[%yes%]' : '[%no%]';
 
     $output[] = EvolutionCMS()->parseText($tpl, $ph);
 }
