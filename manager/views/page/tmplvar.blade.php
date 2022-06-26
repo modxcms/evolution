@@ -4,6 +4,7 @@
     @push('scripts.top')
         <script src="media/script/element-properties.js"></script>
         <script>
+            var defaultProperties = {!! $defaultProperties !!};
             var elementProperties = new ElementProperties({
                 name: 'elementProperties',
                 lang: {
@@ -16,6 +17,36 @@
                 tr: 'displaypropsrow',
                 td: 'displayprops',
             });
+
+            function changeDefaultProperties(ctrl) {
+                var f;
+                if (ctrl && ctrl.form) {
+                    f = ctrl.form;
+                } else {
+                    f = document.forms['mutate'];
+                    if (!f) {
+                        return;
+                    }
+                }
+                // check if codemirror is used
+                var currentProps = typeof myCodeMirrors != 'undefined' && typeof myCodeMirrors['properties'] != 'undefined' ? myCodeMirrors['properties'].getValue() : f.properties.value;
+                try {
+                    currentProps = JSON.parse(currentProps);
+                } catch (e) {
+                    currentProps = {};
+                }
+                if (typeof defaultProperties[ctrl.value] !== 'undefined' && (JSON.stringify(savedProperties) === '{}' || JSON.stringify(currentProps) === '{}')) {
+                    var stringified = JSON.stringify(defaultProperties[ctrl.value], null, 2);
+                    if (typeof myCodeMirrors != 'undefined') {
+                        myCodeMirrors['properties'].setValue(stringified);
+                    } else {
+                        f.properties.value = stringified;
+                    }
+                    elementProperties.showParameters();
+                    elementProperties.setDefaults();
+                };
+            }
+
           function check_toggle(target)
           {
             var el = document.getElementsByName(target + '[]');
@@ -344,7 +375,7 @@
                         'label' => ManagerTheme::getLexicon('tmplvars_type'),
                         'value' => $data->type,
                         'options' => $types,
-                        'attributes' => 'onchange="documentDirty=true;"'
+                        'attributes' => 'onchange="changeDefaultProperties(this);documentDirty=true;"'
                     ])
 
                     @include('manager::form.textarea', [
@@ -586,6 +617,7 @@
         </div>
     </form>
     <script>
+        var savedProperties = {!! json_encode($data->properties) !!};
         setTimeout(function () {
             showParameters();
             elementProperties.showParameters();
