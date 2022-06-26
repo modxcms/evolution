@@ -51,7 +51,7 @@ if (!empty($_COOKIE['MODX_themeMode'])) {
  * This plugin is only valid in "text" mode. So check for the current Editor
  */
 $prte = (isset($_POST['which_editor']) ? $_POST['which_editor'] : '');
-$srte = ($modx->config['use_editor'] ? $modx->getConfig('which_editor') : 'none');
+$srte = ($modx->getConfig('use_editor') ? $modx->getConfig('which_editor') : 'none');
 $xrte = isset($content['richtext']) ? $content['richtext'] : '';
 $tvMode = false;
 $limitedHeight = false;
@@ -127,6 +127,7 @@ switch($modx->event->name) {
 	case 'OnSnipFormRender'   :
 	case 'OnPluginFormRender' :
 	case 'OnModFormRender'    :
+    case 'OnTVFormRender':
 		$tvMode = true;
 		// $limitedHeight = true; // No limited height since MODX 1.2
 		$elements = array(
