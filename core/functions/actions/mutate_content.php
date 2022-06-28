@@ -865,13 +865,12 @@ if (! function_exists('renderFormElement')) {
                     }
                     break;
                 case "image": // handles image fields using htmlarea image manager
-                    global $_lang;
                     global $ResourceManagerLoaded;
                     global $content, $which_editor;
                     if (!$ResourceManagerLoaded && !(((isset($content['richtext']) && $content['richtext'] == 1) || $modx->getManagerApi()->action == 4) && $modx->getConfig('use_editor') && $which_editor == 3)) {
                         $ResourceManagerLoaded = true;
                     }
-                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '"  value="' . $field_value . '" ' . $field_style . ' onchange="documentDirty=true;" /><input type="button" value="' . $_lang['insert'] . '" onclick="BrowseServer(\'tv' . $field_id . '\')" />
+                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '"  value="' . $field_value . '" ' . $field_style . ' onchange="documentDirty=true;" /><input type="button" value="' . ManagerTheme::getLexicon('insert') . '" onclick="BrowseServer(\'tv' . $field_id . '\')" />
                     <div class="col-12" style="padding-left: 0px;">
                         <div id="image_for_tv' . $field_id . '" class="image_for_field" data-image="' . $field_value . '" onclick="BrowseServer(\'tv' . $field_id . '\')" style="background-image: url(\'' . evo()->getConfig('site_url') . $field_value . '\');"></div>
                         <script>document.getElementById(\'tv' . $field_id . '\').addEventListener(\'change\', evoRenderTvImageCheck, false);</script>
@@ -879,13 +878,12 @@ if (! function_exists('renderFormElement')) {
                     break;
                 case "file": // handles the input of file uploads
                     /* Modified by Timon for use with resource browser */
-                    global $_lang;
                     global $ResourceManagerLoaded;
                     global $content, $which_editor;
                     if (!$ResourceManagerLoaded && !(((isset($content['richtext']) && $content['richtext'] == 1) || $modx->getManagerApi()->action == 4) && $modx->getConfig('use_editor') && $which_editor == 3)) {
                         $ResourceManagerLoaded = true;
                     }
-                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '"  value="' . $field_value . '" ' . $field_style . ' onchange="documentDirty=true;" /><input type="button" value="' . $_lang['insert'] . '" onclick="BrowseFileServer(\'tv' . $field_id . '\')" />';
+                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '"  value="' . $field_value . '" ' . $field_style . ' onchange="documentDirty=true;" /><input type="button" value="' . ManagerTheme::getLexicon('insert') . '" onclick="BrowseFileServer(\'tv' . $field_id . '\')" />';
 
                     break;
 
