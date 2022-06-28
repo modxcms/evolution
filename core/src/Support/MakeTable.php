@@ -461,7 +461,7 @@ class MakeTable implements MakeTableInterface
             if ($this->formElementType) {
                 $table = "\n" . '<form id="' . $this->formName . '" name="' . $this->formName . '" action="' . $this->formAction . '" method="POST">' . $table;
             }
-            if (strlen($this->pageNav) > 1) {//changed to display the pagination if exists.
+            if (strlen($this->pageNav ?? '') > 1) {//changed to display the pagination if exists.
                 /* commented this part because of cookie
                 $table .= '<div id="max-display-records" ><select style="display:inline" onchange="javascript:updatePageSize(this[this.selectedIndex].value);">';
                 $pageSizes= array (10, 25, 50, 100, 250);
