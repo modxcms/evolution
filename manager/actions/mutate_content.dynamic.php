@@ -1064,7 +1064,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                                     $row,
                                                     $tvsArray,
                                                     $content,
-                                                    json_decode($row['properties'], true)
+                                                    $modx->parseProperties($row['properties'], $row['name'], 'tv')
                                                 ) .
                                             '</div></td>
                                         </tr>';

@@ -13,9 +13,7 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
 
     protected $standartTypes = [
         'text'             => 'Text',
-        'rawtext'          => 'Raw Text (deprecated)',
         'textarea'         => 'Textarea',
-        'rawtextarea'      => 'Raw Textarea (deprecated)',
         'textareamini'     => 'Textarea (Mini)',
         'richtext'         => 'RichText',
         'dropdown'         => 'DropDown List Menu',
@@ -59,7 +57,35 @@ class Tmplvar extends AbstractController implements ManagerTheme\PageControllerI
         'listbox-multiple' => [],
         'option'           => [],
         'checkbox'         => [],
-        'image'            => [],
+        'image'            => [
+            'width' => [
+                [
+                    'label'   => 'Width',
+                    'type'    => 'text',
+                    'value'   => '120',
+                    'default' => '120',
+                    'desc'    => ''
+                ]
+            ],
+            'height' => [
+                [
+                    'label'   => 'Height',
+                    'type'    => 'text',
+                    'value'   => '120',
+                    'default' => '120',
+                    'desc'    => ''
+                ]
+            ],
+            'thumbnailer' => [
+                [
+                    'label'   => 'Thumbnailer',
+                    'type'    => 'text',
+                    'value'   => '',
+                    'default' => '',
+                    'desc'    => ''
+                ]
+            ],
+        ],
         'file'             => [],
         'url'              => [],
         'email'            => [],

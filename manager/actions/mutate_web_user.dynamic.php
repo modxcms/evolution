@@ -638,7 +638,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
                                 $row,
                                 $tvsArray ?? [],
                                 $userdata,
-                                json_decode($row['properties'], true)
+                                $modx->parseProperties($row['properties'], $row['name'], 'tv')
                             ) .
                             '</div></td>
                                         </tr>';
