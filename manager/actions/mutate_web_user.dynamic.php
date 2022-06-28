@@ -637,7 +637,8 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
                                 '',
                                 $row,
                                 $tvsArray ?? [],
-                                $userdata
+                                $userdata,
+                                json_decode($row['properties'], true)
                             ) .
                             '</div></td>
                                         </tr>';

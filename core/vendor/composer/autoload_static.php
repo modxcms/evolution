@@ -40,7 +40,6 @@ class ComposerStaticInit08584f8f0eccca6c60577ced8376ce8c
         '850cf87a4646948c81a18db623cd783d' => __DIR__ . '/../..' . '/functions/nodes.php',
         '47888c4fce27f59ac1f379f35c64700a' => __DIR__ . '/../..' . '/functions/preload.php',
         '721e8ed78efe5b07c82130c5cc7a50a7' => __DIR__ . '/../..' . '/functions/processors.php',
-        '2bb55d8335813ffd1a5fe37235c4b40d' => __DIR__ . '/../..' . '/functions/tv.php',
         '0c8c4e4d96abc93b354afd18efb554f7' => __DIR__ . '/../..' . '/functions/utils.php',
     );
 
@@ -326,8 +325,8 @@ class ComposerStaticInit08584f8f0eccca6c60577ced8376ce8c
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -395,8 +394,8 @@ class ComposerStaticInit08584f8f0eccca6c60577ced8376ce8c
         ),
         'Illuminate\\Support\\' => 
         array (
-            0 => __DIR__ . '/..' . '/illuminate/macroable',
-            1 => __DIR__ . '/..' . '/illuminate/collections',
+            0 => __DIR__ . '/..' . '/illuminate/collections',
+            1 => __DIR__ . '/..' . '/illuminate/macroable',
             2 => __DIR__ . '/..' . '/illuminate/support',
         ),
         'Illuminate\\Session\\' => 
