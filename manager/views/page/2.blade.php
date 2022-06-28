@@ -234,6 +234,7 @@
     \Illuminate\Support\Facades\File::ensureDirectoryExists($feedCache);
     $feed->set_cache_location($feedCache);
     foreach ($urls as $section => $url) {
+        if (empty($url)) continue;
         $output = '';
         $feed->set_feed_url($url);
         $feed->init();
