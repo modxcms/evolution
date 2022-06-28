@@ -76,7 +76,7 @@ if (! function_exists('ProcessTVCommand')) {
         } elseif (isset($modx->config['enable_bindings']) && $modx->config['enable_bindings'] != 1 && $src === 'docform') {
             return '@Bindings is disabled.';
         } else {
-            list ($cmd, $param) = ParseCommand($nvalue);
+            [$cmd, $param] = ParseCommand($nvalue);
             $cmd = trim($cmd);
             $param = parseTvValues($param, $tvsArray);
             switch ($cmd) {
@@ -370,7 +370,7 @@ if (! function_exists('getTVDisplayFormat')) {
                 $o = '';
                 $countValue = count($value);
                 for ($i = 0; $i < $countValue; $i++) {
-                    list($name, $url) = is_array($value[$i]) ? $value[$i] : array_merge(explode("==", $value[$i]), ['']);
+                    [$name, $url] = is_array($value[$i]) ? $value[$i] : array_merge(explode("==", $value[$i]), ['']);
                     if (!$url) {
                         $url = $name;
                     }
@@ -732,9 +732,9 @@ if (! function_exists('renderFormElement')) {
                         $min = '';
                         $max = '';
                     } else {
-                        $step = isset($properties['step']) ? $properties['step'][0]['value'] : '';
-                        $min = isset($properties['min']) ? $properties['min'][0]['value'] : '';
-                        $max = isset($properties['max']) ? $properties['max'][0]['value'] : '';
+                        $step = isset($properties['step']) ? $properties['step'] : '';
+                        $min = isset($properties['min']) ? $properties['min'] : '';
+                        $max = isset($properties['max']) ? $properties['max'] : '';
                     }
                     $field_html .= '<input type="number"' . ($step ? '" step="'.$step.'"' : '') . ($min ? ' min="'.$min.'"' : '') . ($max ? ' min="'.$max.'"' : '') . ' id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '" ' . $field_style . ' tvtype="' . $field_type . '" onchange="documentDirty=true;" style="width:100%" onkeyup="this.value=this.value.replace(/[^\d-,.+]/,\'\')"/>';
                     break;
@@ -764,7 +764,7 @@ if (! function_exists('renderFormElement')) {
                     $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform',
                         $tvsArray));
                     foreach($index_list as $item => $itemvalue) {
-                        list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : array_merge(explode("==", $itemvalue), ['']);
+                        [$item, $itemvalue] = (is_array($itemvalue)) ? $itemvalue : array_merge(explode("==", $itemvalue), ['']);
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
                         }
@@ -777,7 +777,7 @@ if (! function_exists('renderFormElement')) {
                     $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform',
                         $tvsArray));
                     foreach($index_list as $item => $itemvalue) {
-                        list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : array_merge(explode("==", $itemvalue), ['']);
+                        [$item, $itemvalue] = (is_array($itemvalue)) ? $itemvalue : array_merge(explode("==", $itemvalue), ['']);
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
                         }
@@ -791,7 +791,7 @@ if (! function_exists('renderFormElement')) {
                     $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform',
                         $tvsArray));
                     foreach($index_list as $item => $itemvalue) {
-                        list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : array_merge(explode("==", $itemvalue), ['']);
+                        [$item, $itemvalue] = (is_array($itemvalue)) ? $itemvalue : array_merge(explode("==", $itemvalue), ['']);
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
                         }
@@ -833,7 +833,7 @@ if (! function_exists('renderFormElement')) {
                             $value = isset($item[1]) ? $item[1] : $name;
                         } else {
                             $item = trim($item);
-                            list($name, $value) = (strpos($item, '==') !== false) ? array_merge(explode('==', $item, 2), ['']) : array(
+                            [$name, $value] = (strpos($item, '==') !== false) ? array_merge(explode('==', $item, 2), ['']) : array(
                                 $item,
                                 $item
                             );
@@ -856,7 +856,7 @@ if (! function_exists('renderFormElement')) {
                         $tvsArray));
                     static $i = 0;
                     foreach($index_list as $item => $itemvalue) {
-                        list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : array_merge(explode("==", $itemvalue), ['']);
+                        [$item, $itemvalue] = (is_array($itemvalue)) ? $itemvalue : array_merge(explode("==", $itemvalue), ['']);
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
                         }
@@ -870,9 +870,32 @@ if (! function_exists('renderFormElement')) {
                     if (!$ResourceManagerLoaded && !(((isset($content['richtext']) && $content['richtext'] == 1) || $modx->getManagerApi()->action == 4) && $modx->getConfig('use_editor') && $which_editor == 3)) {
                         $ResourceManagerLoaded = true;
                     }
+                    $size = '';
+                    $image = $field_value;
+                    if(!empty($properties['width'])) {
+                        $size .= 'width:' . $properties['width'] . 'px;';
+                    }
+                    if(!empty($properties['height'])) {
+                        $size .= 'height:' . $properties['height'] . 'px;';
+                    }
+                    if(!empty($properties['thumbnailer'])) {
+                        if (is_callable($properties['thumbnailer'])) {
+                            $image = call_user_func($properties['thumbnailer'],
+                                $image,
+                                $properties['width'] ?: 120,
+                                $properties['height'] ?: 120
+                            );
+                        } elseif (\Illuminate\Support\Facades\Storage::exists($properties['thumbnailer'])) {
+                        $image = $properties['thumbnailer'] . '?' . http_build_query([
+                                'src' => $image,
+                                'w'   => $properties['width'] ?: 120,
+                                'h'   => $properties['height'] ?: 120,
+                            ]);
+                        }
+                    }
                     $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '"  value="' . $field_value . '" ' . $field_style . ' onchange="documentDirty=true;" /><input type="button" value="' . ManagerTheme::getLexicon('insert') . '" onclick="BrowseServer(\'tv' . $field_id . '\')" />
                     <div class="col-12" style="padding-left: 0px;">
-                        <div id="image_for_tv' . $field_id . '" class="image_for_field" data-image="' . $field_value . '" onclick="BrowseServer(\'tv' . $field_id . '\')" style="background-image: url(\'' . evo()->getConfig('site_url') . $field_value . '\');"></div>
+                        <div id="image_for_tv' . $field_id . '" class="image_for_field" data-image="' . $field_value . '" onclick="BrowseServer(\'tv' . $field_id . '\')" style="' . $size . 'background-image: url(\'' . evo()->getConfig('site_url') . $image . '\');"></div>
                         <script>document.getElementById(\'tv' . $field_id . '\').addEventListener(\'change\', evoRenderTvImageCheck, false);</script>
                     </div>';
                     break;
