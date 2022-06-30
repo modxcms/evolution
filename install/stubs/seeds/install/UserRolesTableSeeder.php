@@ -1,5 +1,7 @@
 <?php
 
+namespace EvolutionCMS\Installer\Install;
+
 use Illuminate\Database\Seeder;
 
 class UserRolesTableSeeder extends Seeder
@@ -12,27 +14,27 @@ class UserRolesTableSeeder extends Seeder
      */
     public function run()
     {
-        
+
 
         \DB::table('user_roles')->delete();
-        
-        \DB::table('user_roles')->insert(array (
+
+        \DB::table('user_roles')->insert([
             0 =>
-                array (
-                    'name' => 'Administrator',
+                [
+                    'name'        => 'Administrator',
                     'description' => 'Site administrators have full access to all functions',
-                ),
+                ],
             1 =>
-            array (
-                'name' => 'Editor',
-                'description' => 'Limited to managing content',
-            ),
+                [
+                    'name'        => 'Editor',
+                    'description' => 'Limited to managing content',
+                ],
             2 =>
-            array (
-                'name' => 'Publisher',
-                'description' => 'Editor with expanded permissions including manage users, update Elements and site settings',
-            )
-        ));
+                [
+                    'name'        => 'Publisher',
+                    'description' => 'Editor with expanded permissions including manage users, update Elements and site settings',
+                ]
+        ]);
 
 
         $insertArray = [
@@ -180,6 +182,6 @@ class UserRolesTableSeeder extends Seeder
             ['permission' => 'access_permissions', 'role_id' => 3],
         ];
         \DB::table('role_permissions')->insert($insertArray);
-        
+
     }
 }
