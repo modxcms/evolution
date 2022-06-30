@@ -89,6 +89,7 @@ class InstallEvo
     {
         $this->initEvo();
         Console::call('migrate', ['--path' => '../install/stubs/migrations', '--force' => true]);
+        seed('update');
         echo 'Evolution CMS updated!' . "\n";
         $this->checkRemoveInstall();
         $this->removeInstall();
@@ -394,17 +395,7 @@ class InstallEvo
         }
         $_POST['database_type'] = $this->databaseType; //костыль для адекватной миграции
         Console::call('migrate', ['--path' => '../install/stubs/migrations', '--force' => true]);
-
-        foreach (glob("stubs/seeds/*.php") as $filename) {
-            include $filename;
-            $classes = get_declared_classes();
-            $class = end($classes);
-            if ($class == 'Illuminate\\Database\\Seeder') {
-                $count = count($classes) - 2;
-                $class = $classes[$count];
-            }
-            Console::call('db:seed', ['--class' => '\\' . $class]);
-        }
+        seed('install');
         $field = array();
         $field['password'] = $this->evo->getPasswordHash()->HashPassword($this->cmsPassword);
         $field['username'] = $this->cmsAdmin;
