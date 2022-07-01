@@ -18,6 +18,23 @@
             <div class="split my-1"></div>
         @endif
 
+        @if(! isset($fileSetting['enable_robot_indexing']))
+            @include('manager::form.radio', [
+                'name' => 'enable_robot_indexing',
+                'label' => ManagerTheme::getLexicon('site_indexing_title'),
+                'small' => '[(enable_robot_indexing)]',
+                'value' => $settings['enable_robot_indexing'],
+                'comment' => ManagerTheme::getLexicon('site_indexing_message'),
+                'options' => [
+                    0 => ManagerTheme::getLexicon('ignore'),
+                    1 => ManagerTheme::getLexicon('indexing_is_allowed'),
+                    2 => ManagerTheme::getLexicon('indexing_is_prohibited'),
+                ]
+            ])
+
+            <div class="split my-1"></div>
+        @endif
+
         @if(! isset($fileSetting['site_name']))
             @include('manager::form.input', [
                 'name' => 'site_name',

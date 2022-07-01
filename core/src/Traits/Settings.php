@@ -21,6 +21,7 @@ trait Settings
         'unauthorized_page' => 'int',
         'server_offset_time' => 'int',
         'site_unavailable_page' => 'int',
+        'enable_robot_indexing' => 'int',
         'site_status' => 'bool',
         'use_alias_path' => 'bool',
         'seostrict' => 'bool',

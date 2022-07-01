@@ -99,7 +99,7 @@ $_lang["errors"] = 'ошибок';
 $_lang["failed"] = 'ОШИБКА!';
 $_lang["guid_set"] = 'GUID ключ';
 $_lang["help"] = 'Помощь!';
-$_lang["help_link"] = 'http://modx.im';
+$_lang["help_link"] = 'https://evo.im/forums.html';
 $_lang["help_title"] = 'Помощь в установке на форумах Evolution CMS';
 $_lang["iagree_box"] = 'Я согласен с условиями <a href="../assets/docs/license.txt" target="_blank">лицензии</a>. С русским переводом текста лицензии можно познакомиться на странице <a href="http://ru.wikipedia.org/wiki/GPL" target="_blank">GNU General Public License</a>.';
 $_lang["install"] = 'Установить';
