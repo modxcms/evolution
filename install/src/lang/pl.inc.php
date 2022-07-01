@@ -93,7 +93,7 @@ $_lang["errors"] = 'błędy';
 $_lang["failed"] = 'NIE POWIODŁO SIĘ!';
 $_lang["guid_set"] = 'GUID ustawiony';
 $_lang["help"] = 'Pomoc!';
-$_lang["help_link"] = 'https://evo.im/';
+$_lang["help_link"] = 'https://evo.im/forums.html';
 $_lang["help_title"] = 'Wsparcie przy instalacji EVO';
 $_lang["iagree_box"] = 'Akceptuję warunki <a href="../assets/docs/license.txt" target="_blank">licencji EVO</a>. Tłumaczenia licencji GPL w wersji 2 znajdziesz na stronie <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0-translations.html" target="_blank">GNU Operating System</a>.';
 $_lang["install"] = 'Instaluj';
