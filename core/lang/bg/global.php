@@ -16,7 +16,7 @@
 $modx_lang_attribute = 'bg'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = 'MODX is a <a href="http://modx.com/" target="_blank">PHP Application Framework and Content Management System</a> licensed under the <a href="../assets/docs/license.txt">GNU GPL</a>.';
+$_lang["about_msg"] = 'MODX is a <a href="https://evo.im/" target="_blank">PHP Application Framework and Content Management System</a> licensed under the <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'За Системата MODX';
 $_lang["access_permission_denied"] = 'Нямате Права за Достъп за този Документ.';
 $_lang["access_permission_parent_denied"] = 'Нямате Права да създавате Документ тук!';
@@ -182,7 +182,7 @@ $_lang["create_resource_title"] = 'Create Resource';
 $_lang["create_weblink_here"] = 'Създайте препратка тук';
 $_lang["createdon"] = 'Дата на създаване';
 $_lang["credits"] = 'Екипът на MODX';
-$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="https://evo.im/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Тук можете да добавите типовете потребителско съдържание, които могат да бъдат използвани във Вашите документи. За да добавите нов запис, въведете типа на съдържанието в текстовото поле и след това щракнете на бутона \'Добавяне\'.';
 $_lang["custom_contenttype_title"] = 'Потребителски типове съдържание:';
 $_lang["database_charset"] = 'Кодова таблица на базата от данни';

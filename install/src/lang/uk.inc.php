@@ -122,7 +122,7 @@ $_lang["installing_demo_site"] = 'Інсталяція прикладу веб-�
 $_lang["language_code"] = 'uk';
 $_lang["loading"] = 'Завантажується...';
 $_lang["modules"] = 'Модулі';
-$_lang["modx_footer1"] = '&copy; 2005-[+current_year+] <a href="https://evo.im/" target="_blank" style="color: green; text-decoration:underline">Evolution CMS</a> a fast, feature-rich content management system. Всі права захищені. Evolution CMS ліцензовано GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2022 <a href="https://evo.im/" target="_blank" style="color: green; text-decoration:underline">Evolution CMS</a> a fast, feature-rich content management system. Всі права захищені. Evolution CMS ліцензовано GNU GPL.';
 $_lang["modx_footer2"] = 'Evolution CMS &mdash; вільне програмне забезпечення. Ми заохочуємо вас бути творчими та використовувати Evolution CMS як ви вважаєте за доцільне. Якщо ви внесете зміни та вирішите розповсюджувати ваш змінений варіант Evolution CMS, то повинні зберігати та розповсюджувати вихідний код безкоштовно.';
 $_lang["modx_install"] = 'Evolution CMS &raquo; Встановлення';
 $_lang["modx_requires_php"] = ', а Evolution CMS необхідний PHP [+min_version+] або пізніший';

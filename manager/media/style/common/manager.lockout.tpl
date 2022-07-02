@@ -78,7 +78,7 @@
 
 <!-- convert this to a language include -->
 <p class="loginLicense">
-	<strong>MODX</strong>&trade; is licensed under the GPL license. &copy; 2005-2018 <a href="http://modx.com/" target="_blank">MODX</a>.
+	<strong>MODX</strong>&trade; is licensed under the GPL license. &copy; 2005-2022 <a href="https://evo.im/" target="_blank">MODX</a>.
 </p>
 
 </body>

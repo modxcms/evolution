@@ -17,7 +17,7 @@
 $modx_lang_attribute = 'zh'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = '镆铘是一个 <a href="http://modx.com/" target="_blank">PHP编写的内容管理系统</a> 遵循 <a href="../assets/docs/license.txt">GNU GPL</a>协议.';
+$_lang["about_msg"] = '镆铘是一个 <a href="https://evo.im/" target="_blank">PHP编写的内容管理系统</a> 遵循 <a href="../assets/docs/license.txt">GNU GPL</a>协议.';
 $_lang["about_title"] = '关于MODX';
 $_lang["access_permission_denied"] = '你没有访问这文档的权限。';
 $_lang["access_permission_parent_denied"] = '你不允许在这里建立文档！';
@@ -183,7 +183,7 @@ $_lang["create_resource_title"] = 'Create Resource';
 $_lang["create_weblink_here"] = '在这里建立连接';
 $_lang["createdon"] = '建立日期';
 $_lang["credits"] = 'Credits';
-$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="https://evo.im/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Add custom content types for Resources. To add a new entry, enter the content type in the text box then click the \'Add\' button.';
 $_lang["custom_contenttype_title"] = '定制内容类型:';
 $_lang["database_charset"] = 'Database Charset';
@@ -353,7 +353,7 @@ $_lang["go"] = 'Go';
 $_lang["group_access_permissions"] = '用户组访问';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = '帮助';
-$_lang["help_msg"] = '<p>你可以在这里寻求支持 <a href="http://modx.com/" target="_blank">访问中文MODX网站</a>如果你有兴趣，.';
+$_lang["help_msg"] = '<p>你可以在这里寻求支持 <a href="https://evo.im/" target="_blank">访问中文MODX网站</a>如果你有兴趣，.';
 $_lang["help_title"] = '帮助';
 $_lang["hide_tree"] = '隐藏树';
 $_lang["home"] = '主页';
@@ -1075,7 +1075,7 @@ $_lang["websignupemail_title"] = '网站注册信:';
 $_lang["wednesday"] = '星期三';
 $_lang["welcome_messages"] = '你有 <b>%d</b> 消息,  <b>%s</b>没读';
 $_lang["welcome_title"] = '欢迎来到MODX内容管理';
-$_lang["which_editor_message"] = '你可以在这里选择你要使用哪一个编辑器。你可以在<a href="http://modx.com/">MODX的中文网站</a>下载文本编辑器。';
+$_lang["which_editor_message"] = '你可以在这里选择你要使用哪一个编辑器。你可以在<a href="https://evo.im/">MODX的中文网站</a>下载文本编辑器。';
 $_lang["which_editor_title"] = '选用编辑器:';
 $_lang["working"] = '工作中...';
 $_lang["wrap_lines"] = 'Wrap lines';
