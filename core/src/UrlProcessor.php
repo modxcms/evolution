@@ -583,7 +583,7 @@ class UrlProcessor
                     }
                 }
 
-                if ($al['alias_visible'] == 1) {
+                if (isset($al['alias_visible']) && $al['alias_visible'] == 1) {
                     $alias = $alPath . $f_url_prefix . $alias . $f_url_suffix;
                 } else {
                     $alias = $alPath;
