@@ -89,7 +89,10 @@ class UserRolesTableSeeder extends Seeder
             ['permission' => 'save_user', 'role_id' => 1],
             ['permission' => 'delete_user', 'role_id' => 1],
             ['permission' => 'access_permissions', 'role_id' => 1],
-            ['permission' => 'web_access_permissions', 'role_id' => 1],
+            ['permission' => 'manage_groups', 'role_id' => 1],
+            ['permission' => 'manage_document_permissions', 'role_id' => 1],
+            ['permission' => 'manage_module_permissions', 'role_id' => 1],
+            ['permission' => 'manage_tv_permissions', 'role_id' => 1],
             ['permission' => 'new_role', 'role_id' => 1],
             ['permission' => 'edit_role', 'role_id' => 1],
             ['permission' => 'save_role', 'role_id' => 1],
@@ -133,6 +136,7 @@ class UserRolesTableSeeder extends Seeder
             ['permission' => 'remove_locks', 'role_id' => 2],
             ['permission' => 'display_locks', 'role_id' => 2],
             ['permission' => 'access_permissions', 'role_id' => 2],
+            ['permission' => 'manage_document_permissions', 'role_id' => 2],
         ];
         \DB::table('role_permissions')->insert($insertArray);
 
@@ -180,8 +184,8 @@ class UserRolesTableSeeder extends Seeder
             ['permission' => 'remove_locks', 'role_id' => 3],
             ['permission' => 'display_locks', 'role_id' => 3],
             ['permission' => 'access_permissions', 'role_id' => 3],
+            ['permission' => 'manage_document_permissions', 'role_id' => 3]
         ];
         \DB::table('role_permissions')->insert($insertArray);
-
     }
 }

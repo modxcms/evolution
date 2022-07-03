@@ -255,14 +255,25 @@ class UserPermissionsTableSeeder extends Seeder
                 'name'     => 'Delete users', 'key' => 'delete_user', 'lang_key' => 'role_delete_user', 'disabled' => 0,
                 'group_id' => 10
             ],
-
             [
-                'name'     => 'Access permissions', 'key' => 'access_permissions',
-                'lang_key' => 'role_access_persmissions', 'disabled' => 0, 'group_id' => 11
+                'name'     => 'Manager access permissions', 'key' => 'access_permissions',
+                'lang_key' => 'manager_access_permissions', 'disabled' => 0, 'group_id' => 11
             ],
             [
-                'name'     => 'Web access permissions', 'key' => 'web_access_permissions',
-                'lang_key' => 'role_web_access_persmissions', 'disabled' => 0, 'group_id' => 11
+                'name'     => 'Manage document and user groups', 'key' => 'manage_groups',
+                'lang_key' => 'manage_groups', 'disabled' => 0, 'group_id' => 11
+            ],
+            [
+                'name'     => 'Manage document permissions', 'key' => 'manage_document_permissions',
+                'lang_key' => 'manage_document_permissions', 'disabled' => 0, 'group_id' => 11
+            ],
+            [
+                'name'     => 'Manage module permissions', 'key' => 'manage_module_permissions',
+                'lang_key' => 'manage_module_permissions', 'disabled' => 0, 'group_id' => 11
+            ],
+[
+                'name'     => 'Manage TV permissions', 'key' => 'manage_tv_permissions',
+                'lang_key' => 'manage_tv_permissions', 'disabled' => 0, 'group_id' => 11
             ],
 
         ];
