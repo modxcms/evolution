@@ -21,6 +21,11 @@ class UserPermissionsTableSeeder extends Seeder
         ], ['timestamps' => false]);
 
         if ($affected) {
+            \DB::table('permissions')->where('key', 'access_permissions')->update([
+                'name'     => 'Manager access permissions',
+                'lang_key' => 'manager_access_permissions'
+            ], ['timestamps' => false]);
+            
             \DB::table('role_permissions')->where('permission', 'web_access_permissions')->update([
                 'permission' => 'manage_groups',
             ]);
