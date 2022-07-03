@@ -338,7 +338,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
             ->hasAnyPermissions([
                     'edit_user',
                     'edit_role',
-                    'web_access_permissions'
+                    'manage_groups'
                 ]
             )
         ) {
@@ -685,7 +685,7 @@ class Frame extends AbstractController implements ManagerTheme\PageControllerInt
 
     protected function menuWebPermissions()
     {
-        if (!$this->managerTheme->getCore()->hasPermission('web_access_permissions')) {
+        if (!$this->managerTheme->getCore()->hasPermission('manage_groups')) {
             return $this;
         }
 

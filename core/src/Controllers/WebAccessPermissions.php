@@ -20,7 +20,7 @@ class WebAccessPermissions extends AbstractController implements ManagerTheme\Pa
      */
     public function canView(): bool
     {
-        return $this->managerTheme->getCore()->hasPermission('web_access_permissions');
+        return $this->managerTheme->getCore()->hasPermission('manage_groups');
     }
 
     public function process() : bool
