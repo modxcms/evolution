@@ -18,8 +18,15 @@ class DocumentgroupName extends Eloquent\Model
 {
     public $timestamps = false;
 
+    protected $casts = [
+        'private_memgroup' => 'int',
+        'private_webgroup' => 'int'
+    ];
+
     protected $fillable = [
-        'name'
+        'name',
+        'private_memgroup',
+        'private_webgroup',
     ];
 
     public function documents(): Eloquent\Relations\BelongsToMany
