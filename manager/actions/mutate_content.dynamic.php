@@ -901,7 +901,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                     ->leftJoin('site_tmplvar_contentvalues', function ($join) use ($id) {
                                         $join->on('site_tmplvar_contentvalues.tmplvarid', '=', 'site_tmplvars.id');
                                         $join->on('site_tmplvar_contentvalues.contentid', '=', \DB::raw($id));
-                                    })->leftJoin('site_tmplvar_access', 'site_tmplvar_access.tmplvarid', '=', 'site_tmplvars.id');
+                                    });
 
                                 if ($group_tvs) {
                                     $tvs = $tvs->select('site_tmplvars.*',
@@ -916,11 +916,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                                 $tvs = $tvs->orderBy('site_tmplvars.id', 'ASC');
                                 $tvs = $tvs->where('site_tmplvar_templates.templateid', $template);
 
-                                if ($_SESSION['mgrRole'] != 1) {
-                                    $tvs = $tvs->leftJoin('document_groups', 'site_tmplvar_contentvalues.contentid', '=', 'document_groups.document');
+                                if ($_SESSION['mgrRole'] != 1 && !empty($_SESSION['mgrDocgroups'])) {
+                                    $tvs->leftJoin('site_tmplvar_access', 'site_tmplvar_access.tmplvarid', '=', 'site_tmplvars.id');
                                     $tvs = $tvs->where(function ($query) {
                                         $query->whereNull('site_tmplvar_access.documentgroup')
-                                            ->orWhereIn('document_groups.document_group', $_SESSION['mgrDocgroups']);
+                                            ->orWhereIn('site_tmplvar_access.documentgroup', $_SESSION['mgrDocgroups']);
                                     });
                                 }
 
