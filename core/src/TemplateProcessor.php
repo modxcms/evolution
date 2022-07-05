@@ -58,7 +58,6 @@ class TemplateProcessor
                         if (!class_exists(
                             $className
                         )) { //Проверяем есть ли контроллер по алиасу, если нет, то помещаем Base
-                            $this->core->logEvent(0, 3, $className . ' not exists!');
                             $className = $baseClassName;
                         }
                         $controller = $this->core->make($className);
