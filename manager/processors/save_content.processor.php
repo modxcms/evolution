@@ -397,7 +397,7 @@ switch ($actionToTake) {
         } else {
             $groupsParent = [];
         }
-        if ($modx->getConfig('use_udperms') == 1 && is_array($document_groups)) {
+        if ($modx->getConfig('use_udperms') == 1 && $modx->hasAnyPermissions(['manage_groups', 'manage_document_permissions']) && is_array($document_groups)) {
             $new_groups = [];
             $groupsToInsert = [];
             foreach ($document_groups as $value_pair) {
@@ -594,7 +594,7 @@ switch ($actionToTake) {
             }
 
             // set document permissions
-            if ($modx->getConfig('use_udperms') == 1 && is_array($document_groups)) {
+            if ($modx->getConfig('use_udperms') == 1 && $modx->hasAnyPermissions(['manage_groups', 'manage_document_permissions']) && is_array($document_groups)) {
                 $new_groups = array();
                 // process the new input
                 foreach ($document_groups as $value_pair) {
