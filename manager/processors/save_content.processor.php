@@ -605,9 +605,8 @@ switch ($actionToTake) {
                 }
 
                 // grab the current set of permissions on this document the user can access
-                $documentGroups = \EvolutionCMS\Models\DocumentGroup::query()->select('document_groups.id','document_groups.document_group')
-                    ->leftJoin('documentgroup_names','document_groups.document_group','=','documentgroup_names.id')
-                    ->where('document_groups.document', $id)->get();
+                $documentGroups = \EvolutionCMS\Models\DocumentGroup::select('id','document_group')
+                    ->where('document', $id)->get();
 
                 $old_groups = array();
                 foreach ($documentGroups as $documentGroup) {
