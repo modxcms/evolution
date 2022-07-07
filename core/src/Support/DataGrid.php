@@ -147,8 +147,8 @@ class DataGrid implements DataGridInterface
         $this->_colnames = explode((strstr($this->columns, "||") !== false ? "||" : ","), $this->columns);
         $this->_colwidths = explode((strstr($this->colWidths, "||") !== false ? "||" : ","), $this->colWidths);
         $this->_colaligns = explode((strstr($this->colAligns, "||") !== false ? "||" : ","), $this->colAligns);
-        $this->_colwraps = explode((strstr($this->colWraps, "||") !== false ? "||" : ","), $this->colWraps);
-        $this->_colcolors = explode((strstr($this->colColors, "||") !== false ? "||" : ","), $this->colColors);
+        $this->_colwraps = explode((strstr($this->colWraps ?? '', "||") !== false ? "||" : ","), $this->colWraps ?? '');
+        $this->_colcolors = explode((strstr($this->colColors ?? '', "||") !== false ? "||" : ","), $this->colColors ?? '');
         $this->_coltypes = explode((strstr($this->colTypes, "||") !== false ? "||" : ","), $this->colTypes);
         $this->_colcount = count($this->_colnames);
         if (!$this->_isDataset) {
