@@ -19,7 +19,7 @@
 $modx_lang_attribute = 'fr'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = 'MODX est un <a href="http://modx.com/" target="_blank">Système de Gestion de Contenu et un Framework applicatif PHP</a> placé sous licence <a href="../assets/docs/license.txt">GNU GPL</a>.';
+$_lang["about_msg"] = 'MODX est un <a href="https://evo.im/" target="_blank">Système de Gestion de Contenu et un Framework applicatif PHP</a> placé sous licence <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'À propos de MODX';
 $_lang["access_permission_denied"] = 'Vous n\'avez pas les autorisations nécessaires pour modifier cette Ressource.';
 $_lang["access_permission_parent_denied"] = 'Vous n\'avez pas l\'autorisation de créer ou de déplacer une Ressource ici! Veuillez choisir une autre destination.';
@@ -185,7 +185,7 @@ $_lang["create_resource_title"] = 'Créer une Ressource';
 $_lang["create_weblink_here"] = 'Créer un Lien Web ici';
 $_lang["createdon"] = 'Date de création';
 $_lang["credits"] = 'Crédits';
-$_lang["credits_shouts_msg"] = '<p>MODX est développé et maintenu par <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>MODX est développé et maintenu par <a href="https://evo.im/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Vous pouvez ajouter ici des types de contenu personnalisés pour vos Ressources. Pour ajouter un nouveau type, saisissez-le dans le champ, puis cliquez sur le bouton «Ajouter».';
 $_lang["custom_contenttype_title"] = 'Types de contenu personnalisés:';
 $_lang["database_charset"] = 'Jeu de caractères de la base de données';

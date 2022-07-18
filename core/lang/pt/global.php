@@ -16,7 +16,7 @@
 $modx_lang_attribute = 'pt'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = 'MODX é um <a href=\'http://modx.com/\' target=\'_blank\'>Sistema em PHP para Gestão de Conteúdos</a> (em Inglês).';
+$_lang["about_msg"] = 'MODX é um <a href=\'https://evo.im/\' target=\'_blank\'>Sistema em PHP para Gestão de Conteúdos</a> (em Inglês).';
 $_lang["about_title"] = 'Àcerca do MODX';
 $_lang["access_permission_denied"] = 'Não tem permissão para ver este documento.';
 $_lang["access_permission_parent_denied"] = 'Não tem permissão para criar ou mover um documento para aqui! Por favor escolha outra localização.';
@@ -182,7 +182,7 @@ $_lang["create_resource_title"] = 'Create Resource';
 $_lang["create_weblink_here"] = 'Criar Weblink aqui';
 $_lang["createdon"] = 'Data de criação';
 $_lang["credits"] = 'Créditos';
-$_lang["credits_shouts_msg"] = '<p>MODX é gerenciado e mantido em <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>MODX é gerenciado e mantido em <a href="https://evo.im/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Aqui pode adicionar tipos de conteúdos personalizados para usar nos seus documentos. Para adicionar uma nova entrada, digite o tipo de conteúdo na caixa de texto e clique no botão \'Adicionar\'.';
 $_lang["custom_contenttype_title"] = 'Tipos de conteúdos personalizados:';
 $_lang["database_charset"] = 'Database Charset';

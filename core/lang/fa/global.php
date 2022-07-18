@@ -16,7 +16,7 @@ $modx_textdir = 'rtl'; // uncomment this line for RTL langauges
 $modx_lang_attribute = 'fa'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = 'مادایکس یک <a href="http://modx.com/" target="_blank">سیستم مدیریت محتوای ساختار یافته و پیشرفته  توسط PHP میباشد</a> که  تحت لیسانس <a href="../assets/docs/license.txt">GNU-GPL</a> منتشر شده است';
+$_lang["about_msg"] = 'مادایکس یک <a href="https://evo.im/" target="_blank">سیستم مدیریت محتوای ساختار یافته و پیشرفته  توسط PHP میباشد</a> که  تحت لیسانس <a href="../assets/docs/license.txt">GNU-GPL</a> منتشر شده است';
 $_lang["about_title"] = 'درباره مادایکس';
 $_lang["access_permission_denied"] = 'شما دسترسی لازم را برای این پرونده ندارید.';
 $_lang["access_permission_parent_denied"] = 'شما اجازه یا دسترسی ایجاد یا انتقال پرونده ای جدید در این مکان را ندارید!. لطفا مکان دیگری را انتخاب کنید.';
@@ -182,7 +182,7 @@ $_lang["create_resource_title"] = 'Create Resource';
 $_lang["create_weblink_here"] = 'ایجاد وب لینک در اینجا';
 $_lang["createdon"] = 'تاریخ ایجاد';
 $_lang["credits"] = 'امکانات و قابلیتهای استفاده شده';
-$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="https://evo.im/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'در اینجا شما میتوانید انواع مختلف و مخصوص از محتوا را اضافه کنید تا در پرونده های شما از آنها استفاده شوند. برای اضافه کردن ورودی جدید, نوع محتوا را در جعبه ی متنی وارد کنید و سپس روی گزینه ی \'اضافه کردن\' کلیک کنید.';
 $_lang["custom_contenttype_title"] = 'انواع مختلف محتوا:';
 $_lang["database_charset"] = 'کارست بانک اطلاعات';

@@ -16,7 +16,7 @@
 $modx_lang_attribute = 'no'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = 'MODX er et <a href="http://modx.com/" target="_blank">PHP applikasjonsrammeverk og system for innholdshåndtering</a> som er lisensiert under <a href=\'../assets/docs/license.txt\'>GPL</a>.';
+$_lang["about_msg"] = 'MODX er et <a href="https://evo.im/" target="_blank">PHP applikasjonsrammeverk og system for innholdshåndtering</a> som er lisensiert under <a href=\'../assets/docs/license.txt\'>GPL</a>.';
 $_lang["about_title"] = 'Om MODX';
 $_lang["access_permission_denied"] = 'Du har ikke rettigheter til dette dokumentet.';
 $_lang["access_permission_parent_denied"] = 'Du har ikke tilgang til å lage et dokument her!';
@@ -182,7 +182,7 @@ $_lang["create_resource_title"] = 'Create Resource';
 $_lang["create_weblink_here"] = 'Opprett weblink her';
 $_lang["createdon"] = 'Dato opprettet';
 $_lang["credits"] = 'Anerkjennelser';
-$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="https://evo.im/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Her kan du legge til egne innholdstyper som kan brukes i dine dokumenter. Skriv inn innholdstypen i det øvre feltet og klikk på \'Legg til\' for å legg til en ny. Marker den innholdstypen i det nedre feltet som du vil fjerne og klikk på \'Fjern\'.';
 $_lang["custom_contenttype_title"] = 'Egne innholdstyper';
 $_lang["database_charset"] = 'Database Charset';

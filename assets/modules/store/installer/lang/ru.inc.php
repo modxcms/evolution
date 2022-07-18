@@ -111,7 +111,7 @@ $_lang["installing_demo_site"] = 'Установка контента: ';
 $_lang["language_code"] = 'ru';
 $_lang["loading"] = 'Загружается...';
 $_lang["modules"] = 'Модули';
-$_lang["MODX_footer1"] = '&copy; 2005-2013 <a href="http://www.modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) project. Все права защищены. MODX лицензирован GNU GPL.';
+$_lang["MODX_footer1"] = '&copy; 2005-2022 <a href="http://www.modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) project. Все права защищены. MODX лицензирован GNU GPL.';
 $_lang["MODX_footer2"] = 'MODX &mdash; свободное программное обеспечение. Мы поощряем вас быть творческими и использовать MODX как вы считаете целесообразным. Если вы внесете изменения и решите распространять ваш измененный вариант MODX, то должны сохранять и распространять исходный код бесплатно.';
 $_lang["MODX_install"] = 'MODX &raquo; Установка';
 $_lang["MODX_requires_php"] = ', а MODX необходим PHP 4.2.0 или более поздний';

@@ -16,7 +16,7 @@
 $modx_lang_attribute = 'cs'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = 'MODX je <a href="http://modx.com/" target="_blank">PHP Application Framework and Content Management System</a> licencovaný pod <a href="http://www.gnu.cz/article/32/">GNU GPL</a>.';
+$_lang["about_msg"] = 'MODX je <a href="https://evo.im/" target="_blank">PHP Application Framework and Content Management System</a> licencovaný pod <a href="http://www.gnu.cz/article/32/">GNU GPL</a>.';
 $_lang["about_title"] = 'O MODX';
 $_lang["access_permission_denied"] = 'Nemáte potřebná oprávnění pro tento dokument.';
 $_lang["access_permission_parent_denied"] = 'Nemáte oprávnění pro vytvoření nebo přesun dokumentu na toto místo! Vyberte jiné umístění.';
@@ -182,7 +182,7 @@ $_lang["create_resource_title"] = 'Vytvořit dokument';
 $_lang["create_weblink_here"] = 'Zde vytvořit link';
 $_lang["createdon"] = 'Vytvořeno dne:';
 $_lang["credits"] = 'Poděkování';
-$_lang["credits_shouts_msg"] = '<p>MODX je spravován a udržován na <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>MODX je spravován a udržován na <a href="https://evo.im/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Tady můžete přidat uživatelské typy obsahu užité ve vašich dokumentech. Pro přidání nového vstupu, zadejte typ obsahu v textovém poli, potom klikněte na tlačítko \'Přidat\'.';
 $_lang["custom_contenttype_title"] = 'Uživatelské typy obsahu:';
 $_lang["database_charset"] = 'Znaková sada databáze';

@@ -16,7 +16,7 @@
 $modx_lang_attribute = 'fi'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = 'MODX on <a href="http://modx.com/" target="_blank">PHP-sovelluskehys ja sisällönhallintajärjestelmä</a>, jonka lisenssinä on avoimen lähdekoodin <a href="../assets/docs/license.txt">GNU GPL</a>.';
+$_lang["about_msg"] = 'MODX on <a href="https://evo.im/" target="_blank">PHP-sovelluskehys ja sisällönhallintajärjestelmä</a>, jonka lisenssinä on avoimen lähdekoodin <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Tietoa MODX:stä';
 $_lang["access_permission_denied"] = 'Ei käyttöoikeuksia tähän sivuun.';
 $_lang["access_permission_parent_denied"] = 'Ei käyttöoikeuksia luoda sivua tähän!';
@@ -182,7 +182,7 @@ $_lang["create_resource_title"] = 'Uusi sivu';
 $_lang["create_weblink_here"] = 'Uusi hyperlinkki tähän';
 $_lang["createdon"] = 'Luonti päivämäärä';
 $_lang["credits"] = 'Kunniamaininnat';
-$_lang["credits_shouts_msg"] = '<p>MODX:n kehittäjät ja ylläpitäjät: <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>MODX:n kehittäjät ja ylläpitäjät: <a href="https://evo.im/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Muokkaa sivuissa käytettäviä sisältötyyppejä.';
 $_lang["custom_contenttype_title"] = 'Sisältötyypit:';
 $_lang["database_charset"] = 'Tietokannan merkistö';

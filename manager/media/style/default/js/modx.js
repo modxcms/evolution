@@ -38,7 +38,8 @@
             this.resizer.init();
             this.search.init();
             if (this.config.session_timeout > 0) {
-                w.setInterval(this.keepMeAlive, 1000 * 60 * this.config.session_timeout);
+                let timerId = setInterval(() => {this.keepMeAlive()}, 1000 * 60);
+                setTimeout(() => {clearInterval(timerId)}, 1000 * 60 * this.config.session_timeout);
             }
             if (modx.config.mail_check_timeperiod > 0 && modx.permission.messages) {
                 setTimeout('modx.updateMail(true)', 1000);
@@ -196,9 +197,9 @@
             },
             search: function(href, ul) {
                 var items,
-                        input = ul.querySelector('input[name=filter]'),
-                        index = -1,
-                        el = null;
+                    input = ul.querySelector('input[name=filter]'),
+                    index = -1,
+                    el = null;
                 if (input) {
                     if (!modx.isMobile) {
                         input.focus();
@@ -287,7 +288,7 @@
                                     s.open();
                                     s.result.onclick = function(e) {
                                         var t = e.target,
-                                                p = t.parentNode;
+                                            p = t.parentNode;
                                         if (t.tagName === 'I') {
                                             modx.openWindow({
                                                 title: p.innerText,
@@ -378,9 +379,9 @@
                 var el = e.target;
                 if (modx.user.role === 1 && /modxtv|modxplaceholder|modxattributevalue|modxchunk|modxsnippet|modxsnippetnocache/i.test(el.className)) {
                     var id = Date.now(),
-                            name = el.innerText.replace(/[\[|\]|{|}|\*||\#|\+|?|\!|&|=|`|:]/g, ''),
-                            type = el.className.replace(/cm-modx/, ''),
-                            n = !!name.replace(/^\d+$/, '');
+                        name = el.innerText.replace(/[\[|\]|{|}|\*||\#|\+|?|\!|&|=|`|:]/g, ''),
+                        type = el.className.replace(/cm-modx/, ''),
+                        n = !!name.replace(/^\d+$/, '');
                     if (name && n) {
                         e.preventDefault();
                         modx.post(modx.MODX_MANAGER_URL + 'media/style/' + modx.config.theme + '/ajax.php', {
@@ -412,7 +413,7 @@
                 },
                 build: function(row) {
                     var rowContainer = d.createElement('div'),
-                            sel = row.querySelector('.selected');
+                        sel = row.querySelector('.selected');
                     rowContainer.className = 'tab-row-container';
                     row.parentNode.insertBefore(rowContainer, row);
                     rowContainer.appendChild(row);
@@ -472,7 +473,7 @@
                     sel = sel || row.querySelector('.selected') || row.firstChild;
                     a = a || 100;
                     var c = 0,
-                            elms = row.childNodes;
+                        elms = row.childNodes;
                     for (var i = 0; i < elms.length; i++) {
                         c += elms[i].offsetWidth;
                     }
@@ -495,7 +496,7 @@
                         if (e.button === 0) {
                             e.preventDefault();
                             var x = e.clientX,
-                                    f = row.scrollLeft;
+                                f = row.scrollLeft;
                             row.ownerDocument.body.focus();
                             row.onmousemove = row.ownerDocument.onmousemove = function(e) {
                                 if (Math.abs(e.clientX - x) > 5) {
@@ -526,9 +527,9 @@
             },
             scrollWork: function() {
                 var a = w.main.frameElement.contentWindow,
-                        b = a.location.search.substring(1) || a.location.hash.substring(2),
-                        c = localStorage.getItem('page_y') || 0,
-                        f = localStorage.getItem('page_url') || b;
+                    b = a.location.search.substring(1) || a.location.hash.substring(2),
+                    c = localStorage.getItem('page_y') || 0,
+                    f = localStorage.getItem('page_url') || b;
                 if (((modx.getActionFromUrl(f) === modx.getActionFromUrl(b)) && (modx.main.getQueryVariable('id', f) && modx.main.getQueryVariable('id', f) === modx.main.getQueryVariable('id', b))) || (f === b)) {
                     a.scrollTo(0, c);
                 }
@@ -836,13 +837,13 @@
             },
             ondrop: function(e) {
                 var el = d.getElementById('node' + modx.tree.itemToChange),
-                        els = null,
-                        id = modx.tree.itemToChange,
-                        parent = 0,
-                        menuindex = [],
-                        level = 0,
-                        indent = el.firstChild.querySelector('.indent'),
-                        i = 0;
+                    els = null,
+                    id = modx.tree.itemToChange,
+                    parent = 0,
+                    menuindex = [],
+                    level = 0,
+                    indent = el.firstChild.querySelector('.indent'),
+                    i = 0;
                 indent.innerHTML = '';
                 el.removeAttribute('draggable');
                 if (this.parentNode.classList.contains('dragenter')) {
@@ -924,9 +925,9 @@
                 var b = w.main.frameElement.contentWindow.location.search.substr(1);
                 if (modx.getActionFromUrl(b, 27) && parseInt(modx.main.getQueryVariable('id', b)) === parseInt(id)) {
                     var index = menuindex.indexOf(id),
-                            elMenuIndex = w.main.document.querySelector('#documentPane input[name=menuindex]'),
-                            elParent = w.main.document.querySelector('#documentPane input[name=parent]'),
-                            elParentName = w.main.document.querySelector('#documentPane #parentName');
+                        elMenuIndex = w.main.document.querySelector('#documentPane input[name=menuindex]'),
+                        elParent = w.main.document.querySelector('#documentPane input[name=parent]'),
+                        elParentName = w.main.document.querySelector('#documentPane #parentName');
                     if (elMenuIndex && index >= 0) elMenuIndex.value = index;
                     if (elParent && elParentName) {
                         elParent.value = parent;
@@ -974,12 +975,12 @@
                 var el = d.getElementById('node' + id).firstChild;
                 this.rpcNode = el.nextSibling;
                 var toggle = el.querySelector('.toggle'),
-                        icon = el.querySelector('.icon');
+                    icon = el.querySelector('.icon');
                 if (this.rpcNode.innerHTML === '') {
                     if (toggle) toggle.innerHTML = el.dataset.iconCollapsed;
                     icon.innerHTML = el.dataset.iconFolderOpen;
                     var rpcNodeText = this.rpcNode.innerHTML,
-                            loadText = modx.lang.loading_doc_tree;
+                        loadText = modx.lang.loading_doc_tree;
                     modx.openedArray[id] = 1;
                     if (rpcNodeText === '' || rpcNodeText.indexOf(loadText) > 0) {
                         var folderState = this.getFolderState();
@@ -1037,9 +1038,9 @@
             treeAction: function(e, id, title) {
                 if (e.ctrlKey) return;
                 var el = d.getElementById('node' + id).firstChild,
-                        treepageclick = el.dataset.treepageclick,
-                        showchildren = parseInt(el.dataset.showchildren),
-                        openfolder = parseInt(el.dataset.openfolder);
+                    treepageclick = el.dataset.treepageclick,
+                    showchildren = parseInt(el.dataset.showchildren),
+                    openfolder = parseInt(el.dataset.openfolder);
                 title = title || el.dataset && el.dataset.titleEsc;
                 if (tree.ca === 'move') {
                     try {
@@ -1105,9 +1106,9 @@
                 if (e.ctrlKey) return;
                 e.preventDefault();
                 var tree = d.getElementById('tree'),
-                        el = d.getElementById('node' + id) || e.target,
-                        x = 0,
-                        y = 0;
+                    el = d.getElementById('node' + id) || e.target,
+                    x = 0,
+                    y = 0;
                 if (el.firstChild && el.firstChild.dataset && el.firstChild.dataset.contextmenu) {
                     el = el.firstChild;
                 }
@@ -1175,11 +1176,11 @@
                         modx.hideDropDown(e);
                         this.setSelectedByContext(id);
                         var i4 = d.getElementById('item4'),
-                                i5 = d.getElementById('item5'),
-                                i8 = d.getElementById('item8'),
-                                i9 = d.getElementById('item9'),
-                                i10 = d.getElementById('item10'),
-                                i11 = d.getElementById('item11');
+                            i5 = d.getElementById('item5'),
+                            i8 = d.getElementById('item8'),
+                            i9 = d.getElementById('item9'),
+                            i10 = d.getElementById('item10'),
+                            i11 = d.getElementById('item11');
                         if (modx.permission.publish_document === 1) {
                             i9.style.display = 'block';
                             i10.style.display = 'block';
@@ -1333,7 +1334,7 @@
             },
             setItemToChange: function() {
                 var a = w.main.document && (w.main.document.URL || w.main.document.location.href),
-                        b = modx.getActionFromUrl(a);
+                    b = modx.getActionFromUrl(a);
                 if (a && modx.typesactions[b]) {
                     this.itemToChange = (modx.typesactions[b] === 7 ? '' : modx.typesactions[b] + '_') + parseInt(modx.main.getQueryVariable('id', a));
                 } else {
@@ -1474,7 +1475,7 @@
                         updateMsgCount: true
                     }, function(r) {
                         var c = r.split(','),
-                                el = d.getElementById('msgCounter');
+                            el = d.getElementById('msgCounter');
                         if (c[0] > 0) {
                             if (el) {
                                 el.innerHTML = c[0];
@@ -2104,9 +2105,9 @@
         },
         getWindowDimension: function() {
             var a = 0,
-                    b = 0,
-                    c = d.documentElement,
-                    e = d.body;
+                b = 0,
+                c = d.documentElement,
+                e = d.body;
             if (typeof(w.innerWidth) === 'number') {
                 a = w.innerWidth;
                 b = w.innerHeight;
@@ -2132,12 +2133,12 @@
                 modx.tree.ctx = null;
             }
             if (!/dropdown\-item/.test(e.target.className)
-                    //&& !(e && ("click" === e.type && /form|label|input|textarea|select/i.test(e.target.tagName)))
+                //&& !(e && ("click" === e.type && /form|label|input|textarea|select/i.test(e.target.tagName)))
             ) {
                 var els = d.querySelectorAll('.dropdown.show'),
-                        n = null,
-                        t = e.target || e.target.parentNode,
-                        i;
+                    n = null,
+                    t = e.target || e.target.parentNode,
+                    i;
                 if (typeof t.dataset.toggle !== 'undefined') {
                     n = d.querySelector(t.dataset.toggle);
                 } else if (t.classList.contains('dropdown-toggle')) {
@@ -2173,14 +2174,14 @@
         },
         post: function(a, b, c, t) {
             var x = this.XHR(),
-                    f = '';
+                f = '';
             if (typeof b === 'function') {
                 t = c;
                 c = b;
             } else if (typeof b === 'object') {
                 var e = [],
-                        i = 0,
-                        k;
+                    i = 0,
+                    k;
                 for (k in b) {
                     if (b.hasOwnProperty(k)) e[i++] = k + '=' + b[k];
                 }
@@ -2286,35 +2287,35 @@
         dragging: function(a, b) {
             this.dragging.init = function(a, b) {
                 var c = {
-                            resize: !1,
-                            minWidth: 50,
-                            minHeight: 50,
-                            wrap: document,
-                            opacity: '0.65',
-                            classDrag: 'drag',
-                            classResize: 'resize',
-                            handler: '',
-                            onstart: function(e, obj) { },
-                            onstop: function(e, obj) { },
-                            ondrag: function(e, obj) { },
-                            onresize: function(e, obj) { }
-                        },
-                        f = {
-                            x: 0,
-                            y: 0,
-                            elmX: 0,
-                            elmY: 0,
-                            border: 5,
-                            isdrag: !1,
-                            isresize: !1,
-                            onTop: 0,
-                            onLeft: 0,
-                            onRight: 0,
-                            onBottom: 0,
-                            handlerHeight: a.offsetHeight,
-                            borders: document.createElement('div')
-                        },
-                        s = modx.extend(this, c, b, f);
+                        resize: !1,
+                        minWidth: 50,
+                        minHeight: 50,
+                        wrap: document,
+                        opacity: '0.65',
+                        classDrag: 'drag',
+                        classResize: 'resize',
+                        handler: '',
+                        onstart: function(e, obj) { },
+                        onstop: function(e, obj) { },
+                        ondrag: function(e, obj) { },
+                        onresize: function(e, obj) { }
+                    },
+                    f = {
+                        x: 0,
+                        y: 0,
+                        elmX: 0,
+                        elmY: 0,
+                        border: 5,
+                        isdrag: !1,
+                        isresize: !1,
+                        onTop: 0,
+                        onLeft: 0,
+                        onRight: 0,
+                        onBottom: 0,
+                        handlerHeight: a.offsetHeight,
+                        borders: document.createElement('div')
+                    },
+                    s = modx.extend(this, c, b, f);
                 this.el = a;
                 this.borders.className = 'border-outline';
                 this.borders.innerHTML = '<i class="bo-left"></i><i class="bo-top"></i><i class="bo-right"></i><i class="bo-bottom"></i>';
@@ -2345,9 +2346,9 @@
                     }
                     e = document.all ? window.event : e;
                     var s = this,
-                            x = document.all ? window.event.clientX : e.clientX,
-                            y = document.all ? window.event.clientY : e.clientY,
-                            style = w.getComputedStyle(this.el);
+                        x = document.all ? window.event.clientX : e.clientX,
+                        y = document.all ? window.event.clientY : e.clientY,
+                        style = w.getComputedStyle(this.el);
                     this.elmX = (x - this.el.offsetLeft + parseInt(style.marginLeft));
                     this.elmY = (y - this.el.offsetTop + parseInt(style.marginTop));
                     this.el.position = this.el.getBoundingClientRect();
@@ -2396,7 +2397,7 @@
                 },
                 mousemove: function(e) {
                     var x = document.all ? window.event.clientX : e.clientX,
-                            y = document.all ? window.event.clientY : e.clientY;
+                        y = document.all ? window.event.clientY : e.clientY;
                     if (this.isresize) {
                         if (this.onRight) this.el.style.width = Math.max(x - this.el.position.left + (this.el.position.width - this.x), this.minWidth) + 'px';
                         if (this.onBottom) this.el.style.height = Math.max(y - this.el.position.top + (this.el.position.height - this.y), this.minHeight) + 'px';
@@ -2576,7 +2577,7 @@
     if (!Element.prototype.closest) {
         Element.prototype.closest = function(a) {
             var b = this,
-                    c, d;
+                c, d;
             ['matches', 'webkitMatchesSelector', 'mozMatchesSelector', 'msMatchesSelector', 'oMatchesSelector'].some(function(fn) {
                 if (typeof document.body[fn] === 'function') {
                     c = fn;

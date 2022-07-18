@@ -16,7 +16,7 @@ $modx_textdir = 'rtl'; // uncomment this line for RTL langauges
 $modx_lang_attribute = 'he'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = 'MODX הינה <a href="http://modx.com/" target="_blank">מערכת ניהול תוכן מבוססת PHP</a> תחת רשיון <a href="../assets/docs/license.txt">GNU GPL</a>.';
+$_lang["about_msg"] = 'MODX הינה <a href="https://evo.im/" target="_blank">מערכת ניהול תוכן מבוססת PHP</a> תחת רשיון <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'אודות MODX';
 $_lang["access_permission_denied"] = 'אין לך את ההרשאות הנכונות עבור מסמך זה.';
 $_lang["access_permission_parent_denied"] = 'אין לך הרשאה ליצור או להעביר מסמך כאן! אנא בחר מיקום אחר.';
@@ -182,7 +182,7 @@ $_lang["create_resource_title"] = 'Create Resource';
 $_lang["create_weblink_here"] = 'צור קישור כאן';
 $_lang["createdon"] = 'תאריך יצירה';
 $_lang["credits"] = 'קרדיטים';
-$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="http://modx.com/" target="_blank">modx.com</a>.<br /> תרגום לעברית MODX ישראל<a href="http://www.modx.co.il" target="_blank">MODX.co.il</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="https://evo.im/" target="_blank">modx.com</a>.<br /> תרגום לעברית MODX ישראל<a href="http://www.modx.co.il" target="_blank">MODX.co.il</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Here you can add custom content types to be used in your documents. To add a new entry, enter the content type in the text box then click the \'Add\' button.';
 $_lang["custom_contenttype_title"] = 'Custom content types:';
 $_lang["database_charset"] = 'Database Charset';

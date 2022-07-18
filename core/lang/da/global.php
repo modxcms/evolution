@@ -17,7 +17,7 @@
 $modx_lang_attribute = 'da'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = 'MODX Evolution er et <a href="http://modx.com/" target="_blank">PHP Application Framework og Content Management System</a> der er licenseret under <a href="../assets/docs/license.txt">GNU GPL</a>.';
+$_lang["about_msg"] = 'MODX Evolution er et <a href="https://evo.im/" target="_blank">PHP Application Framework og Content Management System</a> der er licenseret under <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Om MODX Evolution';
 $_lang["access_permission_denied"] = 'Du har ikke rettigheder til denne ressource.';
 $_lang["access_permission_parent_denied"] = 'Du har ikke rettigheder til at oprette eller flytte en ressource hertil! Vælg venligst en anden placering.';
@@ -183,7 +183,7 @@ $_lang["create_resource_title"] = 'Opret ressource';
 $_lang["create_weblink_here"] = 'Opret weblink her';
 $_lang["createdon"] = 'Oprettelsesdato';
 $_lang["credits"] = 'Krediteringer';
-$_lang["credits_shouts_msg"] = '<p>MODX bliver administreret og vedligeholdt af <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>MODX bliver administreret og vedligeholdt af <a href="https://evo.im/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Opret specielle indholdstype for ressourcer. For at oprette en ny; indtast indholdstypen i tekst feltet og klik på  \'Opret\'.';
 $_lang["custom_contenttype_title"] = 'Specielle indholdstyper:';
 $_lang["database_charset"] = 'Database karaktersæt';
