@@ -573,6 +573,7 @@ class UrlProcessor
                         if ($al['isfolder'] === 1 && $this->core->getConfig('make_folders')) {
                             $f_url_suffix = '/';
                         }
+
                         if (isset($al['path']) && $al['path'] != '') {
                             $alPath = $al['path'] . '/';
                         }
@@ -580,13 +581,13 @@ class UrlProcessor
                         if (isset($al['alias'])) {
                             $alias = $al['alias'];
                         }
-                    }
-                }
 
-                if (isset($al['alias_visible']) && $al['alias_visible'] == 1) {
-                    $alias = $alPath . $f_url_prefix . $alias . $f_url_suffix;
-                } else {
-                    $alias = $alPath;
+                        if ($al['alias_visible'] === 0 && $al['isfolder'] === 1) {
+                            $alias = $alPath;
+                        } else {
+                            $alias = $alPath . $f_url_prefix . $alias . $f_url_suffix;
+                        }
+                    }
                 }
 
                 $url = $alias . $args;
