@@ -632,7 +632,7 @@ switch ($actionToTake) {
                 if (!$modx->hasPermission('manage_groups')) {
                     $remainingGroups = \EvolutionCMS\Models\DocumentGroup::select('document_groups.document_group')->whereNotIn('id',
                         $old_groups)->where('document_groups.document', $id)->pluck('document_group')->toArray();
-                    if (!array_intersect($docgrp, $remainingGroups)) {
+                    if (!empty($docgrp) && !array_intersect($docgrp, $remainingGroups)) {
                         $modx->webAlertAndQuit($_lang["resource_permissions_error"], "index.php?a=27&id={$id}");
                     }
                 }
