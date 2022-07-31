@@ -3375,7 +3375,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         } else {
             $timeout = $this->getConfig('session_timeout') * 60;
         }
-        // session.js pings every 10min, updateMail() in mainMenu pings every minute, so 2min is minimum
+        // session.js pings every 10min, so 2min is minimum
         $validSessionTimeLimit = $this->time - $timeout;
         ActiveUserSession::where('lasthit', '<', (int)$validSessionTimeLimit)->delete();
 
@@ -3392,7 +3392,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         } else {
             ActiveUserLock::query()->truncate();
         }
-
     }
 
     /**

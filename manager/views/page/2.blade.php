@@ -62,7 +62,7 @@
 
     // do some config checks
     if ($modx->getConfig('warning_visibility') || $_SESSION['mgrRole'] == 1) {
-        include_once(MODX_MANAGER_PATH . 'includes/config_check.inc.php');
+        include_once MODX_MANAGER_PATH . 'includes/config_check.inc.php';
         if ($config_check_results != $_lang['configcheck_ok']) {
             $ph['config_check_results'] = $config_check_results;
             $ph['config_display'] = 'block';
@@ -94,35 +94,31 @@
     $ph['RecentInfo'] = $modx->getChunk('manager#welcome\RecentInfo');
 
     $tpl = '
-<table class="table data">
-	<tr>
-		<td width="150">[%yourinfo_username%]</td>
-		<td><b>[+username+]</b></td>
-	</tr>
-	<tr>
-		<td>[%yourinfo_role%]</td>
-		<td><b>[+role+]</b></td>
-	</tr>
-	<tr>
-		<td>[%yourinfo_previous_login%]</td>
-		<td><b>[+lastlogin+]</b></td>
-	</tr>
-	<tr>
-		<td>[%yourinfo_total_logins%]</td>
-		<td><b>[+logincount+]</b></td>
-	</tr>
-	<tr>
-		<td>[%inbox%]</td>
-		<td><a href="index.php?a=10" target="main"><b>[+msginfo+]</b></a></td>
-	</tr>
-</table>';
+    <table class="table data">
+    	<tr>
+    		<td width="150">[%yourinfo_username%]</td>
+    		<td><b>[+username+]</b></td>
+    	</tr>
+    	<tr>
+    		<td>[%yourinfo_role%]</td>
+    		<td><b>[+role+]</b></td>
+    	</tr>
+    	<tr>
+    		<td>[%yourinfo_previous_login%]</td>
+    		<td><b>[+lastlogin+]</b></td>
+    	</tr>
+    	<tr>
+    		<td>[%yourinfo_total_logins%]</td>
+    		<td><b>[+logincount+]</b></td>
+    	</tr>
+    </table>';
 
-    $ph['UserInfo'] = $modx->parseText($tpl, array(
-        'username'   => $modx->getLoginUserName(),
-        'role'       => $_SESSION['mgrPermissions']['name'],
-        'lastlogin'  => $modx->toDateFormat($modx->timestamp($_SESSION['mgrLastlogin'])),
+    $ph['UserInfo'] = $modx->parseText($tpl, [
+        'username' => $modx->getLoginUserName(),
+        'role' => $_SESSION['mgrPermissions']['name'],
+        'lastlogin' => $modx->toDateFormat($modx->timestamp($_SESSION['mgrLastlogin'])),
         'logincount' => $_SESSION['mgrLogincount'] + 1,
-    ));
+    ]);
 
     $activeUsers = \EvolutionCMS\Models\ActiveUserSession::query()
         ->join('active_users', 'active_users.sid', '=', 'active_user_sessions.sid')
@@ -136,39 +132,32 @@
         if (extension_loaded('intl')) {
             // https://www.php.net/manual/en/class.intldateformatter.php
             // https://www.php.net/manual/en/datetime.createfromformat.php
-            $formatter = new IntlDateFormatter(
-                evolutionCMS()->getConfig('manager_language'),
-                IntlDateFormatter::MEDIUM,
-                IntlDateFormatter::MEDIUM,
-                null,
-                null,
-                "HH:mm:ss"
-            );
+            $formatter = new IntlDateFormatter(evolutionCMS()->getConfig('manager_language'), IntlDateFormatter::MEDIUM, IntlDateFormatter::MEDIUM, null, null, 'HH:mm:ss');
             $ph['now'] = $formatter->format($now);
         } else {
             $ph['now'] = date('H:i:s', $now);
         }
-        $timetocheck = ($now - (60 * 20)); //+$server_offset_time;
+        $timetocheck = $now - 60 * 20; //+$server_offset_time;
         $html = '
-	<div class="card-body">
-		[%onlineusers_message%]
-		<b>[+now+]</b>):
-	</div>
-	<div class="table-responsive">
-	<table class="table data">
-	<thead>
-		<tr>
-			<th>[%onlineusers_user%]</th>
-			<th>ID</th>
-			<th>[%onlineusers_ipaddress%]</th>
-			<th>[%onlineusers_lasthit%]</th>
-			<th>[%onlineusers_action%]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-		</tr>
-	</thead>
-	<tbody>';
+    	<div class="card-body">
+    		[%onlineusers_message%]
+    		<b>[+now+]</b>):
+    	</div>
+    	<div class="table-responsive">
+    	<table class="table data">
+    	<thead>
+    		<tr>
+    			<th>[%onlineusers_user%]</th>
+    			<th>ID</th>
+    			<th>[%onlineusers_ipaddress%]</th>
+    			<th>[%onlineusers_lasthit%]</th>
+    			<th>[%onlineusers_action%]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+    		</tr>
+    	</thead>
+    	<tbody>';
 
-        $userList = array();
-        $userCount = array();
+        $userList = [];
+        $userCount = [];
         // Create userlist with session-count first before output
         foreach ($activeUsers->get()->toArray() as $activeUser) {
             $userCount[$activeUser['internalKey']] = isset($userCount[$activeUser['internalKey']]) ? $userCount[$activeUser['internalKey']] + 1 : 1;
@@ -180,40 +169,23 @@
             if (extension_loaded('intl')) {
                 // https://www.php.net/manual/en/class.intldateformatter.php
                 // https://www.php.net/manual/en/datetime.createfromformat.php
-                $formatter = new IntlDateFormatter(
-                    evolutionCMS()->getConfig('manager_language'),
-                    IntlDateFormatter::MEDIUM,
-                    IntlDateFormatter::MEDIUM,
-                    null,
-                    null,
-                    "HH:mm:ss"
-                );
+                $formatter = new IntlDateFormatter(evolutionCMS()->getConfig('manager_language'), IntlDateFormatter::MEDIUM, IntlDateFormatter::MEDIUM, null, null, 'HH:mm:ss');
                 $lasthit = $formatter->format($modx->timestamp($activeUser['lasthit']));
             } else {
                 $lasthit = date('H:i:s', $modx->timestamp($activeUser['lasthit']));
             }
-            $userList[] = array(
-                $idle,
-                '',
-                $activeUser['username'],
-                $webicon,
-                abs($activeUser['internalKey']),
-                $ip,
-                $lasthit,
-                $currentaction
-            );
+            $userList[] = [$idle, '', $activeUser['username'], $webicon, abs($activeUser['internalKey']), $ip, $lasthit, $currentaction];
         }
         foreach ($userList as $params) {
             $params[1] = $userCount[$params[4]] > 1 ? ' class="userMultipleSessions"' : '';
-            $html .= "\n\t\t" . vsprintf('<tr%s><td><strong%s>%s</strong></td><td>%s%s</td><td>%s</td><td>%s</td><td>%s</td></tr>',
-                    $params);
+            $html .= "\n\t\t" . vsprintf('<tr%s><td><strong%s>%s</strong></td><td>%s%s</td><td>%s</td><td>%s</td><td>%s</td></tr>', $params);
         }
 
         $html .= '
-	</tbody>
-	</table>
-</div>
-';
+    	</tbody>
+    	</table>
+    </div>
+    ';
     }
     $ph['OnlineInfo'] = $html;
 
@@ -226,7 +198,7 @@
     // How many items per Feed?
     $itemsNumber = '3';
 
-    $feedData = array();
+    $feedData = [];
 
     // create Feed
     $feed = new \SimplePie\SimplePie();
@@ -234,7 +206,9 @@
     \Illuminate\Support\Facades\File::ensureDirectoryExists($feedCache);
     $feed->set_cache_location($feedCache);
     foreach ($urls as $section => $url) {
-        if (empty($url)) continue;
+        if (empty($url)) {
+            continue;
+        }
         $output = '';
         $feed->set_feed_url($url);
         $feed->init();
@@ -295,142 +269,187 @@
         $ph['OnManagerWelcomePrerender'] = $output;
     }
 
-    $widgets['welcome'] = array(
+    $widgets['welcome'] = [
         'menuindex' => '10',
-        'id'        => 'welcome',
-        'cols'      => 'col-lg-6',
-        'icon'      => 'fa-home',
-        'title'     => '[%welcome_title%]',
-        'body'      => '
-            <div class="wm_buttons card-body">' .
-            ($modx->hasPermission("new_document") ? '
-                <span class="wm_button">
-                    <a target="main" href="index.php?a=4">
-                        <i class="' . $_style['icon_document'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
-                        <span>[%add_resource%]</span>
-                    </a>
-                </span>
-                <span class="wm_button">
-                    <a target="main" href="index.php?a=72">
-                        <i class="' . $_style['icon_chain'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
-                        <span>[%add_weblink%]</span>
-                    </a>
-                </span>
-                ' : '') .
-            ($modx->hasPermission("assets_images") ? '
-                <span class="wm_button">
-                    <a target="main" href="media/browser/mcpuk/browse.php?filemanager=media/browser/mcpuk/browse.php&type=images">
-                        <i class="' . $_style['icon_camera'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
-                        <span>[%images_management%]</span>
-                    </a>
-                </span>
-                ' : '') .
-            ($modx->hasPermission("assets_files") ? '
-                <span class="wm_button">
-                    <a target="main" href="media/browser/mcpuk/browse.php?filemanager=media/browser/mcpuk/browse.php&type=files">
-                        <i class="' . $_style['icon_files'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
-                        <span>[%files_management%]</span>
-                    </a>
-                </span>
-                ' : '') .
-            ($modx->hasPermission("bk_manager") ? '
-                <span class="wm_button">
-                    <a target="main" href="index.php?a=93">
-                        <i class="' . $_style['icon_database'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
-                        <span>[%bk_manager%]</span>
-                    </a>
-                </span>
-                ' : '') .
-            ($modx->hasPermission("change_password") ? '
-                <span class="wm_button">
-                    <a target="main" href="index.php?a=28">
-                        <i class="' . $_style['icon_lock'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
-                        <span>[%change_password%]</span>
-                    </a>
-                </span>
-                ' : '') . '
-                <span class="wm_button">
-                    <a target="_top" href="index.php?a=8">
-                        <i class="' . $_style['icon_logout'] . $_style['icon_size_2x'] . $_style['icon_size_fix'] . '"></i>
-                        <span>[%logout%]</span>
-                    </a>
-                </span>
-            </div>
-            <div class="userprofiletable card-body">
-                <table>
-                    <tr>
-                        <td width="150">[%yourinfo_username%]</td>
-                        <td><b>' . $modx->getLoginUserName() . '</b></td>
-                    </tr>
-                    <tr>
-                        <td>[%yourinfo_role%]</td>
-                        <td><b>[[$_SESSION[\'mgrPermissions\'][\'name\'] ]]</b></td>
-                    </tr>
-                    <tr>
-                        <td>[%yourinfo_previous_login%]</td>
-                        <td><b>[[$_SESSION[\'mgrLastlogin\']:math(\'%s+[(server_offset_time)]\'):dateFormat]]</b></td>
-                    </tr>
-                    <tr>
-                        <td>[%yourinfo_total_logins%]</td>
-                        <td><b>[[$_SESSION[\'mgrLogincount\']:math(\'%s+1\')]]</b></td>
-                    </tr>' .
-            ($modx->hasPermission("change_password") ? '
+        'id' => 'welcome',
+        'cols' => 'col-lg-6',
+        'icon' => 'fa-home',
+        'title' => '[%welcome_title%]',
+        'body' =>
+            '
+                <div class="wm_buttons card-body">' .
+            ($modx->hasPermission('new_document')
+                ? '
+                    <span class="wm_button">
+                        <a target="main" href="index.php?a=4">
+                            <i class="' .
+                    $_style['icon_document'] .
+                    $_style['icon_size_2x'] .
+                    $_style['icon_size_fix'] .
+                    '"></i>
+                            <span>[%add_resource%]</span>
+                        </a>
+                    </span>
+                    <span class="wm_button">
+                        <a target="main" href="index.php?a=72">
+                            <i class="' .
+                    $_style['icon_chain'] .
+                    $_style['icon_size_2x'] .
+                    $_style['icon_size_fix'] .
+                    '"></i>
+                            <span>[%add_weblink%]</span>
+                        </a>
+                    </span>
+                    '
+                : '') .
+            ($modx->hasPermission('assets_images')
+                ? '
+                    <span class="wm_button">
+                        <a target="main" href="media/browser/mcpuk/browse.php?filemanager=media/browser/mcpuk/browse.php&type=images">
+                            <i class="' .
+                    $_style['icon_camera'] .
+                    $_style['icon_size_2x'] .
+                    $_style['icon_size_fix'] .
+                    '"></i>
+                            <span>[%images_management%]</span>
+                        </a>
+                    </span>
+                    '
+                : '') .
+            ($modx->hasPermission('assets_files')
+                ? '
+                    <span class="wm_button">
+                        <a target="main" href="media/browser/mcpuk/browse.php?filemanager=media/browser/mcpuk/browse.php&type=files">
+                            <i class="' .
+                    $_style['icon_files'] .
+                    $_style['icon_size_2x'] .
+                    $_style['icon_size_fix'] .
+                    '"></i>
+                            <span>[%files_management%]</span>
+                        </a>
+                    </span>
+                    '
+                : '') .
+            ($modx->hasPermission('bk_manager')
+                ? '
+                    <span class="wm_button">
+                        <a target="main" href="index.php?a=93">
+                            <i class="' .
+                    $_style['icon_database'] .
+                    $_style['icon_size_2x'] .
+                    $_style['icon_size_fix'] .
+                    '"></i>
+                            <span>[%bk_manager%]</span>
+                        </a>
+                    </span>
+                    '
+                : '') .
+            ($modx->hasPermission('change_password')
+                ? '
+                    <span class="wm_button">
+                        <a target="main" href="index.php?a=28">
+                            <i class="' .
+                    $_style['icon_lock'] .
+                    $_style['icon_size_2x'] .
+                    $_style['icon_size_fix'] .
+                    '"></i>
+                            <span>[%change_password%]</span>
+                        </a>
+                    </span>
+                    '
+                : '') .
+            '
+                    <span class="wm_button">
+                        <a target="_top" href="index.php?a=8">
+                            <i class="' .
+            $_style['icon_logout'] .
+            $_style['icon_size_2x'] .
+            $_style['icon_size_fix'] .
+            '"></i>
+                            <span>[%logout%]</span>
+                        </a>
+                    </span>
+                </div>
+                <div class="userprofiletable card-body">
+                    <table>
+                        <tr>
+                            <td width="150">[%yourinfo_username%]</td>
+                            <td><b>' .
+            $modx->getLoginUserName() .
+            '</b></td>
+                        </tr>
+                        <tr>
+                            <td>[%yourinfo_role%]</td>
+                            <td><b>[[$_SESSION[\'mgrPermissions\'][\'name\'] ]]</b></td>
+                        </tr>
+                        <tr>
+                            <td>[%yourinfo_previous_login%]</td>
+                            <td><b>[[$_SESSION[\'mgrLastlogin\']:math(\'%s+[(server_offset_time)]\'):dateFormat]]</b></td>
+                        </tr>
+                        <tr>
+                            <td>[%yourinfo_total_logins%]</td>
+                            <td><b>[[$_SESSION[\'mgrLogincount\']:math(\'%s+1\')]]</b></td>
+                        </tr>' .
+            ($modx->hasPermission('change_password')
+                ? '
 
-                    ' : '') . '
-                </table>
-            </div>
-		',
-        'hide'      => '0'
-    );
-    $widgets['onlineinfo'] = array(
+                        '
+                : '') .
+            '
+                    </table>
+                </div>
+    		',
+        'hide' => '0',
+    ];
+    $widgets['onlineinfo'] = [
         'menuindex' => '20',
-        'id'        => 'onlineinfo',
-        'cols'      => 'col-lg-6',
-        'icon'      => 'fa-user',
-        'title'     => '[%onlineusers_title%]',
-        'body'      => '<div class="userstable">[+OnlineInfo+]</div>',
-        'hide'      => '0'
-    );
-    $widgets['recentinfo'] = array(
+        'id' => 'onlineinfo',
+        'cols' => 'col-lg-6',
+        'icon' => 'fa-user',
+        'title' => '[%onlineusers_title%]',
+        'body' => '<div class="userstable">[+OnlineInfo+]</div>',
+        'hide' => '0',
+    ];
+    $widgets['recentinfo'] = [
         'menuindex' => '30',
-        'id'        => 'modxrecent_widget',
-        'cols'      => 'col-sm-12',
-        'icon'      => 'fa-pencil-square-o',
-        'title'     => '[%activity_title%]',
-        'body'      => '<div class="widget-stage">[+RecentInfo+]</div>',
-        'hide'      => '0'
-    );
+        'id' => 'modxrecent_widget',
+        'cols' => 'col-sm-12',
+        'icon' => 'fa-pencil-square-o',
+        'title' => '[%activity_title%]',
+        'body' => '<div class="widget-stage">[+RecentInfo+]</div>',
+        'hide' => '0',
+    ];
     if ($modx->getConfig('rss_url_news')) {
-        $widgets['news'] = array(
+        $widgets['news'] = [
             'menuindex' => '40',
-            'id'        => 'news',
-            'cols'      => 'col-sm-6',
-            'icon'      => 'fa-rss',
-            'title'     => '[%modx_news_title%]',
-            'body'      => '<div style="max-height:200px;overflow-y: scroll;padding: 1rem .5rem">[+modx_news_content+]</div>',
-            'hide'      => '0'
-        );
+            'id' => 'news',
+            'cols' => 'col-sm-6',
+            'icon' => 'fa-rss',
+            'title' => '[%modx_news_title%]',
+            'body' => '<div style="max-height:200px;overflow-y: scroll;padding: 1rem .5rem">[+modx_news_content+]</div>',
+            'hide' => '0',
+        ];
     }
     if ($modx->getConfig('rss_url_security')) {
-        $widgets['security'] = array(
+        $widgets['security'] = [
             'menuindex' => '50',
-            'id'        => 'security',
-            'cols'      => 'col-sm-6',
-            'icon'      => 'fa-exclamation-triangle',
-            'title'     => '[%security_notices_title%]',
-            'body'      => '<div style="max-height:200px;overflow-y: scroll;padding: 1rem .5rem">[+modx_security_notices_content+]</div>',
-            'hide'      => '0'
-        );
+            'id' => 'security',
+            'cols' => 'col-sm-6',
+            'icon' => 'fa-exclamation-triangle',
+            'title' => '[%security_notices_title%]',
+            'body' => '<div style="max-height:200px;overflow-y: scroll;padding: 1rem .5rem">[+modx_security_notices_content+]</div>',
+            'hide' => '0',
+        ];
     }
 
     // invoke OnManagerWelcomeHome event
-    $sitewidgets = $modx->invokeEvent("OnManagerWelcomeHome", array('widgets' => $widgets));
+    $sitewidgets = $modx->invokeEvent('OnManagerWelcomeHome', ['widgets' => $widgets]);
     if (is_array($sitewidgets)) {
-        $newwidgets = array();
+        $newwidgets = [];
         foreach ($sitewidgets as $widget) {
             $newwidgets = array_merge($newwidgets, unserialize($widget));
         }
-        $widgets = (count($newwidgets) > 0) ? $newwidgets : $widgets;
+        $widgets = count($newwidgets) > 0 ? $newwidgets : $widgets;
     }
 
     usort($widgets, function ($a, $b) {
