@@ -144,15 +144,15 @@ class DataGrid implements DataGridInterface
         $tblEnd = "</table>";
 
         // build column header
-        $this->_colnames = explode((strstr($this->columns, "||") !== false ? "||" : ","), $this->columns);
-        $this->_colwidths = explode((strstr($this->colWidths, "||") !== false ? "||" : ","), $this->colWidths);
-        $this->_colaligns = explode((strstr($this->colAligns, "||") !== false ? "||" : ","), $this->colAligns);
+        $this->_colnames = explode((strstr($this->columns ?? '', "||") !== false ? "||" : ","), $this->columns ?? '');
+        $this->_colwidths = explode((strstr($this->colWidths ?? '', "||") !== false ? "||" : ","), $this->colWidths ?? '');
+        $this->_colaligns = explode((strstr($this->colAligns ?? '', "||") !== false ? "||" : ","), $this->colAligns ?? '');
         $this->_colwraps = explode((strstr($this->colWraps ?? '', "||") !== false ? "||" : ","), $this->colWraps ?? '');
         $this->_colcolors = explode((strstr($this->colColors ?? '', "||") !== false ? "||" : ","), $this->colColors ?? '');
-        $this->_coltypes = explode((strstr($this->colTypes, "||") !== false ? "||" : ","), $this->colTypes);
+        $this->_coltypes = explode((strstr($this->colTypes ?? '', "||") !== false ? "||" : ","), $this->colTypes ?? '');
         $this->_colcount = count($this->_colnames);
         if (!$this->_isDataset) {
-            $this->ds = explode((strstr($this->ds, "||") !== false ? "||" : ","), $this->ds);
+            $this->ds = explode((strstr($this->ds ?? '', "||") !== false ? "||" : ","), $this->ds ?? '');
             $this->ds = array_chunk($this->ds, $this->_colcount);
         }
         $tblColHdr = "<thead><tr>";
@@ -281,10 +281,10 @@ class DataGrid implements DataGridInterface
 
     public function formatColumnValue($row, $value, $type, &$align)
     {
-        if (strpos($type, ":") !== false) {
+        if (strpos($type ?? '', ":") !== false) {
             list($type, $type_format) = explode(":", $type, 2);
         }
-        switch (strtolower($type)) {
+        switch (strtolower($type ?? '')) {
             case "integer":
                 if ($align == "") {
                     $align = "right";

@@ -169,7 +169,7 @@ if (!function_exists('is_ajax')) {
      */
     function is_ajax()
     {
-        return (strtolower(get_by_key($_SERVER, 'HTTP_X_REQUESTED_WITH')) === 'xmlhttprequest');
+        return (strtolower(get_by_key($_SERVER, 'HTTP_X_REQUESTED_WITH') ?? '') === 'xmlhttprequest');
     }
 }
 
