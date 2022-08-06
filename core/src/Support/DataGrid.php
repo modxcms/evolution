@@ -363,7 +363,7 @@ class DataGrid implements DataGridInterface
                 // replace other [+fields+]
                 if (strpos($value, "[+") !== false) {
                     foreach ($row as $k => $v) {
-                        $value = str_replace("[+$k+]", $v, $value);
+                        $value = str_replace("[+$k+]", $v ?? '', $value);
                     }
                 }
                 break;
