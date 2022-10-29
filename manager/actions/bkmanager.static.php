@@ -128,9 +128,9 @@ if ($mode == 'restore1') {
         mkdir(rtrim(EvolutionCMS()->getConfig('snapshot_path'), '/'));
         @chmod(rtrim(EvolutionCMS()->getConfig('snapshot_path'), '/'), 0777);
     }
-    if (!is_file("{EvolutionCMS()->getConfig('snapshot_path')}.htaccess")) {
+    if (!is_file(EvolutionCMS()->getConfig('snapshot_path').".htaccess")) {
         $htaccess = "order deny,allow\ndeny from all\n";
-        file_put_contents("{EvolutionCMS()->getConfig('snapshot_path')}.htaccess", $htaccess);
+        file_put_contents(EvolutionCMS()->getConfig('snapshot_path').".htaccess", $htaccess);
     }
     if (!is_writable(rtrim(EvolutionCMS()->getConfig('snapshot_path'), '/'))) {
         EvolutionCMS()->webAlertAndQuit(parsePlaceholder($_lang["bkmgr_alert_mkdir"], array('snapshot_path' => EvolutionCMS()->getConfig('snapshot_path'))));
@@ -138,7 +138,7 @@ if ($mode == 'restore1') {
     $dumpfinished = false;
     $today = date('Y-m-d_H-i-s');
     global $path;
-    $path = "{EvolutionCMS()->getConfig('snapshot_path')}{$today}.sql";
+    $path = EvolutionCMS()->getConfig('snapshot_path').$today.".sql";
     switch ($driver) {
         case 'pgsql':
 //            $lf = "\n";
@@ -174,7 +174,7 @@ if ($mode == 'restore1') {
             $dumper->setDroptables(true);
             $dumpfinished = $dumper->createDump('snapshot');
 
-            $pattern = "{EvolutionCMS()->getConfig('snapshot_path')}*.sql";
+            $pattern = EvolutionCMS()->getConfig('snapshot_path')."*.sql";
             $files = glob($pattern, GLOB_NOCHECK);
             $total = ($files[0] !== $pattern) ? count($files) : 0;
             arsort($files);
@@ -298,9 +298,9 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                                 <thead>
                                 <tr>
                                     <td><label class="form-check form-check-label"><input type="checkbox" name="chkselall"
-                                                                               class="form-check-input"
-                                                                               onclick="selectAll();"
-                                                                               title="Select All Tables"/> <?= $_lang['database_table_tablename'] ?>
+                                                                                          class="form-check-input"
+                                                                                          onclick="selectAll();"
+                                                                                          title="Select All Tables"/> <?= $_lang['database_table_tablename'] ?>
                                         </label></td>
                                     <td width="1%"></td>
                                     <td class="text-xs-center"><?= $_lang['database_table_records'] ?></td>
@@ -494,7 +494,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
             <div class="container container-body">
                 <?= $ph['result_msg_snapshot'] ?>
                 <div class="element-edit-message-tab alert alert-warning">
-                    <?= parsePlaceholder($_lang["bkmgr_snapshot_msg"], array('snapshot_path' => "snapshot_path={EvolutionCMS()->getConfig('snapshot_path')}")) ?>
+                    <?= parsePlaceholder($_lang["bkmgr_snapshot_msg"], array('snapshot_path' => "snapshot_path=".EvolutionCMS()->getConfig('snapshot_path'))) ?>
                 </div>
                 <form method="post" name="snapshot" action="index.php">
                     <input type="hidden" name="a" value="93"/>
@@ -518,7 +518,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                     <input type="hidden" name="mode" value="restore2"/>
                     <input type="hidden" name="filename" value=""/>
                     <?php
-                    $pattern = "{EvolutionCMS()->getConfig('snapshot_path')}*.sql";
+                    $pattern = EvolutionCMS()->getConfig('snapshot_path')."*.sql";
                     $files = glob($pattern, GLOB_NOCHECK);
                     $total = ($files[0] !== $pattern) ? count($files) : 0;
                     $detailFields = array(
