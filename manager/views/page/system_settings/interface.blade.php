@@ -35,7 +35,7 @@
             'name' => 'manager_theme',
             'label' => ManagerTheme::getLexicon('manager_theme'),
             'small' => '[(manager_theme)]',
-            'value' => $settings['manager_theme'],
+            'value' => $settings['manager_theme'] ?? 'default',
             'attributes' => 'onChange="documentDirty=true; document.forms[\'settings\'].theme_refresher.value = Date.parse(new Date());" size="1"',
             'options' => $themes,
             'ucwords' => true,
