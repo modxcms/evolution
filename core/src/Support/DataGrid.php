@@ -319,30 +319,8 @@ class DataGrid implements DataGridInterface
                 if (!is_numeric($value)) {
                     $value = strtotime($value);
                 }
-                if (!$type_format) {
-                    $type_format = "%A %d, %B %Y";
-                }
-                if (extension_loaded('intl')) {
-                    // https://www.php.net/manual/en/class.intldateformatter.php
-                    // https://www.php.net/manual/en/datetime.createfromformat.php
-                    $type_format = str_replace(
-                        ['%Y', '%m', '%d', '%I', '%H', '%M', '%S', '%p'],
-                        ['Y', 'MM', 'dd', 'h', 'hh', 'mm', 'ss', 'a'],
-                        $type_format
-                    );
 
-                    $formatter = new IntlDateFormatter(
-                        evolutionCMS()->getConfig('manager_language'),
-                        IntlDateFormatter::FULL,
-                        IntlDateFormatter::FULL,
-                        null,
-                        null,
-                        $type_format . " hh:mm:ss"
-                    );
-                    $value = $formatter->format($value);
-                } else {
-                    $value = strftime($type_format, $value);
-                }
+                $value = EvolutionCMS()->toDateFormat($value);
                 break;
 
             case "boolean":
