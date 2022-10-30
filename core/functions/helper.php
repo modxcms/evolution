@@ -44,7 +44,7 @@ if (!function_exists('entities')) {
      */
     function entities($string, $charset = 'UTF-8')
     {
-        return htmlentities($string, ENT_COMPAT | ENT_SUBSTITUTE, $charset, false);
+        return htmlentities($string ?? '', ENT_COMPAT | ENT_SUBSTITUTE, $charset, false);
     }
 }
 

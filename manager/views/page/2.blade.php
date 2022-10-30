@@ -120,7 +120,7 @@
     $ph['UserInfo'] = EvolutionCMS()->parseText($tpl, array(
         'username' => EvolutionCMS()->getLoginUserName(),
         'role' => $_SESSION['mgrPermissions']['name'],
-        'lastlogin' => EvolutionCMS()->toDateFormat(EvolutionCMS()->timestamp($_SESSION['mgrLastlogin'])),
+        'lastlogin' => EvolutionCMS()->toDateFormat($_SESSION['mgrLastlogin']),
         'logincount' => $_SESSION['mgrLogincount'] + 1,
     ));
 
@@ -132,23 +132,8 @@
     if($activeUsers->count() < 1) {
         $html = '<p>[%no_active_users_found%]</p>';
     } else {
-        $now = EvolutionCMS()->timestamp($_SERVER['REQUEST_TIME']);
-        if (extension_loaded('intl')) {
-            // https://www.php.net/manual/en/class.intldateformatter.php
-            // https://www.php.net/manual/en/datetime.createfromformat.php
-            $formatter = new IntlDateFormatter(
-                evolutionCMS()->getConfig('manager_language'),
-                IntlDateFormatter::MEDIUM,
-                IntlDateFormatter::MEDIUM,
-                null,
-                null,
-                "hh:mm:ss"
-            );
-            $ph['now'] = $formatter->format($now);
-        } else {
-            $ph['now'] = strftime('%H:%M:%S', $now);
-        }
-        $timetocheck = ($now - (60 * 20)); //+$server_offset_time;
+        $ph['now'] = EvolutionCMS()->now()->toTimeString();
+        $timetocheck = (EvolutionCMS()->now()->unix() - (60 * 20)); //+$server_offset_time;
         $html = '
 	<div class="card-body">
 		[%onlineusers_message%]
@@ -173,25 +158,11 @@
         foreach($activeUsers->get()->toArray() as $activeUser) {
             $userCount[$activeUser['internalKey']] = isset($userCount[$activeUser['internalKey']]) ? $userCount[$activeUser['internalKey']] + 1 : 1;
 
-            $idle = $activeUser['lasthit'] < $timetocheck ? ' class="userIdle"' : '';
+            $idle = EvolutionCMS()->timestamp($activeUser['lasthit']) < $timetocheck ? ' class="userIdle"' : '';
             $webicon = $activeUser['internalKey'] < 0 ? '<i class="[&icon_globe&]"></i>' : '';
             $ip = $activeUser['ip'] === '::1' ? '127.0.0.1' : $activeUser['ip'];
             $currentaction = EvolutionCMS\Legacy\LogHandler::getAction($activeUser['action'], $activeUser['id']);
-            if (extension_loaded('intl')) {
-                // https://www.php.net/manual/en/class.intldateformatter.php
-                // https://www.php.net/manual/en/datetime.createfromformat.php
-                $formatter = new IntlDateFormatter(
-                    evolutionCMS()->getConfig('manager_language'),
-                    IntlDateFormatter::MEDIUM,
-                    IntlDateFormatter::MEDIUM,
-                    null,
-                    null,
-                    "hh:mm:ss"
-                );
-                $lasthit = $formatter->format(EvolutionCMS()->timestamp($activeUser['lasthit']));
-            } else {
-                $lasthit = strftime('%H:%M:%S', EvolutionCMS()->timestamp($activeUser['lasthit']));
-            }
+            $lasthit = EvolutionCMS()->toDateFormat($activeUser['lasthit'], 'timeOnly');
             $userList[] = array(
                 $idle,
                 '',
@@ -374,7 +345,7 @@
                     </tr>
                     <tr>
                         <td>[%yourinfo_previous_login%]</td>
-                        <td><b>[[$_SESSION[\'mgrLastlogin\']:math(\'%s+[(server_offset_time)]\'):dateFormat]]</b></td>
+                        <td><b>'.EvolutionCMS()->toDateFormat($_SESSION['mgrLastlogin']).'</b></td>
                     </tr>
                     <tr>
                         <td>[%yourinfo_total_logins%]</td>

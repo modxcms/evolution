@@ -3,6 +3,7 @@
 use AgelxNash\Modx\Evo\Database\Exceptions\InvalidFieldException;
 use AgelxNash\Modx\Evo\Database\Exceptions\TableNotDefinedException;
 use AgelxNash\Modx\Evo\Database\Exceptions\UnknownFetchTypeException;
+use Carbon\Carbon;
 use EvolutionCMS\Models\ActiveUser;
 use EvolutionCMS\Models\ActiveUserLock;
 use EvolutionCMS\Models\ActiveUserSession;
@@ -2465,8 +2466,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
 
         if ($documentObject === false) {
             $documentObject = SiteContent::query()
-                ->where('site_content.' . $method, $identifier)->first();
-
+                ->where('site_content.' . $method, $identifier)
+                ->first();
 
             if (is_null($documentObject)) {
                 $this->sendErrorPage();
@@ -2880,7 +2881,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public function prepareResponse()
     {
         // we now know the method and identifier, let's check the cache
-
         if ($this->getConfig('enable_cache') == 2 && $this->isLoggedIn()) {
             $this->setConfig('enable_cache', 0);
         }
@@ -4626,70 +4626,28 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
 
         $timestamp = (int)$timestamp;
+        $dateTime = Carbon::createFromTimestamp(EvolutionCMS()->timestamp($timestamp));
 
         switch ($this->getConfig('datetime_format')) {
             case 'YYYY/mm/dd':
-                $dateFormat = '%Y/%m/%d';
+                $dateFormat = 'Y/m/d';
                 break;
             case 'dd-mm-YYYY':
-                $dateFormat = '%d-%m-%Y';
+                $dateFormat = 'd-m-Y';
                 break;
             case 'mm/dd/YYYY':
-                $dateFormat = '%m/%d/%Y';
+                $dateFormat = 'm/d/Y';
                 break;
         }
 
-        if (extension_loaded('intl')) {
-            // https://www.php.net/manual/en/class.intldateformatter.php
-            // https://www.php.net/manual/en/datetime.createfromformat.php
-            $dateFormat = str_replace(
-                ['%Y', '%m', '%d', '%I', '%H', '%M', '%S', '%p'],
-                ['Y', 'MM', 'dd', 'h', 'hh', 'mm', 'ss', 'a'],
-                $dateFormat
-            );
-            if (empty($mode)) {
-                $formatter = new IntlDateFormatter(
-                    $this->getConfig('manager_language'),
-                    IntlDateFormatter::FULL,
-                    IntlDateFormatter::FULL,
-                    null,
-                    null,
-                    $dateFormat . " hh:mm:ss"
-                );
-                $strTime = $formatter->format($timestamp);
-            } elseif ($mode === 'dateOnly') {
-                $formatter = new IntlDateFormatter(
-                    $this->getConfig('manager_language'),
-                    IntlDateFormatter::FULL,
-                    IntlDateFormatter::NONE,
-                    null,
-                    null,
-                    $dateFormat
-                );
-                $strTime = $formatter->format($timestamp);
-            } elseif ($mode === 'timeOnly') {
-                $formatter = new IntlDateFormatter(
-                    $this->getConfig('manager_language'),
-                    IntlDateFormatter::NONE,
-                    IntlDateFormatter::MEDIUM,
-                    null,
-                    null,
-                    "hh:mm:ss"
-                );
-                $strTime = $formatter->format($timestamp);
-            } elseif ($mode === 'formatOnly') {
-                $strTime = $dateFormat;
-            }
-        } else {
-            if (empty($mode)) {
-                $strTime = strftime($dateFormat . " %H:%M:%S", $timestamp);
-            } elseif ($mode === 'dateOnly') {
-                $strTime = strftime($dateFormat, $timestamp);
-            } elseif ($mode === 'formatOnly') {
-                $strTime = $dateFormat;
-            } elseif ($mode === 'timeOnly') {
-                $strTime = $dateFormat;
-            }
+        if (empty($mode)) {
+            $strTime = $dateTime->format($dateFormat . ' H:i:s');
+        } elseif ($mode === 'dateOnly') {
+            $strTime = $dateTime->format($dateFormat);
+        } elseif ($mode === 'formatOnly') {
+            $strTime = $dateFormat;
+        } elseif ($mode === 'timeOnly') {
+            $strTime = $dateTime->toTimeString();
         }
 
         return $strTime;
