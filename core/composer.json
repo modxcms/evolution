@@ -67,7 +67,8 @@
     "james-heinrich/phpthumb": "1.*",
     "evolutioncms-services/user-manager": "1.*",
     "evolutioncms-services/document-manager": "1.*",
-    "evolution-cms/salo": "1.*"
+    "evolution-cms/salo": "1.*",
+    "dragonmantank/cron-expression": "^3.3"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master"
