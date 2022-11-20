@@ -1,6 +1,12 @@
 <?php namespace EvolutionCMS\Providers;
 
 use EvolutionCMS\Console;
+use EvolutionCMS\Console\Scheduling\ScheduleListCommand;
+use EvolutionCMS\Console\Scheduling\ScheduleRunCommand;
+use Illuminate\Console\Scheduling\ScheduleClearCacheCommand;
+use Illuminate\Console\Scheduling\ScheduleFinishCommand;
+use Illuminate\Console\Scheduling\ScheduleTestCommand;
+use Illuminate\Console\Scheduling\ScheduleWorkCommand;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Console\Seeds\SeedCommand;
 use Illuminate\Database\Console\Migrations\MigrateCommand;
@@ -48,6 +54,12 @@ class ArtisanServiceProvider extends ServiceProvider
         'MigrateRollback' => 'command.migrate.rollback',
         'MigrateStatus' => 'command.migrate.status',
         'Seed' => 'command.seed',
+        'ScheduleFinish' => ScheduleFinishCommand::class,
+        'ScheduleList' => ScheduleListCommand::class,
+        'ScheduleRun' => ScheduleRunCommand::class,
+        'ScheduleClearCache' => ScheduleClearCacheCommand::class,
+        'ScheduleTest' => ScheduleTestCommand::class,
+        'ScheduleWork' => ScheduleWorkCommand::class,
         'ViewClear' => 'command.view.clear',
         'ListsDoc' => 'command.lists.doc',
         'ListsTv' => 'command.lists.tv',
@@ -233,6 +245,66 @@ class ArtisanServiceProvider extends ServiceProvider
         $this->app->singleton('command.seed', function ($app) {
             return new SeedCommand($app['db']);
         });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerScheduleClearCacheCommand()
+    {
+        $this->app->singleton(ScheduleClearCacheCommand::class);
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerScheduleFinishCommand()
+    {
+        $this->app->singleton(ScheduleFinishCommand::class);
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerScheduleListCommand()
+    {
+        $this->app->singleton(ScheduleListCommand::class);
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerScheduleRunCommand()
+    {
+        $this->app->singleton(ScheduleRunCommand::class);
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerScheduleTestCommand()
+    {
+        $this->app->singleton(ScheduleTestCommand::class);
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerScheduleWorkCommand()
+    {
+        $this->app->singleton(ScheduleWorkCommand::class);
     }
 
     /**
