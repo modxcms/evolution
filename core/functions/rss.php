@@ -10,7 +10,7 @@ if (! function_exists('fetchCacheableRss')) {
         if (!$content) {
             return $items;
         }
-
+        $content = str_replace('xmlns=', 'ns=', $content);
         $xml = new SimpleXmlElement($content);
 
         if ($xpath) {

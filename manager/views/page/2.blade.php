@@ -201,12 +201,13 @@
     // create Feed
     foreach ($urls as $section => $url) {
         $output = '';
-        $items = fetchCacheableRss($url, 'channel/item', function(SimpleXMLElement $entry){
+        $items = fetchCacheableRss($url, '//entry', function(SimpleXMLElement $entry){
             $props = [];
             foreach ($entry as $prop) {
-                if (mb_strtolower($prop->getName()) === 'pubdate' && ($time = @strtotime($prop->__toString())) > 0) {
-                    $props['date_timestamp'] = $time;
-                    $props['pubdate'] = $prop->__toString();
+                if (mb_strtolower($prop->getName()) === 'updated' && ($time = @strtotime($prop->__toString())) > 0) {
+                    $props['updated'] = $prop->__toString();
+                } elseif (mb_strtolower($prop->getName()) === 'link') {
+                    $props['link'] = $prop->attributes()['href']->__toString();
                 } else {
                     $props[$prop->getName()] = $prop->__toString();
                 }
@@ -222,11 +223,11 @@
 
         $items = array_slice($items, 0, $itemsNumber);
         foreach ($items as $item) {
-            $href = rel2abs($item['link'], 'https://github.com');
+            $href = $item['link'];
             $title = $item['title'];
-            $pubdate = $item['pubdate'];
+            $pubdate = $item['updated'];
             $pubdate = EvolutionCMS()->toDateFormat(strtotime($pubdate));
-            $description = strip_tags($item['description']);
+            $description = strip_tags($item['content']);
             if (strlen($description) > 199) {
                 $description = substr($description, 0, 200);
                 $description .= '...<br />Read <a href="' . $href . '" target="_blank">more</a>.';
