@@ -15,14 +15,15 @@
                     <label>
                         @if(is_string($option))
                             <input type="radio" name="{{ $name }}" value="{{ $key ?? '' }}"
-                                @if(isset($value) && $value == $key) checked="checked" @endif
+                                   @if(isset($value) && $value == $key) checked="checked" @endif
+                                   @if(!empty($disabled)) disabled @endif
                             />
                             {!! $option ?? '' !!}
                         @else
                             <input type="radio" name="{{ $name }}" value="{{ $option['value'] ?? $key }}"
-                                {!! $option['attributes'] ?? '' !!}
-                                @if(isset($value) && ((isset($option['value']) && $value == $option['value']) || ($value == $key))) checked="checked" @endif
-                            @if(!empty($disabled) || !empty($option['disabled'])) disabled @endif
+                                   {!! $option['attributes'] ?? '' !!}
+                                   @if(isset($value) && ((isset($option['value']) && $value == $option['value']) || ($value == $key))) checked="checked" @endif
+                                   @if(!empty($disabled) || !empty($option['disabled'])) disabled @endif
                             />
                             {!! $option['text'] ?? '' !!}
                         @endif

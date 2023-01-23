@@ -595,11 +595,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                     $evtOut = EvolutionCMS()->invokeEvent('OnDocFormTemplateRender', array(
                         'id' => $id
                     ));
-                                                        
+
                     $group_tvs = EvolutionCMS()->getConfig('group_tvs');
                     $templateVariables = '';
                     $templateVariablesOutput = '';
-                                                        
+
                     if(is_array($evtOut)) {
                         echo implode('', $evtOut);
                     } else {
@@ -1404,7 +1404,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
                         foreach ($groups as $group){
                             $row = $group->toArray();
                             // Create an inputValue pair (group ID and group link (if it exists))
-                            $inputValue = $row['id'] . ',' . ($row['link_id'] ? $row['link_id'] : 'new');
+                            $inputValue = $row['id'] . ',' . ($row['link_id'] ?? 'new');
                             $inputId = 'group-' . $row['id'];
 
                             $checked = in_array($inputValue, $groupsarray);

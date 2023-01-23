@@ -74,15 +74,10 @@ trait Settings
     /**
      * @param $name
      * @param $value
-     * @param bool $legacy
      */
-    public function setConfig($name, $value, $legacy = false)
+    public function setConfig($name, $value)
     {
-        if ($legacy === true) {
-            $this->config[$name] = $value;
-        } else {
-            $this['config']->set('cms.settings.' . $name, $value);
-        }
+        $this->config[$name] = $value;
     }
 
     /**
@@ -131,10 +126,10 @@ trait Settings
         }
 
         // store base_url and base_path inside config array
-        $this->setConfig('base_url', MODX_BASE_URL, true);
-        $this->setConfig('base_path', MODX_BASE_PATH, true);
-        $this->setConfig('site_url', MODX_SITE_URL, true);
-        $this->setConfig('site_manager_path', MODX_MANAGER_PATH, true);
+        $this->setConfig('base_url', MODX_BASE_URL);
+        $this->setConfig('base_path', MODX_BASE_PATH);
+        $this->setConfig('site_url', MODX_SITE_URL);
+        $this->setConfig('site_manager_path', MODX_MANAGER_PATH);
         $this->error_reporting = $this->getConfig('error_reporting');
         $this->setConfig(
             'filemanager_path',

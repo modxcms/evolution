@@ -51,8 +51,8 @@ if($data['friendly_urls']==='1' && strpos($_SERVER['SERVER_SOFTWARE'],'IIS')===f
 }
 
 
-if (file_exists(MODX_MANAGER_PATH . 'media/style/' . EvolutionCMS()->config['manager_theme'] . '/css/styles.min.css')) {
-    unlink(MODX_MANAGER_PATH . 'media/style/' . EvolutionCMS()->config['manager_theme'] . '/css/styles.min.css');
+if (file_exists(MODX_MANAGER_PATH . 'media/style/' . EvolutionCMS()->getConfig('manager_theme') . '/css/styles.min.css')) {
+    unlink(MODX_MANAGER_PATH . 'media/style/' . EvolutionCMS()->getConfig('manager_theme') . '/css/styles.min.css');
 }
 
 $data['filemanager_path'] = str_replace('[(base_path)]',MODX_BASE_PATH,$data['filemanager_path']);

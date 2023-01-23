@@ -46,6 +46,9 @@ class EditOrNewUser extends AbstractController implements ManagerTheme\PageContr
         if (isset($userData['blockeduntil']) && !is_numeric($userData['blockeduntil'])) {
             $userData['blockeduntil'] = strtotime($userData['blockeduntil']);
         }
+        if (isset($userData['blockedafter']) && !is_numeric($userData['blockedafter'])) {
+            $userData['blockedafter'] = strtotime($userData['blockedafter']);
+        }
         try {
             if ($userData['mode'] == 87) {
                 $user = \UserManager::create($userData);
@@ -154,8 +157,9 @@ class EditOrNewUser extends AbstractController implements ManagerTheme\PageContr
             $a = ($userData['stay'] == '2') ? "88&id={$user->getKey()}" : "87";
             $this->parameters['url'] = "index.php?a={$a}&r=2&stay=" . $userData['stay'];
         } else {
-            $this->parameters['url'] = "index.php?a=99&r=2";
+            $this->parameters['url'] = "index.php?a=88&id={$user->getKey()}";
         }
+        $this->parameters['cancel_url'] = "index.php?a=99";
         if ($userData['passwordnotifymethod'] == 'e') {
             $websignupemail_message = EvolutionCMS()->getConfig('websignupemail_message');
             $site_url = EvolutionCMS()->getConfig('site_url');

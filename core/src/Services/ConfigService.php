@@ -7,9 +7,9 @@ class ConfigService
     {
         return EvolutionCMS()->getConfig($config, $default);
     }
-    public function set($name, $value, $legacy = false)
+    public function set($name, $value)
     {
-        EvolutionCMS()->setConfig($name, $value, $legacy);
+        EvolutionCMS()->setConfig($name, $value);
     }
 
 }

@@ -79,3 +79,6 @@ Desktop.ini
 
 # except do not ignore .gitignore
 !.gitignore
+
+# dev
+.vscode/

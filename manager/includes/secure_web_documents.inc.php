@@ -12,19 +12,22 @@ if (!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
  *
  * @param string $docid
  */
-function secureWebDocument($docid = '')
+function secureWebDocument($docid = '', $context = 1)
 {
-
+    $context = $context == 0 ? 0 : 1;
+    $privateField = $context ? 'privateweb' : 'privatemgr';
     if (is_numeric($docid) && $docid > 0) {
-        \EvolutionCMS\Models\SiteContent::withTrashed()->find($docid)->update(['privatemgr' => 0]);
+        \EvolutionCMS\Models\SiteContent::withTrashed()->find($docid)->update([$privateField => 0]);
     } else {
-        \EvolutionCMS\Models\SiteContent::withTrashed()->where('privatemgr', 1)->update(['privatemgr' => 0]);
+        \EvolutionCMS\Models\SiteContent::withTrashed()->where($privateField, 1)->update([$privateField => 0]);
     }
 
     $documentIds = \EvolutionCMS\Models\SiteContent::withTrashed()->select('site_content.id')->distinct()
         ->leftJoin('document_groups', 'site_content.id', '=', 'document_groups.document')
-        ->leftJoin('membergroup_access', 'document_groups.document_group', '=', 'membergroup_access.documentgroup')
-        ->where('membergroup_access.id', '>', 0);
+        ->leftJoin('membergroup_access', function(Illuminate\Database\Query\JoinClause $join) use ($context) {
+            $join->on('document_groups.document_group', '=', 'membergroup_access.documentgroup')
+                ->where('membergroup_access.context', '=', $context);
+        })->where('membergroup_access.id', '>', 0);
     if (is_numeric($docid) && $docid > 0) {
         $documentIds = $documentIds->where('site_content.id', $docid);
     }
@@ -32,6 +35,11 @@ function secureWebDocument($docid = '')
     $ids = $documentIds->get()->pluck('id');
 
     if (count($ids) > 0) {
-        \EvolutionCMS\Models\SiteContent::withTrashed()->whereIn('id', $ids)->update(['privatemgr' => 1]);
+        \EvolutionCMS\Models\SiteContent::withTrashed()->whereIn('id', $ids)->update([$privateField => 1]);
     }
+}
+
+function secureMgrDocument($docid = '', $context = 0)
+{
+    secureWebDocument($docid, $context);
 }

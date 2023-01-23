@@ -259,8 +259,8 @@ if (isset ($_POST['module']) || $installData) {
 
                 // Create the category if it does not already exist
                 $category = getCreateDbCategory($category, $sqlParser);
-
-                $module = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
+                $tmp = preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2);
+                $module = end($tmp);
                 // remove installer docblock
                 $module = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $module, 1);
                 $module = evo()->getDatabase()->escape($module);
@@ -318,8 +318,8 @@ if (isset ($_POST['plugin']) || $installData) {
 
                 // Create the category if it does not already exist
                 $category = getCreateDbCategory($category, $sqlParser);
-
-                $plugin = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
+                $tmp = preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2);
+                $plugin = end($tmp);
                 // remove installer docblock
                 $plugin = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $plugin, 1);
                 $plugin = EvolutionCms()->getDatabase()->escape($plugin);
@@ -416,7 +416,7 @@ if (isset ($_POST['snippet']) || $installData) {
 
                 // Create the category if it does not already exist
                 $category = getCreateDbCategory($category, $sqlParser);
-                $tmp = preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent));
+                $tmp = preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2);
                 $snippet = end($tmp);
                 // remove installer docblock
                 $snippet = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', $snippet, 1);

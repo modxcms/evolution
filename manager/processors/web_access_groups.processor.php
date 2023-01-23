@@ -90,10 +90,11 @@ switch ($operation) {
         break;
     case "add_document_group_to_user_group" :
         $updategroupaccess = true;
-        $usergroup = (int)$_REQUEST['usergroup'];
-        $docgroup = (int)$_REQUEST['docgroup'];
-        if (\EvolutionCMS\Models\MembergroupAccess::where('membergroup', $usergroup)->where('documentgroup', $docgroup)->count() <= 0) {
-            \EvolutionCMS\Models\MembergroupAccess::create(array('membergroup' => $usergroup, 'documentgroup' => $docgroup));
+        $usergroup = (int)($_REQUEST['usergroup'] ?? 0);
+        $docgroup = (int)($_REQUEST['docgroup'] ?? 0);
+        $context = (int)($_REQUEST['context'] ?? 0) == 0 ? 0 : 1;
+        if (\EvolutionCMS\Models\MembergroupAccess::where('membergroup', $usergroup)->where('documentgroup', $docgroup)->where('context', $context)->count() <= 0) {
+            \EvolutionCMS\Models\MembergroupAccess::create(array('membergroup' => $usergroup, 'documentgroup' => $docgroup, 'context' => $context));
         } else {
             //alert user that coupling already exists?
         }
@@ -101,8 +102,8 @@ switch ($operation) {
     case "remove_document_group_from_user_group" :
         $updategroupaccess = true;
         $coupling = (int)$_REQUEST['coupling'];
-        $document_group = (int)$_REQUEST['document_group'];
-        \EvolutionCMS\Models\MembergroupAccess::where('membergroup', $coupling)->where('documentgroup', $document_group)->delete();
+        $context = (int)($_REQUEST['context'] ?? 0) == 0 ? 0 : 1;
+        \EvolutionCMS\Models\MembergroupAccess::where('id', $coupling)->delete();
         break;
     default :
         EvolutionCMS()->webAlertAndQuit("No operation set in request.");
@@ -111,15 +112,23 @@ switch ($operation) {
 // secure web documents - flag as private
 if ($updategroupaccess == true) {
     include MODX_MANAGER_PATH . "includes/secure_web_documents.inc.php";
-    secureWebDocument();
-
+    if ($context) {
+        secureWebDocument();
+    } else {
+        secureMgrDocument();
+    }
     // Update the private group column
-    $resp = \EvolutionCMS\Models\DocumentgroupName::query()->select('documentgroup_names.id', 'membergroup_access.membergroup')
-        ->join('membergroup_access', 'membergroup_access.documentgroup', '=', 'documentgroup_names.id')
-        ->get();
+    $columnName = $context ? 'private_webgroup' : 'private_memgroup';
+    $resp = \EvolutionCMS\Models\DocumentgroupName::query()->select('documentgroup_names.id',
+        'membergroup_access.membergroup')
+        ->join('membergroup_access', function($join) use ($context) {
+            $join->on('membergroup_access.documentgroup', '=', 'documentgroup_names.id')
+                ->where('membergroup_access.context', '=', $context);
+        })->get();
     foreach ($resp as $item) {
-        if (!is_null($item->membergroup))
-            \EvolutionCMS\Models\DocumentgroupName::find($item->id)->update(['private_memgroup' => $item->membergroup]);
+        if (!is_null($item->membergroup)) {
+            \EvolutionCMS\Models\DocumentgroupName::find($item->id)->update([$columnName => 1]);
+        }
     }
 }
 

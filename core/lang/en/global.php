@@ -28,6 +28,7 @@ $_lang["access_permissions_docs_message"] = 'Select which Resource Groups this R
 $_lang["access_permissions_group_link"] = 'Create a new group link';
 $_lang["access_permissions_introtext"] = 'Manage the User Groups and Resource Groups used for access permissions. To add a user to a User Group, edit the user and select the groups (s)he should be a member of. To add a Resource to a User Group, edit the Resource and select the groups it should belong to.';
 $_lang["access_permissions_link_to_group"] = 'to Resource Group';
+$_lang["access_permissions_context"] = 'in context';
 $_lang["access_permissions_link_user_group"] = 'Link User Group';
 $_lang["access_permissions_links"] = 'User/Resource Group links';
 $_lang["access_permissions_links_tab"] = 'Specify which User Groups are given access (i.e. can edit or create children) to the Resource Groups. To link a Resource Group to a User Group, select the appropriate groups from the drop down menus, and click on \'Submit\'. To remove the link for a certain group, press \'Remove\'. This will immediately remove the link.';
@@ -1180,6 +1181,7 @@ $_lang["web_access_permissions_user_groups"] = 'User groups';
 $_lang["web_permissions"] = 'Permissions';
 $_lang["web_user_management_msg"] = 'Choose the User you wish to edit. Users are those Users who are allowed to log into the web site and manager';
 $_lang["web_user_management_title"] = 'Users';
+$_lang["web_user_management_select_role"] = 'All roles';
 $_lang["web_user_title"] = 'Create/edit User';
 $_lang["web_users"] = 'Users';
 $_lang["weblink"] = 'Weblink';
@@ -1320,6 +1322,7 @@ $_lang["error_no_truncate_tablename"] = "Table to truncate not found in request!
 $_lang["error_double_action"]         = "Double action (GET & POST) posted!";
 $_lang["error_no_id"]                 = "ID not passed in request!";
 $_lang["error_id_nan"]                = "ID passed in request is NaN!";
+$_lang["error_parent_deleted"]        = "Failed because resource parent is deleted!";
 $_lang["error_no_parent"]             = "Couldn't find parent document's name!";
 $_lang["error_many_results"]          = "Too many results returned from database!";
 $_lang["error_no_results"]            = "Not enough/ no results returned from database!";
@@ -1495,5 +1498,7 @@ $_lang["role_no_tv"] = 'No Variables have been assigned to this Role yet.';
 $_lang["role_notassigned_tv"] = 'These Variables are available for assigning.';
 $_lang["role_tv_msg"] = 'The Variables assigned to this Role are listed below.';
 $_lang["tmplvar_roles_access_msg"] = 'Select the Roles that are allowed to access/process this Template Variable';
+
+$_lang["setting_from_file"] = '<strong class="text-danger">Parameter value is defined in core/custom/confic/cms/settings</strong>';
 
 return $_lang;

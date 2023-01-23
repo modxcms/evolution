@@ -26,12 +26,12 @@ tbody.collapse.in { display: table-row-group}
 .form-control-name .custom-control .fa-lock { margin-top: 0.6em; font-size: 1.5em }
 .form-control-name .custom-control .fa-lock::before { content: "\f09c"; color: #ddd }
 .form-control-name .custom-control input:checked ~ .fa-lock::before { content: "\f023"; color: #d9534f }
-input[type=date]:not(.unstyled), input[name*=date]:not(.unstyled):not([type=checkbox]):not([type=radio]), input[name=createdon], input[name=editedon], input[size="1"], select[name=usergroup]:not(.unstyled), select[name=docgroup]:not(.unstyled) { width: auto !important; vertical-align: middle }
+input[type=date]:not(.unstyled), input[name*=date]:not(.unstyled):not([type=checkbox]):not([type=radio]), input[name=createdon], input[name=editedon], input[size="1"], select[name=usergroup]:not(.unstyled), select[name=docgroup]:not(.unstyled), select[name=context]:not(.unstyled) { width: auto !important; vertical-align: middle }
 select[size="1"]:not(.unstyled) { vertical-align: middle }
 input[name*=date]:not(.unstyled) + .input-group-addon { float: left; width: auto; }
 input[size="50"], select[size="50"] { width: 10rem !important }
 select[name=usergroup], select[name=docgroup] { margin: 0 0.5em; }
-select[name=docgroup] + input[type=submit] { float: none; margin: 0; }
+select[name=context] + input[type=submit] { float: none; margin: 0; }
 #settingsPane #filemanager_path, #settingsPane #rb_base_dir, #settingsPane input[name=txt_custom_contenttype] { border-top-right-radius: 0; border-bottom-right-radius: 0 }
 #settingsPane #filemanager_path + input[name=reset_filemanager_path], #settingsPane #rb_base_dir + input[name=reset_rb_base_dir], #settingsPane input[name=txt_custom_contenttype] + input[type=button], input[name=photo] + input[type=button], #range input#pids + input[name=fsubmit], input[name="ta"].inputBox + input[type=button], input[name="ta"].inputBox + .CodeMirror + input[type=button], #documentPane input[name^=tv]:not([class*=mtv]) + input[type=button] { z-index: 5; float: right; margin-top: -2.30769em; width: auto !important; border-top-left-radius: 0; border-bottom-left-radius: 0 }
 #settingsPane select[size="1"] { width: 50%; }

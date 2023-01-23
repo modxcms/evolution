@@ -23,7 +23,11 @@ class TemplateProcessor
         if(isset($this->core->documentObject['templatealias']) && $this->core->documentObject['templatealias'] != ''){
             $templateAlias = $this->core->documentObject['templatealias'];
         }else {
-            $templateAlias = SiteTemplate::select('templatealias')->find($doc['template'])->templatealias;
+            if($doc['template'] === 0) {
+                $templateAlias = '_blank';
+            } else {
+                $templateAlias = SiteTemplate::select('templatealias')->find($doc['template'])->templatealias;
+            }
         }
 
         switch (true) {

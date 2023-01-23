@@ -29,6 +29,6 @@ class MembergroupName extends Eloquent\Model
 
     public function documentGroups(): Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(DocumentgroupName::class, 'membergroup_access', 'membergroup', 'documentgroup');
+        return $this->belongsToMany(DocumentgroupName::class, 'membergroup_access', 'membergroup', 'documentgroup')->withPivot(['id', 'context']);
     }
 }

@@ -25,8 +25,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($categories as $cat)
-                    @foreach($cat->modules as $module)
+                    @foreach($modules as $module)
                         <tr>
                             <td class="tableItem text-center" style="width: 34px;">
                                 @if(evo()->hasAnyPermissions(['edit_module', 'exec_module']))
@@ -61,7 +60,6 @@
                             </td>
                         </tr>
                     @endforeach
-                @endforeach
                 </tbody>
             </table>
         </div>

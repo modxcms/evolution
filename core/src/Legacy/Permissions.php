@@ -43,8 +43,8 @@ class Permissions
         if ($modx->getConfig('use_udperms') == 0 || $modx->getConfig('use_udperms') == "" || !isset($modx->config['use_udperms'])) {
             return true; // permissions aren't in use
         }
-
-        $parent = SiteContent::query()->find($this->document)->parent;
+        $parent = SiteContent::query()->find($this->document);
+        $parent = $parent->parent ?? null;
         if ($document == 0 && $parent == null && $udperms_allowroot == 1) {
             return true;
         } // User is allowed to create new document in root
@@ -77,10 +77,6 @@ class Permissions
             $query->where('privatemgr', 0);
         }
         if ($query->count() > 0) {
-            $permissionsok = true;
-        }
-        $limit = $modx->getDatabase()->getValue($rs);
-        if ($limit == 1) {
             $permissionsok = true;
         }
 

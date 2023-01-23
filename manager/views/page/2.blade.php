@@ -132,8 +132,23 @@
     if($activeUsers->count() < 1) {
         $html = '<p>[%no_active_users_found%]</p>';
     } else {
-        $ph['now'] = EvolutionCMS()->now()->toTimeString();
-        $timetocheck = (EvolutionCMS()->now()->unix() - (60 * 20)); //+$server_offset_time;
+        $now = $modx->timestamp($_SERVER['REQUEST_TIME']);
+        if (extension_loaded('intl')) {
+            // https://www.php.net/manual/en/class.intldateformatter.php
+            // https://www.php.net/manual/en/datetime.createfromformat.php
+            $formatter = new IntlDateFormatter(
+                evolutionCMS()->getConfig('manager_language'),
+                IntlDateFormatter::MEDIUM,
+                IntlDateFormatter::MEDIUM,
+                null,
+                null,
+                "HH:mm:ss"
+            );
+            $ph['now'] = $formatter->format($now);
+        } else {
+            $ph['now'] = date('H:i:s', $now);
+        }
+        $timetocheck = ($now - (60 * 20)); //+$server_offset_time;
         $html = '
 	<div class="card-body">
 		[%onlineusers_message%]
@@ -162,7 +177,21 @@
             $webicon = $activeUser['internalKey'] < 0 ? '<i class="[&icon_globe&]"></i>' : '';
             $ip = $activeUser['ip'] === '::1' ? '127.0.0.1' : $activeUser['ip'];
             $currentaction = EvolutionCMS\Legacy\LogHandler::getAction($activeUser['action'], $activeUser['id']);
-            $lasthit = EvolutionCMS()->toDateFormat($activeUser['lasthit'], 'timeOnly');
+            if (extension_loaded('intl')) {
+                // https://www.php.net/manual/en/class.intldateformatter.php
+                // https://www.php.net/manual/en/datetime.createfromformat.php
+                $formatter = new IntlDateFormatter(
+                    evolutionCMS()->getConfig('manager_language'),
+                    IntlDateFormatter::MEDIUM,
+                    IntlDateFormatter::MEDIUM,
+                    null,
+                    null,
+                    "HH:mm:ss"
+                );
+                $lasthit = $formatter->format($modx->timestamp($activeUser['lasthit']));
+            } else {
+                $lasthit = date('H:i:s', $modx->timestamp($activeUser['lasthit']));
+            }
             $userList[] = array(
                 $idle,
                 '',

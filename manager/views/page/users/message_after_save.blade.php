@@ -4,8 +4,11 @@
 
     <div id="actions">
         <div class="btn-group">
-            <a href="{{ $url }}"><i
-                        class="{{ $_style["icon_save"] }}"></i> {{ \Lang::get('global.edit') }}
+            <a class="btn btn-success" href="{{ $url }}"><i
+                        class="{{ $_style["icon_edit"] }}"></i> {{ \Lang::get('global.edit') }}
+            </a>
+            <a class="btn btn-secondary" href="{{ $cancel_url }}"><i
+                        class="{{ $_style["icon_cancel"] }}"></i> {{ \Lang::get('global.cancel') }}
             </a>
         </div>
     </div>
@@ -19,6 +22,4 @@
             </div>
         </div>
     </div>
-
-
 @endsection
