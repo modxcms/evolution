@@ -11,7 +11,6 @@
 
 namespace Symfony\Component\Translation\Command;
 
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Completion\CompletionInput;
 use Symfony\Component\Console\Completion\CompletionSuggestions;
@@ -21,6 +20,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Translation\Provider\FilteringProvider;
 use Symfony\Component\Translation\Provider\TranslationProviderCollection;
 use Symfony\Component\Translation\Reader\TranslationReaderInterface;
 use Symfony\Component\Translation\TranslatorBag;
@@ -28,15 +28,17 @@ use Symfony\Component\Translation\TranslatorBag;
 /**
  * @author Mathieu Santostefano <msantostefano@protonmail.com>
  */
-#[AsCommand(name: 'translation:push', description: 'Push translations to a given provider.')]
 final class TranslationPushCommand extends Command
 {
     use TranslationTrait;
 
+    protected static $defaultName = 'translation:push';
+    protected static $defaultDescription = 'Push translations to a given provider.';
+
     private $providers;
     private $reader;
-    private array $transPaths;
-    private array $enabledLocales;
+    private $transPaths;
+    private $enabledLocales;
 
     public function __construct(TranslationProviderCollection $providers, TranslationReaderInterface $reader, array $transPaths = [], array $enabledLocales = [])
     {
@@ -132,7 +134,13 @@ EOF
         $localTranslations = $this->readLocalTranslations($locales, $domains, $this->transPaths);
 
         if (!$domains) {
-            $domains = $this->getDomainsFromTranslatorBag($localTranslations);
+            if ($provider instanceof FilteringProvider) {
+                $domains = $provider->getDomains();
+            }
+
+            if (!$domains) {
+                $domains = $this->getDomainsFromTranslatorBag($localTranslations);
+            }
         }
 
         if (!$deleteMissing && $force) {

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -52,7 +52,7 @@ class DiagnoseCommand extends BaseCommand
     /**
      * @return void
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('diagnose')
@@ -69,12 +69,9 @@ EOT
         ;
     }
 
-    /**
-     * @return int
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $composer = $this->getComposer(false);
+        $composer = $this->tryComposer();
         $io = $this->getIO();
 
         if ($composer) {
@@ -83,6 +80,9 @@ EOT
 
             $io->write('Checking composer.json: ', false);
             $this->outputResult($this->checkComposerSchema());
+            $this->process = $composer->getLoop()->getProcessExecutor() ?? new ProcessExecutor($io);
+        } else {
+            $this->process = new ProcessExecutor($io);
         }
 
         if ($composer) {
@@ -95,7 +95,6 @@ EOT
         $config->prohibitUrlByConfig('http://repo.packagist.org', new NullIO);
 
         $this->httpDownloader = Factory::createHttpDownloader($io, $config);
-        $this->process = new ProcessExecutor($io);
 
         $io->write('Checking platform settings: ', false);
         $this->outputResult($this->checkPlatform());
@@ -248,7 +247,7 @@ EOT
      *
      * @return string|string[]|true
      */
-    private function checkHttp($proto, Config $config)
+    private function checkHttp(string $proto, Config $config)
     {
         $result = $this->checkConnectivity();
         if ($result !== true) {
@@ -263,7 +262,8 @@ EOT
         try {
             $this->httpDownloader->get($proto . '://repo.packagist.org/packages.json');
         } catch (TransportException $e) {
-            if ($hints = HttpDownloader::getExceptionHints($e)) {
+            $hints = HttpDownloader::getExceptionHints($e);
+            if (null !== $hints && count($hints) > 0) {
                 foreach ($hints as $hint) {
                     $result[] = $hint;
                 }
@@ -317,7 +317,7 @@ EOT
      *
      * @return string|true|\Exception
      */
-    private function checkGithubOauth($domain, $token)
+    private function checkGithubOauth(string $domain, string $token)
     {
         $result = $this->checkConnectivity();
         if ($result !== true) {
@@ -348,7 +348,7 @@ EOT
      * @throws TransportException
      * @return mixed|string
      */
-    private function getGithubRateLimit($domain, $token = null)
+    private function getGithubRateLimit(string $domain, string $token = null)
     {
         $result = $this->checkConnectivity();
         if ($result !== true) {
@@ -439,7 +439,7 @@ EOT
     /**
      * @return string
      */
-    private function getCurlVersion()
+    private function getCurlVersion(): string
     {
         if (extension_loaded('curl')) {
             if (!HttpDownloader::isCurlEnabled()) {
@@ -450,7 +450,7 @@ EOT
 
             return '<comment>'.$version['version'].'</comment> '.
                 'libz <comment>'.(!empty($version['libz_version']) ? $version['libz_version'] : 'missing').'</comment> '.
-                'ssl <comment>'.(isset($version['ssl_version']) ? $version['ssl_version'] : 'missing').'</comment>';
+                'ssl <comment>'.($version['ssl_version'] ?? 'missing').'</comment>';
         }
 
         return '<error>missing, using php streams fallback, which reduces performance</error>';
@@ -461,7 +461,7 @@ EOT
      *
      * @return void
      */
-    private function outputResult($result)
+    private function outputResult($result): void
     {
         $io = $this->getIO();
         if (true === $result) {
@@ -513,7 +513,7 @@ EOT
     private function checkPlatform()
     {
         $output = '';
-        $out = function ($msg, $style) use (&$output) {
+        $out = function ($msg, $style) use (&$output): void {
             $output .= '<'.$style.'>'.$msg.'</'.$style.'>'.PHP_EOL;
         };
 
@@ -553,12 +553,8 @@ EOT
             $errors['ioncube'] = ioncube_loader_version();
         }
 
-        if (PHP_VERSION_ID < 50302) {
+        if (PHP_VERSION_ID < 70205) {
             $errors['php'] = PHP_VERSION;
-        }
-
-        if (!isset($errors['php']) && PHP_VERSION_ID < 50304) {
-            $warnings['php'] = PHP_VERSION;
         }
 
         if (!extension_loaded('openssl')) {
@@ -634,7 +630,7 @@ EOT
                         break;
 
                     case 'php':
-                        $text = PHP_EOL."Your PHP ({$current}) is too old, you must upgrade to PHP 5.3.2 or higher.";
+                        $text = PHP_EOL."Your PHP ({$current}) is too old, you must upgrade to PHP 7.2.5 or higher.";
                         break;
 
                     case 'allow_url_fopen':
@@ -690,11 +686,6 @@ EOT
                     case 'curlwrappers':
                         $text = "PHP was compiled with --with-curlwrappers which will cause issues with HTTP authentication and GitHub.".PHP_EOL;
                         $text .= " Recompile it without this flag if possible";
-                        break;
-
-                    case 'php':
-                        $text = "Your PHP ({$current}) is quite old, upgrading to PHP 5.3.4 or higher is recommended.".PHP_EOL;
-                        $text .= " Composer works with 5.3.2+ for most people, but there might be edge case issues.";
                         break;
 
                     case 'openssl_version':

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -16,6 +16,7 @@ use Composer\IO\NullIO;
 use Composer\Util\Filesystem;
 use Composer\Util\Platform;
 use Composer\Util\Silencer;
+use LogicException;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
 use Symfony\Component\Console\Helper\HelperSet;
@@ -23,6 +24,7 @@ use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Seld\JsonLint\ParsingException;
 use Composer\Command;
@@ -74,7 +76,7 @@ class Application extends BaseApplication
     private $disableScriptsByDefault = false;
 
     /**
-     * @var string Store the initial working directory at startup time
+     * @var string|false Store the initial working directory at startup time
      */
     private $initialWorkingDirectory;
 
@@ -94,14 +96,14 @@ class Application extends BaseApplication
         if (!$shutdownRegistered) {
             if (function_exists('pcntl_async_signals') && function_exists('pcntl_signal')) {
                 pcntl_async_signals(true);
-                pcntl_signal(SIGINT, function ($sig) {
+                pcntl_signal(SIGINT, function ($sig): void {
                     exit(130);
                 });
             }
 
             $shutdownRegistered = true;
 
-            register_shutdown_function(function () {
+            register_shutdown_function(function (): void {
                 $lastError = error_get_last();
 
                 if ($lastError && $lastError['message'] &&
@@ -119,10 +121,7 @@ class Application extends BaseApplication
         parent::__construct('Composer', Composer::getVersion());
     }
 
-    /**
-     * @return int
-     */
-    public function run(InputInterface $input = null, OutputInterface $output = null)
+    public function run(InputInterface $input = null, OutputInterface $output = null): int
     {
         if (null === $output) {
             $output = Factory::createOutput();
@@ -131,10 +130,7 @@ class Application extends BaseApplication
         return parent::run($input, $output);
     }
 
-    /**
-     * @return int
-     */
-    public function doRun(InputInterface $input, OutputInterface $output)
+    public function doRun(InputInterface $input, OutputInterface $output): int
     {
         $this->disablePluginsByDefault = $input->hasParameterOption('--no-plugins');
         $this->disableScriptsByDefault = $input->hasParameterOption('--no-scripts');
@@ -156,11 +152,13 @@ class Application extends BaseApplication
         }
 
         // switch working dir
-        if ($newWorkDir = $this->getNewWorkingDir($input)) {
-            $oldWorkingDir = getcwd();
+        $newWorkDir = $this->getNewWorkingDir($input);
+        if (null !== $newWorkDir) {
+            $oldWorkingDir = Platform::getCwd(true);
             chdir($newWorkDir);
             $this->initialWorkingDirectory = $newWorkDir;
-            $io->writeError('Changed CWD to ' . getcwd(), true, IOInterface::DEBUG);
+            $cwd = Platform::getCwd(true);
+            $io->writeError('Changed CWD to ' . ($cwd !== '' ? $cwd : $newWorkDir), true, IOInterface::DEBUG);
         }
 
         // determine command name to be executed without including plugin commands
@@ -176,8 +174,8 @@ class Application extends BaseApplication
         }
 
         // prompt user for dir change if no composer.json is present in current dir
-        if ($io->isInteractive() && !$newWorkDir && !in_array($commandName, array('', 'list', 'init', 'about', 'help', 'diagnose', 'self-update', 'global', 'create-project', 'outdated'), true) && !file_exists(Factory::getComposerFile()) && ($useParentDirIfNoJsonAvailable = $this->getUseParentDirConfigValue()) !== false) {
-            $dir = dirname(getcwd());
+        if ($io->isInteractive() && null === $newWorkDir && !in_array($commandName, array('', 'list', 'init', 'about', 'help', 'diagnose', 'self-update', 'global', 'create-project', 'outdated'), true) && !file_exists(Factory::getComposerFile()) && ($useParentDirIfNoJsonAvailable = $this->getUseParentDirConfigValue()) !== false) {
+            $dir = dirname(Platform::getCwd(true));
             $home = realpath(Platform::getEnv('HOME') ?: Platform::getEnv('USERPROFILE') ?: '/');
 
             // abort when we reach the home dir or top of the filesystem
@@ -189,7 +187,7 @@ class Application extends BaseApplication
                         } else {
                             $io->writeError('<info>Always want to use the parent dir? Use "composer config --global use-parent-dir true" to change the default.</info>');
                         }
-                        $oldWorkingDir = getcwd();
+                        $oldWorkingDir = Platform::getCwd(true);
                         chdir($dir);
                     }
                     break;
@@ -258,8 +256,8 @@ class Application extends BaseApplication
                 function_exists('php_uname') ? php_uname('s') . ' / ' . php_uname('r') : 'Unknown OS'
             ), true, IOInterface::DEBUG);
 
-            if (PHP_VERSION_ID < 50302) {
-                $io->writeError('<warning>Composer only officially supports PHP 5.3.2 and above, you will most likely encounter problems with your PHP '.PHP_VERSION.', upgrading is strongly recommended.</warning>');
+            if (PHP_VERSION_ID < 70205) {
+                $io->writeError('<warning>Composer supports PHP 7.2.5 and above, you will most likely encounter problems with your PHP '.PHP_VERSION.'. Upgrading is strongly recommended but you can use Composer 2.2.x LTS as a fallback.</warning>');
             }
 
             if (XdebugHandler::isXdebugActive() && !Platform::getEnv('COMPOSER_DISABLE_XDEBUG_WARN')) {
@@ -297,7 +295,7 @@ class Application extends BaseApplication
             }
 
             // Check system temp folder for usability as it can cause weird runtime issues otherwise
-            Silencer::call(function () use ($io) {
+            Silencer::call(function () use ($io): void {
                 $tempfile = sys_get_temp_dir() . '/temp-' . md5(microtime());
                 if (!(file_put_contents($tempfile, __FILE__) && (file_get_contents($tempfile) == __FILE__) && unlink($tempfile) && !file_exists($tempfile))) {
                     $io->writeError(sprintf('<error>PHP temp directory (%s) does not exist or is not writable to Composer. Set sys_temp_dir in your php.ini</error>', sys_get_temp_dir()));
@@ -336,7 +334,7 @@ class Application extends BaseApplication
             $result = parent::doRun($input, $output);
 
             // chdir back to $oldWorkingDir if set
-            if (isset($oldWorkingDir)) {
+            if (isset($oldWorkingDir) && '' !== $oldWorkingDir) {
                 Silencer::call('chdir', $oldWorkingDir);
             }
 
@@ -344,32 +342,53 @@ class Application extends BaseApplication
                 $io->writeError('<info>Memory usage: '.round(memory_get_usage() / 1024 / 1024, 2).'MiB (peak: '.round(memory_get_peak_usage() / 1024 / 1024, 2).'MiB), time: '.round(microtime(true) - $startTime, 2).'s');
             }
 
-            restore_error_handler();
-
             return $result;
         } catch (ScriptExecutionException $e) {
             return $e->getCode();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $ghe = new GithubActionError($this->io);
             $ghe->emit($e->getMessage());
 
-            $this->hintCommonErrors($e);
+            $this->hintCommonErrors($e, $output);
 
-            restore_error_handler();
+            // symfony/console does not handle \Error subtypes so we have to renderThrowable ourselves
+            // instead of rethrowing those for consumption by the parent class
+            if (!$e instanceof \Exception) {
+                if ($output instanceof ConsoleOutputInterface) {
+                    $this->renderThrowable($e, $output->getErrorOutput());
+                } else {
+                    $this->renderThrowable($e, $output);
+                }
+
+                $exitCode = $e->getCode();
+                if (is_numeric($exitCode)) {
+                    $exitCode = (int) $exitCode;
+                    if (0 === $exitCode) {
+                        $exitCode = 1;
+                    }
+                } else {
+                    $exitCode = 1;
+                }
+
+                return $exitCode;
+            }
 
             throw $e;
+        } finally {
+            restore_error_handler();
         }
     }
 
     /**
      * @param  InputInterface    $input
      * @throws \RuntimeException
-     * @return string
+     * @return ?string
      */
-    private function getNewWorkingDir(InputInterface $input)
+    private function getNewWorkingDir(InputInterface $input): ?string
     {
-        $workingDir = $input->getParameterOption(array('--working-dir', '-d'));
-        if (false !== $workingDir && !is_dir($workingDir)) {
+        /** @var string|null $workingDir */
+        $workingDir = $input->getParameterOption(array('--working-dir', '-d'), null, true);
+        if (null !== $workingDir && !is_dir($workingDir)) {
             throw new \RuntimeException('Invalid working directory specified, '.$workingDir.' does not exist.');
         }
 
@@ -379,9 +398,13 @@ class Application extends BaseApplication
     /**
      * @return void
      */
-    private function hintCommonErrors(\Exception $exception)
+    private function hintCommonErrors(\Throwable $exception, OutputInterface $output): void
     {
         $io = $this->getIO();
+
+        if ((get_class($exception) === LogicException::class || $exception instanceof \Error) && $output->getVerbosity() < OutputInterface::VERBOSITY_VERBOSE) {
+            $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
+        }
 
         Silencer::suppress();
         try {
@@ -416,7 +439,8 @@ class Application extends BaseApplication
             $io->writeError('<error>Check https://getcomposer.org/doc/06-config.md#process-timeout for details</error>', true, IOInterface::QUIET);
         }
 
-        if ($hints = HttpDownloader::getExceptionHints($exception)) {
+        $hints = HttpDownloader::getExceptionHints($exception);
+        if (null !== $hints && count($hints) > 0) {
             foreach ($hints as $hint) {
                 $io->writeError($hint, true, IOInterface::QUIET);
             }
@@ -429,9 +453,9 @@ class Application extends BaseApplication
      * @param  bool|null               $disableScripts
      * @throws JsonValidationException
      * @throws \InvalidArgumentException
-     * @return ?\Composer\Composer If $required is true then the return value is guaranteed
+     * @return ?Composer If $required is true then the return value is guaranteed
      */
-    public function getComposer($required = true, $disablePlugins = null, $disableScripts = null)
+    public function getComposer(bool $required = true, ?bool $disablePlugins = null, ?bool $disableScripts = null): ?Composer
     {
         if (null === $disablePlugins) {
             $disablePlugins = $this->disablePluginsByDefault;
@@ -446,8 +470,7 @@ class Application extends BaseApplication
             } catch (\InvalidArgumentException $e) {
                 if ($required) {
                     $this->io->writeError($e->getMessage());
-                    // TODO composer 2.3 simplify to $this->areExceptionsCaught()
-                    if (!method_exists($this, 'areExceptionsCaught') || $this->areExceptionsCaught()) {
+                    if ($this->areExceptionsCaught()) {
                         exit(1);
                     }
                     throw $e;
@@ -467,7 +490,7 @@ class Application extends BaseApplication
      *
      * @return void
      */
-    public function resetComposer()
+    public function resetComposer(): void
     {
         $this->composer = null;
         if (method_exists($this->getIO(), 'resetAuthentications')) {
@@ -478,15 +501,12 @@ class Application extends BaseApplication
     /**
      * @return IOInterface
      */
-    public function getIO()
+    public function getIO(): IOInterface
     {
         return $this->io;
     }
 
-    /**
-     * @return string
-     */
-    public function getHelp()
+    public function getHelp(): string
     {
         return self::$logo . parent::getHelp();
     }
@@ -495,7 +515,7 @@ class Application extends BaseApplication
      * Initializes all the composer commands.
      * @return \Symfony\Component\Console\Command\Command[]
      */
-    protected function getDefaultCommands()
+    protected function getDefaultCommands(): array
     {
         $commands = array_merge(parent::getDefaultCommands(), array(
             new Command\AboutCommand(),
@@ -528,35 +548,30 @@ class Application extends BaseApplication
             new Command\ReinstallCommand(),
         ));
 
-        if (strpos(__FILE__, 'phar:') === 0) {
+        if (strpos(__FILE__, 'phar:') === 0 || '1' === Platform::getEnv('COMPOSER_TESTS_ARE_RUNNING')) {
             $commands[] = new Command\SelfUpdateCommand();
         }
 
         return $commands;
     }
 
-    /**
-     * @return string
-     */
-    public function getLongVersion()
+    public function getLongVersion(): string
     {
+        $branchAliasString = '';
         if (Composer::BRANCH_ALIAS_VERSION && Composer::BRANCH_ALIAS_VERSION !== '@package_branch_alias_version'.'@') {
-            return sprintf(
-                '<info>%s</info> version <comment>%s (%s)</comment> %s',
-                $this->getName(),
-                Composer::BRANCH_ALIAS_VERSION,
-                $this->getVersion(),
-                Composer::RELEASE_DATE
-            );
+            $branchAliasString = sprintf(' (%s)', Composer::BRANCH_ALIAS_VERSION);
         }
 
-        return parent::getLongVersion() . ' ' . Composer::RELEASE_DATE;
+        return sprintf(
+            '<info>%s</info> version <comment>%s%s</comment> %s',
+            $this->getName(),
+            $this->getVersion(),
+            $branchAliasString,
+            Composer::RELEASE_DATE
+        );
     }
 
-    /**
-     * @return InputDefinition
-     */
-    protected function getDefaultInputDefinition()
+    protected function getDefaultInputDefinition(): InputDefinition
     {
         $definition = parent::getDefaultInputDefinition();
         $definition->addOption(new InputOption('--profile', null, InputOption::VALUE_NONE, 'Display timing and memory usage information'));
@@ -571,13 +586,13 @@ class Application extends BaseApplication
     /**
      * @return Command\BaseCommand[]
      */
-    private function getPluginCommands()
+    private function getPluginCommands(): array
     {
         $commands = array();
 
         $composer = $this->getComposer(false, false);
         if (null === $composer) {
-            $composer = Factory::createGlobal($this->io);
+            $composer = Factory::createGlobal($this->io, $this->disablePluginsByDefault, $this->disableScriptsByDefault);
         }
 
         if (null !== $composer) {
@@ -602,7 +617,7 @@ class Application extends BaseApplication
     /**
      * Get the working directory at startup time
      *
-     * @return string
+     * @return string|false
      */
     public function getInitialWorkingDirectory()
     {

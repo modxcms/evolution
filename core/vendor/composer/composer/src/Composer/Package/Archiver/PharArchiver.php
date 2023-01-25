@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -36,7 +36,7 @@ class PharArchiver implements ArchiverInterface
     /**
      * @inheritDoc
      */
-    public function archive($sources, $target, $format, array $excludes = array(), $ignoreFilters = false)
+    public function archive(string $sources, string $target, string $format, array $excludes = array(), bool $ignoreFilters = false): string
     {
         $sources = realpath($sources);
 
@@ -97,7 +97,7 @@ class PharArchiver implements ArchiverInterface
     /**
      * @inheritDoc
      */
-    public function supports($format, $sourceType)
+    public function supports(string $format, ?string $sourceType): bool
     {
         return isset(static::$formats[$format]);
     }

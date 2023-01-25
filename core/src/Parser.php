@@ -556,6 +556,8 @@ class Parser
         if (!is_object($modx)) {
             $modx = $this->modx;
         }
+        $minParserPasses = $modx->minParserPasses;
+        $maxParserPasses = $modx->maxParserPasses;
 
         $modx->minParserPasses = 2;
         $modx->maxParserPasses = 10;
@@ -579,8 +581,9 @@ class Parser
         $out = $this->cleanPHx($out);
 
         $modx->config['site_status'] = $site_status;
-        $modx->minParserPasses = -1;
-        $modx->maxParserPasses = -1;
+
+        $modx->minParserPasses = $minParserPasses;
+        $modx->maxParserPasses = $maxParserPasses;
 
         return $out;
     }

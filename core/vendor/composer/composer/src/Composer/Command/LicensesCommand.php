@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -18,6 +18,8 @@ use Composer\Plugin\CommandEvent;
 use Composer\Plugin\PluginEvents;
 use Composer\Package\PackageInterface;
 use Composer\Repository\RepositoryInterface;
+use Composer\Util\PackageInfo;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -32,7 +34,7 @@ class LicensesCommand extends BaseCommand
     /**
      * @return void
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('licenses')
@@ -52,12 +54,9 @@ EOT
         ;
     }
 
-    /**
-     * @return int
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $composer = $this->getComposer();
+        $composer = $this->requireComposer();
 
         $commandEvent = new CommandEvent(PluginEvents::COMMAND, 'licenses', $input, $output);
         $composer->getEventDispatcher()->dispatch($commandEvent->getName(), $commandEvent);
@@ -85,18 +84,19 @@ EOT
                 $table = new Table($output);
                 $table->setStyle('compact');
                 $tableStyle = $table->getStyle();
-                if (method_exists($tableStyle, 'setVerticalBorderChars')) {
-                    $tableStyle->setVerticalBorderChars('');
-                } else {
-                    // TODO remove in composer 2.2
-                    // @phpstan-ignore-next-line
-                    $tableStyle->setVerticalBorderChar('');
-                }
+                $tableStyle->setVerticalBorderChars('');
                 $tableStyle->setCellRowContentFormat('%s  ');
-                $table->setHeaders(array('Name', 'Version', 'License'));
+                $table->setHeaders(array('Name', 'Version', 'Licenses'));
                 foreach ($packages as $package) {
+                    $link = PackageInfo::getViewSourceOrHomepageUrl($package);
+                    if ($link !== null) {
+                        $name = '<href='.OutputFormatter::escape($link).'>'.$package->getPrettyName().'</>';
+                    } else {
+                        $name = $package->getPrettyName();
+                    }
+
                     $table->addRow(array(
-                        $package->getPrettyName(),
+                        $name,
                         $package->getFullPrettyVersion(),
                         implode(', ', $package instanceof CompletePackageInterface ? $package->getLicense() : array()) ?: 'none',
                     ));
@@ -124,12 +124,16 @@ EOT
             case 'summary':
                 $usedLicenses = array();
                 foreach ($packages as $package) {
-                    $license = $package instanceof CompletePackageInterface ? $package->getLicense() : array();
-                    $licenseName = $license[0];
-                    if (!isset($usedLicenses[$licenseName])) {
-                        $usedLicenses[$licenseName] = 0;
+                    $licenses = $package instanceof CompletePackageInterface ? $package->getLicense() : array();
+                    if (count($licenses) === 0) {
+                        $licenses[] = 'none';
                     }
-                    $usedLicenses[$licenseName]++;
+                    foreach ($licenses as $licenseName) {
+                        if (!isset($usedLicenses[$licenseName])) {
+                            $usedLicenses[$licenseName] = 0;
+                        }
+                        $usedLicenses[$licenseName]++;
+                    }
                 }
 
                 // Sort licenses so that the most used license will appear first
@@ -159,14 +163,14 @@ EOT
      * @param  array<string, PackageInterface> $bucket
      * @return array<string, PackageInterface>
      */
-    private function filterRequiredPackages(RepositoryInterface $repo, PackageInterface $package, $bucket = array())
+    private function filterRequiredPackages(RepositoryInterface $repo, PackageInterface $package, array $bucket = array()): array
     {
         $requires = array_keys($package->getRequires());
 
         $packageListNames = array_keys($bucket);
         $packages = array_filter(
             $repo->getPackages(),
-            function ($package) use ($requires, $packageListNames) {
+            function ($package) use ($requires, $packageListNames): bool {
                 return in_array($package->getName(), $requires) && !in_array($package->getName(), $packageListNames);
             }
         );
@@ -187,7 +191,7 @@ EOT
      * @param  array<string, PackageInterface> $bucket   the list to add packages to
      * @return array<string, PackageInterface>
      */
-    public function appendPackages(array $packages, array $bucket)
+    public function appendPackages(array $packages, array $bucket): array
     {
         foreach ($packages as $package) {
             $bucket[$package->getName()] = $package;

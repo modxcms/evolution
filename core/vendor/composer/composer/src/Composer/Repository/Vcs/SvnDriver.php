@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -31,9 +31,9 @@ class SvnDriver extends VcsDriver
 {
     /** @var string */
     protected $baseUrl;
-    /** @var array<string, string> Map of tag name to identifier */
+    /** @var array<int|string, string> Map of tag name to identifier */
     protected $tags;
-    /** @var array<string, string> Map of branch name to identifier */
+    /** @var array<int|string, string> Map of branch name to identifier */
     protected $branches;
     /** @var ?string */
     protected $rootIdentifier;
@@ -57,7 +57,7 @@ class SvnDriver extends VcsDriver
     /**
      * @inheritDoc
      */
-    public function initialize()
+    public function initialize(): void
     {
         $this->url = $this->baseUrl = rtrim(self::normalizeUrl($this->url), '/');
 
@@ -93,7 +93,7 @@ class SvnDriver extends VcsDriver
     /**
      * @inheritDoc
      */
-    public function getRootIdentifier()
+    public function getRootIdentifier(): string
     {
         return $this->rootIdentifier ?: $this->trunkPath;
     }
@@ -101,7 +101,7 @@ class SvnDriver extends VcsDriver
     /**
      * @inheritDoc
      */
-    public function getUrl()
+    public function getUrl(): string
     {
         return $this->url;
     }
@@ -109,7 +109,7 @@ class SvnDriver extends VcsDriver
     /**
      * @inheritDoc
      */
-    public function getSource($identifier)
+    public function getSource(string $identifier): array
     {
         return array('type' => 'svn', 'url' => $this->baseUrl, 'reference' => $identifier);
     }
@@ -117,7 +117,7 @@ class SvnDriver extends VcsDriver
     /**
      * @inheritDoc
      */
-    public function getDist($identifier)
+    public function getDist(string $identifier): ?array
     {
         return null;
     }
@@ -125,7 +125,7 @@ class SvnDriver extends VcsDriver
     /**
      * @inheritDoc
      */
-    protected function shouldCache($identifier)
+    protected function shouldCache(string $identifier): bool
     {
         return $this->cache && Preg::isMatch('{@\d+$}', $identifier);
     }
@@ -133,7 +133,7 @@ class SvnDriver extends VcsDriver
     /**
      * @inheritDoc
      */
-    public function getComposerInformation($identifier)
+    public function getComposerInformation(string $identifier): ?array
     {
         if (!isset($this->infoCache[$identifier])) {
             if ($this->shouldCache($identifier) && $res = $this->cache->read($identifier.'.json')) {
@@ -148,7 +148,7 @@ class SvnDriver extends VcsDriver
                     throw $e;
                 }
                 // remember a not-existent composer.json
-                $composer = '';
+                $composer = null;
             }
 
             if ($this->shouldCache($identifier)) {
@@ -158,6 +158,11 @@ class SvnDriver extends VcsDriver
             $this->infoCache[$identifier] = $composer;
         }
 
+        // old cache files had '' stored instead of null due to af3783b5f40bae32a23e353eaf0a00c9b8ce82e2, so we make sure here that we always return null or array
+        if (!is_array($this->infoCache[$identifier])) {
+            return null;
+        }
+
         return $this->infoCache[$identifier];
     }
 
@@ -165,7 +170,7 @@ class SvnDriver extends VcsDriver
      * @param string $file
      * @param string $identifier
      */
-    public function getFileContent($file, $identifier)
+    public function getFileContent(string $file, string $identifier): ?string
     {
         $identifier = '/' . trim($identifier, '/') . '/';
 
@@ -194,7 +199,7 @@ class SvnDriver extends VcsDriver
     /**
      * @inheritDoc
      */
-    public function getChangeDate($identifier)
+    public function getChangeDate(string $identifier): ?\DateTimeImmutable
     {
         $identifier = '/' . trim($identifier, '/') . '/';
 
@@ -210,7 +215,7 @@ class SvnDriver extends VcsDriver
         $output = $this->execute('svn info', $this->baseUrl . $path . $rev);
         foreach ($this->process->splitLines($output) as $line) {
             if ($line && Preg::isMatch('{^Last Changed Date: ([^(]+)}', $line, $match)) {
-                return new \DateTime($match[1], new \DateTimeZone('UTC'));
+                return new \DateTimeImmutable($match[1], new \DateTimeZone('UTC'));
             }
         }
 
@@ -220,7 +225,7 @@ class SvnDriver extends VcsDriver
     /**
      * @inheritDoc
      */
-    public function getTags()
+    public function getTags(): array
     {
         if (null === $this->tags) {
             $tags = array();
@@ -251,7 +256,7 @@ class SvnDriver extends VcsDriver
     /**
      * @inheritDoc
      */
-    public function getBranches()
+    public function getBranches(): array
     {
         if (null === $this->branches) {
             $branches = array();
@@ -306,7 +311,7 @@ class SvnDriver extends VcsDriver
     /**
      * @inheritDoc
      */
-    public static function supports(IOInterface $io, Config $config, $url, $deep = false)
+    public static function supports(IOInterface $io, Config $config, string $url, bool $deep = false): bool
     {
         $url = self::normalizeUrl($url);
         if (Preg::isMatch('#(^svn://|^svn\+ssh://|svn\.)#i', $url)) {
@@ -353,7 +358,7 @@ class SvnDriver extends VcsDriver
      *
      * @return string
      */
-    protected static function normalizeUrl($url)
+    protected static function normalizeUrl(string $url): string
     {
         $fs = new Filesystem();
         if ($fs->isAbsolutePath($url)) {
@@ -372,7 +377,7 @@ class SvnDriver extends VcsDriver
      * @throws \RuntimeException
      * @return string
      */
-    protected function execute($command, $url)
+    protected function execute(string $command, string $url): string
     {
         if (null === $this->util) {
             $this->util = new SvnUtil($this->baseUrl, $this->io, $this->config, $this->process);
@@ -396,11 +401,11 @@ class SvnDriver extends VcsDriver
      * Build the identifier respecting "package-path" config option
      *
      * @param string $baseDir  The path to trunk/branch/tag
-     * @param int    $revision The revision mark to add to identifier
+     * @param string $revision The revision mark to add to identifier
      *
      * @return string
      */
-    protected function buildIdentifier($baseDir, $revision)
+    protected function buildIdentifier(string $baseDir, string $revision): string
     {
         return rtrim($baseDir, '/') . $this->packagePath . '/@' . $revision;
     }

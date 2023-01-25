@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -13,6 +13,7 @@
 namespace Composer\Downloader;
 
 use Composer\Package\PackageInterface;
+use Composer\Util\Platform;
 use Symfony\Component\Finder\Finder;
 use React\Promise\PromiseInterface;
 use Composer\DependencyResolver\Operation\InstallOperation;
@@ -28,14 +29,13 @@ abstract class ArchiveDownloader extends FileDownloader
 {
     /**
      * @var array<string, true>
-     * @protected
      */
-    public $cleanupExecuted = array();
+    protected $cleanupExecuted = array();
 
     /**
-     * @return PromiseInterface|null
+     * @return PromiseInterface
      */
-    public function prepare($type, PackageInterface $package, $path, PackageInterface $prevPackage = null)
+    public function prepare(string $type, PackageInterface $package, string $path, PackageInterface $prevPackage = null): PromiseInterface
     {
         unset($this->cleanupExecuted[$package->getName()]);
 
@@ -43,9 +43,9 @@ abstract class ArchiveDownloader extends FileDownloader
     }
 
     /**
-     * @return PromiseInterface|null
+     * @return PromiseInterface
      */
-    public function cleanup($type, PackageInterface $package, $path, PackageInterface $prevPackage = null)
+    public function cleanup(string $type, PackageInterface $package, string $path, PackageInterface $prevPackage = null): PromiseInterface
     {
         $this->cleanupExecuted[$package->getName()] = true;
 
@@ -62,7 +62,7 @@ abstract class ArchiveDownloader extends FileDownloader
      * @throws \RuntimeException
      * @throws \UnexpectedValueException
      */
-    public function install(PackageInterface $package, $path, $output = true)
+    public function install(PackageInterface $package, string $path, bool $output = true): PromiseInterface
     {
         if ($output) {
             $this->io->writeError("  - " . InstallOperation::format($package) . $this->getInstallOperationAppendix($package, $path));
@@ -84,7 +84,7 @@ abstract class ArchiveDownloader extends FileDownloader
         $this->addCleanupPath($package, $temporaryDir);
         // avoid cleaning up $path if installing in "." for eg create-project as we can not
         // delete the directory we are currently in on windows
-        if (!is_dir($path) || realpath($path) !== getcwd()) {
+        if (!is_dir($path) || realpath($path) !== Platform::getCwd()) {
             $this->addCleanupPath($package, $path);
         }
 
@@ -92,22 +92,20 @@ abstract class ArchiveDownloader extends FileDownloader
         $fileName = $this->getFileName($package, $path);
 
         $filesystem = $this->filesystem;
-        $self = $this;
 
-        $cleanup = function () use ($path, $filesystem, $temporaryDir, $package, $self) {
+        $cleanup = function () use ($path, $filesystem, $temporaryDir, $package) {
             // remove cache if the file was corrupted
-            $self->clearLastCacheWrite($package);
+            $this->clearLastCacheWrite($package);
 
             // clean up
             $filesystem->removeDirectory($temporaryDir);
-            if (is_dir($path) && realpath($path) !== getcwd()) {
+            if (is_dir($path) && realpath($path) !== Platform::getCwd()) {
                 $filesystem->removeDirectory($path);
             }
-            $self->removeCleanupPath($package, $temporaryDir);
-            $self->removeCleanupPath($package, realpath($path));
+            $this->removeCleanupPath($package, $temporaryDir);
+            $this->removeCleanupPath($package, realpath($path));
         };
 
-        $promise = null;
         try {
             $promise = $this->extract($package, $fileName, $temporaryDir);
         } catch (\Exception $e) {
@@ -115,12 +113,10 @@ abstract class ArchiveDownloader extends FileDownloader
             throw $e;
         }
 
-        if (!$promise instanceof PromiseInterface) {
-            $promise = \React\Promise\resolve();
-        }
-
-        return $promise->then(function () use ($self, $package, $filesystem, $fileName, $temporaryDir, $path) {
-            $filesystem->unlink($fileName);
+        return $promise->then(function () use ($package, $filesystem, $fileName, $temporaryDir, $path): \React\Promise\PromiseInterface {
+            if (file_exists($fileName)) {
+                $filesystem->unlink($fileName);
+            }
 
             /**
              * Returns the folder content, excluding .DS_Store
@@ -128,7 +124,7 @@ abstract class ArchiveDownloader extends FileDownloader
              * @param  string         $dir Directory
              * @return \SplFileInfo[]
              */
-            $getFolderContent = function ($dir) {
+            $getFolderContent = function ($dir): array {
                 $finder = Finder::create()
                     ->ignoreVCS(false)
                     ->ignoreDotFiles(false)
@@ -181,7 +177,7 @@ abstract class ArchiveDownloader extends FileDownloader
             }
 
             $contentDir = $getFolderContent($temporaryDir);
-            $singleDirAtTopLevel = 1 === count($contentDir) && is_dir(reset($contentDir));
+            $singleDirAtTopLevel = 1 === count($contentDir) && is_dir((string) reset($contentDir));
 
             if ($renameAsOne) {
                 // if the target $path is clear, we can rename the whole package in one go instead of looping over the contents
@@ -203,9 +199,9 @@ abstract class ArchiveDownloader extends FileDownloader
 
             $promise = $filesystem->removeDirectoryAsync($temporaryDir);
 
-            return $promise->then(function () use ($self, $package, $path, $temporaryDir) {
-                $self->removeCleanupPath($package, $temporaryDir);
-                $self->removeCleanupPath($package, $path);
+            return $promise->then(function () use ($package, $path, $temporaryDir) {
+                $this->removeCleanupPath($package, $temporaryDir);
+                $this->removeCleanupPath($package, $path);
             });
         }, function ($e) use ($cleanup) {
             $cleanup();
@@ -217,7 +213,7 @@ abstract class ArchiveDownloader extends FileDownloader
     /**
      * @inheritDoc
      */
-    protected function getInstallOperationAppendix(PackageInterface $package, $path)
+    protected function getInstallOperationAppendix(PackageInterface $package, string $path): string
     {
         return ': Extracting archive';
     }
@@ -229,7 +225,6 @@ abstract class ArchiveDownloader extends FileDownloader
      * @param string $path Directory
      *
      * @throws \UnexpectedValueException If can not extract downloaded file to path
-     * @return PromiseInterface|null
      */
-    abstract protected function extract(PackageInterface $package, $file, $path);
+    abstract protected function extract(PackageInterface $package, string $file, string $path): PromiseInterface;
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -35,7 +35,7 @@ class Bitbucket
     /** @var int|null */
     private $time;
 
-    const OAUTH2_ACCESS_TOKEN_URL = 'https://bitbucket.org/site/oauth2/access_token';
+    public const OAUTH2_ACCESS_TOKEN_URL = 'https://bitbucket.org/site/oauth2/access_token';
 
     /**
      * Constructor.
@@ -46,7 +46,7 @@ class Bitbucket
      * @param HttpDownloader  $httpDownloader Remote Filesystem, injectable for mocking
      * @param int             $time           Timestamp, injectable for mocking
      */
-    public function __construct(IOInterface $io, Config $config, ProcessExecutor $process = null, HttpDownloader $httpDownloader = null, $time = null)
+    public function __construct(IOInterface $io, Config $config, ProcessExecutor $process = null, HttpDownloader $httpDownloader = null, int $time = null)
     {
         $this->io = $io;
         $this->config = $config;
@@ -58,7 +58,7 @@ class Bitbucket
     /**
      * @return string
      */
-    public function getToken()
+    public function getToken(): string
     {
         if (!isset($this->token['access_token'])) {
             return '';
@@ -73,7 +73,7 @@ class Bitbucket
      * @param  string $originUrl The host this Bitbucket instance is located at
      * @return bool   true on success
      */
-    public function authorizeOAuth($originUrl)
+    public function authorizeOAuth(string $originUrl): bool
     {
         if ($originUrl !== 'bitbucket.org') {
             return false;
@@ -92,7 +92,7 @@ class Bitbucket
     /**
      * @return bool
      */
-    private function requestAccessToken()
+    private function requestAccessToken(): bool
     {
         try {
             $response = $this->httpDownloader->get(self::OAUTH2_ACCESS_TOKEN_URL, array(
@@ -112,9 +112,10 @@ class Bitbucket
         } catch (TransportException $e) {
             if ($e->getCode() === 400) {
                 $this->io->writeError('<error>Invalid OAuth consumer provided.</error>');
-                $this->io->writeError('This can have two reasons:');
+                $this->io->writeError('This can have three reasons:');
                 $this->io->writeError('1. You are authenticating with a bitbucket username/password combination');
                 $this->io->writeError('2. You are using an OAuth consumer, but didn\'t configure a (dummy) callback url');
+                $this->io->writeError('3. You are using an OAuth consumer, but didn\'t configure it as private consumer');
 
                 return false;
             }
@@ -140,7 +141,7 @@ class Bitbucket
      * @throws TransportException|\Exception
      * @return bool                          true on success
      */
-    public function authorizeOAuthInteractively($originUrl, $message = null)
+    public function authorizeOAuthInteractively(string $originUrl, string $message = null): bool
     {
         if ($message) {
             $this->io->writeError($message);
@@ -194,7 +195,7 @@ class Bitbucket
      * @param  string $consumerSecret
      * @return string
      */
-    public function requestToken($originUrl, $consumerKey, $consumerSecret)
+    public function requestToken(string $originUrl, string $consumerKey, string $consumerSecret): string
     {
         if ($this->token !== null || $this->getTokenFromConfig($originUrl)) {
             return $this->token['access_token'];
@@ -223,7 +224,7 @@ class Bitbucket
      *
      * @return void
      */
-    private function storeInAuthConfig($originUrl, $consumerKey, $consumerSecret)
+    private function storeInAuthConfig(string $originUrl, string $consumerKey, string $consumerSecret): void
     {
         $this->config->getConfigSource()->removeConfigSetting('bitbucket-oauth.'.$originUrl);
 
@@ -246,7 +247,7 @@ class Bitbucket
      * @param  string $originUrl
      * @return bool
      */
-    private function getTokenFromConfig($originUrl)
+    private function getTokenFromConfig(string $originUrl): bool
     {
         $authConfig = $this->config->get('bitbucket-oauth');
 

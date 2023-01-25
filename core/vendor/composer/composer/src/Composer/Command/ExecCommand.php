@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -49,14 +49,11 @@ EOT
         ;
     }
 
-    /**
-     * @return int
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $composer = $this->getComposer();
+        $composer = $this->requireComposer();
         $binDir = $composer->getConfig()->get('bin-dir');
-        if ($input->getOption('list') || !$input->getArgument('binary')) {
+        if ($input->getOption('list') || null === $input->getArgument('binary')) {
             $bins = glob($binDir . '/*');
             $bins = array_merge($bins, array_map(function ($e) {
                 return "$e (local)";
@@ -98,7 +95,7 @@ EOT
         // If the CWD was modified, we restore it to what it was initially, as it was
         // most likely modified by the global command, and we want exec to run in the local working directory
         // not the global one
-        if (getcwd() !== $this->getApplication()->getInitialWorkingDirectory()) {
+        if (getcwd() !== $this->getApplication()->getInitialWorkingDirectory() && $this->getApplication()->getInitialWorkingDirectory() !== false) {
             try {
                 chdir($this->getApplication()->getInitialWorkingDirectory());
             } catch (\Exception $e) {

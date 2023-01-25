@@ -200,12 +200,12 @@ class SystemSettings extends AbstractController implements ManagerTheme\PageCont
         // reload system settings from the database.
         // this will prevent user-defined settings from being saved as system setting
         $out = array_merge(
+            $this->managerTheme->getCore()->config,
             $this->managerTheme->getCore()
                 ->getFactorySettings(),
             Models\SystemSetting::all()
                 ->pluck('setting_value', 'setting_name')
-                ->toArray(),
-            $this->managerTheme->getCore()->config
+                ->toArray()
         );
 
         foreach (config('cms.settings', []) as $key => $value) {

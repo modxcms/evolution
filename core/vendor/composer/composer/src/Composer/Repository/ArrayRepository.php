@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -57,16 +57,16 @@ class ArrayRepository implements RepositoryInterface
     /**
      * @inheritDoc
      */
-    public function loadPackages(array $packageMap, array $acceptableStabilities, array $stabilityFlags, array $alreadyLoaded = array())
+    public function loadPackages(array $packageNameMap, array $acceptableStabilities, array $stabilityFlags, array $alreadyLoaded = array())
     {
         $packages = $this->getPackages();
 
         $result = array();
         $namesFound = array();
         foreach ($packages as $package) {
-            if (array_key_exists($package->getName(), $packageMap)) {
+            if (array_key_exists($package->getName(), $packageNameMap)) {
                 if (
-                    (!$packageMap[$package->getName()] || $packageMap[$package->getName()]->matches(new Constraint('==', $package->getVersion())))
+                    (!$packageNameMap[$package->getName()] || $packageNameMap[$package->getName()]->matches(new Constraint('==', $package->getVersion())))
                     && StabilityFilter::isPackageAcceptable($acceptableStabilities, $stabilityFlags, $package->getNames(), $package->getStability())
                     && !isset($alreadyLoaded[$package->getName()][$package->getVersion()])
                 ) {
@@ -97,7 +97,7 @@ class ArrayRepository implements RepositoryInterface
     /**
      * @inheritDoc
      */
-    public function findPackage($name, $constraint)
+    public function findPackage(string $name, $constraint)
     {
         $name = strtolower($name);
 
@@ -121,7 +121,7 @@ class ArrayRepository implements RepositoryInterface
     /**
      * @inheritDoc
      */
-    public function findPackages($name, $constraint = null)
+    public function findPackages(string $name, $constraint = null)
     {
         // normalize name
         $name = strtolower($name);
@@ -146,7 +146,7 @@ class ArrayRepository implements RepositoryInterface
     /**
      * @inheritDoc
      */
-    public function search($query, $mode = 0, $type = null)
+    public function search(string $query, int $mode = 0, ?string $type = null)
     {
         if ($mode === self::SEARCH_FULLTEXT) {
             $regex = '{(?:'.implode('|', Preg::split('{\s+}', preg_quote($query))).')}i';
@@ -237,7 +237,7 @@ class ArrayRepository implements RepositoryInterface
     /**
      * @inheritDoc
      */
-    public function getProviders($packageName)
+    public function getProviders(string $packageName)
     {
         $result = array();
 
@@ -266,7 +266,7 @@ class ArrayRepository implements RepositoryInterface
      *
      * @return AliasPackage|CompleteAliasPackage
      */
-    protected function createAliasPackage(BasePackage $package, $alias, $prettyAlias)
+    protected function createAliasPackage(BasePackage $package, string $alias, string $prettyAlias)
     {
         while ($package instanceof AliasPackage) {
             $package = $package->getAliasOf();
@@ -323,8 +323,7 @@ class ArrayRepository implements RepositoryInterface
      *
      * @return int Number of packages
      */
-    #[\ReturnTypeWillChange]
-    public function count()
+    public function count(): int
     {
         if (null === $this->packages) {
             $this->initialize();

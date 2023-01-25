@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -20,6 +20,8 @@ use Composer\IO\IOInterface;
 use Composer\Json\JsonFile;
 use Composer\Pcre\Preg;
 use Composer\Spdx\SpdxLicenses;
+use Seld\JsonLint\DuplicateKeyException;
+use Seld\JsonLint\JsonParser;
 
 /**
  * Validates a composer configuration.
@@ -29,7 +31,7 @@ use Composer\Spdx\SpdxLicenses;
  */
 class ConfigValidator
 {
-    const CHECK_VERSION = 1;
+    public const CHECK_VERSION = 1;
 
     /** @var IOInterface */
     private $io;
@@ -48,7 +50,7 @@ class ConfigValidator
      *
      * @return array{list<string>, list<string>, list<string>} a triple containing the errors, publishable errors, and warnings
      */
-    public function validate($file, $arrayLoaderValidationFlags = ValidatingArrayLoader::CHECK_ALL, $flags = self::CHECK_VERSION)
+    public function validate(string $file, int $arrayLoaderValidationFlags = ValidatingArrayLoader::CHECK_ALL, int $flags = self::CHECK_VERSION): array
     {
         $errors = array();
         $publishErrors = array();
@@ -56,6 +58,7 @@ class ConfigValidator
 
         // validate json schema
         $laxValid = false;
+        $manifest = null;
         try {
             $json = new JsonFile($file, null, $this->io);
             $manifest = $json->read();
@@ -75,6 +78,16 @@ class ConfigValidator
             $errors[] = $e->getMessage();
 
             return array($errors, $publishErrors, $warnings);
+        }
+
+        if (is_array($manifest)) {
+            $jsonParser = new JsonParser();
+            try {
+                $jsonParser->parse((string) file_get_contents($file), JsonParser::DETECT_KEY_CONFLICTS);
+            } catch (DuplicateKeyException $e) {
+                $details = $e->getDetails();
+                $warnings[] = 'Key '.$details['key'].' is a duplicate in '.$file.' at line '.$details['line'];
+            }
         }
 
         // validate actual data
@@ -159,8 +172,8 @@ class ConfigValidator
         }
 
         // check for commit references
-        $require = isset($manifest['require']) ? $manifest['require'] : array();
-        $requireDev = isset($manifest['require-dev']) ? $manifest['require-dev'] : array();
+        $require = $manifest['require'] ?? array();
+        $requireDev = $manifest['require-dev'] ?? array();
         $packages = array_merge($require, $requireDev);
         foreach ($packages as $package => $version) {
             if (Preg::isMatch('/#/', $version)) {
@@ -172,8 +185,8 @@ class ConfigValidator
         }
 
         // report scripts-descriptions for non-existent scripts
-        $scriptsDescriptions = isset($manifest['scripts-descriptions']) ? $manifest['scripts-descriptions'] : array();
-        $scripts = isset($manifest['scripts']) ? $manifest['scripts'] : array();
+        $scriptsDescriptions = $manifest['scripts-descriptions'] ?? array();
+        $scripts = $manifest['scripts'] ?? array();
         foreach ($scriptsDescriptions as $scriptName => $scriptDescription) {
             if (!array_key_exists($scriptName, $scripts)) {
                 $warnings[] = sprintf(

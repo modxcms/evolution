@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -30,15 +30,15 @@ interface ArchiverInterface
      *
      * @return string The path to the written archive file
      */
-    public function archive($sources, $target, $format, array $excludes = array(), $ignoreFilters = false);
+    public function archive(string $sources, string $target, string $format, array $excludes = array(), bool $ignoreFilters = false): string;
 
     /**
      * Format supported by the archiver.
      *
      * @param string $format     The archive format
-     * @param string $sourceType The source type (git, svn, hg, etc.)
+     * @param ?string $sourceType The source type (git, svn, hg, etc.)
      *
      * @return bool true if the format is supported by the archiver
      */
-    public function supports($format, $sourceType);
+    public function supports(string $format, ?string $sourceType): bool;
 }

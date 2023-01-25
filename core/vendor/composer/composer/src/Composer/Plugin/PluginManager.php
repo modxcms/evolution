@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -20,6 +20,7 @@ use Composer\Package\BasePackage;
 use Composer\Package\CompletePackage;
 use Composer\Package\Package;
 use Composer\Package\Version\VersionParser;
+use Composer\PartialComposer;
 use Composer\Pcre\Preg;
 use Composer\Repository\RepositoryInterface;
 use Composer\Repository\InstalledRepository;
@@ -42,7 +43,7 @@ class PluginManager
     protected $composer;
     /** @var IOInterface */
     protected $io;
-    /** @var ?Composer */
+    /** @var PartialComposer|null */
     protected $globalComposer;
     /** @var VersionParser */
     protected $versionParser;
@@ -67,15 +68,7 @@ class PluginManager
     /** @var int */
     private static $classCounter = 0;
 
-    /**
-     * Initializes plugin manager
-     *
-     * @param IOInterface $io
-     * @param Composer    $composer
-     * @param Composer    $globalComposer
-     * @param bool        $disablePlugins
-     */
-    public function __construct(IOInterface $io, Composer $composer, Composer $globalComposer = null, $disablePlugins = false)
+    public function __construct(IOInterface $io, Composer $composer, PartialComposer $globalComposer = null, bool $disablePlugins = false)
     {
         $this->io = $io;
         $this->composer = $composer;
@@ -92,7 +85,7 @@ class PluginManager
      *
      * @return void
      */
-    public function loadInstalledPlugins()
+    public function loadInstalledPlugins(): void
     {
         if ($this->disablePlugins) {
             return;
@@ -111,17 +104,16 @@ class PluginManager
      *
      * @return void
      */
-    public function deactivateInstalledPlugins()
+    public function deactivateInstalledPlugins(): void
     {
         if ($this->disablePlugins) {
             return;
         }
 
         $repo = $this->composer->getRepositoryManager()->getLocalRepository();
-        $globalRepo = $this->globalComposer ? $this->globalComposer->getRepositoryManager()->getLocalRepository() : null;
         $this->deactivateRepository($repo, false);
-        if ($globalRepo) {
-            $this->deactivateRepository($globalRepo, true);
+        if ($this->globalComposer !== null) {
+            $this->deactivateRepository($this->globalComposer->getRepositoryManager()->getLocalRepository(), true);
         }
     }
 
@@ -130,17 +122,15 @@ class PluginManager
      *
      * @return array<PluginInterface> plugins
      */
-    public function getPlugins()
+    public function getPlugins(): array
     {
         return $this->plugins;
     }
 
     /**
      * Gets global composer or null when main composer is not fully loaded
-     *
-     * @return Composer|null
      */
-    public function getGlobalComposer()
+    public function getGlobalComposer(): ?PartialComposer
     {
         return $this->globalComposer;
     }
@@ -159,7 +149,7 @@ class PluginManager
      *
      * @throws \UnexpectedValueException
      */
-    public function registerPackage(PackageInterface $package, $failOnMissingClasses = false, $isGlobalPlugin = false)
+    public function registerPackage(PackageInterface $package, bool $failOnMissingClasses = false, bool $isGlobalPlugin = false): void
     {
         if ($this->disablePlugins) {
             return;
@@ -167,6 +157,7 @@ class PluginManager
 
         if (!$this->isPluginAllowed($package->getName(), $isGlobalPlugin)) {
             $this->io->writeError('Skipped loading "'.$package->getName() . '" '.($isGlobalPlugin ? '(installed globally) ' : '').'as it is not in config.allow-plugins', true, IOInterface::DEBUG);
+
             return;
         }
 
@@ -317,7 +308,7 @@ class PluginManager
      *
      * @throws \UnexpectedValueException
      */
-    public function deactivatePackage(PackageInterface $package)
+    public function deactivatePackage(PackageInterface $package): void
     {
         if ($this->disablePlugins) {
             return;
@@ -348,7 +339,7 @@ class PluginManager
      *
      * @throws \UnexpectedValueException
      */
-    public function uninstallPackage(PackageInterface $package)
+    public function uninstallPackage(PackageInterface $package): void
     {
         if ($this->disablePlugins) {
             return;
@@ -373,7 +364,7 @@ class PluginManager
      *
      * @return string
      */
-    protected function getPluginApiVersion()
+    protected function getPluginApiVersion(): string
     {
         return PluginInterface::PLUGIN_API_VERSION;
     }
@@ -391,12 +382,13 @@ class PluginManager
      *
      * @return void
      */
-    public function addPlugin(PluginInterface $plugin, $isGlobalPlugin = false, PackageInterface $sourcePackage = null)
+    public function addPlugin(PluginInterface $plugin, bool $isGlobalPlugin = false, PackageInterface $sourcePackage = null): void
     {
         if ($sourcePackage === null) {
             trigger_error('Calling PluginManager::addPlugin without $sourcePackage is deprecated, if you are using this please get in touch with us to explain the use case', E_USER_DEPRECATED);
         } elseif (!$this->isPluginAllowed($sourcePackage->getName(), $isGlobalPlugin)) {
             $this->io->writeError('Skipped loading "'.get_class($plugin).' from '.$sourcePackage->getName() . '" '.($isGlobalPlugin ? '(installed globally) ' : '').' as it is not in config.allow-plugins', true, IOInterface::DEBUG);
+
             return;
         }
 
@@ -427,7 +419,7 @@ class PluginManager
      *
      * @return void
      */
-    public function removePlugin(PluginInterface $plugin)
+    public function removePlugin(PluginInterface $plugin): void
     {
         $index = array_search($plugin, $this->plugins, true);
         if ($index === false) {
@@ -452,7 +444,7 @@ class PluginManager
      *
      * @return void
      */
-    public function uninstallPlugin(PluginInterface $plugin)
+    public function uninstallPlugin(PluginInterface $plugin): void
     {
         $this->io->writeError('Uninstalling plugin '.get_class($plugin), true, IOInterface::DEBUG);
         $plugin->uninstall($this->composer, $this->io);
@@ -474,10 +466,21 @@ class PluginManager
      *
      * @throws \RuntimeException
      */
-    private function loadRepository(RepositoryInterface $repo, $isGlobalRepo)
+    private function loadRepository(RepositoryInterface $repo, bool $isGlobalRepo): void
     {
         $packages = $repo->getPackages();
-        $sortedPackages = PackageSorter::sortPackages($packages);
+
+        $weights = array();
+        foreach ($packages as $package) {
+            if ($package->getType() === 'composer-plugin') {
+                $extra = $package->getExtra();
+                if ($package->getName() === 'composer/installers' || true === ($extra['plugin-modifies-install-path'] ?? false)) {
+                    $weights[$package->getName()] = -10000;
+                }
+            }
+        }
+
+        $sortedPackages = PackageSorter::sortPackages($packages, $weights);
         foreach ($sortedPackages as $package) {
             if (!($package instanceof CompletePackage)) {
                 continue;
@@ -501,7 +504,7 @@ class PluginManager
      *
      * @return void
      */
-    private function deactivateRepository(RepositoryInterface $repo, $isGlobalRepo)
+    private function deactivateRepository(RepositoryInterface $repo, bool $isGlobalRepo): void
     {
         $packages = $repo->getPackages();
         $sortedPackages = array_reverse(PackageSorter::sortPackages($packages));
@@ -528,7 +531,7 @@ class PluginManager
      *
      * @return array<string, PackageInterface> Map of package names to packages
      */
-    private function collectDependencies(InstalledRepository $installedRepo, array $collected, PackageInterface $package)
+    private function collectDependencies(InstalledRepository $installedRepo, array $collected, PackageInterface $package): array
     {
         foreach ($package->getRequires() as $requireLink) {
             foreach ($installedRepo->findPackagesWithReplacersAndProviders($requireLink->getTarget()) as $requiredPackage) {
@@ -550,11 +553,13 @@ class PluginManager
      *
      * @return string Install path
      */
-    private function getInstallPath(PackageInterface $package, $global = false)
+    private function getInstallPath(PackageInterface $package, bool $global = false): string
     {
         if (!$global) {
             return $this->composer->getInstallationManager()->getInstallPath($package);
         }
+
+        assert(null !== $this->globalComposer);
 
         return $this->globalComposer->getInstallationManager()->getInstallPath($package);
     }
@@ -565,7 +570,7 @@ class PluginManager
      * @throws \RuntimeException On empty or non-string implementation class name value
      * @return null|string       The fully qualified class of the implementation or null if Plugin is not of Capable type or does not provide it
      */
-    protected function getCapabilityImplementationClassName(PluginInterface $plugin, $capability)
+    protected function getCapabilityImplementationClassName(PluginInterface $plugin, string $capability): ?string
     {
         if (!($plugin instanceof Capable)) {
             return null;
@@ -598,7 +603,7 @@ class PluginManager
      * @phpstan-param class-string<CapabilityClass> $capabilityClassName
      * @phpstan-return null|CapabilityClass
      */
-    public function getPluginCapability(PluginInterface $plugin, $capabilityClassName, array $ctorArgs = array())
+    public function getPluginCapability(PluginInterface $plugin, $capabilityClassName, array $ctorArgs = array()): ?Capability
     {
         if ($capabilityClass = $this->getCapabilityImplementationClassName($plugin, $capabilityClassName)) {
             if (!class_exists($capabilityClass)) {
@@ -629,7 +634,7 @@ class PluginManager
      *                                                            Keeping it an array will allow future values to be passed w\o changing the signature.
      * @return CapabilityClass[]
      */
-    public function getPluginCapabilities($capabilityClassName, array $ctorArgs = array())
+    public function getPluginCapabilities($capabilityClassName, array $ctorArgs = array()): array
     {
         $capabilities = array();
         foreach ($this->getPlugins() as $plugin) {
@@ -645,7 +650,7 @@ class PluginManager
      * @param  array<string, bool>|bool|null $allowPluginsConfig
      * @return array<non-empty-string, bool>|null
      */
-    private function parseAllowedPlugins($allowPluginsConfig)
+    private function parseAllowedPlugins($allowPluginsConfig): ?array
     {
         if (null === $allowPluginsConfig) {
             return null;
@@ -656,7 +661,7 @@ class PluginManager
         }
 
         if (false === $allowPluginsConfig) {
-            return array('{^$}D' => false);
+            return array('{}' => false);
         }
 
         $rules = array();
@@ -672,7 +677,7 @@ class PluginManager
      * @param bool $isGlobalPlugin
      * @return bool
      */
-    private function isPluginAllowed($package, $isGlobalPlugin)
+    private function isPluginAllowed(string $package, bool $isGlobalPlugin): bool
     {
         static $warned = array();
         $rules = $isGlobalPlugin ? $this->allowGlobalPluginRules : $this->allowPluginRules;
@@ -708,8 +713,16 @@ class PluginManager
                 $composer = $isGlobalPlugin && $this->globalComposer !== null ? $this->globalComposer : $this->composer;
 
                 $this->io->writeError('<warning>'.$package.($isGlobalPlugin ? ' (installed globally)' : '').' contains a Composer plugin which is currently not in your allow-plugins config. See https://getcomposer.org/allow-plugins</warning>');
+                $attempts = 0;
                 while (true) {
-                    switch ($answer = $this->io->ask('Do you trust "<info>'.$package.'</info>" to execute code and wish to enable it now? (writes "allow-plugins" to composer.json) [<comment>y,n,d,?</comment>] ', '?')) {
+                    // do not allow more than 5 prints of the help message, at some point assume the
+                    // input is not interactive and bail defaulting to a disabled plugin
+                    $default = '?';
+                    if ($attempts > 5) {
+                        $default = 'd';
+                    }
+
+                    switch ($answer = $this->io->ask('Do you trust "<fg=green;options=bold>'.$package.'</>" to execute code and wish to enable it now? (writes "allow-plugins" to composer.json) [<comment>y,n,d,?</comment>] ', $default)) {
                         case 'y':
                         case 'n':
                         case 'd':
@@ -731,11 +744,12 @@ class PluginManager
 
                         case '?':
                         default:
+                            $attempts++;
                             $this->io->writeError(array(
                                 'y - add package to allow-plugins in composer.json and let it run immediately',
                                 'n - add package (as disallowed) to allow-plugins in composer.json to suppress further prompts',
                                 'd - discard this, do not change composer.json and do not allow the plugin to run',
-                                '? - print help'
+                                '? - print help',
                             ));
                             break;
                     }

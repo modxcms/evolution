@@ -21,24 +21,26 @@ use Symfony\Component\VarDumper\Caster\ClassStub;
  */
 final class WrappedListener
 {
-    private string|array|object $listener;
-    private ?\Closure $optimizedListener;
-    private string $name;
-    private bool $called = false;
-    private bool $stoppedPropagation = false;
+    private $listener;
+    private $optimizedListener;
+    private $name;
+    private $called;
+    private $stoppedPropagation;
     private $stopwatch;
     private $dispatcher;
-    private string $pretty;
+    private $pretty;
     private $stub;
-    private ?int $priority = null;
-    private static bool $hasClassStub;
+    private $priority;
+    private static $hasClassStub;
 
-    public function __construct(callable|array $listener, ?string $name, Stopwatch $stopwatch, EventDispatcherInterface $dispatcher = null)
+    public function __construct($listener, ?string $name, Stopwatch $stopwatch, EventDispatcherInterface $dispatcher = null)
     {
         $this->listener = $listener;
         $this->optimizedListener = $listener instanceof \Closure ? $listener : (\is_callable($listener) ? \Closure::fromCallable($listener) : null);
         $this->stopwatch = $stopwatch;
         $this->dispatcher = $dispatcher;
+        $this->called = false;
+        $this->stoppedPropagation = false;
 
         if (\is_array($listener)) {
             $this->name = \is_object($listener[0]) ? get_debug_type($listener[0]) : $listener[0];
@@ -64,10 +66,12 @@ final class WrappedListener
             $this->name = $name;
         }
 
-        self::$hasClassStub ??= class_exists(ClassStub::class);
+        if (null === self::$hasClassStub) {
+            self::$hasClassStub = class_exists(ClassStub::class);
+        }
     }
 
-    public function getWrappedListener(): callable|array
+    public function getWrappedListener()
     {
         return $this->listener;
     }
@@ -89,7 +93,9 @@ final class WrappedListener
 
     public function getInfo(string $eventName): array
     {
-        $this->stub ??= self::$hasClassStub ? new ClassStub($this->pretty.'()', $this->listener) : $this->pretty.'()';
+        if (null === $this->stub) {
+            $this->stub = self::$hasClassStub ? new ClassStub($this->pretty.'()', $this->listener) : $this->pretty.'()';
+        }
 
         return [
             'event' => $eventName,

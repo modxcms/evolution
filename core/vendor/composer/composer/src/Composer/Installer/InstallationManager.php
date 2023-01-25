@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -63,7 +63,7 @@ class InstallationManager
     /**
      * @return void
      */
-    public function reset()
+    public function reset(): void
     {
         $this->notifiablePackages = array();
         FileDownloader::$downloadMetadata = array();
@@ -76,7 +76,7 @@ class InstallationManager
      *
      * @return void
      */
-    public function addInstaller(InstallerInterface $installer)
+    public function addInstaller(InstallerInterface $installer): void
     {
         array_unshift($this->installers, $installer);
         $this->cache = array();
@@ -89,7 +89,7 @@ class InstallationManager
      *
      * @return void
      */
-    public function removeInstaller(InstallerInterface $installer)
+    public function removeInstaller(InstallerInterface $installer): void
     {
         if (false !== ($key = array_search($installer, $this->installers, true))) {
             array_splice($this->installers, $key, 1);
@@ -106,7 +106,7 @@ class InstallationManager
      *
      * @return void
      */
-    public function disablePlugins()
+    public function disablePlugins(): void
     {
         foreach ($this->installers as $i => $installer) {
             if (!$installer instanceof PluginInstaller) {
@@ -125,7 +125,7 @@ class InstallationManager
      * @throws \InvalidArgumentException if installer for provided type is not registered
      * @return InstallerInterface
      */
-    public function getInstaller($type)
+    public function getInstaller(string $type): InstallerInterface
     {
         $type = strtolower($type);
 
@@ -150,7 +150,7 @@ class InstallationManager
      *
      * @return bool
      */
-    public function isPackageInstalled(InstalledRepositoryInterface $repo, PackageInterface $package)
+    public function isPackageInstalled(InstalledRepositoryInterface $repo, PackageInterface $package): bool
     {
         if ($package instanceof AliasPackage) {
             return $repo->hasPackage($package) && $this->isPackageInstalled($repo, $package->getAliasOf());
@@ -167,7 +167,7 @@ class InstallationManager
      *
      * @return void
      */
-    public function ensureBinariesPresence(PackageInterface $package)
+    public function ensureBinariesPresence(PackageInterface $package): void
     {
         try {
             $installer = $this->getInstaller($package->getType());
@@ -192,25 +192,25 @@ class InstallationManager
      *
      * @return void
      */
-    public function execute(InstalledRepositoryInterface $repo, array $operations, $devMode = true, $runScripts = true)
+    public function execute(InstalledRepositoryInterface $repo, array $operations, bool $devMode = true, bool $runScripts = true): void
     {
         /** @var PromiseInterface[] */
         $cleanupPromises = array();
 
         $loop = $this->loop;
         $io = $this->io;
-        $runCleanup = function () use (&$cleanupPromises, $loop) {
+        $runCleanup = function () use (&$cleanupPromises, $loop): void {
             $promises = array();
 
             $loop->abortJobs();
 
             foreach ($cleanupPromises as $cleanup) {
-                $promises[] = new \React\Promise\Promise(function ($resolve, $reject) use ($cleanup) {
+                $promises[] = new \React\Promise\Promise(function ($resolve, $reject) use ($cleanup): void {
                     $promise = $cleanup();
                     if (!$promise instanceof PromiseInterface) {
                         $resolve();
                     } else {
-                        $promise->then(function () use ($resolve) {
+                        $promise->then(function () use ($resolve): void {
                             $resolve();
                         });
                     }
@@ -223,13 +223,13 @@ class InstallationManager
         };
 
         $handleInterruptsUnix = function_exists('pcntl_async_signals') && function_exists('pcntl_signal');
-        $handleInterruptsWindows = function_exists('sapi_windows_set_ctrl_handler') && PHP_SAPI === 'cli';
+        $handleInterruptsWindows = PHP_VERSION_ID >= 70400 && function_exists('sapi_windows_set_ctrl_handler') && PHP_SAPI === 'cli';
         $prevHandler = null;
         $windowsHandler = null;
         if ($handleInterruptsUnix) {
             pcntl_async_signals(true);
             $prevHandler = pcntl_signal_get_handler(SIGINT);
-            pcntl_signal(SIGINT, function ($sig) use ($runCleanup, $prevHandler, $io) {
+            pcntl_signal(SIGINT, function ($sig) use ($runCleanup, $prevHandler, $io): void {
                 $io->writeError('Received SIGINT, aborting', true, IOInterface::DEBUG);
                 $runCleanup();
 
@@ -241,7 +241,7 @@ class InstallationManager
             });
         }
         if ($handleInterruptsWindows) {
-            $windowsHandler = function ($event) use ($runCleanup, $io) {
+            $windowsHandler = function ($event) use ($runCleanup, $io): void {
                 if ($event !== PHP_WINDOWS_EVENT_CTRL_C) {
                     return;
                 }
@@ -316,7 +316,7 @@ class InstallationManager
      *
      * @return void
      */
-    private function downloadAndExecuteBatch(InstalledRepositoryInterface $repo, array $operations, array &$cleanupPromises, $devMode, $runScripts, array $allOperations)
+    private function downloadAndExecuteBatch(InstalledRepositoryInterface $repo, array $operations, array &$cleanupPromises, bool $devMode, bool $runScripts, array $allOperations): void
     {
         $promises = array();
 
@@ -400,7 +400,7 @@ class InstallationManager
      *
      * @return void
      */
-    private function executeBatch(InstalledRepositoryInterface $repo, array $operations, array $cleanupPromises, $devMode, $runScripts, array $allOperations)
+    private function executeBatch(InstalledRepositoryInterface $repo, array $operations, array $cleanupPromises, bool $devMode, bool $runScripts, array $allOperations): void
     {
         $promises = array();
         $postExecCallbacks = array();
@@ -436,26 +436,25 @@ class InstallationManager
             }
 
             $dispatcher = $this->eventDispatcher;
-            $installManager = $this;
             $io = $this->io;
 
             $promise = $installer->prepare($opType, $package, $initialPackage);
             if (!$promise instanceof PromiseInterface) {
-                $promise = \React\Promise\resolve();
+                $promise = \React\Promise\resolve(null);
             }
 
-            $promise = $promise->then(function () use ($opType, $installManager, $repo, $operation) {
-                return $installManager->$opType($repo, $operation);
+            $promise = $promise->then(function () use ($opType, $repo, $operation) {
+                return $this->$opType($repo, $operation);
             })->then($cleanupPromises[$index])
-            ->then(function () use ($installManager, $devMode, $repo) {
-                $repo->write($devMode, $installManager);
-            }, function ($e) use ($opType, $package, $io) {
+            ->then(function () use ($devMode, $repo): void {
+                $repo->write($devMode, $this);
+            }, function ($e) use ($opType, $package, $io): void {
                 $io->writeError('    <error>' . ucfirst($opType) .' of '.$package->getPrettyName().' failed</error>');
 
                 throw $e;
             });
 
-            $postExecCallbacks[] = function () use ($opType, $runScripts, $dispatcher, $devMode, $repo, $allOperations, $operation) {
+            $postExecCallbacks[] = function () use ($opType, $runScripts, $dispatcher, $devMode, $repo, $allOperations, $operation): void {
                 $event = 'Composer\Installer\PackageEvents::POST_PACKAGE_'.strtoupper($opType);
                 if (defined($event) && $runScripts && $dispatcher) {
                     $dispatcher->dispatchPackageEvent(constant($event), $devMode, $repo, $allOperations, $operation);
@@ -482,7 +481,7 @@ class InstallationManager
      *
      * @return void
      */
-    private function waitOnPromises(array $promises)
+    private function waitOnPromises(array $promises): void
     {
         $progress = null;
         if (
@@ -512,7 +511,7 @@ class InstallationManager
      *
      * @return PromiseInterface|null
      */
-    public function install(InstalledRepositoryInterface $repo, InstallOperation $operation)
+    public function install(InstalledRepositoryInterface $repo, InstallOperation $operation): ?PromiseInterface
     {
         $package = $operation->getPackage();
         $installer = $this->getInstaller($package->getType());
@@ -530,7 +529,7 @@ class InstallationManager
      *
      * @return PromiseInterface|null
      */
-    public function update(InstalledRepositoryInterface $repo, UpdateOperation $operation)
+    public function update(InstalledRepositoryInterface $repo, UpdateOperation $operation): ?PromiseInterface
     {
         $initial = $operation->getInitialPackage();
         $target = $operation->getTargetPackage();
@@ -545,12 +544,17 @@ class InstallationManager
         } else {
             $promise = $this->getInstaller($initialType)->uninstall($repo, $initial);
             if (!$promise instanceof PromiseInterface) {
-                $promise = \React\Promise\resolve();
+                $promise = \React\Promise\resolve(null);
             }
 
             $installer = $this->getInstaller($targetType);
-            $promise = $promise->then(function () use ($installer, $repo, $target) {
-                return $installer->install($repo, $target);
+            $promise = $promise->then(function () use ($installer, $repo, $target): PromiseInterface {
+                $promise = $installer->install($repo, $target);
+                if ($promise instanceof PromiseInterface) {
+                    return $promise;
+                }
+
+                return \React\Promise\resolve(null);
             });
         }
 
@@ -565,7 +569,7 @@ class InstallationManager
      *
      * @return PromiseInterface|null
      */
-    public function uninstall(InstalledRepositoryInterface $repo, UninstallOperation $operation)
+    public function uninstall(InstalledRepositoryInterface $repo, UninstallOperation $operation): ?PromiseInterface
     {
         $package = $operation->getPackage();
         $installer = $this->getInstaller($package->getType());
@@ -581,7 +585,7 @@ class InstallationManager
      *
      * @return void
      */
-    public function markAliasInstalled(InstalledRepositoryInterface $repo, MarkAliasInstalledOperation $operation)
+    public function markAliasInstalled(InstalledRepositoryInterface $repo, MarkAliasInstalledOperation $operation): void
     {
         $package = $operation->getPackage();
 
@@ -598,7 +602,7 @@ class InstallationManager
      *
      * @return void
      */
-    public function markAliasUninstalled(InstalledRepositoryInterface $repo, MarkAliasUninstalledOperation $operation)
+    public function markAliasUninstalled(InstalledRepositoryInterface $repo, MarkAliasUninstalledOperation $operation): void
     {
         $package = $operation->getPackage();
 
@@ -611,7 +615,7 @@ class InstallationManager
      * @param  PackageInterface $package
      * @return string           path
      */
-    public function getInstallPath(PackageInterface $package)
+    public function getInstallPath(PackageInterface $package): string
     {
         $installer = $this->getInstaller($package->getType());
 
@@ -623,7 +627,7 @@ class InstallationManager
      *
      * @return void
      */
-    public function setOutputProgress($outputProgress)
+    public function setOutputProgress(bool $outputProgress): void
     {
         $this->outputProgress = $outputProgress;
     }
@@ -631,7 +635,7 @@ class InstallationManager
     /**
      * @return void
      */
-    public function notifyInstalls(IOInterface $io)
+    public function notifyInstalls(IOInterface $io): void
     {
         $promises = array();
 
@@ -701,7 +705,7 @@ class InstallationManager
     /**
      * @return void
      */
-    private function markForNotification(PackageInterface $package)
+    private function markForNotification(PackageInterface $package): void
     {
         if ($package->getNotificationUrl()) {
             $this->notifiablePackages[$package->getNotificationUrl()][$package->getName()] = $package;

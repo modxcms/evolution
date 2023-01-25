@@ -405,7 +405,7 @@ $_lang["update_tree_description"] = '<ul>
                    <li> - Closure table database design pattern that makes working with the document tree more convenient and fast </li>
                      <li> - If the data in the tree is updated not through models, then there is a possibility of an incorrect linking of documents in the database </li>
                      <li> - This operation fixes the problem when site_content is not updated through the model (save, create) and the links (Closure table) are not updated </li>
-                     <li> - It is also possible to perform this operation in CLI mode via the \'php artisan closuretable: rebuild \' command </li> 
+                     <li> - It is also possible to perform this operation in CLI mode via the \'php artisan closuretable: rebuild \' command </li>
                      </ul>';
 $_lang["update_tree_danger"] = 'If you have more than 1000 resources, it is better to perform this operation in CLI mode using the \'php artisan closuretable: rebuild command\'';
 $_lang["update_tree_time"] = 'Rebuild tree finished. Documents processed: <b>%s</b><br>Import took <b>%s</b> seconds to complete.';

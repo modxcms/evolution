@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -14,7 +14,6 @@ namespace Composer\Command;
 
 use Composer\Composer;
 use Composer\DependencyResolver\Request;
-use Composer\Filter\PlatformRequirementFilter\PlatformRequirementFilterFactory;
 use Composer\Installer;
 use Composer\IO\IOInterface;
 use Composer\Package\Loader\RootPackageLoader;
@@ -46,7 +45,7 @@ class UpdateCommand extends BaseCommand
         $this
             ->setName('update')
             ->setAliases(array('u', 'upgrade'))
-            ->setDescription('Upgrades your dependencies to the latest version according to composer.json, and updates the composer.lock file.')
+            ->setDescription('Updates your dependencies to the latest version according to composer.json, and updates the composer.lock file.')
             ->setDefinition(array(
                 new InputArgument('packages', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'Packages that should be updated, if not provided all packages are.'),
                 new InputOption('with', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Temporary version constraint to add, e.g. foo/bar:1.0.0 or foo/bar=1.0.0'),
@@ -109,10 +108,6 @@ EOT
         ;
     }
 
-    /**
-     * @return int
-     * @throws \Exception
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = $this->getIO();
@@ -123,7 +118,7 @@ EOT
             $io->writeError('<warning>You are using the deprecated option "--no-suggest". It has no effect and will break in Composer 3.</warning>');
         }
 
-        $composer = $this->getComposer(true, $input->getOption('no-plugins'), $input->getOption('no-scripts'));
+        $composer = $this->requireComposer();
 
         if (!HttpDownloader::isCurlEnabled()) {
             $io->writeError('<warning>Composer is operating significantly slower than normal because you do not have the PHP curl extension enabled.</warning>');
@@ -133,8 +128,8 @@ EOT
         $reqs = $this->formatRequirements($input->getOption('with'));
 
         // extract --with shorthands from the allowlist
-        if ($packages) {
-            $allowlistPackagesWithRequirements = array_filter($packages, function ($pkg) {
+        if (count($packages) > 0) {
+            $allowlistPackagesWithRequirements = array_filter($packages, function ($pkg): bool {
                 return Preg::isMatch('{\S+[ =:]\S+}', $pkg);
             });
             foreach ($this->formatRequirements($allowlistPackagesWithRequirements) as $package => $constraint) {
@@ -185,7 +180,7 @@ EOT
 
         // the arguments lock/nothing/mirrors are not package names but trigger a mirror update instead
         // they are further mutually exclusive with listing actual package names
-        $filteredPackages = array_filter($packages, function ($package) {
+        $filteredPackages = array_filter($packages, function ($package): bool {
             return !in_array($package, array('lock', 'nothing', 'mirrors'), true);
         });
         $updateMirrors = $input->getOption('lock') || count($filteredPackages) != count($packages);
@@ -219,8 +214,6 @@ EOT
             $updateAllowTransitiveDependencies = Request::UPDATE_LISTED_WITH_TRANSITIVE_DEPS_NO_ROOT_REQUIRE;
         }
 
-        $ignorePlatformReqs = $input->getOption('ignore-platform-reqs') ?: ($input->getOption('ignore-platform-req') ?: false);
-
         $install
             ->setDryRun($input->getOption('dry-run'))
             ->setVerbose($input->getOption('verbose'))
@@ -236,7 +229,7 @@ EOT
             ->setUpdateMirrors($updateMirrors)
             ->setUpdateAllowList($packages)
             ->setUpdateAllowTransitiveDependencies($updateAllowTransitiveDependencies)
-            ->setPlatformRequirementFilter(PlatformRequirementFilterFactory::fromBoolOrList($ignorePlatformReqs))
+            ->setPlatformRequirementFilter($this->getPlatformRequirementFilter($input))
             ->setPreferStable($input->getOption('prefer-stable'))
             ->setPreferLowest($input->getOption('prefer-lowest'))
         ;
@@ -252,7 +245,7 @@ EOT
      * @param array<string> $packages
      * @return array<string>
      */
-    private function getPackagesInteractively(IOInterface $io, InputInterface $input, OutputInterface $output, Composer $composer, array $packages)
+    private function getPackagesInteractively(IOInterface $io, InputInterface $input, OutputInterface $output, Composer $composer, array $packages): array
     {
         if (!$input->isInteractive()) {
             throw new \InvalidArgumentException('--interactive cannot be used in non-interactive terminals.');
@@ -319,7 +312,7 @@ EOT
      * @param string $constraint
      * @return Link
      */
-    private function appendConstraintToLink(Link $link, $constraint)
+    private function appendConstraintToLink(Link $link, string $constraint): Link
     {
         $parser = new VersionParser;
         $oldPrettyString = $link->getConstraint()->getPrettyString();

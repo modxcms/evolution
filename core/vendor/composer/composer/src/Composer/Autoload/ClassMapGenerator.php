@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -19,6 +19,7 @@
 namespace Composer\Autoload;
 
 use Composer\Pcre\Preg;
+use Composer\Util\Platform;
 use Symfony\Component\Finder\Finder;
 use Composer\IO\IOInterface;
 use Composer\Util\Filesystem;
@@ -35,10 +36,10 @@ class ClassMapGenerator
      * Generate a class map file
      *
      * @param \Traversable<string>|array<string> $dirs Directories or a single path to search in
-     * @param string                     $file The name of the class map file
+     * @param string                             $file The name of the class map file
      * @return void
      */
-    public static function dump($dirs, $file)
+    public static function dump(iterable $dirs, string $file): void
     {
         $maps = array();
 
@@ -55,13 +56,13 @@ class ClassMapGenerator
      * @param \Traversable<\SplFileInfo>|string|array<string> $path The path to search in or an iterator
      * @param string              $excluded     Regex that matches file paths to be excluded from the classmap
      * @param ?IOInterface        $io           IO object
-     * @param ?string             $namespace    Optional namespace prefix to filter by
-     * @param ?string             $autoloadType psr-0|psr-4 Optional autoload standard to use mapping rules
+     * @param null|string         $namespace    Optional namespace prefix to filter by
+     * @param null|string         $autoloadType psr-0|psr-4 Optional autoload standard to use mapping rules
      * @param array<string, true> $scannedFiles
      * @return array<class-string, string> A class map array
      * @throws \RuntimeException When the path is neither an existing file nor directory
      */
-    public static function createMap($path, $excluded = null, IOInterface $io = null, $namespace = null, $autoloadType = null, &$scannedFiles = array())
+    public static function createMap($path, string $excluded = null, IOInterface $io = null, ?string $namespace = null, ?string $autoloadType = null, array &$scannedFiles = array()): array
     {
         $basePath = $path;
         if (is_string($path)) {
@@ -81,7 +82,7 @@ class ClassMapGenerator
 
         $map = array();
         $filesystem = new Filesystem();
-        $cwd = realpath(getcwd());
+        $cwd = realpath(Platform::getCwd());
 
         foreach ($path as $file) {
             $filePath = $file->getPathname();
@@ -157,13 +158,14 @@ class ClassMapGenerator
      * @param  ?IOInterface             $io            IO object
      * @return array<int, class-string> valid classes
      */
-    private static function filterByNamespace($classes, $filePath, $baseNamespace, $namespaceType, $basePath, $io)
+    private static function filterByNamespace(array $classes, string $filePath, string $baseNamespace, string $namespaceType, string $basePath, ?IOInterface $io): array
     {
         $validClasses = array();
         $rejectedClasses = array();
 
         $realSubPath = substr($filePath, strlen($basePath) + 1);
-        $realSubPath = substr($realSubPath, 0, strrpos($realSubPath, '.'));
+        $dotPosition = strrpos($realSubPath, '.');
+        $realSubPath = substr($realSubPath, 0, $dotPosition === false ? PHP_INT_MAX : $dotPosition);
 
         foreach ($classes as $class) {
             // silently skip if ns doesn't have common root
@@ -197,7 +199,7 @@ class ClassMapGenerator
         if (empty($validClasses)) {
             foreach ($rejectedClasses as $class) {
                 if ($io) {
-                    $io->writeError("<warning>Class $class located in ".Preg::replace('{^'.preg_quote(getcwd()).'}', '.', $filePath, 1)." does not comply with $namespaceType autoloading standard. Skipping.</warning>");
+                    $io->writeError("<warning>Class $class located in ".Preg::replace('{^'.preg_quote(Platform::getCwd()).'}', '.', $filePath, 1)." does not comply with $namespaceType autoloading standard. Skipping.</warning>");
                 }
             }
 
@@ -214,7 +216,7 @@ class ClassMapGenerator
      * @throws \RuntimeException
      * @return array<int, class-string> The found classes
      */
-    private static function findClasses($path)
+    private static function findClasses(string $path): array
     {
         $extraTypes = self::getExtraTypes();
 
@@ -226,7 +228,7 @@ class ClassMapGenerator
                 $message = 'File at "%s" does not exist, check your classmap definitions';
             } elseif (!Filesystem::isReadable($path)) {
                 $message = 'File at "%s" is not readable, check its permissions';
-            } elseif ('' === trim(file_get_contents($path))) {
+            } elseif ('' === trim((string) file_get_contents($path))) {
                 // The input file was really empty and thus contains no classes
                 return array();
             } else {
@@ -240,7 +242,7 @@ class ClassMapGenerator
         }
 
         // return early if there is no chance of matching anything in this file
-        Preg::matchAll('{\b(?:class|interface'.$extraTypes.')\s}i', $contents, $matches);
+        Preg::matchAll('{\b(?:class|interface|trait'.$extraTypes.')\s}i', $contents, $matches);
         if (!$matches) {
             return array();
         }
@@ -251,7 +253,7 @@ class ClassMapGenerator
 
         Preg::matchAll('{
             (?:
-                 \b(?<![\$:>])(?P<type>class|interface'.$extraTypes.') \s++ (?P<name>[a-zA-Z_\x7f-\xff:][a-zA-Z0-9_\x7f-\xff:\-]*+)
+                 \b(?<![\$:>])(?P<type>class|interface|trait'.$extraTypes.') \s++ (?P<name>[a-zA-Z_\x7f-\xff:][a-zA-Z0-9_\x7f-\xff:\-]*+)
                | \b(?<![\$:>])(?P<ns>namespace) (?P<nsname>\s++[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*+(?:\s*+\\\\\s*+[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*+)*+)? \s*+ [\{;]
             )
         }ix', $contents, $matches);
@@ -261,7 +263,7 @@ class ClassMapGenerator
 
         for ($i = 0, $len = count($matches['type']); $i < $len; $i++) {
             if (!empty($matches['ns'][$i])) {
-                $namespace = str_replace(array(' ', "\t", "\r", "\n"), '', $matches['nsname'][$i]) . '\\';
+                $namespace = str_replace(array(' ', "\t", "\r", "\n"), '', (string) $matches['nsname'][$i]) . '\\';
             } else {
                 $name = $matches['name'][$i];
                 // skip anon classes extending/implementing
@@ -271,7 +273,7 @@ class ClassMapGenerator
                 if ($name[0] === ':') {
                     // This is an XHP class, https://github.com/facebook/xhp
                     $name = 'xhp'.substr(str_replace(array('-', ':'), array('_', '__'), $name), 1);
-                } elseif ($matches['type'][$i] === 'enum') {
+                } elseif (strtolower($matches['type'][$i]) === 'enum') {
                     // something like:
                     //   enum Foo: int { HERP = '123'; }
                     // The regex above captures the colon, which isn't part of
@@ -295,15 +297,17 @@ class ClassMapGenerator
     /**
      * @return string
      */
-    private static function getExtraTypes()
+    private static function getExtraTypes(): string
     {
         static $extraTypes = null;
+
         if (null === $extraTypes) {
-            $extraTypes = PHP_VERSION_ID < 50400 ? '' : '|trait';
+            $extraTypes = '';
             if (PHP_VERSION_ID >= 80100 || (defined('HHVM_VERSION') && version_compare(HHVM_VERSION, '3.3', '>='))) {
                 $extraTypes .= '|enum';
             }
-            PhpFileCleaner::setTypeConfig(array_merge(array('class', 'interface'), array_filter(explode('|', $extraTypes))));
+
+            PhpFileCleaner::setTypeConfig(array_merge(['class', 'interface', 'trait'], array_filter(explode('|', $extraTypes))));
         }
 
         return $extraTypes;

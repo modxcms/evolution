@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -27,7 +27,7 @@ class NoopInstaller implements InstallerInterface
     /**
      * @inheritDoc
      */
-    public function supports($packageType)
+    public function supports(string $packageType)
     {
         return true;
     }
@@ -45,7 +45,7 @@ class NoopInstaller implements InstallerInterface
      */
     public function download(PackageInterface $package, PackageInterface $prevPackage = null)
     {
-        return \React\Promise\resolve();
+        return \React\Promise\resolve(null);
     }
 
     /**
@@ -53,7 +53,7 @@ class NoopInstaller implements InstallerInterface
      */
     public function prepare($type, PackageInterface $package, PackageInterface $prevPackage = null)
     {
-        return \React\Promise\resolve();
+        return \React\Promise\resolve(null);
     }
 
     /**
@@ -61,7 +61,7 @@ class NoopInstaller implements InstallerInterface
      */
     public function cleanup($type, PackageInterface $package, PackageInterface $prevPackage = null)
     {
-        return \React\Promise\resolve();
+        return \React\Promise\resolve(null);
     }
 
     /**
@@ -73,7 +73,7 @@ class NoopInstaller implements InstallerInterface
             $repo->addPackage(clone $package);
         }
 
-        return \React\Promise\resolve();
+        return \React\Promise\resolve(null);
     }
 
     /**
@@ -90,7 +90,7 @@ class NoopInstaller implements InstallerInterface
             $repo->addPackage(clone $target);
         }
 
-        return \React\Promise\resolve();
+        return \React\Promise\resolve(null);
     }
 
     /**
@@ -103,7 +103,7 @@ class NoopInstaller implements InstallerInterface
         }
         $repo->removePackage($package);
 
-        return \React\Promise\resolve();
+        return \React\Promise\resolve(null);
     }
 
     /**

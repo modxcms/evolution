@@ -535,7 +535,10 @@ class uploader
             $img = $image;
 
         $orientation = 1;
-
+        if (function_exists("exif_read_data")) {
+            $orientation = @exif_read_data($file);
+            $orientation = isset($orientation['Orientation']) ? $orientation['Orientation'] : 1;
+        }
 
         // IMAGE WILL NOT BE RESIZED WHEN NO WATERMARK AND SIZE IS ACCEPTABLE
         if ((

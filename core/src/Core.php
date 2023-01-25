@@ -87,7 +87,6 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     public $mstart = 0;
     public $minParserPasses = 2;
     public $maxParserPasses = 10;
-    public $maxSourcePasses = 10;
     public $documentObject = [];
     public $templateObject;
     public $snippetObjects;
@@ -2476,16 +2475,16 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $documentObject = SiteContent::query()
                 ->leftJoin('document_groups', 'document_groups.document', '=', 'site_content.id')
                 ->where('site_content.' . $method, $identifier);
-            if ($this->isFrontend()) {
-                $documentObject->where('privateweb', 0);
-            } else {
-                $documentObject->where(function($query) use ($docgrp) {
+            $documentObject->where(function($query) use ($docgrp){
+                if ($this->isFrontend()) {
+                    $query->where('privateweb', 0);
+                } else {
                     $query->whereRaw("1 = {$_SESSION['mgrRole']} OR site_content.privatemgr=0");
-                    if ($docgrp) {
-                        $query->orWhereIn('document_groups.document_group', $docgrp);
-                    }
-                });
-            }
+                }
+                if ($docgrp) {
+                    $query->orWhereIn('document_groups.document_group', $docgrp);
+                }
+            });
             $documentObject = $documentObject->first();
             if (is_null($documentObject)) {
                 $seclimit = 0;
@@ -2512,6 +2511,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             }
             //this is now the document :)
             $documentObject = $documentObject->toArray();
+            unset($documentObject['document_group'], $documentObject['document']);
+            $documentObject['id'] = $identifier;
 
             if ($isPrepareResponse === 'prepareResponse') {
                 $this->documentObject = &$documentObject;
@@ -2631,6 +2632,8 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
     {
         // set the number of times we are to parse the document source
         $this->minParserPasses = !$this->minParserPasses ? 2 : $this->minParserPasses;
+        $this->maxParserPasses = !$this->maxParserPasses ? 10 : $this->maxParserPasses;
+
         $passes = $this->minParserPasses;
         for ($i = 0; $i < $passes; $i++) {
             // get source length if this is the final pass
@@ -2660,7 +2663,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             if ($this->dumpSnippets == 1) {
                 $this->snippetsCode .= '</fieldset><br />';
             }
-            if ($i == ($passes - 1) && $i < ($this->maxSourcePasses - 1)) {
+            if ($i == ($passes - 1) && $i < ($this->maxParserPasses - 1)) {
                 // check if source content was changed
                 if ($st != md5($source)) {
                     $passes++;
@@ -3913,11 +3916,12 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $documentChildren = $documentChildren->where($where);
         }
         if (!is_array($fields)) {
-            $documentChildren = $documentChildren->select(explode(',', $fields));
+            $fields = array_filter(array_map('trim', explode(',', $fields)));
+            $documentChildren = $documentChildren->select($fields);
         }
         // modify field names to use sc. table reference
         if ($sort != '') {
-            $sort = explode(',', $sort);
+            $sort = array_filter(array_map('trim', explode(',', $sort)));
             foreach ($sort as $item)
                 $documentChildren = $documentChildren->orderBy($item, $dir);
         }
@@ -4020,7 +4024,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
             $documentChildren = $documentChildren->where($where);
         }
         if (!is_array($fields)) {
-            $arr = explode(',', $fields);
+            $arr = array_filter(array_map('trim', explode(',', $fields)));
             $new_arr = [];
             foreach ($arr as $item) {
                 if (stristr($item, '.') === false) {
@@ -4033,7 +4037,7 @@ class Core extends AbstractLaravel implements Interfaces\CoreInterface
         }
         // modify field names to use sc. table reference
         if ($sort != '') {
-            $sort = explode(',', $sort);
+            $sort = array_filter(array_map('trim', explode(',', $sort)));
             foreach ($sort as $item)
                 $documentChildren = $documentChildren->orderBy($item, $dir);
         }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -21,6 +21,8 @@ use Composer\Util\Git as GitUtil;
 use Composer\Util\HttpDownloader;
 use Composer\Util\ProcessExecutor;
 use Composer\Util\Svn as SvnUtil;
+use React\Promise\CancellablePromiseInterface;
+use Symfony\Component\Process\Process;
 
 /**
  * Try to guess the current version number based on different VCS configuration.
@@ -66,7 +68,7 @@ class VersionGuesser
      * @return array|null
      * @phpstan-return Version|null
      */
-    public function guessVersion(array $packageConfig, $path)
+    public function guessVersion(array $packageConfig, string $path): ?array
     {
         if (!function_exists('proc_open')) {
             return null;
@@ -103,7 +105,7 @@ class VersionGuesser
      * @return array
      * @phpstan-return Version
      */
-    private function postprocess(array $versionData)
+    private function postprocess(array $versionData): array
     {
         if (!empty($versionData['feature_version']) && $versionData['feature_version'] === $versionData['version'] && $versionData['feature_pretty_version'] === $versionData['pretty_version']) {
             unset($versionData['feature_version'], $versionData['feature_pretty_version']);
@@ -126,7 +128,7 @@ class VersionGuesser
      *
      * @return array{version: string|null, commit: string|null, pretty_version: string|null, feature_version?: string|null, feature_pretty_version?: string|null}
      */
-    private function guessGitVersion(array $packageConfig, $path)
+    private function guessGitVersion(array $packageConfig, string $path): array
     {
         GitUtil::cleanEnv();
         $commit = null;
@@ -137,7 +139,7 @@ class VersionGuesser
         $isDetached = false;
 
         // try to fetch current version from git branch
-        if (0 === $this->process->execute('git branch -a --no-color --no-abbrev -v', $output, $path)) {
+        if (0 === $this->process->execute(['git', 'branch', '-a', '--no-color', '--no-abbrev', '-v'], $output, $path)) {
             $branches = array();
             $isFeatureBranch = false;
 
@@ -211,7 +213,7 @@ class VersionGuesser
      *
      * @return array{version: string, pretty_version: string}|null
      */
-    private function versionFromGitTags($path)
+    private function versionFromGitTags(string $path): ?array
     {
         // try to fetch current version from git tags
         if (0 === $this->process->execute('git describe --exact-match --tags', $output, $path)) {
@@ -232,7 +234,7 @@ class VersionGuesser
      *
      * @return array{version: string|null, commit: ''|null, pretty_version: string|null, feature_version?: string|null, feature_pretty_version?: string|null}|null
      */
-    private function guessHgVersion(array $packageConfig, $path)
+    private function guessHgVersion(array $packageConfig, string $path): ?array
     {
         // try to fetch current version from hg branch
         if (0 === $this->process->execute('hg branch', $output, $path)) {
@@ -276,7 +278,7 @@ class VersionGuesser
      *
      * @return array{version: string|null, pretty_version: string|null}
      */
-    private function guessFeatureVersion(array $packageConfig, $version, array $branches, $scmCmdline, $path)
+    private function guessFeatureVersion(array $packageConfig, ?string $version, array $branches, string $scmCmdline, string $path): array
     {
         $prettyVersion = $version;
 
@@ -296,7 +298,7 @@ class VersionGuesser
             // sort local branches first then remote ones
             // and sort numeric branches below named ones, to make sure if the branch has the same distance from main and 1.10 and 1.9 for example, main is picked
             // and sort using natural sort so that 1.10 will appear before 1.9
-            usort($branches, function ($a, $b) {
+            usort($branches, function ($a, $b): int {
                 $aRemote = 0 === strpos($a, 'remotes/');
                 $bRemote = 0 === strpos($b, 'remotes/');
 
@@ -307,27 +309,42 @@ class VersionGuesser
                 return strnatcasecmp($b, $a);
             });
 
-            foreach ($branches as $candidate) {
-                $candidateVersion = Preg::replace('{^remotes/\S+/}', '', $candidate);
+            $promises = [];
+            $this->process->setMaxJobs(30);
+            try {
+                foreach ($branches as $candidate) {
+                    $candidateVersion = Preg::replace('{^remotes/\S+/}', '', $candidate);
 
-                // do not compare against itself or other feature branches
-                if ($candidate === $branch || $this->isFeatureBranch($packageConfig, $candidateVersion)) {
-                    continue;
-                }
-
-                $cmdLine = str_replace(array('%candidate%', '%branch%'), array($candidate, $branch), $scmCmdline);
-                if (0 !== $this->process->execute($cmdLine, $output, $path)) {
-                    continue;
-                }
-
-                if (strlen($output) < $length) {
-                    $length = strlen($output);
-                    $version = $this->versionParser->normalizeBranch($candidateVersion);
-                    $prettyVersion = 'dev-' . $candidateVersion;
-                    if ($length === 0) {
-                        break;
+                    // do not compare against itself or other feature branches
+                    if ($candidate === $branch || $this->isFeatureBranch($packageConfig, $candidateVersion)) {
+                        continue;
                     }
+
+                    $cmdLine = str_replace(array('%candidate%', '%branch%'), array($candidate, $branch), $scmCmdline);
+                    $promises[] = $this->process->executeAsync($cmdLine, $path)->then(function (Process $process) use (&$length, &$version, &$prettyVersion, $candidateVersion, &$promises): void {
+                        if (!$process->isSuccessful()) {
+                            return;
+                        }
+
+                        $output = $process->getOutput();
+                        if (strlen($output) < $length) {
+                            $length = strlen($output);
+                            $version = $this->versionParser->normalizeBranch($candidateVersion);
+                            $prettyVersion = 'dev-' . $candidateVersion;
+                            if ($length === 0) {
+                                foreach ($promises as $promise) {
+                                    if ($promise instanceof CancellablePromiseInterface) {
+                                        $promise->cancel();
+                                    }
+                                }
+                            }
+                        }
+                    });
                 }
+
+                $this->process->wait();
+            } finally {
+                $this->process->resetMaxJobs();
             }
         }
 
@@ -340,7 +357,7 @@ class VersionGuesser
      *
      * @return bool
      */
-    private function isFeatureBranch(array $packageConfig, $branchName)
+    private function isFeatureBranch(array $packageConfig, ?string $branchName): bool
     {
         $nonFeatureBranches = '';
         if (!empty($packageConfig['non-feature-branches'])) {
@@ -355,7 +372,7 @@ class VersionGuesser
      *
      * @return array{version: string|null, commit: '', pretty_version: string|null}
      */
-    private function guessFossilVersion($path)
+    private function guessFossilVersion(string $path): array
     {
         $version = null;
         $prettyVersion = null;
@@ -385,7 +402,7 @@ class VersionGuesser
      *
      * @return array{version: string, commit: '', pretty_version: string}|null
      */
-    private function guessSvnVersion(array $packageConfig, $path)
+    private function guessSvnVersion(array $packageConfig, string $path): ?array
     {
         SvnUtil::cleanEnv();
 

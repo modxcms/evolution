@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -28,6 +28,7 @@ use Composer\Util\Loop;
 use Composer\Util\Silencer;
 use Composer\Plugin\PluginEvents;
 use Composer\EventDispatcher\Event;
+use Phar;
 use Seld\JsonLint\DuplicateKeyException;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
@@ -39,6 +40,8 @@ use Composer\Downloader\TransportException;
 use Composer\Json\JsonValidationException;
 use Composer\Repository\InstalledRepositoryInterface;
 use Seld\JsonLint\JsonParser;
+use UnexpectedValueException;
+use ZipArchive;
 
 /**
  * Creates a configured instance of composer.
@@ -52,9 +55,8 @@ class Factory
 {
     /**
      * @throws \RuntimeException
-     * @return string
      */
-    protected static function getHomeDir()
+    protected static function getHomeDir(): string
     {
         $home = Platform::getEnv('COMPOSER_HOME');
         if ($home) {
@@ -95,11 +97,7 @@ class Factory
         return $dirs[0];
     }
 
-    /**
-     * @param  string $home
-     * @return string
-     */
-    protected static function getCacheDir($home)
+    protected static function getCacheDir(string $home): string
     {
         $cacheDir = Platform::getEnv('COMPOSER_CACHE_DIR');
         if ($cacheDir) {
@@ -144,11 +142,7 @@ class Factory
         return $home . '/cache';
     }
 
-    /**
-     * @param  string $home
-     * @return string
-     */
-    protected static function getDataDir($home)
+    protected static function getDataDir(string $home): string
     {
         $homeEnv = Platform::getEnv('COMPOSER_HOME');
         if ($homeEnv) {
@@ -169,31 +163,29 @@ class Factory
         return $home;
     }
 
-    /**
-     * @param string|null $cwd
-     *
-     * @return Config
-     */
-    public static function createConfig(IOInterface $io = null, $cwd = null)
+    public static function createConfig(IOInterface $io = null, ?string $cwd = null): Config
     {
-        $cwd = $cwd ?: (string) getcwd();
+        $cwd = $cwd ?? Platform::getCwd(true);
 
         $config = new Config(true, $cwd);
 
         // determine and add main dirs to the config
         $home = self::getHomeDir();
-        $config->merge(array('config' => array(
-            'home' => $home,
-            'cache-dir' => self::getCacheDir($home),
-            'data-dir' => self::getDataDir($home),
-        )), Config::SOURCE_DEFAULT);
+        $config->merge(array(
+            'config' => array(
+                'home' => $home,
+                'cache-dir' => self::getCacheDir($home),
+                'data-dir' => self::getDataDir($home),
+            )
+        ), Config::SOURCE_DEFAULT);
 
         // load global config
         $file = new JsonFile($config->get('home').'/config.json');
         if ($file->exists()) {
-            if ($io && $io->isDebug()) {
-                $io->writeError('Loading config file ' . $file->getPath());
+            if ($io instanceof IOInterface) {
+                $io->writeError('Loading config file ' . $file->getPath(), true, IOInterface::DEBUG);
             }
+            self::validateJsonSchema($io, $file);
             $config->merge($file->read(), $file->getPath());
         }
         $config->setConfigSource(new JsonConfigSource($file));
@@ -217,46 +209,42 @@ class Factory
         // load global auth file
         $file = new JsonFile($config->get('home').'/auth.json');
         if ($file->exists()) {
-            if ($io && $io->isDebug()) {
-                $io->writeError('Loading config file ' . $file->getPath());
+            if ($io instanceof IOInterface) {
+                $io->writeError('Loading config file ' . $file->getPath(), true, IOInterface::DEBUG);
             }
+            self::validateJsonSchema($io, $file, JsonFile::AUTH_SCHEMA);
             $config->merge(array('config' => $file->read()), $file->getPath());
         }
         $config->setAuthConfigSource(new JsonConfigSource($file, true));
 
         // load COMPOSER_AUTH environment variable if set
         if ($composerAuthEnv = Platform::getEnv('COMPOSER_AUTH')) {
-            $authData = json_decode($composerAuthEnv, true);
-
+            $authData = json_decode($composerAuthEnv);
             if (null === $authData) {
-                if ($io) {
+                if ($io instanceof IOInterface) {
                     $io->writeError('<error>COMPOSER_AUTH environment variable is malformed, should be a valid JSON object</error>');
                 }
             } else {
-                if ($io && $io->isDebug()) {
-                    $io->writeError('Loading auth config from COMPOSER_AUTH');
+                if ($io instanceof IOInterface) {
+                    $io->writeError('Loading auth config from COMPOSER_AUTH', true, IOInterface::DEBUG);
                 }
-                $config->merge(array('config' => $authData), 'COMPOSER_AUTH');
+                self::validateJsonSchema($io, $authData, JsonFile::AUTH_SCHEMA, 'COMPOSER_AUTH');
+                $authData = json_decode($composerAuthEnv, true);
+                if (null !== $authData) {
+                    $config->merge(array('config' => $authData), 'COMPOSER_AUTH');
+                }
             }
         }
 
         return $config;
     }
 
-    /**
-     * @return string
-     */
-    public static function getComposerFile()
+    public static function getComposerFile(): string
     {
-        return trim(Platform::getEnv('COMPOSER')) ?: './composer.json';
+        return trim((string) Platform::getEnv('COMPOSER')) ?: './composer.json';
     }
 
-    /**
-     * @param string $composerFile
-     *
-     * @return string
-     */
-    public static function getLockFile($composerFile)
+    public static function getLockFile(string $composerFile): string
     {
         return "json" === pathinfo($composerFile, PATHINFO_EXTENSION)
                 ? substr($composerFile, 0, -4).'lock'
@@ -266,7 +254,7 @@ class Factory
     /**
      * @return array{highlight: OutputFormatterStyle, warning: OutputFormatterStyle}
      */
-    public static function createAdditionalStyles()
+    public static function createAdditionalStyles(): array
     {
         return array(
             'highlight' => new OutputFormatterStyle('red'),
@@ -274,12 +262,7 @@ class Factory
         );
     }
 
-    /**
-     * Creates a ConsoleOutput instance
-     *
-     * @return ConsoleOutput
-     */
-    public static function createOutput()
+    public static function createOutput(): ConsoleOutput
     {
         $styles = self::createAdditionalStyles();
         $formatter = new OutputFormatter(false, $styles);
@@ -299,11 +282,11 @@ class Factory
      * @param  bool                              $fullLoad       Whether to initialize everything or only main project stuff (used when loading the global composer)
      * @throws \InvalidArgumentException
      * @throws \UnexpectedValueException
-     * @return Composer
+     * @return Composer|PartialComposer Composer if $fullLoad is true, otherwise PartialComposer
      */
-    public function createComposer(IOInterface $io, $localConfig = null, $disablePlugins = false, $cwd = null, $fullLoad = true, $disableScripts = false)
+    public function createComposer(IOInterface $io, $localConfig = null, bool $disablePlugins = false, ?string $cwd = null, bool $fullLoad = true, bool $disableScripts = false)
     {
-        $cwd = $cwd ?: (string) getcwd();
+        $cwd = $cwd ?? Platform::getCwd(true);
 
         // load Composer configuration
         if (null === $localConfig) {
@@ -333,13 +316,6 @@ class Factory
                 $message = $e->getMessage() . ':' . PHP_EOL . $errors;
                 throw new JsonValidationException($message);
             }
-            $jsonParser = new JsonParser;
-            try {
-                $jsonParser->parse(file_get_contents($localConfig), JsonParser::DETECT_KEY_CONFLICTS);
-            } catch (DuplicateKeyException $e) {
-                $details = $e->getDetails();
-                $io->writeError('<warning>Key '.$details['key'].' is a duplicate in '.$localConfig.' at line '.$details['line'].'</warning>');
-            }
 
             $localConfig = $file->read();
             $localConfigSource = $file->getPath();
@@ -363,7 +339,7 @@ class Factory
         $vendorDir = $config->get('vendor-dir');
 
         // initialize composer
-        $composer = new Composer();
+        $composer = $fullLoad ? new Composer() : new PartialComposer();
         $composer->setConfig($config);
 
         if ($fullLoad) {
@@ -410,7 +386,7 @@ class Factory
         $im = $this->createInstallationManager($loop, $io, $dispatcher);
         $composer->setInstallationManager($im);
 
-        if ($fullLoad) {
+        if ($composer instanceof Composer) {
             // initialize download manager
             $dm = $this->createDownloadManager($io, $config, $httpDownloader, $process, $dispatcher);
             $composer->setDownloadManager($dm);
@@ -427,7 +403,7 @@ class Factory
         // add installers to the manager (must happen after download manager is created since they read it out of $composer)
         $this->createDefaultInstallers($im, $composer, $io, $process);
 
-        if ($fullLoad) {
+        if ($composer instanceof Composer) {
             $globalComposer = null;
             if (realpath($config->get('home')) !== $cwd) {
                 $globalComposer = $this->createGlobalComposer($io, $config, $disablePlugins, $disableScripts);
@@ -440,10 +416,13 @@ class Factory
         }
 
         // init locker if possible
-        if ($fullLoad && isset($composerFile)) {
+        if ($composer instanceof Composer && isset($composerFile)) {
             $lockFile = self::getLockFile($composerFile);
+            if (!$config->get('lock') && file_exists($lockFile)) {
+                $io->writeError('<warning>'.$lockFile.' is present but ignored as the "lock" config option is disabled.</warning>');
+            }
 
-            $locker = new Package\Locker($io, new JsonFile($lockFile, null, $io), $im, file_get_contents($composerFile), $process);
+            $locker = new Package\Locker($io, new JsonFile($config->get('lock') ? $lockFile : Platform::getDevNull(), null, $io), $im, file_get_contents($composerFile), $process);
             $composer->setLocker($locker);
         }
 
@@ -460,16 +439,17 @@ class Factory
     }
 
     /**
-     * @param  IOInterface   $io             IO instance
      * @param  bool          $disablePlugins Whether plugins should not be loaded
      * @param  bool          $disableScripts Whether scripts should not be executed
-     * @return Composer|null
      */
-    public static function createGlobal(IOInterface $io, $disablePlugins = false, $disableScripts = false)
+    public static function createGlobal(IOInterface $io, bool $disablePlugins = false, bool $disableScripts = false): ?Composer
     {
         $factory = new static();
 
-        return $factory->createGlobalComposer($io, static::createConfig($io), $disablePlugins, $disableScripts, true);
+        $composer = $factory->createGlobalComposer($io, static::createConfig($io), $disablePlugins, $disableScripts, true);
+        assert(null === $composer || $composer instanceof Composer);
+
+        return $composer;
     }
 
     /**
@@ -478,7 +458,7 @@ class Factory
      *
      * @return void
      */
-    protected function addLocalRepository(IOInterface $io, RepositoryManager $rm, $vendorDir, RootPackageInterface $rootPackage, ProcessExecutor $process = null)
+    protected function addLocalRepository(IOInterface $io, RepositoryManager $rm, string $vendorDir, RootPackageInterface $rootPackage, ProcessExecutor $process = null): void
     {
         $fs = null;
         if ($process) {
@@ -489,13 +469,9 @@ class Factory
     }
 
     /**
-     * @param bool $disablePlugins
-     * @param bool $disableScripts
-     * @param bool $fullLoad
-     *
-     * @return Composer|null
+     * @return PartialComposer|Composer|null By default PartialComposer, but Composer if $fullLoad is set to true
      */
-    protected function createGlobalComposer(IOInterface $io, Config $config, $disablePlugins, $disableScripts, $fullLoad = false)
+    protected function createGlobalComposer(IOInterface $io, Config $config, bool $disablePlugins, bool $disableScripts, bool $fullLoad = false): ?PartialComposer
     {
         $composer = null;
         try {
@@ -513,7 +489,7 @@ class Factory
      * @param  EventDispatcher            $eventDispatcher
      * @return Downloader\DownloadManager
      */
-    public function createDownloadManager(IOInterface $io, Config $config, HttpDownloader $httpDownloader, ProcessExecutor $process, EventDispatcher $eventDispatcher = null)
+    public function createDownloadManager(IOInterface $io, Config $config, HttpDownloader $httpDownloader, ProcessExecutor $process, EventDispatcher $eventDispatcher = null): Downloader\DownloadManager
     {
         $cache = null;
         if ($config->get('cache-files-ttl') > 0) {
@@ -566,20 +542,20 @@ class Factory
     public function createArchiveManager(Config $config, Downloader\DownloadManager $dm, Loop $loop)
     {
         $am = new Archiver\ArchiveManager($dm, $loop);
-        $am->addArchiver(new Archiver\ZipArchiver);
-        $am->addArchiver(new Archiver\PharArchiver);
+        if (class_exists(ZipArchive::class)) {
+            $am->addArchiver(new Archiver\ZipArchiver);
+        }
+        if (class_exists(Phar::class)) {
+            $am->addArchiver(new Archiver\PharArchiver);
+        }
 
         return $am;
     }
 
     /**
-     * @param  IOInterface          $io
-     * @param  Composer             $composer
-     * @param  Composer             $globalComposer
-     * @param  bool                 $disablePlugins
      * @return Plugin\PluginManager
      */
-    protected function createPluginManager(IOInterface $io, Composer $composer, Composer $globalComposer = null, $disablePlugins = false)
+    protected function createPluginManager(IOInterface $io, Composer $composer, PartialComposer $globalComposer = null, bool $disablePlugins = false): Plugin\PluginManager
     {
         return new Plugin\PluginManager($io, $composer, $globalComposer, $disablePlugins);
     }
@@ -587,7 +563,7 @@ class Factory
     /**
      * @return Installer\InstallationManager
      */
-    public function createInstallationManager(Loop $loop, IOInterface $io, EventDispatcher $eventDispatcher = null)
+    public function createInstallationManager(Loop $loop, IOInterface $io, EventDispatcher $eventDispatcher = null): Installer\InstallationManager
     {
         return new Installer\InstallationManager($loop, $io, $eventDispatcher);
     }
@@ -595,7 +571,7 @@ class Factory
     /**
      * @return void
      */
-    protected function createDefaultInstallers(Installer\InstallationManager $im, Composer $composer, IOInterface $io, ProcessExecutor $process = null)
+    protected function createDefaultInstallers(Installer\InstallationManager $im, PartialComposer $composer, IOInterface $io, ProcessExecutor $process = null): void
     {
         $fs = new Filesystem($process);
         $binaryInstaller = new Installer\BinaryInstaller($io, rtrim($composer->getConfig()->get('bin-dir'), '/'), $composer->getConfig()->get('bin-compat'), $fs, rtrim($composer->getConfig()->get('vendor-dir'), '/'));
@@ -608,10 +584,8 @@ class Factory
     /**
      * @param InstalledRepositoryInterface   $repo repository to purge packages from
      * @param Installer\InstallationManager  $im   manager to check whether packages are still installed
-     *
-     * @return void
      */
-    protected function purgePackages(InstalledRepositoryInterface $repo, Installer\InstallationManager $im)
+    protected function purgePackages(InstalledRepositoryInterface $repo, Installer\InstallationManager $im): void
     {
         foreach ($repo->getPackages() as $package) {
             if (!$im->isPackageInstalled($repo, $package)) {
@@ -620,10 +594,7 @@ class Factory
         }
     }
 
-    /**
-     * @return Package\Loader\RootPackageLoader
-     */
-    protected function loadRootPackage(RepositoryManager $rm, Config $config, VersionParser $parser, VersionGuesser $guesser, IOInterface $io)
+    protected function loadRootPackage(RepositoryManager $rm, Config $config, VersionParser $parser, VersionGuesser $guesser, IOInterface $io): Package\Loader\RootPackageLoader
     {
         return new Package\Loader\RootPackageLoader($rm, $config, $parser, $guesser, $io);
     }
@@ -636,11 +607,14 @@ class Factory
      * @param  bool        $disableScripts Whether scripts should not be run
      * @return Composer
      */
-    public static function create(IOInterface $io, $config = null, $disablePlugins = false, $disableScripts = false)
+    public static function create(IOInterface $io, $config = null, bool $disablePlugins = false, bool $disableScripts = false): Composer
     {
         $factory = new static();
 
-        return $factory->createComposer($io, $config, $disablePlugins, null, true, $disableScripts);
+        $composer = $factory->createComposer($io, $config, $disablePlugins, null, true, $disableScripts);
+        assert($composer instanceof Composer);
+
+        return $composer;
     }
 
     /**
@@ -651,7 +625,7 @@ class Factory
      * @param  mixed[]        $options Array of options passed directly to HttpDownloader constructor
      * @return HttpDownloader
      */
-    public static function createHttpDownloader(IOInterface $io, Config $config, $options = array())
+    public static function createHttpDownloader(IOInterface $io, Config $config, array $options = array()): HttpDownloader
     {
         static $warned = false;
         $disableTls = false;
@@ -685,9 +659,6 @@ class Factory
             if (false !== strpos($e->getMessage(), 'cafile')) {
                 $io->write('<error>Unable to locate a valid CA certificate file. You must set a valid \'cafile\' option.</error>');
                 $io->write('<error>A valid CA certificate file is required for SSL/TLS protection.</error>');
-                if (PHP_VERSION_ID < 50600) {
-                    $io->write('<error>It is recommended you upgrade to PHP 5.6+ which can detect your system CA file automatically.</error>');
-                }
                 $io->write('<error>You can disable this error, at your own risk, by setting the \'disable-tls\' option to true.</error>');
             }
             throw $e;
@@ -696,10 +667,7 @@ class Factory
         return $httpDownloader;
     }
 
-    /**
-     * @return bool
-     */
-    private static function useXdg()
+    private static function useXdg(): bool
     {
         foreach (array_keys($_SERVER) as $key) {
             if (strpos($key, 'XDG_') === 0) {
@@ -716,9 +684,8 @@ class Factory
 
     /**
      * @throws \RuntimeException
-     * @return string
      */
-    private static function getUserDir()
+    private static function getUserDir(): string
     {
         $home = Platform::getEnv('HOME');
         if (!$home) {
@@ -726,5 +693,30 @@ class Factory
         }
 
         return rtrim(strtr($home, '\\', '/'), '/');
+    }
+
+    /**
+     * @param mixed $fileOrData
+     * @param JsonFile::*_SCHEMA $schema
+     */
+    private static function validateJsonSchema(?IOInterface $io, $fileOrData, int $schema = JsonFile::LAX_SCHEMA, ?string $source = null): void
+    {
+        try {
+            if ($fileOrData instanceof JsonFile) {
+                $fileOrData->validateSchema($schema);
+            } else {
+                if (null === $source) {
+                    throw new \InvalidArgumentException('$source is required to be provided if $fileOrData is arbitrary data');
+                }
+                JsonFile::validateJsonSchema($source, $fileOrData, $schema);
+            }
+        } catch (JsonValidationException $e) {
+            $msg = $e->getMessage().', this may result in errors and should be resolved:'.PHP_EOL.' - '.implode(PHP_EOL.' - ', $e->getErrors());
+            if ($io instanceof IOInterface) {
+                $io->writeError('<warning>'.$msg.'</>');
+            } else {
+                throw new UnexpectedValueException($msg);
+            }
+        }
     }
 }
