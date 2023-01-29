@@ -2,248 +2,50 @@
 @section('content')
     <?php /** @var EvolutionCMS\Models\SiteTmplvar $data */ ?>
     @push('scripts.top')
+        <script src="media/script/element-properties.js"></script>
         <script>
+            var defaultProperties = {!! $defaultProperties !!};
+            var elementProperties = new ElementProperties({
+                name: 'elementProperties',
+                lang: {
+                    parameter: '{{ ManagerTheme::getLexicon('parameter') }}',
+                    value: '{{ ManagerTheme::getLexicon('value') }}',
+                    set_default: '{{ ManagerTheme::getLexicon('set_default') }}',
+                },
+                icon_refresh: '{{ ManagerTheme::getStyle('icon_refresh') }}',
+                table:'displayprops',
+                tr: 'displaypropsrow',
+                td: 'displayprops',
+            });
 
-            /*
-            * Set methods for props
-            * */
-            var props = {
-                currentParams: {},
-                f: '',
-                first: true,
-                showParameters: function (ctrl) {
-                    var c, p, df, cp;
-                    var ar, label, value, key, dt, defaultVal, tr;
-
-                    var valueElement = document.getElementById('properties');
-                    if (!valueElement) {
+            function changeDefaultProperties(ctrl) {
+                var f;
+                if (ctrl && ctrl.form) {
+                    f = ctrl.form;
+                } else {
+                    f = document.forms['mutate'];
+                    if (!f) {
                         return;
                     }
-
-                    this.currentParams = {}; // reset;
-
-                    if (ctrl && ctrl.form) {
-                        this.f = ctrl.form;
-                    } else {
-                        this.f = document.forms['mutate'];
-                        if (!this.f) {
-                            return;
-                        }
-                    }
-
-                    tr = document.getElementById('displaypropsrow');
-
-                    // check if codemirror is used
-                    var t, td, desc;
-                    this.currentParams = JSON.parse(valueElement.value);
-
-                    t = '<table width="100%" class="displayparams grid"><thead><tr><td>{{ ManagerTheme::getLexicon('parameter') }}</td><td>{{ ManagerTheme::getLexicon('value') }}</td><td style="text-align:right;white-space:nowrap">{{ ManagerTheme::getLexicon('set_default') }} </td></tr></thead>';
-
-                    try {
-                        var type, options, found, info, sd;
-                        var ll, ls, sets = [], lv, arrValue, split;
-
-                        for (var key in this.currentParams) {
-
-                            if (key === 'internal' || this.currentParams[key][0]['label'] == undefined) {
-                                return;
-                            }
-
-                            cp = this.currentParams[key][0];
-                            type = cp['type'];
-                            value = cp['value'];
-                            defaultVal = cp['default'];
-                            label = cp['label'] != undefined ? cp['label'] : key;
-                            desc = cp['desc'] + '';
-                            options = cp['options'] != undefined ? cp['options'] : '';
-
-                            ll = [];
-                            ls = [];
-                            if (options.indexOf('==') > -1) {
-                                // option-format: label==value||label==value
-                                sets = options.split('||');
-                                for (i = 0; i < sets.length; i++) {
-                                    split = sets[i].split('==');
-                                    ll[i] = split[0];
-                                    ls[i] = split[1] != undefined ? split[1] : split[0];
-                                }
-                            } else {
-                                // option-format: value,value
-                                ls = options.split(',');
-                                ll = ls;
-                            }
-
-                            key   = key.replace(/\"/g, '&quot;');
-                            value = value.replace(/\"/g, '&quot;');
-
-                            switch (type) {
-                                case 'int':
-                                    c = '<input type="text" name="prop_' + key + '" value="' + value + '" onchange="props.setParameter(\'' + key + '\',\'' + type + '\',this)" />';
-                                    break;
-                                case 'menu':
-                                    c = '<select name="prop_' + key + '" onchange="props.setParameter(\'' + key + '\',\'' + type + '\',this)">';
-                                    if (this.currentParams[key] === options) {
-                                        this.currentParams[key] = ls[0];
-                                    } // use first list item as default
-                                    for (i = 0; i < ls.length; i++) {
-                                        c += '<option value="' + ls[i] + '"' + ((ls[i] === value) ? ' selected="selected"' : '') + '>' + ll[i] + '</option>';
-                                    }
-                                    c += '</select>';
-                                    break;
-                                case 'list':
-                                    if (this.currentParams[key] === options) {
-                                        this.currentParams[key] = ls[0];
-                                    } // use first list item as default
-                                    c = '<select name="prop_' + key + '" onchange="props.setParameter(\'' + key + '\',\'' + type + '\',this)">';
-                                    for (i = 0; i < ls.length; i++) {
-                                        c += '<option value="' + ls[i] + '"' + ((ls[i] === value) ? ' selected="selected"' : '') + '>' + ll[i] + '</option>';
-                                    }
-                                    c += '</select>';
-                                    break;
-                                case 'list-multi':
-                                    // value = typeof ar[3] !== 'undefined' ? (ar[3] + '').replace(/^\s|\s$/, "") : '';
-                                    arrValue = value.split(',');
-                                    if (this.currentParams[key] === options) {
-                                        this.currentParams[key] = ls[0];
-                                    } // use first list item as default
-                                    c = '<select name="prop_' + key + '" size="' + ls.length + '" multiple="multiple" onchange="props.setParameter(\'' + key + '\',\'' + type + '\',this)">';
-                                    for (i = 0; i < ls.length; i++) {
-                                        if (arrValue.length) {
-                                            found = false;
-                                            for (j = 0; j < arrValue.length; j++) {
-                                                if (ls[i] === arrValue[j]) {
-                                                    found = true;
-                                                }
-                                            }
-                                            if (found === true) {
-                                                c += '<option value="' + ls[i] + '" selected="selected">' + ll[i] + '</option>';
-                                            } else {
-                                                c += '<option value="' + ls[i] + '">' + ll[i] + '</option>';
-                                            }
-                                        } else {
-                                            c += '<option value="' + ls[i] + '">' + ll[i] + '</option>';
-                                        }
-                                    }
-                                    c += '</select>';
-                                    break;
-                                case 'checkbox':
-                                    lv = (value + '').split(',');
-                                    c = '';
-                                    for (i = 0; i < ls.length; i++) {
-                                        c += '<label><input type="checkbox" name="prop_' + key + '[]" value="' + ls[i] + '"' + ((contains(lv, ls[i]) === true) ? ' checked="checked"' : '') + ' onchange="props.setParameter(\'' + key + '\',\'' + type + '\',this)" /> ' + ll[i] + '</label>&nbsp;';
-                                    }
-                                    break;
-                                case 'radio':
-                                    c = '';
-                                    for (i = 0; i < ls.length; i++) {
-                                        c += '<label><input type="radio" name="prop_' + key + '" value="' + ls[i] + '"' + ((ls[i] === value) ? ' checked="checked"' : '') + ' onchange="props.setParameter(\'' + key + '\',\'' + type + '\',this)" /> ' + ll[i] + '</label>&nbsp;';
-                                    }
-                                    break;
-                                case 'textarea':
-                                    c = '<textarea name="prop_' + key + '" rows="4" onchange="props.setParameter(\'' + key + '\',\'' + type + '\',this)">' + value + '</textarea>';
-                                    break;
-                                default:  // string
-                                    c = '<input type="text" name="prop_' + key + '" value="' + value + '" onchange="props.setParameter(\'' + key + '\',\'' + type + '\',this)" />';
-                                    break;
-                            }
-
-                            info = '';
-                            info += desc ? '<br/><small>' + desc + '</small>' : '';
-                            sd = defaultVal != undefined ? '<a title="{{ ManagerTheme::getLexicon('set_default') }}" href="javascript:;" class="btn btn-primary" onclick="props.setDefaultParam(\'' + key + '\',1);return false;"><i class="{{ $_style['icon_refresh'] }}"></i></a>' : '';
-
-                            t += '<tr><td class="labelCell" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">' + info + '</span></td><td class="inputCell relative" width="74%">' + c + '</td><td style="text-align: center">' + sd + '</td></tr>';
-                        }
-
-                        t += '</table>';
-
-                    } catch (e) {
-                        t = e + '\n\n' + props;
-                    }
-
-                    td = document.getElementById('displayprops');
-                    td.innerHTML = t;
-                    tr.style.display = '';
-                    if (JSON.stringify(this.currentParams) === '{}') return;
-
-                    this.implodeParameters();
-                },
-                setParameter: function (key, dt, ctrl) {
-                    var v, arrValues, cboxes = [];
-                    if (!ctrl) {
-                        return null;
-                    }
-                    switch (dt) {
-                        case 'int':
-                            ctrl.value = parseInt(ctrl.value);
-                            if (isNaN(ctrl.value)) {
-                                ctrl.value = 0;
-                            }
-                            v = ctrl.value;
-                            break;
-                        case 'menu':
-                        case 'list':
-                            v = ctrl.options[ctrl.selectedIndex].value;
-                            break;
-                        case 'list-multi':
-                            arrValues = [];
-                            for (var i = 0; i < ctrl.options.length; i++) {
-                                if (ctrl.options[i].selected) {
-                                    arrValues.push(ctrl.options[i].value);
-                                }
-                            }
-                            v = arrValues.toString();
-                            break;
-                        case 'checkbox':
-                            arrValues = [];
-                            cboxes = document.getElementsByName(ctrl.name);
-                            for (var i = 0; i < cboxes.length; i++) {
-                                if (cboxes[i].checked) {
-                                    arrValues.push(cboxes[i].value);
-                                }
-                            }
-                            v = arrValues.toString();
-                            break;
-                        default:
-                            v = ctrl.value + '';
-                            break;
-                    }
-                    this.currentParams[key][0]['value'] = v;
-                    this.implodeParameters();
-                },
-                setDefaultParam: function (key, show) {
-                    if (typeof this.currentParams[key][0]['default'] != 'undefined') {
-                        this.currentParams[key][0]['value'] = this.currentParams[key][0]['default'];
-                        if (show) {
-                            this.implodeParameters();
-                            this.showParameters();
-                        }
-                    }
-                },
-                setDefaults: function () {
-                    var keys = Object.keys(this.currentParams);
-                    var last = keys[keys.length - 1], show;
-                    Object.keys(this.currentParams).forEach(function(key) {
-                        show = key === last ? 1 : 0;
-                        props.setDefaultParam(key, show);
-                    });
-                },
-                IsJsonString: function (str) {
-                    try {
-                        JSON.parse(str);
-                    } catch (e) {
-                        return false;
-                    }
-                    return true;
-                },
-                implodeParameters: function () {
-                    var stringified = JSON.stringify(this.currentParams, null, 2);
-                    this.f.properties.innerHTML = stringified;
-                    if (this.first) {
-                        documentDirty = false;
-                        this.first = false;
-                    }
                 }
-            };
+                // check if codemirror is used
+                var currentProps = typeof myCodeMirrors != 'undefined' && typeof myCodeMirrors['properties'] != 'undefined' ? myCodeMirrors['properties'].getValue() : f.properties.value;
+                try {
+                    currentProps = JSON.parse(currentProps);
+                } catch (e) {
+                    currentProps = {};
+                }
+                if (typeof defaultProperties[ctrl.value] !== 'undefined' && (JSON.stringify(savedProperties) === '{}' || JSON.stringify(currentProps) === '{}')) {
+                    var stringified = JSON.stringify(defaultProperties[ctrl.value], null, 2);
+                    if (typeof myCodeMirrors != 'undefined') {
+                        myCodeMirrors['properties'].setValue(stringified);
+                    } else {
+                        f.properties.value = stringified;
+                    }
+                    elementProperties.showParameters();
+                    elementProperties.setDefaults();
+                };
+            }
 
           function check_toggle(target)
           {
@@ -516,7 +318,7 @@
                                 'class' => 'form-control-lg',
                                 'attributes' => 'onchange="documentDirty=true;" maxlength="50"'
                             ]) .
-                            (EvolutionCMS()->hasPermission('save_role')
+                            ($modx->hasPermission('save_role')
                             ? '<label class="custom-control" data-tooltip="' . ManagerTheme::getLexicon('lock_tmplvars') . "\n" . ManagerTheme::getLexicon('lock_tmplvars_msg') .'">' .
                              ManagerTheme::view('form.inputElement', [
                                 'type' => 'checkbox',
@@ -573,7 +375,7 @@
                         'label' => ManagerTheme::getLexicon('tmplvars_type'),
                         'value' => $data->type,
                         'options' => $types,
-                        'attributes' => 'onchange="documentDirty=true;"'
+                        'attributes' => 'onchange="changeDefaultProperties(this);documentDirty=true;"'
                     ])
 
                     @include('manager::form.textarea', [
@@ -629,23 +431,43 @@
                 </div>
             </div>
 
-            @if($data->properties)
-                <!-- Config -->
-                <div class="tab-page" id="tabConfig">
-                    <textarea id="properties" name="properties" style="display:none;">{!! json_encode($data->properties) !!}</textarea>
-                    <h2 class="tab">{{ ManagerTheme::getLexicon('settings_config') }}</h2>
-                    <script>tpTmplvars.addTabPage(document.getElementById('tabConfig'));</script>
+           <!-- Config -->
+            <div class="tab-page" id="tabConfig">
+                <h2 class="tab">{{ ManagerTheme::getLexicon('settings_config') }}</h2>
+                <script>tpTmplvars.addTabPage(document.getElementById('tabConfig'));</script>
 
-                    <div class="container container-body">
-                        <div class="form-group">
-                            <a href="javascript:;" class="btn btn-primary" onclick="props.setDefaults(this);return false;">{{ ManagerTheme::getLexicon('set_default_all') }}</a>
-                        </div>
-                        <div id="displaypropsrow">
-                            <div id="displayprops"></div>
-                        </div>
+                <div class="container container-body">
+                    <div class="form-group">
+                        <a href="javascript:;" class="btn btn-primary" onclick="elementProperties.setDefaults(this);return false;">{{ ManagerTheme::getLexicon('set_default_all') }}</a>
+                    </div>
+                    <div id="displaypropsrow">
+                        <div id="displayprops"></div>
                     </div>
                 </div>
-            @endif
+            </div>
+
+            <!-- Properties -->
+            <div class="tab-page" id="tabProps">
+                <h2 class="tab">{{ ManagerTheme::getLexicon('settings_properties') }}</h2>
+                <script>tpTmplvars.addTabPage(document.getElementById('tabProps'));</script>
+                <div class="container container-body">
+                    <div class="form-group">
+                        <a href="javascript:;" class="btn btn-primary" onclick="tpTmplvars.pages[1].select();elementProperties.showParameters(this);return false;">{{ ManagerTheme::getLexicon('update_params') }}</a>
+                    </div>
+                </div>
+
+                <!-- HTML text editor start -->
+                <div class="section-editor clearfix">
+                    @include('manager::form.textareaElement', [
+                        'name' => 'properties',
+                        'value' => json_encode($data->properties),
+                        'class' => 'phptextarea',
+                        'rows' => 20,
+                        'attributes' => 'onChange="documentDirty=true;elementProperties.showParameters(this);"'
+                    ])
+                </div>
+                <!-- HTML text editor end -->
+            </div>
 
             <div class="tab-page" id="tabTemplates">
                 <h2 class="tab">{{ ManagerTheme::getLexicon('manage_templates') }}</h2>
@@ -715,7 +537,7 @@
                 </div>
             </div>
 
-            @if(get_by_key(EvolutionCMS()->config, 'use_udperms') == 1 && EvolutionCMS()->hasPermission('access_permissions'))
+            @if($modx->getConfig('use_udperms') && $modx->hasAnyPermissions(['manage_groups', 'manage_tv_permissions']))
                 <div class="tab-page" id="tabAccess">
                     <h2 class="tab">{{ ManagerTheme::getLexicon('access_permissions') }}</h2>
                     <script>tpTmplvars.addTabPage(document.getElementById('tabAccess'));</script>
@@ -767,21 +589,13 @@
                         $chks = '';
                         foreach ($documentGroupNames as $row) {
                             $checked = in_array($row['id'], $groupsArray);
-                            if (EvolutionCMS()->hasPermission('access_permissions')) {
-                                if ($checked) {
-                                    $notPublic = true;
-                                }
-                                $chks .= "<li><label><input type='checkbox' name='docgroups[]' value='" . $row['id'] . "' " . ($checked ? "checked='checked'" : '') . " onclick=\"makePublic(false)\" /> " . $row['name'] . "</label></li>";
-                            } else {
-                                if ($checked) {
-                                    echo "<input type='hidden' name='docgroups[]'  value='" . $row['id'] . "' />";
-                                }
+                            if ($checked) {
+                                $notPublic = true;
                             }
+                            $chks .= "<li><label><input type='checkbox' name='docgroups[]' value='" . $row['id'] . "' " . ($checked ? "checked='checked'" : '') . " onclick=\"makePublic(false)\" /> " . $row['name'] . "</label></li>";
                         }
 
-                        if (EvolutionCMS()->hasPermission('access_permissions')) {
-                            $chks = "<li><label><input type='checkbox' name='chkalldocs' " . (empty($notPublic) ? "checked='checked'" : '') . " onclick=\"makePublic(true)\" /> <span class='warning'>" . ManagerTheme::getLexicon('all_doc_groups') . "</span></label></li>" . $chks;
-                        }
+                        $chks = "<li><label><input type='checkbox' name='chkalldocs' " . (empty($notPublic) ? "checked='checked'" : '') . " onclick=\"makePublic(true)\" /> <span class='warning'>" . ManagerTheme::getLexicon('all_doc_groups') . "</span></label></li>" . $chks;
 
                         echo '<ul>' . $chks . '</ul>';
 
@@ -795,9 +609,10 @@
         </div>
     </form>
     <script>
+        var savedProperties = {!! json_encode($data->properties) !!};
         setTimeout(function () {
             showParameters();
-            props.showParameters();
+            elementProperties.showParameters();
         }, 10);
     </script>
 @endsection

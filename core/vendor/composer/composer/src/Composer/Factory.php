@@ -190,7 +190,7 @@ class Factory
         }
         $config->setConfigSource(new JsonConfigSource($file));
 
-        $htaccessProtect = (bool) $config->get('htaccess-protect');
+        $htaccessProtect = $config->get('htaccess-protect');
         if ($htaccessProtect) {
             // Protect directory against web access. Since HOME could be
             // the www-data's user home and be web-accessible it is a
@@ -331,6 +331,7 @@ class Factory
             $localAuthFile = new JsonFile(dirname(realpath($composerFile)) . '/auth.json', null, $io);
             if ($localAuthFile->exists()) {
                 $io->writeError('Loading config file ' . $localAuthFile->getPath(), true, IOInterface::DEBUG);
+                self::validateJsonSchema($io, $localAuthFile, JsonFile::AUTH_SCHEMA);
                 $config->merge(array('config' => $localAuthFile->read()), $localAuthFile->getPath());
                 $config->setAuthConfigSource(new JsonConfigSource($localAuthFile, true));
             }
@@ -645,10 +646,10 @@ class Factory
         }
         $httpDownloaderOptions = array();
         if ($disableTls === false) {
-            if ($config->get('cafile')) {
+            if ('' !== $config->get('cafile')) {
                 $httpDownloaderOptions['ssl']['cafile'] = $config->get('cafile');
             }
-            if ($config->get('capath')) {
+            if ('' !== $config->get('capath')) {
                 $httpDownloaderOptions['ssl']['capath'] = $config->get('capath');
             }
             $httpDownloaderOptions = array_replace_recursive($httpDownloaderOptions, $options);

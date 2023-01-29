@@ -6,6 +6,36 @@ if (!EvolutionCMS()->hasPermission('save_chunk')) {
     EvolutionCMS()->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
+if (isset($_GET['disabled'])) {
+    $disabled = $_GET['disabled'] == 1 ? 1 : 0;
+    $id = (int)($_REQUEST['id'] ?? 0);
+    // Set the item name for logger
+    try {
+        $chunk = EvolutionCMS\Models\SiteHtmlsnippet::findOrFail($id);
+        // invoke OnBeforeChunkFormSave event
+        $modx->invokeEvent("OnBeforeChunkFormSave", array(
+            "mode" => "upd",
+            "id" => $id
+        ));
+        $_SESSION['itemname'] = $chunk->name;
+        $chunk->update(['disabled' => $disabled]);
+        // invoke OnChunkFormSave event
+        $modx->invokeEvent("OnChunkFormSave", array(
+            "mode" => "upd",
+            "id" => $id
+        ));
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        $modx->webAlertAndQuit($_lang["error_no_id"]);
+    }
+    // empty cache
+    $modx->clearCache('full');
+
+    // finished emptying cache - redirect
+    $header="Location: index.php?a=76&tab=2&r=2";
+    header($header);
+    exit;
+}
+
 $id = (int)$_POST['id'];
 $snippet = $_POST['post'];
 $name = trim($_POST['name']);

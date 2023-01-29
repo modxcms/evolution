@@ -34,7 +34,7 @@ class Config
     public static $defaultConfig = array(
         'process-timeout' => 300,
         'use-include-path' => false,
-        'allow-plugins' => null, // null for BC for now, will become array() after July 2022
+        'allow-plugins' => array(),
         'use-parent-dir' => 'prompt',
         'preferred-install' => 'dist',
         'notify-on-install' => true,
@@ -76,13 +76,12 @@ class Config
         'use-github-api' => true,
         'lock' => true,
         'platform-check' => 'php-only',
-        // valid keys without defaults (auth config stuff):
-        // bitbucket-oauth
-        // github-oauth
-        // gitlab-oauth
-        // gitlab-token
-        // http-basic
-        // bearer
+        'bitbucket-oauth' => array(),
+        'github-oauth' => array(),
+        'gitlab-oauth' => array(),
+        'gitlab-token' => array(),
+        'http-basic' => array(),
+        'bearer' => array(),
     );
 
     /** @var array<string, mixed> */
@@ -120,11 +119,6 @@ class Config
     {
         // load defaults
         $this->config = static::$defaultConfig;
-
-        // TODO after July 2022 remove this and update the default value above in self::$defaultConfig + remove note from 06-config.md
-        if (strtotime('2022-07-01') < time()) {
-            $this->config['allow-plugins'] = array();
-        }
 
         $this->repositories = static::$defaultRepositories;
         $this->useEnvironment = (bool) $useEnvironment;
@@ -187,7 +181,7 @@ class Config
                 if (in_array($key, array('bitbucket-oauth', 'github-oauth', 'gitlab-oauth', 'gitlab-token', 'http-basic', 'bearer'), true) && isset($this->config[$key])) {
                     $this->config[$key] = array_merge($this->config[$key], $val);
                     $this->setSourceOfConfigValue($val, $key, $source);
-                } elseif (in_array($key, array('allow-plugins'), true) && isset($this->config[$key]) && is_array($this->config[$key])) {
+                } elseif (in_array($key, array('allow-plugins'), true) && isset($this->config[$key]) && is_array($this->config[$key]) && is_array($val)) {
                     // merging $val first to get the local config on top of the global one, then appending the global config,
                     // then merging local one again to make sure the values from local win over global ones for keys present in both
                     $this->config[$key] = array_merge($val, $this->config[$key], $val);
@@ -301,6 +295,10 @@ class Config
                     $this->setSourceOfConfigValue($val, $key, $env);
                 }
 
+                if ($key === 'process-timeout') {
+                    return max(0, false !== $val ? (int) $val : $this->config[$key]);
+                }
+
                 $val = rtrim((string) $this->process(false !== $val ? $val : $this->config[$key], $flags), '/\\');
                 $val = Platform::expandPath($val);
 
@@ -339,7 +337,7 @@ class Config
 
             // ints without env var support
             case 'cache-ttl':
-                return (int) $this->config[$key];
+                return max(0, (int) $this->config[$key]);
 
             // numbers with kb/mb/gb support, without env var support
             case 'cache-files-maxsize':
@@ -348,7 +346,7 @@ class Config
                         "Could not parse the value of '$key': {$this->config[$key]}"
                     );
                 }
-                $size = $matches[1];
+                $size = (float) $matches[1];
                 if (isset($matches[2])) {
                     switch (strtolower($matches[2])) {
                         case 'g':
@@ -365,15 +363,15 @@ class Config
                     }
                 }
 
-                return $size;
+                return max(0, (int) $size);
 
             // special cases below
             case 'cache-files-ttl':
                 if (isset($this->config[$key])) {
-                    return (int) $this->config[$key];
+                    return max(0, (int) $this->config[$key]);
                 }
 
-                return (int) $this->config['cache-ttl'];
+                return $this->get('cache-ttl');
 
             case 'home':
                 return rtrim($this->process(Platform::expandPath($this->config[$key]), $flags), '/\\');

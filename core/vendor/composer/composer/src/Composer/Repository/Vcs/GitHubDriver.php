@@ -234,6 +234,10 @@ class GitHubDriver extends VcsDriver
         foreach (Preg::split('{\r?\n}', $funding) as $line) {
             $line = trim($line);
             if (Preg::isMatch('{^(\w+)\s*:\s*(.+)$}', $line, $match)) {
+                if ($match[2] === '[') {
+                    $key = $match[1];
+                    continue;
+                }
                 if (Preg::isMatch('{^\[(.*)\](?:\s*#.*)?$}', $match[2], $match2)) {
                     foreach (array_map('trim', Preg::split('{[\'"]?\s*,\s*[\'"]?}', $match2[1])) as $item) {
                         $result[] = array('type' => $match[1], 'url' => trim($item, '"\' '));
@@ -244,8 +248,13 @@ class GitHubDriver extends VcsDriver
                 $key = null;
             } elseif (Preg::isMatch('{^(\w+)\s*:\s*#\s*$}', $line, $match)) {
                 $key = $match[1];
-            } elseif ($key && Preg::isMatch('{^-\s*(.+)(\s+#.*)?$}', $line, $match)) {
+            } elseif ($key && (
+                Preg::isMatch('{^-\s*(.+)(\s+#.*)?$}', $line, $match)
+                || Preg::isMatch('{^(.+),(\s*#.*)?$}', $line, $match)
+            )) {
                 $result[] = array('type' => $key, 'url' => trim($match[1], '"\' '));
+            } elseif ($key && $line === ']') {
+                $key = null;
             }
         }
 
@@ -295,6 +304,13 @@ class GitHubDriver extends VcsDriver
 
         $resource = $this->getApiUrl() . '/repos/'.$this->owner.'/'.$this->repository.'/contents/' . $file . '?ref='.urlencode($identifier);
         $resource = $this->getContents($resource)->decodeJson();
+
+        // The GitHub contents API only returns files up to 1MB as base64 encoded files
+        // larger files either need be fetched with a raw accept header or by using the git blob endpoint
+        if ((!isset($resource['content']) || $resource['content'] === '') && $resource['encoding'] === 'none' && isset($resource['git_url'])) {
+            $resource = $this->getContents($resource['git_url'])->decodeJson();
+        }
+
         if (empty($resource['content']) || $resource['encoding'] !== 'base64' || !($content = base64_decode($resource['content']))) {
             throw new \RuntimeException('Could not retrieve ' . $file . ' for '.$identifier);
         }

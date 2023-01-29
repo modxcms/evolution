@@ -51,9 +51,9 @@ class DocumentSetGroups extends DocumentCreate
 
     /**
      * UserRegistration constructor.
-     * @param array $documentData
-     * @param bool $events
-     * @param bool $cache
+     * @param  array  $documentData
+     * @param  bool  $events
+     * @param  bool  $cache
      */
     public function __construct(array $documentData, bool $events = true, bool $cache = true)
     {
@@ -105,42 +105,29 @@ class DocumentSetGroups extends DocumentCreate
         }
 
 
-        $new_groups = array();
+        $new_groups = [];
         // process the new input
 
-        foreach ($this->documentData['document_groups'] as $value_pair) {
-            list($group, $link_id) = explode(',', $value_pair); // @see actions/mutate_content.dynamic.php @ line 1138 (permissions list)
-            $new_groups[$group] = $link_id;
+        foreach ($this->documentData['document_groups'] as $group) {
+            $new_groups[$group] = $this->documentData['id'];
         }
 
         // grab the current set of permissions on this document the user can access
-        $isManager = EvolutionCMS()->hasPermission('access_permissions');
-        $isWeb = EvolutionCMS()->hasPermission('web_access_permissions');
-        $documentGroups = \EvolutionCMS\Models\DocumentGroup::query()->select('document_groups.id', 'document_groups.document_group')
-            ->leftJoin('documentgroup_names', 'document_groups.document_group', '=', 'documentgroup_names.id')
-            ->where(function ($query) use ($isWeb, $isManager) {
-                $query->where(function ($query) use ($isManager) {
-                    $query->whereRaw('1 = ' . (int)$isManager)
-                        ->where('documentgroup_names.private_memgroup', true);
-                })
-                    ->orWhere(function ($query) use ($isWeb) {
-                        $query->whereRaw('1 = ' . (int)$isWeb)
-                            ->where('documentgroup_names.private_webgroup', true);
-                    });
-            })->where('document_groups.document', $this->documentData['id'])->get();
+        $documentGroups = \EvolutionCMS\Models\DocumentGroup::select('id', 'document_group')
+            ->where('document', $this->documentData['id'])->get();
 
-        $old_groups = array();
-        foreach ($documentGroups as $documentGroup)
+        $old_groups = [];
+        foreach ($documentGroups as $documentGroup) {
             $old_groups[$documentGroup->document_group] = $documentGroup->id;
+        }
 
         // update the permissions in the database
-        $insertions = $deletions = array();
+        $insertions = [];
         foreach ($new_groups as $group => $link_id) {
             if (array_key_exists($group, $old_groups)) {
                 unset($old_groups[$group]);
-                continue;
-            } elseif ($link_id == 'new') {
-                $insertions[] = ['document_group' => (int)$group, 'document' => $this->documentData['id']];
+            } else {
+                $insertions[] = ['document_group' => (int) $group, 'document' => $this->documentData['id']];
             }
         }
         if (!empty($insertions)) {
@@ -148,10 +135,6 @@ class DocumentSetGroups extends DocumentCreate
         }
         if (!empty($old_groups)) {
             \EvolutionCMS\Models\DocumentGroup::query()->whereIn('id', $old_groups)->delete();
-        }
-        // necessary to remove all permissions as document is public
-        if ((isset($_POST['chkalldocs']) && $_POST['chkalldocs'] == 'on')) {
-            \EvolutionCMS\Models\DocumentGroup::query()->where('document', $this->documentData['id'])->delete();
         }
 
         if ($this->cache) {

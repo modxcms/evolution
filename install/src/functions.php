@@ -1,12 +1,12 @@
 <?php
-if (! function_exists('getLangOptions')) {
+if (!function_exists('getLangOptions')) {
     /**
-     * @param string $install_language
+     * @param  string  $install_language
      * @return string
      */
     function getLangOptions($install_language = 'en')
     {
-        $langs = array();
+        $langs = [];
         if ($handle = opendir(__DIR__ . '/lang/')) {
             while (false !== ($file = readdir($handle))) {
                 if (strpos($file, '.')) {
@@ -16,7 +16,7 @@ if (! function_exists('getLangOptions')) {
             closedir($handle);
         }
         sort($langs);
-        $_ = array();
+        $_ = [];
         foreach ($langs as $language) {
             $abrv_language = explode('-', $language);
             $selected = ($language === $install_language) ? 'selected' : '';
@@ -27,7 +27,7 @@ if (! function_exists('getLangOptions')) {
     }
 }
 
-if (! function_exists('install_sessionCheck')) {
+if (!function_exists('install_sessionCheck')) {
     function install_sessionCheck()
     {
         global $_lang;
@@ -62,10 +62,10 @@ if (! function_exists('install_sessionCheck')) {
 
 if (!function_exists('parse')) {
     /**
-     * @param string $src
-     * @param array $ph
-     * @param string $left
-     * @param string $right
+     * @param  string  $src
+     * @param  array  $ph
+     * @param  string  $left
+     * @param  string  $right
      * @return string
      */
     function parse($src, $ph, $left = '[+', $right = '+]')
@@ -86,7 +86,7 @@ if (!function_exists('ph')) {
     function ph()
     {
         global $_lang, $moduleName, $moduleVersion, $modx_textdir, $modx_release_date;
-        $ph = array();
+        $ph = [];
 
         if (isset($_SESSION['installmode'])) {
             $installmode = $_SESSION['installmode'];
@@ -96,7 +96,6 @@ if (!function_exists('ph')) {
 
         $ph['pagetitle'] = $_lang['modx_install'];
         $ph['textdir'] = $modx_textdir ? ' id="rtl"' : '';
-        $ph['help_link'] = $installmode == 0 ? ($_lang['help_link_new'] ?? '') : $_lang['help_link_upd'];
         $ph['version'] = $moduleVersion;
         $ph['release_date'] = ($modx_textdir ? '&rlm;' : '') . $modx_release_date;
         $ph['footer1'] = $_lang['modx_footer1'];
@@ -127,7 +126,8 @@ if (!function_exists('get_installmode')) {
                 $installmode = 0;
             } else {
                 $host = explode(':', $database_server, 2);
-                $conn = mysqli_connect($host[0], $database_user, $database_password,'', isset($host[1]) ? $host[1] : null);
+                $conn = mysqli_connect($host[0], $database_user, $database_password, '',
+                    isset($host[1]) ? $host[1] : null);
                 if ($conn) {
                     $_SESSION['database_server'] = $database_server;
                     $_SESSION['database_user'] = $database_user;
@@ -172,22 +172,22 @@ if (!function_exists('get_installmode')) {
 
 if (!function_exists('getLangs')) {
     /**
-     * @param string $install_language
+     * @param  string  $install_language
      * @return string
      */
     function getLangs($install_language)
     {
         if ($install_language !== 'en' &&
-            is_dir('../core/lang/'.$install_language)
+            is_dir('../core/lang/' . $install_language)
         ) {
             $manager_language = $install_language;
         } else {
             $manager_language = 'english';
         }
-        $langs = array();
+        $langs = [];
         if ($handle = opendir('../core/lang')) {
             while (false !== ($file = readdir($handle))) {
-                if (is_dir('../core/lang/'.$file) && $file != '.' && $file != '..') {
+                if (is_dir('../core/lang/' . $file) && $file != '.' && $file != '..') {
                     $langs[] = $file;
                 }
             }
@@ -195,7 +195,7 @@ if (!function_exists('getLangs')) {
         }
         sort($langs);
 
-        $_ = array();
+        $_ = [];
         foreach ($langs as $language) {
             $abrv_language = explode('.', $language);
             $selected = (strtolower($abrv_language[0]) == strtolower($manager_language)) ? ' selected' : '';
@@ -207,9 +207,9 @@ if (!function_exists('getLangs')) {
 }
 
 if (!function_exists('sortItem')) {
-    function sortItem($array = array(), $order = 'utf8mb4,utf8')
+    function sortItem($array = [], $order = 'utf8mb4,utf8')
     {
-        $rs = array('recommend' => '');
+        $rs = ['recommend' => ''];
         $order = explode(',', $order);
         foreach ($order as $v) {
             foreach ($array as $name => $sel) {
@@ -227,19 +227,19 @@ if (!function_exists('sortItem')) {
 
 if (!function_exists('getTemplates')) {
     /**
-     * @param array $presets
+     * @param  array  $presets
      * @return string
      */
-    function getTemplates($presets = array())
+    function getTemplates($presets = [])
     {
         if (empty($presets)) {
             return '';
         }
-        $selectedTemplates = isset ($_POST['template']) ? $_POST['template'] : array();
+        $selectedTemplates = isset ($_POST['template']) ? $_POST['template'] : [];
         $tpl = '<label><input type="checkbox" name="template[]" value="[+i+]" class="[+class+]" [+checked+] />[%install_update%] <span class="comname">[+name+]</span> - [+desc+]</label><hr />';
-        $_ = array();
+        $_ = [];
         $i = 0;
-        $ph = array();
+        $ph = [];
         foreach ($presets as $preset) {
             $ph['i'] = $i;
             $ph['name'] = isset($preset[0]) ? $preset[0] : '';
@@ -256,19 +256,19 @@ if (!function_exists('getTemplates')) {
 
 if (!function_exists('getTVs')) {
     /**
-     * @param array $presets
+     * @param  array  $presets
      * @return string
      */
-    function getTVs($presets = array())
+    function getTVs($presets = [])
     {
         if (empty($presets)) {
             return '';
         }
-        $selectedTvs = isset ($_POST['tv']) ? $_POST['tv'] : array();
+        $selectedTvs = isset ($_POST['tv']) ? $_POST['tv'] : [];
         $tpl = '<label><input type="checkbox" name="tv[]" value="[+i+]" class="[+class+]" [+checked+] />[%install_update%] <span class="comname">[+name+]</span> - [+alterName+] <span class="description">([+desc+])</span></label><hr />';
-        $_ = array();
+        $_ = [];
         $i = 0;
-        $ph = array();
+        $ph = [];
         foreach ($presets as $preset) {
             $ph['i'] = $i;
             $ph['name'] = $preset[0];
@@ -288,19 +288,19 @@ if (!function_exists('getChunks')) {
     /**
      * display chunks
      *
-     * @param array $presets
+     * @param  array  $presets
      * @return string
      */
-    function getChunks($presets = array())
+    function getChunks($presets = [])
     {
         if (empty($presets)) {
             return '';
         }
-        $selected = isset ($_POST['chunk']) ? $_POST['chunk'] : array();
+        $selected = isset ($_POST['chunk']) ? $_POST['chunk'] : [];
         $tpl = '<label><input type="checkbox" name="chunk[]" value="[+i+]" class="[+class+]" [+checked+] />[%install_update%] <span class="comname">[+name+]</span> - [+desc+]</label><hr />';
-        $_ = array();
+        $_ = [];
         $i = 0;
-        $ph = array();
+        $ph = [];
         foreach ($presets as $preset) {
             $ph['i'] = $i;
             $ph['name'] = $preset[0];
@@ -319,19 +319,19 @@ if (!function_exists('getModules')) {
     /**
      * display modules
      *
-     * @param array $presets
+     * @param  array  $presets
      * @return string
      */
-    function getModules($presets = array())
+    function getModules($presets = [])
     {
         if (empty($presets)) {
             return '';
         }
-        $selected = isset ($_POST['module']) ? $_POST['module'] : array();
+        $selected = isset ($_POST['module']) ? $_POST['module'] : [];
         $tpl = '<label><input type="checkbox" name="module[]" value="[+i+]" class="[+class+]" [+checked+] />[%install_update%] <span class="comname">[+name+]</span> - [+desc+]</label><hr />';
-        $_ = array();
+        $_ = [];
         $i = 0;
-        $ph = array();
+        $ph = [];
         foreach ($presets as $preset) {
             $ph['i'] = $i;
             $ph['name'] = $preset[0];
@@ -350,19 +350,19 @@ if (!function_exists('getPlugins')) {
     /**
      * display plugins
      *
-     * @param array $presets
+     * @param  array  $presets
      * @return string
      */
-    function getPlugins($presets = array())
+    function getPlugins($presets = [])
     {
         if (!count($presets)) {
             return '';
         }
-        $selected = isset ($_POST['plugin']) ? $_POST['plugin'] : array();
+        $selected = isset ($_POST['plugin']) ? $_POST['plugin'] : [];
         $tpl = '<label><input type="checkbox" name="plugin[]" value="[+i+]" class="[+class+]" [+checked+] />[%install_update%] <span class="comname">[+name+]</span> - [+desc+]</label><hr />';
-        $_ = array();
+        $_ = [];
         $i = 0;
-        $ph = array();
+        $ph = [];
         foreach ($presets as $preset) {
             $ph['i'] = $i;
             $ph['name'] = $preset[0];
@@ -385,19 +385,19 @@ if (!function_exists('getSnippets')) {
     /**
      * display snippets
      *
-     * @param array $presets
+     * @param  array  $presets
      * @return string
      */
-    function getSnippets($presets = array())
+    function getSnippets($presets = [])
     {
         if (!count($presets)) {
             return '';
         }
-        $selected = isset ($_POST['snippet']) ? $_POST['snippet'] : array();
+        $selected = isset ($_POST['snippet']) ? $_POST['snippet'] : [];
         $tpl = '<label><input type="checkbox" name="snippet[]" value="[+i+]" class="[+class+]" [+checked+] />[%install_update%] <span class="comname">[+name+]</span> - [+desc+]</label><hr />';
-        $_ = array();
+        $_ = [];
         $i = 0;
-        $ph = array();
+        $ph = [];
         foreach ($presets as $preset) {
             $ph['i'] = $i;
             $ph['name'] = $preset[0];
@@ -412,39 +412,10 @@ if (!function_exists('getSnippets')) {
     }
 }
 
-if (!function_exists('clean_up')) {
-    function clean_up()
-    {
-        // secure web documents - privateweb
-        \EvolutionCMS\Models\SiteContent::query()->where('privateweb', 1)->update(['privateweb' => 0]);
-
-        $ids = \EvolutionCMS\Models\SiteContent::query()
-            ->leftJoin('document_groups', 'document_groups.document', '=', 'site_content.id')
-            ->leftJoin('webgroup_access', 'document_groups.document_group', '=', 'webgroup_access.documentgroup')
-            ->where('webgroup_access.id', '>', 0)->pluck('site_content.id');
-
-
-        if($ids->count()> 0){
-            \EvolutionCMS\Models\SiteContent::query()->whereIn('id', $ids)->update(['privateweb' => 1]);
-            }
-        //Clear privatemgr
-        \EvolutionCMS\Models\SiteContent::query()->where('privatemgr', 1)->update(['privatemgr' => 0]);
-
-        $ids = \EvolutionCMS\Models\SiteContent::query()
-            ->leftJoin('document_groups', 'document_groups.document', '=', 'site_content.id')
-            ->leftJoin('membergroup_access', 'document_groups.document_group', '=', 'membergroup_access.documentgroup')
-            ->where('membergroup_access.id', '>', 0)->pluck('site_content.id');
-
-        if($ids->count()> 0){
-            \EvolutionCMS\Models\SiteContent::query()->whereIn('id', $ids)->update(['privatemgr' => 1]);
-        }
-    }
-}
-
 if (!function_exists('parse_docblock')) {
     function parse_docblock($element_dir, $filename)
     {
-        $params = array();
+        $params = [];
         $fullpath = $element_dir . '/' . $filename;
         if (is_readable($fullpath)) {
             $tpl = @fopen($fullpath, 'r');
@@ -515,12 +486,12 @@ if (!function_exists('propertiesNameValue')) {
      * parses a resource property string and returns the result as an array
      * duplicate of method in documentParser class
      *
-     * @param string $propertyString
+     * @param  string  $propertyString
      * @return array
      */
     function propertiesNameValue($propertyString)
     {
-        $parameter = array();
+        $parameter = [];
         if (!empty ($propertyString)) {
             $tmpParams = explode('&', $propertyString);
             $countParams = count($tmpParams);
@@ -548,8 +519,8 @@ if (!function_exists('propUpdate')) {
     /**
      * Property Update function
      *
-     * @param string $new
-     * @param string $old
+     * @param  string  $new
+     * @param  string  $old
      * @return string
      */
     function propUpdate($new, $old)
@@ -571,8 +542,8 @@ if (!function_exists('propUpdate')) {
 
 if (!function_exists('parseProperties')) {
     /**
-     * @param string $propertyString
-     * @param bool|mixed $json
+     * @param  string  $propertyString
+     * @param  bool|mixed  $json
      * @return string|array
      */
     function parseProperties($propertyString, $json = false)
@@ -585,7 +556,7 @@ if (!function_exists('parseProperties')) {
         }
 
         $jsonFormat = isJson($propertyString, true);
-        $property = array();
+        $property = [];
         // old format
         if ($jsonFormat === false) {
             $props = explode('&', $propertyString);
@@ -597,7 +568,7 @@ if (!function_exists('parseProperties')) {
 
                 $arr = explode(';', $prop);
                 if (!is_array($arr)) {
-                    $arr = array();
+                    $arr = [];
                 }
                 $key = explode('=', isset($arr[0]) ? $arr[0] : '');
                 if (!is_array($key) || empty($key[0])) {
@@ -641,8 +612,8 @@ if (!function_exists('parseProperties')) {
 
 if (!function_exists('isJson')) {
     /**
-     * @param string $string
-     * @param bool $returnData
+     * @param  string  $string
+     * @param  bool  $returnData
      * @return bool|mixed
      */
     function isJson($string, $returnData = false)
@@ -655,8 +626,8 @@ if (!function_exists('isJson')) {
 
 if (!function_exists('getCreateDbCategory')) {
     /**
-     * @param string|int $category
-     * @param SqlParser $sqlParser
+     * @param  string|int  $category
+     * @param  SqlParser  $sqlParser
      * @return int
      */
     function getCreateDbCategory($category)
@@ -664,8 +635,8 @@ if (!function_exists('getCreateDbCategory')) {
         $category_id = 0;
         if (!empty($category)) {
             $categoryRecord = \EvolutionCMS\Models\Category::where('category', $category)->first();
-            if(is_null($categoryRecord)){
-                $categoryRecord = \EvolutionCMS\Models\Category::firstOrCreate(['category'=>$category]);
+            if (is_null($categoryRecord)) {
+                $categoryRecord = \EvolutionCMS\Models\Category::firstOrCreate(['category' => $category]);
             }
             $category_id = $categoryRecord->getKey();
         }
@@ -677,8 +648,8 @@ if (!function_exists('removeDocblock')) {
     /**
      * Remove installer Docblock only from components using plugin FileSource / fileBinding
      *
-     * @param string $code
-     * @param string $type
+     * @param  string  $code
+     * @param  string  $type
      * @return string
      */
     function removeDocblock($code, $type)
@@ -716,7 +687,7 @@ if (!function_exists('removeFolder')) {
     /**
      * RemoveFolder
      *
-     * @param string $path
+     * @param  string  $path
      * @return string
      */
     function removeFolder($path)
@@ -743,12 +714,12 @@ if (!function_exists('removeFolder')) {
     }
 }
 
-if (! function_exists('env')) {
+if (!function_exists('env')) {
     /**
      * Gets the value of an environment variable.
      *
      * @param  string  $key
-     * @param  mixed   $default
+     * @param  mixed  $default
      * @return mixed
      */
     function env($key, $default = null)
@@ -782,7 +753,7 @@ if (! function_exists('env')) {
     }
 }
 
-if (! function_exists('value')) {
+if (!function_exists('value')) {
     /**
      * Return the default value of the given value.
      *
@@ -792,5 +763,20 @@ if (! function_exists('value')) {
     function value($value)
     {
         return $value instanceof Closure ? $value() : $value;
+    }
+}
+
+if (!function_exists('seed')) {
+    function seed($folder = 'install')
+    {
+        $folder = $folder == 'update' ? 'update' : 'install';
+        $namespace = 'EvolutionCMS\\Installer\\' . ($folder == 'update' ? 'Update\\' : 'Install\\');
+        foreach (glob("../install/stubs/seeds/{$folder}/*.php") as $filename) {
+            include_once $filename;
+            $class = $namespace . basename($filename, '.php');
+            if (class_exists($class) && is_subclass_of($class, 'Illuminate\\Database\\Seeder')) {
+                \EvolutionCMS\Facades\Console::call('db:seed', ['--class' => '\\' . $class]);
+            }
+        }
     }
 }

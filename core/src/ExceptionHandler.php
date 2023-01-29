@@ -94,7 +94,7 @@ class ExceptionHandler
      */
     public function phpError($nr, $text, $file, $line)
     {
-        if (error_reporting() == 0 || $nr == 0) {
+        if (error_reporting() == 0 || $nr == 0 || error_reporting() !== E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT) {
             return true;
         }
         if ($this->container->stopOnNotice == false) {

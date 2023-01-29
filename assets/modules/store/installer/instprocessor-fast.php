@@ -26,7 +26,7 @@ $moduleRelease = $modx_release_date;
 $moduleSQLBaseFile = "setup.sql";
 $moduleSQLDataFile = "setup.data.sql";
 
-if (is_file($installPath . '/' . $moduleSQLBaseFile)) {
+if (!empty($installPath) && is_file($installPath . '/' . $moduleSQLBaseFile)) {
     $moduleSQLDataFile = $moduleSQLBaseFile;
 }
 
@@ -499,7 +499,7 @@ function propUpdate($new, $old)
     $newArr = parseProperties($new);
     $oldArr = parseProperties($old);
     foreach ($oldArr as $k => $v) {
-        if (isset($v['0']['options'])) {
+        if (isset($v['0']['options']) && isset($newArr[$k]['0']['options'])) {
             $oldArr[$k]['0']['options'] = $newArr[$k]['0']['options'];
         }
     }

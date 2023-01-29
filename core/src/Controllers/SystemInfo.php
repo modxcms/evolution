@@ -42,48 +42,10 @@ class SystemInfo extends AbstractController implements ManagerTheme\PageControll
     {
         return [
             'serverArr' => $this->parameterServerArr(),
-            'tables' => $this->parameterTablesInfo(),
-            'truncateable' => $this->parameterTruncateableTables()
         ];
     }
 
-    protected function parameterTruncateableTables()
-    {
-        return [
-            $this->database->getTableName('event_log', false),
-            $this->database->getTableName('manager_log', false)
-        ];
-    }
-
-    protected function parameterTablesInfo(): array
-    {
-        switch ($this->database->getConfig()['driver']) {
-            case 'pgsql':
-                $prefix = $this->database->escape($this->database->getConfig('prefix'));
-                $sql = "SELECT *, tablename as Name
-                 FROM pg_catalog.pg_tables WHERE 
-            schemaname != 'information_schema' AND tablename LIKE '%".$prefix."%'";
-                $resultArray = json_decode(json_encode(\DB::select($sql)), true);
-                return $resultArray;
-
-                break;
-
-            case 'mysql':
-                $prefix = $this->database->escape($this->database->getConfig('prefix'));
-                $sql = 'SHOW TABLE STATUS FROM `' . $this->database->getConfig('database') . '` LIKE "' . $prefix . '%"';
-                $resultArray = json_decode(json_encode(\DB::select($sql)), true);
-                return $resultArray;
-
-                break;
-            default:
-                return [];
-                break;
-        }
-
-    }
-
-    protected
-    function resolveCharset()
+    protected function resolveCharset()
     {
         switch ($this->database->getConfig()['driver']) {
             case 'pgsql':
@@ -100,12 +62,9 @@ class SystemInfo extends AbstractController implements ManagerTheme\PageControll
             default :
                 return 'none';
         }
-
-
     }
 
-    protected
-    function resolveCollation()
+    protected function resolveCollation()
     {
         switch ($this->database->getConfig()['driver']) {
             case 'pgsql':
@@ -125,86 +84,85 @@ class SystemInfo extends AbstractController implements ManagerTheme\PageControll
 
     }
 
-    protected
-    function parameterServerArr(): Collection
+    protected function parameterServerArr(): Collection
     {
         return new Collection([
-            'modx_version' => [
+            'modx_version'       => [
                 'is_lexicon' => true,
-                'data' => implode(' ', [
+                'data'       => implode(' ', [
                     $this->managerTheme->getCore()->getVersionData('version'),
                     $this->managerTheme->getCore()->getVersionData('new_version')
                 ])
             ],
-            'release_date' => [
+            'release_date'       => [
                 'is_lexicon' => true,
-                'data' => $this->managerTheme->getCore()->getVersionData('release_date')
+                'data'       => $this->managerTheme->getCore()->getVersionData('release_date')
             ],
-            'PHP Version' => [
-                'data' => phpversion(),
+            'PHP Version'        => [
+                'data'   => phpversion(),
                 'render' => 'manager::' . $this->getView() . '.phpversion'
             ],
             'access_permissions' => [
                 'is_lexicon' => true,
-                'data' => $this->managerTheme->getLexicon(
-                    (bool)$this->managerTheme->getCore()->getConfig('use_udperms') ? 'enabled' : 'disabled'
+                'data'       => $this->managerTheme->getLexicon(
+                    (bool) $this->managerTheme->getCore()->getConfig('use_udperms') ? 'enabled' : 'disabled'
                 )
             ],
-            'servertime' => [
+            'servertime'         => [
                 'is_lexicon' => true,
-                'data' => date('H:i:s', time())
+                'data'       => date('H:i:s', time())
             ],
-            'localtime' => [
+            'localtime'          => [
                 'is_lexicon' => true,
-                'data' => date('H:i:s', time() + $this->managerTheme->getCore()->getConfig('server_offset_time'))
+                'data'       => date('H:i:s', time() + $this->managerTheme->getCore()->getConfig('server_offset_time'))
             ],
-            'serveroffset' => [
+            'serveroffset'       => [
                 'is_lexicon' => true,
-                'data' => $this->managerTheme->getCore()->getConfig('server_offset_time') / (60 * 60) . ' h'
+                'data'       => $this->managerTheme->getCore()->getConfig('server_offset_time') / (60 * 60) . ' h'
             ],
-            'database_name' => [
+            'database_name'      => [
                 'is_lexicon' => true,
-                'data' => $this->managerTheme->getCore()->getService('config')->get('database.connections.default.database')
+                'data'       => $this->managerTheme->getCore()->getService('config')->get('database.connections.default.database')
             ],
-            'database_server' => [
+            'database_server'    => [
                 'is_lexicon' => true,
-                'data' => $this->managerTheme->getCore()->getService('config')->get('database.connections.default.host')
+                'data'       => $this->managerTheme->getCore()->getService('config')->get('database.connections.default.host')
             ],
-            'database_version' => [
+            'database_version'   => [
                 'is_lexicon' => true,
-                'data' => $this->database->getVersion()
+                'data'       => $this->database->getVersion()
             ],
-            'database_charset' => [
+            'database_charset'   => [
                 'is_lexicon' => true,
-                'data' => $this->resolveCharset()
+                'data'       => $this->resolveCharset()
             ],
             'database_collation' => [
                 'is_lexicon' => true,
-                'data' => $this->resolveCollation()
+                'data'       => $this->resolveCollation()
             ],
-            'table_prefix' => [
+            'table_prefix'       => [
                 'is_lexicon' => true,
-                'data' => $this->managerTheme->getCore()->getService('config')->get('database.connections.default.prefix')
+                'data'       => $this->managerTheme->getCore()->getService('config')->get('database.connections.default.prefix')
             ],
-            'cfg_base_path' => [
+            'cfg_base_path'      => [
                 'is_lexicon' => true,
-                'data' => MODX_BASE_PATH
+                'data'       => MODX_BASE_PATH
             ],
-            'cfg_base_url' => [
+            'cfg_base_url'       => [
                 'is_lexicon' => true,
-                'data' => MODX_BASE_URL
+                'data'       => MODX_BASE_URL
             ],
-            'cfg_manager_url' => [
+            'cfg_manager_url'    => [
                 'is_lexicon' => true,
-                'data' => MODX_MANAGER_URL
+                'data'       => MODX_MANAGER_URL
             ],
-            'cfg_manager_path' => [
+            'cfg_manager_path'   => [
                 'is_lexicon' => true,
-                'data' => MODX_MANAGER_PATH
+                'data'       => MODX_MANAGER_PATH
             ],
-            'cfg_site_url' => [
+            'cfg_site_url'       => [
                 'is_lexicon' => true,
-                'data' => MODX_SITE_URL
+                'data'       => MODX_SITE_URL
             ]
         ]);
     }

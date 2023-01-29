@@ -76,7 +76,7 @@ if (! function_exists('ProcessTVCommand')) {
         } elseif (isset($modx->config['enable_bindings']) && $modx->config['enable_bindings'] != 1 && $src === 'docform') {
             return '@Bindings is disabled.';
         } else {
-            list ($cmd, $param) = ParseCommand($nvalue);
+            [$cmd, $param] = ParseCommand($nvalue);
             $cmd = trim($cmd);
             $param = parseTvValues($param, $tvsArray);
             switch ($cmd) {
@@ -370,7 +370,7 @@ if (! function_exists('getTVDisplayFormat')) {
                 $o = '';
                 $countValue = count($value);
                 for ($i = 0; $i < $countValue; $i++) {
-                    list($name, $url) = is_array($value[$i]) ? $value[$i] : explode("==", $value[$i]);
+                    [$name, $url] = is_array($value[$i]) ? $value[$i] : array_merge(explode("==", $value[$i]), ['']);
                     if (!$url) {
                         $url = $name;
                     }
@@ -705,9 +705,9 @@ if (! function_exists('renderFormElement')) {
         $properties = []
     ) {
         $modx = evolutionCMS();
-        global $_style;
-        global $_lang;
-        global $content;
+        if ($content === null) {
+            global $content;
+        }
 
         if (substr($default_text, 0, 6) === '@@EVAL' && $field_value === $default_text) {
             $eval_str = trim(substr($default_text, 7));
@@ -719,7 +719,6 @@ if (! function_exists('renderFormElement')) {
         $cimode = strpos($field_type, ':');
         if ($cimode === false) {
             switch ($field_type) {
-
                 case "text": // handler for regular text boxes
                 case "rawtext"; // non-htmlentity converted text boxes
                     $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '" ' . $field_style . ' tvtype="' . $field_type . '" onchange="documentDirty=true;" style="width:100%" />';
@@ -733,9 +732,9 @@ if (! function_exists('renderFormElement')) {
                         $min = '';
                         $max = '';
                     } else {
-                        $step = isset($properties['step']) ? $properties['step'][0]['value'] : '';
-                        $min = isset($properties['min']) ? $properties['min'][0]['value'] : '';
-                        $max = isset($properties['max']) ? $properties['max'][0]['value'] : '';
+                        $step = isset($properties['step']) ? $properties['step'] : '';
+                        $min = isset($properties['min']) ? $properties['min'] : '';
+                        $max = isset($properties['max']) ? $properties['max'] : '';
                     }
                     $field_html .= '<input type="number"' . ($step ? '" step="'.$step.'"' : '') . ($min ? ' min="'.$min.'"' : '') . ($max ? ' min="'.$max.'"' : '') . ' id="tv' . $field_id . '" name="tv' . $field_id . '" value="' . $modx->getPhpCompat()->htmlspecialchars($field_value) . '" ' . $field_style . ' tvtype="' . $field_type . '" onchange="documentDirty=true;" style="width:100%" onkeyup="this.value=this.value.replace(/[^\d-,.+]/,\'\')"/>';
                     break;
@@ -756,8 +755,8 @@ if (! function_exists('renderFormElement')) {
                     if ($field_value == '') {
                         $field_value = 0;
                     }
-                    $field_html .= '<input id="tv' . $field_id . '" name="tv' . $field_id . '" class="DatePicker" type="text" value="' . ($field_value == 0 || !isset($field_value) ? "" : $field_value) . '" onblur="documentDirty=true;" />';
-                    $field_html .= ' <a onclick="document.forms[\'mutate\'].elements[\'tv' . $field_id . '\'].value=\'\';document.forms[\'mutate\'].elements[\'tv' . $field_id . '\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><i class="' . $_style["icon_calendar_close"] . '"></i></a>';
+                    $field_html .= '<input id="tv' . $field_id . '" name="tv' . $field_id . '" class="DatePicker" type="text" value="' . ( !isset($field_value) || $field_value == 0 ? "" : $field_value) . '" onblur="documentDirty=true;" />';
+                    $field_html .= ' <a onclick="document.forms[\'mutate\'].elements[\'tv' . $field_id . '\'].value=\'\';document.forms[\'mutate\'].elements[\'tv' . $field_id . '\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><i class="' . ManagerTheme::getStyle("icon_calendar_close") . '"></i></a>';
 
                     break;
                 case "dropdown": // handler for select boxes
@@ -765,7 +764,7 @@ if (! function_exists('renderFormElement')) {
                     $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform',
                         $tvsArray));
                     foreach($index_list as $item => $itemvalue) {
-                        list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
+                        [$item, $itemvalue] = (is_array($itemvalue)) ? $itemvalue : array_merge(explode("==", $itemvalue), ['']);
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
                         }
@@ -778,7 +777,7 @@ if (! function_exists('renderFormElement')) {
                     $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform',
                         $tvsArray));
                     foreach($index_list as $item => $itemvalue) {
-                        list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
+                        [$item, $itemvalue] = (is_array($itemvalue)) ? $itemvalue : array_merge(explode("==", $itemvalue), ['']);
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
                         }
@@ -792,7 +791,7 @@ if (! function_exists('renderFormElement')) {
                     $index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform',
                         $tvsArray));
                     foreach($index_list as $item => $itemvalue) {
-                        list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
+                        [$item, $itemvalue] = (is_array($itemvalue)) ? $itemvalue : array_merge(explode("==", $itemvalue), ['']);
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
                         }
@@ -834,7 +833,7 @@ if (! function_exists('renderFormElement')) {
                             $value = isset($item[1]) ? $item[1] : $name;
                         } else {
                             $item = trim($item);
-                            list($name, $value) = (strpos($item, '==') !== false) ? explode('==', $item, 2) : array(
+                            [$name, $value] = (strpos($item, '==') !== false) ? array_merge(explode('==', $item, 2), ['']) : array(
                                 $item,
                                 $item
                             );
@@ -857,7 +856,7 @@ if (! function_exists('renderFormElement')) {
                         $tvsArray));
                     static $i = 0;
                     foreach($index_list as $item => $itemvalue) {
-                        list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
+                        [$item, $itemvalue] = (is_array($itemvalue)) ? $itemvalue : array_merge(explode("==", $itemvalue), ['']);
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;
                         }
@@ -866,27 +865,48 @@ if (! function_exists('renderFormElement')) {
                     }
                     break;
                 case "image": // handles image fields using htmlarea image manager
-                    global $_lang;
                     global $ResourceManagerLoaded;
                     global $content, $which_editor;
                     if (!$ResourceManagerLoaded && !(((isset($content['richtext']) && $content['richtext'] == 1) || $modx->getManagerApi()->action == 4) && $modx->getConfig('use_editor') && $which_editor == 3)) {
                         $ResourceManagerLoaded = true;
                     }
-                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '"  value="' . $field_value . '" ' . $field_style . ' onchange="documentDirty=true;" /><input type="button" value="' . $_lang['insert'] . '" onclick="BrowseServer(\'tv' . $field_id . '\')" />
+                    $size = '';
+                    $image = $field_value;
+                    if(!empty($properties['width'])) {
+                        $size .= 'width:' . $properties['width'] . 'px;';
+                    }
+                    if(!empty($properties['height'])) {
+                        $size .= 'height:' . $properties['height'] . 'px;';
+                    }
+                    if(!empty($properties['thumbnailer'])) {
+                        if (is_callable($properties['thumbnailer'])) {
+                            $image = call_user_func($properties['thumbnailer'],
+                                $image,
+                                $properties['width'] ?: 120,
+                                $properties['height'] ?: 120
+                            );
+                        } elseif (\Illuminate\Support\Facades\Storage::exists($properties['thumbnailer'])) {
+                        $image = $properties['thumbnailer'] . '?' . http_build_query([
+                                'src' => $image,
+                                'w'   => $properties['width'] ?: 120,
+                                'h'   => $properties['height'] ?: 120,
+                            ]);
+                        }
+                    }
+                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '"  value="' . $field_value . '" ' . $field_style . ' onchange="documentDirty=true;" /><input type="button" value="' . ManagerTheme::getLexicon('insert') . '" onclick="BrowseServer(\'tv' . $field_id . '\')" />
                     <div class="col-12" style="padding-left: 0px;">
-                        <div id="image_for_tv' . $field_id . '" class="image_for_field" data-image="' . $field_value . '" onclick="BrowseServer(\'tv' . $field_id . '\')" style="background-image: url(\'' . evo()->getConfig('site_url') . $field_value . '\');"></div>
+                        <div id="image_for_tv' . $field_id . '" class="image_for_field" data-image="' . $field_value . '" onclick="BrowseServer(\'tv' . $field_id . '\')" style="' . $size . 'background-image: url(\'' . evo()->getConfig('site_url') . $image . '\');"></div>
                         <script>document.getElementById(\'tv' . $field_id . '\').addEventListener(\'change\', evoRenderTvImageCheck, false);</script>
                     </div>';
                     break;
                 case "file": // handles the input of file uploads
                     /* Modified by Timon for use with resource browser */
-                    global $_lang;
                     global $ResourceManagerLoaded;
                     global $content, $which_editor;
                     if (!$ResourceManagerLoaded && !(((isset($content['richtext']) && $content['richtext'] == 1) || $modx->getManagerApi()->action == 4) && $modx->getConfig('use_editor') && $which_editor == 3)) {
                         $ResourceManagerLoaded = true;
                     }
-                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '"  value="' . $field_value . '" ' . $field_style . ' onchange="documentDirty=true;" /><input type="button" value="' . $_lang['insert'] . '" onclick="BrowseFileServer(\'tv' . $field_id . '\')" />';
+                    $field_html .= '<input type="text" id="tv' . $field_id . '" name="tv' . $field_id . '"  value="' . $field_value . '" ' . $field_style . ' onchange="documentDirty=true;" /><input type="button" value="' . ManagerTheme::getLexicon('insert') . '" onclick="BrowseFileServer(\'tv' . $field_id . '\')" />';
 
                     break;
 

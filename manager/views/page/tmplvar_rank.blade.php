@@ -15,7 +15,7 @@
               setTimeout('document.sortableListForm.submit()', 1000);
             },
             cancel: function() {
-              document.location.href = 'index.php?a=76';
+              document.location.href = 'index.php?a=76&tab=1';
             }
           };
 

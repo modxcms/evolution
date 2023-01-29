@@ -55,8 +55,7 @@ class SiteTmplvar extends Eloquent\Model
 		'locked' => 'int',
 		'rank' => 'int',
 		'createdon' => 'int',
-		'editedon' => 'int',
-		'properties' => 'array'
+		'editedon' => 'int'
 	];
 
 	protected $fillable = [

@@ -67,23 +67,23 @@ if (!function_exists('ProcessTVCommand')) {
 
             case 'INHERIT' :
                 $output = $param; // Default to param value if no content from parents
-                $doc = $modx->getPageInfo($docid, 0, 'id,parent');
+                $doc = $modx->getPageInfo($docid, 0, 'id,parent', false);
 
                 while ($doc['parent'] != 0) {
                     $parent_id = $doc['parent'];
 
                     // Grab document regardless of publish status
-                    $doc = $modx->getPageInfo($parent_id, 0, 'id,parent,published');
+                    $doc = $modx->getPageInfo($parent_id, 0, 'id,parent,published', false);
                     if ($doc['parent'] != 0 && !$doc['published']) {
                         continue;
                     } // hide unpublished docs if we're not at the top
 
-                    $tv = $modx->getTemplateVar($name, '*', $doc['id'], $doc['published']);
+                    $tv = $modx->getTemplateVar($name, '*', $doc['id'], $doc['published'], false);
 
                     // if an inherited value is found and if there is content following the @INHERIT binding
                     // remove @INHERIT and output that following content. This content could contain other
                     // @ bindings, that are processed in the next step
-                    if ((string)$tv['value'] !== '' && !preg_match('%^@INHERIT[\s\n\r]*$%im', $tv['value'])) {
+                    if (!empty($tv) && (string)$tv['value'] !== '' && !preg_match('%^@INHERIT[\s\n\r]*$%im', $tv['value'])) {
                         $output = trim(str_replace('@INHERIT', '', (string)$tv['value']));
                         break 2;
                     }
@@ -729,7 +729,7 @@ if (!function_exists('renderFormElement')) {
                         if ((is_array($itemvalue))) {
                             list($item, $itemvalue) = $itemvalue;
                         } else {
-                            list($item, $itemvalue) = explode('==', $itemvalue);
+                            list($item, $itemvalue) = array_merge(explode('==', $itemvalue), ['']);
                         }
                         if ($itemvalue == '') {
                             $itemvalue = $item;
@@ -753,7 +753,7 @@ if (!function_exists('renderFormElement')) {
                         if (is_array($itemvalue)) {
                             list($item, $itemvalue) = $itemvalue;
                         } else {
-                            list($item, $itemvalue) = explode('==', $itemvalue);
+                            list($item, $itemvalue) = array_merge(explode('==', $itemvalue), ['']);
                         }
                         if ($itemvalue == '') {
                             $itemvalue = $item;
@@ -777,7 +777,7 @@ if (!function_exists('renderFormElement')) {
                         if (is_array($itemvalue)) {
                             list($item, $itemvalue) = $itemvalue;
                         } else {
-                            list($item, $itemvalue) = explode('==', $itemvalue);
+                            list($item, $itemvalue) = array_merge(explode('==', $itemvalue), ['']);
                         }
                         if ($itemvalue == '') {
                             $itemvalue = $item;
@@ -830,7 +830,7 @@ if (!function_exists('renderFormElement')) {
                         } else {
                             $item = trim($item);
                             if (strpos($item, '==') !== false) {
-                                list($name, $value) = explode('==', $item, 2);
+                                list($name, $value) = array_merge(explode('==', $item, 2), ['']);
                             } else {
                                 list($name, $value) = array($item, $item);
                             }
@@ -863,7 +863,7 @@ if (!function_exists('renderFormElement')) {
                         if (is_array($itemvalue)) {
                             list($item, $itemvalue) = $itemvalue;
                         } else {
-                            list($item, $itemvalue) = explode('==', $itemvalue);
+                            list($item, $itemvalue) = array_merge(explode('==', $itemvalue), ['']);
                         }
                         if (strlen($itemvalue) == 0) {
                             $itemvalue = $item;

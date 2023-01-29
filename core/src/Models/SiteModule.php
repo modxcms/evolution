@@ -83,6 +83,8 @@ class SiteModule extends Eloquent\Model
         'id' => [
             'actions.edit' => 108,
             'actions.save' => 109,
+            'actions.enable' => 109,
+            'actions.disable' => 109,
             'actions.delete' => 110,
             'actions.duplicate' => 111,
             'actions.run' => 112,

@@ -41,28 +41,31 @@ class TemplateProcessor
                 $template = 'tpl-' . $doc['template'];
                 break;
             case $this->core['view']->exists($templateAlias):
-               
-                $baseClassName = $this->core->getConfig('ControllerNamespace') . 'BaseController';
-                if (class_exists($baseClassName)) { //Проверяем есть ли Base класс
-                    $classArray = explode('.', $templateAlias);
-                    $classArray = array_map(
-                        function ($item) {
-                            return $this->setPsrClassNames($item);
-                        },
-                        $classArray
-                    );
-                    $classViewPart = implode('.', $classArray);
-                    $className = str_replace('.', '\\', $classViewPart);
-                    $className =
-                        $this->core->getConfig('ControllerNamespace') . ucfirst($className) . 'Controller';
-                    if (!class_exists(
-                        $className
-                    )) { //Проверяем есть ли контроллер по алиасу, если нет, то помещаем Base
-                        $className = $baseClassName;
-                    }
-                    $controller = $this->core->make($className);
-                    if (method_exists($controller, 'main')) {
-                        $this->core->call([$controller, 'main']);
+                $namespace = trim($this->core->getConfig('ControllerNamespace'));
+                if (!empty($namespace)) {
+                    $baseClassName = $namespace . 'BaseController';
+                    if (class_exists($baseClassName)) { //Проверяем есть ли Base класс
+                        $classArray = explode('.', $templateAlias);
+                        $classArray = array_map(
+                            function ($item) {
+                                return $this->setPsrClassNames($item);
+                            },
+                            $classArray
+                        );
+                        $classViewPart = implode('.', $classArray);
+                        $className = str_replace('.', '\\', $classViewPart);
+                        $className = $namespace . ucfirst($className) . 'Controller';
+                        if (!class_exists(
+                            $className
+                        )) { //Проверяем есть ли контроллер по алиасу, если нет, то помещаем Base
+                            $className = $baseClassName;
+                        }
+                        $controller = $this->core->make($className);
+                        if (method_exists($controller, 'main')) {
+                            $this->core->call([$controller, 'main']);
+                        }
+                    } else {
+                        $this->core->logEvent(0, 3, $baseClassName . ' not exists!');
                     }
                 }
                 $template = $templateAlias;

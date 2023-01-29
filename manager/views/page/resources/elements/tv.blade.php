@@ -31,21 +31,23 @@
             </div>
             <div class="btnCell">
                 <ul class="elements_buttonbar">
+                    @if(evolutionCMS()->hasAnyPermissions(['new_template', 'edit_template', 'new_role', 'edit_role']))
                     <li>
-                        <a href="{{ $item->makeUrl('actions.edit') }}" title="{{ ManagerTheme::getLexicon('edit_resource') }}">
+                        <a href="{{ $item->makeUrl('actions.edit') }}" target="main" title="{{ ManagerTheme::getLexicon('edit_resource') }}">
                             <i class="{{ $_style['icon_edit'] }}"></i>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ $item->makeUrl('actions.duplicate') }}" title="{{ ManagerTheme::getLexicon('resource_duplicate') }}" onclick="return confirm('{{ ManagerTheme::getLexicon('confirm_duplicate_record') }}')">
+                        <a href="{{ $item->makeUrl('actions.duplicate') }}" target="main" title="{{ ManagerTheme::getLexicon('resource_duplicate') }}" onclick="return confirm('{{ ManagerTheme::getLexicon('confirm_duplicate_record') }}')">
                             <i class="{{ $_style['icon_clone'] }}"></i>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ $item->makeUrl('actions.delete') }}" title="{{ ManagerTheme::getLexicon('delete') }}" onclick="return confirm('{{ ManagerTheme::getLexicon('confirm_delete_tmplvars') }}')">
+                        <a href="{{ $item->makeUrl('actions.delete') }}" target="main" title="{{ ManagerTheme::getLexicon('delete') }}" onclick="return confirm('{{ ManagerTheme::getLexicon('confirm_delete_tmplvars') }}')">
                             <i class="{{ $_style['icon_trash'] }}"></i>
                         </a>
                     </li>
+                    @endif
                 </ul>
             </div>
         </div>

@@ -50,8 +50,6 @@ return [
     'show_meta' => 0,
     'datepicker_offset' => -10,
     'number_of_logs' => 100,
-    'mail_check_timeperiod' => 60,
-    'number_of_messages' => 40,
     'number_of_results' => 30,
     'use_editor' => 1,
     'editor_css_path' => '',
@@ -125,5 +123,5 @@ return [
     'login_logo' => '',
     'login_bg' => '',
     'smtp_secure' => '',
-    'snapshot_path' => '[(base_path)]assets/backup/'
+    'snapshot_path' => '[(base_path)]assets/backup/',
 ];
